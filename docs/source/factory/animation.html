@@ -4,7 +4,7 @@
 <head>
   <title>Animation factory</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -110,6 +110,11 @@
                 </a>
               
                 
+                <a class="source" href="emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
                 <a class="source" href="filter.html">
                   ./source/factory/filter.js
                 </a>
@@ -150,6 +155,11 @@
                 </a>
               
                 
+                <a class="source" href="net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
                 <a class="source" href="oval.html">
                   ./source/factory/oval.js
                 </a>
@@ -157,6 +167,31 @@
                 
                 <a class="source" href="palette.html">
                   ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="particleForce.html">
+                  ./source/factory/particleForce.js
+                </a>
+              
+                
+                <a class="source" href="particleHistory.html">
+                  ./source/factory/particleHistory.js
+                </a>
+              
+                
+                <a class="source" href="particleSpring.html">
+                  ./source/factory/particleSpring.js
+                </a>
+              
+                
+                <a class="source" href="particleWorld.html">
+                  ./source/factory/particleWorld.js
                 </a>
               
                 
@@ -247,6 +282,11 @@
                 
                 <a class="source" href="ticker.html">
                   ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="tracer.html">
+                  ./source/factory/tracer.js
                 </a>
               
                 
@@ -452,11 +492,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { animation, constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { mergeOver, pushUnique, removeItem, xt, λ<span class="hljs-literal">null</span>, λpromise, λ<span class="hljs-keyword">this</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
-<span class="hljs-keyword">import</span> { animate, resortAnimations } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/animationloop.js'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { animation, <span class="hljs-title">constructors</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+<span class="hljs-keyword">import</span> { mergeOver, pushUnique, removeItem, xt, λ<span class="hljs-literal">null</span>, λpromise, λ<span class="hljs-built_in">this</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { animate, resortAnimations } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/animationloop.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/base.js'</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -473,18 +513,18 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Animation = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.makeName(items.name);
-    <span class="hljs-keyword">this</span>.order = (xt(items.order)) ? items.order : <span class="hljs-keyword">this</span>.defs.order;
-    <span class="hljs-keyword">this</span>.fn = items.fn || λpromise;
-    <span class="hljs-keyword">this</span>.onRun = items.onRun || λ<span class="hljs-literal">null</span>;
-    <span class="hljs-keyword">this</span>.onHalt = items.onHalt || λ<span class="hljs-literal">null</span>;
-    <span class="hljs-keyword">this</span>.onKill = items.onKill || λ<span class="hljs-literal">null</span>;
+    <span class="hljs-built_in">this</span>.makeName(items.name);
+    <span class="hljs-built_in">this</span>.order = (xt(items.order)) ? items.order : <span class="hljs-built_in">this</span>.defs.order;
+    <span class="hljs-built_in">this</span>.fn = items.fn || λpromise;
+    <span class="hljs-built_in">this</span>.onRun = items.onRun || λ<span class="hljs-literal">null</span>;
+    <span class="hljs-built_in">this</span>.onHalt = items.onHalt || λ<span class="hljs-literal">null</span>;
+    <span class="hljs-built_in">this</span>.onKill = items.onKill || λ<span class="hljs-literal">null</span>;
 
-    <span class="hljs-keyword">this</span>.register();
+    <span class="hljs-built_in">this</span>.register();
 
-    <span class="hljs-keyword">if</span>(!items.delay) <span class="hljs-keyword">this</span>.run();
+    <span class="hljs-keyword">if</span>(!items.delay) <span class="hljs-built_in">this</span>.run();
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -502,8 +542,8 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Animation.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
 
-P.type = <span class="hljs-string">'Animation'</span>;
-P.lib = <span class="hljs-string">'animation'</span>;
+P.type = <span class="hljs-string">&#x27;Animation&#x27;</span>;
+P.lib = <span class="hljs-string">&#x27;animation&#x27;</span>;
 P.isArtefact = <span class="hljs-literal">false</span>;
 P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
             
@@ -631,7 +671,7 @@ P.processPacketOut = λ<span class="hljs-literal">null</span>;
 P.finalizePacketOut = λ<span class="hljs-literal">null</span>;
 P.saveAsPacket = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">return</span> <span class="hljs-string">`[<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span>, <span class="hljs-subst">${<span class="hljs-keyword">this</span>.type}</span>, <span class="hljs-subst">${<span class="hljs-keyword">this</span>.lib}</span>, {}]`</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-string">`[<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span>, <span class="hljs-subst">${<span class="hljs-built_in">this</span>.type}</span>, <span class="hljs-subst">${<span class="hljs-built_in">this</span>.lib}</span>, {}]`</span>
 };</pre></div></div>
             
         </li>
@@ -648,7 +688,7 @@ P.saveAsPacket = <span class="hljs-function"><span class="hljs-keyword">function
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.clone = λ<span class="hljs-keyword">this</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.clone = λ<span class="hljs-built_in">this</span>;</pre></div></div>
             
         </li>
         
@@ -706,10 +746,10 @@ P.saveAsPacket = <span class="hljs-function"><span class="hljs-keyword">function
             
             <div class="content"><div class='highlight'><pre>P.run = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">this</span>.onRun();
-    pushUnique(animate, <span class="hljs-keyword">this</span>.name);
+    <span class="hljs-built_in">this</span>.onRun();
+    pushUnique(animate, <span class="hljs-built_in">this</span>.name);
     resortAnimations();
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -727,7 +767,7 @@ P.saveAsPacket = <span class="hljs-function"><span class="hljs-keyword">function
             
             <div class="content"><div class='highlight'><pre>P.isRunning = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">return</span> (animate.indexOf(<span class="hljs-keyword">this</span>.name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">return</span> (animate.indexOf(<span class="hljs-built_in">this</span>.name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
 };</pre></div></div>
             
         </li>
@@ -745,10 +785,10 @@ P.saveAsPacket = <span class="hljs-function"><span class="hljs-keyword">function
             
             <div class="content"><div class='highlight'><pre>P.halt = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">this</span>.onHalt();
-    removeItem(animate, <span class="hljs-keyword">this</span>.name);
+    <span class="hljs-built_in">this</span>.onHalt();
+    removeItem(animate, <span class="hljs-built_in">this</span>.name);
     resortAnimations();
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -766,11 +806,11 @@ P.saveAsPacket = <span class="hljs-function"><span class="hljs-keyword">function
             
             <div class="content"><div class='highlight'><pre>P.kill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">this</span>.onKill();
-    removeItem(animate, <span class="hljs-keyword">this</span>.name);
+    <span class="hljs-built_in">this</span>.onKill();
+    removeItem(animate, <span class="hljs-built_in">this</span>.name);
     resortAnimations();
 
-    <span class="hljs-keyword">this</span>.deregister();
+    <span class="hljs-built_in">this</span>.deregister();
     
     <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
 };</pre></div></div>
@@ -787,7 +827,7 @@ P.saveAsPacket = <span class="hljs-function"><span class="hljs-keyword">function
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.makeAnimation({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'demo-animation'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
 
     <span class="hljs-comment">// Function MUST return a Promise object, and that promise must ALWAYS resolve (not reject)</span>
     <span class="hljs-attr">fn</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
@@ -796,7 +836,7 @@ P.saveAsPacket = <span class="hljs-function"><span class="hljs-keyword">function
 
             <span class="hljs-comment">// Renders all stack and canvas elements in the document</span>
             scrawl.render()
-            .then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> resolve(<span class="hljs-literal">true</span>))
+            .then(<span class="hljs-function">() =&gt;</span> resolve(<span class="hljs-literal">true</span>))
             .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> resolve(<span class="hljs-literal">false</span>));
         });
     }
@@ -809,7 +849,7 @@ P.saveAsPacket = <span class="hljs-function"><span class="hljs-keyword">function
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Animation(items);
 };
 
-constructors.Animation = Animation;</pre></div></div>
+<span class="hljs-title">constructors</span>.<span class="hljs-title">Animation</span> = <span class="hljs-title">Animation</span>;</pre></div></div>
             
         </li>
         

@@ -4,7 +4,7 @@
 <head>
   <title>Vector factory</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -110,6 +110,11 @@
                 </a>
               
                 
+                <a class="source" href="emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
                 <a class="source" href="filter.html">
                   ./source/factory/filter.js
                 </a>
@@ -150,6 +155,11 @@
                 </a>
               
                 
+                <a class="source" href="net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
                 <a class="source" href="oval.html">
                   ./source/factory/oval.js
                 </a>
@@ -157,6 +167,31 @@
                 
                 <a class="source" href="palette.html">
                   ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="particleForce.html">
+                  ./source/factory/particleForce.js
+                </a>
+              
+                
+                <a class="source" href="particleHistory.html">
+                  ./source/factory/particleHistory.js
+                </a>
+              
+                
+                <a class="source" href="particleSpring.html">
+                  ./source/factory/particleSpring.js
+                </a>
+              
+                
+                <a class="source" href="particleWorld.html">
+                  ./source/factory/particleWorld.js
                 </a>
               
                 
@@ -247,6 +282,11 @@
                 
                 <a class="source" href="ticker.html">
                   ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="tracer.html">
+                  ./source/factory/tracer.js
                 </a>
               
                 
@@ -422,8 +462,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { xt, xta, isa_obj, isa_number } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+<span class="hljs-keyword">import</span> { xt, xta, isa_obj, isa_number } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -440,13 +480,13 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Vector = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y, z</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.x = <span class="hljs-number">0</span>;
-    <span class="hljs-keyword">this</span>.y = <span class="hljs-number">0</span>;
-    <span class="hljs-keyword">this</span>.z = <span class="hljs-number">0</span>;
+    <span class="hljs-built_in">this</span>.x = <span class="hljs-number">0</span>;
+    <span class="hljs-built_in">this</span>.y = <span class="hljs-number">0</span>;
+    <span class="hljs-built_in">this</span>.z = <span class="hljs-number">0</span>;
 
-    <span class="hljs-keyword">if</span> (xt(x)) <span class="hljs-keyword">this</span>.set(x, y, z);
+    <span class="hljs-keyword">if</span> (xt(x)) <span class="hljs-built_in">this</span>.set(x, y, z);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -463,7 +503,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Vector.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">'Vector'</span>;</pre></div></div>
+P.type = <span class="hljs-string">&#x27;Vector&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -521,12 +561,12 @@ P.type = <span class="hljs-string">'Vector'</span>;</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>P.getXYCoordinate = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">return</span> [<span class="hljs-keyword">this</span>.x, <span class="hljs-keyword">this</span>.y];
+    <span class="hljs-keyword">return</span> [<span class="hljs-built_in">this</span>.x, <span class="hljs-built_in">this</span>.y];
 };
 
 P.getXYZCoordinate = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">return</span> [<span class="hljs-keyword">this</span>.x, <span class="hljs-keyword">this</span>.y, <span class="hljs-keyword">this</span>.z];
+    <span class="hljs-keyword">return</span> [<span class="hljs-built_in">this</span>.x, <span class="hljs-built_in">this</span>.y, <span class="hljs-built_in">this</span>.z];
 };</pre></div></div>
             
         </li>
@@ -544,39 +584,39 @@ P.getXYZCoordinate = <span class="hljs-function"><span class="hljs-keyword">func
             
             <div class="content"><div class='highlight'><pre>P.setX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (!xt(x)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span> Vector error - setX() arguments error: <span class="hljs-subst">${x}</span>`</span>);
+    <span class="hljs-keyword">if</span> (!xt(x)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> Vector error - setX() arguments error: <span class="hljs-subst">${x}</span>`</span>);
 
-    <span class="hljs-keyword">this</span>.x = x;
+    <span class="hljs-built_in">this</span>.x = x;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };
 
 P.setY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">y</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (!xt(y)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span> Vector error - setY() arguments error: <span class="hljs-subst">${y}</span>`</span>);
+    <span class="hljs-keyword">if</span> (!xt(y)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> Vector error - setY() arguments error: <span class="hljs-subst">${y}</span>`</span>);
 
-    <span class="hljs-keyword">this</span>.y = y;
+    <span class="hljs-built_in">this</span>.y = y;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };
 
 P.setZ = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">z</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (!xt(z)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span> Vector error - setZ() arguments error: <span class="hljs-subst">${z}</span>`</span>);
+    <span class="hljs-keyword">if</span> (!xt(z)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> Vector error - setZ() arguments error: <span class="hljs-subst">${z}</span>`</span>);
     
-    <span class="hljs-keyword">this</span>.z = z;
+    <span class="hljs-built_in">this</span>.z = z;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };
 
 P.setXY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (!xta(x, y)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span> Vector error - setXY() arguments error: <span class="hljs-subst">${x}</span>, <span class="hljs-subst">${y}</span>`</span>);
+    <span class="hljs-keyword">if</span> (!xta(x, y)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> Vector error - setXY() arguments error: <span class="hljs-subst">${x}</span>, <span class="hljs-subst">${y}</span>`</span>);
     
-    <span class="hljs-keyword">this</span>.x = x;
-    <span class="hljs-keyword">this</span>.y = y;
+    <span class="hljs-built_in">this</span>.x = x;
+    <span class="hljs-built_in">this</span>.y = y;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -600,39 +640,39 @@ P.setXY = <span class="hljs-function"><span class="hljs-keyword">function</span>
             
             <div class="content"><div class='highlight'><pre>P.set = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y, z</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (isa_obj(x)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.setFromVector(x);
+    <span class="hljs-keyword">if</span> (isa_obj(x)) <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.setFromVector(x);
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(x)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.setFromArray(x);
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(x)) <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.setFromArray(x);
 
-    <span class="hljs-keyword">if</span> (xta(x, y)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.setFromArray([x, y, z]);
+    <span class="hljs-keyword">if</span> (xta(x, y)) <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.setFromArray([x, y, z]);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };
 
 P.setFromArray = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">args</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Array</span>.isArray(args)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span> Vector error - setFromArray() arguments error: <span class="hljs-subst">${args}</span>`</span>);
+    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Array</span>.isArray(args)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> Vector error - setFromArray() arguments error: <span class="hljs-subst">${args}</span>`</span>);
 
     <span class="hljs-keyword">let</span> [x, y, z] = args;
     
-    <span class="hljs-keyword">if</span> (isa_number(x)) <span class="hljs-keyword">this</span>.x = x;
-    <span class="hljs-keyword">if</span> (isa_number(y)) <span class="hljs-keyword">this</span>.y = y;
-    <span class="hljs-keyword">if</span> (isa_number(z)) <span class="hljs-keyword">this</span>.z = z;
+    <span class="hljs-keyword">if</span> (isa_number(x)) <span class="hljs-built_in">this</span>.x = x;
+    <span class="hljs-keyword">if</span> (isa_number(y)) <span class="hljs-built_in">this</span>.y = y;
+    <span class="hljs-keyword">if</span> (isa_number(z)) <span class="hljs-built_in">this</span>.z = z;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };
 
 P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (!isa_obj(item)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span> Vector error - setFromVector() arguments error: <span class="hljs-subst">${<span class="hljs-built_in">JSON</span>.stringify(item)}</span>`</span>);
+    <span class="hljs-keyword">if</span> (!isa_obj(item)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> Vector error - setFromVector() arguments error: <span class="hljs-subst">${<span class="hljs-built_in">JSON</span>.stringify(item)}</span>`</span>);
     
     <span class="hljs-keyword">let</span> {x, y, z} = item;
 
-    <span class="hljs-keyword">if</span> (isa_number(x)) <span class="hljs-keyword">this</span>.x = x;
-    <span class="hljs-keyword">if</span> (isa_number(y)) <span class="hljs-keyword">this</span>.y = y;
-    <span class="hljs-keyword">if</span> (isa_number(z)) <span class="hljs-keyword">this</span>.z = z;
+    <span class="hljs-keyword">if</span> (isa_number(x)) <span class="hljs-built_in">this</span>.x = x;
+    <span class="hljs-keyword">if</span> (isa_number(y)) <span class="hljs-built_in">this</span>.y = y;
+    <span class="hljs-keyword">if</span> (isa_number(z)) <span class="hljs-built_in">this</span>.z = z;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -663,11 +703,11 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
             
             <div class="content"><div class='highlight'><pre>P.zero = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">this</span>.x = <span class="hljs-number">0</span>;
-    <span class="hljs-keyword">this</span>.y = <span class="hljs-number">0</span>;
-    <span class="hljs-keyword">this</span>.z = <span class="hljs-number">0</span>;
+    <span class="hljs-built_in">this</span>.x = <span class="hljs-number">0</span>;
+    <span class="hljs-built_in">this</span>.y = <span class="hljs-number">0</span>;
+    <span class="hljs-built_in">this</span>.z = <span class="hljs-number">0</span>;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -685,26 +725,26 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
             
             <div class="content"><div class='highlight'><pre>P.vectorAdd = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item = {}</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(item)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.vectorAddArray(item);
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(item)) <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.vectorAddArray(item);
 
     <span class="hljs-keyword">let</span> {x, y, z} = item;
 
-    <span class="hljs-keyword">if</span> (isa_number(x)) <span class="hljs-keyword">this</span>.x += x;
-    <span class="hljs-keyword">if</span> (isa_number(y)) <span class="hljs-keyword">this</span>.y += y;
-    <span class="hljs-keyword">if</span> (isa_number(z)) <span class="hljs-keyword">this</span>.z += z;
+    <span class="hljs-keyword">if</span> (isa_number(x)) <span class="hljs-built_in">this</span>.x += x;
+    <span class="hljs-keyword">if</span> (isa_number(y)) <span class="hljs-built_in">this</span>.y += y;
+    <span class="hljs-keyword">if</span> (isa_number(z)) <span class="hljs-built_in">this</span>.z += z;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };
 
 P.vectorAddArray = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item = []</span>) </span>{
 
     <span class="hljs-keyword">let</span> [x, y, z] = item;
 
-    <span class="hljs-keyword">if</span> (isa_number(x)) <span class="hljs-keyword">this</span>.x += x;
-    <span class="hljs-keyword">if</span> (isa_number(y)) <span class="hljs-keyword">this</span>.y += y;
-    <span class="hljs-keyword">if</span> (isa_number(z)) <span class="hljs-keyword">this</span>.z += z;
+    <span class="hljs-keyword">if</span> (isa_number(x)) <span class="hljs-built_in">this</span>.x += x;
+    <span class="hljs-keyword">if</span> (isa_number(y)) <span class="hljs-built_in">this</span>.y += y;
+    <span class="hljs-keyword">if</span> (isa_number(z)) <span class="hljs-built_in">this</span>.z += z;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -722,26 +762,26 @@ P.vectorAddArray = <span class="hljs-function"><span class="hljs-keyword">functi
             
             <div class="content"><div class='highlight'><pre>P.vectorSubtract = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item = {}</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(item)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.vectorSubtractArray(item);
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(item)) <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.vectorSubtractArray(item);
 
     <span class="hljs-keyword">let</span> {x, y, z} = item;
 
-    <span class="hljs-keyword">if</span> (isa_number(x)) <span class="hljs-keyword">this</span>.x -= x;
-    <span class="hljs-keyword">if</span> (isa_number(y)) <span class="hljs-keyword">this</span>.y -= y;
-    <span class="hljs-keyword">if</span> (isa_number(z)) <span class="hljs-keyword">this</span>.z -= z;
+    <span class="hljs-keyword">if</span> (isa_number(x)) <span class="hljs-built_in">this</span>.x -= x;
+    <span class="hljs-keyword">if</span> (isa_number(y)) <span class="hljs-built_in">this</span>.y -= y;
+    <span class="hljs-keyword">if</span> (isa_number(z)) <span class="hljs-built_in">this</span>.z -= z;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };
 
 P.vectorSubtractArray = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">let</span> [x, y, z] = item;
 
-    <span class="hljs-keyword">if</span> (isa_number(x)) <span class="hljs-keyword">this</span>.x -= x;
-    <span class="hljs-keyword">if</span> (isa_number(y)) <span class="hljs-keyword">this</span>.y -= y;
-    <span class="hljs-keyword">if</span> (isa_number(z)) <span class="hljs-keyword">this</span>.z -= z;
+    <span class="hljs-keyword">if</span> (isa_number(x)) <span class="hljs-built_in">this</span>.x -= x;
+    <span class="hljs-keyword">if</span> (isa_number(y)) <span class="hljs-built_in">this</span>.y -= y;
+    <span class="hljs-keyword">if</span> (isa_number(z)) <span class="hljs-built_in">this</span>.z -= z;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -759,13 +799,37 @@ P.vectorSubtractArray = <span class="hljs-function"><span class="hljs-keyword">f
             
             <div class="content"><div class='highlight'><pre>P.scalarMultiply = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (!isa_number(item)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span> Vector error - scalarMultiply() argument not a number: <span class="hljs-subst">${item}</span>`</span>);
+    <span class="hljs-keyword">if</span> (!isa_number(item)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> Vector error - scalarMultiply() argument not a number: <span class="hljs-subst">${item}</span>`</span>);
 
-    <span class="hljs-keyword">this</span>.x *= item;
-    <span class="hljs-keyword">this</span>.y *= item;
-    <span class="hljs-keyword">this</span>.z *= item;
+    <span class="hljs-built_in">this</span>.x *= item;
+    <span class="hljs-built_in">this</span>.y *= item;
+    <span class="hljs-built_in">this</span>.z *= item;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+};
+
+P.vectorMultiply = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item = {}</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(item)) <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.vectorMultiplyArray(item);
+
+    <span class="hljs-keyword">let</span> {x, y, z} = item;
+
+    <span class="hljs-keyword">if</span> (isa_number(x)) <span class="hljs-built_in">this</span>.x *= x;
+    <span class="hljs-keyword">if</span> (isa_number(y)) <span class="hljs-built_in">this</span>.y *= y;
+    <span class="hljs-keyword">if</span> (isa_number(z)) <span class="hljs-built_in">this</span>.z *= z;
+
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+};
+
+P.vectorMultiplyArray = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">let</span> [x, y, z] = item;
+
+    <span class="hljs-keyword">if</span> (isa_number(x)) <span class="hljs-built_in">this</span>.x *= x;
+    <span class="hljs-keyword">if</span> (isa_number(y)) <span class="hljs-built_in">this</span>.y *= y;
+    <span class="hljs-keyword">if</span> (isa_number(z)) <span class="hljs-built_in">this</span>.z *= z;
+
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -783,14 +847,14 @@ P.vectorSubtractArray = <span class="hljs-function"><span class="hljs-keyword">f
             
             <div class="content"><div class='highlight'><pre>P.scalarDivide = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (!isa_number(item)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span> Vector error - scalarDivide() argument not a number: <span class="hljs-subst">${item}</span>`</span>);
-    <span class="hljs-keyword">if</span> (!item) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span> Vector error - scalarDivide() division by zero: <span class="hljs-subst">${item}</span>`</span>);
+    <span class="hljs-keyword">if</span> (!isa_number(item)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> Vector error - scalarDivide() argument not a number: <span class="hljs-subst">${item}</span>`</span>);
+    <span class="hljs-keyword">if</span> (!item) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> Vector error - scalarDivide() division by zero: <span class="hljs-subst">${item}</span>`</span>);
 
-    <span class="hljs-keyword">this</span>.x /= item;
-    <span class="hljs-keyword">this</span>.y /= item;
-    <span class="hljs-keyword">this</span>.z /= item;
+    <span class="hljs-built_in">this</span>.x /= item;
+    <span class="hljs-built_in">this</span>.y /= item;
+    <span class="hljs-built_in">this</span>.z /= item;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -808,7 +872,7 @@ P.vectorSubtractArray = <span class="hljs-function"><span class="hljs-keyword">f
             
             <div class="content"><div class='highlight'><pre>P.getMagnitude = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.sqrt((<span class="hljs-keyword">this</span>.x * <span class="hljs-keyword">this</span>.x) + (<span class="hljs-keyword">this</span>.y * <span class="hljs-keyword">this</span>.y) + (<span class="hljs-keyword">this</span>.z * <span class="hljs-keyword">this</span>.z));
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.sqrt((<span class="hljs-built_in">this</span>.x * <span class="hljs-built_in">this</span>.x) + (<span class="hljs-built_in">this</span>.y * <span class="hljs-built_in">this</span>.y) + (<span class="hljs-built_in">this</span>.z * <span class="hljs-built_in">this</span>.z));
 };</pre></div></div>
             
         </li>
@@ -826,17 +890,17 @@ P.vectorSubtractArray = <span class="hljs-function"><span class="hljs-keyword">f
             
             <div class="content"><div class='highlight'><pre>P.rotate = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">angle</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (!isa_number(angle)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span> Vector error - rotate() argument not a number: <span class="hljs-subst">${angle}</span>`</span>);
+    <span class="hljs-keyword">if</span> (!isa_number(angle)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> Vector error - rotate() argument not a number: <span class="hljs-subst">${angle}</span>`</span>);
 
-    <span class="hljs-keyword">let</span> arg = <span class="hljs-built_in">Math</span>.atan2(<span class="hljs-keyword">this</span>.y, <span class="hljs-keyword">this</span>.x);
+    <span class="hljs-keyword">let</span> arg = <span class="hljs-built_in">Math</span>.atan2(<span class="hljs-built_in">this</span>.y, <span class="hljs-built_in">this</span>.x);
     arg += (angle * <span class="hljs-number">0.01745329251</span>);
     
-    <span class="hljs-keyword">let</span> mag = <span class="hljs-keyword">this</span>.getMagnitude();
+    <span class="hljs-keyword">let</span> mag = <span class="hljs-built_in">this</span>.getMagnitude();
 
-    <span class="hljs-keyword">this</span>.x = mag * <span class="hljs-built_in">Math</span>.cos(arg);
-    <span class="hljs-keyword">this</span>.y = mag * <span class="hljs-built_in">Math</span>.sin(arg);
+    <span class="hljs-built_in">this</span>.x = mag * <span class="hljs-built_in">Math</span>.cos(arg);
+    <span class="hljs-built_in">this</span>.y = mag * <span class="hljs-built_in">Math</span>.sin(arg);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -854,11 +918,11 @@ P.vectorSubtractArray = <span class="hljs-function"><span class="hljs-keyword">f
             
             <div class="content"><div class='highlight'><pre>P.reverse = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">this</span>.x = -<span class="hljs-keyword">this</span>.x;
-    <span class="hljs-keyword">this</span>.y = -<span class="hljs-keyword">this</span>.y;
-    <span class="hljs-keyword">this</span>.z = -<span class="hljs-keyword">this</span>.z;
+    <span class="hljs-built_in">this</span>.x = -<span class="hljs-built_in">this</span>.x;
+    <span class="hljs-built_in">this</span>.y = -<span class="hljs-built_in">this</span>.y;
+    <span class="hljs-built_in">this</span>.z = -<span class="hljs-built_in">this</span>.z;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -876,14 +940,14 @@ P.vectorSubtractArray = <span class="hljs-function"><span class="hljs-keyword">f
             
             <div class="content"><div class='highlight'><pre>P.normalize = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
     
-    <span class="hljs-keyword">let</span> val = <span class="hljs-keyword">this</span>.getMagnitude();
+    <span class="hljs-keyword">let</span> val = <span class="hljs-built_in">this</span>.getMagnitude();
     
     <span class="hljs-keyword">if</span> (val &gt; <span class="hljs-number">0</span>) {
-        <span class="hljs-keyword">this</span>.x /= val;
-        <span class="hljs-keyword">this</span>.y /= val;
-        <span class="hljs-keyword">this</span>.z /= val;
+        <span class="hljs-built_in">this</span>.x /= val;
+        <span class="hljs-built_in">this</span>.y /= val;
+        <span class="hljs-built_in">this</span>.z /= val;
     }
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -941,7 +1005,7 @@ P.vectorSubtractArray = <span class="hljs-function"><span class="hljs-keyword">f
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> releaseVector = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (item &amp;&amp; item.type === <span class="hljs-string">'Vector'</span>) vectorPool.push(item.zero());
+    <span class="hljs-keyword">if</span> (item &amp;&amp; item.type === <span class="hljs-string">&#x27;Vector&#x27;</span>) vectorPool.push(item.zero());
 };</pre></div></div>
             
         </li>
@@ -962,7 +1026,7 @@ P.vectorSubtractArray = <span class="hljs-function"><span class="hljs-keyword">f
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Vector(x, y, z);
 };
 
-constructors.Vector = Vector;</pre></div></div>
+<span class="hljs-title">constructors</span>.<span class="hljs-title">Vector</span> = <span class="hljs-title">Vector</span>;</pre></div></div>
             
         </li>
         

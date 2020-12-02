@@ -10,7 +10,7 @@ const canvas = scrawl.library.canvas.mycanvas;
 scrawl.importDomImage('.flowers');
 
 
-// Create the target entity
+// Create the target entitys
 const piccy = scrawl.makePicture({
 
     name: 'base-piccy',
@@ -70,6 +70,24 @@ const demoAnimation = scrawl.makeRender({
 
 
 // #### User interaction
+// No additional work required in the Javascript file to create the CSS filters; these are defined as Strings in the HTML select &lt;option> elements, and will be set on the target entitys as part of the form control user interaction below.
+// 
+// ```
+// <select class="controlItem" id="filter">
+//     <option value="none">none</option>
+//     <option value="blur(6px)">blur(6px)</option>
+//     <option value="brightness(0.4)">brightness(0.4)</option>
+//     <option value="contrast(200%)">contrast(200%)</option>
+//     <option value="drop-shadow(4px 4px 4px blue)">drop-shadow(4px 4px 4px blue)</option>
+//     <option value="grayscale(100%)">grayscale(100%)</option>
+//     <option value="hue-rotate(90deg)">hue-rotate(90deg)</option>
+//     <option value="invert(75%)">invert(75%)</option>
+//     <option value="opacity(25%)">opacity(25%)</option>
+//     <option value="saturate(30%)">saturate(30%)</option>
+//     <option value="sepia(100%)">sepia(100%)</option>
+// </select>
+// ```
+
 let filterTarget = piccy,
     filterString = 'none';
 
@@ -108,7 +126,6 @@ let updateFilter = (e) => {
     }
 };
 scrawl.addNativeListener(['input', 'change'], updateFilter, '#filter');
-
 
 document.querySelector('#filter').options.selectedIndex = 0;
 document.querySelector('#target').options.selectedIndex = 0;

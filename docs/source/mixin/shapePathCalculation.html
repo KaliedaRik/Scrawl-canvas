@@ -4,7 +4,7 @@
 <head>
   <title>Shape path calculation</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -110,6 +110,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
                 <a class="source" href="../factory/filter.html">
                   ./source/factory/filter.js
                 </a>
@@ -150,6 +155,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
                 <a class="source" href="../factory/oval.html">
                   ./source/factory/oval.js
                 </a>
@@ -157,6 +167,31 @@
                 
                 <a class="source" href="../factory/palette.html">
                   ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleForce.html">
+                  ./source/factory/particleForce.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleHistory.html">
+                  ./source/factory/particleHistory.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleSpring.html">
+                  ./source/factory/particleSpring.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleWorld.html">
+                  ./source/factory/particleWorld.js
                 </a>
               
                 
@@ -247,6 +282,11 @@
                 
                 <a class="source" href="../factory/ticker.html">
                   ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="../factory/tracer.html">
+                  ./source/factory/tracer.js
                 </a>
               
                 
@@ -457,8 +497,8 @@
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> points = [],
         myData = [],
-        command = <span class="hljs-string">''</span>,
-        localPath = <span class="hljs-string">''</span>,
+        command = <span class="hljs-string">&#x27;&#x27;</span>,
+        localPath = <span class="hljs-string">&#x27;&#x27;</span>,
         units = [],
         unitLengths = [],
         unitPartials = [],
@@ -550,11 +590,11 @@
 
             <span class="hljs-keyword">if</span> (i === <span class="hljs-number">0</span>) {
 
-                <span class="hljs-keyword">if</span> (command === <span class="hljs-string">'M'</span>) {
+                <span class="hljs-keyword">if</span> (command === <span class="hljs-string">&#x27;M&#x27;</span>) {
 
                     oldX = (points[<span class="hljs-number">0</span>] * scale) - start.x;
                     oldY = (points[<span class="hljs-number">1</span>] * scale) - start.y;
-                    command = <span class="hljs-string">'m'</span>;
+                    command = <span class="hljs-string">&#x27;m&#x27;</span>;
                 }
             } 
             <span class="hljs-keyword">else</span> {
@@ -565,7 +605,7 @@
 
             <span class="hljs-keyword">switch</span> (command) {
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'H'</span>:
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;H&#x27;</span>:
                     <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = points.length; j &lt; jz; j++) {
 
                         points[j] = (points[j] * scale) - oldX;
@@ -575,7 +615,7 @@
                     }
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'V'</span>:
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;V&#x27;</span>:
                     <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = points.length; j &lt; jz; j++) {
 
                         points[j] = (points[j] * scale) - oldY;
@@ -585,7 +625,7 @@
                     }
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'M'</span>:
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;M&#x27;</span>:
                     <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = points.length; j &lt; jz; j += <span class="hljs-number">2</span>) {
 
                         points[j] = (points[j] * scale) - oldX;
@@ -597,8 +637,8 @@
                     }
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'L'</span>:
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'T'</span>:
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;L&#x27;</span>:
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;T&#x27;</span>:
                     <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = points.length; j &lt; jz; j += <span class="hljs-number">2</span>) {
 
                         points[j] = (points[j] * scale) - oldX;
@@ -606,7 +646,7 @@
                         curX += points[j];
                         curY += points[j + <span class="hljs-number">1</span>];
 
-                        <span class="hljs-keyword">if</span> (command === <span class="hljs-string">'T'</span>) {
+                        <span class="hljs-keyword">if</span> (command === <span class="hljs-string">&#x27;T&#x27;</span>) {
 
                             reflectX = points[j] + oldX;
                             reflectY = points[j + <span class="hljs-number">1</span>] + oldY;
@@ -619,8 +659,8 @@
                     }
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'Q'</span>:
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'S'</span>:
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;Q&#x27;</span>:
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;S&#x27;</span>:
                     <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = points.length; j &lt; jz; j += <span class="hljs-number">4</span>) {
 
                         points[j] = (points[j] * scale) - oldX;
@@ -635,7 +675,7 @@
                     }
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'C'</span>:
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;C&#x27;</span>:
                     <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = points.length; j &lt; jz; j += <span class="hljs-number">6</span>) {
 
                         points[j] = (points[j] * scale) - oldX;
@@ -652,7 +692,7 @@
                     }
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'A'</span>:
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;A&#x27;</span>:
                     <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = points.length; j &lt; jz; j += <span class="hljs-number">7</span>) {
 
                         points[j + <span class="hljs-number">5</span>] = (points[j + <span class="hljs-number">5</span>] * scale) - oldX;
@@ -664,7 +704,7 @@
                     }
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'h'</span>:
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;h&#x27;</span>:
                     <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = points.length; j &lt; jz; j++) {
 
                         points[j] *= scale;
@@ -674,7 +714,7 @@
                     }
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'v'</span>:
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;v&#x27;</span>:
                     <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = points.length; j &lt; jz; j++) {
 
                         points[j] *= scale;
@@ -684,9 +724,9 @@
                     }
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'m'</span>:
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'l'</span>:
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'t'</span>:
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;m&#x27;</span>:
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;l&#x27;</span>:
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;t&#x27;</span>:
                     <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = points.length; j &lt; jz; j += <span class="hljs-number">2</span>) {
 
                         points[j] *= scale;
@@ -694,7 +734,7 @@
                         curX += points[j];
                         curY += points[j + <span class="hljs-number">1</span>];
 
-                        <span class="hljs-keyword">if</span> (command === <span class="hljs-string">'t'</span>) {
+                        <span class="hljs-keyword">if</span> (command === <span class="hljs-string">&#x27;t&#x27;</span>) {
 
                             reflectX = points[j] + oldX;
                             reflectY = points[j + <span class="hljs-number">1</span>] + oldY;
@@ -707,8 +747,8 @@
                     }
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'q'</span>:
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'s'</span>:
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;q&#x27;</span>:
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;s&#x27;</span>:
                     <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = points.length; j &lt; jz; j += <span class="hljs-number">4</span>) {
 
                         points[j] *= scale;
@@ -723,7 +763,7 @@
                     }
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'c'</span>:
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;c&#x27;</span>:
                     <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = points.length; j &lt; jz; j += <span class="hljs-number">6</span>) {
 
                         points[j] *= scale;
@@ -740,7 +780,7 @@
                     }
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'a'</span>:
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;a&#x27;</span>:
                     <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = points.length; j &lt; jz; j += <span class="hljs-number">7</span>) {
 
                         points[j] *= scale;
@@ -859,66 +899,66 @@
 
                 <span class="hljs-keyword">switch</span> (c) {
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'h'</span> :
-                        units[i] = [<span class="hljs-string">'linear'</span>, x, y, p[<span class="hljs-number">0</span>] + x, y];
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;h&#x27;</span> :
+                        units[i] = [<span class="hljs-string">&#x27;linear&#x27;</span>, x, y, p[<span class="hljs-number">0</span>] + x, y];
                         <span class="hljs-keyword">break</span>;
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'v'</span> :
-                        units[i] = [<span class="hljs-string">'linear'</span>, x, y, x, p[<span class="hljs-number">0</span>] + y];
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;v&#x27;</span> :
+                        units[i] = [<span class="hljs-string">&#x27;linear&#x27;</span>, x, y, x, p[<span class="hljs-number">0</span>] + y];
                         <span class="hljs-keyword">break</span>;
                         
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'m'</span> :
-                        units[i] = [<span class="hljs-string">'move'</span>, x, y];
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;m&#x27;</span> :
+                        units[i] = [<span class="hljs-string">&#x27;move&#x27;</span>, x, y];
                         <span class="hljs-keyword">break</span>;
                         
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'l'</span> :
-                        units[i] = [<span class="hljs-string">'linear'</span>, x, y, p[<span class="hljs-number">0</span>] + x, p[<span class="hljs-number">1</span>] + y];
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;l&#x27;</span> :
+                        units[i] = [<span class="hljs-string">&#x27;linear&#x27;</span>, x, y, p[<span class="hljs-number">0</span>] + x, p[<span class="hljs-number">1</span>] + y];
                         <span class="hljs-keyword">break</span>;
                         
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'t'</span> :
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;t&#x27;</span> :
                         <span class="hljs-keyword">if</span> (prevData &amp;&amp; (prevData.rx || prevData.ry)) {
 
                             setVector(v, prevData.rx - cx, prevData.ry - cy);
                             rotateVector(v, <span class="hljs-number">180</span>);
 
-                            units[i] = [<span class="hljs-string">'quadratic'</span>, x, y, v.x + cx, v.y + cy, p[<span class="hljs-number">0</span>] + x, p[<span class="hljs-number">1</span>] + y];
+                            units[i] = [<span class="hljs-string">&#x27;quadratic&#x27;</span>, x, y, v.x + cx, v.y + cy, p[<span class="hljs-number">0</span>] + x, p[<span class="hljs-number">1</span>] + y];
                         }
-                        <span class="hljs-keyword">else</span> units[i] = [<span class="hljs-string">'quadratic'</span>, x, y, x, y, p[<span class="hljs-number">0</span>] + x, p[<span class="hljs-number">1</span>] + y];
+                        <span class="hljs-keyword">else</span> units[i] = [<span class="hljs-string">&#x27;quadratic&#x27;</span>, x, y, x, y, p[<span class="hljs-number">0</span>] + x, p[<span class="hljs-number">1</span>] + y];
                         <span class="hljs-keyword">break</span>;
                         
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'q'</span> :
-                        units[i] = [<span class="hljs-string">'quadratic'</span>, x, y, p[<span class="hljs-number">0</span>] + x, p[<span class="hljs-number">1</span>] + y, p[<span class="hljs-number">2</span>] + x, p[<span class="hljs-number">3</span>] + y];
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;q&#x27;</span> :
+                        units[i] = [<span class="hljs-string">&#x27;quadratic&#x27;</span>, x, y, p[<span class="hljs-number">0</span>] + x, p[<span class="hljs-number">1</span>] + y, p[<span class="hljs-number">2</span>] + x, p[<span class="hljs-number">3</span>] + y];
                         <span class="hljs-keyword">break</span>;
                         
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'s'</span> :
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;s&#x27;</span> :
                         <span class="hljs-keyword">if</span> (prevData &amp;&amp; (prevData.rx || prevData.ry)) {
 
                             setVector(v, prevData.rx - cx, prevData.ry - cy);
                             rotateVector(v, <span class="hljs-number">180</span>);
 
-                            units[i] = [<span class="hljs-string">'bezier'</span>, x, y, v.x + cx, v.y + cy, p[<span class="hljs-number">0</span>] + x, p[<span class="hljs-number">1</span>] + y, p[<span class="hljs-number">2</span>] + x, p[<span class="hljs-number">3</span>] + y];
+                            units[i] = [<span class="hljs-string">&#x27;bezier&#x27;</span>, x, y, v.x + cx, v.y + cy, p[<span class="hljs-number">0</span>] + x, p[<span class="hljs-number">1</span>] + y, p[<span class="hljs-number">2</span>] + x, p[<span class="hljs-number">3</span>] + y];
                         }
-                        <span class="hljs-keyword">else</span> units[i] = [<span class="hljs-string">'bezier'</span>, x, y, x, y, p[<span class="hljs-number">0</span>] + x, p[<span class="hljs-number">1</span>] + y, p[<span class="hljs-number">2</span>] + x, p[<span class="hljs-number">3</span>] + y];
+                        <span class="hljs-keyword">else</span> units[i] = [<span class="hljs-string">&#x27;bezier&#x27;</span>, x, y, x, y, p[<span class="hljs-number">0</span>] + x, p[<span class="hljs-number">1</span>] + y, p[<span class="hljs-number">2</span>] + x, p[<span class="hljs-number">3</span>] + y];
                         <span class="hljs-keyword">break</span>;
                         
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'c'</span> :
-                        units[i] = [<span class="hljs-string">'bezier'</span>, x, y, p[<span class="hljs-number">0</span>] + x, p[<span class="hljs-number">1</span>] + y, p[<span class="hljs-number">2</span>] + x, p[<span class="hljs-number">3</span>] + y, p[<span class="hljs-number">4</span>] + x, p[<span class="hljs-number">5</span>] + y];
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;c&#x27;</span> :
+                        units[i] = [<span class="hljs-string">&#x27;bezier&#x27;</span>, x, y, p[<span class="hljs-number">0</span>] + x, p[<span class="hljs-number">1</span>] + y, p[<span class="hljs-number">2</span>] + x, p[<span class="hljs-number">3</span>] + y, p[<span class="hljs-number">4</span>] + x, p[<span class="hljs-number">5</span>] + y];
                         <span class="hljs-keyword">break</span>;
                         
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'a'</span> :
-                        units[i] = [<span class="hljs-string">'linear'</span>, x, y, p[<span class="hljs-number">5</span>] + x, p[<span class="hljs-number">6</span>] + y];
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;a&#x27;</span> :
+                        units[i] = [<span class="hljs-string">&#x27;linear&#x27;</span>, x, y, p[<span class="hljs-number">5</span>] + x, p[<span class="hljs-number">6</span>] + y];
                         <span class="hljs-keyword">break</span>;
                         
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'z'</span> :
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;z&#x27;</span> :
                         <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(x)) x = <span class="hljs-number">0</span>;
                         <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(y)) y = <span class="hljs-number">0</span>;
-                        units[i] = [<span class="hljs-string">'close'</span>, x, y];
+                        units[i] = [<span class="hljs-string">&#x27;close&#x27;</span>, x, y];
                         <span class="hljs-keyword">break</span>;
 
                     <span class="hljs-keyword">default</span> :
                         <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(x)) x = <span class="hljs-number">0</span>;
                         <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(y)) y = <span class="hljs-number">0</span>;
-                        units[i] = [<span class="hljs-string">'unknown'</span>, x, y];
+                        units[i] = [<span class="hljs-string">&#x27;unknown&#x27;</span>, x, y];
                 }
             }
             <span class="hljs-keyword">else</span> units[i] = [<span class="hljs-string">`no-points-<span class="hljs-subst">${c}</span>`</span>, x, y];
@@ -933,9 +973,9 @@
 
             <span class="hljs-keyword">switch</span> (spec) {
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'linear'</span> :
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'quadratic'</span> :
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'bezier'</span> :
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;linear&#x27;</span> :
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;quadratic&#x27;</span> :
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;bezier&#x27;</span> :
                     results = getShapeUnitMetaData(spec, precision, data);
                     unitLengths[i] = results.length;
                     xPoints = xPoints.concat(results.xPoints);
@@ -1084,7 +1124,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (species === <span class="hljs-string">'linear'</span>) {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (species === <span class="hljs-string">&#x27;linear&#x27;</span>) {
 
         <span class="hljs-keyword">let</span> [sx, sy, ex, ey] = args;
 
@@ -1096,9 +1136,9 @@
         xPts = xPts.concat([sx, ex]);
         yPts = yPts.concat([sy, ey]);
     }
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (species === <span class="hljs-string">'bezier'</span> || (species === <span class="hljs-string">'quadratic'</span>)) {
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (species === <span class="hljs-string">&#x27;bezier&#x27;</span> || (species === <span class="hljs-string">&#x27;quadratic&#x27;</span>)) {
 
-        <span class="hljs-keyword">let</span> func = (species === <span class="hljs-string">'bezier'</span>) ? <span class="hljs-string">'getBezierXY'</span> : <span class="hljs-string">'getQuadraticXY'</span>,
+        <span class="hljs-keyword">let</span> func = (species === <span class="hljs-string">&#x27;bezier&#x27;</span>) ? <span class="hljs-string">&#x27;getBezierXY&#x27;</span> : <span class="hljs-string">&#x27;getQuadraticXY&#x27;</span>,
             flag = <span class="hljs-literal">false</span>,
             step = <span class="hljs-number">0.25</span>,
             currentLength = <span class="hljs-number">0</span>,

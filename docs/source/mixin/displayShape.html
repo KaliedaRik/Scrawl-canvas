@@ -4,7 +4,7 @@
 <head>
   <title>Display shape mixin</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -110,6 +110,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
                 <a class="source" href="../factory/filter.html">
                   ./source/factory/filter.js
                 </a>
@@ -150,6 +155,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
                 <a class="source" href="../factory/oval.html">
                   ./source/factory/oval.js
                 </a>
@@ -157,6 +167,31 @@
                 
                 <a class="source" href="../factory/palette.html">
                   ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleForce.html">
+                  ./source/factory/particleForce.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleHistory.html">
+                  ./source/factory/particleHistory.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleSpring.html">
+                  ./source/factory/particleSpring.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleWorld.html">
+                  ./source/factory/particleWorld.js
                 </a>
               
                 
@@ -247,6 +282,11 @@
                 
                 <a class="source" href="../factory/ticker.html">
                   ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="../factory/tracer.html">
+                  ./source/factory/tracer.js
                 </a>
               
                 
@@ -439,7 +479,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { mergeOver, pushUnique, λ<span class="hljs-literal">null</span>, isa_obj, isa_number, isa_fn } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { mergeOver, pushUnique, λ<span class="hljs-literal">null</span>, isa_obj, isa_number, isa_fn } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -556,7 +596,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.packetFunctions = pushUnique(P.packetFunctions, [<span class="hljs-string">'actionBannerShape'</span>, <span class="hljs-string">'actionLandscapeShape'</span>, <span class="hljs-string">'actionRectangleShape'</span>, <span class="hljs-string">'actionPortraitShape'</span>, <span class="hljs-string">'actionSkyscraperShape'</span>]);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    P.packetFunctions = pushUnique(P.packetFunctions, [<span class="hljs-string">&#x27;actionBannerShape&#x27;</span>, <span class="hljs-string">&#x27;actionLandscapeShape&#x27;</span>, <span class="hljs-string">&#x27;actionRectangleShape&#x27;</span>, <span class="hljs-string">&#x27;actionPortraitShape&#x27;</span>, <span class="hljs-string">&#x27;actionSkyscraperShape&#x27;</span>]);</pre></div></div>
             
         </li>
         
@@ -617,7 +657,7 @@
             
             <div class="content"><div class='highlight'><pre>    G.displayShape = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.currentDisplayShape;
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.currentDisplayShape;
     };</pre></div></div>
             
         </li>
@@ -636,14 +676,14 @@
             <div class="content"><div class='highlight'><pre>    G.displayShapeBreakpoints = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
         <span class="hljs-keyword">return</span> {
-            <span class="hljs-attr">breakToBanner</span>: <span class="hljs-keyword">this</span>.breakToBanner,
-            <span class="hljs-attr">breakToLandscape</span>: <span class="hljs-keyword">this</span>.breakToLandscape,
-            <span class="hljs-attr">breakToPortrait</span>: <span class="hljs-keyword">this</span>.breakToPortrait,
-            <span class="hljs-attr">breakToSkyscraper</span>: <span class="hljs-keyword">this</span>.breakToSkyscraper,
-            <span class="hljs-attr">breakToSmallest</span>: <span class="hljs-keyword">this</span>.breakToSmallest,
-            <span class="hljs-attr">breakToSmaller</span>: <span class="hljs-keyword">this</span>.breakToSmaller,
-            <span class="hljs-attr">breakToLarger</span>: <span class="hljs-keyword">this</span>.breakToLarger,
-            <span class="hljs-attr">breakToLargest</span>: <span class="hljs-keyword">this</span>.breakToLargest,
+            <span class="hljs-attr">breakToBanner</span>: <span class="hljs-built_in">this</span>.breakToBanner,
+            <span class="hljs-attr">breakToLandscape</span>: <span class="hljs-built_in">this</span>.breakToLandscape,
+            <span class="hljs-attr">breakToPortrait</span>: <span class="hljs-built_in">this</span>.breakToPortrait,
+            <span class="hljs-attr">breakToSkyscraper</span>: <span class="hljs-built_in">this</span>.breakToSkyscraper,
+            <span class="hljs-attr">breakToSmallest</span>: <span class="hljs-built_in">this</span>.breakToSmallest,
+            <span class="hljs-attr">breakToSmaller</span>: <span class="hljs-built_in">this</span>.breakToSmaller,
+            <span class="hljs-attr">breakToLarger</span>: <span class="hljs-built_in">this</span>.breakToLarger,
+            <span class="hljs-attr">breakToLargest</span>: <span class="hljs-built_in">this</span>.breakToLargest,
         };
     };</pre></div></div>
             
@@ -668,42 +708,42 @@
 
                 <span class="hljs-keyword">switch</span> (key) {
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'breakToBanner'</span> :
-                        <span class="hljs-keyword">this</span>.breakToBanner = val;
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;breakToBanner&#x27;</span> :
+                        <span class="hljs-built_in">this</span>.breakToBanner = val;
                         <span class="hljs-keyword">break</span>;
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'breakToLandscape'</span> :
-                        <span class="hljs-keyword">this</span>.breakToLandscape = val;
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;breakToLandscape&#x27;</span> :
+                        <span class="hljs-built_in">this</span>.breakToLandscape = val;
                         <span class="hljs-keyword">break</span>;
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'breakToPortrait'</span> :
-                        <span class="hljs-keyword">this</span>.breakToPortrait = val;
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;breakToPortrait&#x27;</span> :
+                        <span class="hljs-built_in">this</span>.breakToPortrait = val;
                         <span class="hljs-keyword">break</span>;
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'breakToSkyscraper'</span> :
-                        <span class="hljs-keyword">this</span>.breakToSkyscraper = val;
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;breakToSkyscraper&#x27;</span> :
+                        <span class="hljs-built_in">this</span>.breakToSkyscraper = val;
                         <span class="hljs-keyword">break</span>;
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'breakToSmallest'</span> :
-                        <span class="hljs-keyword">this</span>.breakToSmallest = val;
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;breakToSmallest&#x27;</span> :
+                        <span class="hljs-built_in">this</span>.breakToSmallest = val;
                         <span class="hljs-keyword">break</span>;
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'breakToSmaller'</span> :
-                        <span class="hljs-keyword">this</span>.breakToSmaller = val;
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;breakToSmaller&#x27;</span> :
+                        <span class="hljs-built_in">this</span>.breakToSmaller = val;
                         <span class="hljs-keyword">break</span>;
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'breakToLarger'</span> :
-                        <span class="hljs-keyword">this</span>.breakToLarger = val;
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;breakToLarger&#x27;</span> :
+                        <span class="hljs-built_in">this</span>.breakToLarger = val;
                         <span class="hljs-keyword">break</span>;
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'breakToLargest'</span> :
-                        <span class="hljs-keyword">this</span>.breakToLargest = val;
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;breakToLargest&#x27;</span> :
+                        <span class="hljs-built_in">this</span>.breakToLargest = val;
                         <span class="hljs-keyword">break</span>;
                 }
             }
         }
-        <span class="hljs-keyword">this</span>.dirtyDisplayShape = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">this</span>.dirtyDisplayArea = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.dirtyDisplayShape = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.dirtyDisplayArea = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -736,8 +776,8 @@
             
             <div class="content"><div class='highlight'><pre>    S.breakToBanner = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (isa_number(item)) <span class="hljs-keyword">this</span>.breakToBanner = item;
-        <span class="hljs-keyword">this</span>.dirtyDisplayShape = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (isa_number(item)) <span class="hljs-built_in">this</span>.breakToBanner = item;
+        <span class="hljs-built_in">this</span>.dirtyDisplayShape = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -755,8 +795,8 @@
             
             <div class="content"><div class='highlight'><pre>    S.breakToLandscape = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (isa_number(item)) <span class="hljs-keyword">this</span>.breakToLandscape = item;
-        <span class="hljs-keyword">this</span>.dirtyDisplayShape = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (isa_number(item)) <span class="hljs-built_in">this</span>.breakToLandscape = item;
+        <span class="hljs-built_in">this</span>.dirtyDisplayShape = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -774,8 +814,8 @@
             
             <div class="content"><div class='highlight'><pre>    S.breakToPortrait = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (isa_number(item)) <span class="hljs-keyword">this</span>.breakToPortrait = item;
-        <span class="hljs-keyword">this</span>.dirtyDisplayShape = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (isa_number(item)) <span class="hljs-built_in">this</span>.breakToPortrait = item;
+        <span class="hljs-built_in">this</span>.dirtyDisplayShape = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -793,8 +833,8 @@
             
             <div class="content"><div class='highlight'><pre>    S.breakToSkyscraper = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (isa_number(item)) <span class="hljs-keyword">this</span>.breakToSkyscraper = item;
-        <span class="hljs-keyword">this</span>.dirtyDisplayShape = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (isa_number(item)) <span class="hljs-built_in">this</span>.breakToSkyscraper = item;
+        <span class="hljs-built_in">this</span>.dirtyDisplayShape = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -812,8 +852,8 @@
             
             <div class="content"><div class='highlight'><pre>    S.breakToSmallest = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (isa_number(item)) <span class="hljs-keyword">this</span>.breakToSmallest = item;
-        <span class="hljs-keyword">this</span>.dirtyDisplayArea = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (isa_number(item)) <span class="hljs-built_in">this</span>.breakToSmallest = item;
+        <span class="hljs-built_in">this</span>.dirtyDisplayArea = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -831,8 +871,8 @@
             
             <div class="content"><div class='highlight'><pre>    S.breakToSmaller = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (isa_number(item)) <span class="hljs-keyword">this</span>.breakToSmaller = item;
-        <span class="hljs-keyword">this</span>.dirtyDisplayArea = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (isa_number(item)) <span class="hljs-built_in">this</span>.breakToSmaller = item;
+        <span class="hljs-built_in">this</span>.dirtyDisplayArea = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -850,8 +890,8 @@
             
             <div class="content"><div class='highlight'><pre>    S.breakToLarger = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (isa_number(item)) <span class="hljs-keyword">this</span>.breakToLarger = item;
-        <span class="hljs-keyword">this</span>.dirtyDisplayArea = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (isa_number(item)) <span class="hljs-built_in">this</span>.breakToLarger = item;
+        <span class="hljs-built_in">this</span>.dirtyDisplayArea = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -869,8 +909,8 @@
             
             <div class="content"><div class='highlight'><pre>    S.breakToLargest = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (isa_number(item)) <span class="hljs-keyword">this</span>.breakToLargest = item;
-        <span class="hljs-keyword">this</span>.dirtyDisplayArea = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (isa_number(item)) <span class="hljs-built_in">this</span>.breakToLargest = item;
+        <span class="hljs-built_in">this</span>.dirtyDisplayArea = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -902,8 +942,8 @@
             
             <div class="content"><div class='highlight'><pre>    S.actionBannerShape = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (isa_fn(item)) <span class="hljs-keyword">this</span>.actionBannerShape = item;
-        <span class="hljs-keyword">this</span>.dirtyDisplayShape = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (isa_fn(item)) <span class="hljs-built_in">this</span>.actionBannerShape = item;
+        <span class="hljs-built_in">this</span>.dirtyDisplayShape = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -936,8 +976,8 @@
             
             <div class="content"><div class='highlight'><pre>    S.actionLandscapeShape = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (isa_fn(item)) <span class="hljs-keyword">this</span>.actionLandscapeShape = item;
-        <span class="hljs-keyword">this</span>.dirtyDisplayShape = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (isa_fn(item)) <span class="hljs-built_in">this</span>.actionLandscapeShape = item;
+        <span class="hljs-built_in">this</span>.dirtyDisplayShape = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -970,8 +1010,8 @@
             
             <div class="content"><div class='highlight'><pre>    S.actionRectangleShape = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (isa_fn(item)) <span class="hljs-keyword">this</span>.actionRectangleShape = item;
-        <span class="hljs-keyword">this</span>.dirtyDisplayShape = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (isa_fn(item)) <span class="hljs-built_in">this</span>.actionRectangleShape = item;
+        <span class="hljs-built_in">this</span>.dirtyDisplayShape = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -1004,8 +1044,8 @@
             
             <div class="content"><div class='highlight'><pre>    S.actionPortraitShape = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (isa_fn(item)) <span class="hljs-keyword">this</span>.actionPortraitShape = item;
-        <span class="hljs-keyword">this</span>.dirtyDisplayShape = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (isa_fn(item)) <span class="hljs-built_in">this</span>.actionPortraitShape = item;
+        <span class="hljs-built_in">this</span>.dirtyDisplayShape = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -1038,8 +1078,8 @@
             
             <div class="content"><div class='highlight'><pre>    S.actionSkyscraperShape = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (isa_fn(item)) <span class="hljs-keyword">this</span>.actionSkyscraperShape = item;
-        <span class="hljs-keyword">this</span>.dirtyDisplayShape = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (isa_fn(item)) <span class="hljs-built_in">this</span>.actionSkyscraperShape = item;
+        <span class="hljs-built_in">this</span>.dirtyDisplayShape = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -1072,8 +1112,8 @@
             
             <div class="content"><div class='highlight'><pre>    S.actionSmallestArea = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (isa_fn(item)) <span class="hljs-keyword">this</span>.actionSmallestArea = item;
-        <span class="hljs-keyword">this</span>.dirtyDisplayArea = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (isa_fn(item)) <span class="hljs-built_in">this</span>.actionSmallestArea = item;
+        <span class="hljs-built_in">this</span>.dirtyDisplayArea = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -1106,8 +1146,8 @@
             
             <div class="content"><div class='highlight'><pre>    S.actionSmallerArea = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (isa_fn(item)) <span class="hljs-keyword">this</span>.actionSmallerArea = item;
-        <span class="hljs-keyword">this</span>.dirtyDisplayArea = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (isa_fn(item)) <span class="hljs-built_in">this</span>.actionSmallerArea = item;
+        <span class="hljs-built_in">this</span>.dirtyDisplayArea = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -1140,8 +1180,8 @@
             
             <div class="content"><div class='highlight'><pre>    S.actionRegularArea = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (isa_fn(item)) <span class="hljs-keyword">this</span>.actionRegularArea = item;
-        <span class="hljs-keyword">this</span>.dirtyDisplayArea = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (isa_fn(item)) <span class="hljs-built_in">this</span>.actionRegularArea = item;
+        <span class="hljs-built_in">this</span>.dirtyDisplayArea = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -1174,8 +1214,8 @@
             
             <div class="content"><div class='highlight'><pre>    S.actionLargerArea = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (isa_fn(item)) <span class="hljs-keyword">this</span>.actionLargerArea = item;
-        <span class="hljs-keyword">this</span>.dirtyDisplayArea = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (isa_fn(item)) <span class="hljs-built_in">this</span>.actionLargerArea = item;
+        <span class="hljs-built_in">this</span>.dirtyDisplayArea = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -1208,8 +1248,8 @@
             
             <div class="content"><div class='highlight'><pre>    S.actionLargestArea = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (isa_fn(item)) <span class="hljs-keyword">this</span>.actionLargestArea = item;
-        <span class="hljs-keyword">this</span>.dirtyDisplayArea = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (isa_fn(item)) <span class="hljs-built_in">this</span>.actionLargestArea = item;
+        <span class="hljs-built_in">this</span>.dirtyDisplayArea = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -1255,23 +1295,23 @@
             
             <div class="content"><div class='highlight'><pre>    P.initializeDisplayShapeActions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">this</span>.actionBannerShape = λ<span class="hljs-literal">null</span>;
-        <span class="hljs-keyword">this</span>.actionLandscapeShape = λ<span class="hljs-literal">null</span>;
-        <span class="hljs-keyword">this</span>.actionRectangleShape = λ<span class="hljs-literal">null</span>;
-        <span class="hljs-keyword">this</span>.actionPortraitShape = λ<span class="hljs-literal">null</span>;
-        <span class="hljs-keyword">this</span>.actionSkyscraperShape = λ<span class="hljs-literal">null</span>;
+        <span class="hljs-built_in">this</span>.actionBannerShape = λ<span class="hljs-literal">null</span>;
+        <span class="hljs-built_in">this</span>.actionLandscapeShape = λ<span class="hljs-literal">null</span>;
+        <span class="hljs-built_in">this</span>.actionRectangleShape = λ<span class="hljs-literal">null</span>;
+        <span class="hljs-built_in">this</span>.actionPortraitShape = λ<span class="hljs-literal">null</span>;
+        <span class="hljs-built_in">this</span>.actionSkyscraperShape = λ<span class="hljs-literal">null</span>;
 
-        <span class="hljs-keyword">this</span>.currentDisplayShape = <span class="hljs-string">''</span>;
-        <span class="hljs-keyword">this</span>.dirtyDisplayShape = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.currentDisplayShape = <span class="hljs-string">&#x27;&#x27;</span>;
+        <span class="hljs-built_in">this</span>.dirtyDisplayShape = <span class="hljs-literal">true</span>;
 
-        <span class="hljs-keyword">this</span>.actionSmallestArea = λ<span class="hljs-literal">null</span>;
-        <span class="hljs-keyword">this</span>.actionSmallerArea = λ<span class="hljs-literal">null</span>;
-        <span class="hljs-keyword">this</span>.actionRegularArea = λ<span class="hljs-literal">null</span>;
-        <span class="hljs-keyword">this</span>.actionLargerArea = λ<span class="hljs-literal">null</span>;
-        <span class="hljs-keyword">this</span>.actionLargestArea = λ<span class="hljs-literal">null</span>;
+        <span class="hljs-built_in">this</span>.actionSmallestArea = λ<span class="hljs-literal">null</span>;
+        <span class="hljs-built_in">this</span>.actionSmallerArea = λ<span class="hljs-literal">null</span>;
+        <span class="hljs-built_in">this</span>.actionRegularArea = λ<span class="hljs-literal">null</span>;
+        <span class="hljs-built_in">this</span>.actionLargerArea = λ<span class="hljs-literal">null</span>;
+        <span class="hljs-built_in">this</span>.actionLargestArea = λ<span class="hljs-literal">null</span>;
 
-        <span class="hljs-keyword">this</span>.currentDisplayArea = <span class="hljs-string">''</span>;
-        <span class="hljs-keyword">this</span>.dirtyDisplayArea = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.currentDisplayArea = <span class="hljs-string">&#x27;&#x27;</span>;
+        <span class="hljs-built_in">this</span>.dirtyDisplayArea = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -1289,65 +1329,65 @@
             
             <div class="content"><div class='highlight'><pre>    P.cleanDisplayShape = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">this</span>.dirtyDisplayShape = <span class="hljs-literal">false</span>;
+        <span class="hljs-built_in">this</span>.dirtyDisplayShape = <span class="hljs-literal">false</span>;
 
-        <span class="hljs-keyword">let</span> [width, height] = <span class="hljs-keyword">this</span>.currentDimensions;
+        <span class="hljs-keyword">let</span> [width, height] = <span class="hljs-built_in">this</span>.currentDimensions;
 
         <span class="hljs-keyword">if</span> (width &gt; <span class="hljs-number">0</span> &amp;&amp; height &gt; <span class="hljs-number">0</span>) {
 
             <span class="hljs-keyword">let</span> ratio = width / height,
-                current = <span class="hljs-keyword">this</span>.currentDisplayShape,
-                banner = <span class="hljs-keyword">this</span>.breakToBanner,
-                landscape = <span class="hljs-keyword">this</span>.breakToLandscape,
-                portrait = <span class="hljs-keyword">this</span>.breakToPortrait,
-                skyscraper = <span class="hljs-keyword">this</span>.breakToSkyscraper;
+                current = <span class="hljs-built_in">this</span>.currentDisplayShape,
+                banner = <span class="hljs-built_in">this</span>.breakToBanner,
+                landscape = <span class="hljs-built_in">this</span>.breakToLandscape,
+                portrait = <span class="hljs-built_in">this</span>.breakToPortrait,
+                skyscraper = <span class="hljs-built_in">this</span>.breakToSkyscraper;
 
             <span class="hljs-keyword">if</span> (ratio &gt; banner) {
 
-                <span class="hljs-keyword">if</span> (current !== <span class="hljs-string">'banner'</span>) {
+                <span class="hljs-keyword">if</span> (current !== <span class="hljs-string">&#x27;banner&#x27;</span>) {
 
-                    <span class="hljs-keyword">this</span>.currentDisplayShape = <span class="hljs-string">'banner'</span>;
-                    <span class="hljs-keyword">this</span>.actionBannerShape();
+                    <span class="hljs-built_in">this</span>.currentDisplayShape = <span class="hljs-string">&#x27;banner&#x27;</span>;
+                    <span class="hljs-built_in">this</span>.actionBannerShape();
                     <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
                 }
                 <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
             }
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (ratio &gt; landscape) {
 
-                <span class="hljs-keyword">if</span> (current !== <span class="hljs-string">'landscape'</span>) {
+                <span class="hljs-keyword">if</span> (current !== <span class="hljs-string">&#x27;landscape&#x27;</span>) {
 
-                    <span class="hljs-keyword">this</span>.currentDisplayShape = <span class="hljs-string">'landscape'</span>;
-                    <span class="hljs-keyword">this</span>.actionLandscapeShape();
+                    <span class="hljs-built_in">this</span>.currentDisplayShape = <span class="hljs-string">&#x27;landscape&#x27;</span>;
+                    <span class="hljs-built_in">this</span>.actionLandscapeShape();
                     <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
                 }
                 <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
             }
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (ratio &lt; skyscraper) {
                 
-                <span class="hljs-keyword">if</span> (current !== <span class="hljs-string">'skyscraper'</span>) {
+                <span class="hljs-keyword">if</span> (current !== <span class="hljs-string">&#x27;skyscraper&#x27;</span>) {
 
-                    <span class="hljs-keyword">this</span>.currentDisplayShape = <span class="hljs-string">'skyscraper'</span>;
-                    <span class="hljs-keyword">this</span>.actionSkyscraperShape();
+                    <span class="hljs-built_in">this</span>.currentDisplayShape = <span class="hljs-string">&#x27;skyscraper&#x27;</span>;
+                    <span class="hljs-built_in">this</span>.actionSkyscraperShape();
                     <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
                 }
                 <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
             }
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (ratio &lt; portrait) {
                 
-                <span class="hljs-keyword">if</span> (current !== <span class="hljs-string">'portrait'</span>) {
+                <span class="hljs-keyword">if</span> (current !== <span class="hljs-string">&#x27;portrait&#x27;</span>) {
 
-                    <span class="hljs-keyword">this</span>.currentDisplayShape = <span class="hljs-string">'portrait'</span>;
-                    <span class="hljs-keyword">this</span>.actionPortraitShape();
+                    <span class="hljs-built_in">this</span>.currentDisplayShape = <span class="hljs-string">&#x27;portrait&#x27;</span>;
+                    <span class="hljs-built_in">this</span>.actionPortraitShape();
                     <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
                 }
                 <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
             }
             <span class="hljs-keyword">else</span> {
 
-                <span class="hljs-keyword">if</span> (current !== <span class="hljs-string">'rectangle'</span>) {
+                <span class="hljs-keyword">if</span> (current !== <span class="hljs-string">&#x27;rectangle&#x27;</span>) {
 
-                    <span class="hljs-keyword">this</span>.currentDisplayShape = <span class="hljs-string">'rectangle'</span>;
-                    <span class="hljs-keyword">this</span>.actionRectangleShape();
+                    <span class="hljs-built_in">this</span>.currentDisplayShape = <span class="hljs-string">&#x27;rectangle&#x27;</span>;
+                    <span class="hljs-built_in">this</span>.actionRectangleShape();
                     <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
                 }
                 <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
@@ -1355,7 +1395,7 @@
         }
         <span class="hljs-keyword">else</span> {
 
-            <span class="hljs-keyword">this</span>.dirtyDisplayShape = <span class="hljs-literal">true</span>;
+            <span class="hljs-built_in">this</span>.dirtyDisplayShape = <span class="hljs-literal">true</span>;
             <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
         }
     };</pre></div></div>
@@ -1378,65 +1418,65 @@
             
             <div class="content"><div class='highlight'><pre>    P.cleanDisplayArea = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">this</span>.dirtyDisplayArea = <span class="hljs-literal">false</span>;
+        <span class="hljs-built_in">this</span>.dirtyDisplayArea = <span class="hljs-literal">false</span>;
 
-        <span class="hljs-keyword">let</span> [width, height] = <span class="hljs-keyword">this</span>.currentDimensions;
+        <span class="hljs-keyword">let</span> [width, height] = <span class="hljs-built_in">this</span>.currentDimensions;
 
         <span class="hljs-keyword">if</span> (width &gt; <span class="hljs-number">0</span> &amp;&amp; height &gt; <span class="hljs-number">0</span>) {
 
             <span class="hljs-keyword">let</span> area = width * height,
-                current = <span class="hljs-keyword">this</span>.currentDisplayArea,
-                largest = <span class="hljs-keyword">this</span>.breakToLargest,
-                larger = <span class="hljs-keyword">this</span>.breakToLarger,
-                smaller = <span class="hljs-keyword">this</span>.breakToSmaller,
-                smallest = <span class="hljs-keyword">this</span>.breakToSmallest;
+                current = <span class="hljs-built_in">this</span>.currentDisplayArea,
+                largest = <span class="hljs-built_in">this</span>.breakToLargest,
+                larger = <span class="hljs-built_in">this</span>.breakToLarger,
+                smaller = <span class="hljs-built_in">this</span>.breakToSmaller,
+                smallest = <span class="hljs-built_in">this</span>.breakToSmallest;
 
             <span class="hljs-keyword">if</span> (area &gt; largest) {
 
-                <span class="hljs-keyword">if</span> (current !== <span class="hljs-string">'largest'</span>) {
+                <span class="hljs-keyword">if</span> (current !== <span class="hljs-string">&#x27;largest&#x27;</span>) {
 
-                    <span class="hljs-keyword">this</span>.currentDisplayArea = <span class="hljs-string">'largest'</span>;
-                    <span class="hljs-keyword">this</span>.actionLargestArea();
+                    <span class="hljs-built_in">this</span>.currentDisplayArea = <span class="hljs-string">&#x27;largest&#x27;</span>;
+                    <span class="hljs-built_in">this</span>.actionLargestArea();
                     <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
                 }
                 <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
             }
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (area &gt; larger) {
 
-                <span class="hljs-keyword">if</span> (current !== <span class="hljs-string">'larger'</span>) {
+                <span class="hljs-keyword">if</span> (current !== <span class="hljs-string">&#x27;larger&#x27;</span>) {
 
-                    <span class="hljs-keyword">this</span>.currentDisplayArea = <span class="hljs-string">'larger'</span>;
-                    <span class="hljs-keyword">this</span>.actionLargerArea();
+                    <span class="hljs-built_in">this</span>.currentDisplayArea = <span class="hljs-string">&#x27;larger&#x27;</span>;
+                    <span class="hljs-built_in">this</span>.actionLargerArea();
                     <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
                 }
                 <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
             }
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (area &lt; smallest) {
                 
-                <span class="hljs-keyword">if</span> (current !== <span class="hljs-string">'smallest'</span>) {
+                <span class="hljs-keyword">if</span> (current !== <span class="hljs-string">&#x27;smallest&#x27;</span>) {
 
-                    <span class="hljs-keyword">this</span>.currentDisplayArea = <span class="hljs-string">'smallest'</span>;
-                    <span class="hljs-keyword">this</span>.actionSmallestArea();
+                    <span class="hljs-built_in">this</span>.currentDisplayArea = <span class="hljs-string">&#x27;smallest&#x27;</span>;
+                    <span class="hljs-built_in">this</span>.actionSmallestArea();
                     <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
                 }
                 <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
             }
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (area &lt; smaller) {
                 
-                <span class="hljs-keyword">if</span> (current !== <span class="hljs-string">'smaller'</span>) {
+                <span class="hljs-keyword">if</span> (current !== <span class="hljs-string">&#x27;smaller&#x27;</span>) {
 
-                    <span class="hljs-keyword">this</span>.currentDisplayArea = <span class="hljs-string">'smaller'</span>;
-                    <span class="hljs-keyword">this</span>.actionSmallerArea();
+                    <span class="hljs-built_in">this</span>.currentDisplayArea = <span class="hljs-string">&#x27;smaller&#x27;</span>;
+                    <span class="hljs-built_in">this</span>.actionSmallerArea();
                     <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
                 }
                 <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
             }
             <span class="hljs-keyword">else</span> {
 
-                <span class="hljs-keyword">if</span> (current !== <span class="hljs-string">'regular'</span>) {
+                <span class="hljs-keyword">if</span> (current !== <span class="hljs-string">&#x27;regular&#x27;</span>) {
 
-                    <span class="hljs-keyword">this</span>.currentDisplayArea = <span class="hljs-string">'regular'</span>;
-                    <span class="hljs-keyword">this</span>.actionRegularArea();
+                    <span class="hljs-built_in">this</span>.currentDisplayArea = <span class="hljs-string">&#x27;regular&#x27;</span>;
+                    <span class="hljs-built_in">this</span>.actionRegularArea();
                     <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
                 }
                 <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
@@ -1444,7 +1484,7 @@
         }
         <span class="hljs-keyword">else</span> {
 
-            <span class="hljs-keyword">this</span>.dirtyDisplayArea = <span class="hljs-literal">true</span>;
+            <span class="hljs-built_in">this</span>.dirtyDisplayArea = <span class="hljs-literal">true</span>;
             <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
         }
     };</pre></div></div>
@@ -1464,8 +1504,8 @@
             
             <div class="content"><div class='highlight'><pre>    P.updateDisplayShape = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">this</span>.currentDisplayShape = <span class="hljs-string">''</span>;
-        <span class="hljs-keyword">this</span>.dirtyDisplayShape = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.currentDisplayShape = <span class="hljs-string">&#x27;&#x27;</span>;
+        <span class="hljs-built_in">this</span>.dirtyDisplayShape = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -1483,8 +1523,8 @@
             
             <div class="content"><div class='highlight'><pre>    P.updateDisplayArea = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">this</span>.currentDisplayArea = <span class="hljs-string">''</span>;
-        <span class="hljs-keyword">this</span>.dirtyDisplayArea = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.currentDisplayArea = <span class="hljs-string">&#x27;&#x27;</span>;
+        <span class="hljs-built_in">this</span>.dirtyDisplayArea = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -1502,8 +1542,8 @@
             
             <div class="content"><div class='highlight'><pre>    P.updateDisplay = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">this</span>.updateDisplayShape();
-        <span class="hljs-keyword">this</span>.updateDisplayArea();
+        <span class="hljs-built_in">this</span>.updateDisplayShape();
+        <span class="hljs-built_in">this</span>.updateDisplayArea();
     };</pre></div></div>
             
         </li>

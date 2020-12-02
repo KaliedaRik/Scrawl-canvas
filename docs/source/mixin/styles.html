@@ -4,7 +4,7 @@
 <head>
   <title>Styles mixin</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -110,6 +110,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
                 <a class="source" href="../factory/filter.html">
                   ./source/factory/filter.js
                 </a>
@@ -150,6 +155,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
                 <a class="source" href="../factory/oval.html">
                   ./source/factory/oval.js
                 </a>
@@ -157,6 +167,31 @@
                 
                 <a class="source" href="../factory/palette.html">
                   ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleForce.html">
+                  ./source/factory/particleForce.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleHistory.html">
+                  ./source/factory/particleHistory.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleSpring.html">
+                  ./source/factory/particleSpring.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleWorld.html">
+                  ./source/factory/particleWorld.js
                 </a>
               
                 
@@ -247,6 +282,11 @@
                 
                 <a class="source" href="../factory/ticker.html">
                   ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="../factory/tracer.html">
+                  ./source/factory/tracer.js
                 </a>
               
                 
@@ -436,11 +476,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { entity, palette } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { addStrings, λ<span class="hljs-literal">null</span>, mergeOver, isa_obj, mergeDiscard } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { entity, palette } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { addStrings, λ<span class="hljs-literal">null</span>, mergeOver, isa_obj, mergeDiscard } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { makeCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">'../factory/coordinate.js'</span>;
-<span class="hljs-keyword">import</span> { makePalette } <span class="hljs-keyword">from</span> <span class="hljs-string">'../factory/palette.js'</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { makeCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/coordinate.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { makePalette } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/palette.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -565,8 +605,8 @@
             <div class="content"><div class='highlight'><pre>    P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) </span>{
 
         <span class="hljs-keyword">if</span> (items.colors) copy.colors = items.colors;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.palette &amp;&amp; <span class="hljs-keyword">this</span>.palette.colors) copy.colors = <span class="hljs-keyword">this</span>.palette.colors;
-        <span class="hljs-keyword">else</span> copy.colors = {<span class="hljs-string">'0 '</span>: [<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>], <span class="hljs-string">'999 '</span>: [<span class="hljs-number">255</span>,<span class="hljs-number">255</span>,<span class="hljs-number">255</span>,<span class="hljs-number">1</span>]};
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.palette &amp;&amp; <span class="hljs-built_in">this</span>.palette.colors) copy.colors = <span class="hljs-built_in">this</span>.palette.colors;
+        <span class="hljs-keyword">else</span> copy.colors = {<span class="hljs-string">&#x27;0 &#x27;</span>: [<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>], <span class="hljs-string">&#x27;999 &#x27;</span>: [<span class="hljs-number">255</span>,<span class="hljs-number">255</span>,<span class="hljs-number">255</span>,<span class="hljs-number">1</span>]};
 
         <span class="hljs-keyword">return</span> copy;
     };</pre></div></div>
@@ -600,9 +640,9 @@
             
             <div class="content"><div class='highlight'><pre>    P.kill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">let</span> myname = <span class="hljs-keyword">this</span>.name;
+        <span class="hljs-keyword">let</span> myname = <span class="hljs-built_in">this</span>.name;
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.palette &amp;&amp; <span class="hljs-keyword">this</span>.palette.kill) <span class="hljs-keyword">this</span>.palette.kill();</pre></div></div>
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.palette &amp;&amp; <span class="hljs-built_in">this</span>.palette.kill) <span class="hljs-built_in">this</span>.palette.kill();</pre></div></div>
             
         </li>
         
@@ -644,9 +684,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">this</span>.deregister();
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-built_in">this</span>.deregister();
         
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
     };</pre></div></div>
             
         </li>
@@ -681,49 +721,49 @@
             
             <div class="content"><div class='highlight'><pre>    G.startX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.currentStart[<span class="hljs-number">0</span>];
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.currentStart[<span class="hljs-number">0</span>];
     };
     G.startY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.currentStart[<span class="hljs-number">1</span>];
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.currentStart[<span class="hljs-number">1</span>];
     };
     S.startX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
         <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
 
-            <span class="hljs-keyword">this</span>.start[<span class="hljs-number">0</span>] = coord;
-            <span class="hljs-keyword">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
+            <span class="hljs-built_in">this</span>.start[<span class="hljs-number">0</span>] = coord;
+            <span class="hljs-built_in">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
         }
     };
     S.startY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
         <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
 
-            <span class="hljs-keyword">this</span>.start[<span class="hljs-number">1</span>] = coord;
-            <span class="hljs-keyword">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
+            <span class="hljs-built_in">this</span>.start[<span class="hljs-number">1</span>] = coord;
+            <span class="hljs-built_in">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
         }
     };
     S.start = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
 
-        <span class="hljs-keyword">this</span>.setCoordinateHelper(<span class="hljs-string">'start'</span>, x, y);
-        <span class="hljs-keyword">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.setCoordinateHelper(<span class="hljs-string">&#x27;start&#x27;</span>, x, y);
+        <span class="hljs-built_in">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
     };
     D.startX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
-        <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>.start;
+        <span class="hljs-keyword">let</span> c = <span class="hljs-built_in">this</span>.start;
         c[<span class="hljs-number">0</span>] = addStrings(c[<span class="hljs-number">0</span>], coord);
-        <span class="hljs-keyword">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
     };
     D.startY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
-        <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>.start;
+        <span class="hljs-keyword">let</span> c = <span class="hljs-built_in">this</span>.start;
         c[<span class="hljs-number">1</span>] = addStrings(c[<span class="hljs-number">1</span>], coord);
-        <span class="hljs-keyword">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
     };
     D.start = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
 
-        <span class="hljs-keyword">this</span>.setDeltaCoordinateHelper(<span class="hljs-string">'start'</span>, x, y);
-        <span class="hljs-keyword">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.setDeltaCoordinateHelper(<span class="hljs-string">&#x27;start&#x27;</span>, x, y);
+        <span class="hljs-built_in">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -741,49 +781,49 @@
             
             <div class="content"><div class='highlight'><pre>    G.endX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.currentEnd[<span class="hljs-number">0</span>];
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.currentEnd[<span class="hljs-number">0</span>];
     };
     G.endY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.currentEnd[<span class="hljs-number">1</span>];
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.currentEnd[<span class="hljs-number">1</span>];
     };
     S.endX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
         <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
 
-            <span class="hljs-keyword">this</span>.end[<span class="hljs-number">0</span>] = coord;
-            <span class="hljs-keyword">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
+            <span class="hljs-built_in">this</span>.end[<span class="hljs-number">0</span>] = coord;
+            <span class="hljs-built_in">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
         }
     };
     S.endY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
         <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
 
-            <span class="hljs-keyword">this</span>.end[<span class="hljs-number">1</span>] = coord;
-            <span class="hljs-keyword">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
+            <span class="hljs-built_in">this</span>.end[<span class="hljs-number">1</span>] = coord;
+            <span class="hljs-built_in">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
         }
     };
     S.end = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
 
-        <span class="hljs-keyword">this</span>.setCoordinateHelper(<span class="hljs-string">'end'</span>, x, y);
-        <span class="hljs-keyword">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.setCoordinateHelper(<span class="hljs-string">&#x27;end&#x27;</span>, x, y);
+        <span class="hljs-built_in">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
     };
     D.endX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
-        <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>.end;
+        <span class="hljs-keyword">let</span> c = <span class="hljs-built_in">this</span>.end;
         c[<span class="hljs-number">0</span>] = addStrings(c[<span class="hljs-number">0</span>], coord);
-        <span class="hljs-keyword">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
     };
     D.endY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
-        <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>.end;
+        <span class="hljs-keyword">let</span> c = <span class="hljs-built_in">this</span>.end;
         c[<span class="hljs-number">1</span>] = addStrings(c[<span class="hljs-number">1</span>], coord);
-        <span class="hljs-keyword">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
     };
     D.end = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
 
-        <span class="hljs-keyword">this</span>.setDeltaCoordinateHelper(<span class="hljs-string">'end'</span>, x, y);
-        <span class="hljs-keyword">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.setDeltaCoordinateHelper(<span class="hljs-string">&#x27;end&#x27;</span>, x, y);
+        <span class="hljs-built_in">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -801,7 +841,7 @@
             
             <div class="content"><div class='highlight'><pre>    S.palette = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item = {}</span>) </span>{
 
-        <span class="hljs-keyword">if</span>(item.type === <span class="hljs-string">'Palette'</span>) <span class="hljs-keyword">this</span>.palette = item;
+        <span class="hljs-keyword">if</span>(item.type === <span class="hljs-string">&#x27;Palette&#x27;</span>) <span class="hljs-built_in">this</span>.palette = item;
     };</pre></div></div>
             
         </li>
@@ -821,9 +861,9 @@
 
         <span class="hljs-keyword">if</span> (item.toFixed) {
 
-            <span class="hljs-keyword">this</span>.paletteStart = item;
+            <span class="hljs-built_in">this</span>.paletteStart = item;
             
-            <span class="hljs-keyword">if</span>(item &lt; <span class="hljs-number">0</span> || item &gt; <span class="hljs-number">999</span>) <span class="hljs-keyword">this</span>.paletteStart = (item &gt; <span class="hljs-number">500</span>) ? <span class="hljs-number">999</span> : <span class="hljs-number">0</span>;
+            <span class="hljs-keyword">if</span>(item &lt; <span class="hljs-number">0</span> || item &gt; <span class="hljs-number">999</span>) <span class="hljs-built_in">this</span>.paletteStart = (item &gt; <span class="hljs-number">500</span>) ? <span class="hljs-number">999</span> : <span class="hljs-number">0</span>;
         }
     };
     D.paletteStart = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
@@ -832,15 +872,15 @@
 
         <span class="hljs-keyword">if</span> (item.toFixed) {
 
-            p = <span class="hljs-keyword">this</span>.paletteStart + item;
+            p = <span class="hljs-built_in">this</span>.paletteStart + item;
 
             <span class="hljs-keyword">if</span> (p &lt; <span class="hljs-number">0</span> || p &gt; <span class="hljs-number">999</span>) {
 
-                <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.cyclePalette) p = (p &gt; <span class="hljs-number">500</span>) ? p - <span class="hljs-number">1000</span> : p + <span class="hljs-number">1000</span>;
+                <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.cyclePalette) p = (p &gt; <span class="hljs-number">500</span>) ? p - <span class="hljs-number">1000</span> : p + <span class="hljs-number">1000</span>;
                 <span class="hljs-keyword">else</span> p = (item &gt; <span class="hljs-number">500</span>) ? <span class="hljs-number">999</span> : <span class="hljs-number">0</span>;
             }
 
-            <span class="hljs-keyword">this</span>.paletteStart = p;
+            <span class="hljs-built_in">this</span>.paletteStart = p;
         }
     };</pre></div></div>
             
@@ -861,9 +901,9 @@
 
         <span class="hljs-keyword">if</span> (item.toFixed) {
 
-            <span class="hljs-keyword">this</span>.paletteEnd = item;
+            <span class="hljs-built_in">this</span>.paletteEnd = item;
             
-            <span class="hljs-keyword">if</span> (item &lt; <span class="hljs-number">0</span> || item &gt; <span class="hljs-number">999</span>) <span class="hljs-keyword">this</span>.paletteEnd = (item &gt; <span class="hljs-number">500</span>) ? <span class="hljs-number">999</span> : <span class="hljs-number">0</span>;
+            <span class="hljs-keyword">if</span> (item &lt; <span class="hljs-number">0</span> || item &gt; <span class="hljs-number">999</span>) <span class="hljs-built_in">this</span>.paletteEnd = (item &gt; <span class="hljs-number">500</span>) ? <span class="hljs-number">999</span> : <span class="hljs-number">0</span>;
         }
     };
 
@@ -873,15 +913,15 @@
 
         <span class="hljs-keyword">if</span> (item.toFixed) {
 
-            p = <span class="hljs-keyword">this</span>.paletteEnd + item;
+            p = <span class="hljs-built_in">this</span>.paletteEnd + item;
 
             <span class="hljs-keyword">if</span> (p &lt; <span class="hljs-number">0</span> || p &gt; <span class="hljs-number">999</span>) {
 
-                <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.cyclePalette) p = (p &gt; <span class="hljs-number">500</span>) ? p - <span class="hljs-number">1000</span> : p + <span class="hljs-number">1000</span>;
+                <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.cyclePalette) p = (p &gt; <span class="hljs-number">500</span>) ? p - <span class="hljs-number">1000</span> : p + <span class="hljs-number">1000</span>;
                 <span class="hljs-keyword">else</span> p = (item &gt; <span class="hljs-number">500</span>) ? <span class="hljs-number">999</span> : <span class="hljs-number">0</span>;
             }
 
-            <span class="hljs-keyword">this</span>.paletteEnd = p;
+            <span class="hljs-built_in">this</span>.paletteEnd = p;
         }
     };</pre></div></div>
             
@@ -900,7 +940,7 @@
             
             <div class="content"><div class='highlight'><pre>    S.colors = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">let</span> p = <span class="hljs-keyword">this</span>.palette;
+        <span class="hljs-keyword">let</span> p = <span class="hljs-built_in">this</span>.palette;
 
         <span class="hljs-keyword">if</span> (p &amp;&amp; p.colors) p.set({ <span class="hljs-attr">colors</span>: item });
     };</pre></div></div>
@@ -920,7 +960,7 @@
             
             <div class="content"><div class='highlight'><pre>    S.delta = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (items) <span class="hljs-keyword">this</span>.delta = mergeDiscard(<span class="hljs-keyword">this</span>.delta, items);
+        <span class="hljs-keyword">if</span> (items) <span class="hljs-built_in">this</span>.delta = mergeDiscard(<span class="hljs-built_in">this</span>.delta, items);
     };</pre></div></div>
             
         </li>
@@ -951,27 +991,27 @@
             
             <div class="content"><div class='highlight'><pre>    P.get = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">let</span> getter = <span class="hljs-keyword">this</span>.getters[item];
+        <span class="hljs-keyword">let</span> getter = <span class="hljs-built_in">this</span>.getters[item];
 
-        <span class="hljs-keyword">if</span> (getter) <span class="hljs-keyword">return</span> getter.call(<span class="hljs-keyword">this</span>);
+        <span class="hljs-keyword">if</span> (getter) <span class="hljs-keyword">return</span> getter.call(<span class="hljs-built_in">this</span>);
         <span class="hljs-keyword">else</span> {
 
-            <span class="hljs-keyword">let</span> def = <span class="hljs-keyword">this</span>.defs[item],
-                palette = <span class="hljs-keyword">this</span>.palette,
+            <span class="hljs-keyword">let</span> def = <span class="hljs-built_in">this</span>.defs[item],
+                palette = <span class="hljs-built_in">this</span>.palette,
                 val;
 
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> def !== <span class="hljs-string">'undefined'</span>) {
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> def !== <span class="hljs-string">&#x27;undefined&#x27;</span>) {
 
-                val = <span class="hljs-keyword">this</span>[item];
-                <span class="hljs-keyword">return</span> (<span class="hljs-keyword">typeof</span> val !== <span class="hljs-string">'undefined'</span>) ? val : def;
+                val = <span class="hljs-built_in">this</span>[item];
+                <span class="hljs-keyword">return</span> (<span class="hljs-keyword">typeof</span> val !== <span class="hljs-string">&#x27;undefined&#x27;</span>) ? val : def;
             }
 
             def = palette.defs[item];
 
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> def !== <span class="hljs-string">'undefined'</span>) {
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> def !== <span class="hljs-string">&#x27;undefined&#x27;</span>) {
 
                 val = palette[item];
-                <span class="hljs-keyword">return</span> (<span class="hljs-keyword">typeof</span> val !== <span class="hljs-string">'undefined'</span>) ? val : def;
+                <span class="hljs-keyword">return</span> (<span class="hljs-keyword">typeof</span> val !== <span class="hljs-string">&#x27;undefined&#x27;</span>) ? val : def;
             }
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> undef;
         }
@@ -994,15 +1034,15 @@
 
         <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Object</span>.keys(items).length) {
 
-            <span class="hljs-keyword">let</span> setters = <span class="hljs-keyword">this</span>.setters,
-                defs = <span class="hljs-keyword">this</span>.defs,
-                palette = <span class="hljs-keyword">this</span>.palette,
+            <span class="hljs-keyword">let</span> setters = <span class="hljs-built_in">this</span>.setters,
+                defs = <span class="hljs-built_in">this</span>.defs,
+                palette = <span class="hljs-built_in">this</span>.palette,
                 paletteSetters = (palette) ? palette.setters : {},
                 paletteDefs = (palette) ? palette.defs : {};
 
             <span class="hljs-built_in">Object</span>.entries(items).forEach(<span class="hljs-function">(<span class="hljs-params">[key, value]</span>) =&gt;</span> {
 
-                <span class="hljs-keyword">if</span> (key &amp;&amp; key !== <span class="hljs-string">'name'</span> &amp;&amp; value != <span class="hljs-literal">null</span>) {
+                <span class="hljs-keyword">if</span> (key &amp;&amp; key !== <span class="hljs-string">&#x27;name&#x27;</span> &amp;&amp; value != <span class="hljs-literal">null</span>) {
 
                     <span class="hljs-keyword">let</span> predefined = setters[key],
                         paletteFlag = <span class="hljs-literal">false</span>;
@@ -1013,13 +1053,13 @@
                         paletteFlag = <span class="hljs-literal">true</span>;
                     }
 
-                    <span class="hljs-keyword">if</span> (predefined) predefined.call(paletteFlag ? <span class="hljs-keyword">this</span>.palette : <span class="hljs-keyword">this</span>, value);
-                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] !== <span class="hljs-string">'undefined'</span>) <span class="hljs-keyword">this</span>[key] = value;
-                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> paletteDefs[key] !== <span class="hljs-string">'undefined'</span>) palette[key] = value;
+                    <span class="hljs-keyword">if</span> (predefined) predefined.call(paletteFlag ? <span class="hljs-built_in">this</span>.palette : <span class="hljs-built_in">this</span>, value);
+                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] !== <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-built_in">this</span>[key] = value;
+                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> paletteDefs[key] !== <span class="hljs-string">&#x27;undefined&#x27;</span>) palette[key] = value;
                 }
-            }, <span class="hljs-keyword">this</span>);
+            }, <span class="hljs-built_in">this</span>);
         }
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
     };</pre></div></div>
             
         </li>
@@ -1039,15 +1079,15 @@
 
         <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Object</span>.keys(items).length) {
 
-            <span class="hljs-keyword">let</span> setters = <span class="hljs-keyword">this</span>.deltaSetters,
-                defs = <span class="hljs-keyword">this</span>.defs,
-                palette = <span class="hljs-keyword">this</span>.palette,
+            <span class="hljs-keyword">let</span> setters = <span class="hljs-built_in">this</span>.deltaSetters,
+                defs = <span class="hljs-built_in">this</span>.defs,
+                palette = <span class="hljs-built_in">this</span>.palette,
                 paletteSetters = (palette) ? palette.deltaSetters : {},
                 paletteDefs = (palette) ? palette.defs : {};
 
             <span class="hljs-built_in">Object</span>.entries(items).forEach(<span class="hljs-function">(<span class="hljs-params">[key, value]</span>) =&gt;</span> {
 
-                <span class="hljs-keyword">if</span> (key &amp;&amp; key !== <span class="hljs-string">'name'</span> &amp;&amp; value != <span class="hljs-literal">null</span>) {
+                <span class="hljs-keyword">if</span> (key &amp;&amp; key !== <span class="hljs-string">&#x27;name&#x27;</span> &amp;&amp; value != <span class="hljs-literal">null</span>) {
 
                     <span class="hljs-keyword">let</span> predefined = setters[key],
                         paletteFlag = <span class="hljs-literal">false</span>;
@@ -1058,13 +1098,13 @@
                         paletteFlag = <span class="hljs-literal">true</span>;
                     }
 
-                    <span class="hljs-keyword">if</span> (predefined) predefined.call(paletteFlag ? <span class="hljs-keyword">this</span>.palette : <span class="hljs-keyword">this</span>, value);
-                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] != <span class="hljs-string">'undefined'</span>) <span class="hljs-keyword">this</span>[key] = addStrings(<span class="hljs-keyword">this</span>[key], value);
-                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> paletteDefs[key] !== <span class="hljs-string">'undefined'</span>) palette[key] = addStrings(<span class="hljs-keyword">this</span>[key], value);
+                    <span class="hljs-keyword">if</span> (predefined) predefined.call(paletteFlag ? <span class="hljs-built_in">this</span>.palette : <span class="hljs-built_in">this</span>, value);
+                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] != <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-built_in">this</span>[key] = addStrings(<span class="hljs-built_in">this</span>[key], value);
+                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> paletteDefs[key] !== <span class="hljs-string">&#x27;undefined&#x27;</span>) palette[key] = addStrings(<span class="hljs-built_in">this</span>[key], value);
                 }
-            }, <span class="hljs-keyword">this</span>);
+            }, <span class="hljs-built_in">this</span>);
         }
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
     };</pre></div></div>
             
         </li>
@@ -1082,7 +1122,7 @@
             
             <div class="content"><div class='highlight'><pre>    P.setCoordinateHelper = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">label, x, y</span>) </span>{
 
-        <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>[label];
+        <span class="hljs-keyword">let</span> c = <span class="hljs-built_in">this</span>[label];
 
         <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(x)) {
 
@@ -1111,7 +1151,7 @@
             
             <div class="content"><div class='highlight'><pre>    P.setDeltaCoordinateHelper = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">label, x, y</span>) </span>{
 
-        <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>[label],
+        <span class="hljs-keyword">let</span> c = <span class="hljs-built_in">this</span>[label],
             myX = c[<span class="hljs-number">0</span>],
             myY = c[<span class="hljs-number">1</span>];
 
@@ -1142,9 +1182,9 @@
             
             <div class="content"><div class='highlight'><pre>    P.updateByDelta = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">this</span>.setDelta(<span class="hljs-keyword">this</span>.delta);
+        <span class="hljs-built_in">this</span>.setDelta(<span class="hljs-built_in">this</span>.delta);
 
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
     };</pre></div></div>
             
         </li>
@@ -1162,26 +1202,26 @@
             
             <div class="content"><div class='highlight'><pre>    P.stylesInit = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-        <span class="hljs-keyword">this</span>.makeName(items.name);
-        <span class="hljs-keyword">this</span>.register();
+        <span class="hljs-built_in">this</span>.makeName(items.name);
+        <span class="hljs-built_in">this</span>.register();
 
-        <span class="hljs-keyword">this</span>.gradientArgs = [];
+        <span class="hljs-built_in">this</span>.gradientArgs = [];
 
-        <span class="hljs-keyword">this</span>.start = makeCoordinate();
-        <span class="hljs-keyword">this</span>.end = makeCoordinate();
+        <span class="hljs-built_in">this</span>.start = makeCoordinate();
+        <span class="hljs-built_in">this</span>.end = makeCoordinate();
 
-        <span class="hljs-keyword">this</span>.currentStart = makeCoordinate();
-        <span class="hljs-keyword">this</span>.currentEnd = makeCoordinate();
+        <span class="hljs-built_in">this</span>.currentStart = makeCoordinate();
+        <span class="hljs-built_in">this</span>.currentEnd = makeCoordinate();
 
-        <span class="hljs-keyword">this</span>.palette = makePalette({
-            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span>_palette`</span>,
+        <span class="hljs-built_in">this</span>.palette = makePalette({
+            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span>_palette`</span>,
         });
 
-        <span class="hljs-keyword">this</span>.delta = {};
+        <span class="hljs-built_in">this</span>.delta = {};
 
-        <span class="hljs-keyword">this</span>.set(<span class="hljs-keyword">this</span>.defs);
+        <span class="hljs-built_in">this</span>.set(<span class="hljs-built_in">this</span>.defs);
 
-        <span class="hljs-keyword">this</span>.set(items);
+        <span class="hljs-built_in">this</span>.set(items);
     };</pre></div></div>
             
         </li>
@@ -1212,7 +1252,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span>(<span class="hljs-keyword">this</span>.palette &amp;&amp; <span class="hljs-keyword">this</span>.palette.dirtyPalette) <span class="hljs-keyword">this</span>.palette.recalculate();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span>(<span class="hljs-built_in">this</span>.palette &amp;&amp; <span class="hljs-built_in">this</span>.palette.dirtyPalette) <span class="hljs-built_in">this</span>.palette.recalculate();</pre></div></div>
             
         </li>
         
@@ -1227,7 +1267,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">this</span>.cleanStyle(entity, cell);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-built_in">this</span>.cleanStyle(entity, cell);</pre></div></div>
             
         </li>
         
@@ -1242,7 +1282,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">this</span>.finalizeCoordinates(entity);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-built_in">this</span>.finalizeCoordinates(entity);</pre></div></div>
             
         </li>
         
@@ -1277,7 +1317,7 @@ console.log(entity.name, …this.gradientArgs);</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.buildStyle(cell);
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.buildStyle(cell);
     };</pre></div></div>
             
         </li>
@@ -1312,9 +1352,9 @@ console.log(entity.name, …this.gradientArgs);</p>
             h = dims[<span class="hljs-number">1</span>]; 
         }
 
-        <span class="hljs-keyword">this</span>.cleanPosition(<span class="hljs-keyword">this</span>.currentStart, <span class="hljs-keyword">this</span>.start, [w, h]);
-        <span class="hljs-keyword">this</span>.cleanPosition(<span class="hljs-keyword">this</span>.currentEnd, <span class="hljs-keyword">this</span>.end, [w, h]);
-        <span class="hljs-keyword">this</span>.cleanRadius(w);
+        <span class="hljs-built_in">this</span>.cleanPosition(<span class="hljs-built_in">this</span>.currentStart, <span class="hljs-built_in">this</span>.start, [w, h]);
+        <span class="hljs-built_in">this</span>.cleanPosition(<span class="hljs-built_in">this</span>.currentEnd, <span class="hljs-built_in">this</span>.end, [w, h]);
+        <span class="hljs-built_in">this</span>.cleanRadius(w);
     };</pre></div></div>
             
         </li>
@@ -1340,9 +1380,9 @@ console.log(entity.name, …this.gradientArgs);</p>
             dim = dimensions[i];
 
             <span class="hljs-keyword">if</span> (val.toFixed) current[i] = val;
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (val === <span class="hljs-string">'left'</span> || val === <span class="hljs-string">'top'</span>) current[i] = <span class="hljs-number">0</span>;
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (val === <span class="hljs-string">'right'</span> || val === <span class="hljs-string">'bottom'</span>) current[i] = dim;
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (val === <span class="hljs-string">'center'</span>) current[i] = dim / <span class="hljs-number">2</span>;
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (val === <span class="hljs-string">&#x27;left&#x27;</span> || val === <span class="hljs-string">&#x27;top&#x27;</span>) current[i] = <span class="hljs-number">0</span>;
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (val === <span class="hljs-string">&#x27;right&#x27;</span> || val === <span class="hljs-string">&#x27;bottom&#x27;</span>) current[i] = dim;
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (val === <span class="hljs-string">&#x27;center&#x27;</span>) current[i] = dim / <span class="hljs-number">2</span>;
             <span class="hljs-keyword">else</span> current[i] = (<span class="hljs-built_in">parseFloat</span>(val) / <span class="hljs-number">100</span>) * dim;
         }
     };</pre></div></div>
@@ -1362,8 +1402,8 @@ console.log(entity.name, …this.gradientArgs);</p>
             
             <div class="content"><div class='highlight'><pre>    P.finalizeCoordinates = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">entity = {}</span>) </span>{
 
-        <span class="hljs-keyword">let</span> currentStart = <span class="hljs-keyword">this</span>.currentStart,
-            currentEnd = <span class="hljs-keyword">this</span>.currentEnd,
+        <span class="hljs-keyword">let</span> currentStart = <span class="hljs-built_in">this</span>.currentStart,
+            currentEnd = <span class="hljs-built_in">this</span>.currentEnd,
             entityStampPosition = entity.currentStampPosition,
             entityStampHandlePosition = entity.currentStampHandlePosition,
             entityScale = entity.currentScale,
@@ -1379,7 +1419,7 @@ console.log(entity.name, …this.gradientArgs);</p>
             correctX = -entityStampPosition[<span class="hljs-number">0</span>] || <span class="hljs-number">0</span>; 
             correctY = -entityStampPosition[<span class="hljs-number">1</span>] || <span class="hljs-number">0</span>; 
         }
-        <span class="hljs-keyword">this</span>.updateGradientArgs(correctX, correctY);
+        <span class="hljs-built_in">this</span>.updateGradientArgs(correctX, correctY);
     };</pre></div></div>
             
         </li>
@@ -1412,7 +1452,7 @@ console.log(entity.name, …this.gradientArgs);</p>
             
             <div class="content"><div class='highlight'><pre>    P.buildStyle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">cell</span>) </span>{
 
-        <span class="hljs-keyword">return</span> <span class="hljs-string">'rgba(0,0,0,0)'</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;rgba(0,0,0,0)&#x27;</span>;
     };</pre></div></div>
             
         </li>
@@ -1430,7 +1470,7 @@ console.log(entity.name, …this.gradientArgs);</p>
             
             <div class="content"><div class='highlight'><pre>    P.addStopsToGradient = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">gradient, start, stop, cycle</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.palette) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.palette.addStopsToGradient(gradient, start, stop, cycle);
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.palette) <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.palette.addStopsToGradient(gradient, start, stop, cycle);
 
         <span class="hljs-keyword">return</span> gradient;
     };</pre></div></div>
@@ -1456,13 +1496,13 @@ console.log(entity.name, …this.gradientArgs);</p>
 <p>Scrawl-canvas overcomes this problem through the use of <a href="../factory/palette.html">Palette objects</a> which separate a gradient-type style’s color-stop data from its positioning data. We treat Canvas API <code>CanvasGradient</code> objects as use-once-and-dispose objects, generating them in a just-in-time fashion for each entity’s <code>stamp</code> operation in the Display cycle.</p>
 <p>Palette objects store their color data in a <code>colors</code> attribute object:</p>
 <pre><code>{
-    <span class="hljs-attr">name</span>: <span class="hljs-string">"mygradient_palette"</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;mygradient_palette&quot;</span>,
     <span class="hljs-attr">colors</span>: {
-        <span class="hljs-string">"0 "</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>],
-        <span class="hljs-string">"350 "</span>: [<span class="hljs-number">255</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>],
-        <span class="hljs-string">"650 "</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">255</span>, <span class="hljs-number">1</span>],
-        <span class="hljs-string">"999 "</span>: [<span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">1</span>],
-        <span class="hljs-string">"index-label-between-0-and-999 "</span>: [redValue, greenValue, blueValue, alphaValue]
+        <span class="hljs-string">&quot;0 &quot;</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>],
+        <span class="hljs-string">&quot;350 &quot;</span>: [<span class="hljs-number">255</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>],
+        <span class="hljs-string">&quot;650 &quot;</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">255</span>, <span class="hljs-number">1</span>],
+        <span class="hljs-string">&quot;999 &quot;</span>: [<span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">1</span>],
+        <span class="hljs-string">&quot;index-label-between-0-and-999 &quot;</span>: [redValue, greenValue, blueValue, alphaValue]
     },
 }</code></pre>
 <p>To <code>set</code> the Palette object’s <code>colors</code> object, either when creating the gradient-type style or at some point afterwards, we can use CSS color Strings instead of an array of values for each color. Note that:</p>
@@ -1474,10 +1514,10 @@ console.log(entity.name, …this.gradientArgs);</p>
 
     <span class="hljs-attr">colors</span>: {
 
-        <span class="hljs-string">'0 '</span>: <span class="hljs-string">'black'</span>,
-        <span class="hljs-string">'350 '</span>: <span class="hljs-string">'red'</span>,
-        <span class="hljs-string">'650 '</span>: <span class="hljs-string">'blue'</span>,
-        <span class="hljs-string">'999 '</span>: <span class="hljs-string">'white'</span>
+        <span class="hljs-string">&#x27;0 &#x27;</span>: <span class="hljs-string">&#x27;black&#x27;</span>,
+        <span class="hljs-string">&#x27;350 &#x27;</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
+        <span class="hljs-string">&#x27;650 &#x27;</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
+        <span class="hljs-string">&#x27;999 &#x27;</span>: <span class="hljs-string">&#x27;white&#x27;</span>
     },
 });</code></pre>
 <p>The following <strong>convenience functions</strong> are supplied to make adding, deleting and managing Palette object color stop data easier than the above:</p>
@@ -1503,9 +1543,9 @@ console.log(entity.name, …this.gradientArgs);</p>
             
             <div class="content"><div class='highlight'><pre>    P.updateColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">index, color</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.palette) <span class="hljs-keyword">this</span>.palette.updateColor(index, color);
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.palette) <span class="hljs-built_in">this</span>.palette.updateColor(index, color);
 
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
     };</pre></div></div>
             
         </li>
@@ -1526,9 +1566,9 @@ console.log(entity.name, …this.gradientArgs);</p>
             
             <div class="content"><div class='highlight'><pre>    P.removeColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">index</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.palette) <span class="hljs-keyword">this</span>.palette.removeColor(index);
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.palette) <span class="hljs-built_in">this</span>.palette.removeColor(index);
 
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
     };</pre></div></div>
             
         </li>

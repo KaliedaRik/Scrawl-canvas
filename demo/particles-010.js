@@ -13,6 +13,7 @@ canvas.setBase({
 });
 
 
+// For this Demo, we are creating some Shape entitys and using them as a template for generating Net entity Particles.
 scrawl.makeShape({
 
     name: 'my-first-template-arrow',
@@ -37,7 +38,9 @@ scrawl.makeShape({
 });
 
 
-// Create a World object; add some user-defined attributes to it
+// #### Particle physics animation scene
+
+// Create a World object which we can then assign to the Net entity
 let myWorld = scrawl.makeWorld({
 
     name: 'demo-world',
@@ -45,16 +48,19 @@ let myWorld = scrawl.makeWorld({
 
 });
 
+
+// Create a Net entity
 const myNet = scrawl.makeNet({
 
     name: 'weak-arrow',
     world: myWorld,
 
+    // The Net entity comes with four pre-defined `generate` functions - we will be testing 'weak-shape' and 'strong-shape' in this demo.
+    // + We can define our own generate function if the pre-defined functions do not meet our needs.
+    generate: 'weak-shape',
     shapeTemplate: 'my-first-template-arrow',
     precision: 40,
     joinTemplateEnds: true,
-
-    generate: 'weak-shape',
 
     postGenerate: function () {
 
@@ -123,6 +129,7 @@ const myNet = scrawl.makeNet({
     },
     particlesAreDraggable: true,
 
+// Clone the Net entity
 }).clone({
 
     name: 'strong-arrow',
@@ -163,7 +170,7 @@ scrawl.makeRender({
 
 
 // #### User interaction
-// Make the Emitter draggable
+// Make the Net entity's Particles draggable
 scrawl.makeGroup({
 
     name: 'my-draggable-group',

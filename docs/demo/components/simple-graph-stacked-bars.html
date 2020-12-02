@@ -4,7 +4,7 @@
 <head>
   <title>simple-graph-stacked-bars.js</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -92,12 +92,12 @@
 Data format requirements - a Javascript object with structure:
 
 {
-    area:           'area-label',
-    yearLabels:     ['year-1-label', 'year-2-label', ...],
-    categoryLabels: ['category-1-label', 'category-2-label', ...],
+    area:           &#x27;area-label&#x27;,
+    yearLabels:     [&#x27;year-1-label&#x27;, &#x27;year-2-label&#x27;, ...],
+    categoryLabels: [&#x27;category-1-label&#x27;, &#x27;category-2-label&#x27;, ...],
     yearData: {
-        'year-1-label': ["category-1-data", "category-2-data", ...],
-        'year-2-label': ["category-1-data", "category-2-data", ...],
+        &#x27;year-1-label&#x27;: [&quot;category-1-data&quot;, &quot;category-2-data&quot;, ...],
+        &#x27;year-2-label&#x27;: [&quot;category-1-data&quot;, &quot;category-2-data&quot;, ...],
         ...
     }
 }
@@ -116,7 +116,7 @@ Data format requirements - a Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">'../../source/scrawl.js'</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../../source/scrawl.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -131,7 +131,7 @@ Data format requirements - a Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> frame <span class="hljs-keyword">from</span> <span class="hljs-string">'./simple-chart-frame.js'</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> frame <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./simple-chart-frame.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -308,20 +308,20 @@ Data format requirements - a Javascript object with structure:
                 <span class="hljs-attr">startY</span>: <span class="hljs-string">`<span class="hljs-subst">${graphBottom - localHeight}</span>%`</span>,
 
                 <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">6</span>,
-                <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'yellow'</span>,
+                <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;yellow&#x27;</span>,
 
                 <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">`hsla(<span class="hljs-subst">${localColor ? <span class="hljs-number">243</span> : <span class="hljs-number">0</span>}</span>, 100%, <span class="hljs-subst">${localSaturation}</span>%, 1)`</span>,
-                <span class="hljs-attr">method</span>: <span class="hljs-string">'fill'</span>,
+                <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
 
                 <span class="hljs-attr">onEnter</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
                     group.setArtefacts({
-                        <span class="hljs-attr">method</span>: <span class="hljs-string">'fill'</span>,
+                        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
                         <span class="hljs-attr">order</span>: <span class="hljs-number">0</span>,
                     });
 
-                    <span class="hljs-keyword">this</span>.set({
-                        <span class="hljs-attr">method</span>: <span class="hljs-string">'fillThenDraw'</span>,
+                    <span class="hljs-built_in">this</span>.set({
+                        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
                         <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
                     });</pre></div></div>
             
@@ -363,7 +363,7 @@ Data format requirements - a Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    frame.updateSubtitle(<span class="hljs-string">'No data selected'</span>);
+            <div class="content"><div class='highlight'><pre>    frame.updateSubtitle(<span class="hljs-string">&#x27;No data selected&#x27;</span>);
     frame.updateXLeft(yearLabels[<span class="hljs-number">0</span>]);
     frame.updateXRight(yearLabels[numberOfYears - <span class="hljs-number">1</span>]);
     frame.updateYTop(maximumBarTotal.toLocaleString());
@@ -384,9 +384,9 @@ Data format requirements - a Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> kill = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> group.kill(<span class="hljs-literal">true</span>);
-<span class="hljs-keyword">const</span> hide = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> group.visibility = <span class="hljs-literal">false</span>;
-<span class="hljs-keyword">const</span> show = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> group.visibility = <span class="hljs-literal">true</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> kill = <span class="hljs-function">() =&gt;</span> group.kill(<span class="hljs-literal">true</span>);
+<span class="hljs-keyword">const</span> hide = <span class="hljs-function">() =&gt;</span> group.visibility = <span class="hljs-literal">false</span>;
+<span class="hljs-keyword">const</span> show = <span class="hljs-function">() =&gt;</span> group.visibility = <span class="hljs-literal">true</span>;
 
 <span class="hljs-keyword">export</span> {
     build,

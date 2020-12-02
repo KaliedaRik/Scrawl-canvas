@@ -39,7 +39,7 @@
 
 
 // #### Imports
-import { constructors, force, spring } from '../core/library.js';
+import { constructors, force, spring, springnames } from '../core/library.js';
 import { mergeOver, pushUnique, λnull } from '../core/utilities.js';
 
 import { requestParticleHistoryObject, releaseParticleHistoryObject } from './particleHistory.js';
@@ -133,7 +133,9 @@ P.factoryKill = function () {
 
     let deadSprings = [];
 
-    spring.forEach(s => {
+    springnames.forEach(name => {
+
+        let s = spring[name];
 
         if (s.particleFrom && s.particleFrom.name === this.name) deadSprings.push[s];
         else if (s.particleTo && s.particleTo.name === this.name) deadSprings.push[s];

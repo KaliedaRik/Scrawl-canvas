@@ -4,7 +4,7 @@
 <head>
   <title>UnstackedElement factory</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -110,6 +110,11 @@
                 </a>
               
                 
+                <a class="source" href="emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
                 <a class="source" href="filter.html">
                   ./source/factory/filter.js
                 </a>
@@ -150,6 +155,11 @@
                 </a>
               
                 
+                <a class="source" href="net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
                 <a class="source" href="oval.html">
                   ./source/factory/oval.js
                 </a>
@@ -157,6 +167,31 @@
                 
                 <a class="source" href="palette.html">
                   ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="particleForce.html">
+                  ./source/factory/particleForce.js
+                </a>
+              
+                
+                <a class="source" href="particleHistory.html">
+                  ./source/factory/particleHistory.js
+                </a>
+              
+                
+                <a class="source" href="particleSpring.html">
+                  ./source/factory/particleSpring.js
+                </a>
+              
+                
+                <a class="source" href="particleWorld.html">
+                  ./source/factory/particleWorld.js
                 </a>
               
                 
@@ -247,6 +282,11 @@
                 
                 <a class="source" href="ticker.html">
                   ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="tracer.html">
+                  ./source/factory/tracer.js
                 </a>
               
                 
@@ -511,12 +551,12 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { unstackedelement, constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { xt, mergeOver } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { unstackedelement, <span class="hljs-title">constructors</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+<span class="hljs-keyword">import</span> { xt, mergeOver } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { makeCanvas } <span class="hljs-keyword">from</span> <span class="hljs-string">'./canvas.js'</span>;
+<span class="hljs-keyword">import</span> { makeCanvas } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./canvas.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/base.js'</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -535,22 +575,22 @@
     
     <span class="hljs-keyword">let</span> name = el.id || el.name;
 
-    <span class="hljs-keyword">this</span>.makeName(name);
-    <span class="hljs-keyword">this</span>.register();
+    <span class="hljs-built_in">this</span>.makeName(name);
+    <span class="hljs-built_in">this</span>.register();
 
-    el.setAttribute(<span class="hljs-string">'data-scrawl-name'</span>, <span class="hljs-keyword">this</span>.name);
-    <span class="hljs-keyword">this</span>.domElement = el;
+    el.setAttribute(<span class="hljs-string">&#x27;data-scrawl-name&#x27;</span>, <span class="hljs-built_in">this</span>.name);
+    <span class="hljs-built_in">this</span>.domElement = el;
 
-    <span class="hljs-keyword">this</span>.elementComputedStyles = <span class="hljs-built_in">window</span>.getComputedStyle(el);
-    <span class="hljs-keyword">this</span>.hostStyles = {};
+    <span class="hljs-built_in">this</span>.elementComputedStyles = <span class="hljs-built_in">window</span>.getComputedStyle(el);
+    <span class="hljs-built_in">this</span>.hostStyles = {};
 
-    <span class="hljs-keyword">this</span>.canvasStartX = <span class="hljs-number">0</span>;
-    <span class="hljs-keyword">this</span>.canvasStartY = <span class="hljs-number">0</span>;
-    <span class="hljs-keyword">this</span>.canvasWidth = <span class="hljs-number">0</span>;
-    <span class="hljs-keyword">this</span>.canvasHeight = <span class="hljs-number">0</span>;
-    <span class="hljs-keyword">this</span>.canvasZIndex = <span class="hljs-number">0</span>;
+    <span class="hljs-built_in">this</span>.canvasStartX = <span class="hljs-number">0</span>;
+    <span class="hljs-built_in">this</span>.canvasStartY = <span class="hljs-number">0</span>;
+    <span class="hljs-built_in">this</span>.canvasWidth = <span class="hljs-number">0</span>;
+    <span class="hljs-built_in">this</span>.canvasHeight = <span class="hljs-number">0</span>;
+    <span class="hljs-built_in">this</span>.canvasZIndex = <span class="hljs-number">0</span>;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -567,8 +607,8 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = UnstackedElement.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">'UnstackedElement'</span>;
-P.lib = <span class="hljs-string">'unstackedelement'</span>;
+P.type = <span class="hljs-string">&#x27;UnstackedElement&#x27;</span>;
+P.lib = <span class="hljs-string">&#x27;unstackedelement&#x27;</span>;
 P.isArtefact = <span class="hljs-literal">false</span>;
 P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
             
@@ -702,7 +742,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.demolish = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">removeFromDom = false</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.demolish = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">removeFromDom = <span class="hljs-literal">false</span></span>) </span>{
 
     <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
 };</pre></div></div>
@@ -722,28 +762,28 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>P.addCanvas = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.canvas) {
+    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.canvas) {
 
-        <span class="hljs-keyword">let</span> canvas = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'canvas'</span>),
-            el = <span class="hljs-keyword">this</span>.domElement,
+        <span class="hljs-keyword">let</span> canvas = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;canvas&#x27;</span>),
+            el = <span class="hljs-built_in">this</span>.domElement,
             style = el.style;
 
-        <span class="hljs-keyword">if</span> (style.position === <span class="hljs-string">'static'</span>) style.position = <span class="hljs-string">'relative'</span>;
+        <span class="hljs-keyword">if</span> (style.position === <span class="hljs-string">&#x27;static&#x27;</span>) style.position = <span class="hljs-string">&#x27;relative&#x27;</span>;
 
         el.prepend(canvas);
 
         <span class="hljs-keyword">let</span> art = makeCanvas({
-            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span>-canvas`</span>,
+            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span>-canvas`</span>,
             <span class="hljs-attr">domElement</span>: canvas,
 
-            <span class="hljs-attr">position</span>: <span class="hljs-string">'absolute'</span>,
+            <span class="hljs-attr">position</span>: <span class="hljs-string">&#x27;absolute&#x27;</span>,
         });
 
-        <span class="hljs-keyword">this</span>.canvas = art;
+        <span class="hljs-built_in">this</span>.canvas = art;
 
         art.set(items);
 
-        <span class="hljs-keyword">this</span>.updateCanvas()
+        <span class="hljs-built_in">this</span>.updateCanvas()
 
         <span class="hljs-keyword">return</span> art;
     }
@@ -762,7 +802,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.includedStyles = [<span class="hljs-string">'width'</span>, <span class="hljs-string">'height'</span>, <span class="hljs-string">'zIndex'</span>, <span class="hljs-string">'borderBottomLeftRadius'</span>, <span class="hljs-string">'borderBottomRightRadius'</span>, <span class="hljs-string">'borderTopLeftRadius'</span>, <span class="hljs-string">'borderTopRightRadius'</span>];</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.includedStyles = [<span class="hljs-string">&#x27;width&#x27;</span>, <span class="hljs-string">&#x27;height&#x27;</span>, <span class="hljs-string">&#x27;zIndex&#x27;</span>, <span class="hljs-string">&#x27;borderBottomLeftRadius&#x27;</span>, <span class="hljs-string">&#x27;borderBottomRightRadius&#x27;</span>, <span class="hljs-string">&#x27;borderTopLeftRadius&#x27;</span>, <span class="hljs-string">&#x27;borderTopRightRadius&#x27;</span>];</pre></div></div>
             
         </li>
         
@@ -777,7 +817,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.mimickedStyles = [<span class="hljs-string">'borderBottomLeftRadius'</span>, <span class="hljs-string">'borderBottomRightRadius'</span>, <span class="hljs-string">'borderTopLeftRadius'</span>, <span class="hljs-string">'borderTopRightRadius'</span>];</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.mimickedStyles = [<span class="hljs-string">&#x27;borderBottomLeftRadius&#x27;</span>, <span class="hljs-string">&#x27;borderBottomRightRadius&#x27;</span>, <span class="hljs-string">&#x27;borderTopLeftRadius&#x27;</span>, <span class="hljs-string">&#x27;borderTopRightRadius&#x27;</span>];</pre></div></div>
             
         </li>
         
@@ -813,15 +853,15 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
     <span class="hljs-keyword">let</span> results = {};
 
-    <span class="hljs-keyword">let</span> el = <span class="hljs-keyword">this</span>.domElement,
-        wrapper = <span class="hljs-keyword">this</span>.canvas;
+    <span class="hljs-keyword">let</span> el = <span class="hljs-built_in">this</span>.domElement,
+        wrapper = <span class="hljs-built_in">this</span>.canvas;
 
     <span class="hljs-keyword">if</span> (el &amp;&amp; wrapper &amp;&amp; wrapper.domElement) {
 
-        <span class="hljs-keyword">let</span> host = <span class="hljs-keyword">this</span>.hostStyles,
-            style = <span class="hljs-keyword">this</span>.elementComputedStyles,
+        <span class="hljs-keyword">let</span> host = <span class="hljs-built_in">this</span>.hostStyles,
+            style = <span class="hljs-built_in">this</span>.elementComputedStyles,
             canvas = wrapper.domElement,
-            includedStyles = <span class="hljs-keyword">this</span>.includedStyles,
+            includedStyles = <span class="hljs-built_in">this</span>.includedStyles,
             mMax = <span class="hljs-built_in">Math</span>.max;
 
         <span class="hljs-keyword">let</span> {<span class="hljs-attr">x</span>: elX, <span class="hljs-attr">y</span>: elY, <span class="hljs-attr">width</span>: elW, <span class="hljs-attr">height</span>: elH} = el.getBoundingClientRect();
@@ -831,35 +871,35 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             <span class="hljs-keyword">switch</span> (item) {
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'width'</span> :
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;width&#x27;</span> :
 
                     <span class="hljs-keyword">let</span> w = mMax(<span class="hljs-built_in">parseFloat</span>(style.width), elW);
-                    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.canvasWidth !== w) {
+                    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.canvasWidth !== w) {
 
-                        <span class="hljs-keyword">this</span>.canvasWidth = w;
-                        <span class="hljs-keyword">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
+                        <span class="hljs-built_in">this</span>.canvasWidth = w;
+                        <span class="hljs-built_in">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
                     }
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'height'</span> :
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;height&#x27;</span> :
 
                     <span class="hljs-keyword">let</span> h = mMax(<span class="hljs-built_in">parseFloat</span>(style.height), elH);
-                    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.canvasHeight !== h) {
+                    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.canvasHeight !== h) {
 
-                        <span class="hljs-keyword">this</span>.canvasHeight = h;
-                        <span class="hljs-keyword">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
+                        <span class="hljs-built_in">this</span>.canvasHeight = h;
+                        <span class="hljs-built_in">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
                     }
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'zIndex'</span> :
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;zIndex&#x27;</span> :
 
-                    <span class="hljs-keyword">let</span> z = (style.zIndex === <span class="hljs-string">'auto'</span>) ? <span class="hljs-number">0</span> : <span class="hljs-built_in">parseInt</span>(style.zIndex, <span class="hljs-number">10</span>);
-                    z = (<span class="hljs-keyword">this</span>.canvasOnTop) ? z + <span class="hljs-number">1</span> : z - <span class="hljs-number">1</span>;
+                    <span class="hljs-keyword">let</span> z = (style.zIndex === <span class="hljs-string">&#x27;auto&#x27;</span>) ? <span class="hljs-number">0</span> : <span class="hljs-built_in">parseInt</span>(style.zIndex, <span class="hljs-number">10</span>);
+                    z = (<span class="hljs-built_in">this</span>.canvasOnTop) ? z + <span class="hljs-number">1</span> : z - <span class="hljs-number">1</span>;
 
-                    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.canvasZIndex !== z) {
+                    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.canvasZIndex !== z) {
 
-                        <span class="hljs-keyword">this</span>.canvasZIndex = z;
-                        <span class="hljs-keyword">this</span>.dirtyZIndex = <span class="hljs-literal">true</span>;
+                        <span class="hljs-built_in">this</span>.canvasZIndex = z;
+                        <span class="hljs-built_in">this</span>.dirtyZIndex = <span class="hljs-literal">true</span>;
                     }
                     <span class="hljs-keyword">break</span>;
 
@@ -881,10 +921,10 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
         <span class="hljs-keyword">if</span> (dx || dy) {
 
-            <span class="hljs-keyword">this</span>.canvasStartX += dx;
-            <span class="hljs-keyword">this</span>.canvasStartY += dy;
+            <span class="hljs-built_in">this</span>.canvasStartX += dx;
+            <span class="hljs-built_in">this</span>.canvasStartY += dy;
 
-            <span class="hljs-keyword">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
+            <span class="hljs-built_in">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
         }
     }
     <span class="hljs-keyword">return</span> results;
@@ -918,12 +958,12 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>P.updateCanvas = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.canvas &amp;&amp; <span class="hljs-keyword">this</span>.canvas.domElement) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.canvas &amp;&amp; <span class="hljs-built_in">this</span>.canvas.domElement) {
 
-        <span class="hljs-keyword">let</span> canvas = <span class="hljs-keyword">this</span>.canvas,
+        <span class="hljs-keyword">let</span> canvas = <span class="hljs-built_in">this</span>.canvas,
             style = canvas.domElement.style,
-            mimics = <span class="hljs-keyword">this</span>.mimickedStyles,
-            updates = <span class="hljs-keyword">this</span>.checkElementStyleValues();
+            mimics = <span class="hljs-built_in">this</span>.mimickedStyles,
+            updates = <span class="hljs-built_in">this</span>.checkElementStyleValues();
 
         <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> [key, value] <span class="hljs-keyword">of</span> <span class="hljs-built_in">Object</span>.entries(updates)) {
 
@@ -933,22 +973,22 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             }
         }
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyStart) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyStart) {
 
-            <span class="hljs-keyword">this</span>.dirtyStart = <span class="hljs-literal">false</span>;
+            <span class="hljs-built_in">this</span>.dirtyStart = <span class="hljs-literal">false</span>;
 
             canvas.set({
-                <span class="hljs-attr">startX</span>: <span class="hljs-keyword">this</span>.canvasStartX,
-                <span class="hljs-attr">startY</span>: <span class="hljs-keyword">this</span>.canvasStartY,
+                <span class="hljs-attr">startX</span>: <span class="hljs-built_in">this</span>.canvasStartX,
+                <span class="hljs-attr">startY</span>: <span class="hljs-built_in">this</span>.canvasStartY,
             });
         }
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyDimensions) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyDimensions) {
 
-            <span class="hljs-keyword">this</span>.dirtyDimensions = <span class="hljs-literal">false</span>;
+            <span class="hljs-built_in">this</span>.dirtyDimensions = <span class="hljs-literal">false</span>;
 
-            <span class="hljs-keyword">let</span> w = <span class="hljs-keyword">this</span>.canvasWidth,
-                h = <span class="hljs-keyword">this</span>.canvasHeight;
+            <span class="hljs-keyword">let</span> w = <span class="hljs-built_in">this</span>.canvasWidth,
+                h = <span class="hljs-built_in">this</span>.canvasHeight;
 
             canvas.set({
                 <span class="hljs-attr">width</span>: w,
@@ -966,10 +1006,10 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             canvas.base.cleanDimensions();
         }
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyZIndex) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyZIndex) {
 
-            <span class="hljs-keyword">this</span>.dirtyZIndex = <span class="hljs-literal">false</span>;
-            style.zIndex = <span class="hljs-keyword">this</span>.canvasZIndex;
+            <span class="hljs-built_in">this</span>.dirtyZIndex = <span class="hljs-literal">false</span>;
+            style.zIndex = <span class="hljs-built_in">this</span>.canvasZIndex;
         }
     }
 };</pre></div></div>
@@ -992,7 +1032,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> UnstackedElement(items);
 };
 
-constructors.UnstackedElement = UnstackedElement;
+<span class="hljs-title">constructors</span>.<span class="hljs-title">UnstackedElement</span> = <span class="hljs-title">UnstackedElement</span>;
 
 <span class="hljs-keyword">export</span> {
     makeUnstackedElement,

@@ -4,7 +4,7 @@
 <head>
   <title>Core library</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -110,6 +110,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
                 <a class="source" href="../factory/filter.html">
                   ./source/factory/filter.js
                 </a>
@@ -150,6 +155,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
                 <a class="source" href="../factory/oval.html">
                   ./source/factory/oval.js
                 </a>
@@ -157,6 +167,31 @@
                 
                 <a class="source" href="../factory/palette.html">
                   ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleForce.html">
+                  ./source/factory/particleForce.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleHistory.html">
+                  ./source/factory/particleHistory.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleSpring.html">
+                  ./source/factory/particleSpring.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleWorld.html">
+                  ./source/factory/particleWorld.js
                 </a>
               
                 
@@ -247,6 +282,11 @@
                 
                 <a class="source" href="../factory/ticker.html">
                   ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="../factory/tracer.html">
+                  ./source/factory/tracer.js
                 </a>
               
                 
@@ -437,7 +477,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> version = <span class="hljs-string">'8.2.5'</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> version = <span class="hljs-string">&#x27;8.2.5&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -656,6 +696,31 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
+              <p>Physics-related objects</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> particle = {};
+<span class="hljs-keyword">const</span> particlenames = [];
+    
+<span class="hljs-keyword">const</span> force = {};
+<span class="hljs-keyword">const</span> forcenames = [];
+
+<span class="hljs-keyword">const</span> spring = {};
+<span class="hljs-keyword">const</span> springnames = [];
+    
+<span class="hljs-keyword">const</span> world = {};
+<span class="hljs-keyword">const</span> worldnames = [];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
               <p>Stack element wrappers created during Scrawl-canvas initialization, and created using the <strong>makeStack</strong> and <strong>addStack</strong> factories</p>
 
             </div>
@@ -666,11 +731,11 @@
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>Objects created using the <strong>makeTween</strong> and <strong>makeAction</strong> factories</p>
 
@@ -682,11 +747,11 @@
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>Objects created using the <strong>makeGradient</strong>, <strong>makeRadialGradient</strong>, <strong>makePattern</strong> and <strong>makeColor</strong> factories</p>
 
@@ -698,11 +763,11 @@
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>DOM unstackedElement wrappers created using the <strong>makeUnstackedElement</strong> and <strong>makeComponent</strong> factories</p>
 
@@ -714,32 +779,17 @@
         </li>
         
         
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
-              </div>
-              <p>All <strong>makeXXX</strong> factory functions get added as references to the <strong>constructors</strong> section of the library - used mainly as part of Scrawl-canvas cloning functionality.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> constructors = {};</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <p>Convenience value, used internally</p>
+              <p>All <strong>makeXXX</strong> factory functions get added as references to the <strong>constructors</strong> section of the library - used mainly as part of Scrawl-canvas cloning functionality.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> radian = <span class="hljs-built_in">Math</span>.PI / <span class="hljs-number">180</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title">constructors</span> = {};</pre></div></div>
             
         </li>
         
@@ -750,11 +800,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
-              <p>Convenience set, used internally</p>
+              <p>Convenience value, used internally</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> css = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>([<span class="hljs-string">'all'</span>, <span class="hljs-string">'background'</span>, <span class="hljs-string">'backgroundAttachment'</span>, <span class="hljs-string">'backgroundBlendMode'</span>, <span class="hljs-string">'backgroundClip'</span>, <span class="hljs-string">'backgroundColor'</span>, <span class="hljs-string">'backgroundOrigin'</span>, <span class="hljs-string">'backgroundPosition'</span>, <span class="hljs-string">'backgroundRepeat'</span>, <span class="hljs-string">'border'</span>, <span class="hljs-string">'borderBottom'</span>, <span class="hljs-string">'borderBottomColor'</span>, <span class="hljs-string">'borderBottomStyle'</span>, <span class="hljs-string">'borderBottomWidth'</span>, <span class="hljs-string">'borderCollapse'</span>, <span class="hljs-string">'borderColor'</span>, <span class="hljs-string">'borderLeft'</span>, <span class="hljs-string">'borderLeftColor'</span>, <span class="hljs-string">'borderLeftStyle'</span>, <span class="hljs-string">'borderLeftWidth'</span>, <span class="hljs-string">'borderRight'</span>, <span class="hljs-string">'borderRightColor'</span>, <span class="hljs-string">'borderRightStyle'</span>, <span class="hljs-string">'borderRightWidth'</span>, <span class="hljs-string">'borderSpacing'</span>, <span class="hljs-string">'borderStyle'</span>, <span class="hljs-string">'borderTop'</span>, <span class="hljs-string">'borderTopColor'</span>, <span class="hljs-string">'borderTopStyle'</span>, <span class="hljs-string">'borderTopWidth'</span>, <span class="hljs-string">'borderWidth'</span>, <span class="hljs-string">'clear'</span>, <span class="hljs-string">'color'</span>, <span class="hljs-string">'columns'</span>, <span class="hljs-string">'content'</span>, <span class="hljs-string">'counterIncrement'</span>, <span class="hljs-string">'counterReset'</span>, <span class="hljs-string">'cursor'</span>, <span class="hljs-string">'direction'</span>, <span class="hljs-string">'display'</span>, <span class="hljs-string">'emptyCells'</span>, <span class="hljs-string">'float'</span>, <span class="hljs-string">'font'</span>, <span class="hljs-string">'fontFamily'</span>, <span class="hljs-string">'fontSize'</span>, <span class="hljs-string">'fontSizeAdjust'</span>, <span class="hljs-string">'fontStretch'</span>, <span class="hljs-string">'fontStyle'</span>, <span class="hljs-string">'fontSynthesis'</span>, <span class="hljs-string">'fontVariant'</span>, <span class="hljs-string">'fontVariantAlternates'</span>, <span class="hljs-string">'fontVariantCaps'</span>, <span class="hljs-string">'fontVariantEastAsian'</span>, <span class="hljs-string">'fontVariantLigatures'</span>, <span class="hljs-string">'fontVariantNumeric'</span>, <span class="hljs-string">'fontVariantPosition'</span>, <span class="hljs-string">'fontWeight'</span>, <span class="hljs-string">'grid'</span>, <span class="hljs-string">'gridArea'</span>, <span class="hljs-string">'gridAutoColumns'</span>, <span class="hljs-string">'gridAutoFlow'</span>, <span class="hljs-string">'gridAutoPosition'</span>, <span class="hljs-string">'gridAutoRows'</span>, <span class="hljs-string">'gridColumn'</span>, <span class="hljs-string">'gridColumnStart'</span>, <span class="hljs-string">'gridColumnEnd'</span>, <span class="hljs-string">'gridRow'</span>, <span class="hljs-string">'gridRowStart'</span>, <span class="hljs-string">'gridRowEnd'</span>, <span class="hljs-string">'gridTemplate'</span>, <span class="hljs-string">'gridTemplateAreas'</span>, <span class="hljs-string">'gridTemplateRows'</span>, <span class="hljs-string">'gridTemplateColumns'</span>, <span class="hljs-string">'imageResolution'</span>, <span class="hljs-string">'imeMode'</span>, <span class="hljs-string">'inherit'</span>, <span class="hljs-string">'inlineSize'</span>, <span class="hljs-string">'isolation'</span>, <span class="hljs-string">'letterSpacing'</span>, <span class="hljs-string">'lineBreak'</span>, <span class="hljs-string">'lineHeight'</span>, <span class="hljs-string">'listStyle'</span>, <span class="hljs-string">'listStyleImage'</span>, <span class="hljs-string">'listStylePosition'</span>, <span class="hljs-string">'listStyleType'</span>, <span class="hljs-string">'margin'</span>, <span class="hljs-string">'marginBlockStart'</span>, <span class="hljs-string">'marginBlockEnd'</span>, <span class="hljs-string">'marginInlineStart'</span>, <span class="hljs-string">'marginInlineEnd'</span>, <span class="hljs-string">'marginBottom'</span>, <span class="hljs-string">'marginLeft'</span>, <span class="hljs-string">'marginRight'</span>, <span class="hljs-string">'marginTop'</span>, <span class="hljs-string">'marks'</span>, <span class="hljs-string">'mask'</span>, <span class="hljs-string">'maskType'</span>, <span class="hljs-string">'maxWidth'</span>, <span class="hljs-string">'maxHeight'</span>, <span class="hljs-string">'maxBlockSize'</span>, <span class="hljs-string">'maxInlineSize'</span>, <span class="hljs-string">'maxZoom'</span>, <span class="hljs-string">'minWidth'</span>, <span class="hljs-string">'minHeight'</span>, <span class="hljs-string">'minBlockSize'</span>, <span class="hljs-string">'minInlineSize'</span>, <span class="hljs-string">'minZoom'</span>, <span class="hljs-string">'mixBlendMode'</span>, <span class="hljs-string">'objectFit'</span>, <span class="hljs-string">'objectPosition'</span>, <span class="hljs-string">'offsetBlockStart'</span>, <span class="hljs-string">'offsetBlockEnd'</span>, <span class="hljs-string">'offsetInlineStart'</span>, <span class="hljs-string">'offsetInlineEnd'</span>, <span class="hljs-string">'orphans'</span>, <span class="hljs-string">'overflow'</span>, <span class="hljs-string">'overflowWrap'</span>, <span class="hljs-string">'overflowX'</span>, <span class="hljs-string">'overflowY'</span>, <span class="hljs-string">'pad'</span>, <span class="hljs-string">'padding'</span>, <span class="hljs-string">'paddingBlockStart'</span>, <span class="hljs-string">'paddingBlockEnd'</span>, <span class="hljs-string">'paddingInlineStart'</span>, <span class="hljs-string">'paddingInlineEnd'</span>, <span class="hljs-string">'paddingBottom'</span>, <span class="hljs-string">'paddingLeft'</span>, <span class="hljs-string">'paddingRight'</span>, <span class="hljs-string">'paddingTop'</span>, <span class="hljs-string">'pageBreakAfter'</span>, <span class="hljs-string">'pageBreakBefore'</span>, <span class="hljs-string">'pageBreakInside'</span>, <span class="hljs-string">'pointerEvents'</span>, <span class="hljs-string">'position'</span>, <span class="hljs-string">'prefix'</span>, <span class="hljs-string">'quotes'</span>, <span class="hljs-string">'rubyAlign'</span>, <span class="hljs-string">'rubyMerge'</span>, <span class="hljs-string">'rubyPosition'</span>, <span class="hljs-string">'scrollBehavior'</span>, <span class="hljs-string">'scrollSnapCoordinate'</span>, <span class="hljs-string">'scrollSnapDestination'</span>, <span class="hljs-string">'scrollSnapPointsX'</span>, <span class="hljs-string">'scrollSnapPointsY'</span>, <span class="hljs-string">'scrollSnapType'</span>, <span class="hljs-string">'scrollSnapTypeX'</span>, <span class="hljs-string">'scrollSnapTypeY'</span>, <span class="hljs-string">'shapeImageThreshold'</span>, <span class="hljs-string">'shapeMargin'</span>, <span class="hljs-string">'shapeOutside'</span>, <span class="hljs-string">'tableLayout'</span>, <span class="hljs-string">'textAlign'</span>, <span class="hljs-string">'textDecoration'</span>, <span class="hljs-string">'textIndent'</span>, <span class="hljs-string">'textOrientation'</span>, <span class="hljs-string">'textOverflow'</span>, <span class="hljs-string">'textRendering'</span>, <span class="hljs-string">'textShadow'</span>, <span class="hljs-string">'textTransform'</span>, <span class="hljs-string">'textUnderlinePosition'</span>, <span class="hljs-string">'unicodeRange'</span>, <span class="hljs-string">'unset'</span>, <span class="hljs-string">'verticalAlign'</span>, <span class="hljs-string">'widows'</span>, <span class="hljs-string">'willChange'</span>, <span class="hljs-string">'wordBreak'</span>, <span class="hljs-string">'wordSpacing'</span>, <span class="hljs-string">'wordWrap'</span>, <span class="hljs-string">'zIndex'</span>]);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> radian = <span class="hljs-built_in">Math</span>.PI / <span class="hljs-number">180</span>;</pre></div></div>
             
         </li>
         
@@ -769,7 +819,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> xcss = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>([<span class="hljs-string">'alignContent'</span>, <span class="hljs-string">'alignItems'</span>, <span class="hljs-string">'alignSelf'</span>, <span class="hljs-string">'animation'</span>, <span class="hljs-string">'animationDelay'</span>, <span class="hljs-string">'animationDirection'</span>, <span class="hljs-string">'animationDuration'</span>, <span class="hljs-string">'animationFillMode'</span>, <span class="hljs-string">'animationIterationCount'</span>, <span class="hljs-string">'animationName'</span>, <span class="hljs-string">'animationPlayState'</span>, <span class="hljs-string">'animationTimingFunction'</span>, <span class="hljs-string">'backfaceVisibility'</span>, <span class="hljs-string">'backgroundImage'</span>, <span class="hljs-string">'backgroundSize'</span>, <span class="hljs-string">'borderBottomLeftRadius'</span>, <span class="hljs-string">'borderBottomRightRadius'</span>, <span class="hljs-string">'borderImage'</span>, <span class="hljs-string">'borderImageOutset'</span>, <span class="hljs-string">'borderImageRepeat'</span>, <span class="hljs-string">'borderImageSlice'</span>, <span class="hljs-string">'borderImageSource'</span>, <span class="hljs-string">'borderImageWidth'</span>, <span class="hljs-string">'borderRadius'</span>, <span class="hljs-string">'borderTopLeftRadius'</span>, <span class="hljs-string">'borderTopRightRadius'</span>, <span class="hljs-string">'boxDecorationBreak'</span>, <span class="hljs-string">'boxShadow'</span>, <span class="hljs-string">'boxSizing'</span>, <span class="hljs-string">'columnCount'</span>, <span class="hljs-string">'columnFill'</span>, <span class="hljs-string">'columnGap'</span>, <span class="hljs-string">'columnRule'</span>, <span class="hljs-string">'columnRuleColor'</span>, <span class="hljs-string">'columnRuleStyle'</span>, <span class="hljs-string">'columnRuleWidth'</span>, <span class="hljs-string">'columnSpan'</span>, <span class="hljs-string">'columnWidth'</span>, <span class="hljs-string">'filter'</span>, <span class="hljs-string">'flex'</span>, <span class="hljs-string">'flexBasis'</span>, <span class="hljs-string">'flexDirection'</span>, <span class="hljs-string">'flexFlow'</span>, <span class="hljs-string">'flexGrow'</span>, <span class="hljs-string">'flexShrink'</span>, <span class="hljs-string">'flexWrap'</span>, <span class="hljs-string">'fontFeatureSettings'</span>, <span class="hljs-string">'fontKerning'</span>, <span class="hljs-string">'fontLanguageOverride'</span>, <span class="hljs-string">'hyphens'</span>, <span class="hljs-string">'imageRendering'</span>, <span class="hljs-string">'imageOrientation'</span>, <span class="hljs-string">'initial'</span>, <span class="hljs-string">'justifyContent'</span>, <span class="hljs-string">'linearGradient'</span>, <span class="hljs-string">'opacity'</span>, <span class="hljs-string">'order'</span>, <span class="hljs-string">'orientation'</span>, <span class="hljs-string">'outline'</span>, <span class="hljs-string">'outlineColor'</span>, <span class="hljs-string">'outlineOffset'</span>, <span class="hljs-string">'outlineStyle'</span>, <span class="hljs-string">'outlineWidth'</span>, <span class="hljs-string">'resize'</span>, <span class="hljs-string">'tabSize'</span>, <span class="hljs-string">'textAlignLast'</span>, <span class="hljs-string">'textCombineUpright'</span>, <span class="hljs-string">'textDecorationColor'</span>, <span class="hljs-string">'textDecorationLine'</span>, <span class="hljs-string">'textDecorationStyle'</span>, <span class="hljs-string">'touchAction'</span>, <span class="hljs-string">'transformStyle'</span>, <span class="hljs-string">'transition'</span>, <span class="hljs-string">'transitionDelay'</span>, <span class="hljs-string">'transitionDuration'</span>, <span class="hljs-string">'transitionProperty'</span>, <span class="hljs-string">'transitionTimingFunction'</span>, <span class="hljs-string">'unicodeBidi'</span>, <span class="hljs-string">'whiteSpace'</span>, <span class="hljs-string">'writingMode'</span>]);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> css = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>([<span class="hljs-string">&#x27;all&#x27;</span>, <span class="hljs-string">&#x27;background&#x27;</span>, <span class="hljs-string">&#x27;backgroundAttachment&#x27;</span>, <span class="hljs-string">&#x27;backgroundBlendMode&#x27;</span>, <span class="hljs-string">&#x27;backgroundClip&#x27;</span>, <span class="hljs-string">&#x27;backgroundColor&#x27;</span>, <span class="hljs-string">&#x27;backgroundOrigin&#x27;</span>, <span class="hljs-string">&#x27;backgroundPosition&#x27;</span>, <span class="hljs-string">&#x27;backgroundRepeat&#x27;</span>, <span class="hljs-string">&#x27;border&#x27;</span>, <span class="hljs-string">&#x27;borderBottom&#x27;</span>, <span class="hljs-string">&#x27;borderBottomColor&#x27;</span>, <span class="hljs-string">&#x27;borderBottomStyle&#x27;</span>, <span class="hljs-string">&#x27;borderBottomWidth&#x27;</span>, <span class="hljs-string">&#x27;borderCollapse&#x27;</span>, <span class="hljs-string">&#x27;borderColor&#x27;</span>, <span class="hljs-string">&#x27;borderLeft&#x27;</span>, <span class="hljs-string">&#x27;borderLeftColor&#x27;</span>, <span class="hljs-string">&#x27;borderLeftStyle&#x27;</span>, <span class="hljs-string">&#x27;borderLeftWidth&#x27;</span>, <span class="hljs-string">&#x27;borderRight&#x27;</span>, <span class="hljs-string">&#x27;borderRightColor&#x27;</span>, <span class="hljs-string">&#x27;borderRightStyle&#x27;</span>, <span class="hljs-string">&#x27;borderRightWidth&#x27;</span>, <span class="hljs-string">&#x27;borderSpacing&#x27;</span>, <span class="hljs-string">&#x27;borderStyle&#x27;</span>, <span class="hljs-string">&#x27;borderTop&#x27;</span>, <span class="hljs-string">&#x27;borderTopColor&#x27;</span>, <span class="hljs-string">&#x27;borderTopStyle&#x27;</span>, <span class="hljs-string">&#x27;borderTopWidth&#x27;</span>, <span class="hljs-string">&#x27;borderWidth&#x27;</span>, <span class="hljs-string">&#x27;clear&#x27;</span>, <span class="hljs-string">&#x27;color&#x27;</span>, <span class="hljs-string">&#x27;columns&#x27;</span>, <span class="hljs-string">&#x27;content&#x27;</span>, <span class="hljs-string">&#x27;counterIncrement&#x27;</span>, <span class="hljs-string">&#x27;counterReset&#x27;</span>, <span class="hljs-string">&#x27;cursor&#x27;</span>, <span class="hljs-string">&#x27;direction&#x27;</span>, <span class="hljs-string">&#x27;display&#x27;</span>, <span class="hljs-string">&#x27;emptyCells&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>, <span class="hljs-string">&#x27;font&#x27;</span>, <span class="hljs-string">&#x27;fontFamily&#x27;</span>, <span class="hljs-string">&#x27;fontSize&#x27;</span>, <span class="hljs-string">&#x27;fontSizeAdjust&#x27;</span>, <span class="hljs-string">&#x27;fontStretch&#x27;</span>, <span class="hljs-string">&#x27;fontStyle&#x27;</span>, <span class="hljs-string">&#x27;fontSynthesis&#x27;</span>, <span class="hljs-string">&#x27;fontVariant&#x27;</span>, <span class="hljs-string">&#x27;fontVariantAlternates&#x27;</span>, <span class="hljs-string">&#x27;fontVariantCaps&#x27;</span>, <span class="hljs-string">&#x27;fontVariantEastAsian&#x27;</span>, <span class="hljs-string">&#x27;fontVariantLigatures&#x27;</span>, <span class="hljs-string">&#x27;fontVariantNumeric&#x27;</span>, <span class="hljs-string">&#x27;fontVariantPosition&#x27;</span>, <span class="hljs-string">&#x27;fontWeight&#x27;</span>, <span class="hljs-string">&#x27;grid&#x27;</span>, <span class="hljs-string">&#x27;gridArea&#x27;</span>, <span class="hljs-string">&#x27;gridAutoColumns&#x27;</span>, <span class="hljs-string">&#x27;gridAutoFlow&#x27;</span>, <span class="hljs-string">&#x27;gridAutoPosition&#x27;</span>, <span class="hljs-string">&#x27;gridAutoRows&#x27;</span>, <span class="hljs-string">&#x27;gridColumn&#x27;</span>, <span class="hljs-string">&#x27;gridColumnStart&#x27;</span>, <span class="hljs-string">&#x27;gridColumnEnd&#x27;</span>, <span class="hljs-string">&#x27;gridRow&#x27;</span>, <span class="hljs-string">&#x27;gridRowStart&#x27;</span>, <span class="hljs-string">&#x27;gridRowEnd&#x27;</span>, <span class="hljs-string">&#x27;gridTemplate&#x27;</span>, <span class="hljs-string">&#x27;gridTemplateAreas&#x27;</span>, <span class="hljs-string">&#x27;gridTemplateRows&#x27;</span>, <span class="hljs-string">&#x27;gridTemplateColumns&#x27;</span>, <span class="hljs-string">&#x27;imageResolution&#x27;</span>, <span class="hljs-string">&#x27;imeMode&#x27;</span>, <span class="hljs-string">&#x27;inherit&#x27;</span>, <span class="hljs-string">&#x27;inlineSize&#x27;</span>, <span class="hljs-string">&#x27;isolation&#x27;</span>, <span class="hljs-string">&#x27;letterSpacing&#x27;</span>, <span class="hljs-string">&#x27;lineBreak&#x27;</span>, <span class="hljs-string">&#x27;lineHeight&#x27;</span>, <span class="hljs-string">&#x27;listStyle&#x27;</span>, <span class="hljs-string">&#x27;listStyleImage&#x27;</span>, <span class="hljs-string">&#x27;listStylePosition&#x27;</span>, <span class="hljs-string">&#x27;listStyleType&#x27;</span>, <span class="hljs-string">&#x27;margin&#x27;</span>, <span class="hljs-string">&#x27;marginBlockStart&#x27;</span>, <span class="hljs-string">&#x27;marginBlockEnd&#x27;</span>, <span class="hljs-string">&#x27;marginInlineStart&#x27;</span>, <span class="hljs-string">&#x27;marginInlineEnd&#x27;</span>, <span class="hljs-string">&#x27;marginBottom&#x27;</span>, <span class="hljs-string">&#x27;marginLeft&#x27;</span>, <span class="hljs-string">&#x27;marginRight&#x27;</span>, <span class="hljs-string">&#x27;marginTop&#x27;</span>, <span class="hljs-string">&#x27;marks&#x27;</span>, <span class="hljs-string">&#x27;mask&#x27;</span>, <span class="hljs-string">&#x27;maskType&#x27;</span>, <span class="hljs-string">&#x27;maxWidth&#x27;</span>, <span class="hljs-string">&#x27;maxHeight&#x27;</span>, <span class="hljs-string">&#x27;maxBlockSize&#x27;</span>, <span class="hljs-string">&#x27;maxInlineSize&#x27;</span>, <span class="hljs-string">&#x27;maxZoom&#x27;</span>, <span class="hljs-string">&#x27;minWidth&#x27;</span>, <span class="hljs-string">&#x27;minHeight&#x27;</span>, <span class="hljs-string">&#x27;minBlockSize&#x27;</span>, <span class="hljs-string">&#x27;minInlineSize&#x27;</span>, <span class="hljs-string">&#x27;minZoom&#x27;</span>, <span class="hljs-string">&#x27;mixBlendMode&#x27;</span>, <span class="hljs-string">&#x27;objectFit&#x27;</span>, <span class="hljs-string">&#x27;objectPosition&#x27;</span>, <span class="hljs-string">&#x27;offsetBlockStart&#x27;</span>, <span class="hljs-string">&#x27;offsetBlockEnd&#x27;</span>, <span class="hljs-string">&#x27;offsetInlineStart&#x27;</span>, <span class="hljs-string">&#x27;offsetInlineEnd&#x27;</span>, <span class="hljs-string">&#x27;orphans&#x27;</span>, <span class="hljs-string">&#x27;overflow&#x27;</span>, <span class="hljs-string">&#x27;overflowWrap&#x27;</span>, <span class="hljs-string">&#x27;overflowX&#x27;</span>, <span class="hljs-string">&#x27;overflowY&#x27;</span>, <span class="hljs-string">&#x27;pad&#x27;</span>, <span class="hljs-string">&#x27;padding&#x27;</span>, <span class="hljs-string">&#x27;paddingBlockStart&#x27;</span>, <span class="hljs-string">&#x27;paddingBlockEnd&#x27;</span>, <span class="hljs-string">&#x27;paddingInlineStart&#x27;</span>, <span class="hljs-string">&#x27;paddingInlineEnd&#x27;</span>, <span class="hljs-string">&#x27;paddingBottom&#x27;</span>, <span class="hljs-string">&#x27;paddingLeft&#x27;</span>, <span class="hljs-string">&#x27;paddingRight&#x27;</span>, <span class="hljs-string">&#x27;paddingTop&#x27;</span>, <span class="hljs-string">&#x27;pageBreakAfter&#x27;</span>, <span class="hljs-string">&#x27;pageBreakBefore&#x27;</span>, <span class="hljs-string">&#x27;pageBreakInside&#x27;</span>, <span class="hljs-string">&#x27;pointerEvents&#x27;</span>, <span class="hljs-string">&#x27;position&#x27;</span>, <span class="hljs-string">&#x27;prefix&#x27;</span>, <span class="hljs-string">&#x27;quotes&#x27;</span>, <span class="hljs-string">&#x27;rubyAlign&#x27;</span>, <span class="hljs-string">&#x27;rubyMerge&#x27;</span>, <span class="hljs-string">&#x27;rubyPosition&#x27;</span>, <span class="hljs-string">&#x27;scrollBehavior&#x27;</span>, <span class="hljs-string">&#x27;scrollSnapCoordinate&#x27;</span>, <span class="hljs-string">&#x27;scrollSnapDestination&#x27;</span>, <span class="hljs-string">&#x27;scrollSnapPointsX&#x27;</span>, <span class="hljs-string">&#x27;scrollSnapPointsY&#x27;</span>, <span class="hljs-string">&#x27;scrollSnapType&#x27;</span>, <span class="hljs-string">&#x27;scrollSnapTypeX&#x27;</span>, <span class="hljs-string">&#x27;scrollSnapTypeY&#x27;</span>, <span class="hljs-string">&#x27;shapeImageThreshold&#x27;</span>, <span class="hljs-string">&#x27;shapeMargin&#x27;</span>, <span class="hljs-string">&#x27;shapeOutside&#x27;</span>, <span class="hljs-string">&#x27;tableLayout&#x27;</span>, <span class="hljs-string">&#x27;textAlign&#x27;</span>, <span class="hljs-string">&#x27;textDecoration&#x27;</span>, <span class="hljs-string">&#x27;textIndent&#x27;</span>, <span class="hljs-string">&#x27;textOrientation&#x27;</span>, <span class="hljs-string">&#x27;textOverflow&#x27;</span>, <span class="hljs-string">&#x27;textRendering&#x27;</span>, <span class="hljs-string">&#x27;textShadow&#x27;</span>, <span class="hljs-string">&#x27;textTransform&#x27;</span>, <span class="hljs-string">&#x27;textUnderlinePosition&#x27;</span>, <span class="hljs-string">&#x27;unicodeRange&#x27;</span>, <span class="hljs-string">&#x27;unset&#x27;</span>, <span class="hljs-string">&#x27;verticalAlign&#x27;</span>, <span class="hljs-string">&#x27;widows&#x27;</span>, <span class="hljs-string">&#x27;willChange&#x27;</span>, <span class="hljs-string">&#x27;wordBreak&#x27;</span>, <span class="hljs-string">&#x27;wordSpacing&#x27;</span>, <span class="hljs-string">&#x27;wordWrap&#x27;</span>, <span class="hljs-string">&#x27;zIndex&#x27;</span>]);</pre></div></div>
             
         </li>
         
@@ -779,6 +829,21 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>Convenience set, used internally</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> xcss = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>([<span class="hljs-string">&#x27;alignContent&#x27;</span>, <span class="hljs-string">&#x27;alignItems&#x27;</span>, <span class="hljs-string">&#x27;alignSelf&#x27;</span>, <span class="hljs-string">&#x27;animation&#x27;</span>, <span class="hljs-string">&#x27;animationDelay&#x27;</span>, <span class="hljs-string">&#x27;animationDirection&#x27;</span>, <span class="hljs-string">&#x27;animationDuration&#x27;</span>, <span class="hljs-string">&#x27;animationFillMode&#x27;</span>, <span class="hljs-string">&#x27;animationIterationCount&#x27;</span>, <span class="hljs-string">&#x27;animationName&#x27;</span>, <span class="hljs-string">&#x27;animationPlayState&#x27;</span>, <span class="hljs-string">&#x27;animationTimingFunction&#x27;</span>, <span class="hljs-string">&#x27;backfaceVisibility&#x27;</span>, <span class="hljs-string">&#x27;backgroundImage&#x27;</span>, <span class="hljs-string">&#x27;backgroundSize&#x27;</span>, <span class="hljs-string">&#x27;borderBottomLeftRadius&#x27;</span>, <span class="hljs-string">&#x27;borderBottomRightRadius&#x27;</span>, <span class="hljs-string">&#x27;borderImage&#x27;</span>, <span class="hljs-string">&#x27;borderImageOutset&#x27;</span>, <span class="hljs-string">&#x27;borderImageRepeat&#x27;</span>, <span class="hljs-string">&#x27;borderImageSlice&#x27;</span>, <span class="hljs-string">&#x27;borderImageSource&#x27;</span>, <span class="hljs-string">&#x27;borderImageWidth&#x27;</span>, <span class="hljs-string">&#x27;borderRadius&#x27;</span>, <span class="hljs-string">&#x27;borderTopLeftRadius&#x27;</span>, <span class="hljs-string">&#x27;borderTopRightRadius&#x27;</span>, <span class="hljs-string">&#x27;boxDecorationBreak&#x27;</span>, <span class="hljs-string">&#x27;boxShadow&#x27;</span>, <span class="hljs-string">&#x27;boxSizing&#x27;</span>, <span class="hljs-string">&#x27;columnCount&#x27;</span>, <span class="hljs-string">&#x27;columnFill&#x27;</span>, <span class="hljs-string">&#x27;columnGap&#x27;</span>, <span class="hljs-string">&#x27;columnRule&#x27;</span>, <span class="hljs-string">&#x27;columnRuleColor&#x27;</span>, <span class="hljs-string">&#x27;columnRuleStyle&#x27;</span>, <span class="hljs-string">&#x27;columnRuleWidth&#x27;</span>, <span class="hljs-string">&#x27;columnSpan&#x27;</span>, <span class="hljs-string">&#x27;columnWidth&#x27;</span>, <span class="hljs-string">&#x27;filter&#x27;</span>, <span class="hljs-string">&#x27;flex&#x27;</span>, <span class="hljs-string">&#x27;flexBasis&#x27;</span>, <span class="hljs-string">&#x27;flexDirection&#x27;</span>, <span class="hljs-string">&#x27;flexFlow&#x27;</span>, <span class="hljs-string">&#x27;flexGrow&#x27;</span>, <span class="hljs-string">&#x27;flexShrink&#x27;</span>, <span class="hljs-string">&#x27;flexWrap&#x27;</span>, <span class="hljs-string">&#x27;fontFeatureSettings&#x27;</span>, <span class="hljs-string">&#x27;fontKerning&#x27;</span>, <span class="hljs-string">&#x27;fontLanguageOverride&#x27;</span>, <span class="hljs-string">&#x27;hyphens&#x27;</span>, <span class="hljs-string">&#x27;imageRendering&#x27;</span>, <span class="hljs-string">&#x27;imageOrientation&#x27;</span>, <span class="hljs-string">&#x27;initial&#x27;</span>, <span class="hljs-string">&#x27;justifyContent&#x27;</span>, <span class="hljs-string">&#x27;linearGradient&#x27;</span>, <span class="hljs-string">&#x27;opacity&#x27;</span>, <span class="hljs-string">&#x27;order&#x27;</span>, <span class="hljs-string">&#x27;orientation&#x27;</span>, <span class="hljs-string">&#x27;outline&#x27;</span>, <span class="hljs-string">&#x27;outlineColor&#x27;</span>, <span class="hljs-string">&#x27;outlineOffset&#x27;</span>, <span class="hljs-string">&#x27;outlineStyle&#x27;</span>, <span class="hljs-string">&#x27;outlineWidth&#x27;</span>, <span class="hljs-string">&#x27;resize&#x27;</span>, <span class="hljs-string">&#x27;tabSize&#x27;</span>, <span class="hljs-string">&#x27;textAlignLast&#x27;</span>, <span class="hljs-string">&#x27;textCombineUpright&#x27;</span>, <span class="hljs-string">&#x27;textDecorationColor&#x27;</span>, <span class="hljs-string">&#x27;textDecorationLine&#x27;</span>, <span class="hljs-string">&#x27;textDecorationStyle&#x27;</span>, <span class="hljs-string">&#x27;touchAction&#x27;</span>, <span class="hljs-string">&#x27;transformStyle&#x27;</span>, <span class="hljs-string">&#x27;transition&#x27;</span>, <span class="hljs-string">&#x27;transitionDelay&#x27;</span>, <span class="hljs-string">&#x27;transitionDuration&#x27;</span>, <span class="hljs-string">&#x27;transitionProperty&#x27;</span>, <span class="hljs-string">&#x27;transitionTimingFunction&#x27;</span>, <span class="hljs-string">&#x27;unicodeBidi&#x27;</span>, <span class="hljs-string">&#x27;whiteSpace&#x27;</span>, <span class="hljs-string">&#x27;writingMode&#x27;</span>]);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 
@@ -808,10 +873,16 @@
     filternames,
     fontattribute,
     fontattributenames,
+    force,
+    forcenames,
     group,
     groupnames,
     palette,
     palettenames,
+    particle,
+    particlenames,
+    spring,
+    springnames,
     stack,
     stacknames,
     styles,
@@ -820,10 +891,12 @@
     tweennames,
     unstackedelement,
     unstackedelementnames,
-    constructors,
-    radian,
-    css,
-    xcss,
+    world,
+    worldnames,
+    <span class="hljs-title">constructors</span>,
+    <span class="hljs-title">radian</span>,
+    <span class="hljs-title">css</span>,
+    <span class="hljs-title">xcss</span>,
 };</pre></div></div>
             
         </li>

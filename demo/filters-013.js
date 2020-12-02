@@ -28,11 +28,26 @@ const piccy = scrawl.makePicture({
     filter: 'url(#svg-posterize)',
 });
 
-// #### Scene animation
+
+// #### SVG filter
+// We create the filter in the HTML script, not here:
+// ```
+// <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+//   <filter id="svg-posterize">
+//     <feComponentTransfer>
+//       <feFuncR type="discrete" tableValues=".1 .4 .7 1" />
+//       <feFuncG type="discrete" tableValues=".1 .4 .7 1" />
+//       <feFuncB type="discrete" tableValues=".1 .4 .7 1" />
+//     </feComponentTransfer>
+//   </filter>
+// </svg>
+// ```
 let feFuncR = document.querySelector('feFuncR'),
     feFuncG = document.querySelector('feFuncG'),
     feFuncB = document.querySelector('feFuncB');
 
+
+// #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 

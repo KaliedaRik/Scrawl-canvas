@@ -4,7 +4,7 @@
 <head>
   <title>simple-graph-lines.js</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -91,7 +91,7 @@
             <div class="content"><div class='highlight'><pre><span class="hljs-comment">/*
 Data supplied to graph module as Javascript object with structure:
 {
-    yearLabels: ['year-1-label', 'year-2-label', ...],
+    yearLabels: [&#x27;year-1-label&#x27;, &#x27;year-2-label&#x27;, ...],
     data:       [year-1-data, year-2-data, ...],
 }
 */</span></pre></div></div>
@@ -109,7 +109,7 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">'../../source/scrawl.js'</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../../source/scrawl.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -124,7 +124,7 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> frame <span class="hljs-keyword">from</span> <span class="hljs-string">'./simple-chart-frame.js'</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> frame <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./simple-chart-frame.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -304,7 +304,7 @@ Data supplied to graph module as Javascript object with structure:
 
                 <span class="hljs-attr">width</span>: <span class="hljs-number">0</span>,
                 <span class="hljs-attr">height</span>: <span class="hljs-number">0</span>,
-                <span class="hljs-attr">method</span>: <span class="hljs-string">'none'</span>,
+                <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;none&#x27;</span>,
 
                 <span class="hljs-attr">startX</span>: <span class="hljs-string">`<span class="hljs-subst">${graphLeft + (xStep * index) + (xStep / <span class="hljs-number">2</span>)}</span>%`</span>,
                 <span class="hljs-attr">startY</span>: <span class="hljs-string">`<span class="hljs-subst">${graphBottom}</span>%`</span>,
@@ -331,17 +331,17 @@ Data supplied to graph module as Javascript object with structure:
                     <span class="hljs-attr">group</span>: lineGroup,
 
                     <span class="hljs-attr">pivot</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${index - <span class="hljs-number">1</span>}</span>-position`</span>,
-                    <span class="hljs-attr">lockTo</span>: <span class="hljs-string">'pivot'</span>,
+                    <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
 
                     <span class="hljs-attr">endPivot</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${index}</span>-position`</span>,
-                    <span class="hljs-attr">endLockTo</span>: <span class="hljs-string">'pivot'</span>,
+                    <span class="hljs-attr">endLockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
 
                     <span class="hljs-attr">useStartAsControlPoint</span>: <span class="hljs-literal">true</span>,
 
-                    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'blue'</span>,
+                    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
                     <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
 
-                    <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
+                    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
                 });
             }</pre></div></div>
             
@@ -365,17 +365,17 @@ Data supplied to graph module as Javascript object with structure:
 
                 <span class="hljs-attr">radius</span>: <span class="hljs-number">8</span>,
 
-                <span class="hljs-attr">handleX</span>: <span class="hljs-string">'center'</span>,
-                <span class="hljs-attr">handleY</span>: <span class="hljs-string">'center'</span>,
+                <span class="hljs-attr">handleX</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
+                <span class="hljs-attr">handleY</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
 
                 <span class="hljs-attr">pivot</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${index}</span>-position`</span>,
-                <span class="hljs-attr">lockTo</span>: <span class="hljs-string">'pivot'</span>,
+                <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
 
-                <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'aliceblue'</span>,
-                <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'blue'</span>,
+                <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;aliceblue&#x27;</span>,
+                <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
                 <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">4</span>,
 
-                <span class="hljs-attr">method</span>: <span class="hljs-string">'drawThenFill'</span>,
+                <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;drawThenFill&#x27;</span>,
             });
         });</pre></div></div>
             
@@ -529,7 +529,7 @@ Data supplied to graph module as Javascript object with structure:
             
             <div class="content"><div class='highlight'><pre>        pinGroup.setArtefacts({
             <span class="hljs-attr">scale</span>: <span class="hljs-number">1</span>,
-            <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'aliceblue'</span>,
+            <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;aliceblue&#x27;</span>,
         });</pre></div></div>
             
         </li>
@@ -561,14 +561,14 @@ Data supplied to graph module as Javascript object with structure:
 
                     pinGroup.setArtefacts({
                         <span class="hljs-attr">scale</span>: <span class="hljs-number">1</span>,
-                        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'aliceblue'</span>,
+                        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;aliceblue&#x27;</span>,
                     });
 
                     frame.updateSubtitle(<span class="hljs-string">`<span class="hljs-subst">${label}</span>: §RED§<span class="hljs-subst">${data[index].toLocaleString()}</span>`</span>);
 
-                    <span class="hljs-keyword">this</span>.set({
+                    <span class="hljs-built_in">this</span>.set({
                         <span class="hljs-attr">scale</span>: <span class="hljs-number">1.5</span>,
-                        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'red'</span>,
+                        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
                     });
                 },
             });
@@ -587,7 +587,7 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        frame.updateSubtitle(<span class="hljs-string">'No data selected'</span>);
+            <div class="content"><div class='highlight'><pre>        frame.updateSubtitle(<span class="hljs-string">&#x27;No data selected&#x27;</span>);
         frame.updateYTop(max.toLocaleString());
         frame.updateYBottom(min.toLocaleString());
         frame.updateXLeft(yearLabels[<span class="hljs-number">0</span>]);
@@ -608,7 +608,7 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> kill = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> kill = <span class="hljs-function">() =&gt;</span> {
 
     <span class="hljs-keyword">if</span> (positionGroup) {
 
@@ -635,7 +635,7 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> hide = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> hide = <span class="hljs-function">() =&gt;</span> {
 
     <span class="hljs-keyword">if</span> (positionGroup) {
 
@@ -658,7 +658,7 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> show = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> show = <span class="hljs-function">() =&gt;</span> {
 
     <span class="hljs-keyword">if</span> (positionGroup) {
 

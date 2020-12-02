@@ -4,7 +4,7 @@
 <head>
   <title>State factory</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -110,6 +110,11 @@
                 </a>
               
                 
+                <a class="source" href="emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
                 <a class="source" href="filter.html">
                   ./source/factory/filter.js
                 </a>
@@ -150,6 +155,11 @@
                 </a>
               
                 
+                <a class="source" href="net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
                 <a class="source" href="oval.html">
                   ./source/factory/oval.js
                 </a>
@@ -157,6 +167,31 @@
                 
                 <a class="source" href="palette.html">
                   ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="particleForce.html">
+                  ./source/factory/particleForce.js
+                </a>
+              
+                
+                <a class="source" href="particleHistory.html">
+                  ./source/factory/particleHistory.js
+                </a>
+              
+                
+                <a class="source" href="particleSpring.html">
+                  ./source/factory/particleSpring.js
+                </a>
+              
+                
+                <a class="source" href="particleWorld.html">
+                  ./source/factory/particleWorld.js
                 </a>
               
                 
@@ -247,6 +282,11 @@
                 
                 <a class="source" href="ticker.html">
                   ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="tracer.html">
+                  ./source/factory/tracer.js
                 </a>
               
                 
@@ -446,10 +486,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, entity, styles } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { isa_obj, xt, xtGet } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">entity</span>, <span class="hljs-title">styles</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+<span class="hljs-keyword">import</span> { isa_obj, xt, xtGet } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/base.js'</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -466,11 +506,11 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> State = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.set(<span class="hljs-keyword">this</span>.defs);
-    <span class="hljs-keyword">this</span>.lineDash = [];
-    <span class="hljs-keyword">this</span>.set(items);
+    <span class="hljs-built_in">this</span>.set(<span class="hljs-built_in">this</span>.defs);
+    <span class="hljs-built_in">this</span>.lineDash = [];
+    <span class="hljs-built_in">this</span>.set(items);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -487,7 +527,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = State.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">'State'</span>;</pre></div></div>
+P.type = <span class="hljs-string">&#x27;State&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -543,8 +583,8 @@ P.type = <span class="hljs-string">'State'</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    fillStyle: <span class="hljs-string">'rgba(0,0,0,1)'</span>,
-    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'rgba(0,0,0,1)'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    fillStyle: <span class="hljs-string">&#x27;rgba(0,0,0,1)&#x27;</span>,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;rgba(0,0,0,1)&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -590,7 +630,7 @@ P.type = <span class="hljs-string">'State'</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    globalCompositeOperation: <span class="hljs-string">'source-over'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    globalCompositeOperation: <span class="hljs-string">&#x27;source-over&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -626,7 +666,7 @@ P.type = <span class="hljs-string">'State'</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    lineCap: <span class="hljs-string">'butt'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    lineCap: <span class="hljs-string">&#x27;butt&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -646,7 +686,7 @@ P.type = <span class="hljs-string">'State'</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    lineJoin: <span class="hljs-string">'miter'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    lineJoin: <span class="hljs-string">&#x27;miter&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -757,7 +797,7 @@ P.type = <span class="hljs-string">'State'</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    shadowColor: <span class="hljs-string">'rgba(0,0,0,0)'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    shadowColor: <span class="hljs-string">&#x27;rgba(0,0,0,0)&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -773,9 +813,9 @@ P.type = <span class="hljs-string">'State'</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    font: <span class="hljs-string">'12px sans-serif'</span>,
-    <span class="hljs-attr">textAlign</span>: <span class="hljs-string">'left'</span>,
-    <span class="hljs-attr">textBaseline</span>: <span class="hljs-string">'top'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    font: <span class="hljs-string">&#x27;12px sans-serif&#x27;</span>,
+    <span class="hljs-attr">textAlign</span>: <span class="hljs-string">&#x27;left&#x27;</span>,
+    <span class="hljs-attr">textBaseline</span>: <span class="hljs-string">&#x27;top&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -794,7 +834,7 @@ P.type = <span class="hljs-string">'State'</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    filter: <span class="hljs-string">'none'</span>,
+            <div class="content"><div class='highlight'><pre>    filter: <span class="hljs-string">&#x27;none&#x27;</span>,
 };</pre></div></div>
             
         </li>
@@ -816,17 +856,17 @@ P.type = <span class="hljs-string">'State'</span>;</pre></div></div>
 
     <span class="hljs-keyword">switch</span> (key) {
 
-        <span class="hljs-keyword">case</span> <span class="hljs-string">'lineDash'</span> : 
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;lineDash&#x27;</span> : 
 
             <span class="hljs-keyword">if</span> (!value.length) {
 
-                result = (includes.indexOf(<span class="hljs-string">'lineDash'</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
+                result = (includes.indexOf(<span class="hljs-string">&#x27;lineDash&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
             }
             <span class="hljs-keyword">break</span>;
 
         <span class="hljs-keyword">default</span> : 
 
-            <span class="hljs-keyword">if</span> (includes.indexOf(key) &lt; <span class="hljs-number">0</span> &amp;&amp; value === <span class="hljs-keyword">this</span>.defs[key]) result = <span class="hljs-literal">false</span>;
+            <span class="hljs-keyword">if</span> (includes.indexOf(key) &lt; <span class="hljs-number">0</span> &amp;&amp; value === <span class="hljs-built_in">this</span>.defs[key]) result = <span class="hljs-literal">false</span>;
     }
     <span class="hljs-keyword">return</span> result;
 };
@@ -889,31 +929,31 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
         
         <span class="hljs-keyword">let</span> key, i, iz,
             keys = <span class="hljs-built_in">Object</span>.keys(items),
-            d = <span class="hljs-keyword">this</span>.defs;
+            d = <span class="hljs-built_in">this</span>.defs;
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = keys.length; i &lt; iz; i++) {
 
             key = keys[i];
 
-            <span class="hljs-keyword">if</span> (key !== <span class="hljs-string">'name'</span>) {
+            <span class="hljs-keyword">if</span> (key !== <span class="hljs-string">&#x27;name&#x27;</span>) {
 
-                <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> d[key] !== <span class="hljs-string">'undefined'</span>) <span class="hljs-keyword">this</span>[key] = items[key];
+                <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> d[key] !== <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-built_in">this</span>[key] = items[key];
             }
         }
     }
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };
 
 P.get = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">let</span> undef, d, i;
 
-    d = <span class="hljs-keyword">this</span>.defs[item];
+    d = <span class="hljs-built_in">this</span>.defs[item];
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> d !== <span class="hljs-string">'undefined'</span>) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> d !== <span class="hljs-string">&#x27;undefined&#x27;</span>) {
     
-        i = <span class="hljs-keyword">this</span>[item];
-        <span class="hljs-keyword">return</span> (<span class="hljs-keyword">typeof</span> i !== <span class="hljs-string">'undefined'</span>) ? i : d;
+        i = <span class="hljs-built_in">this</span>[item];
+        <span class="hljs-keyword">return</span> (<span class="hljs-keyword">typeof</span> i !== <span class="hljs-string">&#x27;undefined&#x27;</span>) ? i : d;
     }
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> undef;
 };
@@ -926,13 +966,13 @@ S.fillStyle = <span class="hljs-function"><span class="hljs-keyword">function</s
 
     <span class="hljs-keyword">let</span> temp;
 
-    <span class="hljs-keyword">if</span> (isa_obj(item) &amp;&amp; item.lib === <span class="hljs-string">'styles'</span>) <span class="hljs-keyword">this</span>.fillStyle = item;
+    <span class="hljs-keyword">if</span> (isa_obj(item) &amp;&amp; item.lib === <span class="hljs-string">&#x27;styles&#x27;</span>) <span class="hljs-built_in">this</span>.fillStyle = item;
     <span class="hljs-keyword">else</span>{
 
         temp = styles[item];
 
-        <span class="hljs-keyword">if</span> (temp) <span class="hljs-keyword">this</span>.fillStyle = temp;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.fillStyle = item;
+        <span class="hljs-keyword">if</span> (temp) <span class="hljs-built_in">this</span>.fillStyle = temp;
+        <span class="hljs-keyword">else</span> <span class="hljs-built_in">this</span>.fillStyle = item;
     }
 };
 
@@ -940,13 +980,13 @@ S.strokeStyle = <span class="hljs-function"><span class="hljs-keyword">function<
 
     <span class="hljs-keyword">let</span> temp;
 
-    <span class="hljs-keyword">if</span> (isa_obj(item) &amp;&amp; item.lib === <span class="hljs-string">'styles'</span>) <span class="hljs-keyword">this</span>.strokeStyle = item;
+    <span class="hljs-keyword">if</span> (isa_obj(item) &amp;&amp; item.lib === <span class="hljs-string">&#x27;styles&#x27;</span>) <span class="hljs-built_in">this</span>.strokeStyle = item;
     <span class="hljs-keyword">else</span>{
 
         temp = styles[item];
 
-        <span class="hljs-keyword">if</span> (temp) <span class="hljs-keyword">this</span>.strokeStyle = temp;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.strokeStyle = item;
+        <span class="hljs-keyword">if</span> (temp) <span class="hljs-built_in">this</span>.strokeStyle = temp;
+        <span class="hljs-keyword">else</span> <span class="hljs-built_in">this</span>.strokeStyle = item;
     }
 };</pre></div></div>
             
@@ -977,10 +1017,10 @@ S.strokeStyle = <span class="hljs-function"><span class="hljs-keyword">function<
             </div>
             
             <div class="content"><div class='highlight'><pre>P.allKeys = <span class="hljs-built_in">Object</span>.keys(P.defs);
-P.mainKeys = [<span class="hljs-string">'globalAlpha'</span>, <span class="hljs-string">'globalCompositeOperation'</span>, <span class="hljs-string">'shadowOffsetX'</span>, <span class="hljs-string">'shadowOffsetY'</span>, <span class="hljs-string">'shadowBlur'</span>, <span class="hljs-string">'filter'</span>];
-P.lineKeys = [<span class="hljs-string">'lineWidth'</span>, <span class="hljs-string">'lineCap'</span>, <span class="hljs-string">'lineJoin'</span>, <span class="hljs-string">'lineDash'</span>, <span class="hljs-string">'lineDashOffset'</span>, <span class="hljs-string">'miterLimit'</span>];
-P.styleKeys = [<span class="hljs-string">'fillStyle'</span>, <span class="hljs-string">'strokeStyle'</span>, <span class="hljs-string">'shadowColor'</span>];
-P.textKeys = [<span class="hljs-string">'font'</span>];</pre></div></div>
+P.mainKeys = [<span class="hljs-string">&#x27;globalAlpha&#x27;</span>, <span class="hljs-string">&#x27;globalCompositeOperation&#x27;</span>, <span class="hljs-string">&#x27;shadowOffsetX&#x27;</span>, <span class="hljs-string">&#x27;shadowOffsetY&#x27;</span>, <span class="hljs-string">&#x27;shadowBlur&#x27;</span>, <span class="hljs-string">&#x27;filter&#x27;</span>];
+P.lineKeys = [<span class="hljs-string">&#x27;lineWidth&#x27;</span>, <span class="hljs-string">&#x27;lineCap&#x27;</span>, <span class="hljs-string">&#x27;lineJoin&#x27;</span>, <span class="hljs-string">&#x27;lineDash&#x27;</span>, <span class="hljs-string">&#x27;lineDashOffset&#x27;</span>, <span class="hljs-string">&#x27;miterLimit&#x27;</span>];
+P.styleKeys = [<span class="hljs-string">&#x27;fillStyle&#x27;</span>, <span class="hljs-string">&#x27;strokeStyle&#x27;</span>, <span class="hljs-string">&#x27;shadowColor&#x27;</span>];
+P.textKeys = [<span class="hljs-string">&#x27;font&#x27;</span>];</pre></div></div>
             
         </li>
         
@@ -997,17 +1037,17 @@ P.textKeys = [<span class="hljs-string">'font'</span>];</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>P.getChanges = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">ent, engineState</span>) </span>{
 
-    <span class="hljs-keyword">let</span> mainKeys = <span class="hljs-keyword">this</span>.mainKeys,
-        lineKeys = <span class="hljs-keyword">this</span>.lineKeys,
-        styleKeys = <span class="hljs-keyword">this</span>.styleKeys,
-        textKeys = <span class="hljs-keyword">this</span>.textKeys,
+    <span class="hljs-keyword">let</span> mainKeys = <span class="hljs-built_in">this</span>.mainKeys,
+        lineKeys = <span class="hljs-built_in">this</span>.lineKeys,
+        styleKeys = <span class="hljs-built_in">this</span>.styleKeys,
+        textKeys = <span class="hljs-built_in">this</span>.textKeys,
         k, style, scaled, i, iz, j, jz,
         linedashFlag, desired, current,
-        defs = <span class="hljs-keyword">this</span>.defs,
+        defs = <span class="hljs-built_in">this</span>.defs,
         result = {};
 
     <span class="hljs-keyword">let</span> getItem = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">source, key</span>) </span>{
-        <span class="hljs-keyword">return</span> (<span class="hljs-keyword">typeof</span> source[key] != <span class="hljs-string">'undefined'</span>) ? source[key] : defs[key];
+        <span class="hljs-keyword">return</span> (<span class="hljs-keyword">typeof</span> source[key] != <span class="hljs-string">&#x27;undefined&#x27;</span>) ? source[key] : defs[key];
     };
 
     <span class="hljs-keyword">if</span> (ent.substring) ent = entity[ent];</pre></div></div>
@@ -1028,7 +1068,7 @@ P.textKeys = [<span class="hljs-string">'font'</span>];</pre></div></div>
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = mainKeys.length; i &lt; iz; i++) {
 
         k = mainKeys[i];
-        desired = getItem(<span class="hljs-keyword">this</span>, k);
+        desired = getItem(<span class="hljs-built_in">this</span>, k);
         current = getItem(engineState, k);
 
         <span class="hljs-keyword">if</span> (current !== desired) result[k] = desired;
@@ -1047,15 +1087,15 @@ P.textKeys = [<span class="hljs-string">'font'</span>];</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lineWidth || engineState.lineWidth) {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.lineWidth || engineState.lineWidth) {
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = lineKeys.length; i &lt; iz; i++) {
 
             k = lineKeys[i];
-            desired = getItem(<span class="hljs-keyword">this</span>, k);
+            desired = getItem(<span class="hljs-built_in">this</span>, k);
             current = getItem(engineState, k);
 
-            <span class="hljs-keyword">if</span> (k == <span class="hljs-string">'lineDash'</span>) {
+            <span class="hljs-keyword">if</span> (k == <span class="hljs-string">&#x27;lineDash&#x27;</span>) {
 
                 <span class="hljs-keyword">if</span> (desired.length || current.length) {
 
@@ -1077,7 +1117,7 @@ P.textKeys = [<span class="hljs-string">'font'</span>];</pre></div></div>
                 }
             }
 
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (k == <span class="hljs-string">'lineWidth'</span>) {
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (k == <span class="hljs-string">&#x27;lineWidth&#x27;</span>) {
 
                 <span class="hljs-keyword">if</span> (ent.scaleOutline) {
 
@@ -1112,7 +1152,7 @@ P.textKeys = [<span class="hljs-string">'font'</span>];</pre></div></div>
 
         k = styleKeys[i];
         current = getItem(engineState, k);
-        desired = getItem(<span class="hljs-keyword">this</span>, k);</pre></div></div>
+        desired = getItem(<span class="hljs-built_in">this</span>, k);</pre></div></div>
             
         </li>
         
@@ -1142,7 +1182,7 @@ P.textKeys = [<span class="hljs-string">'font'</span>];</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (desired.type === <span class="hljs-string">'Color'</span>) {
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (desired.type === <span class="hljs-string">&#x27;Color&#x27;</span>) {
 
             desired = desired.getData();
 
@@ -1178,12 +1218,12 @@ P.textKeys = [<span class="hljs-string">'font'</span>];</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (ent.type === <span class="hljs-string">'Phrase'</span>) {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (ent.type === <span class="hljs-string">&#x27;Phrase&#x27;</span>) {
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = textKeys.length; i &lt; iz; i++) {
 
             k = textKeys[i];
-            desired = getItem(<span class="hljs-keyword">this</span>, k);
+            desired = getItem(<span class="hljs-built_in">this</span>, k);
             current = getItem(engineState, k);
 
             <span class="hljs-keyword">if</span> (current !== desired) result[k] = desired
@@ -1207,21 +1247,21 @@ P.textKeys = [<span class="hljs-string">'font'</span>];</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>P.setStateFromEngine = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
 
-    <span class="hljs-keyword">let</span> keys = <span class="hljs-keyword">this</span>.allKeys,
+    <span class="hljs-keyword">let</span> keys = <span class="hljs-built_in">this</span>.allKeys,
         key;
 
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = keys.length; i &lt; iz; i++) {
 
         key = keys[i];
-        <span class="hljs-keyword">this</span>[key] = engine[key];
+        <span class="hljs-built_in">this</span>[key] = engine[key];
     }
 
-    <span class="hljs-keyword">this</span>.lineDash = (xt(engine.lineDash)) ? engine.lineDash : [];
-    <span class="hljs-keyword">this</span>.lineDashOffset = xtGet(engine.lineDashOffset, <span class="hljs-number">0</span>);
-    engine.textAlign = <span class="hljs-keyword">this</span>.textAlign = <span class="hljs-string">'left'</span>;
-    engine.textBaseline = <span class="hljs-keyword">this</span>.textBaseline = <span class="hljs-string">'top'</span>;
+    <span class="hljs-built_in">this</span>.lineDash = (xt(engine.lineDash)) ? engine.lineDash : [];
+    <span class="hljs-built_in">this</span>.lineDashOffset = xtGet(engine.lineDashOffset, <span class="hljs-number">0</span>);
+    engine.textAlign = <span class="hljs-built_in">this</span>.textAlign = <span class="hljs-string">&#x27;left&#x27;</span>;
+    engine.textBaseline = <span class="hljs-built_in">this</span>.textBaseline = <span class="hljs-string">&#x27;top&#x27;</span>;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -1243,7 +1283,7 @@ P.textKeys = [<span class="hljs-string">'font'</span>];</pre></div></div>
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> State(items);
 };
 
-constructors.State = State;</pre></div></div>
+<span class="hljs-title">constructors</span>.<span class="hljs-title">State</span> = <span class="hljs-title">State</span>;</pre></div></div>
             
         </li>
         

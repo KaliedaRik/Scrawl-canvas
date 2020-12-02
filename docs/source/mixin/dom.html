@@ -4,7 +4,7 @@
 <head>
   <title>DOM mixin</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -110,6 +110,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
                 <a class="source" href="../factory/filter.html">
                   ./source/factory/filter.js
                 </a>
@@ -150,6 +155,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
                 <a class="source" href="../factory/oval.html">
                   ./source/factory/oval.js
                 </a>
@@ -157,6 +167,31 @@
                 
                 <a class="source" href="../factory/palette.html">
                   ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleForce.html">
+                  ./source/factory/particleForce.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleHistory.html">
+                  ./source/factory/particleHistory.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleSpring.html">
+                  ./source/factory/particleSpring.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleWorld.html">
+                  ./source/factory/particleWorld.js
                 </a>
               
                 
@@ -247,6 +282,11 @@
                 
                 <a class="source" href="../factory/ticker.html">
                   ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="../factory/tracer.html">
+                  ./source/factory/tracer.js
                 </a>
               
                 
@@ -433,19 +473,19 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, artefact } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { mergeOver, pushUnique, removeItem, isa_obj, isa_dom, isa_quaternion, xt, xta, λ<span class="hljs-literal">null</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
-<span class="hljs-keyword">import</span> { uiSubscribedElements, currentCorePosition, applyCoreResizeListener } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/userInteraction.js'</span>;
-<span class="hljs-keyword">import</span> { addDomShowElement, setDomShowRequired, domShow } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/document.js'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">artefact</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+<span class="hljs-keyword">import</span> { mergeOver, pushUnique, removeItem, isa_obj, isa_dom, isa_quaternion, xt, xta, λ<span class="hljs-literal">null</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { uiSubscribedElements, currentCorePosition, applyCoreResizeListener } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/userInteraction.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { addDomShowElement, setDomShowRequired, domShow } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/document.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { makeQuaternion, requestQuaternion, releaseQuaternion } <span class="hljs-keyword">from</span> <span class="hljs-string">'../factory/quaternion.js'</span>;
+<span class="hljs-keyword">import</span> { makeQuaternion, requestQuaternion, releaseQuaternion } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/quaternion.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> positionMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/position.js'</span>;
-<span class="hljs-keyword">import</span> deltaMix <span class="hljs-keyword">from</span> <span class="hljs-string">'./delta.js'</span>;
-<span class="hljs-keyword">import</span> pivotMix <span class="hljs-keyword">from</span> <span class="hljs-string">'./pivot.js'</span>;
-<span class="hljs-keyword">import</span> mimicMix <span class="hljs-keyword">from</span> <span class="hljs-string">'./mimic.js'</span>;
-<span class="hljs-keyword">import</span> pathMix <span class="hljs-keyword">from</span> <span class="hljs-string">'./path.js'</span>;
-<span class="hljs-keyword">import</span> anchorMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/anchor.js'</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> positionMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/position.js&#x27;</span>;
+<span class="hljs-keyword">import</span> deltaMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./delta.js&#x27;</span>;
+<span class="hljs-keyword">import</span> pivotMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./pivot.js&#x27;</span>;
+<span class="hljs-keyword">import</span> mimicMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./mimic.js&#x27;</span>;
+<span class="hljs-keyword">import</span> pathMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./path.js&#x27;</span>;
+<span class="hljs-keyword">import</span> anchorMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/anchor.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -519,7 +559,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        domElement: <span class="hljs-string">''</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        domElement: <span class="hljs-string">&#x27;&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -583,7 +623,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        classes: <span class="hljs-string">''</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        classes: <span class="hljs-string">&#x27;&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -603,7 +643,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        position: <span class="hljs-string">'absolute'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        position: <span class="hljs-string">&#x27;absolute&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -671,8 +711,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.packetExclusions = pushUnique(P.packetExclusions, [<span class="hljs-string">'domElement'</span>, <span class="hljs-string">'pathCorners'</span>, <span class="hljs-string">'rotation'</span>]);
-    P.packetFunctions = pushUnique(P.packetFunctions, [<span class="hljs-string">'onEnter'</span>, <span class="hljs-string">'onLeave'</span>, <span class="hljs-string">'onDown'</span>, <span class="hljs-string">'onUp'</span>]);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    P.packetExclusions = pushUnique(P.packetExclusions, [<span class="hljs-string">&#x27;domElement&#x27;</span>, <span class="hljs-string">&#x27;pathCorners&#x27;</span>, <span class="hljs-string">&#x27;rotation&#x27;</span>]);
+    P.packetFunctions = pushUnique(P.packetFunctions, [<span class="hljs-string">&#x27;onEnter&#x27;</span>, <span class="hljs-string">&#x27;onLeave&#x27;</span>, <span class="hljs-string">&#x27;onDown&#x27;</span>, <span class="hljs-string">&#x27;onUp&#x27;</span>]);</pre></div></div>
             
         </li>
         
@@ -689,7 +729,7 @@
             
             <div class="content"><div class='highlight'><pre>    P.processDOMPacketOut = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">key, value, includes</span>) </span>{
 
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.processFactoryPacketOut(key, value, includes);
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.processFactoryPacketOut(key, value, includes);
     };</pre></div></div>
             
         </li>
@@ -709,7 +749,7 @@
 
         <span class="hljs-keyword">let</span> result = <span class="hljs-literal">true</span>;
 
-        <span class="hljs-keyword">if</span>(includes.indexOf(key) &lt; <span class="hljs-number">0</span> &amp;&amp; value === <span class="hljs-keyword">this</span>.defs[key]) result = <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">if</span>(includes.indexOf(key) &lt; <span class="hljs-number">0</span> &amp;&amp; value === <span class="hljs-built_in">this</span>.defs[key]) result = <span class="hljs-literal">false</span>;
 
         <span class="hljs-keyword">return</span> result;
     };</pre></div></div>
@@ -729,20 +769,20 @@
             
             <div class="content"><div class='highlight'><pre>    P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (isa_dom(<span class="hljs-keyword">this</span>.domElement)) {
+        <span class="hljs-keyword">if</span> (isa_dom(<span class="hljs-built_in">this</span>.domElement)) {
 
-            <span class="hljs-keyword">let</span> el = <span class="hljs-keyword">this</span>.domElement;
+            <span class="hljs-keyword">let</span> el = <span class="hljs-built_in">this</span>.domElement;
 
             <span class="hljs-keyword">let</span> mynode = el.cloneNode(<span class="hljs-literal">true</span>);
 
-            <span class="hljs-keyword">let</span> kids = mynode.querySelectorAll(<span class="hljs-string">'[data-corner-div="sc"]'</span>);
+            <span class="hljs-keyword">let</span> kids = mynode.querySelectorAll(<span class="hljs-string">&#x27;[data-corner-div=&quot;sc&quot;]&#x27;</span>);
             kids.forEach(<span class="hljs-function"><span class="hljs-params">kid</span> =&gt;</span> mynode.removeChild(kid));
 
             copy.outerHTML = mynode.outerHTML;
             copy.host = el.parentElement.id;
         }
 
-        copy = <span class="hljs-keyword">this</span>.handlePacketAnchor(copy, items);
+        copy = <span class="hljs-built_in">this</span>.handlePacketAnchor(copy, items);
 
         <span class="hljs-keyword">return</span> copy;
     };</pre></div></div>
@@ -763,10 +803,10 @@
             
             <div class="content"><div class='highlight'><pre>    P.postCloneAction = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">clone, items</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.onEnter) clone.onEnter = <span class="hljs-keyword">this</span>.onEnter;
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.onLeave) clone.onLeave = <span class="hljs-keyword">this</span>.onLeave;
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.onDown) clone.onDown = <span class="hljs-keyword">this</span>.onDown;
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.onUp) clone.onUp = <span class="hljs-keyword">this</span>.onUp;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.onEnter) clone.onEnter = <span class="hljs-built_in">this</span>.onEnter;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.onLeave) clone.onLeave = <span class="hljs-built_in">this</span>.onLeave;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.onDown) clone.onDown = <span class="hljs-built_in">this</span>.onDown;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.onUp) clone.onUp = <span class="hljs-built_in">this</span>.onUp;
 
         <span class="hljs-keyword">return</span> clone;
     };</pre></div></div>
@@ -816,10 +856,10 @@
             
             <div class="content"><div class='highlight'><pre>    S.trackHere = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">this</span>.trackHere = item;
+        <span class="hljs-built_in">this</span>.trackHere = item;
         
-        <span class="hljs-keyword">if</span> (item) pushUnique(uiSubscribedElements, <span class="hljs-keyword">this</span>.name);
-        <span class="hljs-keyword">else</span> removeItem(uiSubscribedElements, <span class="hljs-keyword">this</span>.name);
+        <span class="hljs-keyword">if</span> (item) pushUnique(uiSubscribedElements, <span class="hljs-built_in">this</span>.name);
+        <span class="hljs-keyword">else</span> removeItem(uiSubscribedElements, <span class="hljs-built_in">this</span>.name);
     };</pre></div></div>
             
         </li>
@@ -837,8 +877,8 @@
             
             <div class="content"><div class='highlight'><pre>    S.position = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">this</span>.position = item;
-        <span class="hljs-keyword">this</span>.dirtyPosition = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.position = item;
+        <span class="hljs-built_in">this</span>.dirtyPosition = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -856,8 +896,8 @@
             
             <div class="content"><div class='highlight'><pre>    S.visibility = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">this</span>.visibility = item;
-        <span class="hljs-keyword">this</span>.dirtyVisibility = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.visibility = item;
+        <span class="hljs-built_in">this</span>.dirtyVisibility = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -875,14 +915,14 @@
             
             <div class="content"><div class='highlight'><pre>    S.offsetZ = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">this</span>.offsetZ = item;
-        <span class="hljs-keyword">this</span>.dirtyOffsetZ = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.offsetZ = item;
+        <span class="hljs-built_in">this</span>.dirtyOffsetZ = <span class="hljs-literal">true</span>;
     };
 
     D.offsetZ = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">this</span>.offsetZ += item;
-        <span class="hljs-keyword">this</span>.dirtyOffsetZ = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.offsetZ += item;
+        <span class="hljs-built_in">this</span>.dirtyOffsetZ = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -900,13 +940,13 @@
             
             <div class="content"><div class='highlight'><pre>    S.roll = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">this</span>.roll = <span class="hljs-keyword">this</span>.checkRotationAngle(item);
-        <span class="hljs-keyword">this</span>.dirtyRotation = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.roll = <span class="hljs-built_in">this</span>.checkRotationAngle(item);
+        <span class="hljs-built_in">this</span>.dirtyRotation = <span class="hljs-literal">true</span>;
     };
     D.roll = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">this</span>.roll = <span class="hljs-keyword">this</span>.checkRotationAngle(<span class="hljs-keyword">this</span>.roll + item);
-        <span class="hljs-keyword">this</span>.dirtyRotation = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.roll = <span class="hljs-built_in">this</span>.checkRotationAngle(<span class="hljs-built_in">this</span>.roll + item);
+        <span class="hljs-built_in">this</span>.dirtyRotation = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -924,13 +964,13 @@
             
             <div class="content"><div class='highlight'><pre>    S.pitch = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">this</span>.pitch = <span class="hljs-keyword">this</span>.checkRotationAngle(item);
-        <span class="hljs-keyword">this</span>.dirtyRotation = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.pitch = <span class="hljs-built_in">this</span>.checkRotationAngle(item);
+        <span class="hljs-built_in">this</span>.dirtyRotation = <span class="hljs-literal">true</span>;
     };
     D.pitch = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">this</span>.pitch = <span class="hljs-keyword">this</span>.checkRotationAngle(<span class="hljs-keyword">this</span>.pitch + item);
-        <span class="hljs-keyword">this</span>.dirtyRotation = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.pitch = <span class="hljs-built_in">this</span>.checkRotationAngle(<span class="hljs-built_in">this</span>.pitch + item);
+        <span class="hljs-built_in">this</span>.dirtyRotation = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -948,13 +988,13 @@
             
             <div class="content"><div class='highlight'><pre>    S.yaw = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">this</span>.yaw = <span class="hljs-keyword">this</span>.checkRotationAngle(item);
-        <span class="hljs-keyword">this</span>.dirtyRotation = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.yaw = <span class="hljs-built_in">this</span>.checkRotationAngle(item);
+        <span class="hljs-built_in">this</span>.dirtyRotation = <span class="hljs-literal">true</span>;
     };
     D.yaw = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">this</span>.yaw = <span class="hljs-keyword">this</span>.checkRotationAngle(<span class="hljs-keyword">this</span>.yaw + item);
-        <span class="hljs-keyword">this</span>.dirtyRotation = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.yaw = <span class="hljs-built_in">this</span>.checkRotationAngle(<span class="hljs-built_in">this</span>.yaw + item);
+        <span class="hljs-built_in">this</span>.dirtyRotation = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -972,9 +1012,9 @@
             
             <div class="content"><div class='highlight'><pre>    S.css = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">this</span>.css = (<span class="hljs-keyword">this</span>.css) ? mergeOver(<span class="hljs-keyword">this</span>.css, item) : item;
+        <span class="hljs-built_in">this</span>.css = (<span class="hljs-built_in">this</span>.css) ? mergeOver(<span class="hljs-built_in">this</span>.css, item) : item;
 
-        <span class="hljs-keyword">this</span>.dirtyCss = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.dirtyCss = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -992,9 +1032,9 @@
             
             <div class="content"><div class='highlight'><pre>    S.classes = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">this</span>.classes = item;
+        <span class="hljs-built_in">this</span>.classes = item;
 
-        <span class="hljs-keyword">this</span>.dirtyClasses = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.dirtyClasses = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -1012,7 +1052,7 @@
             
             <div class="content"><div class='highlight'><pre>    S.domAttributes = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">this</span>.updateDomAttributes(item);
+        <span class="hljs-built_in">this</span>.updateDomAttributes(item);
     }</pre></div></div>
             
         </li>
@@ -1043,8 +1083,8 @@
             
             <div class="content"><div class='highlight'><pre>    P.checkRotationAngle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">angle</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (angle &lt; <span class="hljs-number">-180</span> || angle &gt; <span class="hljs-number">180</span>) {
-            angle += (angle &gt; <span class="hljs-number">0</span>) ? <span class="hljs-number">-360</span> : <span class="hljs-number">360</span>;
+        <span class="hljs-keyword">if</span> (angle &lt; -<span class="hljs-number">180</span> || angle &gt; <span class="hljs-number">180</span>) {
+            angle += (angle &gt; <span class="hljs-number">0</span>) ? -<span class="hljs-number">360</span> : <span class="hljs-number">360</span>;
         }
 
         <span class="hljs-keyword">return</span> angle;
@@ -1069,9 +1109,9 @@
             
             <div class="content"><div class='highlight'><pre>    P.updateDomAttributes = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items, value</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.domElement) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.domElement) {
 
-            <span class="hljs-keyword">let</span> el = <span class="hljs-keyword">this</span>.domElement;
+            <span class="hljs-keyword">let</span> el = <span class="hljs-built_in">this</span>.domElement;
 
             <span class="hljs-keyword">if</span> (items.substring &amp;&amp; xt(value)) {
 
@@ -1087,7 +1127,7 @@
                 });
             }
         }
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
     };</pre></div></div>
             
         </li>
@@ -1112,7 +1152,7 @@
         <span class="hljs-keyword">let</span> el = items.domElement,
             elStyle = el.style;
 
-        elStyle.boxSizing = <span class="hljs-string">'border-box'</span>;
+        elStyle.boxSizing = <span class="hljs-string">&#x27;border-box&#x27;</span>;
 
         <span class="hljs-keyword">if</span> (el &amp;&amp; items.setInitialDimensions) {
 
@@ -1155,8 +1195,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">this</span>.currentDimensions[<span class="hljs-number">0</span>] = dims.width;
-            <span class="hljs-keyword">this</span>.currentDimensions[<span class="hljs-number">1</span>] = dims.height;
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-built_in">this</span>.currentDimensions[<span class="hljs-number">0</span>] = dims.width;
+            <span class="hljs-built_in">this</span>.currentDimensions[<span class="hljs-number">1</span>] = dims.height;
             items.width = dims.width;
             items.height = dims.height;</pre></div></div>
             
@@ -1264,7 +1304,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.type === <span class="hljs-string">'Stack'</span>) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.type === <span class="hljs-string">&#x27;Stack&#x27;</span>) {</pre></div></div>
             
         </li>
         
@@ -1301,7 +1341,7 @@
 
                 <span class="hljs-keyword">if</span> (perspectiveOrigin.length) {
 
-                    perspectiveOrigin = perspectiveOrigin.split(<span class="hljs-string">' '</span>);
+                    perspectiveOrigin = perspectiveOrigin.split(<span class="hljs-string">&#x27; &#x27;</span>);
 
                     <span class="hljs-keyword">if</span> (perspectiveOrigin.length &gt; <span class="hljs-number">0</span> &amp;&amp; !xt(items.perspective) &amp;&amp; !xt(items.perspectiveX)) items.perspectiveX = perspectiveOrigin[<span class="hljs-number">0</span>];
 
@@ -1345,19 +1385,19 @@
 
         <span class="hljs-keyword">if</span> (item.substring) {
 
-            <span class="hljs-keyword">let</span> classes = <span class="hljs-keyword">this</span>.classes;
+            <span class="hljs-keyword">let</span> classes = <span class="hljs-built_in">this</span>.classes;
 
             classes += <span class="hljs-string">` <span class="hljs-subst">${item}</span>`</span>;
             classes = classes.trim();
-            classes = classes.replace(<span class="hljs-regexp">/[\s\uFEFF\xA0]+/g</span>, <span class="hljs-string">' '</span>);
+            classes = classes.replace(<span class="hljs-regexp">/[\s\uFEFF\xA0]+/g</span>, <span class="hljs-string">&#x27; &#x27;</span>);
 
-            <span class="hljs-keyword">if</span> (classes !== <span class="hljs-keyword">this</span>.classes) {
+            <span class="hljs-keyword">if</span> (classes !== <span class="hljs-built_in">this</span>.classes) {
 
-                <span class="hljs-keyword">this</span>.classes = classes;
-                <span class="hljs-keyword">this</span>.dirtyClasses = <span class="hljs-literal">true</span>;
+                <span class="hljs-built_in">this</span>.classes = classes;
+                <span class="hljs-built_in">this</span>.dirtyClasses = <span class="hljs-literal">true</span>;
             }
         }
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
     };</pre></div></div>
             
         </li>
@@ -1377,25 +1417,25 @@
 
         <span class="hljs-keyword">if</span> (item.substring) {
 
-            <span class="hljs-keyword">let</span> classes = <span class="hljs-keyword">this</span>.classes,
+            <span class="hljs-keyword">let</span> classes = <span class="hljs-built_in">this</span>.classes,
                 targets = item.split(),
                 search;
 
             targets.forEach(<span class="hljs-function"><span class="hljs-params">cls</span> =&gt;</span> {
 
-                search = <span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">' ?'</span> + cls + <span class="hljs-string">' ?'</span>);
-                classes = classes.replace(search, <span class="hljs-string">' '</span>);
+                search = <span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">&#x27; ?&#x27;</span> + cls + <span class="hljs-string">&#x27; ?&#x27;</span>);
+                classes = classes.replace(search, <span class="hljs-string">&#x27; &#x27;</span>);
                 classes = classes.trim();
-                classes = classes.replace(<span class="hljs-regexp">/[\s\uFEFF\xA0]+/g</span>, <span class="hljs-string">' '</span>);
+                classes = classes.replace(<span class="hljs-regexp">/[\s\uFEFF\xA0]+/g</span>, <span class="hljs-string">&#x27; &#x27;</span>);
             });
 
-            <span class="hljs-keyword">if</span> (classes !== <span class="hljs-keyword">this</span>.classes) {
+            <span class="hljs-keyword">if</span> (classes !== <span class="hljs-built_in">this</span>.classes) {
 
-                <span class="hljs-keyword">this</span>.classes = classes;
-                <span class="hljs-keyword">this</span>.dirtyClasses = <span class="hljs-literal">true</span>;
+                <span class="hljs-built_in">this</span>.classes = classes;
+                <span class="hljs-built_in">this</span>.dirtyClasses = <span class="hljs-literal">true</span>;
             }
         }
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
     };</pre></div></div>
             
         </li>
@@ -1427,15 +1467,15 @@
             
             <div class="content"><div class='highlight'><pre>    P.addPathCorners = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.domElement &amp;&amp; !<span class="hljs-keyword">this</span>.noUserInteraction) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.domElement &amp;&amp; !<span class="hljs-built_in">this</span>.noUserInteraction) {
 
             <span class="hljs-keyword">let</span> pointMaker = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-                <span class="hljs-keyword">let</span> p = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'div'</span>);
+                <span class="hljs-keyword">let</span> p = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;div&#x27;</span>);
 
                 p.style.width = <span class="hljs-number">0</span>;
                 p.style.height = <span class="hljs-number">0</span>;
-                p.style.position = <span class="hljs-string">'absolute'</span>;
+                p.style.position = <span class="hljs-string">&#x27;absolute&#x27;</span>;
 
                 <span class="hljs-keyword">return</span> p;
             };
@@ -1445,37 +1485,37 @@
                 br = pointMaker(),
                 bl = pointMaker();
 
-            tl.style.top = <span class="hljs-string">'0%'</span>;
-            tl.style.left = <span class="hljs-string">'0%'</span>;
-            tl.setAttribute(<span class="hljs-string">'data-corner-div'</span>, <span class="hljs-string">'sc'</span>);
+            tl.style.top = <span class="hljs-string">&#x27;0%&#x27;</span>;
+            tl.style.left = <span class="hljs-string">&#x27;0%&#x27;</span>;
+            tl.setAttribute(<span class="hljs-string">&#x27;data-corner-div&#x27;</span>, <span class="hljs-string">&#x27;sc&#x27;</span>);
 
-            tr.style.top = <span class="hljs-string">'0%'</span>;
-            tr.style.left = <span class="hljs-string">'100%'</span>;
-            tr.setAttribute(<span class="hljs-string">'data-corner-div'</span>, <span class="hljs-string">'sc'</span>);
+            tr.style.top = <span class="hljs-string">&#x27;0%&#x27;</span>;
+            tr.style.left = <span class="hljs-string">&#x27;100%&#x27;</span>;
+            tr.setAttribute(<span class="hljs-string">&#x27;data-corner-div&#x27;</span>, <span class="hljs-string">&#x27;sc&#x27;</span>);
 
-            br.style.top = <span class="hljs-string">'100%'</span>;
-            br.style.left = <span class="hljs-string">'100%'</span>;
-            br.setAttribute(<span class="hljs-string">'data-corner-div'</span>, <span class="hljs-string">'sc'</span>);
+            br.style.top = <span class="hljs-string">&#x27;100%&#x27;</span>;
+            br.style.left = <span class="hljs-string">&#x27;100%&#x27;</span>;
+            br.setAttribute(<span class="hljs-string">&#x27;data-corner-div&#x27;</span>, <span class="hljs-string">&#x27;sc&#x27;</span>);
 
-            bl.style.top = <span class="hljs-string">'100%'</span>;
-            bl.style.left = <span class="hljs-string">'0%'</span>;
-            bl.setAttribute(<span class="hljs-string">'data-corner-div'</span>, <span class="hljs-string">'sc'</span>);
+            bl.style.top = <span class="hljs-string">&#x27;100%&#x27;</span>;
+            bl.style.left = <span class="hljs-string">&#x27;0%&#x27;</span>;
+            bl.setAttribute(<span class="hljs-string">&#x27;data-corner-div&#x27;</span>, <span class="hljs-string">&#x27;sc&#x27;</span>);
 
-            <span class="hljs-keyword">let</span> el = <span class="hljs-keyword">this</span>.domElement;
+            <span class="hljs-keyword">let</span> el = <span class="hljs-built_in">this</span>.domElement;
 
             el.appendChild(tl);
             el.appendChild(tr);
             el.appendChild(br);
             el.appendChild(bl);
 
-            <span class="hljs-keyword">this</span>.pathCorners.push(tl);
-            <span class="hljs-keyword">this</span>.pathCorners.push(tr);
-            <span class="hljs-keyword">this</span>.pathCorners.push(br);
-            <span class="hljs-keyword">this</span>.pathCorners.push(bl);
+            <span class="hljs-built_in">this</span>.pathCorners.push(tl);
+            <span class="hljs-built_in">this</span>.pathCorners.push(tr);
+            <span class="hljs-built_in">this</span>.pathCorners.push(br);
+            <span class="hljs-built_in">this</span>.pathCorners.push(bl);
 
-            <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.currentCornersData) <span class="hljs-keyword">this</span>.currentCornersData = [];
+            <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.currentCornersData) <span class="hljs-built_in">this</span>.currentCornersData = [];
         }
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
     };</pre></div></div>
             
         </li>
@@ -1493,11 +1533,11 @@
             
             <div class="content"><div class='highlight'><pre>    P.checkCornerPositions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">corner</span>) </span>{
 
-        <span class="hljs-keyword">let</span> pathCorners = <span class="hljs-keyword">this</span>.pathCorners;
+        <span class="hljs-keyword">let</span> pathCorners = <span class="hljs-built_in">this</span>.pathCorners;
 
         <span class="hljs-keyword">if</span> (pathCorners.length === <span class="hljs-number">4</span>) {
 
-            <span class="hljs-keyword">let</span> here = <span class="hljs-keyword">this</span>.getHere(),
+            <span class="hljs-keyword">let</span> here = <span class="hljs-built_in">this</span>.getHere(),
                 x = currentCorePosition.scrollX - (here.offsetX || <span class="hljs-number">0</span>),
                 y = currentCorePosition.scrollY - (here.offsetY || <span class="hljs-number">0</span>),
                 round = <span class="hljs-built_in">Math</span>.round,
@@ -1518,25 +1558,25 @@
 
             <span class="hljs-keyword">switch</span> (corner) {
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'topLeft'</span> :
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;topLeft&#x27;</span> :
 
                     client = pathCorners[<span class="hljs-number">0</span>].getClientRects();
                     cornerPush(client);
                     <span class="hljs-keyword">return</span> results;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'topRight'</span> :
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;topRight&#x27;</span> :
 
                     client = pathCorners[<span class="hljs-number">1</span>].getClientRects();
                     cornerPush(client);
                     <span class="hljs-keyword">return</span> results;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'bottomRight'</span> :
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;bottomRight&#x27;</span> :
 
                     client = pathCorners[<span class="hljs-number">2</span>].getClientRects();
                     cornerPush(client);
                     <span class="hljs-keyword">return</span> results;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'bottomLeft'</span> :
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;bottomLeft&#x27;</span> :
 
                     client = pathCorners[<span class="hljs-number">3</span>].getClientRects();
                     cornerPush(client);
@@ -1570,38 +1610,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.getCornerCoordinate = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">corner, coordinate</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> cornerCoordinateLabels = [<span class="hljs-string">&#x27;topLeft&#x27;</span>, <span class="hljs-string">&#x27;topRight&#x27;</span>, <span class="hljs-string">&#x27;bottomRight&#x27;</span>, <span class="hljs-string">&#x27;bottomLeft&#x27;</span>];
+    P.getCornerCoordinate = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">corner</span>) </span>{
 
-        <span class="hljs-keyword">let</span> x, y;
-
-        <span class="hljs-keyword">switch</span> (corner) {
-
-            <span class="hljs-keyword">case</span> <span class="hljs-string">'topLeft'</span> :
-                [x, y] = <span class="hljs-keyword">this</span>.checkCornerPositions(<span class="hljs-string">'topLeft'</span>);
-                <span class="hljs-keyword">break</span>;
-
-            <span class="hljs-keyword">case</span> <span class="hljs-string">'topRight'</span> :
-                [x, y] = <span class="hljs-keyword">this</span>.checkCornerPositions(<span class="hljs-string">'topRight'</span>);
-                <span class="hljs-keyword">break</span>;
-
-            <span class="hljs-keyword">case</span> <span class="hljs-string">'bottomRight'</span> :
-                [x, y] = <span class="hljs-keyword">this</span>.checkCornerPositions(<span class="hljs-string">'bottomRight'</span>);
-                <span class="hljs-keyword">break</span>;
-
-            <span class="hljs-keyword">case</span> <span class="hljs-string">'bottomLeft'</span> :
-                [x, y] = <span class="hljs-keyword">this</span>.checkCornerPositions(<span class="hljs-string">'bottomLeft'</span>);
-                <span class="hljs-keyword">break</span>;
-
-            <span class="hljs-keyword">default</span> :
-                [x, y] = <span class="hljs-keyword">this</span>.currentStampPosition;
-        }
-
-        <span class="hljs-keyword">if</span> (coordinate) {
-
-            <span class="hljs-keyword">if</span> (coordinate === <span class="hljs-string">'x'</span>) <span class="hljs-keyword">return</span> x;
-            <span class="hljs-keyword">if</span> (coordinate === <span class="hljs-string">'y'</span>) <span class="hljs-keyword">return</span> y;
-        }
-        <span class="hljs-keyword">return</span> [x, y];
+        <span class="hljs-keyword">if</span> (cornerCoordinateLabels.indexOf(corner) &gt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.checkCornerPositions(corner);
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> [].concat(<span class="hljs-built_in">this</span>.currentStampPosition);
     };</pre></div></div>
             
         </li>
@@ -1636,19 +1649,19 @@
             
             <div class="content"><div class='highlight'><pre>    P.cleanPathObject = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">false</span>;
+        <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">false</span>;
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.domElement &amp;&amp; !<span class="hljs-keyword">this</span>.noUserInteraction) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.domElement &amp;&amp; !<span class="hljs-built_in">this</span>.noUserInteraction) {
 
-            <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.pathCorners.length) <span class="hljs-keyword">this</span>.addPathCorners();
+            <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.pathCorners.length) <span class="hljs-built_in">this</span>.addPathCorners();
 
-            <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.currentCornersData) <span class="hljs-keyword">this</span>.currentCornersData = [];
+            <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.currentCornersData) <span class="hljs-built_in">this</span>.currentCornersData = [];
 
-            <span class="hljs-keyword">let</span> cornerData = <span class="hljs-keyword">this</span>.currentCornersData;
+            <span class="hljs-keyword">let</span> cornerData = <span class="hljs-built_in">this</span>.currentCornersData;
             cornerData.length = <span class="hljs-number">0</span>;
             cornerData.push(...this.checkCornerPositions());
 
-            <span class="hljs-keyword">let</span> p = <span class="hljs-keyword">this</span>.pathObject = <span class="hljs-keyword">new</span> Path2D();
+            <span class="hljs-keyword">let</span> p = <span class="hljs-built_in">this</span>.pathObject = <span class="hljs-keyword">new</span> Path2D();
             p.moveTo(cornerData[<span class="hljs-number">0</span>], cornerData[<span class="hljs-number">1</span>]);
             p.lineTo(cornerData[<span class="hljs-number">2</span>], cornerData[<span class="hljs-number">3</span>]);
             p.lineTo(cornerData[<span class="hljs-number">4</span>], cornerData[<span class="hljs-number">5</span>]);
@@ -1672,9 +1685,9 @@
             
             <div class="content"><div class='highlight'><pre>    P.checkHit = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = [], mycell</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.noUserInteraction) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.noUserInteraction) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.pathObject || <span class="hljs-keyword">this</span>.dirtyPathObject) <span class="hljs-keyword">this</span>.cleanPathObject();
+        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.pathObject || <span class="hljs-built_in">this</span>.dirtyPathObject) <span class="hljs-built_in">this</span>.cleanPathObject();
 
         <span class="hljs-keyword">let</span> tests = (!<span class="hljs-built_in">Array</span>.isArray(items)) ?  [items] : items,
             poolCellFlag = <span class="hljs-literal">false</span>;
@@ -1686,7 +1699,7 @@
         }
 
         <span class="hljs-keyword">let</span> engine = mycell.engine,
-            stamp = <span class="hljs-keyword">this</span>.currentStampPosition,
+            stamp = <span class="hljs-built_in">this</span>.currentStampPosition,
             x = stamp[<span class="hljs-number">0</span>],
             y = stamp[<span class="hljs-number">1</span>],
             tx, ty;
@@ -1707,16 +1720,16 @@
 
             <span class="hljs-keyword">if</span> (!tx.toFixed || !ty.toFixed || <span class="hljs-built_in">isNaN</span>(tx) || <span class="hljs-built_in">isNaN</span>(ty)) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 
-            <span class="hljs-keyword">return</span> engine.isPointInPath(<span class="hljs-keyword">this</span>.pathObject, tx, ty);
+            <span class="hljs-keyword">return</span> engine.isPointInPath(<span class="hljs-built_in">this</span>.pathObject, tx, ty);
 
-        }, <span class="hljs-keyword">this</span>)) {
+        }, <span class="hljs-built_in">this</span>)) {
 
             <span class="hljs-keyword">if</span> (poolCellFlag) releaseCell(mycell);
 
             <span class="hljs-keyword">return</span> {
                 <span class="hljs-attr">x</span>: tx,
                 <span class="hljs-attr">y</span>: ty,
-                <span class="hljs-attr">artefact</span>: <span class="hljs-keyword">this</span>,
+                <span class="hljs-attr">artefact</span>: <span class="hljs-built_in">this</span>,
             };
         }
         
@@ -1753,29 +1766,29 @@
             
             <div class="content"><div class='highlight'><pre>    P.cleanRotation = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">this</span>.dirtyRotation = <span class="hljs-literal">false</span>;
+        <span class="hljs-built_in">this</span>.dirtyRotation = <span class="hljs-literal">false</span>;
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.rotation || !isa_quaternion(<span class="hljs-keyword">this</span>.rotation)) <span class="hljs-keyword">this</span>.rotation = makeQuaternion();
+        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.rotation || !isa_quaternion(<span class="hljs-built_in">this</span>.rotation)) <span class="hljs-built_in">this</span>.rotation = makeQuaternion();
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.currentRotation || !isa_quaternion(<span class="hljs-keyword">this</span>.rotation)) <span class="hljs-keyword">this</span>.currentRotation = makeQuaternion();
+        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.currentRotation || !isa_quaternion(<span class="hljs-built_in">this</span>.rotation)) <span class="hljs-built_in">this</span>.currentRotation = makeQuaternion();
 
-        <span class="hljs-keyword">let</span> calculatedRotation = <span class="hljs-keyword">this</span>.rotation;
+        <span class="hljs-keyword">let</span> calculatedRotation = <span class="hljs-built_in">this</span>.rotation;
 
         calculatedRotation.setFromEuler({
-            <span class="hljs-attr">pitch</span>: <span class="hljs-keyword">this</span>.pitch || <span class="hljs-number">0</span>,
-            <span class="hljs-attr">yaw</span>: <span class="hljs-keyword">this</span>.yaw || <span class="hljs-number">0</span>,
-            <span class="hljs-attr">roll</span>: <span class="hljs-keyword">this</span>.roll || <span class="hljs-number">0</span>,
+            <span class="hljs-attr">pitch</span>: <span class="hljs-built_in">this</span>.pitch || <span class="hljs-number">0</span>,
+            <span class="hljs-attr">yaw</span>: <span class="hljs-built_in">this</span>.yaw || <span class="hljs-number">0</span>,
+            <span class="hljs-attr">roll</span>: <span class="hljs-built_in">this</span>.roll || <span class="hljs-number">0</span>,
         });
 
         <span class="hljs-keyword">if</span> (calculatedRotation.getMagnitude() !== <span class="hljs-number">1</span>) calculatedRotation.normalize();
 
         <span class="hljs-keyword">let</span> processedRotation = requestQuaternion(),
-            path = <span class="hljs-keyword">this</span>.path,
-            mimic = <span class="hljs-keyword">this</span>.mimic,
-            pivot = <span class="hljs-keyword">this</span>.pivot,
-            lock = <span class="hljs-keyword">this</span>.lockTo;
+            path = <span class="hljs-built_in">this</span>.path,
+            mimic = <span class="hljs-built_in">this</span>.mimic,
+            pivot = <span class="hljs-built_in">this</span>.pivot,
+            lock = <span class="hljs-built_in">this</span>.lockTo;
 
-        <span class="hljs-keyword">if</span> (path &amp;&amp; lock.indexOf(<span class="hljs-string">'path'</span>) &gt;= <span class="hljs-number">0</span>) {
+        <span class="hljs-keyword">if</span> (path &amp;&amp; lock.indexOf(<span class="hljs-string">&#x27;path&#x27;</span>) &gt;= <span class="hljs-number">0</span>) {
 
             processedRotation.set(calculatedRotation);</pre></div></div>
             
@@ -1794,33 +1807,33 @@
             
             <div class="content"><div class='highlight'><pre>
         }
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (mimic &amp;&amp; <span class="hljs-keyword">this</span>.useMimicRotation &amp;&amp; lock.indexOf(<span class="hljs-string">'mimic'</span>) &gt;= <span class="hljs-number">0</span>) {
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (mimic &amp;&amp; <span class="hljs-built_in">this</span>.useMimicRotation &amp;&amp; lock.indexOf(<span class="hljs-string">&#x27;mimic&#x27;</span>) &gt;= <span class="hljs-number">0</span>) {
 
             <span class="hljs-keyword">if</span> (xt(mimic.currentRotation)) {
 
                 processedRotation.set(mimic.currentRotation);
-                <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.addOwnRotationToMimic) processedRotation.quaternionRotate(calculatedRotation);
+                <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.addOwnRotationToMimic) processedRotation.quaternionRotate(calculatedRotation);
             }
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.dirtyMimicRotation = <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">else</span> <span class="hljs-built_in">this</span>.dirtyMimicRotation = <span class="hljs-literal">true</span>;
         } 
         <span class="hljs-keyword">else</span> {
 
             processedRotation.set(calculatedRotation);
 
-            <span class="hljs-keyword">if</span> (pivot &amp;&amp; <span class="hljs-keyword">this</span>.addPivotRotation &amp;&amp; lock.indexOf(<span class="hljs-string">'pivot'</span>) &gt;= <span class="hljs-number">0</span>) {
+            <span class="hljs-keyword">if</span> (pivot &amp;&amp; <span class="hljs-built_in">this</span>.addPivotRotation &amp;&amp; lock.indexOf(<span class="hljs-string">&#x27;pivot&#x27;</span>) &gt;= <span class="hljs-number">0</span>) {
 
                 <span class="hljs-keyword">if</span> (xt(pivot.currentRotation)) processedRotation.quaternionRotate(pivot.currentRotation);
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.dirtyPivotRotation = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">else</span> <span class="hljs-built_in">this</span>.dirtyPivotRotation = <span class="hljs-literal">true</span>;
             }
         }
 
-        <span class="hljs-keyword">this</span>.currentRotation.set(processedRotation);
+        <span class="hljs-built_in">this</span>.currentRotation.set(processedRotation);
 
         releaseQuaternion(processedRotation);
 
-        <span class="hljs-keyword">this</span>.dirtyPositionSubscribers = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.dirtyPositionSubscribers = <span class="hljs-literal">true</span>;
         
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.mimicked &amp;&amp; <span class="hljs-keyword">this</span>.mimicked.length) <span class="hljs-keyword">this</span>.dirtyMimicRotation = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.mimicked &amp;&amp; <span class="hljs-built_in">this</span>.mimicked.length) <span class="hljs-built_in">this</span>.dirtyMimicRotation = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -1851,7 +1864,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">this</span>.dirtyOffsetZ = <span class="hljs-literal">false</span>;
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-built_in">this</span>.dirtyOffsetZ = <span class="hljs-literal">false</span>;
     };</pre></div></div>
             
         </li>
@@ -1869,11 +1882,11 @@
             
             <div class="content"><div class='highlight'><pre>    P.cleanContent = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">this</span>.dirtyContent = <span class="hljs-literal">false</span>;
+        <span class="hljs-built_in">this</span>.dirtyContent = <span class="hljs-literal">false</span>;
 
-        <span class="hljs-keyword">let</span> el = <span class="hljs-keyword">this</span>.domElement;
+        <span class="hljs-keyword">let</span> el = <span class="hljs-built_in">this</span>.domElement;
 
-        <span class="hljs-keyword">if</span> (el) <span class="hljs-keyword">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (el) <span class="hljs-built_in">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -1921,32 +1934,32 @@
             
             <div class="content"><div class='highlight'><pre>    P.prepareStamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyScale || <span class="hljs-keyword">this</span>.dirtyDimensions || <span class="hljs-keyword">this</span>.dirtyStart || <span class="hljs-keyword">this</span>.dirtyOffset || <span class="hljs-keyword">this</span>.dirtyHandle || <span class="hljs-keyword">this</span>.dirtyRotation) <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyScale || <span class="hljs-built_in">this</span>.dirtyDimensions || <span class="hljs-built_in">this</span>.dirtyStart || <span class="hljs-built_in">this</span>.dirtyOffset || <span class="hljs-built_in">this</span>.dirtyHandle || <span class="hljs-built_in">this</span>.dirtyRotation) <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyContent) <span class="hljs-keyword">this</span>.cleanContent();
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyScale) <span class="hljs-keyword">this</span>.cleanScale();
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyDimensions) <span class="hljs-keyword">this</span>.cleanDimensions();
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyDisplayArea) <span class="hljs-keyword">this</span>.cleanDisplayArea();
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyDisplayShape) <span class="hljs-keyword">this</span>.cleanDisplayShape();
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyLock) <span class="hljs-keyword">this</span>.cleanLock();
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyStart) <span class="hljs-keyword">this</span>.cleanStart();
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyOffset) <span class="hljs-keyword">this</span>.cleanOffset();
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyOffsetZ) <span class="hljs-keyword">this</span>.cleanOffsetZ();
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyHandle) <span class="hljs-keyword">this</span>.cleanHandle();
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyRotation) <span class="hljs-keyword">this</span>.cleanRotation();
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyContent) <span class="hljs-built_in">this</span>.cleanContent();
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyScale) <span class="hljs-built_in">this</span>.cleanScale();
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyDimensions) <span class="hljs-built_in">this</span>.cleanDimensions();
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyDisplayArea) <span class="hljs-built_in">this</span>.cleanDisplayArea();
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyDisplayShape) <span class="hljs-built_in">this</span>.cleanDisplayShape();
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyLock) <span class="hljs-built_in">this</span>.cleanLock();
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyStart) <span class="hljs-built_in">this</span>.cleanStart();
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyOffset) <span class="hljs-built_in">this</span>.cleanOffset();
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyOffsetZ) <span class="hljs-built_in">this</span>.cleanOffsetZ();
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyHandle) <span class="hljs-built_in">this</span>.cleanHandle();
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyRotation) <span class="hljs-built_in">this</span>.cleanRotation();
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.isBeingDragged || <span class="hljs-keyword">this</span>.lockTo.indexOf(<span class="hljs-string">'mouse'</span>) &gt;= <span class="hljs-number">0</span>) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.isBeingDragged || <span class="hljs-built_in">this</span>.lockTo.indexOf(<span class="hljs-string">&#x27;mouse&#x27;</span>) &gt;= <span class="hljs-number">0</span> || <span class="hljs-built_in">this</span>.lockTo.indexOf(<span class="hljs-string">&#x27;particle&#x27;</span>) &gt;= <span class="hljs-number">0</span>) {
 
-            <span class="hljs-keyword">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">this</span>.dirtyStampHandlePositions = <span class="hljs-literal">true</span>;
+            <span class="hljs-built_in">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
+            <span class="hljs-built_in">this</span>.dirtyStampHandlePositions = <span class="hljs-literal">true</span>;
         }
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.pivoted.length) <span class="hljs-keyword">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.pivoted.length) <span class="hljs-built_in">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyStampPositions) <span class="hljs-keyword">this</span>.cleanStampPositions();
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyStampHandlePositions) <span class="hljs-keyword">this</span>.cleanStampHandlePositions();
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyStampPositions) <span class="hljs-built_in">this</span>.cleanStampPositions();
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyStampHandlePositions) <span class="hljs-built_in">this</span>.cleanStampHandlePositions();
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyPathObject) <span class="hljs-keyword">this</span>.cleanPathObject();
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyPathObject) <span class="hljs-built_in">this</span>.cleanPathObject();
     };</pre></div></div>
             
         </li>
@@ -1977,7 +1990,7 @@
             
             <div class="content"><div class='highlight'><pre>    P.stamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">let</span> self = <span class="hljs-keyword">this</span>;
+        <span class="hljs-keyword">let</span> self = <span class="hljs-built_in">this</span>;
 
         <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {</pre></div></div>
             
@@ -2130,12 +2143,12 @@
 
         applyCoreResizeListener();
 
-        <span class="hljs-keyword">this</span>.prepareStamp();
+        <span class="hljs-built_in">this</span>.prepareStamp();
 
-        <span class="hljs-keyword">let</span> self = <span class="hljs-keyword">this</span>;
+        <span class="hljs-keyword">let</span> self = <span class="hljs-built_in">this</span>;
 
-        <span class="hljs-keyword">this</span>.stamp()
-        .then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+        <span class="hljs-built_in">this</span>.stamp()
+        .then(<span class="hljs-function">() =&gt;</span> {
 
             domShow(self.name);
             self.dirtyPathObject = <span class="hljs-literal">true</span>;

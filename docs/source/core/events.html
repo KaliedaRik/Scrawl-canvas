@@ -4,7 +4,7 @@
 <head>
   <title>DOM event listeners</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -110,6 +110,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
                 <a class="source" href="../factory/filter.html">
                   ./source/factory/filter.js
                 </a>
@@ -150,6 +155,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
                 <a class="source" href="../factory/oval.html">
                   ./source/factory/oval.js
                 </a>
@@ -157,6 +167,31 @@
                 
                 <a class="source" href="../factory/palette.html">
                   ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleForce.html">
+                  ./source/factory/particleForce.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleHistory.html">
+                  ./source/factory/particleHistory.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleSpring.html">
+                  ./source/factory/particleSpring.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleWorld.html">
+                  ./source/factory/particleWorld.js
                 </a>
               
                 
@@ -247,6 +282,11 @@
                 
                 <a class="source" href="../factory/ticker.html">
                   ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="../factory/tracer.html">
+                  ./source/factory/tracer.js
                 </a>
               
                 
@@ -435,7 +475,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { isa_fn, isa_dom, λ<span class="hljs-literal">null</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./utilities.js"</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { isa_fn, isa_dom, λ<span class="hljs-literal">null</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./utilities.js&quot;</span>;</pre></div></div>
             
         </li>
         
@@ -459,7 +499,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeAnimationObserver = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">anim, wrapper, specs = {}</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-built_in">window</span>.IntersectionObserver === <span class="hljs-string">'function'</span> &amp;&amp; anim &amp;&amp; anim.run) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-built_in">window</span>.IntersectionObserver === <span class="hljs-string">&#x27;function&#x27;</span> &amp;&amp; anim &amp;&amp; anim.run) {
 
         <span class="hljs-keyword">let</span> observer = <span class="hljs-keyword">new</span> IntersectionObserver(<span class="hljs-function">(<span class="hljs-params">entries, observer</span>) =&gt;</span> {
 
@@ -500,8 +540,8 @@
 
     <span class="hljs-keyword">if</span> (!isa_fn(fn)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/document addListener() error - no function supplied: <span class="hljs-subst">${evt}</span>, <span class="hljs-subst">${targ}</span>`</span>);
 
-    actionListener(evt, fn, targ, <span class="hljs-string">'removeEventListener'</span>);
-    actionListener(evt, fn, targ, <span class="hljs-string">'addEventListener'</span>);
+    actionListener(evt, fn, targ, <span class="hljs-string">&#x27;removeEventListener&#x27;</span>);
+    actionListener(evt, fn, targ, <span class="hljs-string">&#x27;addEventListener&#x27;</span>);
 
     <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
@@ -526,7 +566,7 @@
 
     <span class="hljs-keyword">if</span> (!isa_fn(fn)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/document removeListener() error - no function supplied: <span class="hljs-subst">${evt}</span>, <span class="hljs-subst">${targ}</span>`</span>);
 
-    actionListener(evt, fn, targ, <span class="hljs-string">'removeEventListener'</span>);
+    actionListener(evt, fn, targ, <span class="hljs-string">&#x27;removeEventListener&#x27;</span>);
 };</pre></div></div>
             
         </li>
@@ -578,30 +618,30 @@
 
             <span class="hljs-keyword">switch</span> (myevent) {
             
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'move'</span>:
-                    target[action](<span class="hljs-string">'mousemove'</span>, fn, <span class="hljs-literal">false</span>);
-                    target[action](<span class="hljs-string">'touchmove'</span>, fn, <span class="hljs-literal">false</span>);
-                    target[action](<span class="hljs-string">'touchfollow'</span>, fn, <span class="hljs-literal">false</span>);
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;move&#x27;</span>:
+                    target[action](<span class="hljs-string">&#x27;mousemove&#x27;</span>, fn, <span class="hljs-literal">false</span>);
+                    target[action](<span class="hljs-string">&#x27;touchmove&#x27;</span>, fn, <span class="hljs-literal">false</span>);
+                    target[action](<span class="hljs-string">&#x27;touchfollow&#x27;</span>, fn, <span class="hljs-literal">false</span>);
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'up'</span>:
-                    target[action](<span class="hljs-string">'mouseup'</span>, fn, <span class="hljs-literal">false</span>);
-                    target[action](<span class="hljs-string">'touchend'</span>, fn, <span class="hljs-literal">false</span>);
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;up&#x27;</span>:
+                    target[action](<span class="hljs-string">&#x27;mouseup&#x27;</span>, fn, <span class="hljs-literal">false</span>);
+                    target[action](<span class="hljs-string">&#x27;touchend&#x27;</span>, fn, <span class="hljs-literal">false</span>);
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'down'</span>:
-                    target[action](<span class="hljs-string">'mousedown'</span>, fn, <span class="hljs-literal">false</span>);
-                    target[action](<span class="hljs-string">'touchstart'</span>, fn, <span class="hljs-literal">false</span>);
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;down&#x27;</span>:
+                    target[action](<span class="hljs-string">&#x27;mousedown&#x27;</span>, fn, <span class="hljs-literal">false</span>);
+                    target[action](<span class="hljs-string">&#x27;touchstart&#x27;</span>, fn, <span class="hljs-literal">false</span>);
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'leave'</span>:
-                    target[action](<span class="hljs-string">'mouseleave'</span>, fn, <span class="hljs-literal">false</span>);
-                    target[action](<span class="hljs-string">'touchleave'</span>, fn, <span class="hljs-literal">false</span>);
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;leave&#x27;</span>:
+                    target[action](<span class="hljs-string">&#x27;mouseleave&#x27;</span>, fn, <span class="hljs-literal">false</span>);
+                    target[action](<span class="hljs-string">&#x27;touchleave&#x27;</span>, fn, <span class="hljs-literal">false</span>);
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'enter'</span>:
-                    target[action](<span class="hljs-string">'mouseenter'</span>, fn, <span class="hljs-literal">false</span>);
-                    target[action](<span class="hljs-string">'touchenter'</span>, fn, <span class="hljs-literal">false</span>);
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;enter&#x27;</span>:
+                    target[action](<span class="hljs-string">&#x27;mouseenter&#x27;</span>, fn, <span class="hljs-literal">false</span>);
+                    target[action](<span class="hljs-string">&#x27;touchenter&#x27;</span>, fn, <span class="hljs-literal">false</span>);
                     <span class="hljs-keyword">break</span>;
             }
         });
@@ -618,24 +658,24 @@
 
             <span class="hljs-keyword">switch</span> (myevent) {
             
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'move'</span>:
-                    target[action](<span class="hljs-string">'pointermove'</span>, fn, <span class="hljs-literal">false</span>);
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;move&#x27;</span>:
+                    target[action](<span class="hljs-string">&#x27;pointermove&#x27;</span>, fn, <span class="hljs-literal">false</span>);
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'up'</span>:
-                    target[action](<span class="hljs-string">'pointerup'</span>, fn, <span class="hljs-literal">false</span>);
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;up&#x27;</span>:
+                    target[action](<span class="hljs-string">&#x27;pointerup&#x27;</span>, fn, <span class="hljs-literal">false</span>);
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'down'</span>:
-                    target[action](<span class="hljs-string">'pointerdown'</span>, fn, <span class="hljs-literal">false</span>);
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;down&#x27;</span>:
+                    target[action](<span class="hljs-string">&#x27;pointerdown&#x27;</span>, fn, <span class="hljs-literal">false</span>);
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'leave'</span>:
-                    target[action](<span class="hljs-string">'pointerleave'</span>, fn, <span class="hljs-literal">false</span>);
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;leave&#x27;</span>:
+                    target[action](<span class="hljs-string">&#x27;pointerleave&#x27;</span>, fn, <span class="hljs-literal">false</span>);
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'enter'</span>:
-                    target[action](<span class="hljs-string">'pointerenter'</span>, fn, <span class="hljs-literal">false</span>);
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;enter&#x27;</span>:
+                    target[action](<span class="hljs-string">&#x27;pointerenter&#x27;</span>, fn, <span class="hljs-literal">false</span>);
                     <span class="hljs-keyword">break</span>;
             }
         });
@@ -679,8 +719,8 @@
 
     <span class="hljs-keyword">if</span> (!isa_fn(fn)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/document addNativeListener() error - no function supplied: <span class="hljs-subst">${evt}</span>, <span class="hljs-subst">${targ}</span>`</span>);
 
-    actionNativeListener(evt, fn, targ, <span class="hljs-string">'removeEventListener'</span>);
-    actionNativeListener(evt, fn, targ, <span class="hljs-string">'addEventListener'</span>);
+    actionNativeListener(evt, fn, targ, <span class="hljs-string">&#x27;removeEventListener&#x27;</span>);
+    actionNativeListener(evt, fn, targ, <span class="hljs-string">&#x27;addEventListener&#x27;</span>);
 
     <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
@@ -705,7 +745,7 @@
 
     <span class="hljs-keyword">if</span> (!isa_fn(fn)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/document removeNativeListener() error - no function supplied: <span class="hljs-subst">${evt}</span>, <span class="hljs-subst">${targ}</span>`</span>);
 
-    actionNativeListener(evt, fn, targ, <span class="hljs-string">'removeEventListener'</span>);
+    actionNativeListener(evt, fn, targ, <span class="hljs-string">&#x27;removeEventListener&#x27;</span>);
 };
 
 <span class="hljs-keyword">const</span> actionNativeListener = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">evt, fn, targ, action</span>) </span>{
@@ -776,31 +816,31 @@
 <pre><code>__Example code__
 
 <span class="hljs-keyword">const</span> myAnimation = scrawl.makeRender({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'scene-animation'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;scene-animation&#x27;</span>,
     <span class="hljs-attr">target</span>: mycanvas,
     <span class="hljs-attr">delay</span>: <span class="hljs-literal">true</span>,
 });
 
-scrawl.setReduceMotionAction(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> myAnimation.halt());
-scrawl.setNoPreferenceMotionAction(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> myAnimation.run());
+scrawl.setReduceMotionAction(<span class="hljs-function">() =&gt;</span> myAnimation.halt());
+scrawl.setNoPreferenceMotionAction(<span class="hljs-function">() =&gt;</span> myAnimation.run());
 
 scrawl.reducedMotionActions();</code></pre>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> reducedMotionMediaQuery = <span class="hljs-built_in">window</span>.matchMedia(<span class="hljs-string">"(prefers-reduced-motion: reduce)"</span>);
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> reducedMotionMediaQuery = <span class="hljs-built_in">window</span>.matchMedia(<span class="hljs-string">&quot;(prefers-reduced-motion: reduce)&quot;</span>);
 
 <span class="hljs-keyword">let</span> prefersReducedMotion = reducedMotionMediaQuery.matches,
     reducedMotion_reduceAction = λ<span class="hljs-literal">null</span>,
     reducedMotion_noPreferenceAction = λ<span class="hljs-literal">null</span>;
 
-<span class="hljs-keyword">const</span> reducedMotionActions = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+<span class="hljs-keyword">const</span> reducedMotionActions = <span class="hljs-function">() =&gt;</span> {
 
     <span class="hljs-keyword">if</span> (prefersReducedMotion) reducedMotion_reduceAction();
     <span class="hljs-keyword">else</span> reducedMotion_noPreferenceAction();
 };
 
-reducedMotionMediaQuery.addEventListener(<span class="hljs-string">'change'</span>, () =&gt; {
+reducedMotionMediaQuery.addEventListener(<span class="hljs-string">&#x27;change&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
 
     prefersReducedMotion = reducedMotionMediaQuery.matches;
     reducedMotionActions();
@@ -830,21 +870,21 @@ reducedMotionMediaQuery.addEventListener(<span class="hljs-string">'change'</spa
 <span class="hljs-keyword">const</span> canvas = scrawl.library.mycanvas;
 
 <span class="hljs-keyword">const</span> myBlock = scrawl.makeBlock({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'myThemedBlock'</span>,
-    <span class="hljs-attr">start</span>: [<span class="hljs-string">'center'</span>, <span class="hljs-string">'center'</span>],
-    <span class="hljs-attr">handle</span>: [<span class="hljs-string">'center'</span>, <span class="hljs-string">'center'</span>],
-    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">'30%'</span>, <span class="hljs-string">'30%'</span>],
-    <span class="hljs-attr">method</span>: <span class="hljs-string">'fill'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myThemedBlock&#x27;</span>,
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;30%&#x27;</span>, <span class="hljs-string">&#x27;30%&#x27;</span>],
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
 });
 
-scrawl.setColorSchemeDarkAction(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
-    canvas.set({ <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">'black'</span>});
-    myBlock.set({ <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'white'</span>});
+scrawl.setColorSchemeDarkAction(<span class="hljs-function">() =&gt;</span> {
+    canvas.set({ <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;black&#x27;</span>});
+    myBlock.set({ <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;white&#x27;</span>});
 });
 
-scrawl.setColorSchemeLightAction(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
-    canvas.set({ <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">'white'</span>});
-    myBlock.set({ <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'black'</span>});
+scrawl.setColorSchemeLightAction(<span class="hljs-function">() =&gt;</span> {
+    canvas.set({ <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;white&#x27;</span>});
+    myBlock.set({ <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;black&#x27;</span>});
 });
 
 scrawl.colorSchemeActions();</code></pre>
@@ -852,19 +892,19 @@ scrawl.colorSchemeActions();</code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre>
-<span class="hljs-keyword">const</span> colorSchemeMediaQuery = <span class="hljs-built_in">window</span>.matchMedia(<span class="hljs-string">"(prefers-color-scheme: dark)"</span>);
+<span class="hljs-keyword">const</span> colorSchemeMediaQuery = <span class="hljs-built_in">window</span>.matchMedia(<span class="hljs-string">&quot;(prefers-color-scheme: dark)&quot;</span>);
 
 <span class="hljs-keyword">let</span> prefersColorScheme = colorSchemeMediaQuery.matches,
     colorScheme_darkAction = λ<span class="hljs-literal">null</span>,
     colorScheme_lightAction = λ<span class="hljs-literal">null</span>;
 
-<span class="hljs-keyword">const</span> colorSchemeActions = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+<span class="hljs-keyword">const</span> colorSchemeActions = <span class="hljs-function">() =&gt;</span> {
 
     <span class="hljs-keyword">if</span> (prefersColorScheme) colorScheme_darkAction();
     <span class="hljs-keyword">else</span> colorScheme_lightAction();
 };
 
-colorSchemeMediaQuery.addEventListener(<span class="hljs-string">'change'</span>, () =&gt; {
+colorSchemeMediaQuery.addEventListener(<span class="hljs-string">&#x27;change&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
 
     prefersColorScheme = colorSchemeMediaQuery.matches;
     colorSchemeActions();

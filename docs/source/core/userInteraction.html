@@ -4,7 +4,7 @@
 <head>
   <title>Core user interaction</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -110,6 +110,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
                 <a class="source" href="../factory/filter.html">
                   ./source/factory/filter.js
                 </a>
@@ -150,6 +155,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
                 <a class="source" href="../factory/oval.html">
                   ./source/factory/oval.js
                 </a>
@@ -157,6 +167,31 @@
                 
                 <a class="source" href="../factory/palette.html">
                   ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleForce.html">
+                  ./source/factory/particleForce.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleHistory.html">
+                  ./source/factory/particleHistory.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleSpring.html">
+                  ./source/factory/particleSpring.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleWorld.html">
+                  ./source/factory/particleWorld.js
                 </a>
               
                 
@@ -247,6 +282,11 @@
                 
                 <a class="source" href="../factory/ticker.html">
                   ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="../factory/tracer.html">
+                  ./source/factory/tracer.js
                 </a>
               
                 
@@ -424,11 +464,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> library <span class="hljs-keyword">from</span> <span class="hljs-string">"./library.js"</span>;
-<span class="hljs-keyword">import</span> { xt, xta, isa_dom, isa_fn, isa_boolean, isa_obj, λ<span class="hljs-literal">null</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"./utilities.js"</span>;
-<span class="hljs-keyword">import</span> { addListener, addNativeListener, removeListener, removeNativeListener } <span class="hljs-keyword">from</span> <span class="hljs-string">"./events.js"</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> library <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./library.js&quot;</span>;
+<span class="hljs-keyword">import</span> { xt, xta, isa_dom, isa_fn, isa_boolean, isa_obj, λ<span class="hljs-literal">null</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./utilities.js&quot;</span>;
+<span class="hljs-keyword">import</span> { addListener, addNativeListener, removeListener, removeNativeListener } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./events.js&quot;</span>;
 
-<span class="hljs-keyword">import</span> { makeAnimation } <span class="hljs-keyword">from</span> <span class="hljs-string">"../factory/animation.js"</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { makeAnimation } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../factory/animation.js&quot;</span>;</pre></div></div>
             
         </li>
         
@@ -481,7 +521,7 @@
     <span class="hljs-attr">scrollY</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">w</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">h</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">type</span>: <span class="hljs-string">'mouse'</span>
+    <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;mouse&#x27;</span>
 };</pre></div></div>
             
         </li>
@@ -568,7 +608,7 @@
         y = <span class="hljs-built_in">Math</span>.round(e.pageY);
 
     <span class="hljs-keyword">if</span> (currentCorePosition.x !== x || currentCorePosition.y !== y) {
-        currentCorePosition.type = (navigator.pointerEnabled) ? <span class="hljs-string">'pointer'</span> : <span class="hljs-string">'mouse'</span>;
+        currentCorePosition.type = (navigator.pointerEnabled) ? <span class="hljs-string">&#x27;pointer&#x27;</span> : <span class="hljs-string">&#x27;mouse&#x27;</span>;
         currentCorePosition.x = x;
         currentCorePosition.y = y;
         mouseChanged = <span class="hljs-literal">true</span>;
@@ -617,7 +657,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> touchAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (e.type === <span class="hljs-string">'touchstart'</span> || e.type === <span class="hljs-string">'touchmove'</span>) {
+    <span class="hljs-keyword">if</span> (e.type === <span class="hljs-string">&#x27;touchstart&#x27;</span> || e.type === <span class="hljs-string">&#x27;touchmove&#x27;</span>) {
 
         <span class="hljs-keyword">if</span> (e.touches &amp;&amp; e.touches[<span class="hljs-number">0</span>]) {
 
@@ -626,7 +666,7 @@
                 y = <span class="hljs-built_in">Math</span>.round(touch.pageY);
 
             <span class="hljs-keyword">if</span> (currentCorePosition.x !== x || currentCorePosition.y !== y) {
-                currentCorePosition.type = <span class="hljs-string">'touch'</span>;
+                currentCorePosition.type = <span class="hljs-string">&#x27;touch&#x27;</span>;
                 currentCorePosition.x = x;
                 currentCorePosition.y = y;
                 updateUiSubscribedElements();
@@ -682,7 +722,7 @@
 
     <span class="hljs-keyword">if</span> (here.normX &lt; <span class="hljs-number">0</span> || here.normX &gt; <span class="hljs-number">1</span> || here.normY &lt; <span class="hljs-number">0</span> || here.normY &gt; <span class="hljs-number">1</span>) here.active = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">if</span> (dom.type === <span class="hljs-string">'Canvas'</span>) dom.updateBaseHere(here, dom.fit);</pre></div></div>
+    <span class="hljs-keyword">if</span> (dom.type === <span class="hljs-string">&#x27;Canvas&#x27;</span>) dom.updateBaseHere(here, dom.fit);</pre></div></div>
             
         </li>
         
@@ -705,7 +745,7 @@
 
         <span class="hljs-keyword">let</span> [w, h] = dom.currentDimensions;
 
-        <span class="hljs-keyword">if</span> (dom.type === <span class="hljs-string">'Canvas'</span>) {</pre></div></div>
+        <span class="hljs-keyword">if</span> (dom.type === <span class="hljs-string">&#x27;Canvas&#x27;</span>) {</pre></div></div>
             
         </li>
         
@@ -784,7 +824,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> coreListenersTracker = makeAnimation({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'coreListenersTracker'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;coreListenersTracker&#x27;</span>,
     <span class="hljs-attr">order</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">delay</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">fn</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
@@ -819,8 +859,8 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> startCoreListeners = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    actionCoreListeners(<span class="hljs-string">'removeEventListener'</span>);
-    actionCoreListeners(<span class="hljs-string">'addEventListener'</span>);
+    actionCoreListeners(<span class="hljs-string">&#x27;removeEventListener&#x27;</span>);
+    actionCoreListeners(<span class="hljs-string">&#x27;addEventListener&#x27;</span>);
 
     trackMouse = <span class="hljs-literal">true</span>;
     mouseChanged = <span class="hljs-literal">true</span>;
@@ -833,7 +873,7 @@
     mouseChanged = <span class="hljs-literal">false</span>;
     coreListenersTracker.halt();
 
-    actionCoreListeners(<span class="hljs-string">'removeEventListener'</span>);
+    actionCoreListeners(<span class="hljs-string">&#x27;removeEventListener&#x27;</span>);
 };</pre></div></div>
             
         </li>
@@ -853,28 +893,28 @@
 
     <span class="hljs-keyword">if</span> (navigator.pointerEnabled || navigator.msPointerEnabled) {
 
-        <span class="hljs-built_in">window</span>[action](<span class="hljs-string">'pointermove'</span>, moveAction, <span class="hljs-literal">false</span>);
-        <span class="hljs-built_in">window</span>[action](<span class="hljs-string">'pointerup'</span>, moveAction, <span class="hljs-literal">false</span>);
-        <span class="hljs-built_in">window</span>[action](<span class="hljs-string">'pointerdown'</span>, moveAction, <span class="hljs-literal">false</span>);
-        <span class="hljs-built_in">window</span>[action](<span class="hljs-string">'pointerleave'</span>, moveAction, <span class="hljs-literal">false</span>);
-        <span class="hljs-built_in">window</span>[action](<span class="hljs-string">'pointerenter'</span>, moveAction, <span class="hljs-literal">false</span>);
+        <span class="hljs-built_in">window</span>[action](<span class="hljs-string">&#x27;pointermove&#x27;</span>, moveAction, <span class="hljs-literal">false</span>);
+        <span class="hljs-built_in">window</span>[action](<span class="hljs-string">&#x27;pointerup&#x27;</span>, moveAction, <span class="hljs-literal">false</span>);
+        <span class="hljs-built_in">window</span>[action](<span class="hljs-string">&#x27;pointerdown&#x27;</span>, moveAction, <span class="hljs-literal">false</span>);
+        <span class="hljs-built_in">window</span>[action](<span class="hljs-string">&#x27;pointerleave&#x27;</span>, moveAction, <span class="hljs-literal">false</span>);
+        <span class="hljs-built_in">window</span>[action](<span class="hljs-string">&#x27;pointerenter&#x27;</span>, moveAction, <span class="hljs-literal">false</span>);
     }
     <span class="hljs-keyword">else</span> {
 
-        <span class="hljs-built_in">window</span>[action](<span class="hljs-string">'mousemove'</span>, moveAction, <span class="hljs-literal">false</span>);
-        <span class="hljs-built_in">window</span>[action](<span class="hljs-string">'mouseup'</span>, moveAction, <span class="hljs-literal">false</span>);
-        <span class="hljs-built_in">window</span>[action](<span class="hljs-string">'mousedown'</span>, moveAction, <span class="hljs-literal">false</span>);
-        <span class="hljs-built_in">window</span>[action](<span class="hljs-string">'mouseleave'</span>, moveAction, <span class="hljs-literal">false</span>);
-        <span class="hljs-built_in">window</span>[action](<span class="hljs-string">'mouseenter'</span>, moveAction, <span class="hljs-literal">false</span>);
+        <span class="hljs-built_in">window</span>[action](<span class="hljs-string">&#x27;mousemove&#x27;</span>, moveAction, <span class="hljs-literal">false</span>);
+        <span class="hljs-built_in">window</span>[action](<span class="hljs-string">&#x27;mouseup&#x27;</span>, moveAction, <span class="hljs-literal">false</span>);
+        <span class="hljs-built_in">window</span>[action](<span class="hljs-string">&#x27;mousedown&#x27;</span>, moveAction, <span class="hljs-literal">false</span>);
+        <span class="hljs-built_in">window</span>[action](<span class="hljs-string">&#x27;mouseleave&#x27;</span>, moveAction, <span class="hljs-literal">false</span>);
+        <span class="hljs-built_in">window</span>[action](<span class="hljs-string">&#x27;mouseenter&#x27;</span>, moveAction, <span class="hljs-literal">false</span>);
 
-        <span class="hljs-built_in">window</span>[action](<span class="hljs-string">'touchmove'</span>, touchAction, <span class="hljs-literal">false</span>);
-        <span class="hljs-built_in">window</span>[action](<span class="hljs-string">'touchstart'</span>, touchAction, <span class="hljs-literal">false</span>);
-        <span class="hljs-built_in">window</span>[action](<span class="hljs-string">'touchend'</span>, touchAction, <span class="hljs-literal">false</span>);
-        <span class="hljs-built_in">window</span>[action](<span class="hljs-string">'touchcancel'</span>, touchAction, <span class="hljs-literal">false</span>);
+        <span class="hljs-built_in">window</span>[action](<span class="hljs-string">&#x27;touchmove&#x27;</span>, touchAction, <span class="hljs-literal">false</span>);
+        <span class="hljs-built_in">window</span>[action](<span class="hljs-string">&#x27;touchstart&#x27;</span>, touchAction, <span class="hljs-literal">false</span>);
+        <span class="hljs-built_in">window</span>[action](<span class="hljs-string">&#x27;touchend&#x27;</span>, touchAction, <span class="hljs-literal">false</span>);
+        <span class="hljs-built_in">window</span>[action](<span class="hljs-string">&#x27;touchcancel&#x27;</span>, touchAction, <span class="hljs-literal">false</span>);
     }
 
-    <span class="hljs-built_in">window</span>[action](<span class="hljs-string">'scroll'</span>, scrollAction, <span class="hljs-literal">false</span>);
-    <span class="hljs-built_in">window</span>[action](<span class="hljs-string">'resize'</span>, resizeAction, <span class="hljs-literal">false</span>);
+    <span class="hljs-built_in">window</span>[action](<span class="hljs-string">&#x27;scroll&#x27;</span>, scrollAction, <span class="hljs-literal">false</span>);
+    <span class="hljs-built_in">window</span>[action](<span class="hljs-string">&#x27;resize&#x27;</span>, resizeAction, <span class="hljs-literal">false</span>);
 };</pre></div></div>
             
         </li>
@@ -989,41 +1029,41 @@
 
                 <span class="hljs-keyword">switch</span> (action) {
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'float'</span> :
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;float&#x27;</span> :
                         val = <span class="hljs-built_in">parseFloat</span>(targetVal);
                         <span class="hljs-keyword">break</span>;
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'int'</span> :
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;int&#x27;</span> :
                         val = <span class="hljs-built_in">parseInt</span>(targetVal, <span class="hljs-number">10</span>);
                         <span class="hljs-keyword">break</span>;
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'round'</span> :
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;round&#x27;</span> :
                         val = <span class="hljs-built_in">Math</span>.round(targetVal);
                         <span class="hljs-keyword">break</span>;
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'roundDown'</span> :
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;roundDown&#x27;</span> :
                         val = <span class="hljs-built_in">Math</span>.floor(targetVal);
                         <span class="hljs-keyword">break</span>;
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'roundUp'</span> :
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;roundUp&#x27;</span> :
                         val = <span class="hljs-built_in">Math</span>.ceil(targetVal);
                         <span class="hljs-keyword">break</span>;
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'raw'</span> :
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;raw&#x27;</span> :
                         val = targetVal;
                         <span class="hljs-keyword">break</span>;
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'string'</span> :
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;string&#x27;</span> :
                         val = <span class="hljs-string">`<span class="hljs-subst">${targetVal}</span>`</span>;
                         <span class="hljs-keyword">break</span>;
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'boolean'</span> :
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;boolean&#x27;</span> :
                         <span class="hljs-keyword">if</span> (xt(targetVal)) {
 
                             <span class="hljs-keyword">if</span> (targetVal.substring) {
 
-                                <span class="hljs-keyword">if</span> (<span class="hljs-string">'true'</span> === targetVal.toLowerCase()) val = <span class="hljs-literal">true</span>;
-                                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">'false'</span> === targetVal.toLowerCase()) val = <span class="hljs-literal">false</span>;
+                                <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;true&#x27;</span> === targetVal.toLowerCase()) val = <span class="hljs-literal">true</span>;
+                                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;false&#x27;</span> === targetVal.toLowerCase()) val = <span class="hljs-literal">false</span>;
                                 <span class="hljs-keyword">else</span> val = (<span class="hljs-built_in">parseFloat</span>(targetVal)) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
                             }
                             <span class="hljs-keyword">else</span> val = (targetVal) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
@@ -1038,7 +1078,7 @@
 
                 <span class="hljs-keyword">if</span> (actionFlag) {
 
-                    <span class="hljs-keyword">if</span> (target.type === <span class="hljs-string">'Group'</span>) {
+                    <span class="hljs-keyword">if</span> (target.type === <span class="hljs-string">&#x27;Group&#x27;</span>) {
 
                         target.setArtefacts({
                             [actionAttribute]: val
@@ -1130,15 +1170,15 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!zone) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'dragZone constructor - no zone supplied'</span>);
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!zone) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">&#x27;dragZone constructor - no zone supplied&#x27;</span>);
 
     <span class="hljs-keyword">if</span> (zone.substring) zone = artefact[zone];
 
-    <span class="hljs-keyword">if</span> (!zone || [<span class="hljs-string">'Canvas'</span>, <span class="hljs-string">'Stack'</span>].indexOf(zone.type) &lt; <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'dragZone constructor - zone object is not a Stack or Canvas wrapper'</span>);
+    <span class="hljs-keyword">if</span> (!zone || [<span class="hljs-string">&#x27;Canvas&#x27;</span>, <span class="hljs-string">&#x27;Stack&#x27;</span>].indexOf(zone.type) &lt; <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">&#x27;dragZone constructor - zone object is not a Stack or Canvas wrapper&#x27;</span>);
 
     <span class="hljs-keyword">let</span> target = zone.domElement;
 
-    <span class="hljs-keyword">if</span> (!target) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'dragZone constructor - zone does not contain a target DOM element'</span>);</pre></div></div>
+    <span class="hljs-keyword">if</span> (!target) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">&#x27;dragZone constructor - zone does not contain a target DOM element&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1158,12 +1198,12 @@
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!collisionGroup) {
 
-        <span class="hljs-keyword">if</span> (zone.type === <span class="hljs-string">'Canvas'</span>) collisionGroup = library.group[zone.base.name];
+        <span class="hljs-keyword">if</span> (zone.type === <span class="hljs-string">&#x27;Canvas&#x27;</span>) collisionGroup = library.group[zone.base.name];
         <span class="hljs-keyword">else</span> collisionGroup = library.group[zone.name];
     }
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (collisionGroup.substring) collisionGroup = library.group[collisionGroup];
 
-    <span class="hljs-keyword">if</span> (!collisionGroup || collisionGroup.type !== <span class="hljs-string">'Group'</span>) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'dragZone constructor - unable to recover collisionGroup group'</span>);</pre></div></div>
+    <span class="hljs-keyword">if</span> (!collisionGroup || collisionGroup.type !== <span class="hljs-string">&#x27;Group&#x27;</span>) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">&#x27;dragZone constructor - unable to recover collisionGroup group&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1188,11 +1228,11 @@
     }
     <span class="hljs-keyword">else</span> {
 
-        <span class="hljs-keyword">if</span> (zone.type === <span class="hljs-string">'Canvas'</span>) coordinateSource = zone.base.here;
+        <span class="hljs-keyword">if</span> (zone.type === <span class="hljs-string">&#x27;Canvas&#x27;</span>) coordinateSource = zone.base.here;
         <span class="hljs-keyword">else</span> coordinateSource = zone.here;
     }
 
-    <span class="hljs-keyword">if</span> (!coordinateSource) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'dragZone constructor - unable to discover a usable coordinateSource object'</span>);</pre></div></div>
+    <span class="hljs-keyword">if</span> (!coordinateSource) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">&#x27;dragZone constructor - unable to discover a usable coordinateSource object&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1207,8 +1247,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Array</span>.isArray(startOn)) startOn = [<span class="hljs-string">'down'</span>];
-    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Array</span>.isArray(endOn)) endOn = [<span class="hljs-string">'up'</span>];</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Array</span>.isArray(startOn)) startOn = [<span class="hljs-string">&#x27;down&#x27;</span>];
+    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Array</span>.isArray(endOn)) endOn = [<span class="hljs-string">&#x27;up&#x27;</span>];</pre></div></div>
             
         </li>
         
@@ -1274,7 +1314,7 @@
 
         <span class="hljs-keyword">let</span> type = e.type;
 
-        <span class="hljs-keyword">if</span> (type === <span class="hljs-string">'touchstart'</span> || type === <span class="hljs-string">'touchcancel'</span>) touchAction(e);
+        <span class="hljs-keyword">if</span> (type === <span class="hljs-string">&#x27;touchstart&#x27;</span> || type === <span class="hljs-string">&#x27;touchcancel&#x27;</span>) touchAction(e);
 
         current = collisionGroup.getArtefactAt(coordinateSource);
 
@@ -1303,7 +1343,7 @@
         removeListener(endOn, drop, target);
     };
 
-    <span class="hljs-keyword">const</span> getCurrent = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">actionKill = false</span>) </span>{
+    <span class="hljs-keyword">const</span> getCurrent = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">actionKill = <span class="hljs-literal">false</span></span>) </span>{
 
         <span class="hljs-keyword">if</span> (actionKill) kill();
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> current;

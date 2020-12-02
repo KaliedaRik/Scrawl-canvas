@@ -13,7 +13,7 @@ canvas.setBase({
 });
 
 
-// Define filters - need to test them all, plus some user-defined filters
+// Define some filters
 scrawl.makeFilter({
     name: 'grayscale',
     method: 'grayscale',
@@ -65,6 +65,7 @@ scrawl.makeFilter({
 });
 
 
+// Crezate a Shape entity to act as a path for our Tracer entitys
 scrawl.makeShape({
 
     name: 'my-arrow',
@@ -88,12 +89,18 @@ scrawl.makeShape({
     bringToFrontOnDrag: false,
 });
 
+
+// #### Particle physics animation scene
+
+// Create a Tracer entity
+// + Note that Tracers do not require a World object, cannot process Force objects, and cannot be connected together using Spring objects.
 scrawl.makeTracer({
 
     name: 'trace-1',
 
     historyLength: 50,
 
+    // We will delta-animate this Tracer alonbg the path of our Shape entity
     path: 'my-arrow',
     pathPosition: 0,
     lockTo: 'path',
@@ -120,6 +127,7 @@ scrawl.makeTracer({
         noDeltaUpdates: true,
     }),
 
+    // This Tracer will produce a 'dashed' effect, by displaying discrete ranges of its history
     stampAction: function (artefact, particle, host) {
 
         let history = particle.history,
@@ -134,6 +142,8 @@ scrawl.makeTracer({
             }
         });
     },
+
+// Clone the Tracer entity
 }).clone({
 
     name: 'trace-2',
@@ -145,6 +155,7 @@ scrawl.makeTracer({
         globalAlpha: 0.2,
     }),
 
+    // Our second Tracer shows a 'tail-fade' effect
     stampAction: function (artefact, particle, host) {
 
         let history = particle.history,
@@ -164,6 +175,8 @@ scrawl.makeTracer({
             }
         });
     },
+
+// Clone the second Tracer entity
 }).clone({
 
     name: 'trace-3',
@@ -174,6 +187,7 @@ scrawl.makeTracer({
         fillStyle: 'blue',
     }),
 
+    // This Tracer varies its scale to create a 'teardrop' effect
     stampAction: function (artefact, particle, host) {
 
         let history = particle.history,
@@ -228,7 +242,6 @@ scrawl.makeGroup({
 
 }).addArtefacts('my-arrow');
 
-// #### User interaction
 scrawl.makeDragZone({
 
     zone: canvas,
@@ -236,6 +249,8 @@ scrawl.makeDragZone({
     endOn: ['up', 'leave'],
 });
 
+
+// Action user choice to apply a filter to a Tracer entity
 const filterChoice = function (e) {
 
     e.preventDefault();

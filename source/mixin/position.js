@@ -1463,8 +1463,6 @@ export default function (P = {}) {
                     // When the pivot is an Element artefact, can use its corner values as pivots
                     if (pivotCorner && pivot.getCornerCoordinate) {
 
-                        console.log('hello');
-
                         coord.setFromArray(pivot.getCornerCoordinate(pivotCorner));
                     }
 

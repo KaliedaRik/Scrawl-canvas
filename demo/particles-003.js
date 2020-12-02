@@ -232,7 +232,7 @@ const myemitter = scrawl.makeEmitter({
             if (globalAlpha > 0 && scale > 0) {
 
                 // Note that `simpleStamp` will work with both linear and radial gradients, but will ignore any attempt to add a filter to the Emitter entity.
-                // + If a filter is required, then a more creative solution needs to be used, such as displaying the Emitter in its own Cell with the filter applied at the Cell level.
+                // + If a filter is required, apply it to the Emitter entity itself.
                 artefact.simpleStamp(host, {start, scale, globalAlpha, roll});
             }
         });

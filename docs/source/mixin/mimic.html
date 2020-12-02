@@ -4,7 +4,7 @@
 <head>
   <title>Mimic mixin</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -110,6 +110,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
                 <a class="source" href="../factory/filter.html">
                   ./source/factory/filter.js
                 </a>
@@ -150,6 +155,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
                 <a class="source" href="../factory/oval.html">
                   ./source/factory/oval.js
                 </a>
@@ -157,6 +167,31 @@
                 
                 <a class="source" href="../factory/palette.html">
                   ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleForce.html">
+                  ./source/factory/particleForce.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleHistory.html">
+                  ./source/factory/particleHistory.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleSpring.html">
+                  ./source/factory/particleSpring.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleWorld.html">
+                  ./source/factory/particleWorld.js
                 </a>
               
                 
@@ -247,6 +282,11 @@
                 
                 <a class="source" href="../factory/ticker.html">
                   ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="../factory/tracer.html">
+                  ./source/factory/tracer.js
                 </a>
               
                 
@@ -422,8 +462,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact, asset } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { mergeOver, pushUnique, isa_boolean } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact, asset } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { mergeOver, pushUnique, isa_boolean } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -468,7 +508,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        mimic: <span class="hljs-string">''</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        mimic: <span class="hljs-string">&#x27;&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -527,7 +567,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">'mimic'</span>]);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">&#x27;mimic&#x27;</span>]);</pre></div></div>
             
         </li>
         
@@ -604,18 +644,18 @@
 
         <span class="hljs-keyword">if</span> (isa_boolean(item) &amp;&amp; !item) {
 
-            <span class="hljs-keyword">this</span>.mimic = <span class="hljs-literal">null</span>;
+            <span class="hljs-built_in">this</span>.mimic = <span class="hljs-literal">null</span>;
 
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">0</span>] === <span class="hljs-string">'mimic'</span>) <span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">0</span>] = <span class="hljs-string">'start'</span>;
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">1</span>] === <span class="hljs-string">'mimic'</span>) <span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">1</span>] = <span class="hljs-string">'start'</span>;
+            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.lockTo[<span class="hljs-number">0</span>] === <span class="hljs-string">&#x27;mimic&#x27;</span>) <span class="hljs-built_in">this</span>.lockTo[<span class="hljs-number">0</span>] = <span class="hljs-string">&#x27;start&#x27;</span>;
+            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.lockTo[<span class="hljs-number">1</span>] === <span class="hljs-string">&#x27;mimic&#x27;</span>) <span class="hljs-built_in">this</span>.lockTo[<span class="hljs-number">1</span>] = <span class="hljs-string">&#x27;start&#x27;</span>;
 
-            <span class="hljs-keyword">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">this</span>.dirtyStampHandlePositions = <span class="hljs-literal">true</span>;
+            <span class="hljs-built_in">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
+            <span class="hljs-built_in">this</span>.dirtyStampHandlePositions = <span class="hljs-literal">true</span>;
         }
         <span class="hljs-keyword">else</span> {
 
-            <span class="hljs-keyword">let</span> oldMimic = <span class="hljs-keyword">this</span>.mimic,
-                name = <span class="hljs-keyword">this</span>.name;
+            <span class="hljs-keyword">let</span> oldMimic = <span class="hljs-built_in">this</span>.mimic,
+                name = <span class="hljs-built_in">this</span>.name;
 
             <span class="hljs-keyword">let</span> newMimic = (item.substring) ? artefact[item] : item;
             
@@ -623,7 +663,7 @@
 
                 newMimic = asset[item];
 
-                <span class="hljs-keyword">if</span> (newMimic &amp;&amp; newMimic.type !== <span class="hljs-string">'Cell'</span>) newMimic = <span class="hljs-literal">false</span>;
+                <span class="hljs-keyword">if</span> (newMimic &amp;&amp; newMimic.type !== <span class="hljs-string">&#x27;Cell&#x27;</span>) newMimic = <span class="hljs-literal">false</span>;
             }
 
             <span class="hljs-keyword">if</span> (newMimic &amp;&amp; newMimic.name) {
@@ -632,9 +672,9 @@
 
                 pushUnique(newMimic.mimicked, name);
 
-                <span class="hljs-keyword">this</span>.mimic = newMimic;
-                <span class="hljs-keyword">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
-                <span class="hljs-keyword">this</span>.dirtyStampHandlePositions = <span class="hljs-literal">true</span>;
+                <span class="hljs-built_in">this</span>.mimic = newMimic;
+                <span class="hljs-built_in">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
+                <span class="hljs-built_in">this</span>.dirtyStampHandlePositions = <span class="hljs-literal">true</span>;
             }
         }
     };</pre></div></div>
@@ -654,33 +694,33 @@
             
             <div class="content"><div class='highlight'><pre>    S.useMimicDimensions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">this</span>.useMimicDimensions = item;
-        <span class="hljs-keyword">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.useMimicDimensions = item;
+        <span class="hljs-built_in">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
     };
     S.useMimicScale = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">this</span>.useMimicScale = item;
-        <span class="hljs-keyword">this</span>.dirtyScale = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.useMimicScale = item;
+        <span class="hljs-built_in">this</span>.dirtyScale = <span class="hljs-literal">true</span>;
     };
     S.useMimicStart = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">this</span>.useMimicStart = item;
-        <span class="hljs-keyword">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.useMimicStart = item;
+        <span class="hljs-built_in">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
     };
     S.useMimicHandle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">this</span>.useMimicHandle = item;
-        <span class="hljs-keyword">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.useMimicHandle = item;
+        <span class="hljs-built_in">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
     };
     S.useMimicOffset = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">this</span>.useMimicOffset = item;
-        <span class="hljs-keyword">this</span>.dirtyOffset = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.useMimicOffset = item;
+        <span class="hljs-built_in">this</span>.dirtyOffset = <span class="hljs-literal">true</span>;
     };
     S.useMimicRotation = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">this</span>.useMimicRotation = item;
-        <span class="hljs-keyword">this</span>.dirtyRotation = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.useMimicRotation = item;
+        <span class="hljs-built_in">this</span>.dirtyRotation = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -698,33 +738,33 @@
             
             <div class="content"><div class='highlight'><pre>    S.addOwnDimensionsToMimic = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">this</span>.addOwnDimensionsToMimic = item;
-        <span class="hljs-keyword">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.addOwnDimensionsToMimic = item;
+        <span class="hljs-built_in">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
     };
     S.addOwnScaleToMimic = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">this</span>.addOwnScaleToMimic = item;
-        <span class="hljs-keyword">this</span>.dirtyScale = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.addOwnScaleToMimic = item;
+        <span class="hljs-built_in">this</span>.dirtyScale = <span class="hljs-literal">true</span>;
     };
     S.addOwnStartToMimic = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">this</span>.addOwnStartToMimic = item;
-        <span class="hljs-keyword">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.addOwnStartToMimic = item;
+        <span class="hljs-built_in">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
     };
     S.addOwnHandleToMimic = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">this</span>.addOwnHandleToMimic = item;
-        <span class="hljs-keyword">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.addOwnHandleToMimic = item;
+        <span class="hljs-built_in">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
     };
     S.addOwnOffsetToMimic = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">this</span>.addOwnOffsetToMimic = item;
-        <span class="hljs-keyword">this</span>.dirtyOffset = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.addOwnOffsetToMimic = item;
+        <span class="hljs-built_in">this</span>.dirtyOffset = <span class="hljs-literal">true</span>;
     };
     S.addOwnRotationToMimic = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">this</span>.addOwnRotationToMimic = item;
-        <span class="hljs-keyword">this</span>.dirtyRotation = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.addOwnRotationToMimic = item;
+        <span class="hljs-built_in">this</span>.dirtyRotation = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -755,13 +795,13 @@
             
             <div class="content"><div class='highlight'><pre>    P.updateMimicSubscribers = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">let</span> DMH = <span class="hljs-keyword">this</span>.dirtyMimicHandle;
-        <span class="hljs-keyword">let</span> DMO = <span class="hljs-keyword">this</span>.dirtyMimicOffset;
-        <span class="hljs-keyword">let</span> DMR = <span class="hljs-keyword">this</span>.dirtyMimicRotation;
-        <span class="hljs-keyword">let</span> DMS = <span class="hljs-keyword">this</span>.dirtyMimicScale;
-        <span class="hljs-keyword">let</span> DMD = <span class="hljs-keyword">this</span>.dirtyMimicDimensions;
+        <span class="hljs-keyword">let</span> DMH = <span class="hljs-built_in">this</span>.dirtyMimicHandle;
+        <span class="hljs-keyword">let</span> DMO = <span class="hljs-built_in">this</span>.dirtyMimicOffset;
+        <span class="hljs-keyword">let</span> DMR = <span class="hljs-built_in">this</span>.dirtyMimicRotation;
+        <span class="hljs-keyword">let</span> DMS = <span class="hljs-built_in">this</span>.dirtyMimicScale;
+        <span class="hljs-keyword">let</span> DMD = <span class="hljs-built_in">this</span>.dirtyMimicDimensions;
 
-        <span class="hljs-keyword">this</span>.mimicked.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
+        <span class="hljs-built_in">this</span>.mimicked.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
             <span class="hljs-keyword">let</span> instance = artefact[name];
 
@@ -769,7 +809,7 @@
 
                 instance = asset[name];
 
-                <span class="hljs-keyword">if</span> (!instance || instance.type !== <span class="hljs-string">'Cell'</span>) instance = <span class="hljs-literal">false</span>;
+                <span class="hljs-keyword">if</span> (!instance || instance.type !== <span class="hljs-string">&#x27;Cell&#x27;</span>) instance = <span class="hljs-literal">false</span>;
             }
 
             <span class="hljs-keyword">if</span> (instance) {
@@ -783,11 +823,11 @@
             }
         });
 
-        <span class="hljs-keyword">this</span>.dirtyMimicHandle = <span class="hljs-literal">false</span>;
-        <span class="hljs-keyword">this</span>.dirtyMimicOffset = <span class="hljs-literal">false</span>;
-        <span class="hljs-keyword">this</span>.dirtyMimicRotation = <span class="hljs-literal">false</span>;
-        <span class="hljs-keyword">this</span>.dirtyMimicScale = <span class="hljs-literal">false</span>;
-        <span class="hljs-keyword">this</span>.dirtyMimicDimensions = <span class="hljs-literal">false</span>;
+        <span class="hljs-built_in">this</span>.dirtyMimicHandle = <span class="hljs-literal">false</span>;
+        <span class="hljs-built_in">this</span>.dirtyMimicOffset = <span class="hljs-literal">false</span>;
+        <span class="hljs-built_in">this</span>.dirtyMimicRotation = <span class="hljs-literal">false</span>;
+        <span class="hljs-built_in">this</span>.dirtyMimicScale = <span class="hljs-literal">false</span>;
+        <span class="hljs-built_in">this</span>.dirtyMimicDimensions = <span class="hljs-literal">false</span>;
     };</pre></div></div>
             
         </li>

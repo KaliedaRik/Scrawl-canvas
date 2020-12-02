@@ -4,7 +4,7 @@
 <head>
   <title>Anchor factory</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -110,6 +110,11 @@
                 </a>
               
                 
+                <a class="source" href="emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
                 <a class="source" href="filter.html">
                   ./source/factory/filter.js
                 </a>
@@ -150,6 +155,11 @@
                 </a>
               
                 
+                <a class="source" href="net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
                 <a class="source" href="oval.html">
                   ./source/factory/oval.js
                 </a>
@@ -157,6 +167,31 @@
                 
                 <a class="source" href="palette.html">
                   ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="particleForce.html">
+                  ./source/factory/particleForce.js
+                </a>
+              
+                
+                <a class="source" href="particleHistory.html">
+                  ./source/factory/particleHistory.js
+                </a>
+              
+                
+                <a class="source" href="particleSpring.html">
+                  ./source/factory/particleSpring.js
+                </a>
+              
+                
+                <a class="source" href="particleWorld.html">
+                  ./source/factory/particleWorld.js
                 </a>
               
                 
@@ -247,6 +282,11 @@
                 
                 <a class="source" href="ticker.html">
                   ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="tracer.html">
+                  ./source/factory/tracer.js
                 </a>
               
                 
@@ -448,10 +488,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, artefact } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { mergeOver, pushUnique, isa_fn, isa_dom } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">artefact</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+<span class="hljs-keyword">import</span> { mergeOver, pushUnique, isa_fn, isa_dom } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/base.js'</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -468,15 +508,15 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Anchor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.makeName(items.name);
-    <span class="hljs-keyword">this</span>.register();
+    <span class="hljs-built_in">this</span>.makeName(items.name);
+    <span class="hljs-built_in">this</span>.register();
     
-    <span class="hljs-keyword">this</span>.set(<span class="hljs-keyword">this</span>.defs);
-    <span class="hljs-keyword">this</span>.set(items);
+    <span class="hljs-built_in">this</span>.set(<span class="hljs-built_in">this</span>.defs);
+    <span class="hljs-built_in">this</span>.set(items);
 
-    <span class="hljs-keyword">this</span>.build();
+    <span class="hljs-built_in">this</span>.build();
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -493,8 +533,8 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Anchor.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">'Anchor'</span>;
-P.lib = <span class="hljs-string">'anchor'</span>;
+P.type = <span class="hljs-string">&#x27;Anchor&#x27;</span>;
+P.lib = <span class="hljs-string">&#x27;anchor&#x27;</span>;
 P.isArtefact = <span class="hljs-literal">false</span>;
 P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
             
@@ -559,7 +599,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    description: <span class="hljs-string">''</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    description: <span class="hljs-string">&#x27;&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -579,14 +619,14 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    download: <span class="hljs-string">''</span>,
-    <span class="hljs-attr">href</span>: <span class="hljs-string">''</span>,
-    <span class="hljs-attr">hreflang</span>: <span class="hljs-string">''</span>,
-    <span class="hljs-attr">ping</span>: <span class="hljs-string">''</span>,
-    <span class="hljs-attr">referrerpolicy</span>: <span class="hljs-string">''</span>,
-    <span class="hljs-attr">rel</span>: <span class="hljs-string">'noreferrer'</span>,
-    <span class="hljs-attr">target</span>: <span class="hljs-string">'_blank'</span>,
-    <span class="hljs-attr">anchorType</span>: <span class="hljs-string">''</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    download: <span class="hljs-string">&#x27;&#x27;</span>,
+    <span class="hljs-attr">href</span>: <span class="hljs-string">&#x27;&#x27;</span>,
+    <span class="hljs-attr">hreflang</span>: <span class="hljs-string">&#x27;&#x27;</span>,
+    <span class="hljs-attr">ping</span>: <span class="hljs-string">&#x27;&#x27;</span>,
+    <span class="hljs-attr">referrerpolicy</span>: <span class="hljs-string">&#x27;&#x27;</span>,
+    <span class="hljs-attr">rel</span>: <span class="hljs-string">&#x27;noreferrer&#x27;</span>,
+    <span class="hljs-attr">target</span>: <span class="hljs-string">&#x27;_blank&#x27;</span>,
+    <span class="hljs-attr">anchorType</span>: <span class="hljs-string">&#x27;&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -613,19 +653,19 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
               <h5 id="example-usage">Example usage</h5>
 <p>This <strong>doesn’t work!</strong> The browser will generate an error, rather than output an update to the console, when the user clicks on the canvas entity associated with the anchor (although navigation will still occur - the wikipedia page will open in a new browser tab):</p>
 <pre><code>anchor: {
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'wikipedia-box-link'</span>,
-    <span class="hljs-attr">href</span>: <span class="hljs-string">'https://en.wikipedia.org/wiki/Box'</span>,
-    <span class="hljs-attr">description</span>: <span class="hljs-string">'Link to the Wikipedia article on boxes (opens in new tab)'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;wikipedia-box-link&#x27;</span>,
+    <span class="hljs-attr">href</span>: <span class="hljs-string">&#x27;https://en.wikipedia.org/wiki/Box&#x27;</span>,
+    <span class="hljs-attr">description</span>: <span class="hljs-string">&#x27;Link to the Wikipedia article on boxes (opens in new tab)&#x27;</span>,
 
-    <span class="hljs-attr">clickAction</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'box clicked'</span>) },
+    <span class="hljs-attr">clickAction</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;box clicked&#x27;</span>) },
 }</code></pre>
 <p>This <strong>works as expected</strong> - the function returns a string which can then be attached to the &lt;a&gt; DOM element’s <em>onclick</em> attribute:</p>
 <pre><code>anchor: {
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'wikipedia-box-link'</span>,
-    <span class="hljs-attr">href</span>: <span class="hljs-string">'https://en.wikipedia.org/wiki/Box'</span>,
-    <span class="hljs-attr">description</span>: <span class="hljs-string">'Link to the Wikipedia article on boxes (opens in new tab)'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;wikipedia-box-link&#x27;</span>,
+    <span class="hljs-attr">href</span>: <span class="hljs-string">&#x27;https://en.wikipedia.org/wiki/Box&#x27;</span>,
+    <span class="hljs-attr">description</span>: <span class="hljs-string">&#x27;Link to the Wikipedia article on boxes (opens in new tab)&#x27;</span>,
 
-    <span class="hljs-attr">clickAction</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-string">`console.log('box clicked')`</span> },
+    <span class="hljs-attr">clickAction</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-string">`console.log(&#x27;box clicked&#x27;)`</span> },
 },</code></pre>
 
             </div>
@@ -663,9 +703,9 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.packetExclusions = pushUnique(P.packetExclusions, [<span class="hljs-string">'domElement'</span>]);
-P.packetObjects = pushUnique(P.packetExclusions, [<span class="hljs-string">'host'</span>]);
-P.packetFunctions = pushUnique(P.packetFunctions, [<span class="hljs-string">'clickAction'</span>]);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.packetExclusions = pushUnique(P.packetExclusions, [<span class="hljs-string">&#x27;domElement&#x27;</span>]);
+P.packetObjects = pushUnique(P.packetExclusions, [<span class="hljs-string">&#x27;host&#x27;</span>]);
+P.packetFunctions = pushUnique(P.packetFunctions, [<span class="hljs-string">&#x27;clickAction&#x27;</span>]);</pre></div></div>
             
         </li>
         
@@ -696,9 +736,9 @@ P.packetFunctions = pushUnique(P.packetFunctions, [<span class="hljs-string">'cl
             
             <div class="content"><div class='highlight'><pre>P.demolish = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.domElement &amp;&amp; <span class="hljs-keyword">this</span>.hold) <span class="hljs-keyword">this</span>.hold.removeChild(<span class="hljs-keyword">this</span>.domElement);
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.domElement &amp;&amp; <span class="hljs-built_in">this</span>.hold) <span class="hljs-built_in">this</span>.hold.removeChild(<span class="hljs-built_in">this</span>.domElement);
 
-    <span class="hljs-keyword">this</span>.deregister();
+    <span class="hljs-built_in">this</span>.deregister();
 };</pre></div></div>
             
         </li>
@@ -733,7 +773,7 @@ P.packetFunctions = pushUnique(P.packetFunctions, [<span class="hljs-string">'cl
 
     <span class="hljs-keyword">let</span> h = (item.substring) ? artefact[item] : item;
 
-    <span class="hljs-keyword">if</span> (h &amp;&amp; h.name) <span class="hljs-keyword">this</span>.host = h;
+    <span class="hljs-keyword">if</span> (h &amp;&amp; h.name) <span class="hljs-built_in">this</span>.host = h;
 };</pre></div></div>
             
         </li>
@@ -753,11 +793,11 @@ P.packetFunctions = pushUnique(P.packetFunctions, [<span class="hljs-string">'cl
 
     <span class="hljs-keyword">if</span> (isa_dom(item)) {
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.domElement &amp;&amp; <span class="hljs-keyword">this</span>.hold) <span class="hljs-keyword">this</span>.hold.removeChild(<span class="hljs-keyword">this</span>.domElement);
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.domElement &amp;&amp; <span class="hljs-built_in">this</span>.hold) <span class="hljs-built_in">this</span>.hold.removeChild(<span class="hljs-built_in">this</span>.domElement);
 
-        <span class="hljs-keyword">this</span>.hold = item;
+        <span class="hljs-built_in">this</span>.hold = item;
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.domElement) <span class="hljs-keyword">this</span>.hold.appendChild(<span class="hljs-keyword">this</span>.domElement);
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.domElement) <span class="hljs-built_in">this</span>.hold.appendChild(<span class="hljs-built_in">this</span>.domElement);
     }
 };</pre></div></div>
             
@@ -785,15 +825,15 @@ anchor.download        ~~&gt; artefact.anchorDownload</code></pre>
 <pre><code>artefact.set({
 
     <span class="hljs-attr">anchor</span>: {
-        <span class="hljs-attr">description</span>: <span class="hljs-string">'value'</span>,
-        <span class="hljs-attr">type</span>: <span class="hljs-string">'value'</span>,
-        <span class="hljs-attr">target</span>: <span class="hljs-string">'value'</span>,
-        <span class="hljs-attr">rel</span>: <span class="hljs-string">'value'</span>,
-        <span class="hljs-attr">referrerPolicy</span>: <span class="hljs-string">'value'</span>,
-        <span class="hljs-attr">ping</span>: <span class="hljs-string">'value'</span>,
-        <span class="hljs-attr">hreflang</span>: <span class="hljs-string">'value'</span>,
-        <span class="hljs-attr">href</span>: <span class="hljs-string">'value'</span>,
-        <span class="hljs-attr">download</span>: <span class="hljs-string">'value'</span>,
+        <span class="hljs-attr">description</span>: <span class="hljs-string">&#x27;value&#x27;</span>,
+        <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;value&#x27;</span>,
+        <span class="hljs-attr">target</span>: <span class="hljs-string">&#x27;value&#x27;</span>,
+        <span class="hljs-attr">rel</span>: <span class="hljs-string">&#x27;value&#x27;</span>,
+        <span class="hljs-attr">referrerPolicy</span>: <span class="hljs-string">&#x27;value&#x27;</span>,
+        <span class="hljs-attr">ping</span>: <span class="hljs-string">&#x27;value&#x27;</span>,
+        <span class="hljs-attr">hreflang</span>: <span class="hljs-string">&#x27;value&#x27;</span>,
+        <span class="hljs-attr">href</span>: <span class="hljs-string">&#x27;value&#x27;</span>,
+        <span class="hljs-attr">download</span>: <span class="hljs-string">&#x27;value&#x27;</span>,
     },
 });</code></pre>
 
@@ -801,50 +841,50 @@ anchor.download        ~~&gt; artefact.anchorDownload</code></pre>
             
             <div class="content"><div class='highlight'><pre>S.download = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.download = item;
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.domElement) <span class="hljs-keyword">this</span>.update(<span class="hljs-string">'download'</span>);
+    <span class="hljs-built_in">this</span>.download = item;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.domElement) <span class="hljs-built_in">this</span>.update(<span class="hljs-string">&#x27;download&#x27;</span>);
 };
 
 S.href = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.href = item;
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.domElement) <span class="hljs-keyword">this</span>.update(<span class="hljs-string">'href'</span>);
+    <span class="hljs-built_in">this</span>.href = item;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.domElement) <span class="hljs-built_in">this</span>.update(<span class="hljs-string">&#x27;href&#x27;</span>);
 };
 
 S.hreflang = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.hreflang = item;
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.domElement) <span class="hljs-keyword">this</span>.update(<span class="hljs-string">'hreflang'</span>);
+    <span class="hljs-built_in">this</span>.hreflang = item;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.domElement) <span class="hljs-built_in">this</span>.update(<span class="hljs-string">&#x27;hreflang&#x27;</span>);
 };
 
 S.ping = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.ping = item;
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.domElement) <span class="hljs-keyword">this</span>.update(<span class="hljs-string">'ping'</span>);
+    <span class="hljs-built_in">this</span>.ping = item;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.domElement) <span class="hljs-built_in">this</span>.update(<span class="hljs-string">&#x27;ping&#x27;</span>);
 };
 
 S.referrerpolicy = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.referrerpolicy = item;
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.domElement) <span class="hljs-keyword">this</span>.update(<span class="hljs-string">'referrerpolicy'</span>);
+    <span class="hljs-built_in">this</span>.referrerpolicy = item;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.domElement) <span class="hljs-built_in">this</span>.update(<span class="hljs-string">&#x27;referrerpolicy&#x27;</span>);
 };
 
 S.rel = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.rel = item;
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.domElement) <span class="hljs-keyword">this</span>.update(<span class="hljs-string">'rel'</span>);
+    <span class="hljs-built_in">this</span>.rel = item;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.domElement) <span class="hljs-built_in">this</span>.update(<span class="hljs-string">&#x27;rel&#x27;</span>);
 };
 
 S.target = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.target = item;
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.domElement) <span class="hljs-keyword">this</span>.update(<span class="hljs-string">'target'</span>);
+    <span class="hljs-built_in">this</span>.target = item;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.domElement) <span class="hljs-built_in">this</span>.update(<span class="hljs-string">&#x27;target&#x27;</span>);
 };
 
 S.anchorType = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.anchorType = item;
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.domElement) <span class="hljs-keyword">this</span>.update(<span class="hljs-string">'type'</span>);
+    <span class="hljs-built_in">this</span>.anchorType = item;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.domElement) <span class="hljs-built_in">this</span>.update(<span class="hljs-string">&#x27;type&#x27;</span>);
 };</pre></div></div>
             
         </li>
@@ -866,16 +906,16 @@ S.anchorType = <span class="hljs-function"><span class="hljs-keyword">function</
             
             <div class="content"><div class='highlight'><pre>S.description = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.description = item;
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.domElement) <span class="hljs-keyword">this</span>.domElement.textContent = item;
+    <span class="hljs-built_in">this</span>.description = item;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.domElement) <span class="hljs-built_in">this</span>.domElement.textContent = item;
 };
 
 S.clickAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">if</span> (isa_fn(item)) {
 
-        <span class="hljs-keyword">this</span>.clickAction = item;
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.domElement) <span class="hljs-keyword">this</span>.domElement.setAttribute(<span class="hljs-string">'onclick'</span>, item());
+        <span class="hljs-built_in">this</span>.clickAction = item;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.domElement) <span class="hljs-built_in">this</span>.domElement.setAttribute(<span class="hljs-string">&#x27;onclick&#x27;</span>, item());
     }
 };</pre></div></div>
             
@@ -897,31 +937,31 @@ S.clickAction = <span class="hljs-function"><span class="hljs-keyword">function<
             
             <div class="content"><div class='highlight'><pre>P.build = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.domElement &amp;&amp; <span class="hljs-keyword">this</span>.hold) <span class="hljs-keyword">this</span>.hold.removeChild(<span class="hljs-keyword">this</span>.domElement);
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.domElement &amp;&amp; <span class="hljs-built_in">this</span>.hold) <span class="hljs-built_in">this</span>.hold.removeChild(<span class="hljs-built_in">this</span>.domElement);
 
-    <span class="hljs-keyword">let</span> link = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'a'</span>);
+    <span class="hljs-keyword">let</span> link = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;a&#x27;</span>);
 
-    link.id = <span class="hljs-keyword">this</span>.name;
+    link.id = <span class="hljs-built_in">this</span>.name;
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.download) link.setAttribute(<span class="hljs-string">'download'</span>, <span class="hljs-keyword">this</span>.download);
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.href) link.setAttribute(<span class="hljs-string">'href'</span>, <span class="hljs-keyword">this</span>.href);
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.hreflang) link.setAttribute(<span class="hljs-string">'hreflang'</span>, <span class="hljs-keyword">this</span>.hreflang);
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.ping) link.setAttribute(<span class="hljs-string">'ping'</span>, <span class="hljs-keyword">this</span>.ping);
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.referrerpolicy) link.setAttribute(<span class="hljs-string">'referrerpolicy'</span>, <span class="hljs-keyword">this</span>.referrerpolicy);
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.rel) link.setAttribute(<span class="hljs-string">'rel'</span>, <span class="hljs-keyword">this</span>.rel);
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.target) link.setAttribute(<span class="hljs-string">'target'</span>, <span class="hljs-keyword">this</span>.target);
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchorType) link.setAttribute(<span class="hljs-string">'type'</span>, <span class="hljs-keyword">this</span>.anchorType);
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.download) link.setAttribute(<span class="hljs-string">&#x27;download&#x27;</span>, <span class="hljs-built_in">this</span>.download);
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.href) link.setAttribute(<span class="hljs-string">&#x27;href&#x27;</span>, <span class="hljs-built_in">this</span>.href);
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.hreflang) link.setAttribute(<span class="hljs-string">&#x27;hreflang&#x27;</span>, <span class="hljs-built_in">this</span>.hreflang);
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.ping) link.setAttribute(<span class="hljs-string">&#x27;ping&#x27;</span>, <span class="hljs-built_in">this</span>.ping);
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.referrerpolicy) link.setAttribute(<span class="hljs-string">&#x27;referrerpolicy&#x27;</span>, <span class="hljs-built_in">this</span>.referrerpolicy);
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.rel) link.setAttribute(<span class="hljs-string">&#x27;rel&#x27;</span>, <span class="hljs-built_in">this</span>.rel);
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.target) link.setAttribute(<span class="hljs-string">&#x27;target&#x27;</span>, <span class="hljs-built_in">this</span>.target);
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.anchorType) link.setAttribute(<span class="hljs-string">&#x27;type&#x27;</span>, <span class="hljs-built_in">this</span>.anchorType);
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.clickAction &amp;&amp; isa_fn(<span class="hljs-keyword">this</span>.clickAction)) link.setAttribute(<span class="hljs-string">'onclick'</span>, <span class="hljs-keyword">this</span>.clickAction());
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.clickAction &amp;&amp; isa_fn(<span class="hljs-built_in">this</span>.clickAction)) link.setAttribute(<span class="hljs-string">&#x27;onclick&#x27;</span>, <span class="hljs-built_in">this</span>.clickAction());
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.description) link.textContent = <span class="hljs-keyword">this</span>.description;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.description) link.textContent = <span class="hljs-built_in">this</span>.description;
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.focusAction) link.addEventListener(<span class="hljs-string">'focus'</span>, (e) =&gt; <span class="hljs-keyword">this</span>.host.onEnter(), <span class="hljs-literal">false</span>);
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.blurAction) link.addEventListener(<span class="hljs-string">'blur'</span>, (e) =&gt; <span class="hljs-keyword">this</span>.host.onLeave(), <span class="hljs-literal">false</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.focusAction) link.addEventListener(<span class="hljs-string">&#x27;focus&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> <span class="hljs-built_in">this</span>.host.onEnter(), <span class="hljs-literal">false</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.blurAction) link.addEventListener(<span class="hljs-string">&#x27;blur&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> <span class="hljs-built_in">this</span>.host.onLeave(), <span class="hljs-literal">false</span>);
 
-    <span class="hljs-keyword">this</span>.domElement = link;
+    <span class="hljs-built_in">this</span>.domElement = link;
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.hold) <span class="hljs-keyword">this</span>.hold.appendChild(link);
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.hold) <span class="hljs-built_in">this</span>.hold.appendChild(link);
 };</pre></div></div>
             
         </li>
@@ -939,7 +979,7 @@ S.clickAction = <span class="hljs-function"><span class="hljs-keyword">function<
             
             <div class="content"><div class='highlight'><pre>P.update = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.domElement) <span class="hljs-keyword">this</span>.domElement.setAttribute(item, <span class="hljs-keyword">this</span>[item]);
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.domElement) <span class="hljs-built_in">this</span>.domElement.setAttribute(item, <span class="hljs-built_in">this</span>[item]);
 };</pre></div></div>
             
         </li>
@@ -957,9 +997,9 @@ S.clickAction = <span class="hljs-function"><span class="hljs-keyword">function<
             
             <div class="content"><div class='highlight'><pre>P.click = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.hasBeenRecentlyClicked) {
+    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.hasBeenRecentlyClicked) {
 
-        <span class="hljs-keyword">let</span> e = <span class="hljs-keyword">new</span> MouseEvent(<span class="hljs-string">'click'</span>, {
+        <span class="hljs-keyword">let</span> e = <span class="hljs-keyword">new</span> MouseEvent(<span class="hljs-string">&#x27;click&#x27;</span>, {
             <span class="hljs-attr">view</span>: <span class="hljs-built_in">window</span>,
             <span class="hljs-attr">bubbles</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">cancelable</span>: <span class="hljs-literal">true</span>
@@ -981,12 +1021,12 @@ S.clickAction = <span class="hljs-function"><span class="hljs-keyword">function<
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">this</span>.hasBeenRecentlyClicked = <span class="hljs-literal">true</span>;
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-built_in">this</span>.hasBeenRecentlyClicked = <span class="hljs-literal">true</span>;
 
-        <span class="hljs-keyword">let</span> self = <span class="hljs-keyword">this</span>;
-        setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> self.hasBeenRecentlyClicked = <span class="hljs-literal">false</span>, <span class="hljs-number">200</span>);
+        <span class="hljs-keyword">let</span> self = <span class="hljs-built_in">this</span>;
+        <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> self.hasBeenRecentlyClicked = <span class="hljs-literal">false</span>, <span class="hljs-number">200</span>);
 
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.domElement.dispatchEvent(e);
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.domElement.dispatchEvent(e);
     }
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 };</pre></div></div>
@@ -1003,35 +1043,35 @@ S.clickAction = <span class="hljs-function"><span class="hljs-keyword">function<
               <h4 id="factory">Factory</h4>
 <p>To create an anchor, include an anchor definition object in any artefact object’s factory argument:</p>
 <pre><code><span class="hljs-comment">// get a handle on the canvas where the block/link will be defined </span>
-<span class="hljs-comment">// (in this case a canvas with id="mycanvas")</span>
+<span class="hljs-comment">// (in this case a canvas with id=&quot;mycanvas&quot;)</span>
 <span class="hljs-keyword">let</span> canvas = scrawl.library.artefact.mycanvas;
 canvas.setAsCurrentCanvas();
 
 <span class="hljs-comment">// Define a block entity</span>
 scrawl.makeBlock({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'demo-anchor-block'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-anchor-block&#x27;</span>,
 
-    <span class="hljs-attr">width</span>: <span class="hljs-string">'40%'</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-string">'40%'</span>,
+    <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;40%&#x27;</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;40%&#x27;</span>,
 
-    <span class="hljs-attr">startX</span>: <span class="hljs-string">'25%'</span>,
-    <span class="hljs-attr">startY</span>: <span class="hljs-string">'25%'</span>,
+    <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;25%&#x27;</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;25%&#x27;</span>,
 
-    <span class="hljs-comment">// Define the anchor object's attributes</span>
+    <span class="hljs-comment">// Define the anchor object&#x27;s attributes</span>
     <span class="hljs-attr">anchor</span>: {
-        <span class="hljs-attr">name</span>: <span class="hljs-string">'wikipedia-water-link'</span>,
-        <span class="hljs-attr">href</span>: <span class="hljs-string">'https://en.wikipedia.org/wiki/Water'</span>,
-        <span class="hljs-attr">description</span>: <span class="hljs-string">'Link to the Wikipedia article on water (opens in new tab)'</span>,
+        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;wikipedia-water-link&#x27;</span>,
+        <span class="hljs-attr">href</span>: <span class="hljs-string">&#x27;https://en.wikipedia.org/wiki/Water&#x27;</span>,
+        <span class="hljs-attr">description</span>: <span class="hljs-string">&#x27;Link to the Wikipedia article on water (opens in new tab)&#x27;</span>,
     },
 
     <span class="hljs-comment">// Add an action to take when user clicks on the block entity</span>
-    <span class="hljs-attr">onUp</span>: <span class="hljs-keyword">this</span>.clickAnchor,
+    <span class="hljs-attr">onUp</span>: <span class="hljs-built_in">this</span>.clickAnchor,
 });
 
 <span class="hljs-comment">// Add a listener to propagate DOM-detected click events on our canvas </span>
 <span class="hljs-comment">// back into the Scrawl-canvas event system</span>
-scrawl.addListener(<span class="hljs-string">'up'</span>, () =&gt; canvas.cascadeEventAction(<span class="hljs-string">'up'</span>), canvas.domElement);</code></pre>
+scrawl.addListener(<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-function">() =&gt;</span> canvas.cascadeEventAction(<span class="hljs-string">&#x27;up&#x27;</span>), canvas.domElement);</code></pre>
 
             </div>
             
@@ -1040,7 +1080,7 @@ scrawl.addListener(<span class="hljs-string">'up'</span>, () =&gt; canvas.cascad
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Anchor(items);
 };
 
-constructors.Anchor = Anchor;</pre></div></div>
+<span class="hljs-title">constructors</span>.<span class="hljs-title">Anchor</span> = <span class="hljs-title">Anchor</span>;</pre></div></div>
             
         </li>
         

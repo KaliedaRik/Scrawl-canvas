@@ -4,7 +4,7 @@
 <head>
   <title>Coordinate factory</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -110,6 +110,11 @@
                 </a>
               
                 
+                <a class="source" href="emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
                 <a class="source" href="filter.html">
                   ./source/factory/filter.js
                 </a>
@@ -150,6 +155,11 @@
                 </a>
               
                 
+                <a class="source" href="net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
                 <a class="source" href="oval.html">
                   ./source/factory/oval.js
                 </a>
@@ -157,6 +167,31 @@
                 
                 <a class="source" href="palette.html">
                   ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="particleForce.html">
+                  ./source/factory/particleForce.js
+                </a>
+              
+                
+                <a class="source" href="particleHistory.html">
+                  ./source/factory/particleHistory.js
+                </a>
+              
+                
+                <a class="source" href="particleSpring.html">
+                  ./source/factory/particleSpring.js
+                </a>
+              
+                
+                <a class="source" href="particleWorld.html">
+                  ./source/factory/particleWorld.js
                 </a>
               
                 
@@ -247,6 +282,11 @@
                 
                 <a class="source" href="ticker.html">
                   ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="tracer.html">
+                  ./source/factory/tracer.js
                 </a>
               
                 
@@ -422,8 +462,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { xt, isa_number } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+<span class="hljs-keyword">import</span> { xt, isa_number } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -464,7 +504,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Coordinate.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Array</span>.prototype);
 P.constructor = Coordinate;
-P.type = <span class="hljs-string">'Coordinate'</span>;</pre></div></div>
+P.type = <span class="hljs-string">&#x27;Coordinate&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -519,31 +559,31 @@ P.type = <span class="hljs-string">'Coordinate'</span>;</pre></div></div>
 
     <span class="hljs-keyword">if</span> (xt(items)) {
 
-        <span class="hljs-keyword">if</span> (items.type === <span class="hljs-string">'Coordinate'</span>) <span class="hljs-keyword">this</span>.setFromArray(items);
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (items.type === <span class="hljs-string">'Vector'</span>) <span class="hljs-keyword">this</span>.setFromVector(items);
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (items.type === <span class="hljs-string">'Quaternion'</span>) <span class="hljs-keyword">this</span>.setFromVector(items.v);
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(items)) <span class="hljs-keyword">this</span>.setFromArray(items);
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (xt(y)) <span class="hljs-keyword">this</span>.setFromArray([items, y]);
+        <span class="hljs-keyword">if</span> (items.type === <span class="hljs-string">&#x27;Coordinate&#x27;</span>) <span class="hljs-built_in">this</span>.setFromArray(items);
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (items.type === <span class="hljs-string">&#x27;Vector&#x27;</span>) <span class="hljs-built_in">this</span>.setFromVector(items);
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (items.type === <span class="hljs-string">&#x27;Quaternion&#x27;</span>) <span class="hljs-built_in">this</span>.setFromVector(items.v);
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(items)) <span class="hljs-built_in">this</span>.setFromArray(items);
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (xt(y)) <span class="hljs-built_in">this</span>.setFromArray([items, y]);
     }
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };
 
 P.setFromArray = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>[<span class="hljs-number">0</span>] = item[<span class="hljs-number">0</span>];
-    <span class="hljs-keyword">this</span>[<span class="hljs-number">1</span>] = item[<span class="hljs-number">1</span>];
+    <span class="hljs-built_in">this</span>[<span class="hljs-number">0</span>] = item[<span class="hljs-number">0</span>];
+    <span class="hljs-built_in">this</span>[<span class="hljs-number">1</span>] = item[<span class="hljs-number">1</span>];
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };
 
 P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">let</span> {x, y} = item;
 
-    <span class="hljs-keyword">this</span>[<span class="hljs-number">0</span>] = x;
-    <span class="hljs-keyword">this</span>[<span class="hljs-number">1</span>] = y;
+    <span class="hljs-built_in">this</span>[<span class="hljs-number">0</span>] = x;
+    <span class="hljs-built_in">this</span>[<span class="hljs-number">1</span>] = y;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -562,10 +602,10 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
             
             <div class="content"><div class='highlight'><pre>P.zero = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">this</span>[<span class="hljs-number">0</span>] = <span class="hljs-number">0</span>;
-    <span class="hljs-keyword">this</span>[<span class="hljs-number">1</span>] = <span class="hljs-number">0</span>;
+    <span class="hljs-built_in">this</span>[<span class="hljs-number">0</span>] = <span class="hljs-number">0</span>;
+    <span class="hljs-built_in">this</span>[<span class="hljs-number">1</span>] = <span class="hljs-number">0</span>;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -585,10 +625,10 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
 
     <span class="hljs-keyword">let</span> {x, y} = item;
 
-    <span class="hljs-keyword">this</span>[<span class="hljs-number">0</span>] += x;
-    <span class="hljs-keyword">this</span>[<span class="hljs-number">1</span>] += y;
+    <span class="hljs-built_in">this</span>[<span class="hljs-number">0</span>] += x;
+    <span class="hljs-built_in">this</span>[<span class="hljs-number">1</span>] += y;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -608,10 +648,10 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
 
     <span class="hljs-keyword">let</span> {x, y} = item;
 
-    <span class="hljs-keyword">this</span>[<span class="hljs-number">0</span>] -= x;
-    <span class="hljs-keyword">this</span>[<span class="hljs-number">1</span>] -= y;
+    <span class="hljs-built_in">this</span>[<span class="hljs-number">0</span>] -= x;
+    <span class="hljs-built_in">this</span>[<span class="hljs-number">1</span>] -= y;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -631,10 +671,10 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
 
     <span class="hljs-keyword">let</span> [x, y] = item;
 
-    <span class="hljs-keyword">this</span>[<span class="hljs-number">0</span>] += x;
-    <span class="hljs-keyword">this</span>[<span class="hljs-number">1</span>] += y;
+    <span class="hljs-built_in">this</span>[<span class="hljs-number">0</span>] += x;
+    <span class="hljs-built_in">this</span>[<span class="hljs-number">1</span>] += y;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -654,10 +694,10 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
 
     <span class="hljs-keyword">let</span> [x, y] = item;
 
-    <span class="hljs-keyword">this</span>[<span class="hljs-number">0</span>] -= x;
-    <span class="hljs-keyword">this</span>[<span class="hljs-number">1</span>] -= y;
+    <span class="hljs-built_in">this</span>[<span class="hljs-number">0</span>] -= x;
+    <span class="hljs-built_in">this</span>[<span class="hljs-number">1</span>] -= y;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -677,10 +717,10 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
 
     <span class="hljs-keyword">let</span> [x, y] = item;
 
-    <span class="hljs-keyword">this</span>[<span class="hljs-number">0</span>] *= x;
-    <span class="hljs-keyword">this</span>[<span class="hljs-number">1</span>] *= y;
+    <span class="hljs-built_in">this</span>[<span class="hljs-number">0</span>] *= x;
+    <span class="hljs-built_in">this</span>[<span class="hljs-number">1</span>] *= y;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -702,12 +742,12 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
 
     <span class="hljs-keyword">if</span> (x &amp;&amp; y) {
 
-        <span class="hljs-keyword">this</span>[<span class="hljs-number">0</span>] /= x;
-        <span class="hljs-keyword">this</span>[<span class="hljs-number">1</span>] /= y;
+        <span class="hljs-built_in">this</span>[<span class="hljs-number">0</span>] /= x;
+        <span class="hljs-built_in">this</span>[<span class="hljs-number">1</span>] /= y;
     }
 
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -725,10 +765,10 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
             
             <div class="content"><div class='highlight'><pre>P.scalarMultiply = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>[<span class="hljs-number">0</span>] *= item;
-    <span class="hljs-keyword">this</span>[<span class="hljs-number">1</span>] *= item;
+    <span class="hljs-built_in">this</span>[<span class="hljs-number">0</span>] *= item;
+    <span class="hljs-built_in">this</span>[<span class="hljs-number">1</span>] *= item;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -748,11 +788,11 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
 
     <span class="hljs-keyword">if</span> (item &amp;&amp; item.toFixed) {
 
-        <span class="hljs-keyword">this</span>[<span class="hljs-number">0</span>] /= item;
-        <span class="hljs-keyword">this</span>[<span class="hljs-number">1</span>] /= item;
+        <span class="hljs-built_in">this</span>[<span class="hljs-number">0</span>] /= item;
+        <span class="hljs-built_in">this</span>[<span class="hljs-number">1</span>] /= item;
     }
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -770,8 +810,8 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
             
             <div class="content"><div class='highlight'><pre>P.getMagnitude = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">let</span> x = <span class="hljs-keyword">this</span>[<span class="hljs-number">0</span>],
-        y = <span class="hljs-keyword">this</span>[<span class="hljs-number">1</span>];
+    <span class="hljs-keyword">let</span> x = <span class="hljs-built_in">this</span>[<span class="hljs-number">0</span>],
+        y = <span class="hljs-built_in">this</span>[<span class="hljs-number">1</span>];
 
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.sqrt((x * x) + (y * y));
 };</pre></div></div>
@@ -807,17 +847,17 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
             <div class="content"><div class='highlight'><pre>
     <span class="hljs-keyword">let</span> stat_vr = [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>];
 
-    <span class="hljs-keyword">let</span> x = <span class="hljs-keyword">this</span>[<span class="hljs-number">0</span>],
-        y = <span class="hljs-keyword">this</span>[<span class="hljs-number">1</span>];
+    <span class="hljs-keyword">let</span> x = <span class="hljs-built_in">this</span>[<span class="hljs-number">0</span>],
+        y = <span class="hljs-built_in">this</span>[<span class="hljs-number">1</span>];
 
     stat_vr[<span class="hljs-number">0</span>] = <span class="hljs-built_in">Math</span>.atan2(y, x);
     stat_vr[<span class="hljs-number">0</span>] += (angle * <span class="hljs-number">0.01745329251</span>);
     stat_vr[<span class="hljs-number">1</span>] = <span class="hljs-built_in">Math</span>.sqrt((x * x) + (y * y));
 
-    <span class="hljs-keyword">this</span>[<span class="hljs-number">0</span>] = stat_vr[<span class="hljs-number">1</span>] * <span class="hljs-built_in">Math</span>.cos(stat_vr[<span class="hljs-number">0</span>]);
-    <span class="hljs-keyword">this</span>[<span class="hljs-number">1</span>] = stat_vr[<span class="hljs-number">1</span>] * <span class="hljs-built_in">Math</span>.sin(stat_vr[<span class="hljs-number">0</span>]);
+    <span class="hljs-built_in">this</span>[<span class="hljs-number">0</span>] = stat_vr[<span class="hljs-number">1</span>] * <span class="hljs-built_in">Math</span>.cos(stat_vr[<span class="hljs-number">0</span>]);
+    <span class="hljs-built_in">this</span>[<span class="hljs-number">1</span>] = stat_vr[<span class="hljs-number">1</span>] * <span class="hljs-built_in">Math</span>.sin(stat_vr[<span class="hljs-number">0</span>]);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -835,10 +875,10 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
             
             <div class="content"><div class='highlight'><pre>P.reverse = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">this</span>[<span class="hljs-number">0</span>] = -<span class="hljs-keyword">this</span>[<span class="hljs-number">0</span>];
-    <span class="hljs-keyword">this</span>[<span class="hljs-number">1</span>] = -<span class="hljs-keyword">this</span>[<span class="hljs-number">1</span>];
+    <span class="hljs-built_in">this</span>[<span class="hljs-number">0</span>] = -<span class="hljs-built_in">this</span>[<span class="hljs-number">0</span>];
+    <span class="hljs-built_in">this</span>[<span class="hljs-number">1</span>] = -<span class="hljs-built_in">this</span>[<span class="hljs-number">1</span>];
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -856,7 +896,7 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
             
             <div class="content"><div class='highlight'><pre>P.getDotProduct = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
-    <span class="hljs-keyword">return</span> (<span class="hljs-keyword">this</span>[<span class="hljs-number">0</span>] * coord[<span class="hljs-number">0</span>]) + (<span class="hljs-keyword">this</span>[<span class="hljs-number">1</span>] * coord[<span class="hljs-number">1</span>]);
+    <span class="hljs-keyword">return</span> (<span class="hljs-built_in">this</span>[<span class="hljs-number">0</span>] * coord[<span class="hljs-number">0</span>]) + (<span class="hljs-built_in">this</span>[<span class="hljs-number">1</span>] * coord[<span class="hljs-number">1</span>]);
 };</pre></div></div>
             
         </li>
@@ -874,13 +914,13 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
             
             <div class="content"><div class='highlight'><pre>P.normalize = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
     
-    <span class="hljs-keyword">let</span> val = <span class="hljs-keyword">this</span>.getMagnitude();
+    <span class="hljs-keyword">let</span> val = <span class="hljs-built_in">this</span>.getMagnitude();
     
     <span class="hljs-keyword">if</span> (val &gt; <span class="hljs-number">0</span>) {
-        <span class="hljs-keyword">this</span>[<span class="hljs-number">0</span>] /= val;
-        <span class="hljs-keyword">this</span>[<span class="hljs-number">1</span>] /= val;
+        <span class="hljs-built_in">this</span>[<span class="hljs-number">0</span>] /= val;
+        <span class="hljs-built_in">this</span>[<span class="hljs-number">1</span>] /= val;
     }
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -936,7 +976,7 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> releaseCoordinate = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coordinate</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (coordinate &amp;&amp; coordinate.type === <span class="hljs-string">'Coordinate'</span>) coordinatePool.push(coordinate.zero());
+    <span class="hljs-keyword">if</span> (coordinate &amp;&amp; coordinate.type === <span class="hljs-string">&#x27;Coordinate&#x27;</span>) coordinatePool.push(coordinate.zero());
 };</pre></div></div>
             
         </li>
@@ -957,7 +997,7 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Coordinate(items, y);
 };
 
-constructors.Coordinate = Coordinate;</pre></div></div>
+<span class="hljs-title">constructors</span>.<span class="hljs-title">Coordinate</span> = <span class="hljs-title">Coordinate</span>;</pre></div></div>
             
         </li>
         

@@ -4,7 +4,7 @@
 <head>
   <title>Component definitions</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -97,7 +97,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">'../../source/scrawl.js'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../../source/scrawl.js&#x27;</span></pre></div></div>
             
         </li>
         
@@ -114,15 +114,15 @@
 <p><strong>Function output:</strong> a Javascript object will be returned, containing the following attributes</p>
 <pre><code>{
     element     <span class="hljs-comment">// the Scrawl-canvas wrapper for the DOM element supplied to the function</span>
-    canvas      <span class="hljs-comment">// the Scrawl-canvas wrapper for the component's canvas</span>
+    canvas      <span class="hljs-comment">// the Scrawl-canvas wrapper for the component&#x27;s canvas</span>
     animation   <span class="hljs-comment">// the Scrawl-canvas animation object</span>
     demolish    <span class="hljs-comment">// remove the component from the Scrawl-canvas library</span>
 }</code></pre>
 <p><strong>Usage example:</strong></p>
-<pre><code><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">'../relative/or/absolute/path/to/scrawl.js'</span>;
-<span class="hljs-keyword">import</span> { greenBox } <span class="hljs-keyword">from</span> <span class="hljs-string">'./relative/or/absolute/path/to/this/file.js'</span>;
+<pre><code><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../relative/or/absolute/path/to/scrawl.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { greenBox } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./relative/or/absolute/path/to/this/file.js&#x27;</span>;
 
-<span class="hljs-keyword">let</span> myElements = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">'.some-class'</span>);
+<span class="hljs-keyword">let</span> myElements = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">&#x27;.some-class&#x27;</span>);
 myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> greenBox(el));</code></pre>
 <p><strong>Effects on the element:</strong> no additional effects.</p>
 
@@ -141,14 +141,14 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
         scrawl.makeBlock({
 
-            <span class="hljs-attr">width</span>: <span class="hljs-string">'50%'</span>,
-            <span class="hljs-attr">height</span>: <span class="hljs-string">'50%'</span>,
-            <span class="hljs-attr">startX</span>: <span class="hljs-string">'25%'</span>,
-            <span class="hljs-attr">startY</span>: <span class="hljs-string">'25%'</span>,
+            <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+            <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+            <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;25%&#x27;</span>,
+            <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;25%&#x27;</span>,
             <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0.3</span>,
-            <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'lightgreen'</span>,
+            <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;lightgreen&#x27;</span>,
             <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">40</span>,
-            <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
+            <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
         });
     }
 

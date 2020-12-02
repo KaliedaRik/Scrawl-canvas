@@ -4,7 +4,7 @@
 <head>
   <title>simple-chart-frame.js</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -89,9 +89,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">'../../source/scrawl.js'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../../source/scrawl.js&#x27;</span>;
 
-scrawl.importDomImage(<span class="hljs-string">'.crime'</span>);
+scrawl.importDomImage(<span class="hljs-string">&#x27;.crime&#x27;</span>);
 
 <span class="hljs-keyword">let</span> background, 
     title, subtitle, 
@@ -133,11 +133,11 @@ scrawl.importDomImage(<span class="hljs-string">'.crime'</span>);
         <span class="hljs-attr">group</span>: group,
         <span class="hljs-attr">order</span>: <span class="hljs-number">0</span>,
 
-        <span class="hljs-attr">width</span>: <span class="hljs-string">'100%'</span>,
-        <span class="hljs-attr">height</span>: <span class="hljs-string">'100%'</span>,
+        <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+        <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
 
-        <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">'100%'</span>,
-        <span class="hljs-attr">copyHeight</span>: <span class="hljs-string">'100%'</span>,
+        <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+        <span class="hljs-attr">copyHeight</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
 
         <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0.65</span>,
 
@@ -150,30 +150,30 @@ scrawl.importDomImage(<span class="hljs-string">'.crime'</span>);
         <span class="hljs-attr">group</span>: group,
         <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
 
-        <span class="hljs-attr">text</span>: <span class="hljs-string">'No title'</span>,
+        <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;No title&#x27;</span>,
 
-        <span class="hljs-attr">width</span>: <span class="hljs-string">'100%'</span>,
-        <span class="hljs-attr">justify</span>: <span class="hljs-string">'center'</span>,
+        <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+        <span class="hljs-attr">justify</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
 
-        <span class="hljs-attr">startY</span>: <span class="hljs-string">'3%'</span>,
+        <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;3%&#x27;</span>,
 
-        <span class="hljs-attr">font</span>: <span class="hljs-string">'1.5rem Roboto, Arial, sans-serif'</span>,
+        <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;1.5rem Roboto, Arial, sans-serif&#x27;</span>,
 
-        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'black'</span>,
+        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;black&#x27;</span>,
 
-        <span class="hljs-attr">shadowColor</span>: <span class="hljs-string">'white'</span>,
+        <span class="hljs-attr">shadowColor</span>: <span class="hljs-string">&#x27;white&#x27;</span>,
         <span class="hljs-attr">shadowBlur</span>: <span class="hljs-number">6</span>,
     });
 
     subtitle = title.clone({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-subtitle`</span>,
-        <span class="hljs-attr">text</span>: <span class="hljs-string">'No data selected'</span>,
+        <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;No data selected&#x27;</span>,
 
-        <span class="hljs-attr">startY</span>: <span class="hljs-string">'9%'</span>,
-        <span class="hljs-attr">size</span>: <span class="hljs-string">'1.2rem'</span>,
+        <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;9%&#x27;</span>,
+        <span class="hljs-attr">size</span>: <span class="hljs-string">&#x27;1.2rem&#x27;</span>,
     });
-    subtitle.addSectionClass(<span class="hljs-string">'RED'</span>, { <span class="hljs-attr">fill</span>: <span class="hljs-string">'darkred'</span> });
+    subtitle.addSectionClass(<span class="hljs-string">&#x27;RED&#x27;</span>, { <span class="hljs-attr">fill</span>: <span class="hljs-string">&#x27;darkred&#x27;</span> });
 
     yLabelTop = scrawl.makePhrase({
 
@@ -181,36 +181,36 @@ scrawl.importDomImage(<span class="hljs-string">'.crime'</span>);
         <span class="hljs-attr">group</span>: group,
         <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
 
-        <span class="hljs-attr">text</span>: <span class="hljs-string">'0'</span>,
+        <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;0&#x27;</span>,
 
-        <span class="hljs-attr">startX</span>: <span class="hljs-string">'1%'</span>,
-        <span class="hljs-attr">startY</span>: <span class="hljs-string">'12%'</span>,
+        <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;1%&#x27;</span>,
+        <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;12%&#x27;</span>,
 
-        <span class="hljs-attr">font</span>: <span class="hljs-string">'0.9rem Roboto, Arial, sans-serif'</span>,
+        <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;0.9rem Roboto, Arial, sans-serif&#x27;</span>,
 
-        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'darkred'</span>,
+        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;darkred&#x27;</span>,
 
-        <span class="hljs-attr">shadowColor</span>: <span class="hljs-string">'white'</span>,
+        <span class="hljs-attr">shadowColor</span>: <span class="hljs-string">&#x27;white&#x27;</span>,
         <span class="hljs-attr">shadowBlur</span>: <span class="hljs-number">6</span>,
     });
 
     yLabelBottom = yLabelTop.clone({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-y-bottom`</span>,
-        <span class="hljs-attr">startY</span>: <span class="hljs-string">'92%'</span>,
+        <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;92%&#x27;</span>,
     });
 
     xLabelLeft = yLabelTop.clone({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-x-left`</span>,
-        <span class="hljs-attr">startX</span>: <span class="hljs-string">'10%'</span>,
-        <span class="hljs-attr">startY</span>: <span class="hljs-string">'96%'</span>,
+        <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;10%&#x27;</span>,
+        <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;96%&#x27;</span>,
     });
 
     xLabelRight = xLabelLeft.clone({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-x-right`</span>,
-        <span class="hljs-attr">startX</span>: <span class="hljs-string">'89%'</span>,
+        <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;89%&#x27;</span>,
     });
 
     scrawl.makeLine({
@@ -222,11 +222,11 @@ scrawl.importDomImage(<span class="hljs-string">'.crime'</span>);
         <span class="hljs-attr">startX</span>: <span class="hljs-number">0</span>,
         <span class="hljs-attr">startY</span>: <span class="hljs-string">`<span class="hljs-subst">${graphBottom - graphHeight}</span>%`</span>,
 
-        <span class="hljs-attr">endX</span>: <span class="hljs-string">'100%'</span>,
+        <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
         <span class="hljs-attr">endY</span>: <span class="hljs-string">`<span class="hljs-subst">${graphBottom - graphHeight}</span>%`</span>,
 
-        <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'red'</span>,
-        <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
+        <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
+        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
 
         <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">1</span>,
 
@@ -251,10 +251,10 @@ scrawl.importDomImage(<span class="hljs-string">'.crime'</span>);
     show();
 };
 
-<span class="hljs-keyword">const</span> kill = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> group.kill(<span class="hljs-literal">true</span>);
+<span class="hljs-keyword">const</span> kill = <span class="hljs-function">() =&gt;</span> group.kill(<span class="hljs-literal">true</span>);
 
-<span class="hljs-keyword">const</span> hide = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> group.visibility = <span class="hljs-literal">false</span>;
-<span class="hljs-keyword">const</span> show = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> group.visibility = <span class="hljs-literal">true</span>;
+<span class="hljs-keyword">const</span> hide = <span class="hljs-function">() =&gt;</span> group.visibility = <span class="hljs-literal">false</span>;
+<span class="hljs-keyword">const</span> show = <span class="hljs-function">() =&gt;</span> group.visibility = <span class="hljs-literal">true</span>;
 
 <span class="hljs-keyword">const</span> updateTextHelper = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item, text</span>) </span>{
 

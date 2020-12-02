@@ -4,7 +4,7 @@
 <head>
   <title>Scrawl-canvas</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../docco.css" />
 </head>
 <body>
@@ -96,12 +96,12 @@ THE SOFTWARE.</p>
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { 
     startCoreAnimationLoop, 
     stopCoreAnimationLoop,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./core/animationloop.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/animationloop.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     makeComponent,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./core/component.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/component.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
@@ -114,7 +114,7 @@ THE SOFTWARE.</p>
     compile,
     show,
     render,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./core/document.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/document.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { 
     addListener,
@@ -128,9 +128,9 @@ THE SOFTWARE.</p>
     colorSchemeActions,
     setColorSchemeDarkAction,
     setColorSchemeLightAction,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./core/events.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/events.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> library <span class="hljs-keyword">from</span> <span class="hljs-string">'./core/library.js'</span>;
+<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> library <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/library.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { 
     currentCorePosition, 
@@ -138,58 +138,68 @@ THE SOFTWARE.</p>
     stopCoreListeners, 
     observeAndUpdate,
     makeDragZone,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./core/userInteraction.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/userInteraction.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     makeAction,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/action.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/action.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     makeAnimation,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/animation.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/animation.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     makeBlock,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/block.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/block.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     makeBezier,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/bezier.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/bezier.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     makeColor,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/color.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/color.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     requestCoordinate, 
     releaseCoordinate,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/coordinate.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/coordinate.js&#x27;</span>;
+
+
+<span class="hljs-keyword">import</span> { 
+    makeEmitter,
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/emitter.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     makeFilter,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/filter.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/filter.js&#x27;</span>;
+
+
+<span class="hljs-keyword">import</span> { 
+    makeForce,
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/particleForce.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     makeGradient,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/gradient.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/gradient.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     makeGrid,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/grid.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/grid.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     makeGroup,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/group.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/group.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
@@ -198,126 +208,146 @@ THE SOFTWARE.</p>
     createImageFromCell,
     createImageFromGroup,
     createImageFromEntity,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/imageAsset.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/imageAsset.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     makeLine,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/line.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/line.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     makeLoom,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/loom.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/loom.js&#x27;</span>;
+
+
+<span class="hljs-keyword">import</span> { 
+    makeNet,
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/net.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     makeOval,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/oval.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/oval.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     makePattern,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/pattern.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/pattern.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     makePhrase,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/phrase.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/phrase.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     makePicture,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/picture.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/picture.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     makePolygon,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/polygon.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/polygon.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     makePolyline,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/polyline.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/polyline.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     makeQuadratic,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/quadratic.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/quadratic.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     requestQuaternion, 
     releaseQuaternion,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/quaternion.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/quaternion.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     makeRadialGradient,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/radialGradient.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/radialGradient.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     makeRectangle,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/rectangle.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/rectangle.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     makeRender,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/renderAnimation.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/renderAnimation.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     makeShape,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/shape.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/shape.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     makeSpiral,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/spiral.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/spiral.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     importSprite,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/spriteAsset.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/spriteAsset.js&#x27;</span>;
+
+
+<span class="hljs-keyword">import</span> { 
+    makeSpring,
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/particleSpring.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     makeStar,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/star.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/star.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     makeTetragon,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/tetragon.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/tetragon.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     makeTicker,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/ticker.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/ticker.js&#x27;</span>;
+
+
+<span class="hljs-keyword">import</span> { 
+    makeTracer,
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/tracer.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     makeTween,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/tween.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/tween.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     requestVector, 
     releaseVector,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/vector.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/vector.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     importDomVideo,
     importVideo,
     importMediaStream,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/videoAsset.js'</span>;
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/videoAsset.js&#x27;</span>;
 
 
 <span class="hljs-keyword">import</span> { 
     makeWheel,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'./factory/wheel.js'</span>;</pre></div></div>
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/wheel.js&#x27;</span>;
+
+
+<span class="hljs-keyword">import</span> { 
+    makeWorld,
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/particleWorld.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -332,7 +362,7 @@ THE SOFTWARE.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { init } <span class="hljs-keyword">from</span> <span class="hljs-string">'./core/init.js'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { init } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./core/init.js&#x27;</span>;
 init();</pre></div></div>
             
         </li>
@@ -563,11 +593,11 @@ init();</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <p>factory/filter.js</p>
+              <p>factory/emitter.js</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    makeFilter,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    makeEmitter,</pre></div></div>
             
         </li>
         
@@ -578,11 +608,11 @@ init();</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <p>factory/gradient.js</p>
+              <p>factory/filter.js</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    makeGradient,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    makeFilter,</pre></div></div>
             
         </li>
         
@@ -593,11 +623,11 @@ init();</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <p>factory/grid.js</p>
+              <p>factory/particleForce.js</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    makeGrid,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    makeForce,</pre></div></div>
             
         </li>
         
@@ -608,11 +638,11 @@ init();</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
-              <p>factory/group.js</p>
+              <p>factory/gradient.js</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    makeGroup,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    makeGradient,</pre></div></div>
             
         </li>
         
@@ -622,6 +652,36 @@ init();</pre></div></div>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>factory/grid.js</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    makeGrid,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>factory/group.js</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    makeGroup,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>factory/imageAsset.js</p>
 
@@ -636,11 +696,11 @@ init();</pre></div></div>
         </li>
         
         
-        <li id="section-25">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>factory/line.js</p>
 
@@ -651,11 +711,11 @@ init();</pre></div></div>
         </li>
         
         
-        <li id="section-26">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>factory/loom.js</p>
 
@@ -666,47 +726,17 @@ init();</pre></div></div>
         </li>
         
         
-        <li id="section-27">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
-              </div>
-              <p>factory/oval.js</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    makeOval,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-28">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
-              </div>
-              <p>factory/pattern.js</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    makePattern,</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              <p>factory/phrase.js</p>
+              <p>factory/net.js</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    makePhrase,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    makeNet,</pre></div></div>
             
         </li>
         
@@ -717,11 +747,11 @@ init();</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
-              <p>factory/picture.js</p>
+              <p>factory/oval.js</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    makePicture,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    makeOval,</pre></div></div>
             
         </li>
         
@@ -732,11 +762,11 @@ init();</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
-              <p>factory/polygon.js</p>
+              <p>factory/pattern.js</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    makePolygon,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    makePattern,</pre></div></div>
             
         </li>
         
@@ -747,11 +777,11 @@ init();</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
-              <p>factory/polyline.js</p>
+              <p>factory/phrase.js</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    makePolyline,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    makePhrase,</pre></div></div>
             
         </li>
         
@@ -762,11 +792,11 @@ init();</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
-              <p>factory/quadratic.js</p>
+              <p>factory/picture.js</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    makeQuadratic,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    makePicture,</pre></div></div>
             
         </li>
         
@@ -776,6 +806,51 @@ init();</pre></div></div>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>factory/polygon.js</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    makePolygon,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>factory/polyline.js</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    makePolyline,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>factory/quadratic.js</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    makeQuadratic,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>factory/quaternion.js</p>
 
@@ -787,11 +862,11 @@ init();</pre></div></div>
         </li>
         
         
-        <li id="section-35">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p>factory/radialGradient.js</p>
 
@@ -802,11 +877,11 @@ init();</pre></div></div>
         </li>
         
         
-        <li id="section-36">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p>factory/rectangle.js</p>
 
@@ -817,11 +892,11 @@ init();</pre></div></div>
         </li>
         
         
-        <li id="section-37">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <p>factory/renderAnimation.js</p>
 
@@ -832,11 +907,11 @@ init();</pre></div></div>
         </li>
         
         
-        <li id="section-38">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p>factory/shape.js</p>
 
@@ -847,11 +922,11 @@ init();</pre></div></div>
         </li>
         
         
-        <li id="section-39">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p>factory/spiral.js</p>
 
@@ -862,62 +937,17 @@ init();</pre></div></div>
         </li>
         
         
-        <li id="section-40">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
-              </div>
-              <p>factory/spriteAsset.js</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    importSprite,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-41">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
-              </div>
-              <p>factory/star.js</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    makeStar,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-42">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
-              </div>
-              <p>factory/tetragon.js</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    makeTetragon,</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
-              <p>factory/ticker.js</p>
+              <p>factory/particleSpring.js</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    makeTicker,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    makeSpring,</pre></div></div>
             
         </li>
         
@@ -928,11 +958,11 @@ init();</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
-              <p>factory/tween.js</p>
+              <p>factory/spriteAsset.js</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    makeTween,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    importSprite,</pre></div></div>
             
         </li>
         
@@ -942,6 +972,81 @@ init();</pre></div></div>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
+              <p>factory/star.js</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    makeStar,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-46">&#182;</a>
+              </div>
+              <p>factory/tetragon.js</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    makeTetragon,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-47">&#182;</a>
+              </div>
+              <p>factory/ticker.js</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    makeTicker,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-48">&#182;</a>
+              </div>
+              <p>factory/tracer.js</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    makeTracer,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-49">&#182;</a>
+              </div>
+              <p>factory/tween.js</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    makeTween,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-50">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
               <p>factory/vector.js</p>
 
@@ -953,11 +1058,11 @@ init();</pre></div></div>
         </li>
         
         
-        <li id="section-46">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
               <p>factory/videoAsset.js</p>
 
@@ -970,17 +1075,32 @@ init();</pre></div></div>
         </li>
         
         
-        <li id="section-47">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
               <p>factory/wheel.js</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    makeWheel,
+            <div class="content"><div class='highlight'><pre>    makeWheel,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-53">&#182;</a>
+              </div>
+              <p>factory/particleWorld.js</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    makeWorld,
 };</pre></div></div>
             
         </li>

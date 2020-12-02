@@ -4,7 +4,7 @@
 <head>
   <title>DOM management</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -110,6 +110,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
                 <a class="source" href="../factory/filter.html">
                   ./source/factory/filter.js
                 </a>
@@ -150,6 +155,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
                 <a class="source" href="../factory/oval.html">
                   ./source/factory/oval.js
                 </a>
@@ -157,6 +167,31 @@
                 
                 <a class="source" href="../factory/palette.html">
                   ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleForce.html">
+                  ./source/factory/particleForce.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleHistory.html">
+                  ./source/factory/particleHistory.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleSpring.html">
+                  ./source/factory/particleSpring.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleWorld.html">
+                  ./source/factory/particleWorld.js
                 </a>
               
                 
@@ -247,6 +282,11 @@
                 
                 <a class="source" href="../factory/ticker.html">
                   ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="../factory/tracer.html">
+                  ./source/factory/tracer.js
                 </a>
               
                 
@@ -424,12 +464,12 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { isa_canvas, generateUuid, isa_dom, pushUnique, removeItem, xt } <span class="hljs-keyword">from</span> <span class="hljs-string">"./utilities.js"</span>;
-<span class="hljs-keyword">import</span> { artefact, canvas, group, stack, css, xcss } <span class="hljs-keyword">from</span> <span class="hljs-string">"./library.js"</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { isa_canvas, generateUniqueString, isa_dom, pushUnique, removeItem, xt } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./utilities.js&quot;</span>;
+<span class="hljs-keyword">import</span> { artefact, canvas, group, stack, css, xcss } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./library.js&quot;</span>;
 
-<span class="hljs-keyword">import</span> { makeStack } <span class="hljs-keyword">from</span> <span class="hljs-string">"../factory/stack.js"</span>;
-<span class="hljs-keyword">import</span> { makeElement } <span class="hljs-keyword">from</span> <span class="hljs-string">"../factory/element.js"</span>;
-<span class="hljs-keyword">import</span> { makeCanvas } <span class="hljs-keyword">from</span> <span class="hljs-string">"../factory/canvas.js"</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { makeStack } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../factory/stack.js&quot;</span>;
+<span class="hljs-keyword">import</span> { makeElement } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../factory/element.js&quot;</span>;
+<span class="hljs-keyword">import</span> { makeCanvas } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../factory/canvas.js&quot;</span>;</pre></div></div>
             
         </li>
         
@@ -449,7 +489,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> rootElements = [],
-    setRootElementsSort = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {rootElementsSort = <span class="hljs-literal">true</span>};</pre></div></div>
+    setRootElementsSort = <span class="hljs-function">() =&gt;</span> {rootElementsSort = <span class="hljs-literal">true</span>};</pre></div></div>
             
         </li>
         
@@ -526,7 +566,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> getStacks = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
         
-    <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">'[data-stack]'</span>).forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> addInitialStackElement(el));
+    <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">&#x27;[data-stack]&#x27;</span>).forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> addInitialStackElement(el));
 };</pre></div></div>
             
         </li>
@@ -544,20 +584,20 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> addInitialStackElement = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">el</span>) </span>{
 
-    <span class="hljs-keyword">let</span> mygroup = el.getAttribute(<span class="hljs-string">'data-group'</span>),
-        myname = el.id || el.getAttribute(<span class="hljs-string">'name'</span>),
-        position = <span class="hljs-string">'absolute'</span>;
+    <span class="hljs-keyword">let</span> mygroup = el.getAttribute(<span class="hljs-string">&#x27;data-group&#x27;</span>),
+        myname = el.id || el.getAttribute(<span class="hljs-string">&#x27;name&#x27;</span>),
+        position = <span class="hljs-string">&#x27;absolute&#x27;</span>;
 
     <span class="hljs-keyword">if</span> (!mygroup) {
 
-        el.setAttribute(<span class="hljs-string">'data-group'</span>, <span class="hljs-string">'root'</span>);
-        mygroup = <span class="hljs-string">'root'</span>;
-        position = <span class="hljs-string">'relative'</span>;
+        el.setAttribute(<span class="hljs-string">&#x27;data-group&#x27;</span>, <span class="hljs-string">&#x27;root&#x27;</span>);
+        mygroup = <span class="hljs-string">&#x27;root&#x27;</span>;
+        position = <span class="hljs-string">&#x27;relative&#x27;</span>;
     }
 
     <span class="hljs-keyword">if</span> (!myname) {
 
-        myname = generateUuid();
+        myname = generateUniqueString();
         el.id = myname;
     }
 
@@ -608,7 +648,7 @@
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">Array</span>.from(el.children).forEach(<span class="hljs-function"><span class="hljs-params">child</span> =&gt;</span> {
     
-        <span class="hljs-keyword">if</span> (child.getAttribute(<span class="hljs-string">'data-stack'</span>) == <span class="hljs-literal">null</span> &amp;&amp; !isa_canvas(child) &amp;&amp; child.tagName !== <span class="hljs-string">'SCRIPT'</span>) {
+        <span class="hljs-keyword">if</span> (child.getAttribute(<span class="hljs-string">&#x27;data-stack&#x27;</span>) == <span class="hljs-literal">null</span> &amp;&amp; !isa_canvas(child) &amp;&amp; child.tagName !== <span class="hljs-string">&#x27;SCRIPT&#x27;</span>) {
 
             <span class="hljs-keyword">let</span> dims = child.getBoundingClientRect(),
                 computed = <span class="hljs-built_in">window</span>.getComputedStyle(child);
@@ -618,16 +658,16 @@
             y = (!y) ? dims.top - hostDims.top : y;
 
             <span class="hljs-keyword">let</span> args = {
-                <span class="hljs-attr">name</span>: child.id || child.getAttribute(<span class="hljs-string">'name'</span>),
+                <span class="hljs-attr">name</span>: child.id || child.getAttribute(<span class="hljs-string">&#x27;name&#x27;</span>),
                 <span class="hljs-attr">domElement</span>: child,
                 <span class="hljs-attr">group</span>: name,
                 <span class="hljs-attr">host</span>: name,
-                <span class="hljs-attr">position</span>: <span class="hljs-string">'absolute'</span>,
+                <span class="hljs-attr">position</span>: <span class="hljs-string">&#x27;absolute&#x27;</span>,
                 <span class="hljs-attr">width</span>: dims.width,
                 <span class="hljs-attr">height</span>: dims.height,
                 <span class="hljs-attr">startX</span>: dims.left - hostDims.left,
                 <span class="hljs-attr">startY</span>: y,
-                <span class="hljs-attr">classes</span>: (child.className) ? child.className : <span class="hljs-string">''</span>,
+                <span class="hljs-attr">classes</span>: (child.className) ? child.className : <span class="hljs-string">&#x27;&#x27;</span>,
             };
 
             y += yHeight + dims.height;
@@ -648,7 +688,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> child.setAttribute(<span class="hljs-string">'data-group'</span>, name);
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> child.setAttribute(<span class="hljs-string">&#x27;data-group&#x27;</span>, name);
     });
 };</pre></div></div>
             
@@ -687,7 +727,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> el, host, hostinscrawl, mystack, mygroup, name,
-        position = <span class="hljs-string">'absolute'</span>,
+        position = <span class="hljs-string">&#x27;absolute&#x27;</span>,
         newElement = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
@@ -708,7 +748,7 @@
     <span class="hljs-keyword">else</span> {
 
         newElement = <span class="hljs-literal">true</span>;
-        el = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'div'</span>);
+        el = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;div&#x27;</span>);
     }</pre></div></div>
             
         </li>
@@ -762,8 +802,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    name = items.name || el.id || el.getAttribute(<span class="hljs-string">'name'</span>) || <span class="hljs-string">''</span>;
-    <span class="hljs-keyword">if</span> (!name) name = generateUuid();
+            <div class="content"><div class='highlight'><pre>    name = items.name || el.id || el.getAttribute(<span class="hljs-string">&#x27;name&#x27;</span>) || <span class="hljs-string">&#x27;&#x27;</span>;
+    <span class="hljs-keyword">if</span> (!name) name = generateUniqueString();
     el.id = name;</pre></div></div>
             
         </li>
@@ -779,7 +819,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    el.setAttribute(<span class="hljs-string">'data-stack'</span>, <span class="hljs-string">'data-stack'</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    el.setAttribute(<span class="hljs-string">&#x27;data-stack&#x27;</span>, <span class="hljs-string">&#x27;data-stack&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -794,13 +834,13 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (host &amp;&amp; host.getAttribute(<span class="hljs-string">'data-stack'</span>) != <span class="hljs-literal">null</span>) {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (host &amp;&amp; host.getAttribute(<span class="hljs-string">&#x27;data-stack&#x27;</span>) != <span class="hljs-literal">null</span>) {
 
         hostinscrawl = artefact[host.id];
 
-        mygroup = (hostinscrawl) ? hostinscrawl.name : <span class="hljs-string">'root'</span>;
+        mygroup = (hostinscrawl) ? hostinscrawl.name : <span class="hljs-string">&#x27;root&#x27;</span>;
     }
-    <span class="hljs-keyword">else</span> mygroup = <span class="hljs-string">'root'</span>;</pre></div></div>
+    <span class="hljs-keyword">else</span> mygroup = <span class="hljs-string">&#x27;root&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -815,7 +855,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    el.setAttribute(<span class="hljs-string">'data-group'</span>, mygroup);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    el.setAttribute(<span class="hljs-string">&#x27;data-group&#x27;</span>, mygroup);</pre></div></div>
             
         </li>
         
@@ -830,7 +870,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (mygroup === <span class="hljs-string">'root'</span>) position = <span class="hljs-string">'relative'</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (mygroup === <span class="hljs-string">&#x27;root&#x27;</span>) position = <span class="hljs-string">&#x27;relative&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -944,7 +984,7 @@
 
     <span class="hljs-keyword">let</span> item;
 
-    <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">'canvas'</span>).forEach(<span class="hljs-function">(<span class="hljs-params">el, index</span>) =&gt;</span> {
+    <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">&#x27;canvas&#x27;</span>).forEach(<span class="hljs-function">(<span class="hljs-params">el, index</span>) =&gt;</span> {
 
         item = addInitialCanvasElement(el);
 
@@ -967,20 +1007,20 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> addInitialCanvasElement = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">el</span>) </span>{
 
-    <span class="hljs-keyword">let</span> mygroup = el.getAttribute(<span class="hljs-string">'data-group'</span>),
-        myname = el.id || el.getAttribute(<span class="hljs-string">'name'</span>),
-        position = <span class="hljs-string">'absolute'</span>;
+    <span class="hljs-keyword">let</span> mygroup = el.getAttribute(<span class="hljs-string">&#x27;data-group&#x27;</span>),
+        myname = el.id || el.getAttribute(<span class="hljs-string">&#x27;name&#x27;</span>),
+        position = <span class="hljs-string">&#x27;absolute&#x27;</span>;
 
     <span class="hljs-keyword">if</span> (!mygroup) {
 
-        el.setAttribute(<span class="hljs-string">'data-group'</span>, <span class="hljs-string">'root'</span>);
-        mygroup = <span class="hljs-string">'root'</span>;
+        el.setAttribute(<span class="hljs-string">&#x27;data-group&#x27;</span>, <span class="hljs-string">&#x27;root&#x27;</span>);
+        mygroup = <span class="hljs-string">&#x27;root&#x27;</span>;
         position = el.style.position;
     }
 
     <span class="hljs-keyword">if</span> (!myname) {
 
-        myname = generateUuid();
+        myname = generateUniqueString();
         el.id = myname;
     }
 
@@ -1097,7 +1137,7 @@
                 changeFlag = <span class="hljs-literal">true</span>;    
             }
         }
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.type === <span class="hljs-string">'Canvas'</span>) {
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.type === <span class="hljs-string">&#x27;Canvas&#x27;</span>) {
 
             currentCanvas = item;    
             changeFlag = <span class="hljs-literal">true</span>;    
@@ -1133,13 +1173,13 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> addCanvas = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-    <span class="hljs-keyword">let</span> el = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'canvas'</span>),
-        myname = (items.name) ? items.name : generateUuid(),
+    <span class="hljs-keyword">let</span> el = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;canvas&#x27;</span>),
+        myname = (items.name) ? items.name : generateUniqueString(),
         host = items.host,
-        mygroup = <span class="hljs-string">'root'</span>,
+        mygroup = <span class="hljs-string">&#x27;root&#x27;</span>,
         width = items.width || <span class="hljs-number">300</span>,
         height = items.height || <span class="hljs-number">150</span>,
-        position = <span class="hljs-string">'relative'</span>;
+        position = <span class="hljs-string">&#x27;relative&#x27;</span>;
 
     <span class="hljs-keyword">if</span> (host.substring) {
 
@@ -1156,10 +1196,10 @@
 
     <span class="hljs-keyword">if</span> (host) {
 
-        <span class="hljs-keyword">if</span> (host.type === <span class="hljs-string">'Stack'</span>) {
+        <span class="hljs-keyword">if</span> (host.type === <span class="hljs-string">&#x27;Stack&#x27;</span>) {
 
             mygroup = host.name;
-            position = <span class="hljs-string">'absolute'</span>;
+            position = <span class="hljs-string">&#x27;absolute&#x27;</span>;
             host = host.domElement;
         }
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!isa_dom(host)) host = <span class="hljs-built_in">document</span>.body;
@@ -1167,7 +1207,7 @@
     <span class="hljs-keyword">else</span> host = <span class="hljs-built_in">document</span>.body;
 
     el.id = myname;
-    el.setAttribute(<span class="hljs-string">'data-group'</span>, mygroup);
+    el.setAttribute(<span class="hljs-string">&#x27;data-group&#x27;</span>, mygroup);
     el.width = width;
     el.height = height;
     el.style.position = position;
@@ -1249,7 +1289,7 @@
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> clear = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">...items</span>) </span>{
 
     displayCycleHelper(items);
-    <span class="hljs-keyword">return</span> displayCycleBatchProcess(<span class="hljs-string">'clear'</span>);
+    <span class="hljs-keyword">return</span> displayCycleBatchProcess(<span class="hljs-string">&#x27;clear&#x27;</span>);
 };</pre></div></div>
             
         </li>
@@ -1285,7 +1325,7 @@
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> compile = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">...items</span>) </span>{
 
     displayCycleHelper(items);
-    <span class="hljs-keyword">return</span> displayCycleBatchProcess(<span class="hljs-string">'compile'</span>);
+    <span class="hljs-keyword">return</span> displayCycleBatchProcess(<span class="hljs-string">&#x27;compile&#x27;</span>);
 };</pre></div></div>
             
         </li>
@@ -1321,7 +1361,7 @@
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> show = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">...items</span>) </span>{
 
     displayCycleHelper(items);
-    <span class="hljs-keyword">return</span> displayCycleBatchProcess(<span class="hljs-string">'show'</span>);
+    <span class="hljs-keyword">return</span> displayCycleBatchProcess(<span class="hljs-string">&#x27;show&#x27;</span>);
 };</pre></div></div>
             
         </li>
@@ -1356,7 +1396,7 @@
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> render = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">...items</span>) </span>{
 
     displayCycleHelper(items);
-    <span class="hljs-keyword">return</span> displayCycleBatchProcess(<span class="hljs-string">'render'</span>);
+    <span class="hljs-keyword">return</span> displayCycleBatchProcess(<span class="hljs-string">&#x27;render&#x27;</span>);
 };</pre></div></div>
             
         </li>
@@ -1393,7 +1433,7 @@
         })
 
         <span class="hljs-built_in">Promise</span>.all(promises)
-        .then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> resolve(<span class="hljs-literal">true</span>))
+        .then(<span class="hljs-function">() =&gt;</span> resolve(<span class="hljs-literal">true</span>))
         .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(err));
     })
 };</pre></div></div>
@@ -1443,7 +1483,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> addDomShowElement = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item = <span class="hljs-string">''</span></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> addDomShowElement = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item = <span class="hljs-string">&#x27;&#x27;</span></span>) </span>{
 
     <span class="hljs-keyword">if</span> (!item) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/document addDomShowElement() error - false argument supplied: <span class="hljs-subst">${item}</span>`</span>);
     <span class="hljs-keyword">if</span> (!item.substring) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/document addDomShowElement() error - argument not a string: <span class="hljs-subst">${item}</span>`</span>);
@@ -1466,7 +1506,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> setDomShowRequired = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val = true</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> setDomShowRequired = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val = <span class="hljs-literal">true</span></span>) </span>{
 
     domShowRequired = val;
 };</pre></div></div>
@@ -1484,7 +1524,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> domShow = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">singleArtefact = <span class="hljs-string">''</span></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> domShow = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">singleArtefact = <span class="hljs-string">&#x27;&#x27;</span></span>) </span>{
 
     <span class="hljs-keyword">if</span> (domShowRequired || singleArtefact) {
 
@@ -1590,7 +1630,7 @@
                 w = dims[<span class="hljs-number">0</span>];
                 h = dims[<span class="hljs-number">1</span>];
 
-                <span class="hljs-keyword">if</span> (art.type === <span class="hljs-string">'Canvas'</span>) {
+                <span class="hljs-keyword">if</span> (art.type === <span class="hljs-string">&#x27;Canvas&#x27;</span>) {
 
                     el.width = w;
                     el.height = h;
@@ -1600,7 +1640,7 @@
                 <span class="hljs-keyword">else</span> {
 
                     style.width = <span class="hljs-string">`<span class="hljs-subst">${w}</span>px`</span>;
-                    style.height = (h) ? <span class="hljs-string">`<span class="hljs-subst">${h}</span>px`</span> : <span class="hljs-string">'auto'</span>;
+                    style.height = (h) ? <span class="hljs-string">`<span class="hljs-subst">${h}</span>px`</span> : <span class="hljs-string">&#x27;auto&#x27;</span>;
                 }
             }</pre></div></div>
             
@@ -1658,7 +1698,7 @@
             <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (art.dirtyVisibility) {
 
                 art.dirtyVisibility = <span class="hljs-literal">false</span>;
-                style.display = (art.visibility) ? <span class="hljs-string">'block'</span> : <span class="hljs-string">'none'</span>;
+                style.display = (art.visibility) ? <span class="hljs-string">&#x27;block&#x27;</span> : <span class="hljs-string">&#x27;none&#x27;</span>;
             }</pre></div></div>
             
         </li>
@@ -1749,16 +1789,16 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> scrawlCanvasHold = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'div'</span>);
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> scrawlCanvasHold = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;div&#x27;</span>);
 scrawlCanvasHold.style.padding = <span class="hljs-number">0</span>;
 scrawlCanvasHold.style.border = <span class="hljs-number">0</span>;
 scrawlCanvasHold.style.margin = <span class="hljs-number">0</span>;
-scrawlCanvasHold.style.width = <span class="hljs-string">'4500px'</span>;
-scrawlCanvasHold.style.boxSizing = <span class="hljs-string">'border-box'</span>;
-scrawlCanvasHold.style.position = <span class="hljs-string">'absolute'</span>;
-scrawlCanvasHold.style.top = <span class="hljs-string">'-5000px'</span>;
-scrawlCanvasHold.style.left = <span class="hljs-string">'-5000px'</span>;
-scrawlCanvasHold.id = <span class="hljs-string">'Scrawl-ARIA-default-hold'</span>;
+scrawlCanvasHold.style.width = <span class="hljs-string">&#x27;4500px&#x27;</span>;
+scrawlCanvasHold.style.boxSizing = <span class="hljs-string">&#x27;border-box&#x27;</span>;
+scrawlCanvasHold.style.position = <span class="hljs-string">&#x27;absolute&#x27;</span>;
+scrawlCanvasHold.style.top = <span class="hljs-string">&#x27;-5000px&#x27;</span>;
+scrawlCanvasHold.style.left = <span class="hljs-string">&#x27;-5000px&#x27;</span>;
+scrawlCanvasHold.id = <span class="hljs-string">&#x27;Scrawl-ARIA-default-hold&#x27;</span>;
 <span class="hljs-built_in">document</span>.body.appendChild(scrawlCanvasHold);</pre></div></div>
             
         </li>
@@ -1774,11 +1814,11 @@ scrawlCanvasHold.id = <span class="hljs-string">'Scrawl-ARIA-default-hold'</span
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> scrawlNavigationHold = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'nav'</span>);
-scrawlNavigationHold.style.position = <span class="hljs-string">'absolute'</span>;
-scrawlNavigationHold.style.top = <span class="hljs-string">'-5000px'</span>;
-scrawlNavigationHold.style.left = <span class="hljs-string">'-5000px'</span>;
-scrawlNavigationHold.id = <span class="hljs-string">'Scrawl-navigation-default-hold'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> scrawlNavigationHold = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;nav&#x27;</span>);
+scrawlNavigationHold.style.position = <span class="hljs-string">&#x27;absolute&#x27;</span>;
+scrawlNavigationHold.style.top = <span class="hljs-string">&#x27;-5000px&#x27;</span>;
+scrawlNavigationHold.style.left = <span class="hljs-string">&#x27;-5000px&#x27;</span>;
+scrawlNavigationHold.id = <span class="hljs-string">&#x27;Scrawl-navigation-default-hold&#x27;</span>;
 <span class="hljs-built_in">document</span>.body.prepend(scrawlNavigationHold);</pre></div></div>
             
         </li>

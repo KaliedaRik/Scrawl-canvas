@@ -4,7 +4,7 @@
 <head>
   <title>Asset consumer mixin</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -110,6 +110,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
                 <a class="source" href="../factory/filter.html">
                   ./source/factory/filter.js
                 </a>
@@ -150,6 +155,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
                 <a class="source" href="../factory/oval.html">
                   ./source/factory/oval.js
                 </a>
@@ -157,6 +167,31 @@
                 
                 <a class="source" href="../factory/palette.html">
                   ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleForce.html">
+                  ./source/factory/particleForce.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleHistory.html">
+                  ./source/factory/particleHistory.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleSpring.html">
+                  ./source/factory/particleSpring.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleWorld.html">
+                  ./source/factory/particleWorld.js
                 </a>
               
                 
@@ -247,6 +282,11 @@
                 
                 <a class="source" href="../factory/ticker.html">
                   ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="../factory/tracer.html">
+                  ./source/factory/tracer.js
                 </a>
               
                 
@@ -423,12 +463,12 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { mergeOver, xt } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
-<span class="hljs-keyword">import</span> { asset } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { mergeOver, xt } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { asset } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { importImage } <span class="hljs-keyword">from</span> <span class="hljs-string">'../factory/imageAsset.js'</span>;
-<span class="hljs-keyword">import</span> { importVideo } <span class="hljs-keyword">from</span> <span class="hljs-string">'../factory/videoAsset.js'</span>;
-<span class="hljs-keyword">import</span> { importSprite } <span class="hljs-keyword">from</span> <span class="hljs-string">'../factory/spriteAsset.js'</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { importImage } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/imageAsset.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { importVideo } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/videoAsset.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { importSprite } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/spriteAsset.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -491,7 +531,7 @@
             <div class="content"><div class='highlight'><pre>        spriteIsRunning: <span class="hljs-literal">false</span>,
         <span class="hljs-attr">spriteLastFrameChange</span>: <span class="hljs-number">0</span>,
         <span class="hljs-attr">spriteCurrentFrame</span>: <span class="hljs-number">0</span>,
-        <span class="hljs-attr">spriteTrack</span>: <span class="hljs-string">'default'</span>,
+        <span class="hljs-attr">spriteTrack</span>: <span class="hljs-string">&#x27;default&#x27;</span>,
         <span class="hljs-attr">spriteForward</span>: <span class="hljs-literal">true</span>,
         <span class="hljs-attr">spriteFrameDuration</span>: <span class="hljs-number">100</span>,
         <span class="hljs-attr">spriteWillLoop</span>: <span class="hljs-literal">true</span>,
@@ -570,13 +610,13 @@
             
             <div class="content"><div class='highlight'><pre>    S.asset = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">let</span> oldAsset = <span class="hljs-keyword">this</span>.asset,
+        <span class="hljs-keyword">let</span> oldAsset = <span class="hljs-built_in">this</span>.asset,
             newAsset = (item &amp;&amp; item.name) ? item.name : item;
 
-        <span class="hljs-keyword">if</span> (oldAsset &amp;&amp; !oldAsset.substring) oldAsset.unsubscribe(<span class="hljs-keyword">this</span>);
+        <span class="hljs-keyword">if</span> (oldAsset &amp;&amp; !oldAsset.substring) oldAsset.unsubscribe(<span class="hljs-built_in">this</span>);
 
-        <span class="hljs-keyword">this</span>.asset = newAsset;
-        <span class="hljs-keyword">this</span>.dirtyAsset = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.asset = newAsset;
+        <span class="hljs-built_in">this</span>.dirtyAsset = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -616,11 +656,11 @@
 
             <span class="hljs-keyword">if</span> (myAsset) {
 
-                <span class="hljs-keyword">let</span> oldAsset = <span class="hljs-keyword">this</span>.asset;
+                <span class="hljs-keyword">let</span> oldAsset = <span class="hljs-built_in">this</span>.asset;
 
-                <span class="hljs-keyword">if</span> (oldAsset &amp;&amp; oldAsset.unsubscribe) oldAsset.unsubscribe(<span class="hljs-keyword">this</span>);
+                <span class="hljs-keyword">if</span> (oldAsset &amp;&amp; oldAsset.unsubscribe) oldAsset.unsubscribe(<span class="hljs-built_in">this</span>);
             
-                myAsset.subscribe(<span class="hljs-keyword">this</span>);
+                myAsset.subscribe(<span class="hljs-built_in">this</span>);
             }
         }
     };</pre></div></div>
@@ -648,11 +688,11 @@
 
             <span class="hljs-keyword">if</span> (myAsset) {
 
-                <span class="hljs-keyword">let</span> oldAsset = <span class="hljs-keyword">this</span>.asset;
+                <span class="hljs-keyword">let</span> oldAsset = <span class="hljs-built_in">this</span>.asset;
 
-                <span class="hljs-keyword">if</span> (oldAsset &amp;&amp; oldAsset.unsubscribe) oldAsset.unsubscribe(<span class="hljs-keyword">this</span>);
+                <span class="hljs-keyword">if</span> (oldAsset &amp;&amp; oldAsset.unsubscribe) oldAsset.unsubscribe(<span class="hljs-built_in">this</span>);
             
-                myAsset.subscribe(<span class="hljs-keyword">this</span>);
+                myAsset.subscribe(<span class="hljs-built_in">this</span>);
             }
         }
     };</pre></div></div>
@@ -680,11 +720,11 @@
 
             <span class="hljs-keyword">if</span> (myAsset) {
 
-                <span class="hljs-keyword">let</span> oldAsset = <span class="hljs-keyword">this</span>.asset;
+                <span class="hljs-keyword">let</span> oldAsset = <span class="hljs-built_in">this</span>.asset;
 
-                <span class="hljs-keyword">if</span> (oldAsset &amp;&amp; oldAsset.unsubscribe) oldAsset.unsubscribe(<span class="hljs-keyword">this</span>);
+                <span class="hljs-keyword">if</span> (oldAsset &amp;&amp; oldAsset.unsubscribe) oldAsset.unsubscribe(<span class="hljs-built_in">this</span>);
             
-                myAsset.subscribe(<span class="hljs-keyword">this</span>);
+                myAsset.subscribe(<span class="hljs-built_in">this</span>);
             }
         }
     };</pre></div></div>
@@ -717,7 +757,7 @@
             
             <div class="content"><div class='highlight'><pre>    P.cleanAsset = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">let</span> ast = <span class="hljs-keyword">this</span>.asset;
+        <span class="hljs-keyword">let</span> ast = <span class="hljs-built_in">this</span>.asset;
 
         <span class="hljs-keyword">if</span> (ast &amp;&amp; ast.substring) {
 
@@ -725,8 +765,8 @@
 
             <span class="hljs-keyword">if</span> (myAsset) {
 
-                <span class="hljs-keyword">this</span>.dirtyAsset = <span class="hljs-literal">false</span>;
-                myAsset.subscribe(<span class="hljs-keyword">this</span>);
+                <span class="hljs-built_in">this</span>.dirtyAsset = <span class="hljs-literal">false</span>;
+                myAsset.subscribe(<span class="hljs-built_in">this</span>);
             }
         }
     };</pre></div></div>
@@ -760,9 +800,9 @@
             
             <div class="content"><div class='highlight'><pre>    P.videoAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">action, ...args</span>) </span>{
 
-        <span class="hljs-keyword">let</span> myAsset = <span class="hljs-keyword">this</span>.asset;
+        <span class="hljs-keyword">let</span> myAsset = <span class="hljs-built_in">this</span>.asset;
 
-        <span class="hljs-keyword">if</span> (myAsset &amp;&amp; myAsset.type === <span class="hljs-string">'Video'</span>) <span class="hljs-keyword">return</span> myAsset[action](...args);
+        <span class="hljs-keyword">if</span> (myAsset &amp;&amp; myAsset.type === <span class="hljs-string">&#x27;Video&#x27;</span>) <span class="hljs-keyword">return</span> myAsset[action](...args);
     };</pre></div></div>
             
         </li>
@@ -780,10 +820,10 @@
             
             <div class="content"><div class='highlight'><pre>    P.videoPromiseAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">action, ...args</span>) </span>{
 
-        <span class="hljs-keyword">let</span> myAsset = <span class="hljs-keyword">this</span>.asset;
+        <span class="hljs-keyword">let</span> myAsset = <span class="hljs-built_in">this</span>.asset;
 
-        <span class="hljs-keyword">if</span> (myAsset &amp;&amp; myAsset.type === <span class="hljs-string">'Video'</span>) <span class="hljs-keyword">return</span> myAsset[action](...args);
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.reject(<span class="hljs-string">'Asset not a video'</span>);
+        <span class="hljs-keyword">if</span> (myAsset &amp;&amp; myAsset.type === <span class="hljs-string">&#x27;Video&#x27;</span>) <span class="hljs-keyword">return</span> myAsset[action](...args);
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.reject(<span class="hljs-string">&#x27;Asset not a video&#x27;</span>);
     };</pre></div></div>
             
         </li>
@@ -800,7 +840,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>    P.videoAddTextTrack = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">kind, label, language</span>) </span>{
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.videoAction(<span class="hljs-string">'addTextTrack'</span>, kind, label, language);
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.videoAction(<span class="hljs-string">&#x27;addTextTrack&#x27;</span>, kind, label, language);
     };</pre></div></div>
             
         </li>
@@ -817,7 +857,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>    P.videoCaptureStream = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.videoAction(<span class="hljs-string">'captureStream'</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.videoAction(<span class="hljs-string">&#x27;captureStream&#x27;</span>);
     };</pre></div></div>
             
         </li>
@@ -834,7 +874,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>    P.videoCanPlayType = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">mytype</span>) </span>{
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.videoAction(<span class="hljs-string">'canPlayType'</span>, mytype);
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.videoAction(<span class="hljs-string">&#x27;canPlayType&#x27;</span>, mytype);
     };</pre></div></div>
             
         </li>
@@ -851,7 +891,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>    P.videoFastSeek = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">time</span>) </span>{
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.videoAction(<span class="hljs-string">'fastSeek'</span>, time);
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.videoAction(<span class="hljs-string">&#x27;fastSeek&#x27;</span>, time);
     };</pre></div></div>
             
         </li>
@@ -868,7 +908,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>    P.videoLoad = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.videoAction(<span class="hljs-string">'load'</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.videoAction(<span class="hljs-string">&#x27;load&#x27;</span>);
     };</pre></div></div>
             
         </li>
@@ -885,7 +925,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>    P.videoPause = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.videoAction(<span class="hljs-string">'pause'</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.videoAction(<span class="hljs-string">&#x27;pause&#x27;</span>);
     };</pre></div></div>
             
         </li>
@@ -902,7 +942,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>    P.videoPlay = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.videoPromiseAction(<span class="hljs-string">'play'</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.videoPromiseAction(<span class="hljs-string">&#x27;play&#x27;</span>);
     };</pre></div></div>
             
         </li>
@@ -919,7 +959,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>    P.videoSetMediaKeys = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">keys</span>) </span>{
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.videoPromiseAction(<span class="hljs-string">'setMediaKeys'</span>, keys);
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.videoPromiseAction(<span class="hljs-string">&#x27;setMediaKeys&#x27;</span>, keys);
     };</pre></div></div>
             
         </li>
@@ -936,7 +976,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>    P.videoSetSinkId = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.videoPromiseAction(<span class="hljs-string">'setSinkId'</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.videoPromiseAction(<span class="hljs-string">&#x27;setSinkId&#x27;</span>);
     };</pre></div></div>
             
         </li>
@@ -968,16 +1008,16 @@
             
             <div class="content"><div class='highlight'><pre>    P.checkSpriteFrame = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">let</span> asset = <span class="hljs-keyword">this</span>.asset;
+        <span class="hljs-keyword">let</span> asset = <span class="hljs-built_in">this</span>.asset;
 
-        <span class="hljs-keyword">if</span> (asset &amp;&amp; asset.type === <span class="hljs-string">'Sprite'</span>) {
+        <span class="hljs-keyword">if</span> (asset &amp;&amp; asset.type === <span class="hljs-string">&#x27;Sprite&#x27;</span>) {
 
-            <span class="hljs-keyword">let</span> copyArray = <span class="hljs-keyword">this</span>.copyArray;
+            <span class="hljs-keyword">let</span> copyArray = <span class="hljs-built_in">this</span>.copyArray;
 
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.spriteIsRunning) {
+            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.spriteIsRunning) {
 
-                <span class="hljs-keyword">let</span> last = <span class="hljs-keyword">this</span>.spriteLastFrameChange,
-                    choke = <span class="hljs-keyword">this</span>.spriteFrameDuration,
+                <span class="hljs-keyword">let</span> last = <span class="hljs-built_in">this</span>.spriteLastFrameChange,
+                    choke = <span class="hljs-built_in">this</span>.spriteFrameDuration,
                     now = <span class="hljs-built_in">Date</span>.now();
 
                 <span class="hljs-keyword">if</span> (now &gt; last + choke) {
@@ -986,12 +1026,12 @@
 
                     <span class="hljs-keyword">if</span> (manifest) {
 
-                        <span class="hljs-keyword">let</span> track = manifest[<span class="hljs-keyword">this</span>.spriteTrack],
+                        <span class="hljs-keyword">let</span> track = manifest[<span class="hljs-built_in">this</span>.spriteTrack],
                             len = track.length,
-                            frame = <span class="hljs-keyword">this</span>.spriteCurrentFrame,
-                            loop = <span class="hljs-keyword">this</span>.spriteWillLoop;
+                            frame = <span class="hljs-built_in">this</span>.spriteCurrentFrame,
+                            loop = <span class="hljs-built_in">this</span>.spriteWillLoop;
 
-                        frame = (<span class="hljs-keyword">this</span>.spriteForward) ? frame + <span class="hljs-number">1</span> : frame - <span class="hljs-number">1</span>;
+                        frame = (<span class="hljs-built_in">this</span>.spriteForward) ? frame + <span class="hljs-number">1</span> : frame - <span class="hljs-number">1</span>;
 
                         <span class="hljs-keyword">if</span> (frame &lt; <span class="hljs-number">0</span>) frame = (loop) ? len - <span class="hljs-number">1</span> : <span class="hljs-number">0</span>;
                         <span class="hljs-keyword">if</span> (frame &gt;= len) frame = (loop) ? <span class="hljs-number">0</span> : len - <span class="hljs-number">1</span>;
@@ -1001,26 +1041,26 @@
                         copyArray.length = <span class="hljs-number">0</span>;
                         copyArray.push(x, y, w, h);
 
-                        <span class="hljs-keyword">this</span>.dirtyCopyStart = <span class="hljs-literal">false</span>;
-                        <span class="hljs-keyword">this</span>.dirtyCopyDimensions = <span class="hljs-literal">false</span>;
+                        <span class="hljs-built_in">this</span>.dirtyCopyStart = <span class="hljs-literal">false</span>;
+                        <span class="hljs-built_in">this</span>.dirtyCopyDimensions = <span class="hljs-literal">false</span>;
 
-                        <span class="hljs-keyword">let</span> sourceName = <span class="hljs-keyword">this</span>.source.id || <span class="hljs-keyword">this</span>.source.name;
+                        <span class="hljs-keyword">let</span> sourceName = <span class="hljs-built_in">this</span>.source.id || <span class="hljs-built_in">this</span>.source.name;
 
                         <span class="hljs-keyword">if</span> (source !== sourceName) {
 
                             <span class="hljs-keyword">let</span> newSource = asset.sourceHold[source];
 
-                            <span class="hljs-keyword">if</span> (newSource) <span class="hljs-keyword">this</span>.source = newSource;
+                            <span class="hljs-keyword">if</span> (newSource) <span class="hljs-built_in">this</span>.source = newSource;
                         }
 
-                        <span class="hljs-keyword">this</span>.spriteCurrentFrame = frame;
-                        <span class="hljs-keyword">this</span>.spriteLastFrameChange = now;
+                        <span class="hljs-built_in">this</span>.spriteCurrentFrame = frame;
+                        <span class="hljs-built_in">this</span>.spriteLastFrameChange = now;
                     }
                 }
             }
             <span class="hljs-keyword">else</span> {
 
-                <span class="hljs-keyword">let</span> [source, x, y, w, h] = asset.manifest[<span class="hljs-keyword">this</span>.spriteTrack][<span class="hljs-keyword">this</span>.spriteCurrentFrame],
+                <span class="hljs-keyword">let</span> [source, x, y, w, h] = asset.manifest[<span class="hljs-built_in">this</span>.spriteTrack][<span class="hljs-built_in">this</span>.spriteCurrentFrame],
                     [cx, cy, cw, ch] = copyArray;
 
                 <span class="hljs-keyword">if</span> (cx !== x || cy !== y || cw !== w || ch !== h) {
@@ -1028,8 +1068,8 @@
                     copyArray.length = <span class="hljs-number">0</span>;
                     copyArray.push(x, y, w, h);
 
-                    <span class="hljs-keyword">this</span>.dirtyCopyStart = <span class="hljs-literal">false</span>;
-                    <span class="hljs-keyword">this</span>.dirtyCopyDimensions = <span class="hljs-literal">false</span>;
+                    <span class="hljs-built_in">this</span>.dirtyCopyStart = <span class="hljs-literal">false</span>;
+                    <span class="hljs-built_in">this</span>.dirtyCopyDimensions = <span class="hljs-literal">false</span>;
                 }
             }
         }
@@ -1050,14 +1090,14 @@
             
             <div class="content"><div class='highlight'><pre>    P.playSprite = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">speed, loop, track, forward, frame</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (xt(speed)) <span class="hljs-keyword">this</span>.spriteFrameDuration = speed;
-        <span class="hljs-keyword">if</span> (xt(loop)) <span class="hljs-keyword">this</span>.spriteWillLoop = loop;
-        <span class="hljs-keyword">if</span> (xt(track)) <span class="hljs-keyword">this</span>.spriteTrack = track;
-        <span class="hljs-keyword">if</span> (xt(forward)) <span class="hljs-keyword">this</span>.spriteForward = forward;
-        <span class="hljs-keyword">if</span> (xt(frame)) <span class="hljs-keyword">this</span>.spriteCurrentFrame = frame;
+        <span class="hljs-keyword">if</span> (xt(speed)) <span class="hljs-built_in">this</span>.spriteFrameDuration = speed;
+        <span class="hljs-keyword">if</span> (xt(loop)) <span class="hljs-built_in">this</span>.spriteWillLoop = loop;
+        <span class="hljs-keyword">if</span> (xt(track)) <span class="hljs-built_in">this</span>.spriteTrack = track;
+        <span class="hljs-keyword">if</span> (xt(forward)) <span class="hljs-built_in">this</span>.spriteForward = forward;
+        <span class="hljs-keyword">if</span> (xt(frame)) <span class="hljs-built_in">this</span>.spriteCurrentFrame = frame;
 
-        <span class="hljs-keyword">this</span>.spriteLastFrameChange = <span class="hljs-built_in">Date</span>.now();
-        <span class="hljs-keyword">this</span>.spriteIsRunning = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.spriteLastFrameChange = <span class="hljs-built_in">Date</span>.now();
+        <span class="hljs-built_in">this</span>.spriteIsRunning = <span class="hljs-literal">true</span>;
     }</pre></div></div>
             
         </li>
@@ -1075,13 +1115,13 @@
             
             <div class="content"><div class='highlight'><pre>    P.haltSprite = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">speed, loop, track, forward, frame</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (xt(speed)) <span class="hljs-keyword">this</span>.spriteFrameDuration = speed;
-        <span class="hljs-keyword">if</span> (xt(loop)) <span class="hljs-keyword">this</span>.spriteWillLoop = loop;
-        <span class="hljs-keyword">if</span> (xt(track)) <span class="hljs-keyword">this</span>.spriteTrack = track;
-        <span class="hljs-keyword">if</span> (xt(forward)) <span class="hljs-keyword">this</span>.spriteForward = forward;
-        <span class="hljs-keyword">if</span> (xt(frame)) <span class="hljs-keyword">this</span>.spriteCurrentFrame = frame;
+        <span class="hljs-keyword">if</span> (xt(speed)) <span class="hljs-built_in">this</span>.spriteFrameDuration = speed;
+        <span class="hljs-keyword">if</span> (xt(loop)) <span class="hljs-built_in">this</span>.spriteWillLoop = loop;
+        <span class="hljs-keyword">if</span> (xt(track)) <span class="hljs-built_in">this</span>.spriteTrack = track;
+        <span class="hljs-keyword">if</span> (xt(forward)) <span class="hljs-built_in">this</span>.spriteForward = forward;
+        <span class="hljs-keyword">if</span> (xt(frame)) <span class="hljs-built_in">this</span>.spriteCurrentFrame = frame;
 
-        <span class="hljs-keyword">this</span>.spriteIsRunning = <span class="hljs-literal">false</span>;
+        <span class="hljs-built_in">this</span>.spriteIsRunning = <span class="hljs-literal">false</span>;
     }</pre></div></div>
             
         </li>

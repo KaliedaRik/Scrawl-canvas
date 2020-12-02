@@ -1256,8 +1256,6 @@ P.calculateTextPositions = function (mytext) {
             cursor = 0;
             height = handleY;
 
-            // console.log(this.name, width, height, textLineWidths, handleX);
-
             for (i = 0, iz = textLineWidths.length; i < iz; i++) {
 
                 if (justify === 'right') len = (width - textLineWidths[i]) + handleX;
@@ -1268,12 +1266,15 @@ P.calculateTextPositions = function (mytext) {
 
                     item = textPositions[cursor];
 
-                    item[7] = Math.floor(len);
-                    item[8] = Math.floor(height);
-                    item[9] = textGlyphWidths[cursor];
+                    // BUG: There's an issue here which causes the function to fail when `treatWordAsGlyph` flag is set to true. Affects non-path-referencing Phrase entitys. This test to see if item exists is a temporary fix. 
+                    // + Question: do we only care about treating word as glyph when it references a path? Probably no - we need to care about attempts to add space between letters (glyphs) as that may have an unwanted effect on heavily kerned fonts, or fonts with a lot of ligatures between various glyphs.
+                    if (item) {
 
+                        item[7] = Math.floor(len);
+                        item[8] = Math.floor(height);
+                        item[9] = textGlyphWidths[cursor];
+                    }
                     len += textGlyphWidths[cursor];
-
                     cursor++;
                 }
 

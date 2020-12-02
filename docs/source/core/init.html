@@ -4,7 +4,7 @@
 <head>
   <title>Core initialization</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -110,6 +110,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
                 <a class="source" href="../factory/filter.html">
                   ./source/factory/filter.js
                 </a>
@@ -150,6 +155,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
                 <a class="source" href="../factory/oval.html">
                   ./source/factory/oval.js
                 </a>
@@ -157,6 +167,31 @@
                 
                 <a class="source" href="../factory/palette.html">
                   ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleForce.html">
+                  ./source/factory/particleForce.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleHistory.html">
+                  ./source/factory/particleHistory.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleSpring.html">
+                  ./source/factory/particleSpring.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleWorld.html">
+                  ./source/factory/particleWorld.js
                 </a>
               
                 
@@ -247,6 +282,11 @@
                 
                 <a class="source" href="../factory/ticker.html">
                   ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="../factory/tracer.html">
+                  ./source/factory/tracer.js
                 </a>
               
                 
@@ -422,9 +462,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { startCoreAnimationLoop } <span class="hljs-keyword">from</span> <span class="hljs-string">'./animationloop.js'</span>;
-<span class="hljs-keyword">import</span> { getCanvases, getStacks } <span class="hljs-keyword">from</span> <span class="hljs-string">'./document.js'</span>;
-<span class="hljs-keyword">import</span> { startCoreListeners, applyCoreResizeListener, applyCoreScrollListener } <span class="hljs-keyword">from</span> <span class="hljs-string">'./userInteraction.js'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { startCoreAnimationLoop } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./animationloop.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { getCanvases, getStacks } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./document.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { startCoreListeners, applyCoreResizeListener, applyCoreScrollListener } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./userInteraction.js&#x27;</span>;
 
 
 <span class="hljs-keyword">const</span> init = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
@@ -468,7 +508,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">window</span>.scrawlEnvironmentTouchSupported = (<span class="hljs-string">'ontouchstart'</span> <span class="hljs-keyword">in</span> <span class="hljs-built_in">window</span> || (<span class="hljs-built_in">window</span>.DocumentTouch &amp;&amp; <span class="hljs-built_in">document</span> <span class="hljs-keyword">instanceof</span> DocumentTouch)) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">window</span>.scrawlEnvironmentTouchSupported = (<span class="hljs-string">&#x27;ontouchstart&#x27;</span> <span class="hljs-keyword">in</span> <span class="hljs-built_in">window</span> || (<span class="hljs-built_in">window</span>.DocumentTouch &amp;&amp; <span class="hljs-built_in">document</span> <span class="hljs-keyword">instanceof</span> DocumentTouch)) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -483,7 +523,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">window</span>.scrawlEnvironmentOffscreenCanvasSupported = (<span class="hljs-string">'OffscreenCanvas'</span> <span class="hljs-keyword">in</span> <span class="hljs-built_in">window</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">window</span>.scrawlEnvironmentOffscreenCanvasSupported = (<span class="hljs-string">&#x27;OffscreenCanvas&#x27;</span> <span class="hljs-keyword">in</span> <span class="hljs-built_in">window</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         

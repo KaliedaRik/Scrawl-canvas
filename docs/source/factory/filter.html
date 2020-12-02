@@ -4,7 +4,7 @@
 <head>
   <title>Filter factory</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -110,6 +110,11 @@
                 </a>
               
                 
+                <a class="source" href="emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
                 <a class="source" href="filter.html">
                   ./source/factory/filter.js
                 </a>
@@ -150,6 +155,11 @@
                 </a>
               
                 
+                <a class="source" href="net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
                 <a class="source" href="oval.html">
                   ./source/factory/oval.js
                 </a>
@@ -157,6 +167,31 @@
                 
                 <a class="source" href="palette.html">
                   ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="particleForce.html">
+                  ./source/factory/particleForce.js
+                </a>
+              
+                
+                <a class="source" href="particleHistory.html">
+                  ./source/factory/particleHistory.js
+                </a>
+              
+                
+                <a class="source" href="particleSpring.html">
+                  ./source/factory/particleSpring.js
+                </a>
+              
+                
+                <a class="source" href="particleWorld.html">
+                  ./source/factory/particleWorld.js
                 </a>
               
                 
@@ -247,6 +282,11 @@
                 
                 <a class="source" href="ticker.html">
                   ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="tracer.html">
+                  ./source/factory/tracer.js
                 </a>
               
                 
@@ -476,10 +516,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, cell, group, entity } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { mergeOver, removeItem } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">cell</span>, <span class="hljs-title">group</span>, <span class="hljs-title">entity</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+<span class="hljs-keyword">import</span> { mergeOver, removeItem } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/base.js'</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -496,11 +536,11 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Filter = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.makeName(items.name);
-    <span class="hljs-keyword">this</span>.register();
-    <span class="hljs-keyword">this</span>.set(<span class="hljs-keyword">this</span>.defs);
-    <span class="hljs-keyword">this</span>.set(items);
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-built_in">this</span>.makeName(items.name);
+    <span class="hljs-built_in">this</span>.register();
+    <span class="hljs-built_in">this</span>.set(<span class="hljs-built_in">this</span>.defs);
+    <span class="hljs-built_in">this</span>.set(items);
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -517,8 +557,8 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Filter.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">'Filter'</span>;
-P.lib = <span class="hljs-string">'filter'</span>;
+P.type = <span class="hljs-string">&#x27;Filter&#x27;</span>;
+P.lib = <span class="hljs-string">&#x27;filter&#x27;</span>;
 P.isArtefact = <span class="hljs-literal">false</span>;
 P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
             
@@ -568,7 +608,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    method: <span class="hljs-string">''</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    method: <span class="hljs-string">&#x27;&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -580,10 +620,12 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <p>The following methods require no further attributes: </p>
-<pre><code><span class="hljs-string">`grayscale`</span>, <span class="hljs-string">`sepia`</span>, <span class="hljs-string">`invert`</span>
-<span class="hljs-string">`red`</span>, <span class="hljs-string">`green`</span>, <span class="hljs-string">`blue`</span>
-<span class="hljs-string">`notred`</span>, <span class="hljs-string">`notgreen`</span>, <span class="hljs-string">`notblue`</span>
-<span class="hljs-string">`cyan`</span>, <span class="hljs-string">`magenta`</span>, <span class="hljs-string">`yellow`</span></code></pre>
+<ul>
+<li><code>grayscale</code>, <code>sepia</code>, <code>invert</code></li>
+<li><code>red</code>, <code>green</code>, <code>blue</code></li>
+<li><code>notred</code>, <code>notgreen</code>, <code>notblue</code></li>
+<li><code>cyan</code>, <code>magenta</code>, <code>yellow</code></li>
+</ul>
 
             </div>
             
@@ -597,7 +639,9 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <p>The following methods require the <strong>level</strong> attribute:</p>
-<pre><code><span class="hljs-string">`brightness`</span>, <span class="hljs-string">`saturation`</span>, <span class="hljs-string">`threshold`</span></code></pre>
+<ul>
+<li><code>brightness</code>, <code>saturation</code>, <code>threshold</code></li>
+</ul>
 
             </div>
             
@@ -695,7 +739,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 <li>the <strong>radius</strong> of the blur effect, in pixels</li>
 <li>the <strong>passes</strong> attribute (1+) determines how many times the blur filter will iterate</li>
 <li>the <strong>shrinkingRadius</strong> flag reduces the radius by approx 70% on each successive pass</li>
-<li>when <strong>includeAlpha</strong> flag is true, filter will include the alpha channel - note this will make the edges of the entity translucent</li>
+<li>when <strong>includeAlpha</strong> flag is true, filter will include the alpha channel - note this may make the edges of the entity translucent</li>
+<li>because the blur filter works on a 2-pass basis, we can restrict its operation to the vertical and horizontal directions by setting the <code>processVertical</code> and <code>processHorizontal</code> flags appropriately</li>
 </ul>
 
             </div>
@@ -703,7 +748,9 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
             <div class="content"><div class='highlight'><pre>    radius: <span class="hljs-number">1</span>,
     <span class="hljs-attr">passes</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">shrinkingRadius</span>: <span class="hljs-literal">false</span>,
-    <span class="hljs-attr">includeAlpha</span>: <span class="hljs-literal">false</span>,</pre></div></div>
+    <span class="hljs-attr">includeAlpha</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">processVertical</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">processHorizontal</span>: <span class="hljs-literal">true</span>,</pre></div></div>
             
         </li>
         
@@ -714,17 +761,17 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>The <code>matrix</code> method requires a weights attribute - an array of 9 numbers in the following format:</p>
+              <p>The <code>matrix</code> method requires a weights attribute - an array of 9 numbers (also known as a <strong>kernel</strong>) in the following format:</p>
 <pre><code>weights: [
-    topLeftWeight,
-    topCenterWeight,
-    topRightWeight,
-    middleLeftWeight,
-    homePixelWeight,
-    middleRightWeight,
-    bottomLeftWeight,
-    bottomCenterWeight,
-    bottomRightWeight,
+  topLeftWeight,
+  topCenterWeight,
+  topRightWeight,
+  middleLeftWeight,
+  homePixelWeight,
+  middleRightWeight,
+  bottomLeftWeight,
+  bottomCenterWeight,
+  bottomRightWeight,
 ]</code></pre>
 <p>… where the top row is the row above the home pixel, etc</p>
 <p>The method also makes use of the <strong>includeAlpha</strong> attribute.</p>
@@ -741,6 +788,20 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>The <code>matrix5</code> method is the same as the matrix method except that its weights array should contain 25 elements, to cover all the positions (from top-left corner) in a 5x5 grid</p>
+<p>Some common kernels include:</p>
+<ul>
+<li>Identity - matrix3: [0,0,0,0,1,0,0,0,0]; matrix5: [0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0]</li>
+<li>Simple blur - matrix3: [0.1,0.1,0.1,0.1,0.2,0.1,0.1,0.1,0.1]</li>
+<li>Gaussian blur - matrix3: [0,0.14,0,0.14,0.44,0.14,0,0.13,0]</li>
+<li>Edge detect (example) - matrix3: [1,0,-1,0,0,0,-1,0,1]</li>
+<li>Edge emboss - matrix3: [-2,-1,0,-1,1,1,0,1,2]</li>
+<li>Edge enhance - matrix3: [0,0,0,-1,1,0,0,0,0]</li>
+<li>Laplacian edge - matrix3: [0,-1,0,-1,4,-1,0,-1,0]</li>
+<li>Laplacian edge + diagonals - matrix3: [-1,-1,-1,-1,8,-1,-1,-1,-1]</li>
+<li>Laplacian of Gaussian - matrix5: [0,0,-1,0,0,0,-1,-2,-1,0,-1,-2,16,-2,-1,0,-1,-2,-1,0,0,0,-1,0,0]</li>
+<li>Sharpen - matrix3: [0,-1,0,-1,5,-1,0,-1,0]</li>
+<li>Unsharp mask - matrix5: [1,4,6,4,1,4,16,24,16,4,6,24,-476,24,6,4,16,24,16,4,1,4,6,4,1]</li>
+</ul>
 
             </div>
             
@@ -777,17 +838,17 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    userDefined: <span class="hljs-string">''</span>,
-    <span class="hljs-attr">udVariable0</span>: <span class="hljs-string">''</span>,
-    <span class="hljs-attr">udVariable1</span>: <span class="hljs-string">''</span>,
-    <span class="hljs-attr">udVariable2</span>: <span class="hljs-string">''</span>,
-    <span class="hljs-attr">udVariable3</span>: <span class="hljs-string">''</span>,
-    <span class="hljs-attr">udVariable4</span>: <span class="hljs-string">''</span>,
-    <span class="hljs-attr">udVariable5</span>: <span class="hljs-string">''</span>,
-    <span class="hljs-attr">udVariable6</span>: <span class="hljs-string">''</span>,
-    <span class="hljs-attr">udVariable7</span>: <span class="hljs-string">''</span>,
-    <span class="hljs-attr">udVariable8</span>: <span class="hljs-string">''</span>,
-    <span class="hljs-attr">udVariable9</span>: <span class="hljs-string">''</span>,
+            <div class="content"><div class='highlight'><pre>    userDefined: <span class="hljs-string">&#x27;&#x27;</span>,
+    <span class="hljs-attr">udVariable0</span>: <span class="hljs-string">&#x27;&#x27;</span>,
+    <span class="hljs-attr">udVariable1</span>: <span class="hljs-string">&#x27;&#x27;</span>,
+    <span class="hljs-attr">udVariable2</span>: <span class="hljs-string">&#x27;&#x27;</span>,
+    <span class="hljs-attr">udVariable3</span>: <span class="hljs-string">&#x27;&#x27;</span>,
+    <span class="hljs-attr">udVariable4</span>: <span class="hljs-string">&#x27;&#x27;</span>,
+    <span class="hljs-attr">udVariable5</span>: <span class="hljs-string">&#x27;&#x27;</span>,
+    <span class="hljs-attr">udVariable6</span>: <span class="hljs-string">&#x27;&#x27;</span>,
+    <span class="hljs-attr">udVariable7</span>: <span class="hljs-string">&#x27;&#x27;</span>,
+    <span class="hljs-attr">udVariable8</span>: <span class="hljs-string">&#x27;&#x27;</span>,
+    <span class="hljs-attr">udVariable9</span>: <span class="hljs-string">&#x27;&#x27;</span>,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
@@ -835,7 +896,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>P.kill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">let</span> myname = <span class="hljs-keyword">this</span>.name;</pre></div></div>
+    <span class="hljs-keyword">let</span> myname = <span class="hljs-built_in">this</span>.name;</pre></div></div>
             
         </li>
         
@@ -907,9 +968,9 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.deregister();
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.deregister();
     
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -1031,7 +1092,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { filterUrl } <span class="hljs-keyword">from</span> <span class="hljs-string">'../worker/filter-stringed.js'</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { filterUrl } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../worker/filter-stringed.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -1143,7 +1204,7 @@ let path = import.meta.url.slice(0, -(‘factory/filter.js’.length)); </p>
 
         worker.onerror = <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
 
-            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'error'</span>, e.lineno, e.message);
+            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;error&#x27;</span>, e.lineno, e.message);
             resolve(<span class="hljs-literal">false</span>);
         };
 
@@ -1163,26 +1224,26 @@ let path = import.meta.url.slice(0, -(‘factory/filter.js’.length)); </p>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.makeFilter({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'my-grayscale-filter'</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">'grayscale'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-grayscale-filter&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;grayscale&#x27;</span>,
 
 }).clone({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'my-sepia-filter'</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">'sepia'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-sepia-filter&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;sepia&#x27;</span>,
 });
 
 scrawl.makeFilter({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'my-chroma-filter'</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">'chroma'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-chroma-filter&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;chroma&#x27;</span>,
     <span class="hljs-attr">ranges</span>: [[<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">80</span>, <span class="hljs-number">80</span>, <span class="hljs-number">80</span>], [<span class="hljs-number">180</span>, <span class="hljs-number">180</span>, <span class="hljs-number">180</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>]],
 });
 
 scrawl.makeFilter({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'venetian-blinds-filter'</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">'userDefined'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;venetian-blinds-filter&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;userDefined&#x27;</span>,
 
     <span class="hljs-attr">level</span>: <span class="hljs-number">9</span>,
 
@@ -1216,7 +1277,7 @@ scrawl.makeFilter({
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Filter(items);
 };
 
-constructors.Filter = Filter;</pre></div></div>
+<span class="hljs-title">constructors</span>.<span class="hljs-title">Filter</span> = <span class="hljs-title">Filter</span>;</pre></div></div>
             
         </li>
         

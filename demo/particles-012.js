@@ -15,6 +15,8 @@ canvas.setBase({
 });
 
 
+// #### Particle physics animation scene
+
 // Create a World object; add some user-defined attributes to it
 let myWorld = scrawl.makeWorld({
 
@@ -23,6 +25,7 @@ let myWorld = scrawl.makeWorld({
 
 });
 
+// Create the Net entity and pin the top row of Particles
 const myNet = scrawl.makeNet({
 
     name: 'test-net',
@@ -81,6 +84,7 @@ const myNet = scrawl.makeNet({
 });
 
 
+// Create a range of entitys which use Net Particles as their reference coordinate.
 scrawl.makeBlock({
 
     name: 'block1',
@@ -460,7 +464,7 @@ scrawl.makeRender({
 
 
 // #### User interaction
-// Make the Emitter draggable
+// Make the Net Particles draggable
 scrawl.makeGroup({
 
     name: 'my-draggable-group',

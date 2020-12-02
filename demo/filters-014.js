@@ -28,11 +28,32 @@ const piccy = scrawl.makePicture({
     filter: 'url(#svg-duotone)',
 });
 
-// #### Scene animation
+
+// #### SVG filter
+// We create the filter in the HTML script, not here:
+// ```
+// <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+//   <filter id="svg-duotone">
+//     <feColorMatrix type="matrix" values=".33 .33 .33 0 0
+//       .33 .33 .33 0 0
+//       .33 .33 .33 0 0
+//        0   0   0  1 0">
+//     </feColorMatrix>
+
+//     <feComponentTransfer color-interpolation-filters="sRGB">
+//       <feFuncR type="table" tableValues=".996 0.984"></feFuncR>
+//       <feFuncG type="table" tableValues=".125 0.941"></feFuncG>
+//       <feFuncB type="table" tableValues=".552 0.478"></feFuncB>
+//     </feComponentTransfer>
+//   </filter>
+// </svg>
+// ```
 let feFuncR = document.querySelector('feFuncR'),
     feFuncG = document.querySelector('feFuncG'),
     feFuncB = document.querySelector('feFuncB');
 
+
+// #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 

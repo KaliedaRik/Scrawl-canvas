@@ -4,7 +4,7 @@
 <head>
   <title>Asset mixin</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -110,6 +110,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
                 <a class="source" href="../factory/filter.html">
                   ./source/factory/filter.js
                 </a>
@@ -150,6 +155,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
                 <a class="source" href="../factory/oval.html">
                   ./source/factory/oval.js
                 </a>
@@ -157,6 +167,31 @@
                 
                 <a class="source" href="../factory/palette.html">
                   ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleForce.html">
+                  ./source/factory/particleForce.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleHistory.html">
+                  ./source/factory/particleHistory.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleSpring.html">
+                  ./source/factory/particleSpring.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleWorld.html">
+                  ./source/factory/particleWorld.js
                 </a>
               
                 
@@ -247,6 +282,11 @@
                 
                 <a class="source" href="../factory/ticker.html">
                   ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="../factory/tracer.html">
+                  ./source/factory/tracer.js
                 </a>
               
                 
@@ -458,7 +498,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { mergeOver, pushUnique, λ<span class="hljs-literal">null</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { mergeOver, pushUnique, λ<span class="hljs-literal">null</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -566,14 +606,14 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.packetExclusions = pushUnique(P.packetExclusions, [<span class="hljs-string">'sourceLoaded'</span>, <span class="hljs-string">'source'</span>, <span class="hljs-string">'subscribers'</span>]);
+            <div class="content"><div class='highlight'><pre>    P.packetExclusions = pushUnique(P.packetExclusions, [<span class="hljs-string">&#x27;sourceLoaded&#x27;</span>, <span class="hljs-string">&#x27;source&#x27;</span>, <span class="hljs-string">&#x27;subscribers&#x27;</span>]);
 
 
     P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.subscribers &amp;&amp; <span class="hljs-keyword">this</span>.subscribers.length) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.subscribers &amp;&amp; <span class="hljs-built_in">this</span>.subscribers.length) {
 
-            copy.subscribers = <span class="hljs-keyword">this</span>.subscribers.map(<span class="hljs-function"><span class="hljs-params">sub</span> =&gt;</span> sub.name);
+            copy.subscribers = <span class="hljs-built_in">this</span>.subscribers.map(<span class="hljs-function"><span class="hljs-params">sub</span> =&gt;</span> sub.name);
         }
         <span class="hljs-keyword">return</span> copy;
     };</pre></div></div>
@@ -658,7 +698,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.sourceLoaded) <span class="hljs-keyword">this</span>.notifySubscribers();
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.sourceLoaded) <span class="hljs-built_in">this</span>.notifySubscribers();
         }
     };</pre></div></div>
             
@@ -705,15 +745,15 @@
             
             <div class="content"><div class='highlight'><pre>    P.assetConstructor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-        <span class="hljs-keyword">this</span>.makeName(items.name);
-        <span class="hljs-keyword">this</span>.register();
-        <span class="hljs-keyword">this</span>.subscribers = [];
-        <span class="hljs-keyword">this</span>.set(<span class="hljs-keyword">this</span>.defs);
-        <span class="hljs-keyword">this</span>.set(items);
+        <span class="hljs-built_in">this</span>.makeName(items.name);
+        <span class="hljs-built_in">this</span>.register();
+        <span class="hljs-built_in">this</span>.subscribers = [];
+        <span class="hljs-built_in">this</span>.set(<span class="hljs-built_in">this</span>.defs);
+        <span class="hljs-built_in">this</span>.set(items);
 
-        <span class="hljs-keyword">if</span> (items.subscribe) <span class="hljs-keyword">this</span>.subscribers.push(items.subscribe);
+        <span class="hljs-keyword">if</span> (items.subscribe) <span class="hljs-built_in">this</span>.subscribers.push(items.subscribe);
 
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
     };</pre></div></div>
             
         </li>
@@ -736,7 +776,7 @@
 
             <span class="hljs-keyword">let</span> name = sub.name;
 
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.subscribers.every(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.name !== name)) <span class="hljs-keyword">this</span>.subscribeAction(sub);
+            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.subscribers.every(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.name !== name)) <span class="hljs-built_in">this</span>.subscribeAction(sub);
         }
     };</pre></div></div>
             
@@ -755,10 +795,10 @@
             
             <div class="content"><div class='highlight'><pre>    P.subscribeAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">sub = {}</span>) </span>{
 
-        <span class="hljs-keyword">this</span>.subscribers.push(sub);
-        sub.asset = <span class="hljs-keyword">this</span>;
-        sub.source = <span class="hljs-keyword">this</span>.source;
-        <span class="hljs-keyword">this</span>.notifySubscriber(sub);
+        <span class="hljs-built_in">this</span>.subscribers.push(sub);
+        sub.asset = <span class="hljs-built_in">this</span>;
+        sub.source = <span class="hljs-built_in">this</span>.source;
+        <span class="hljs-built_in">this</span>.notifySubscriber(sub);
     };</pre></div></div>
             
         </li>
@@ -779,7 +819,7 @@
         <span class="hljs-keyword">if</span> (sub.name) {
 
             <span class="hljs-keyword">let</span> name = sub.name,
-                index = <span class="hljs-keyword">this</span>.subscribers.findIndex(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.name === name);
+                index = <span class="hljs-built_in">this</span>.subscribers.findIndex(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.name === name);
 
             <span class="hljs-keyword">if</span> (index &gt;= <span class="hljs-number">0</span>) {
 
@@ -788,7 +828,7 @@
                 sub.sourceNaturalHeight = <span class="hljs-number">0</span>;
                 sub.sourceNaturalWidth = <span class="hljs-number">0</span>;
                 sub.sourceLoaded = <span class="hljs-literal">false</span>;
-                <span class="hljs-keyword">this</span>.subscribers.splice(index, <span class="hljs-number">1</span>)
+                <span class="hljs-built_in">this</span>.subscribers.splice(index, <span class="hljs-number">1</span>)
             }
         }
     };</pre></div></div>
@@ -814,15 +854,15 @@
             
             <div class="content"><div class='highlight'><pre>    P.notifySubscribers = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">this</span>.subscribers.forEach(<span class="hljs-function"><span class="hljs-params">sub</span> =&gt;</span> <span class="hljs-keyword">this</span>.notifySubscriber(sub), <span class="hljs-keyword">this</span>);
+        <span class="hljs-built_in">this</span>.subscribers.forEach(<span class="hljs-function"><span class="hljs-params">sub</span> =&gt;</span> <span class="hljs-built_in">this</span>.notifySubscriber(sub), <span class="hljs-built_in">this</span>);
     };
 
     P.notifySubscriber = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">sub</span>) </span>{
 
-        sub.sourceNaturalWidth = <span class="hljs-keyword">this</span>.sourceNaturalWidth;
-        sub.sourceNaturalHeight = <span class="hljs-keyword">this</span>.sourceNaturalHeight;
-        sub.sourceLoaded = <span class="hljs-keyword">this</span>.sourceLoaded;
-        sub.source = <span class="hljs-keyword">this</span>.source;
+        sub.sourceNaturalWidth = <span class="hljs-built_in">this</span>.sourceNaturalWidth;
+        sub.sourceNaturalHeight = <span class="hljs-built_in">this</span>.sourceNaturalHeight;
+        sub.sourceLoaded = <span class="hljs-built_in">this</span>.sourceLoaded;
+        sub.source = <span class="hljs-built_in">this</span>.source;
         sub.dirtyImage = <span class="hljs-literal">true</span>;
         sub.dirtyCopyStart = <span class="hljs-literal">true</span>;
         sub.dirtyCopyDimensions = <span class="hljs-literal">true</span>;

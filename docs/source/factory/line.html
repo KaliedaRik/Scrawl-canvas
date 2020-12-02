@@ -4,7 +4,7 @@
 <head>
   <title>Line factory</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -110,6 +110,11 @@
                 </a>
               
                 
+                <a class="source" href="emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
                 <a class="source" href="filter.html">
                   ./source/factory/filter.js
                 </a>
@@ -150,6 +155,11 @@
                 </a>
               
                 
+                <a class="source" href="net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
                 <a class="source" href="oval.html">
                   ./source/factory/oval.js
                 </a>
@@ -157,6 +167,31 @@
                 
                 <a class="source" href="palette.html">
                   ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="particleForce.html">
+                  ./source/factory/particleForce.js
+                </a>
+              
+                
+                <a class="source" href="particleHistory.html">
+                  ./source/factory/particleHistory.js
+                </a>
+              
+                
+                <a class="source" href="particleSpring.html">
+                  ./source/factory/particleSpring.js
+                </a>
+              
+                
+                <a class="source" href="particleWorld.html">
+                  ./source/factory/particleWorld.js
                 </a>
               
                 
@@ -247,6 +282,11 @@
                 
                 <a class="source" href="ticker.html">
                   ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="tracer.html">
+                  ./source/factory/tracer.js
                 </a>
               
                 
@@ -482,11 +522,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
 
-<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/base.js'</span>;
-<span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/shapeBasic.js'</span>;
-<span class="hljs-keyword">import</span> curveMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/shapeCurve.js'</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
+<span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shapeBasic.js&#x27;</span>;
+<span class="hljs-keyword">import</span> curveMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shapeCurve.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -503,10 +543,10 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Line = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.curveInit(items);
-    <span class="hljs-keyword">this</span>.shapeInit(items);
+    <span class="hljs-built_in">this</span>.curveInit(items);
+    <span class="hljs-built_in">this</span>.shapeInit(items);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -523,8 +563,8 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Line.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">'Line'</span>;
-P.lib = <span class="hljs-string">'entity'</span>;
+P.type = <span class="hljs-string">&#x27;Line&#x27;</span>;
+P.lib = <span class="hljs-string">&#x27;entity&#x27;</span>;
 P.isArtefact = <span class="hljs-literal">true</span>;
 P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
             
@@ -562,12 +602,12 @@ P = curveMix(P);</pre></div></div>
               <h4 id="line-attributes">Line attributes</h4>
 <ul>
 <li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/position.html">position mixin</a>: <strong>group, visibility, order, start, <em>startX</em>, <em>startY</em>, handle, <em>handleX</em>, <em>handleY</em>, offset, <em>offsetX</em>, <em>offsetY</em>, dimensions, <em>width</em>, <em>height</em>, pivoted, mimicked, lockTo, <em>lockXTo</em>, <em>lockYTo</em>, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/position.html">position mixin</a>: <strong>group, visibility, order, start, <em>startX</em>, <em>startY</em>, handle, <em>handleX</em>, <em>handleY</em>, offset, <em>offsetX</em>, <em>offsetY</em>, dimensions, <em>width</em>, <em>height</em>, pivoted, mimicked, lockTo, <em>lockXTo</em>, <em>lockYTo</em>, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge, bringToFrontOnDrag</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/delta.html">delta mixin</a>: <strong>delta, noDeltaUpdates</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/pivot.html">pivot mixin</a>: <strong>pivot, pivotCorner, addPivotHandle, addPivotOffset, addPivotRotation</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/mimic.html">mimic mixin</a>: <strong>mimic, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/path.html">path mixin</a>: <strong>path, pathPosition, addPathHandle, addPathOffset, addPathRotation, constantPathSpeed</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/entity.html">entity mixin</a>: <strong>method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, <em>fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor</em></strong>.</li>
+<li>Attributes defined in the <a href="../mixin/entity.html">entity mixin</a>: <strong>method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, <em>fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor, filter</em></strong>.</li>
 <li>Attributes defined in the <a href="../mixin/anchor.html">anchor mixin</a>: <strong>anchor</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/filter.html">filter mixin</a>: <strong>filters, isStencil</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/shapeBasic.html">shapeBasic mixin</a>: <strong>species, useAsPath, precision, pathDefinition, showBoundingBox, boundingBoxColor, minimumBoundingBoxDimensions, constantPathSpeed</strong>.</li>
@@ -661,13 +701,13 @@ P = curveMix(P);</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>P.cleanSpecies = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">this</span>.dirtySpecies = <span class="hljs-literal">false</span>;
+    <span class="hljs-built_in">this</span>.dirtySpecies = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> p = <span class="hljs-string">'M0,0'</span>;
+    <span class="hljs-keyword">let</span> p = <span class="hljs-string">&#x27;M0,0&#x27;</span>;
 
-    p = <span class="hljs-keyword">this</span>.makeLinePath();
+    p = <span class="hljs-built_in">this</span>.makeLinePath();
     
-    <span class="hljs-keyword">this</span>.pathDefinition = p;
+    <span class="hljs-built_in">this</span>.pathDefinition = p;
 };</pre></div></div>
             
         </li>
@@ -685,8 +725,8 @@ P = curveMix(P);</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>P.makeLinePath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     
-    <span class="hljs-keyword">let</span> [startX, startY] = <span class="hljs-keyword">this</span>.currentStampPosition;
-    <span class="hljs-keyword">let</span> [endX, endY] = <span class="hljs-keyword">this</span>.currentEnd;
+    <span class="hljs-keyword">let</span> [startX, startY] = <span class="hljs-built_in">this</span>.currentStampPosition;
+    <span class="hljs-keyword">let</span> [endX, endY] = <span class="hljs-built_in">this</span>.currentEnd;
 
     <span class="hljs-keyword">let</span> x = (endX - startX).toFixed(<span class="hljs-number">2</span>),
         y = (endY - startY).toFixed(<span class="hljs-number">2</span>);
@@ -712,29 +752,29 @@ P = curveMix(P);</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>P.cleanDimensions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">this</span>.dirtyDimensions = <span class="hljs-literal">false</span>;
-    <span class="hljs-keyword">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyOffset = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyDimensions = <span class="hljs-literal">false</span>;
+    <span class="hljs-built_in">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyOffset = <span class="hljs-literal">true</span>;
 
-    <span class="hljs-keyword">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
 };
 
 
 P.preparePinsForStamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">let</span> ePivot = <span class="hljs-keyword">this</span>.endPivot,
-        ePath = <span class="hljs-keyword">this</span>.endPath;
+    <span class="hljs-keyword">let</span> ePivot = <span class="hljs-built_in">this</span>.endPivot,
+        ePath = <span class="hljs-built_in">this</span>.endPath;
 
-    <span class="hljs-keyword">this</span>.dirtyPins.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
+    <span class="hljs-built_in">this</span>.dirtyPins.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
         <span class="hljs-keyword">if</span> ((ePivot &amp;&amp; ePivot.name === name) || (ePath &amp;&amp; ePath.name === name)) {
 
-            <span class="hljs-keyword">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.endLockTo.includes(<span class="hljs-string">'path'</span>)) <span class="hljs-keyword">this</span>.currentEndPathData = <span class="hljs-literal">false</span>;
+            <span class="hljs-built_in">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.endLockTo.includes(<span class="hljs-string">&#x27;path&#x27;</span>)) <span class="hljs-built_in">this</span>.currentEndPathData = <span class="hljs-literal">false</span>;
         }
     });
-    <span class="hljs-keyword">this</span>.dirtyPins.length = <span class="hljs-number">0</span>;
+    <span class="hljs-built_in">this</span>.dirtyPins.length = <span class="hljs-number">0</span>;
 };</pre></div></div>
             
         </li>
@@ -769,7 +809,7 @@ P.preparePinsForStamp = <span class="hljs-function"><span class="hljs-keyword">f
 </ul>
 <pre><code>scrawl.makeLine({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'my-line'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-line&#x27;</span>,
 
     <span class="hljs-attr">startX</span>: <span class="hljs-number">20</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-number">300</span>,
@@ -778,21 +818,21 @@ P.preparePinsForStamp = <span class="hljs-function"><span class="hljs-keyword">f
     <span class="hljs-attr">endY</span>: <span class="hljs-number">275</span>,
 
     <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">3</span>,
-    <span class="hljs-attr">lineCap</span>: <span class="hljs-string">'round'</span>,
+    <span class="hljs-attr">lineCap</span>: <span class="hljs-string">&#x27;round&#x27;</span>,
 
-    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'darkgoldenrod'</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;darkgoldenrod&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
 });</code></pre>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeLine = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-    items.species = <span class="hljs-string">'line'</span>;
+    items.species = <span class="hljs-string">&#x27;line&#x27;</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Line(items);
 };
 
-constructors.Line = Line;</pre></div></div>
+<span class="hljs-title">constructors</span>.<span class="hljs-title">Line</span> = <span class="hljs-title">Line</span>;</pre></div></div>
             
         </li>
         

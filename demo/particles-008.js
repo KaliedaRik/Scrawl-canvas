@@ -12,6 +12,7 @@ canvas.setBase({
     backgroundColor: 'aliceblue',
 });
 
+// For this Demo, we are creating a flag and pinning it to a pole. This is the pole.
 scrawl.makeLine({
 
     startX: 'center',
@@ -27,7 +28,9 @@ scrawl.makeLine({
 })
 
 
-// Create a World object; add some user-defined attributes to it
+// #### Particle physics animation scene
+
+// Create a World object which we can then assign to the Net entity
 let myWorld = scrawl.makeWorld({
 
     name: 'demo-world',
@@ -41,6 +44,7 @@ let myWorld = scrawl.makeWorld({
     ],
 });
 
+// Create a 'wind' force; we will update the wind direction/strength as part of the Display cycle
 scrawl.makeForce({
 
     name: 'wind',
@@ -53,31 +57,55 @@ scrawl.makeForce({
     },
 });
 
+let changeWind = function () {
 
+    let newWind = myWorld.wind + Math.random() - 0.5;
+
+    if (newWind < -15) newWind = -15;
+    if (newWind > 15) newWind = 15;
+
+    myWorld.set({
+        wind: newWind,
+    });
+};
+
+
+// Create a Net entity
 const myNet = scrawl.makeNet({
 
     name: 'test-net',
+
+    // Every net __must__ be associated with a World object. The attribute's value can be the World object's String name value, or the object itself
     world: myWorld,
 
+    // The entity's `start` coordinates determine where the first pin will be placed on the canvas
     startX: 'center',
     startY: 40,
 
+    // The Net entity comes with four pre-defined `generate` functions - we will be testing 'weak-net' and 'strong-net' in this demo.
+    // + We can define our own generate function if the pre-defined functions do not meet our needs.
     generate: 'weak-net',
 
+    // The `postGenerate` function runs immediately after the `generate` function has created all of the Net entity's Particle and Spring objects.
+    // + If the `generate` function has defined particles and/or springs that we do not need, we can kill them here
+    // + We can also set the attributes of specified Particles, including making them static (immobile, unaffected by forces and springs applied to them)
     postGenerate: function () {
 
+        // Names for 'weak-net' and 'strong-net' Particles are consistent: `${Net-entity-name}-${row-number}-${column-number}`
         const regex = RegExp('.*(-0-0|-4-0|-9-0)$');
 
         this.particleStore.forEach(p => {
 
             if (regex.test(p.name)) {
 
+                // Change the appearance of the selected Particles, and remove the forces acting on them
                 p.set({ 
                     fill: 'black',
                     stroke: 'black',
                     forces: [],
                 });
 
+                // Prevent Springs associated with the selected Particles from moving them
                 this.springs.forEach(s => {
 
                     if (s && s.particleFrom && s.particleFrom.name === p.name) {
@@ -93,18 +121,24 @@ const myNet = scrawl.makeNet({
         });
     },
 
+    // We tell the Net entity how many rows and columns of Particles we want it to create
     rows: 10,
     columns: 14,
+
+    // The distance between rows and columns can be set using either absolute (px) Number values, or relative % String values
     rowDistance: 15,
     columnDistance: '5%',
+
+    // We can get the Net entity to display its springs
     showSprings: true,
     showSpringsColor: 'green',
 
+    // Particle physics attributes
     mass: 1,
     forces: ['gravity', 'wind'],
-
     engine: 'runge-kutta',
 
+    // We can assign an artefact that we will be using for the particle animation, or we can define it here as part of the Net factory
     artefact: scrawl.makeWheel({
 
         name: 'particle-wheel',
@@ -124,6 +158,7 @@ const myNet = scrawl.makeNet({
         noDeltaUpdates: true,
     }),
 
+    // The `stampAction` function describes the steps that our Net will take to draw each of its particles (and springs, hit regions) onto the host canvas screen.
     stampAction: function (artefact, particle, host) {
 
         let [r, z, ...start] = particle.history[0];
@@ -138,18 +173,6 @@ const myNet = scrawl.makeNet({
 
 
 // #### Scene animation
-let changeWind = function () {
-
-    let newWind = myWorld.wind + Math.random() - 0.5;
-
-    if (newWind < -15) newWind = -15;
-    if (newWind > 15) newWind = 15;
-
-    myWorld.set({
-        wind: newWind,
-    });
-};
-
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 

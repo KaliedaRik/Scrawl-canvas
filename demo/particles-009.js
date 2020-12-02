@@ -12,23 +12,8 @@ canvas.setBase({
     backgroundColor: 'slategray',
 });
 
-scrawl.makeLine({
 
-    name: 'topline',
-
-    startX: '10%',
-    startY: '5%',
-    endX: '90%',
-    endY: '5%',
-
-    lineWidth: 20,
-    lineCap: 'round',
-    strokeStyle: 'brown',
-
-    method: 'draw',
-});
-
-// Define filters - need to test them all, plus some user-defined filters
+// Define some filters
 scrawl.makeFilter({
     name: 'grayscale',
     method: 'grayscale',
@@ -80,6 +65,27 @@ scrawl.makeFilter({
 });
 
 
+// For this Demo, we are creating a sheet and pinning its top row to a rail. This is the rail.
+scrawl.makeLine({
+
+    name: 'topline',
+
+    startX: '10%',
+    startY: '5%',
+    endX: '90%',
+    endY: '5%',
+
+    lineWidth: 20,
+    lineCap: 'round',
+    strokeStyle: 'brown',
+
+    method: 'draw',
+});
+
+
+// #### Particle physics animation scene
+
+// Create a repeller force, associated with a Wheel entity
 const bigball = scrawl.makeWheel({
 
     name: 'big-ball',
@@ -92,9 +98,11 @@ const bigball = scrawl.makeWheel({
     lineWidth: 3,
     method: 'fillThenDraw',
 
+    // Default action is for a dragged entity to attempt to place itself over all other entitys (in its Group). We can prevent this by setting the `bringToFrontOnDrag` to `false`
     bringToFrontOnDrag: false,
 });
 
+// The repeller force
 scrawl.makeForce({
 
     name: 'wheel-repellor',
@@ -104,6 +112,7 @@ scrawl.makeForce({
 
         let ballPosition = bigball.get('position');
 
+        // We are using Scrawl-canvas Pool vectors for this calculation, which we need to request before we can use them.
         let v = scrawl.requestVector(ballPosition).vectorSubtract(position);
 
         let mag = v.getMagnitude();
@@ -114,12 +123,13 @@ scrawl.makeForce({
             load.vectorSubtract(v)
         }
 
+        // When we are finished with the vector, we MUST release it back to the pool!
         scrawl.releaseVector(v);
     },
 });
 
 
-// Create a World object; add some user-defined attributes to it
+// Create a World object which we can then assign to the Net entity
 let myWorld = scrawl.makeWorld({
 
     name: 'demo-world',
@@ -127,6 +137,8 @@ let myWorld = scrawl.makeWorld({
 
 });
 
+
+// Create the Net entity
 const myNet = scrawl.makeNet({
 
     name: 'test-net',
@@ -139,6 +151,7 @@ const myNet = scrawl.makeNet({
 
     postGenerate: function () {
 
+        // We want to make all of the top row Particles visually different, and static
         const regex = RegExp('-0-[0-9]+$');
 
         this.particleStore.forEach(p => {
@@ -210,6 +223,7 @@ const myNet = scrawl.makeNet({
         });
     },
 
+    // Make all of the Net entity's Particles draggable
     particlesAreDraggable: true,
 });
 
@@ -242,7 +256,7 @@ scrawl.makeRender({
 
 
 // #### User interaction
-// Make the Emitter draggable
+// Make both the Net entity's Particles, and the big ball, draggable
 scrawl.makeGroup({
 
     name: 'my-draggable-group',
@@ -256,6 +270,7 @@ scrawl.makeDragZone({
     endOn: ['up', 'leave'],
 });
 
+// When we set a filter on a Net entity, all the entity's visual output will be filtered
 const filterChoice = function (e) {
 
     e.preventDefault();
@@ -268,7 +283,9 @@ const filterChoice = function (e) {
 };
 scrawl.addNativeListener(['input', 'change'], filterChoice, '#filter');
 
+// Set DOM form initial input values
 document.querySelector('#filter').value = '';
+
 
 // #### Development and testing
 console.log(scrawl.library);

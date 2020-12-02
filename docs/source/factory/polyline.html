@@ -4,7 +4,7 @@
 <head>
   <title>Polyline factory</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -110,6 +110,11 @@
                 </a>
               
                 
+                <a class="source" href="emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
                 <a class="source" href="filter.html">
                   ./source/factory/filter.js
                 </a>
@@ -150,6 +155,11 @@
                 </a>
               
                 
+                <a class="source" href="net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
                 <a class="source" href="oval.html">
                   ./source/factory/oval.js
                 </a>
@@ -157,6 +167,31 @@
                 
                 <a class="source" href="palette.html">
                   ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="particleForce.html">
+                  ./source/factory/particleForce.js
+                </a>
+              
+                
+                <a class="source" href="particleHistory.html">
+                  ./source/factory/particleHistory.js
+                </a>
+              
+                
+                <a class="source" href="particleSpring.html">
+                  ./source/factory/particleSpring.js
+                </a>
+              
+                
+                <a class="source" href="particleWorld.html">
+                  ./source/factory/particleWorld.js
                 </a>
               
                 
@@ -247,6 +282,11 @@
                 
                 <a class="source" href="ticker.html">
                   ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="tracer.html">
+                  ./source/factory/tracer.js
                 </a>
               
                 
@@ -406,7 +446,7 @@
               </div>
               <h1 id="polyline-factory">Polyline factory</h1>
 <p>A factory for generating an open or closed line/curve based shape entity, using a set of pins to mark the course the line</p>
-<p><strong><em>To be aware - this entity factory is experimental; its API will be subject to short-notice breaking changes as we amend and inprove the entity’s functionality</em></strong></p>
+<p><strong><em>To be aware - this entity factory is experimental; its API will be subject to short-notice breaking changes as we amend and improve the entity’s functionality</em></strong></p>
 <p>Path-defined entitys represent a diverse range of shapes rendered onto a DOM &lt;canvas&gt; element using the Canvas API’s <a href="https://developer.mozilla.org/en-US/docs/Web/API/Path2D">Path2D interface</a>. They use the <a href="../mixin/shapeBasic.html">shapeBasic</a> and <a href="../mixin/shapePathCalculation.html">shapePathCalculation</a> (some also use <a href="../mixin/shapeCurve.html">shapeCurve</a>) mixins to define much of their functionality.</p>
 <p>All path-defined entitys can be positioned, cloned, filtered etc:</p>
 <ul>
@@ -475,13 +515,13 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, artefact } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { mergeOver, isa_obj, isa_boolean, pushUnique, xt, xta, removeItem } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">artefact</span>, <span class="hljs-title">particle</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+<span class="hljs-keyword">import</span> { mergeOver, isa_obj, isa_boolean, pushUnique, xt, xta, removeItem } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { makeCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">'../factory/coordinate.js'</span>;
+<span class="hljs-keyword">import</span> { makeCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/coordinate.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/base.js'</span>;
-<span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/shapeBasic.js'</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
+<span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shapeBasic.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -498,13 +538,13 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Polyline = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.pins = [];
-    <span class="hljs-keyword">this</span>.currentPins = [];
-    <span class="hljs-keyword">this</span>.controlledLineOffset = makeCoordinate();
+    <span class="hljs-built_in">this</span>.pins = [];
+    <span class="hljs-built_in">this</span>.currentPins = [];
+    <span class="hljs-built_in">this</span>.controlledLineOffset = makeCoordinate();
 
-    <span class="hljs-keyword">this</span>.shapeInit(items);
+    <span class="hljs-built_in">this</span>.shapeInit(items);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -521,8 +561,8 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Polyline.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">'Polyline'</span>;
-P.lib = <span class="hljs-string">'entity'</span>;
+P.type = <span class="hljs-string">&#x27;Polyline&#x27;</span>;
+P.lib = <span class="hljs-string">&#x27;entity&#x27;</span>;
 P.isArtefact = <span class="hljs-literal">true</span>;
 P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
             
@@ -558,12 +598,12 @@ P = shapeMix(P);</pre></div></div>
               <h4 id="polyline-attributes">Polyline attributes</h4>
 <ul>
 <li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/position.html">position mixin</a>: <strong>group, visibility, order, start, <em>startX</em>, <em>startY</em>, handle, <em>handleX</em>, <em>handleY</em>, offset, <em>offsetX</em>, <em>offsetY</em>, dimensions, <em>width</em>, <em>height</em>, pivoted, mimicked, lockTo, <em>lockXTo</em>, <em>lockYTo</em>, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/position.html">position mixin</a>: <strong>group, visibility, order, start, <em>startX</em>, <em>startY</em>, handle, <em>handleX</em>, <em>handleY</em>, offset, <em>offsetX</em>, <em>offsetY</em>, dimensions, <em>width</em>, <em>height</em>, pivoted, mimicked, lockTo, <em>lockXTo</em>, <em>lockYTo</em>, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge, bringToFrontOnDrag</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/delta.html">delta mixin</a>: <strong>delta, noDeltaUpdates</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/pivot.html">pivot mixin</a>: <strong>pivot, pivotCorner, addPivotHandle, addPivotOffset, addPivotRotation</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/mimic.html">mimic mixin</a>: <strong>mimic, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/path.html">path mixin</a>: <strong>path, pathPosition, addPathHandle, addPathOffset, addPathRotation, constantPathSpeed</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/entity.html">entity mixin</a>: <strong>method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, <em>fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor</em></strong>.</li>
+<li>Attributes defined in the <a href="../mixin/entity.html">entity mixin</a>: <strong>method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, <em>fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor, filter</em></strong>.</li>
 <li>Attributes defined in the <a href="../mixin/anchor.html">anchor mixin</a>: <strong>anchor</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/filter.html">filter mixin</a>: <strong>filters, isStencil</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/shapeBasic.html">shapeBasic mixin</a>: <strong>species, useAsPath, precision, pathDefinition, showBoundingBox, boundingBoxColor, minimumBoundingBoxDimensions, constantPathSpeed</strong>.</li>
@@ -629,9 +669,7 @@ P = shapeMix(P);</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>    closed: <span class="hljs-literal">false</span>,
 
-    <span class="hljs-attr">mapToPins</span>: <span class="hljs-literal">false</span>,
-};
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
+    <span class="hljs-attr">mapToPins</span>: <span class="hljs-literal">false</span>,</pre></div></div>
             
         </li>
         
@@ -642,11 +680,28 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
+              <p><strong>useParticlesAsPins</strong> - when true, all pins should map directly to Particle objects (as supplied in a Net entity)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    useParticlesAsPins: <span class="hljs-literal">false</span>,
+};
+P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
               <h4 id="packet-management">Packet management</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.packetExclusions = pushUnique(P.packetExclusions, [<span class="hljs-string">'controlledLineOffset'</span>]);
+            <div class="content"><div class='highlight'><pre>P.packetExclusions = pushUnique(P.packetExclusions, [<span class="hljs-string">&#x27;controlledLineOffset&#x27;</span>]);
 P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
 P.packetCoordinates = pushUnique(P.packetCoordinates, []);
 P.packetObjects = pushUnique(P.packetObjects, []);
@@ -654,14 +709,14 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);
 
 P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) </span>{
 
-    <span class="hljs-keyword">let</span> stateCopy = <span class="hljs-built_in">JSON</span>.parse(<span class="hljs-keyword">this</span>.state.saveAsPacket(items))[<span class="hljs-number">3</span>];
+    <span class="hljs-keyword">let</span> stateCopy = <span class="hljs-built_in">JSON</span>.parse(<span class="hljs-built_in">this</span>.state.saveAsPacket(items))[<span class="hljs-number">3</span>];
     copy = mergeOver(copy, stateCopy);
 
-    copy = <span class="hljs-keyword">this</span>.handlePacketAnchor(copy, items);
+    copy = <span class="hljs-built_in">this</span>.handlePacketAnchor(copy, items);
 
     <span class="hljs-built_in">Object</span>.keys(copy).forEach(<span class="hljs-function"><span class="hljs-params">key</span> =&gt;</span> {
 
-        <span class="hljs-keyword">if</span> (key === <span class="hljs-string">'pins'</span>) {
+        <span class="hljs-keyword">if</span> (key === <span class="hljs-string">&#x27;pins&#x27;</span>) {
 
             <span class="hljs-keyword">let</span> temp = [];
 
@@ -680,28 +735,14 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-13">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
-              </div>
-              <h4 id="clone-management">Clone management</h4>
-<p>No additional clone functionality required</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <h4 id="kill-management">Kill management</h4>
-<p>No additional kill functionality required</p>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality required</p>
 
             </div>
             
@@ -714,94 +755,10 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+              <h4 id="kill-management">Kill management</h4>
+<p>No additional kill functionality required</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.getters,
-    S = P.setters,
-    D = P.deltaSetters;
-
-G.pins = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (xt(item)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.getPinAt(item);
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.currentPins.concat();
-};
-S.pins = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (xt(item)) {
-
-        <span class="hljs-keyword">let</span> pins = <span class="hljs-keyword">this</span>.pins;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(item)) {
-
-            pins.forEach(<span class="hljs-function">(<span class="hljs-params">item, index</span>) =&gt;</span> <span class="hljs-keyword">this</span>.removePinAt(index));
-
-            pins.length = <span class="hljs-number">0</span>;
-            pins.push(...item);
-            <span class="hljs-keyword">this</span>.updateDirty();
-        }
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isa_obj(item) &amp;&amp; xt(item.index)) {
-
-            <span class="hljs-keyword">let</span> element = pins[item.index];
-
-            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(element)) {
-
-                <span class="hljs-keyword">if</span> (xt(item.x)) element[<span class="hljs-number">0</span>] = item.x;
-                <span class="hljs-keyword">if</span> (xt(item.y)) element[<span class="hljs-number">1</span>] = item.y;
-                <span class="hljs-keyword">this</span>.updateDirty();
-            }
-        }
-    }
-};
-D.pins = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (xt(item)) {
-
-        <span class="hljs-keyword">let</span> pins = <span class="hljs-keyword">this</span>.pins;
-
-        <span class="hljs-keyword">if</span> (isa_obj(item) &amp;&amp; xt(item.index)) {
-
-            <span class="hljs-keyword">let</span> element = pins[item.index];
-
-            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(element)) {
-
-                <span class="hljs-keyword">if</span> (xt(item.x)) element[<span class="hljs-number">0</span>] = addStrings(element[<span class="hljs-number">0</span>], item.x);
-                <span class="hljs-keyword">if</span> (xt(item.y)) element[<span class="hljs-number">1</span>] = addStrings(element[<span class="hljs-number">1</span>], item.y);
-                <span class="hljs-keyword">this</span>.updateDirty();
-            }
-        }
-    }
-};
-
-S.tension = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (item.toFixed) {
-
-        <span class="hljs-keyword">this</span>.tension = item;
-        <span class="hljs-keyword">this</span>.updateDirty();
-    }
-};
-D.tension = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (item.toFixed) {
-
-        <span class="hljs-keyword">this</span>.tension += item;
-        <span class="hljs-keyword">this</span>.updateDirty();
-    }
-};
-
-S.closed = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.closed = item;
-    <span class="hljs-keyword">this</span>.updateDirty();
-};
-
-S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.mapToPins = item;
-    <span class="hljs-keyword">this</span>.updateDirty();
-};</pre></div></div>
             
         </li>
         
@@ -812,14 +769,93 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p><strong>flipUpend</strong></p>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.flipUpend = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.getters,
+    S = P.setters,
+    D = P.deltaSetters;
 
-    <span class="hljs-keyword">this</span>.flipUpend = item;
-    <span class="hljs-keyword">this</span>.updateDirty();
+G.pins = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (xt(item)) <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.getPinAt(item);
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.currentPins.concat();
+};
+S.pins = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (xt(item)) {
+
+        <span class="hljs-keyword">let</span> pins = <span class="hljs-built_in">this</span>.pins;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(item)) {
+
+            pins.forEach(<span class="hljs-function">(<span class="hljs-params">item, index</span>) =&gt;</span> <span class="hljs-built_in">this</span>.removePinAt(index));
+
+            pins.length = <span class="hljs-number">0</span>;
+            pins.push(...item);
+            <span class="hljs-built_in">this</span>.updateDirty();
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isa_obj(item) &amp;&amp; xt(item.index)) {
+
+            <span class="hljs-keyword">let</span> element = pins[item.index];
+
+            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(element)) {
+
+                <span class="hljs-keyword">if</span> (xt(item.x)) element[<span class="hljs-number">0</span>] = item.x;
+                <span class="hljs-keyword">if</span> (xt(item.y)) element[<span class="hljs-number">1</span>] = item.y;
+                <span class="hljs-built_in">this</span>.updateDirty();
+            }
+        }
+    }
+};
+D.pins = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (xt(item)) {
+
+        <span class="hljs-keyword">let</span> pins = <span class="hljs-built_in">this</span>.pins;
+
+        <span class="hljs-keyword">if</span> (isa_obj(item) &amp;&amp; xt(item.index)) {
+
+            <span class="hljs-keyword">let</span> element = pins[item.index];
+
+            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(element)) {
+
+                <span class="hljs-keyword">if</span> (xt(item.x)) element[<span class="hljs-number">0</span>] = addStrings(element[<span class="hljs-number">0</span>], item.x);
+                <span class="hljs-keyword">if</span> (xt(item.y)) element[<span class="hljs-number">1</span>] = addStrings(element[<span class="hljs-number">1</span>], item.y);
+                <span class="hljs-built_in">this</span>.updateDirty();
+            }
+        }
+    }
+};
+
+S.tension = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (item.toFixed) {
+
+        <span class="hljs-built_in">this</span>.tension = item;
+        <span class="hljs-built_in">this</span>.updateDirty();
+    }
+};
+D.tension = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (item.toFixed) {
+
+        <span class="hljs-built_in">this</span>.tension += item;
+        <span class="hljs-built_in">this</span>.updateDirty();
+    }
+};
+
+S.closed = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.closed = item;
+    <span class="hljs-built_in">this</span>.updateDirty();
+};
+
+S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.mapToPins = item;
+    <span class="hljs-built_in">this</span>.updateDirty();
 };</pre></div></div>
             
         </li>
@@ -831,14 +867,14 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p><strong>flipReverse</strong></p>
+              <p><strong>flipUpend</strong></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.flipReverse = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.flipUpend = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.flipReverse = item;
-    <span class="hljs-keyword">this</span>.updateDirty();
+    <span class="hljs-built_in">this</span>.flipUpend = item;
+    <span class="hljs-built_in">this</span>.updateDirty();
 };</pre></div></div>
             
         </li>
@@ -854,10 +890,10 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.useAsPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.flipReverse = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.useAsPath = item;
-    <span class="hljs-keyword">this</span>.updateDirty();
+    <span class="hljs-built_in">this</span>.flipReverse = item;
+    <span class="hljs-built_in">this</span>.updateDirty();
 };</pre></div></div>
             
         </li>
@@ -869,40 +905,14 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <p><strong>pivot</strong></p>
+              <p><strong>flipReverse</strong></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.pivot = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.useAsPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (isa_boolean(item) &amp;&amp; !item) {
-
-        <span class="hljs-keyword">this</span>.pivot = <span class="hljs-literal">null</span>;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">0</span>] === <span class="hljs-string">'pivot'</span>) <span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">0</span>] = <span class="hljs-string">'start'</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">1</span>] === <span class="hljs-string">'pivot'</span>) <span class="hljs-keyword">this</span>.lockTo[<span class="hljs-number">1</span>] = <span class="hljs-string">'start'</span>;
-
-        <span class="hljs-keyword">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">this</span>.dirtyStampHandlePositions = <span class="hljs-literal">true</span>;
-    }
-    <span class="hljs-keyword">else</span> {
-
-        <span class="hljs-keyword">let</span> oldPivot = <span class="hljs-keyword">this</span>.pivot,
-            newPivot = (item.substring) ? artefact[item] : item,
-            name = <span class="hljs-keyword">this</span>.name;
-
-        <span class="hljs-keyword">if</span> (newPivot &amp;&amp; newPivot.name) {
-
-            <span class="hljs-keyword">if</span> (oldPivot &amp;&amp; oldPivot.name !== newPivot.name) removeItem(oldPivot.pivoted, name);
-
-            pushUnique(newPivot.pivoted, name);
-
-            <span class="hljs-keyword">this</span>.pivot = newPivot;
-            <span class="hljs-keyword">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">this</span>.dirtyStampHandlePositions = <span class="hljs-literal">true</span>;
-        }
-    }
-    <span class="hljs-keyword">this</span>.updateDirty();
+    <span class="hljs-built_in">this</span>.useAsPath = item;
+    <span class="hljs-built_in">this</span>.updateDirty();
 };</pre></div></div>
             
         </li>
@@ -914,9 +924,41 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <h4 id="prototype-functions">Prototype functions</h4>
+              <p><strong>pivot</strong></p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>S.pivot = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (isa_boolean(item) &amp;&amp; !item) {
+
+        <span class="hljs-built_in">this</span>.pivot = <span class="hljs-literal">null</span>;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.lockTo[<span class="hljs-number">0</span>] === <span class="hljs-string">&#x27;pivot&#x27;</span>) <span class="hljs-built_in">this</span>.lockTo[<span class="hljs-number">0</span>] = <span class="hljs-string">&#x27;start&#x27;</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.lockTo[<span class="hljs-number">1</span>] === <span class="hljs-string">&#x27;pivot&#x27;</span>) <span class="hljs-built_in">this</span>.lockTo[<span class="hljs-number">1</span>] = <span class="hljs-string">&#x27;start&#x27;</span>;
+
+        <span class="hljs-built_in">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.dirtyStampHandlePositions = <span class="hljs-literal">true</span>;
+    }
+    <span class="hljs-keyword">else</span> {
+
+        <span class="hljs-keyword">let</span> oldPivot = <span class="hljs-built_in">this</span>.pivot,
+            newPivot = (item.substring) ? artefact[item] : item,
+            name = <span class="hljs-built_in">this</span>.name;
+
+        <span class="hljs-keyword">if</span> (newPivot &amp;&amp; newPivot.name) {
+
+            <span class="hljs-keyword">if</span> (oldPivot &amp;&amp; oldPivot.name !== newPivot.name) removeItem(oldPivot.pivoted, name);
+
+            pushUnique(newPivot.pivoted, name);
+
+            <span class="hljs-built_in">this</span>.pivot = newPivot;
+            <span class="hljs-built_in">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
+            <span class="hljs-built_in">this</span>.dirtyStampHandlePositions = <span class="hljs-literal">true</span>;
+        }
+    }
+    <span class="hljs-built_in">this</span>.updateDirty();
+};</pre></div></div>
             
         </li>
         
@@ -927,16 +969,9 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <p><code>updateDirty</code> - internal setter helper function</p>
+              <h4 id="prototype-functions">Prototype functions</h4>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>P.updateDirty = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">this</span>.dirtySpecies = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPins = <span class="hljs-literal">true</span>;
-};</pre></div></div>
             
         </li>
         
@@ -947,55 +982,15 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <p><code>getPinAt</code> - </p>
+              <p><code>updateDirty</code> - internal setter helper function</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.getPinAt = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">index, coord</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.updateDirty = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">let</span> i = <span class="hljs-built_in">Math</span>.floor(index);
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.useAsPath) {
-
-        <span class="hljs-keyword">let</span> pos = <span class="hljs-keyword">this</span>.getPathPositionData(<span class="hljs-keyword">this</span>.unitPartials[i]);
-
-        <span class="hljs-keyword">if</span> (coord) {
-
-            <span class="hljs-keyword">if</span> (coord === <span class="hljs-string">'x'</span>) <span class="hljs-keyword">return</span> pos.x;
-            <span class="hljs-keyword">if</span> (coord === <span class="hljs-string">'y'</span>) <span class="hljs-keyword">return</span> pos.y;
-        }
-        <span class="hljs-keyword">return</span> [pos.x, pos.y];
-    }
-    <span class="hljs-keyword">else</span> {
-
-        <span class="hljs-keyword">let</span> pins = <span class="hljs-keyword">this</span>.currentPins,
-            pin = pins[i];
-
-        <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-keyword">this</span>.localBox;
-
-        <span class="hljs-keyword">let</span> [px, py] = pin;
-        <span class="hljs-keyword">let</span> [ox, oy] = pins[<span class="hljs-number">0</span>];
-        <span class="hljs-keyword">let</span> [lx, ly] = <span class="hljs-keyword">this</span>.localOffset;
-        <span class="hljs-keyword">let</span> [sx, sy] = <span class="hljs-keyword">this</span>.currentStampPosition;
-        <span class="hljs-keyword">let</span> dx, dy;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.mapToPins) {
-            dx = px - ox + x;
-            dy = py - ox + y;
-        }
-        <span class="hljs-keyword">else</span> {
-            dx = px - lx;
-            dy = py - ly;
-        }
-
-        <span class="hljs-keyword">if</span> (coord) {
-
-            <span class="hljs-keyword">if</span> (coord === <span class="hljs-string">'x'</span>) <span class="hljs-keyword">return</span> sx + dx;
-            <span class="hljs-keyword">if</span> (coord === <span class="hljs-string">'y'</span>) <span class="hljs-keyword">return</span> sy + dy;
-        }
-        <span class="hljs-keyword">return</span> [sx + dx, sy + dy];
-    }
-    <span class="hljs-keyword">return</span> (coord) ? <span class="hljs-number">0</span> : [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>];
+    <span class="hljs-built_in">this</span>.dirtySpecies = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPins = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1007,28 +1002,43 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
-              <p><code>updatePinAt</code> - </p>
+              <p><code>getPinAt</code> - </p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.updatePinAt = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item, index</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.getPinAt = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">index</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (xta(item, index)) {
+    <span class="hljs-keyword">let</span> i = <span class="hljs-built_in">Math</span>.floor(index);
 
-        index = <span class="hljs-built_in">Math</span>.floor(index);
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.useAsPath) {
 
-        <span class="hljs-keyword">let</span> pins = <span class="hljs-keyword">this</span>.pins;
-
-        <span class="hljs-keyword">if</span> (index &lt; pins.length &amp;&amp; index &gt;= <span class="hljs-number">0</span>) {
-
-            <span class="hljs-keyword">let</span> oldPin = pins[index];
-
-            <span class="hljs-keyword">if</span> (isa_obj(oldPin) &amp;&amp; oldPin.pivoted) removeItem(oldPin.pivoted, <span class="hljs-keyword">this</span>.name);
-
-            pins[index] = item;
-            <span class="hljs-keyword">this</span>.updateDirty();
-        }
+        <span class="hljs-keyword">let</span> pos = <span class="hljs-built_in">this</span>.getPathPositionData(<span class="hljs-built_in">this</span>.unitPartials[i]);
+        <span class="hljs-keyword">return</span> [pos.x, pos.y];
     }
+    <span class="hljs-keyword">else</span> {
+
+        <span class="hljs-keyword">let</span> pins = <span class="hljs-built_in">this</span>.currentPins,
+            pin = pins[i];
+
+        <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-built_in">this</span>.localBox;
+
+        <span class="hljs-keyword">let</span> [px, py] = pin;
+        <span class="hljs-keyword">let</span> [ox, oy] = pins[<span class="hljs-number">0</span>];
+        <span class="hljs-keyword">let</span> [lx, ly] = <span class="hljs-built_in">this</span>.localOffset;
+        <span class="hljs-keyword">let</span> [sx, sy] = <span class="hljs-built_in">this</span>.currentStampPosition;
+        <span class="hljs-keyword">let</span> dx, dy;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.mapToPins) {
+            dx = px - ox + x;
+            dy = py - ox + y;
+        }
+        <span class="hljs-keyword">else</span> {
+            dx = px - lx;
+            dy = py - ly;
+        }
+        <span class="hljs-keyword">return</span> [sx + dx, sy + dy];
+    }
+    <span class="hljs-keyword">return</span> [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>];
 };</pre></div></div>
             
         </li>
@@ -1040,24 +1050,27 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
-              <p><code>removePinAt</code> - </p>
+              <p><code>updatePinAt</code> - </p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.removePinAt = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">index</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.updatePinAt = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item, index</span>) </span>{
 
-    index = <span class="hljs-built_in">Math</span>.floor(index);
+    <span class="hljs-keyword">if</span> (xta(item, index)) {
 
-    <span class="hljs-keyword">let</span> pins = <span class="hljs-keyword">this</span>.pins;
+        index = <span class="hljs-built_in">Math</span>.floor(index);
 
-    <span class="hljs-keyword">if</span> (index &lt; pins.length &amp;&amp; index &gt;= <span class="hljs-number">0</span>) {
+        <span class="hljs-keyword">let</span> pins = <span class="hljs-built_in">this</span>.pins;
 
-        <span class="hljs-keyword">let</span> oldPin = pins[index];
+        <span class="hljs-keyword">if</span> (index &lt; pins.length &amp;&amp; index &gt;= <span class="hljs-number">0</span>) {
 
-        <span class="hljs-keyword">if</span> (isa_obj(oldPin) &amp;&amp; oldPin.pivoted) removeItem(oldPin.pivoted, <span class="hljs-keyword">this</span>.name);
+            <span class="hljs-keyword">let</span> oldPin = pins[index];
 
-        pins[index] = <span class="hljs-literal">null</span>;
-        <span class="hljs-keyword">this</span>.updateDirty();
+            <span class="hljs-keyword">if</span> (isa_obj(oldPin) &amp;&amp; oldPin.pivoted) removeItem(oldPin.pivoted, <span class="hljs-built_in">this</span>.name);
+
+            pins[index] = item;
+            <span class="hljs-built_in">this</span>.updateDirty();
+        }
     }
 };</pre></div></div>
             
@@ -1070,43 +1083,25 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
-              <p><code>prepareStamp</code> - the purpose of most of these actions is described in the <a href="http://localhost:8080/docs/source/mixin/entity.html#section-31">entity mixin function</a> that this function overwrites</p>
+              <p><code>removePinAt</code> - </p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.prepareStamp = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.removePinAt = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">index</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyHost) <span class="hljs-keyword">this</span>.dirtyHost = <span class="hljs-literal">false</span>;
+    index = <span class="hljs-built_in">Math</span>.floor(index);
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyPins || <span class="hljs-keyword">this</span>.dirtyLock) <span class="hljs-keyword">this</span>.dirtySpecies = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">let</span> pins = <span class="hljs-built_in">this</span>.pins;
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyScale || <span class="hljs-keyword">this</span>.dirtySpecies || <span class="hljs-keyword">this</span>.dirtyDimensions || <span class="hljs-keyword">this</span>.dirtyStart || <span class="hljs-keyword">this</span>.dirtyHandle) {
+    <span class="hljs-keyword">if</span> (index &lt; pins.length &amp;&amp; index &gt;= <span class="hljs-number">0</span>) {
 
-        <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">let</span> oldPin = pins[index];
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyScale || <span class="hljs-keyword">this</span>.dirtySpecies)  <span class="hljs-keyword">this</span>.pathCalculatedOnce = <span class="hljs-literal">false</span>;
-   }
+        <span class="hljs-keyword">if</span> (isa_obj(oldPin) &amp;&amp; oldPin.pivoted) removeItem(oldPin.pivoted, <span class="hljs-built_in">this</span>.name);
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.isBeingDragged || <span class="hljs-keyword">this</span>.lockTo.indexOf(<span class="hljs-string">'mouse'</span>) &gt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyScale) <span class="hljs-keyword">this</span>.cleanScale();
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyStart) <span class="hljs-keyword">this</span>.cleanStart();
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyOffset) <span class="hljs-keyword">this</span>.cleanOffset();
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyRotation) <span class="hljs-keyword">this</span>.cleanRotation();
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyStampPositions) <span class="hljs-keyword">this</span>.cleanStampPositions();
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtySpecies) <span class="hljs-keyword">this</span>.cleanSpecies();
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyPathObject) {
-
-        <span class="hljs-keyword">this</span>.cleanPathObject();
-        <span class="hljs-keyword">this</span>.updatePathSubscribers();
+        pins[index] = <span class="hljs-literal">null</span>;
+        <span class="hljs-built_in">this</span>.updateDirty();
     }
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyPositionSubscribers) <span class="hljs-keyword">this</span>.updatePositionSubscribers();
 };</pre></div></div>
             
         </li>
@@ -1118,18 +1113,45 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
-              <p><code>cleanSpecies</code> - internal helper function - called by <code>prepareStamp</code></p>
+              <p><code>prepareStamp</code> - the purpose of most of these actions is described in the <a href="http://localhost:8080/docs/source/mixin/entity.html#section-31">entity mixin function</a> that this function overwrites</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.cleanSpecies = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.prepareStamp = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">this</span>.dirtySpecies = <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyHost) <span class="hljs-built_in">this</span>.dirtyHost = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> p = <span class="hljs-string">'M0,0'</span>;
-    p = <span class="hljs-keyword">this</span>.makePolylinePath();
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.useParticlesAsPins) <span class="hljs-built_in">this</span>.dirtyPins = <span class="hljs-literal">true</span>;
 
-    <span class="hljs-keyword">this</span>.pathDefinition = p;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyPins || <span class="hljs-built_in">this</span>.dirtyLock) <span class="hljs-built_in">this</span>.dirtySpecies = <span class="hljs-literal">true</span>;
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyScale || <span class="hljs-built_in">this</span>.dirtySpecies || <span class="hljs-built_in">this</span>.dirtyDimensions || <span class="hljs-built_in">this</span>.dirtyStart || <span class="hljs-built_in">this</span>.dirtyHandle) {
+
+        <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyScale || <span class="hljs-built_in">this</span>.dirtySpecies)  <span class="hljs-built_in">this</span>.pathCalculatedOnce = <span class="hljs-literal">false</span>;
+    }
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.isBeingDragged || <span class="hljs-built_in">this</span>.lockTo.indexOf(<span class="hljs-string">&#x27;mouse&#x27;</span>) &gt;= <span class="hljs-number">0</span> || <span class="hljs-built_in">this</span>.lockTo.indexOf(<span class="hljs-string">&#x27;particle&#x27;</span>) &gt;= <span class="hljs-number">0</span>) <span class="hljs-built_in">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyScale) <span class="hljs-built_in">this</span>.cleanScale();
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyStart) <span class="hljs-built_in">this</span>.cleanStart();
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyOffset) <span class="hljs-built_in">this</span>.cleanOffset();
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyRotation) <span class="hljs-built_in">this</span>.cleanRotation();
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyStampPositions) <span class="hljs-built_in">this</span>.cleanStampPositions();
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtySpecies) <span class="hljs-built_in">this</span>.cleanSpecies();
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyPathObject) {
+
+        <span class="hljs-built_in">this</span>.cleanPathObject();
+        <span class="hljs-built_in">this</span>.updatePathSubscribers();
+    }
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyPositionSubscribers) <span class="hljs-built_in">this</span>.updatePositionSubscribers();
 };</pre></div></div>
             
         </li>
@@ -1140,6 +1162,29 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p><code>cleanSpecies</code> - internal helper function - called by <code>prepareStamp</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.cleanSpecies = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-built_in">this</span>.dirtySpecies = <span class="hljs-literal">false</span>;
+
+    <span class="hljs-keyword">let</span> p = <span class="hljs-string">&#x27;M0,0&#x27;</span>;
+    p = <span class="hljs-built_in">this</span>.makePolylinePath();
+
+    <span class="hljs-built_in">this</span>.pathDefinition = p;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p><code>getPathParts</code> - internal helper function - called by <code>makePolylinePath</code></p>
 
@@ -1165,11 +1210,11 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p><code>buildLine</code> - internal helper function - called by <code>makePolylinePath</code></p>
 
@@ -1192,11 +1237,11 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p><code>buildCurve</code> - internal helper function - called by <code>makePolylinePath</code></p>
 
@@ -1226,11 +1271,11 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p><code>cleanCoordinate</code> - internal helper function - called by <code>cleanPinsArray</code></p>
 
@@ -1239,79 +1284,11 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
             <div class="content"><div class='highlight'><pre>P.cleanCoordinate = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord, dim</span>) </span>{
 
     <span class="hljs-keyword">if</span> (coord.toFixed) <span class="hljs-keyword">return</span> coord;
-    <span class="hljs-keyword">if</span> (coord === <span class="hljs-string">'left'</span> || coord === <span class="hljs-string">'top'</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
-    <span class="hljs-keyword">if</span> (coord === <span class="hljs-string">'right'</span> || coord === <span class="hljs-string">'bottom'</span>) <span class="hljs-keyword">return</span> dim;
-    <span class="hljs-keyword">if</span> (coord === <span class="hljs-string">'center'</span>) <span class="hljs-keyword">return</span> dim / <span class="hljs-number">2</span>;
+    <span class="hljs-keyword">if</span> (coord === <span class="hljs-string">&#x27;left&#x27;</span> || coord === <span class="hljs-string">&#x27;top&#x27;</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">if</span> (coord === <span class="hljs-string">&#x27;right&#x27;</span> || coord === <span class="hljs-string">&#x27;bottom&#x27;</span>) <span class="hljs-keyword">return</span> dim;
+    <span class="hljs-keyword">if</span> (coord === <span class="hljs-string">&#x27;center&#x27;</span>) <span class="hljs-keyword">return</span> dim / <span class="hljs-number">2</span>;
     <span class="hljs-keyword">return</span> (<span class="hljs-built_in">parseFloat</span>(coord) / <span class="hljs-number">100</span>) * dim;
 };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-31">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
-              </div>
-              <p><code>cleanPinsArray</code> - internal helper function - called by <code>makePolylinePath</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.cleanPinsArray = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">this</span>.dirtyPins = <span class="hljs-literal">false</span>;
-
-    <span class="hljs-keyword">let</span> pins = <span class="hljs-keyword">this</span>.pins,
-        current = <span class="hljs-keyword">this</span>.currentPins;
-
-    current.length = <span class="hljs-number">0</span>;
-
-    <span class="hljs-keyword">let</span> w = <span class="hljs-number">1</span>,
-        h = <span class="hljs-number">1</span>,
-        host = <span class="hljs-keyword">this</span>.getHost(),
-        clean = <span class="hljs-keyword">this</span>.cleanCoordinate,
-        x, y, dims;
-
-    <span class="hljs-keyword">if</span> (host) {
-
-        dims = host.currentDimensions;
-
-        <span class="hljs-keyword">if</span> (dims) {
-
-            [w, h] = dims;
-        }
-    }
-
-    pins.forEach(<span class="hljs-function">(<span class="hljs-params">item, index</span>) =&gt;</span> {
-
-        <span class="hljs-keyword">let</span> temp;
-
-        <span class="hljs-keyword">if</span> (item &amp;&amp; item.substring) {
-
-            temp = artefact[item];
-            pins[index] = temp;
-        }
-        <span class="hljs-keyword">else</span> temp = item;
-
-        <span class="hljs-keyword">if</span> (temp) {
-
-            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(temp)) {
-
-                [x, y] = temp;
-
-                current.push([clean(x, w), clean(y, h)]);
-            }
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isa_obj(temp) &amp;&amp; temp.currentStart) {
-
-                <span class="hljs-keyword">let</span> name = <span class="hljs-keyword">this</span>.name;
-
-                <span class="hljs-keyword">if</span> (temp.pivoted.indexOf(name) &lt; <span class="hljs-number">0</span>) pushUnique(temp.pivoted, name);
-
-                current.push([...temp.currentStampPosition]);
-            }
-        }
-    });</pre></div></div>
             
         </li>
         
@@ -1322,22 +1299,89 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
-              <p>Calculate the local offset</p>
+              <p><code>cleanPinsArray</code> - internal helper function - called by <code>makePolylinePath</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> mx = current[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>],
-        my = current[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>];
+            <div class="content"><div class='highlight'><pre>P.cleanPinsArray = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    current.forEach(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> {
+    <span class="hljs-built_in">this</span>.dirtyPins = <span class="hljs-literal">false</span>;
 
-        <span class="hljs-keyword">if</span> (e[<span class="hljs-number">0</span>] &lt; mx) mx = e[<span class="hljs-number">0</span>];
-        <span class="hljs-keyword">if</span> (e[<span class="hljs-number">1</span>] &lt; my) my = e[<span class="hljs-number">1</span>];
-    })
-    <span class="hljs-keyword">this</span>.localOffset = [mx, my];
+    <span class="hljs-keyword">let</span> pins = <span class="hljs-built_in">this</span>.pins,
+        current = <span class="hljs-built_in">this</span>.currentPins;
 
-    <span class="hljs-keyword">this</span>.updatePivotSubscribers();
-}</pre></div></div>
+    current.length = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.useParticlesAsPins) {
+
+        pins.forEach(<span class="hljs-function">(<span class="hljs-params">part, index</span>) =&gt;</span> {
+
+            <span class="hljs-keyword">let</span> temp;
+
+            <span class="hljs-keyword">if</span> (part &amp;&amp; part.substring) {
+
+                temp = particle[part];
+                <span class="hljs-keyword">if</span> (temp) pins[index] = temp;
+            }
+            <span class="hljs-keyword">else</span> temp = part;
+
+            <span class="hljs-keyword">let</span> pos = (temp &amp;&amp; temp.position) ? temp.position : <span class="hljs-literal">false</span>;
+
+            <span class="hljs-keyword">if</span> (pos) current.push([pos.x, pos.y]);
+        });
+
+        <span class="hljs-keyword">if</span> (!current.length) <span class="hljs-built_in">this</span>.dirtyPins = <span class="hljs-literal">true</span>;
+    }
+    <span class="hljs-keyword">else</span> {
+
+        <span class="hljs-keyword">let</span> w = <span class="hljs-number">1</span>,
+            h = <span class="hljs-number">1</span>,
+            host = <span class="hljs-built_in">this</span>.getHost(),
+            clean = <span class="hljs-built_in">this</span>.cleanCoordinate,
+            x, y, dims;
+
+        <span class="hljs-keyword">if</span> (host) {
+
+            dims = host.currentDimensions;
+
+            <span class="hljs-keyword">if</span> (dims) {
+
+                [w, h] = dims;
+            }
+        }
+
+        pins.forEach(<span class="hljs-function">(<span class="hljs-params">item, index</span>) =&gt;</span> {
+
+            <span class="hljs-keyword">let</span> temp;
+
+            <span class="hljs-keyword">if</span> (item &amp;&amp; item.substring) {
+
+                temp = artefact[item];
+                pins[index] = temp;
+            }
+            <span class="hljs-keyword">else</span> temp = item;
+
+            <span class="hljs-keyword">if</span> (temp) {
+
+                <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(temp)) {
+
+                    [x, y] = temp;
+
+                    current.push([clean(x, w), clean(y, h)]);
+                }
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isa_obj(temp) &amp;&amp; temp.currentStart) {
+
+                    <span class="hljs-keyword">let</span> name = <span class="hljs-built_in">this</span>.name;
+
+                    <span class="hljs-keyword">if</span> (temp.pivoted.indexOf(name) &lt; <span class="hljs-number">0</span>) pushUnique(temp.pivoted, name);
+
+                    current.push([...temp.currentStampPosition]);
+                }
+            }
+        });
+    }
+
+    <span class="hljs-keyword">if</span> (current.length) {</pre></div></div>
             
         </li>
         
@@ -1348,19 +1392,23 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
-              <p><code>makePolylinePath</code> - internal helper function - called by <code>cleanSpecies</code></p>
+              <p>Calculate the local offset</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.makePolylinePath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> mx = current[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>],
+            my = current[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>];
 
-    <span class="hljs-keyword">let</span> getPathParts = <span class="hljs-keyword">this</span>.getPathParts,
-        buildLine = <span class="hljs-keyword">this</span>.buildLine,
-        buildCurve = <span class="hljs-keyword">this</span>.buildCurve,
-        pins = <span class="hljs-keyword">this</span>.pins,
-        cPin = <span class="hljs-keyword">this</span>.currentPins, 
-        tension = <span class="hljs-keyword">this</span>.tension,
-        closed = <span class="hljs-keyword">this</span>.closed;</pre></div></div>
+        current.forEach(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> {
+
+            <span class="hljs-keyword">if</span> (e[<span class="hljs-number">0</span>] &lt; mx) mx = e[<span class="hljs-number">0</span>];
+            <span class="hljs-keyword">if</span> (e[<span class="hljs-number">1</span>] &lt; my) my = e[<span class="hljs-number">1</span>];
+        })
+        <span class="hljs-built_in">this</span>.localOffset = [mx, my];
+
+        <span class="hljs-built_in">this</span>.updatePivotSubscribers();
+    }
+};</pre></div></div>
             
         </li>
         
@@ -1371,13 +1419,19 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
-              <ol>
-<li>go through the pins array and get current values for each, pushed into currentPins array</li>
-</ol>
+              <p><code>makePolylinePath</code> - internal helper function - called by <code>cleanSpecies</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyPins) <span class="hljs-keyword">this</span>.cleanPinsArray();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.makePolylinePath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">let</span> getPathParts = <span class="hljs-built_in">this</span>.getPathParts,
+        buildLine = <span class="hljs-built_in">this</span>.buildLine,
+        buildCurve = <span class="hljs-built_in">this</span>.buildCurve,
+        pins = <span class="hljs-built_in">this</span>.pins,
+        cPin = <span class="hljs-built_in">this</span>.currentPins, 
+        tension = <span class="hljs-built_in">this</span>.tension,
+        closed = <span class="hljs-built_in">this</span>.closed;</pre></div></div>
             
         </li>
         
@@ -1388,65 +1442,15 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
-              <ol start="2">
-<li>build the line</li>
+              <ol>
+<li>go through the pins array and get current values for each, pushed into currentPins array</li>
 </ol>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> cLen = cPin.length,
-        first = cPin[<span class="hljs-number">0</span>],
-        last = cPin[cLen - <span class="hljs-number">1</span>],
-        calc = [],
-        result = <span class="hljs-string">'m0,0'</span>;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyPins) <span class="hljs-built_in">this</span>.cleanPinsArray();
 
-    <span class="hljs-keyword">if</span> (closed) {
-
-        <span class="hljs-keyword">let</span> startPoint = [].concat(...getPathParts(...last, ...first, ...cPin[<span class="hljs-number">1</span>], tension));
-
-        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; cLen - <span class="hljs-number">2</span>; i++) {
-
-            calc = calc.concat(...getPathParts(...cPin[i], ...cPin[i + <span class="hljs-number">1</span>], ...cPin[i + <span class="hljs-number">2</span>], tension));
-        }
-
-        calc = calc.concat(...getPathParts(...cPin[cLen - <span class="hljs-number">2</span>], ...last, ...first, tension));
-
-        calc.unshift(startPoint[<span class="hljs-number">4</span>], startPoint[<span class="hljs-number">5</span>]);
-        calc.push(startPoint[<span class="hljs-number">0</span>], startPoint[<span class="hljs-number">1</span>], startPoint[<span class="hljs-number">2</span>], startPoint[<span class="hljs-number">3</span>]);
-
-        <span class="hljs-keyword">if</span> (tension) result = buildCurve(first[<span class="hljs-number">0</span>], first[<span class="hljs-number">1</span>], calc) + <span class="hljs-string">'z'</span>;
-        <span class="hljs-keyword">else</span> result = buildLine(first[<span class="hljs-number">0</span>], first[<span class="hljs-number">1</span>], calc) + <span class="hljs-string">'z'</span>;
-    }
-    <span class="hljs-keyword">else</span> {
-
-        calc.push(first[<span class="hljs-number">0</span>], first[<span class="hljs-number">1</span>]);
-
-        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; cLen - <span class="hljs-number">2</span>; i++) {
-
-            calc = calc.concat(...getPathParts(...cPin[i], ...cPin[i + <span class="hljs-number">1</span>], ...cPin[i + <span class="hljs-number">2</span>], tension));
-        }
-        calc.push(last[<span class="hljs-number">0</span>], last[<span class="hljs-number">1</span>], last[<span class="hljs-number">0</span>], last[<span class="hljs-number">1</span>]);
-
-        <span class="hljs-keyword">if</span> (tension) result = buildCurve(first[<span class="hljs-number">0</span>], first[<span class="hljs-number">1</span>], calc);
-        <span class="hljs-keyword">else</span> result = buildLine(first[<span class="hljs-number">0</span>], first[<span class="hljs-number">1</span>], calc);
-    }
-    <span class="hljs-keyword">return</span> result;
-};
-
-P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-keyword">this</span>.localBox,
-        def = <span class="hljs-keyword">this</span>.pathDefinition;
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.mapToPins) {
-
-        <span class="hljs-keyword">this</span>.set({
-            <span class="hljs-attr">start</span>: <span class="hljs-keyword">this</span>.currentPins[<span class="hljs-number">0</span>],
-        });
-    }
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.pathDefinition = def.replace(<span class="hljs-string">'m0,0'</span>, <span class="hljs-string">`m<span class="hljs-subst">${-x}</span>,<span class="hljs-subst">${-y}</span>`</span>);
-
-    <span class="hljs-keyword">this</span>.pathCalculatedOnce = <span class="hljs-literal">false</span>;</pre></div></div>
+    <span class="hljs-keyword">if</span> (cPin.length) {</pre></div></div>
             
         </li>
         
@@ -1457,15 +1461,67 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
-              <p>ALWAYS, when invoking <code>calculateLocalPath</code> from <code>calculateLocalPathAdditionalActions</code>, include the second argument, set to <code>true</code>! Failure to do this leads to an infinite loop which will make your machine weep.</p>
-<ul>
-<li>We need to recalculate the local path to take into account the offset required to put the Oval entity’s start coordinates at the top-left of the local box, and to recalculate the data used by other artefacts to place themselves on, or move along, its path.</li>
-</ul>
+              <ol start="2">
+<li>build the line</li>
+</ol>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.calculateLocalPath(<span class="hljs-keyword">this</span>.pathDefinition, <span class="hljs-literal">true</span>);
-};</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> cLen = cPin.length,
+            first = cPin[<span class="hljs-number">0</span>],
+            last = cPin[cLen - <span class="hljs-number">1</span>],
+            calc = [],
+            result = <span class="hljs-string">&#x27;m0,0&#x27;</span>;
+
+        <span class="hljs-keyword">if</span> (closed) {
+
+            <span class="hljs-keyword">let</span> startPoint = [].concat(...getPathParts(...last, ...first, ...cPin[<span class="hljs-number">1</span>], tension));
+
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; cLen - <span class="hljs-number">2</span>; i++) {
+
+                calc = calc.concat(...getPathParts(...cPin[i], ...cPin[i + <span class="hljs-number">1</span>], ...cPin[i + <span class="hljs-number">2</span>], tension));
+            }
+
+            calc = calc.concat(...getPathParts(...cPin[cLen - <span class="hljs-number">2</span>], ...last, ...first, tension));
+
+            calc.unshift(startPoint[<span class="hljs-number">4</span>], startPoint[<span class="hljs-number">5</span>]);
+            calc.push(startPoint[<span class="hljs-number">0</span>], startPoint[<span class="hljs-number">1</span>], startPoint[<span class="hljs-number">2</span>], startPoint[<span class="hljs-number">3</span>]);
+
+            <span class="hljs-keyword">if</span> (tension) result = buildCurve(first[<span class="hljs-number">0</span>], first[<span class="hljs-number">1</span>], calc) + <span class="hljs-string">&#x27;z&#x27;</span>;
+            <span class="hljs-keyword">else</span> result = buildLine(first[<span class="hljs-number">0</span>], first[<span class="hljs-number">1</span>], calc) + <span class="hljs-string">&#x27;z&#x27;</span>;
+        }
+        <span class="hljs-keyword">else</span> {
+
+            calc.push(first[<span class="hljs-number">0</span>], first[<span class="hljs-number">1</span>]);
+
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; cLen - <span class="hljs-number">2</span>; i++) {
+
+                calc = calc.concat(...getPathParts(...cPin[i], ...cPin[i + <span class="hljs-number">1</span>], ...cPin[i + <span class="hljs-number">2</span>], tension));
+            }
+            calc.push(last[<span class="hljs-number">0</span>], last[<span class="hljs-number">1</span>], last[<span class="hljs-number">0</span>], last[<span class="hljs-number">1</span>]);
+
+            <span class="hljs-keyword">if</span> (tension) result = buildCurve(first[<span class="hljs-number">0</span>], first[<span class="hljs-number">1</span>], calc);
+            <span class="hljs-keyword">else</span> result = buildLine(first[<span class="hljs-number">0</span>], first[<span class="hljs-number">1</span>], calc);
+        }
+        <span class="hljs-keyword">return</span> result;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;m0,0&#x27;</span>;
+};
+
+P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-built_in">this</span>.localBox,
+        def = <span class="hljs-built_in">this</span>.pathDefinition;
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.mapToPins) {
+
+        <span class="hljs-built_in">this</span>.set({
+            <span class="hljs-attr">start</span>: <span class="hljs-built_in">this</span>.currentPins[<span class="hljs-number">0</span>],
+        });
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-built_in">this</span>.pathDefinition = def.replace(<span class="hljs-string">&#x27;m0,0&#x27;</span>, <span class="hljs-string">`m<span class="hljs-subst">${-x}</span>,<span class="hljs-subst">${-y}</span>`</span>);
+
+    <span class="hljs-built_in">this</span>.pathCalculatedOnce = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -1476,18 +1532,14 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
-              <p><code>updatePathSubscribers</code></p>
+              <p>ALWAYS, when invoking <code>calculateLocalPath</code> from <code>calculateLocalPathAdditionalActions</code>, include the second argument, set to <code>true</code>! Failure to do this leads to an infinite loop which will make your machine weep.</p>
+<ul>
+<li>We need to recalculate the local path to take into account the offset required to put the Oval entity’s start coordinates at the top-left of the local box, and to recalculate the data used by other artefacts to place themselves on, or move along, its path.</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.updatePathSubscribers = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">this</span>.pathed.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
-
-        <span class="hljs-keyword">let</span> instance = artefact[name];
-
-        <span class="hljs-keyword">if</span> (instance) instance.dirtyStart = <span class="hljs-literal">true</span>;
-    });
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.calculateLocalPath(<span class="hljs-built_in">this</span>.pathDefinition, <span class="hljs-literal">true</span>);
 };</pre></div></div>
             
         </li>
@@ -1499,9 +1551,19 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
-              <h4 id="factories">Factories</h4>
+              <p><code>updatePathSubscribers</code></p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>P.updatePathSubscribers = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-built_in">this</span>.pathed.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
+
+        <span class="hljs-keyword">let</span> instance = artefact[name];
+
+        <span class="hljs-keyword">if</span> (instance) instance.dirtyStart = <span class="hljs-literal">true</span>;
+    });
+};</pre></div></div>
             
         </li>
         
@@ -1511,6 +1573,19 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <h4 id="factories">Factories</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <h5 id="makepolyline">makePolyline</h5>
 <p>Accepts argument with attributes:</p>
@@ -1522,41 +1597,41 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
 </ul>
 <pre><code>scrawl.makePolyline({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'my-polyline'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-polyline&#x27;</span>,
 
-    <span class="hljs-attr">pins</span>: [[<span class="hljs-number">10</span>, <span class="hljs-number">10</span>], [<span class="hljs-string">'20%'</span>, <span class="hljs-string">'90%'</span>], [<span class="hljs-number">120</span>, <span class="hljs-string">'center'</span>]],
+    <span class="hljs-attr">pins</span>: [[<span class="hljs-number">10</span>, <span class="hljs-number">10</span>], [<span class="hljs-string">&#x27;20%&#x27;</span>, <span class="hljs-string">&#x27;90%&#x27;</span>], [<span class="hljs-number">120</span>, <span class="hljs-string">&#x27;center&#x27;</span>]],
 
     <span class="hljs-attr">tension</span>: <span class="hljs-number">0.3</span>,
     <span class="hljs-attr">closed</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">mapToPins</span>: <span class="hljs-literal">true</span>,
 
-    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'orange'</span>,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;orange&#x27;</span>,
     <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">6</span>,
-    <span class="hljs-attr">lineCap</span>: <span class="hljs-string">'round'</span>,
-    <span class="hljs-attr">lineJoin</span>: <span class="hljs-string">'round'</span>,
-    <span class="hljs-attr">shadowColor</span>: <span class="hljs-string">'black'</span>,
+    <span class="hljs-attr">lineCap</span>: <span class="hljs-string">&#x27;round&#x27;</span>,
+    <span class="hljs-attr">lineJoin</span>: <span class="hljs-string">&#x27;round&#x27;</span>,
+    <span class="hljs-attr">shadowColor</span>: <span class="hljs-string">&#x27;black&#x27;</span>,
 
-    <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
 });</code></pre>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makePolyline = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-    items.species = <span class="hljs-string">'polyline'</span>;
+    items.species = <span class="hljs-string">&#x27;polyline&#x27;</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Polyline(items);
 };
 
-constructors.Polyline = Polyline;</pre></div></div>
+<span class="hljs-title">constructors</span>.<span class="hljs-title">Polyline</span> = <span class="hljs-title">Polyline</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

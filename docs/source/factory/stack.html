@@ -4,7 +4,7 @@
 <head>
   <title>Stack factory</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -110,6 +110,11 @@
                 </a>
               
                 
+                <a class="source" href="emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
                 <a class="source" href="filter.html">
                   ./source/factory/filter.js
                 </a>
@@ -150,6 +155,11 @@
                 </a>
               
                 
+                <a class="source" href="net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
                 <a class="source" href="oval.html">
                   ./source/factory/oval.js
                 </a>
@@ -157,6 +167,31 @@
                 
                 <a class="source" href="palette.html">
                   ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="particleForce.html">
+                  ./source/factory/particleForce.js
+                </a>
+              
+                
+                <a class="source" href="particleHistory.html">
+                  ./source/factory/particleHistory.js
+                </a>
+              
+                
+                <a class="source" href="particleSpring.html">
+                  ./source/factory/particleSpring.js
+                </a>
+              
+                
+                <a class="source" href="particleWorld.html">
+                  ./source/factory/particleWorld.js
                 </a>
               
                 
@@ -247,6 +282,11 @@
                 
                 <a class="source" href="ticker.html">
                   ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="tracer.html">
+                  ./source/factory/tracer.js
                 </a>
               
                 
@@ -464,19 +504,19 @@ Element  ~~&gt; Entity (eg Block)  </code></pre>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, group, stack, element, artefact, canvas } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { mergeOver, pushUnique, isa_dom, removeItem, xt, addStrings, λ<span class="hljs-keyword">this</span>, λ<span class="hljs-literal">null</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
-<span class="hljs-keyword">import</span> { rootElements, setRootElementsSort, domShow } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/document.js'</span>;
-<span class="hljs-keyword">import</span> { uiSubscribedElements, currentCorePosition } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/userInteraction.js'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">group</span>, <span class="hljs-title">stack</span>, <span class="hljs-title">element</span>, <span class="hljs-title">artefact</span>, <span class="hljs-title">canvas</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+<span class="hljs-keyword">import</span> { mergeOver, pushUnique, isa_dom, removeItem, xt, addStrings, λ<span class="hljs-built_in">this</span>, λ<span class="hljs-literal">null</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { rootElements, setRootElementsSort, domShow } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/document.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { uiSubscribedElements, currentCorePosition } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/userInteraction.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { makeGroup } <span class="hljs-keyword">from</span> <span class="hljs-string">'./group.js'</span>;
-<span class="hljs-keyword">import</span> { makeElement } <span class="hljs-keyword">from</span> <span class="hljs-string">'./element.js'</span>;
-<span class="hljs-keyword">import</span> { makeCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">'./coordinate.js'</span>;
+<span class="hljs-keyword">import</span> { makeGroup } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./group.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { makeElement } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./element.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { makeCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./coordinate.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/base.js'</span>;
-<span class="hljs-keyword">import</span> cascadeMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/cascade.js'</span>;
-<span class="hljs-keyword">import</span> domMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/dom.js'</span>;
-<span class="hljs-keyword">import</span> displayMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/displayShape.js'</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
+<span class="hljs-keyword">import</span> cascadeMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/cascade.js&#x27;</span>;
+<span class="hljs-keyword">import</span> domMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/dom.js&#x27;</span>;
+<span class="hljs-keyword">import</span> displayMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/displayShape.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -495,50 +535,50 @@ Element  ~~&gt; Entity (eg Block)  </code></pre>
 
     <span class="hljs-keyword">let</span> g, el;
 
-    <span class="hljs-keyword">this</span>.makeName(items.name);
-    <span class="hljs-keyword">this</span>.register();
-    <span class="hljs-keyword">this</span>.initializePositions();
-    <span class="hljs-keyword">this</span>.initializeCascade();
+    <span class="hljs-built_in">this</span>.makeName(items.name);
+    <span class="hljs-built_in">this</span>.register();
+    <span class="hljs-built_in">this</span>.initializePositions();
+    <span class="hljs-built_in">this</span>.initializeCascade();
 
-    <span class="hljs-keyword">this</span>.dimensions[<span class="hljs-number">0</span>] = <span class="hljs-number">300</span>;
-    <span class="hljs-keyword">this</span>.dimensions[<span class="hljs-number">1</span>] = <span class="hljs-number">150</span>;
+    <span class="hljs-built_in">this</span>.dimensions[<span class="hljs-number">0</span>] = <span class="hljs-number">300</span>;
+    <span class="hljs-built_in">this</span>.dimensions[<span class="hljs-number">1</span>] = <span class="hljs-number">150</span>;
 
-    <span class="hljs-keyword">this</span>.pathCorners = [];
-    <span class="hljs-keyword">this</span>.css = {};
-    <span class="hljs-keyword">this</span>.here = {};
-    <span class="hljs-keyword">this</span>.perspective = {
+    <span class="hljs-built_in">this</span>.pathCorners = [];
+    <span class="hljs-built_in">this</span>.css = {};
+    <span class="hljs-built_in">this</span>.here = {};
+    <span class="hljs-built_in">this</span>.perspective = {
 
-        <span class="hljs-attr">x</span>: <span class="hljs-string">'50%'</span>,
-        <span class="hljs-attr">y</span>: <span class="hljs-string">'50%'</span>,
+        <span class="hljs-attr">x</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+        <span class="hljs-attr">y</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
         <span class="hljs-attr">z</span>: <span class="hljs-number">0</span>
     };
-    <span class="hljs-keyword">this</span>.dirtyPerspective = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPerspective = <span class="hljs-literal">true</span>;
 
-    <span class="hljs-keyword">this</span>.initializeDomLayout(items);
+    <span class="hljs-built_in">this</span>.initializeDomLayout(items);
 
     g = makeGroup({
-        <span class="hljs-attr">name</span>: <span class="hljs-keyword">this</span>.name,
-        <span class="hljs-attr">host</span>: <span class="hljs-keyword">this</span>.name
+        <span class="hljs-attr">name</span>: <span class="hljs-built_in">this</span>.name,
+        <span class="hljs-attr">host</span>: <span class="hljs-built_in">this</span>.name
     });
-    <span class="hljs-keyword">this</span>.addGroups(g.name);
+    <span class="hljs-built_in">this</span>.addGroups(g.name);
 
-    <span class="hljs-keyword">this</span>.set(<span class="hljs-keyword">this</span>.defs);
-    <span class="hljs-keyword">this</span>.initializeDisplayShapeActions();
-    <span class="hljs-keyword">this</span>.set(items);
+    <span class="hljs-built_in">this</span>.set(<span class="hljs-built_in">this</span>.defs);
+    <span class="hljs-built_in">this</span>.initializeDisplayShapeActions();
+    <span class="hljs-built_in">this</span>.set(items);
 
-    el = <span class="hljs-keyword">this</span>.domElement;
+    el = <span class="hljs-built_in">this</span>.domElement;
 
     <span class="hljs-keyword">if</span> (el) {
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.trackHere) pushUnique(uiSubscribedElements, <span class="hljs-keyword">this</span>.name);
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.trackHere) pushUnique(uiSubscribedElements, <span class="hljs-built_in">this</span>.name);
 
-        <span class="hljs-keyword">if</span> (el.getAttribute(<span class="hljs-string">'data-group'</span>) === <span class="hljs-string">'root'</span>) {
+        <span class="hljs-keyword">if</span> (el.getAttribute(<span class="hljs-string">&#x27;data-group&#x27;</span>) === <span class="hljs-string">&#x27;root&#x27;</span>) {
 
-            pushUnique(rootElements, <span class="hljs-keyword">this</span>.name);
+            pushUnique(rootElements, <span class="hljs-built_in">this</span>.name);
             setRootElementsSort();
         }
     }
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -555,8 +595,8 @@ Element  ~~&gt; Entity (eg Block)  </code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Stack.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">'Stack'</span>;
-P.lib = <span class="hljs-string">'stack'</span>;
+P.type = <span class="hljs-string">&#x27;Stack&#x27;</span>;
+P.lib = <span class="hljs-string">&#x27;stack&#x27;</span>;
 P.isArtefact = <span class="hljs-literal">true</span>;
 P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
             
@@ -596,7 +636,7 @@ P = displayMix(P);</pre></div></div>
               <h4 id="stack-attributes">Stack attributes</h4>
 <ul>
 <li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/position.html">position mixin</a>: <strong>group, visibility, order, start, <em>startX</em>, <em>startY</em>, handle, <em>handleX</em>, <em>handleY</em>, offset, <em>offsetX</em>, <em>offsetY</em>, dimensions, <em>width</em>, <em>height</em>, pivoted, mimicked, lockTo, <em>lockXTo</em>, <em>lockYTo</em>, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/position.html">position mixin</a>: <strong>group, visibility, order, start, <em>startX</em>, <em>startY</em>, handle, <em>handleX</em>, <em>handleY</em>, offset, <em>offsetX</em>, <em>offsetY</em>, dimensions, <em>width</em>, <em>height</em>, pivoted, mimicked, lockTo, <em>lockXTo</em>, <em>lockYTo</em>, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge, bringToFrontOnDrag</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/delta.html">delta mixin</a>: <strong>delta, noDeltaUpdates</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/pivot.html">pivot mixin</a>: <strong>pivot, pivotCorner, addPivotHandle, addPivotOffset, addPivotRotation</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/mimic.html">mimic mixin</a>: <strong>mimic, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic</strong>.</li>
@@ -624,7 +664,7 @@ P = displayMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    position: <span class="hljs-string">'relative'</span>,
+            <div class="content"><div class='highlight'><pre>    position: <span class="hljs-string">&#x27;relative&#x27;</span>,
     <span class="hljs-attr">perspective</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
@@ -679,9 +719,9 @@ P.processPacketOut = λ<span class="hljs-literal">null</span>;
 P.finalizePacketOut = λ<span class="hljs-literal">null</span>;
 P.saveAsPacket = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">return</span> <span class="hljs-string">`[<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span>, <span class="hljs-subst">${<span class="hljs-keyword">this</span>.type}</span>, <span class="hljs-subst">${<span class="hljs-keyword">this</span>.lib}</span>, {}]`</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-string">`[<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span>, <span class="hljs-subst">${<span class="hljs-built_in">this</span>.type}</span>, <span class="hljs-subst">${<span class="hljs-built_in">this</span>.lib}</span>, {}]`</span>
 };
-P.clone = λ<span class="hljs-keyword">this</span>;</pre></div></div>
+P.clone = λ<span class="hljs-built_in">this</span>;</pre></div></div>
             
         </li>
         
@@ -693,12 +733,9 @@ P.clone = λ<span class="hljs-keyword">this</span>;</pre></div></div>
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <h4 id="kill-functionality">Kill functionality</h4>
+<p>P.kill = function () {</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>P.kill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">let</span> myname = <span class="hljs-keyword">this</span>.name;</pre></div></div>
             
         </li>
         
@@ -708,6 +745,122 @@ P.clone = λ<span class="hljs-keyword">this</span>;</pre></div></div>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <pre><code><span class="hljs-keyword">let</span> myname = <span class="hljs-built_in">this</span>.name;</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <pre><code><span class="hljs-comment">// rootElements and uiSubscribedElements arrays</span>
+removeItem(rootElements, myname);
+setRootElementsSort();</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <pre><code>removeItem(uiSubscribedElements, myname);</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <pre><code><span class="hljs-comment">// Groups</span>
+<span class="hljs-keyword">if</span> (group[myname]) group[myname].kill();</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <pre><code><span class="hljs-built_in">Object</span>.entries(artefact).forEach(<span class="hljs-function">(<span class="hljs-params">[name, art]</span>) =&gt;</span> {</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <pre><code>    <span class="hljs-keyword">if</span> (art.host === myname) art.kill();
+});</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <pre><code><span class="hljs-comment">// DOM removals</span>
+<span class="hljs-built_in">this</span>.domElement.remove();</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <pre><code><span class="hljs-comment">// Scrawl-canvas library</span>
+<span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.deregister();</code></pre>
+<p>}</p>
+<h4 id="kill-functionality">Kill functionality</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.factoryKill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">let</span> myname = <span class="hljs-built_in">this</span>.name;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>rootElements and uiSubscribedElements arrays</p>
 
@@ -721,11 +874,11 @@ P.clone = λ<span class="hljs-keyword">this</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>Groups</p>
 
@@ -741,42 +894,27 @@ P.clone = λ<span class="hljs-keyword">this</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-15">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>DOM removals</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.domElement.remove();</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
-              </div>
-              <p>Scrawl-canvas library</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.deregister();
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.domElement.remove();
 }</pre></div></div>
             
         </li>
         
         
-        <li id="section-17">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -789,11 +927,11 @@ P.clone = λ<span class="hljs-keyword">this</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-18">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>Similar to start, handle, dimensions, etc Scrawl-canvas supplies some pseudo-attributes to help set and manage the Stack wrapper’s <code>perspective</code> object:</p>
 <ul>
@@ -806,58 +944,58 @@ P.clone = λ<span class="hljs-keyword">this</span>;</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>G.perspectiveX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.perspective.x;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.perspective.x;
 };
 G.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.perspective.y;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.perspective.y;
 };
 G.perspectiveZ = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.perspective.z;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.perspective.z;
 };
 
 S.perspectiveX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.perspective.x = item;
-    <span class="hljs-keyword">this</span>.dirtyPerspective = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.perspective.x = item;
+    <span class="hljs-built_in">this</span>.dirtyPerspective = <span class="hljs-literal">true</span>;
 };
 S.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.perspective.y = item;
-    <span class="hljs-keyword">this</span>.dirtyPerspective = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.perspective.y = item;
+    <span class="hljs-built_in">this</span>.dirtyPerspective = <span class="hljs-literal">true</span>;
 };
 S.perspectiveZ = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.perspective.z = item;
-    <span class="hljs-keyword">this</span>.dirtyPerspective = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.perspective.z = item;
+    <span class="hljs-built_in">this</span>.dirtyPerspective = <span class="hljs-literal">true</span>;
 };
 S.perspective = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item = {}</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.perspective.x = (xt(item.x)) ? item.x : <span class="hljs-keyword">this</span>.perspective.x;
-    <span class="hljs-keyword">this</span>.perspective.y = (xt(item.y)) ? item.y : <span class="hljs-keyword">this</span>.perspective.y;
-    <span class="hljs-keyword">this</span>.perspective.z = (xt(item.z)) ? item.z : <span class="hljs-keyword">this</span>.perspective.z;
-    <span class="hljs-keyword">this</span>.dirtyPerspective = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.perspective.x = (xt(item.x)) ? item.x : <span class="hljs-built_in">this</span>.perspective.x;
+    <span class="hljs-built_in">this</span>.perspective.y = (xt(item.y)) ? item.y : <span class="hljs-built_in">this</span>.perspective.y;
+    <span class="hljs-built_in">this</span>.perspective.z = (xt(item.z)) ? item.z : <span class="hljs-built_in">this</span>.perspective.z;
+    <span class="hljs-built_in">this</span>.dirtyPerspective = <span class="hljs-literal">true</span>;
 };
 D.perspectiveX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.perspective.x = addStrings(<span class="hljs-keyword">this</span>.perspective.x, item);
-    <span class="hljs-keyword">this</span>.dirtyPerspective = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.perspective.x = addStrings(<span class="hljs-built_in">this</span>.perspective.x, item);
+    <span class="hljs-built_in">this</span>.dirtyPerspective = <span class="hljs-literal">true</span>;
 };
 D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.perspective.y = addStrings(<span class="hljs-keyword">this</span>.perspective.y, item);
-    <span class="hljs-keyword">this</span>.dirtyPerspective = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.perspective.y = addStrings(<span class="hljs-built_in">this</span>.perspective.y, item);
+    <span class="hljs-built_in">this</span>.dirtyPerspective = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-19">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -866,11 +1004,11 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-20">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p><code>updateArtefacts</code> - internal function. Iterate through all Element and Canvas wrappers associated with the Stack wrapper’s Group object and set a range of dirty flags on them, for future processing by each as appropriate.</p>
 
@@ -878,7 +1016,7 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
             
             <div class="content"><div class='highlight'><pre>P.updateArtefacts = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.groupBuckets.forEach(<span class="hljs-function"><span class="hljs-params">grp</span> =&gt;</span> {
+    <span class="hljs-built_in">this</span>.groupBuckets.forEach(<span class="hljs-function"><span class="hljs-params">grp</span> =&gt;</span> {
 
         grp.artefactBuckets.forEach(<span class="hljs-function"><span class="hljs-params">art</span> =&gt;</span> {
 
@@ -897,11 +1035,11 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-21">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p><code>cleanDimensionsAdditionalActions</code> - overwrites mixin/position function. Promulgates Stack dimension changes through to all Element and Canvas wrappers associated with the Stack wrapper’s Group object.</p>
 
@@ -909,9 +1047,9 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
             
             <div class="content"><div class='highlight'><pre>P.cleanDimensionsAdditionalActions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.groupBuckets) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.groupBuckets) {
 
-        <span class="hljs-keyword">this</span>.updateArtefacts({
+        <span class="hljs-built_in">this</span>.updateArtefacts({
             <span class="hljs-attr">dirtyDimensions</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">dirtyPath</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">dirtyStart</span>: <span class="hljs-literal">true</span>,
@@ -919,166 +1057,12 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
         });
     }
 
-    <span class="hljs-keyword">this</span>.dirtyDomDimensions = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPath = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyDisplayShape = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyDisplayArea = <span class="hljs-literal">true</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
-              </div>
-              <p><code>cleanPerspective</code> - internal function</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.cleanPerspective = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">this</span>.dirtyPerspective = <span class="hljs-literal">false</span>;
-
-    <span class="hljs-keyword">let</span> p = <span class="hljs-keyword">this</span>.perspective;
-
-    <span class="hljs-keyword">this</span>.domPerspectiveString = <span class="hljs-string">`perspective-origin: <span class="hljs-subst">${p.x}</span> <span class="hljs-subst">${p.y}</span>; perspective: <span class="hljs-subst">${p.z}</span>px;`</span>;
-    <span class="hljs-keyword">this</span>.domShowRequired = <span class="hljs-literal">true</span>;
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.groupBuckets) {
-
-        <span class="hljs-keyword">this</span>.updateArtefacts({
-            <span class="hljs-attr">dirtyHandle</span>: <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">dirtyPathObject</span>: <span class="hljs-literal">true</span>,
-        });
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
-              </div>
-              <p>TODO - experimental! <code>checkResponsive</code></p>
-<p>Scrawl-canvas Stack artefacts - at the <strong>root</strong> level - cannot have ‘String%’ dimensions, which means they have absolute dimensions - because everything that relies on ‘String%’ dimensions needs an absolute (number) value for their calculations at the root, which is the stack. </p>
-<p>But we still need to make Stacks responsive. We do this by checking if the viewport dimensions have changed (a resize action has taken place) and - if yes - update the stack’s absolute dimensions accordingly … if the <strong>isResponsive</strong> flag has been set to true for the Stack (default is ‘false’ - may change this in due course).</p>
-<p>We call this check in the <strong>clear</strong> function below, because it’s doing nothing else useful at the moment and it makes sense to get updates in place here before everything launches into the compile part of the display cycle</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.checkResponsive = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.isResponsive &amp;&amp; <span class="hljs-keyword">this</span>.trackHere) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
-              </div>
-              <p>Start keeping track of the viewport dimensions</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.currentVportWidth) <span class="hljs-keyword">this</span>.currentVportWidth = currentCorePosition.w;
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.currentVportHeight) <span class="hljs-keyword">this</span>.currentVportHeight = currentCorePosition.h;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-25">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
-              </div>
-              <p>If last display cycle responded to dimension changes, need to finalise height now</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyHeight &amp;&amp; <span class="hljs-keyword">this</span>.containElementsInHeight) {
-
-            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'stack height final fixes need to be done'</span>);
-            <span class="hljs-keyword">this</span>.dirtyHeight = <span class="hljs-literal">false</span>;
-        }
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.currentVportWidth !== currentCorePosition.w) {
-
-            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'need to update for resized viewport width'</span>);
-            <span class="hljs-keyword">this</span>.currentVportWidth = currentCorePosition.w;
-
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.containElementsInHeight) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-26">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
-              </div>
-              <p>Won’t be updated until the next display cycle, but flag it now for action</p>
-<ul>
-<li>needed because text in elements flow as part of normal DOM operations</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">this</span>.dirtyHeight = <span class="hljs-literal">true</span>;
-            }
-        }
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.currentVportHeight !== currentCorePosition.h) {
-
-            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'need to update for resized viewport height'</span>);
-            <span class="hljs-keyword">this</span>.currentVportHeight = currentCorePosition.h;
-        }
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-27">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
-              </div>
-              <h5 id="display-cycle-functions">Display cycle functions</h5>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-28">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
-              </div>
-              <p><code>clear</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.clear = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">this</span>.checkResponsive();
-
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.resolve(<span class="hljs-literal">true</span>);
+    <span class="hljs-built_in">this</span>.dirtyDomDimensions = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPath = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyDisplayShape = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyDisplayArea = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1090,32 +1074,26 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              <p><code>compile</code></p>
+              <p><code>cleanPerspective</code> - internal function</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.compile = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.cleanPerspective = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">let</span> self = <span class="hljs-keyword">this</span>;
+    <span class="hljs-built_in">this</span>.dirtyPerspective = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {
+    <span class="hljs-keyword">let</span> p = <span class="hljs-built_in">this</span>.perspective;
 
-        self.sortGroups();
+    <span class="hljs-built_in">this</span>.domPerspectiveString = <span class="hljs-string">`perspective-origin: <span class="hljs-subst">${p.x}</span> <span class="hljs-subst">${p.y}</span>; perspective: <span class="hljs-subst">${p.z}</span>px;`</span>;
+    <span class="hljs-built_in">this</span>.domShowRequired = <span class="hljs-literal">true</span>;
 
-        self.prepareStamp()
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.groupBuckets) {
 
-        self.stamp()
-        .then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
-
-            <span class="hljs-keyword">let</span> promises = [];
-
-            self.groupBuckets.forEach(<span class="hljs-function"><span class="hljs-params">mygroup</span> =&gt;</span> promises.push(mygroup.stamp()));
-
-            <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.all(promises);
-        })
-        .then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> resolve(<span class="hljs-literal">true</span>))
-        .catch(<span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> reject(<span class="hljs-literal">false</span>));
-    })
+        <span class="hljs-built_in">this</span>.updateArtefacts({
+            <span class="hljs-attr">dirtyHandle</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">dirtyPathObject</span>: <span class="hljs-literal">true</span>,
+        });
+    }
 };</pre></div></div>
             
         </li>
@@ -1126,6 +1104,166 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>TODO - experimental! <code>checkResponsive</code></p>
+<p>Scrawl-canvas Stack artefacts - at the <strong>root</strong> level - cannot have ‘String%’ dimensions, which means they have absolute dimensions - because everything that relies on ‘String%’ dimensions needs an absolute (number) value for their calculations at the root, which is the stack. </p>
+<p>But we still need to make Stacks responsive. We do this by checking if the viewport dimensions have changed (a resize action has taken place) and - if yes - update the stack’s absolute dimensions accordingly … if the <strong>isResponsive</strong> flag has been set to true for the Stack (default is ‘false’ - may change this in due course).</p>
+<p>We call this check in the <strong>clear</strong> function below, because it’s doing nothing else useful at the moment and it makes sense to get updates in place here before everything launches into the compile part of the display cycle</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.checkResponsive = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.isResponsive &amp;&amp; <span class="hljs-built_in">this</span>.trackHere) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>Start keeping track of the viewport dimensions</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.currentVportWidth) <span class="hljs-built_in">this</span>.currentVportWidth = currentCorePosition.w;
+        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.currentVportHeight) <span class="hljs-built_in">this</span>.currentVportHeight = currentCorePosition.h;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p>If last display cycle responded to dimension changes, need to finalise height now</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyHeight &amp;&amp; <span class="hljs-built_in">this</span>.containElementsInHeight) {
+
+            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;stack height final fixes need to be done&#x27;</span>);
+            <span class="hljs-built_in">this</span>.dirtyHeight = <span class="hljs-literal">false</span>;
+        }
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.currentVportWidth !== currentCorePosition.w) {
+
+            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;need to update for resized viewport width&#x27;</span>);
+            <span class="hljs-built_in">this</span>.currentVportWidth = currentCorePosition.w;
+
+            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.containElementsInHeight) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>Won’t be updated until the next display cycle, but flag it now for action</p>
+<ul>
+<li>needed because text in elements flow as part of normal DOM operations</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-built_in">this</span>.dirtyHeight = <span class="hljs-literal">true</span>;
+            }
+        }
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.currentVportHeight !== currentCorePosition.h) {
+
+            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;need to update for resized viewport height&#x27;</span>);
+            <span class="hljs-built_in">this</span>.currentVportHeight = currentCorePosition.h;
+        }
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <h5 id="display-cycle-functions">Display cycle functions</h5>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p><code>clear</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.clear = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-built_in">this</span>.checkResponsive();
+
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.resolve(<span class="hljs-literal">true</span>);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p><code>compile</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.compile = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">let</span> self = <span class="hljs-built_in">this</span>;
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {
+
+        self.sortGroups();
+
+        self.prepareStamp()
+
+        self.stamp()
+        .then(<span class="hljs-function">() =&gt;</span> {
+
+            <span class="hljs-keyword">let</span> promises = [];
+
+            self.groupBuckets.forEach(<span class="hljs-function"><span class="hljs-params">mygroup</span> =&gt;</span> promises.push(mygroup.stamp()));
+
+            <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.all(promises);
+        })
+        .then(<span class="hljs-function">() =&gt;</span> resolve(<span class="hljs-literal">true</span>))
+        .catch(<span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> reject(<span class="hljs-literal">false</span>));
+    })
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p><code>show</code></p>
 
@@ -1143,11 +1281,11 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-31">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p><code>render</code></p>
 
@@ -1155,13 +1293,13 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
             
             <div class="content"><div class='highlight'><pre>P.render = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">let</span> self = <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">let</span> self = <span class="hljs-built_in">this</span>;
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {
 
         self.compile()
-        .then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> self.show())
-        .then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> resolve(<span class="hljs-literal">true</span>))
+        .then(<span class="hljs-function">() =&gt;</span> self.show())
+        .then(<span class="hljs-function">() =&gt;</span> resolve(<span class="hljs-literal">true</span>))
         .catch(<span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> reject(<span class="hljs-literal">false</span>));
     });
 };</pre></div></div>
@@ -1169,11 +1307,11 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-32">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p><code>addExistingDomElements</code> - argument is a CSS query search String. All elements in the DOM matching the search will be <strong>moved</strong> into the Stack wrapper’s DOM element and given Scrawl-canvas Element wrappers. While Scrawl-canvas will try its best to respect the elements’ CSS attributes, they will be <strong>positioned absolutely</strong> within the Stack and given start, handle and offset values of <code>[0, 0]</code>. </p>
 
@@ -1196,27 +1334,27 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
                 captured = makeElement({
                     <span class="hljs-attr">name</span>: el.id || el.name,
                     <span class="hljs-attr">domElement</span>: el,
-                    <span class="hljs-attr">group</span>: <span class="hljs-keyword">this</span>.name,
-                    <span class="hljs-attr">host</span>: <span class="hljs-keyword">this</span>.name,
-                    <span class="hljs-attr">position</span>: <span class="hljs-string">'absolute'</span>,
+                    <span class="hljs-attr">group</span>: <span class="hljs-built_in">this</span>.name,
+                    <span class="hljs-attr">host</span>: <span class="hljs-built_in">this</span>.name,
+                    <span class="hljs-attr">position</span>: <span class="hljs-string">&#x27;absolute&#x27;</span>,
                     <span class="hljs-attr">setInitialDimensions</span>: <span class="hljs-literal">true</span>,
                 });
 
-                <span class="hljs-keyword">if</span> (captured &amp;&amp; captured.domElement) <span class="hljs-keyword">this</span>.domElement.appendChild(captured.domElement);
+                <span class="hljs-keyword">if</span> (captured &amp;&amp; captured.domElement) <span class="hljs-built_in">this</span>.domElement.appendChild(captured.domElement);
             }
         }
     }
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-33">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <p><code>addNewElement</code> - takes an ‘items’ object as an argument. The only required attribute of the argument is <strong>tag</strong>, which determines the type of element that will be created (for example - setting tag to ‘div’ will create a new &lt;div&gt; element)</p>
 <ul>
@@ -1232,11 +1370,11 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
     <span class="hljs-keyword">if</span> (items.tag) {
 
         items.domElement = <span class="hljs-built_in">document</span>.createElement(items.tag);
-        items.domElement.setAttribute(<span class="hljs-string">'data-group'</span>, <span class="hljs-keyword">this</span>.name);
-        <span class="hljs-keyword">if</span> (!xt(items.group)) items.group = <span class="hljs-keyword">this</span>.name;
-        items.host = <span class="hljs-keyword">this</span>.name;
+        items.domElement.setAttribute(<span class="hljs-string">&#x27;data-group&#x27;</span>, <span class="hljs-built_in">this</span>.name);
+        <span class="hljs-keyword">if</span> (!xt(items.group)) items.group = <span class="hljs-built_in">this</span>.name;
+        items.host = <span class="hljs-built_in">this</span>.name;
 
-        <span class="hljs-keyword">if</span> (!items.position) items.position = <span class="hljs-string">'absolute'</span>;
+        <span class="hljs-keyword">if</span> (!items.position) items.position = <span class="hljs-string">&#x27;absolute&#x27;</span>;
         <span class="hljs-keyword">if</span> (!xt(items.width)) items.width = <span class="hljs-number">100</span>;
         <span class="hljs-keyword">if</span> (!xt(items.height)) items.height = <span class="hljs-number">100</span>;
 
@@ -1244,9 +1382,9 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
 
         <span class="hljs-keyword">if</span> (myElement &amp;&amp; myElement.domElement) {
 
-            <span class="hljs-keyword">if</span> (!xt(items.boxSizing)) myElement.domElement.style.boxSizing = <span class="hljs-string">'border-box'</span>;
+            <span class="hljs-keyword">if</span> (!xt(items.boxSizing)) myElement.domElement.style.boxSizing = <span class="hljs-string">&#x27;border-box&#x27;</span>;
 
-            <span class="hljs-keyword">this</span>.domElement.appendChild(myElement.domElement);
+            <span class="hljs-built_in">this</span>.domElement.appendChild(myElement.domElement);
         }
 
         <span class="hljs-keyword">return</span> myElement;
@@ -1257,11 +1395,11 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
         </li>
         
         
-        <li id="section-34">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
@@ -1272,16 +1410,16 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Stack(items);
 };
 
-constructors.Stack = Stack;</pre></div></div>
+<span class="hljs-title">constructors</span>.<span class="hljs-title">Stack</span> = <span class="hljs-title">Stack</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-35">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

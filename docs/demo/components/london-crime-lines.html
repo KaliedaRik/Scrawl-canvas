@@ -4,7 +4,7 @@
 <head>
   <title>london-crime-lines.js</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -92,11 +92,11 @@
 Data fetched from server as JSON String with structure:
 
 {
-    "area": "area-label",
-    "years": ["year-1-label", "year-2-label", ...],
-    "crimesByCategory": {
-        "category-1-label": [year-1-data, year-2-data, ...],
-        "category-2-label": [year-1-data, year-2-data, ...],
+    &quot;area&quot;: &quot;area-label&quot;,
+    &quot;years&quot;: [&quot;year-1-label&quot;, &quot;year-2-label&quot;, ...],
+    &quot;crimesByCategory&quot;: {
+        &quot;category-1-label&quot;: [year-1-data, year-2-data, ...],
+        &quot;category-2-label&quot;: [year-1-data, year-2-data, ...],
         ...
     }
 }
@@ -104,7 +104,7 @@ Data fetched from server as JSON String with structure:
 Data supplied to graph module as Javascript object with structure:
 
 {
-    yearLabels: ['year-1-label', 'year-2-label', ...],
+    yearLabels: [&#x27;year-1-label&#x27;, &#x27;year-2-label&#x27;, ...],
     data:       [year-1-data, year-2-data, ...],
 }
 */</span></pre></div></div>
@@ -122,7 +122,7 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">'../../source/scrawl.js'</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../../source/scrawl.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -137,7 +137,7 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> frame <span class="hljs-keyword">from</span> <span class="hljs-string">'./simple-chart-frame.js'</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> frame <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./simple-chart-frame.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -152,7 +152,7 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> graph <span class="hljs-keyword">from</span> <span class="hljs-string">'./simple-graph-lines.js'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> graph <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./simple-graph-lines.js&#x27;</span></pre></div></div>
             
         </li>
         
@@ -307,7 +307,7 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> kill = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> kill = <span class="hljs-function">() =&gt;</span> {
 
     graph.kill();
     currentData = <span class="hljs-literal">false</span>;

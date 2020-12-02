@@ -19,111 +19,52 @@ canvas.setBase({
 // + Set various `noXYZ` flags to false in the hope that this will speed up stamp computation times
 // + Set `visibility` to false to prevent the entity appearing in the scene outside of the emitter's control
 // + No need to set `fillStyle` and `strokeStyle` colors - we'll do that via the particle emitter and the world object
-let wheel = scrawl.makeWheel({ 
+let commonValues = {
+    handle: ['center', 'center'],
+    lineWidth: 2,
+    method: 'fillThenDraw',
+    visibility: false, 
+    noUserInteraction: true,
+    noPositionDependencies: true,
+    noFilters: true,
+    noDeltaUpdates: true,
+};
 
+let wheel = scrawl.makeWheel({ 
     name: 'particle-wheel-entity',
     radius: 16, 
-    handle: ['center', 'center'],
-
     startAngle: 20,
     endAngle: -20,
     includeCenter: true,
-
-    lineWidth: 2,
-    method: 'fillThenDraw',
-    visibility: false, 
-
-    noUserInteraction: true,
-    noPositionDependencies: true,
-    noFilters: true,
-    noDeltaUpdates: true,
-});
+}).set(commonValues);
 
 let block = scrawl.makeBlock({ 
-
     name: 'particle-block-entity',
     dimensions: [30, 20],
-    handle: ['center', 'center'],
-    fillStyle: 'yellow',
-
-    lineWidth: 2,
-    method: 'fillThenDraw',
-    visibility: false, 
-
-    noUserInteraction: true,
-    noPositionDependencies: true,
-    noFilters: true,
-    noDeltaUpdates: true,
-});
+}).set(commonValues);
 
 let star = scrawl.makeStar({
-
     name: 'particle-star-entity',
-
     radius1: 18,
     radius2: 12,
-
     points: 5,
-
-    handle: ['center', 'center'],
-
-    fillStyle: 'papayawhip',
-    lineWidth: 2,
-
-    method: 'fillThenDraw',
-    visibility: false, 
-
-    noUserInteraction: true,
-    noPositionDependencies: true,
-    noFilters: true,
-    noDeltaUpdates: true,
-});
+}).set(commonValues);
 
 let picture = scrawl.makePicture({
-
     name: 'particle-image-entity',
     asset: 'bunny',
-
     width: 26,
     height: 37,
-
-    handle: ['center', 'center'],
-
     copyWidth: '100%',
     copyHeight: '100%',
-
-    lineWidth: 2,
-
-    method: 'fillThenDraw',
-    visibility: false, 
-
-    noUserInteraction: true,
-    noPositionDependencies: true,
-    noFilters: true,
-    noDeltaUpdates: true,
-});
+}).set(commonValues);
 
 let phrase = scrawl.makePhrase({
-
     name: 'particle-phrase-entity',
-
     text: 'Hello',
     font: 'bold 40px Garamond, serif',
-
-    handle: ['center', 'center'],
-
-    fillStyle: 'green',
-
-    lineWidth: 2,
-
-    method: 'fillThenDraw',
-    visibility: false, 
-
-    noUserInteraction: true,
-    noPositionDependencies: true,
-    noFilters: true,
-    noDeltaUpdates: true,
-});
+    exposeText: false,
+}).set(commonValues);
 
 
 // #### Particle physics animation scene
@@ -218,6 +159,7 @@ const myemitter = scrawl.makeEmitter({
         });
     },
 });
+
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
@@ -421,7 +363,6 @@ scrawl.observeAndUpdate({
     },
 });
 
-
 document.querySelector('#min-fill').value = '#000000';
 document.querySelector('#max-fill').value = '#ffffff';
 document.querySelector('#outline-color').value = '#F0F8FF';
@@ -433,6 +374,7 @@ document.querySelector('#historyLength').value = 20;
 document.querySelector('#kill-radius').value = 50;
 document.querySelector('#kill-radius-variation').value = 0;
 document.querySelector('#artefact').value = 'star';
+
 
 // #### Development and testing
 console.log(scrawl.library);

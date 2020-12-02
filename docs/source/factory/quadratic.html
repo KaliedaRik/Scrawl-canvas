@@ -4,7 +4,7 @@
 <head>
   <title>Quadratic factory</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -110,6 +110,11 @@
                 </a>
               
                 
+                <a class="source" href="emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
                 <a class="source" href="filter.html">
                   ./source/factory/filter.js
                 </a>
@@ -150,6 +155,11 @@
                 </a>
               
                 
+                <a class="source" href="net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
                 <a class="source" href="oval.html">
                   ./source/factory/oval.js
                 </a>
@@ -157,6 +167,31 @@
                 
                 <a class="source" href="palette.html">
                   ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="particleForce.html">
+                  ./source/factory/particleForce.js
+                </a>
+              
+                
+                <a class="source" href="particleHistory.html">
+                  ./source/factory/particleHistory.js
+                </a>
+              
+                
+                <a class="source" href="particleSpring.html">
+                  ./source/factory/particleSpring.js
+                </a>
+              
+                
+                <a class="source" href="particleWorld.html">
+                  ./source/factory/particleWorld.js
                 </a>
               
                 
@@ -247,6 +282,11 @@
                 
                 <a class="source" href="ticker.html">
                   ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="tracer.html">
+                  ./source/factory/tracer.js
                 </a>
               
                 
@@ -482,14 +522,14 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, artefact } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { mergeOver, addStrings, pushUnique } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">artefact</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+<span class="hljs-keyword">import</span> { mergeOver, addStrings, pushUnique } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { makeCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">'./coordinate.js'</span>;
+<span class="hljs-keyword">import</span> { makeCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./coordinate.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/base.js'</span>;
-<span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/shapeBasic.js'</span>;
-<span class="hljs-keyword">import</span> curveMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/shapeCurve.js'</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
+<span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shapeBasic.js&#x27;</span>;
+<span class="hljs-keyword">import</span> curveMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shapeCurve.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -506,16 +546,16 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Quadratic = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.control = makeCoordinate();
-    <span class="hljs-keyword">this</span>.currentControl = makeCoordinate();
-    <span class="hljs-keyword">this</span>.controlLockTo = <span class="hljs-string">'coord'</span>;
+    <span class="hljs-built_in">this</span>.control = makeCoordinate();
+    <span class="hljs-built_in">this</span>.currentControl = makeCoordinate();
+    <span class="hljs-built_in">this</span>.controlLockTo = <span class="hljs-string">&#x27;coord&#x27;</span>;
 
-    <span class="hljs-keyword">this</span>.curveInit(items);
-    <span class="hljs-keyword">this</span>.shapeInit(items);
+    <span class="hljs-built_in">this</span>.curveInit(items);
+    <span class="hljs-built_in">this</span>.shapeInit(items);
 
-    <span class="hljs-keyword">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -532,8 +572,8 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Quadratic.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">'Quadratic'</span>;
-P.lib = <span class="hljs-string">'entity'</span>;
+P.type = <span class="hljs-string">&#x27;Quadratic&#x27;</span>;
+P.lib = <span class="hljs-string">&#x27;entity&#x27;</span>;
 P.isArtefact = <span class="hljs-literal">true</span>;
 P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
             
@@ -571,12 +611,12 @@ P = curveMix(P);</pre></div></div>
               <h4 id="quadratic-attributes">Quadratic attributes</h4>
 <ul>
 <li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/position.html">position mixin</a>: <strong>group, visibility, order, start, <em>startX</em>, <em>startY</em>, handle, <em>handleX</em>, <em>handleY</em>, offset, <em>offsetX</em>, <em>offsetY</em>, dimensions, <em>width</em>, <em>height</em>, pivoted, mimicked, lockTo, <em>lockXTo</em>, <em>lockYTo</em>, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/position.html">position mixin</a>: <strong>group, visibility, order, start, <em>startX</em>, <em>startY</em>, handle, <em>handleX</em>, <em>handleY</em>, offset, <em>offsetX</em>, <em>offsetY</em>, dimensions, <em>width</em>, <em>height</em>, pivoted, mimicked, lockTo, <em>lockXTo</em>, <em>lockYTo</em>, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge, bringToFrontOnDrag</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/delta.html">delta mixin</a>: <strong>delta, noDeltaUpdates</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/pivot.html">pivot mixin</a>: <strong>pivot, pivotCorner, addPivotHandle, addPivotOffset, addPivotRotation</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/mimic.html">mimic mixin</a>: <strong>mimic, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/path.html">path mixin</a>: <strong>path, pathPosition, addPathHandle, addPathOffset, addPathRotation, constantPathSpeed</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/entity.html">entity mixin</a>: <strong>method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, <em>fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor</em></strong>.</li>
+<li>Attributes defined in the <a href="../mixin/entity.html">entity mixin</a>: <strong>method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, <em>fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor, filter</em></strong>.</li>
 <li>Attributes defined in the <a href="../mixin/anchor.html">anchor mixin</a>: <strong>anchor</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/filter.html">filter mixin</a>: <strong>filters, isStencil</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/shapeBasic.html">shapeBasic mixin</a>: <strong>species, useAsPath, precision, pathDefinition, showBoundingBox, boundingBoxColor, minimumBoundingBoxDimensions, constantPathSpeed</strong>.</li>
@@ -621,8 +661,8 @@ P = curveMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    controlPivot: <span class="hljs-string">''</span>,
-    <span class="hljs-attr">controlPivotCorner</span>: <span class="hljs-string">''</span>,
+            <div class="content"><div class='highlight'><pre>    controlPivot: <span class="hljs-string">&#x27;&#x27;</span>,
+    <span class="hljs-attr">controlPivotCorner</span>: <span class="hljs-string">&#x27;&#x27;</span>,
     <span class="hljs-attr">addControlPivotHandle</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">addControlPivotOffset</span>: <span class="hljs-literal">false</span>,</pre></div></div>
             
@@ -642,7 +682,7 @@ P = curveMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    controlPath: <span class="hljs-string">''</span>,
+            <div class="content"><div class='highlight'><pre>    controlPath: <span class="hljs-string">&#x27;&#x27;</span>,
     <span class="hljs-attr">controlPathPosition</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">addControlPathHandle</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">addControlPathOffset</span>: <span class="hljs-literal">true</span>,</pre></div></div>
@@ -656,18 +696,11 @@ P = curveMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p><strong>controlLockTo</strong></p>
-<ul>
-<li>Like the <code>start</code> coordinate, the <code>control</code> coordinate can swap between using absolute and relative positioning by setting this attribute. Accepted values are: <code>coord</code> (default, for absolute positioning), <code>pivot</code>, <code>path</code>, <code>mouse</code>.</li>
-<li>The control coordinate does not support ‘mimic’ relative positioning.</li>
-<li>The control lock does not support setting the <code>x</code> and <code>y</code> coordinates separately - its value is a string argument, not an <code>[x, y]</code> array!</li>
-</ul>
+              <p><strong>controlParticle</strong> - attribute to store any particle the artefact mey be using for its position reference</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    controlLockTo: <span class="hljs-string">''</span>,
-};
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    controlParticle: <span class="hljs-string">&#x27;&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -678,15 +711,18 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <h4 id="packet-management">Packet management</h4>
+              <p><strong>controlLockTo</strong></p>
+<ul>
+<li>Like the <code>start</code> coordinate, the <code>control</code> coordinate can swap between using absolute and relative positioning by setting this attribute. Accepted values are: <code>coord</code> (default, for absolute positioning), <code>pivot</code>, <code>path</code>, <code>mouse</code>.</li>
+<li>The control coordinate does not support ‘mimic’ relative positioning.</li>
+<li>The control lock does not support setting the <code>x</code> and <code>y</code> coordinates separately - its value is a string argument, not an <code>[x, y]</code> array!</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.packetExclusions = pushUnique(P.packetExclusions, []);
-P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-P.packetCoordinates = pushUnique(P.packetCoordinates, [<span class="hljs-string">'control'</span>]);
-P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">'controlPivot'</span>, <span class="hljs-string">'controlPath'</span>]);
-P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    controlLockTo: <span class="hljs-string">&#x27;&#x27;</span>,
+};
+P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -697,10 +733,15 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <h4 id="clone-management">Clone management</h4>
-<p>No additional clone functionality required</p>
+              <h4 id="packet-management">Packet management</h4>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>P.packetExclusions = pushUnique(P.packetExclusions, []);
+P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
+P.packetCoordinates = pushUnique(P.packetCoordinates, [<span class="hljs-string">&#x27;control&#x27;</span>]);
+P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">&#x27;controlPivot&#x27;</span>, <span class="hljs-string">&#x27;controlPath&#x27;</span>]);
+P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
             
         </li>
         
@@ -711,8 +752,8 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <h4 id="kill-management">Kill management</h4>
-<p>No additional kill functionality required</p>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality required</p>
 
             </div>
             
@@ -725,6 +766,20 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
+              <h4 id="kill-management">Kill management</h4>
+<p>No additional kill functionality required</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
             </div>
@@ -736,11 +791,11 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p><strong>controlPivot</strong></p>
 
@@ -748,30 +803,9 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>S.controlPivot = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.setControlHelper(item, <span class="hljs-string">'controlPivot'</span>, <span class="hljs-string">'control'</span>);
-    <span class="hljs-keyword">this</span>.updateDirty();
-    <span class="hljs-keyword">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
-              </div>
-              <p><strong>controlPath</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>S.controlPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.setControlHelper(item, <span class="hljs-string">'controlPath'</span>, <span class="hljs-string">'control'</span>);
-    <span class="hljs-keyword">this</span>.updateDirty();
-    <span class="hljs-keyword">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
+    <span class="hljs-built_in">this</span>.setControlHelper(item, <span class="hljs-string">&#x27;controlPivot&#x27;</span>, <span class="hljs-string">&#x27;control&#x27;</span>);
+    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-built_in">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -783,21 +817,15 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <p><strong>controlPathPosition</strong></p>
+              <p><strong>controlParticle</strong></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.controlPathPosition = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.controlParticle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.controlPathPosition = item;
-    <span class="hljs-keyword">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
-};
-D.controlPathPosition = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.controlPathPosition += item;
-    <span class="hljs-keyword">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
+    <span class="hljs-built_in">this</span>.setControlHelper(item, <span class="hljs-string">&#x27;controlParticle&#x27;</span>, <span class="hljs-string">&#x27;control&#x27;</span>);
+    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-built_in">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -808,6 +836,53 @@ D.controlPathPosition = <span class="hljs-function"><span class="hljs-keyword">f
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p><strong>controlPath</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.controlPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.setControlHelper(item, <span class="hljs-string">&#x27;controlPath&#x27;</span>, <span class="hljs-string">&#x27;control&#x27;</span>);
+    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-built_in">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p><strong>controlPathPosition</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.controlPathPosition = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.controlPathPosition = item;
+    <span class="hljs-built_in">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
+};
+D.controlPathPosition = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.controlPathPosition += item;
+    <span class="hljs-built_in">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p><strong>control</strong></p>
 <ul>
@@ -820,86 +895,52 @@ D.controlPathPosition = <span class="hljs-function"><span class="hljs-keyword">f
 
     <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
 
-        <span class="hljs-keyword">this</span>.control[<span class="hljs-number">0</span>] = coord;
-        <span class="hljs-keyword">this</span>.updateDirty();
-        <span class="hljs-keyword">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
+        <span class="hljs-built_in">this</span>.control[<span class="hljs-number">0</span>] = coord;
+        <span class="hljs-built_in">this</span>.updateDirty();
+        <span class="hljs-built_in">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
     }
 };
 S.controlY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
     <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
 
-        <span class="hljs-keyword">this</span>.control[<span class="hljs-number">1</span>] = coord;
-        <span class="hljs-keyword">this</span>.updateDirty();
-        <span class="hljs-keyword">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
+        <span class="hljs-built_in">this</span>.control[<span class="hljs-number">1</span>] = coord;
+        <span class="hljs-built_in">this</span>.updateDirty();
+        <span class="hljs-built_in">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
     }
 };
 S.control = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.setCoordinateHelper(<span class="hljs-string">'control'</span>, x, y);
-    <span class="hljs-keyword">this</span>.updateDirty();
-    <span class="hljs-keyword">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
+    <span class="hljs-built_in">this</span>.setCoordinateHelper(<span class="hljs-string">&#x27;control&#x27;</span>, x, y);
+    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-built_in">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
 };
 D.controlX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
-    <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>.control;
+    <span class="hljs-keyword">let</span> c = <span class="hljs-built_in">this</span>.control;
     c[<span class="hljs-number">0</span>] = addStrings(c[<span class="hljs-number">0</span>], coord);
-    <span class="hljs-keyword">this</span>.updateDirty();
-    <span class="hljs-keyword">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
+    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-built_in">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
 };
 D.controlY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
-    <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>.control;
+    <span class="hljs-keyword">let</span> c = <span class="hljs-built_in">this</span>.control;
     c[<span class="hljs-number">1</span>] = addStrings(c[<span class="hljs-number">1</span>], coord);
-    <span class="hljs-keyword">this</span>.updateDirty();
-    <span class="hljs-keyword">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
+    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-built_in">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
 };
 D.control = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.setDeltaCoordinateHelper(<span class="hljs-string">'control'</span>, x, y);
-    <span class="hljs-keyword">this</span>.updateDirty();
-    <span class="hljs-keyword">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
+    <span class="hljs-built_in">this</span>.setDeltaCoordinateHelper(<span class="hljs-string">&#x27;control&#x27;</span>, x, y);
+    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-built_in">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
 };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
-              </div>
-              <p><strong>controlLockTo</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>S.controlLockTo = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.controlLockTo = item;
-    <span class="hljs-keyword">this</span>.updateDirty();
-    <span class="hljs-keyword">this</span>.dirtyControlLock = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
-              </div>
-              <h4 id="prototype-functions">Prototype functions</h4>
-
-            </div>
             
         </li>
         
@@ -910,19 +951,16 @@ D.control = <span class="hljs-function"><span class="hljs-keyword">function</spa
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
-              <p><code>cleanSpecies</code> - internal helper function - called by <code>prepareStamp</code></p>
+              <p><strong>controlLockTo</strong></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.cleanSpecies = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.controlLockTo = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.dirtySpecies = <span class="hljs-literal">false</span>;
-
-    <span class="hljs-keyword">let</span> p = <span class="hljs-string">'M0,0'</span>;
-
-    p = <span class="hljs-keyword">this</span>.makeQuadraticPath();
-    
-    <span class="hljs-keyword">this</span>.pathDefinition = p;
+    <span class="hljs-built_in">this</span>.controlLockTo = item;
+    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-built_in">this</span>.dirtyControlLock = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
 };</pre></div></div>
             
         </li>
@@ -934,15 +972,52 @@ D.control = <span class="hljs-function"><span class="hljs-keyword">function</spa
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
+              <h4 id="prototype-functions">Prototype functions</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p><code>cleanSpecies</code> - internal helper function - called by <code>prepareStamp</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.cleanSpecies = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-built_in">this</span>.dirtySpecies = <span class="hljs-literal">false</span>;
+
+    <span class="hljs-keyword">let</span> p = <span class="hljs-string">&#x27;M0,0&#x27;</span>;
+
+    p = <span class="hljs-built_in">this</span>.makeQuadraticPath();
+    
+    <span class="hljs-built_in">this</span>.pathDefinition = p;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
               <p><code>makeQuadraticPath</code> - internal helper function - called by <code>cleanSpecies</code></p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>P.makeQuadraticPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     
-    <span class="hljs-keyword">let</span> [startX, startY] = <span class="hljs-keyword">this</span>.currentStampPosition;
-    <span class="hljs-keyword">let</span> [controlX, controlY] = <span class="hljs-keyword">this</span>.currentControl;
-    <span class="hljs-keyword">let</span> [endX, endY] = <span class="hljs-keyword">this</span>.currentEnd;
+    <span class="hljs-keyword">let</span> [startX, startY] = <span class="hljs-built_in">this</span>.currentStampPosition;
+    <span class="hljs-keyword">let</span> [controlX, controlY] = <span class="hljs-built_in">this</span>.currentControl;
+    <span class="hljs-keyword">let</span> [endX, endY] = <span class="hljs-built_in">this</span>.currentEnd;
 
     <span class="hljs-keyword">let</span> cx = (controlX - startX).toFixed(<span class="hljs-number">2</span>),
         cy = (controlY - startY).toFixed(<span class="hljs-number">2</span>),
@@ -955,11 +1030,11 @@ D.control = <span class="hljs-function"><span class="hljs-keyword">function</spa
         </li>
         
         
-        <li id="section-25">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p><code>cleanDimensions</code> - internal helper function called by <code>prepareStamp</code> </p>
 <ul>
@@ -970,47 +1045,47 @@ D.control = <span class="hljs-function"><span class="hljs-keyword">function</spa
             
             <div class="content"><div class='highlight'><pre>P.cleanDimensions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">this</span>.dirtyDimensions = <span class="hljs-literal">false</span>;
-    <span class="hljs-keyword">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyOffset = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyDimensions = <span class="hljs-literal">false</span>;
+    <span class="hljs-built_in">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyOffset = <span class="hljs-literal">true</span>;
 
-    <span class="hljs-keyword">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
 };
 
 P.preparePinsForStamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">let</span> ePivot = <span class="hljs-keyword">this</span>.endPivot,
-        ePath = <span class="hljs-keyword">this</span>.endPath,
-        cPivot = <span class="hljs-keyword">this</span>.controlPivot,
-        cPath = <span class="hljs-keyword">this</span>.controlPath;
+    <span class="hljs-keyword">let</span> ePivot = <span class="hljs-built_in">this</span>.endPivot,
+        ePath = <span class="hljs-built_in">this</span>.endPath,
+        cPivot = <span class="hljs-built_in">this</span>.controlPivot,
+        cPath = <span class="hljs-built_in">this</span>.controlPath;
 
-    <span class="hljs-keyword">this</span>.dirtyPins.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
+    <span class="hljs-built_in">this</span>.dirtyPins.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
         <span class="hljs-keyword">if</span> ((cPivot &amp;&amp; cPivot.name === name) || (cPath &amp;&amp; cPath.name === name)) {
 
-            <span class="hljs-keyword">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.controlLockTo.includes(<span class="hljs-string">'path'</span>)) <span class="hljs-keyword">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
+            <span class="hljs-built_in">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.controlLockTo.includes(<span class="hljs-string">&#x27;path&#x27;</span>)) <span class="hljs-built_in">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
         }
 
         <span class="hljs-keyword">if</span> ((ePivot &amp;&amp; ePivot.name === name) || (ePath &amp;&amp; ePath.name === name)) {
 
-            <span class="hljs-keyword">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.endLockTo.includes(<span class="hljs-string">'path'</span>)) <span class="hljs-keyword">this</span>.currentEndPathData = <span class="hljs-literal">false</span>;
+            <span class="hljs-built_in">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.endLockTo.includes(<span class="hljs-string">&#x27;path&#x27;</span>)) <span class="hljs-built_in">this</span>.currentEndPathData = <span class="hljs-literal">false</span>;
         }
     });
-    <span class="hljs-keyword">this</span>.dirtyPins.length = <span class="hljs-number">0</span>;
+    <span class="hljs-built_in">this</span>.dirtyPins.length = <span class="hljs-number">0</span>;
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-26">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <h4 id="factories">Factories</h4>
 
@@ -1019,11 +1094,11 @@ P.preparePinsForStamp = <span class="hljs-function"><span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-27">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <h5 id="makequadratic">makeQuadratic</h5>
 <p>Accepts argument with attributes:</p>
@@ -1037,44 +1112,44 @@ P.preparePinsForStamp = <span class="hljs-function"><span class="hljs-keyword">f
 </ul>
 <pre><code>scrawl.makeQuadratic({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'my-quadratic'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-quadratic&#x27;</span>,
 
-    <span class="hljs-attr">startX</span>: <span class="hljs-string">'5%'</span>,
-    <span class="hljs-attr">startY</span>: <span class="hljs-string">'26.5%'</span>,
+    <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;5%&#x27;</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;26.5%&#x27;</span>,
 
-    <span class="hljs-attr">controlX</span>: <span class="hljs-string">'50%'</span>,
-    <span class="hljs-attr">controlY</span>: <span class="hljs-string">'18%'</span>,
+    <span class="hljs-attr">controlX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+    <span class="hljs-attr">controlY</span>: <span class="hljs-string">&#x27;18%&#x27;</span>,
 
-    <span class="hljs-attr">endX</span>: <span class="hljs-string">'95%'</span>,
-    <span class="hljs-attr">endY</span>: <span class="hljs-string">'26.5%'</span>,
+    <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;95%&#x27;</span>,
+    <span class="hljs-attr">endY</span>: <span class="hljs-string">&#x27;26.5%&#x27;</span>,
 
-    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'center'</span>,
+    <span class="hljs-attr">handleY</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
 
     <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">3</span>,
-    <span class="hljs-attr">lineCap</span>: <span class="hljs-string">'round'</span>,
-    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'darkseagreen'</span>,
+    <span class="hljs-attr">lineCap</span>: <span class="hljs-string">&#x27;round&#x27;</span>,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;darkseagreen&#x27;</span>,
 
-    <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
 });</code></pre>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeQuadratic = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-    items.species = <span class="hljs-string">'quadratic'</span>;
+    items.species = <span class="hljs-string">&#x27;quadratic&#x27;</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Quadratic(items);
 };
 
-constructors.Quadratic = Quadratic;</pre></div></div>
+<span class="hljs-title">constructors</span>.<span class="hljs-title">Quadratic</span> = <span class="hljs-title">Quadratic</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-28">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

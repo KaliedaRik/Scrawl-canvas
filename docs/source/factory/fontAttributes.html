@@ -4,7 +4,7 @@
 <head>
   <title>FontAttributes factory</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -110,6 +110,11 @@
                 </a>
               
                 
+                <a class="source" href="emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
                 <a class="source" href="filter.html">
                   ./source/factory/filter.js
                 </a>
@@ -150,6 +155,11 @@
                 </a>
               
                 
+                <a class="source" href="net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
                 <a class="source" href="oval.html">
                   ./source/factory/oval.js
                 </a>
@@ -157,6 +167,31 @@
                 
                 <a class="source" href="palette.html">
                   ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="particleForce.html">
+                  ./source/factory/particleForce.js
+                </a>
+              
+                
+                <a class="source" href="particleHistory.html">
+                  ./source/factory/particleHistory.js
+                </a>
+              
+                
+                <a class="source" href="particleSpring.html">
+                  ./source/factory/particleSpring.js
+                </a>
+              
+                
+                <a class="source" href="particleWorld.html">
+                  ./source/factory/particleWorld.js
                 </a>
               
                 
@@ -247,6 +282,11 @@
                 
                 <a class="source" href="ticker.html">
                   ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="tracer.html">
+                  ./source/factory/tracer.js
                 </a>
               
                 
@@ -446,12 +486,12 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { mergeOver, xt } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+<span class="hljs-keyword">import</span> { mergeOver, xt } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { requestCell, releaseCell } <span class="hljs-keyword">from</span> <span class="hljs-string">'./cell.js'</span>;
+<span class="hljs-keyword">import</span> { requestCell, releaseCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./cell.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/base.js'</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -468,11 +508,11 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> FontAttributes = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.makeName(items.name);
-    <span class="hljs-keyword">this</span>.set(<span class="hljs-keyword">this</span>.defs);
-    <span class="hljs-keyword">this</span>.set(items);
+    <span class="hljs-built_in">this</span>.makeName(items.name);
+    <span class="hljs-built_in">this</span>.set(<span class="hljs-built_in">this</span>.defs);
+    <span class="hljs-built_in">this</span>.set(items);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -489,8 +529,8 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = FontAttributes.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">'FontAttributes'</span>;
-P.lib = <span class="hljs-string">'fontattribute'</span>;</pre></div></div>
+P.type = <span class="hljs-string">&#x27;FontAttributes&#x27;</span>;
+P.lib = <span class="hljs-string">&#x27;fontattribute&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -543,7 +583,7 @@ P.lib = <span class="hljs-string">'fontattribute'</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    style: <span class="hljs-string">'normal'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    style: <span class="hljs-string">&#x27;normal&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -566,7 +606,7 @@ P.lib = <span class="hljs-string">'fontattribute'</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    variant: <span class="hljs-string">'normal'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    variant: <span class="hljs-string">&#x27;normal&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -588,7 +628,7 @@ P.lib = <span class="hljs-string">'fontattribute'</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    weight: <span class="hljs-string">'normal'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    weight: <span class="hljs-string">&#x27;normal&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -611,7 +651,7 @@ P.lib = <span class="hljs-string">'fontattribute'</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    stretch: <span class="hljs-string">'normal'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    stretch: <span class="hljs-string">&#x27;normal&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -654,7 +694,7 @@ P.lib = <span class="hljs-string">'fontattribute'</span>;</pre></div></div>
             </div>
             
             <div class="content"><div class='highlight'><pre>    sizeValue: <span class="hljs-number">12</span>,
-    <span class="hljs-attr">sizeMetric</span>: <span class="hljs-string">'px'</span>,</pre></div></div>
+    <span class="hljs-attr">sizeMetric</span>: <span class="hljs-string">&#x27;px&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -677,12 +717,12 @@ P.lib = <span class="hljs-string">'fontattribute'</span>;</pre></div></div>
 </ul>
 <p>GOTCHA NOTE: current functionality tests the supplied string with the expectation that the font families will be preceded by a font size metric value. To set the fontFamily value direct, put a font size metric at the start of the string - % will do - followed by a space and then the font family string:</p>
 <pre><code>phraseInstance.set({
-    <span class="hljs-attr">font</span>: <span class="hljs-string">'% "Gill Sans", sans-serif'</span>
+    <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;% &quot;Gill Sans&quot;, sans-serif&#x27;</span>
 })</code></pre>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    family: <span class="hljs-string">'sans-serif'</span>,
+            <div class="content"><div class='highlight'><pre>    family: <span class="hljs-string">&#x27;sans-serif&#x27;</span>,
 
 };
 P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
@@ -764,7 +804,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>G.size = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">return</span> (<span class="hljs-keyword">this</span>.sizeValue) ? <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.sizeValue}</span><span class="hljs-subst">${<span class="hljs-keyword">this</span>.sizeMetric}</span>`</span> : <span class="hljs-keyword">this</span>.sizeMetric;
+    <span class="hljs-keyword">return</span> (<span class="hljs-built_in">this</span>.sizeValue) ? <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.sizeValue}</span><span class="hljs-subst">${<span class="hljs-built_in">this</span>.sizeMetric}</span>`</span> : <span class="hljs-built_in">this</span>.sizeMetric;
 };</pre></div></div>
             
         </li>
@@ -788,7 +828,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
         <span class="hljs-keyword">let</span> res, 
             size = <span class="hljs-number">0</span>, 
-            metric = <span class="hljs-string">'medium'</span>;</pre></div></div>
+            metric = <span class="hljs-string">&#x27;medium&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -803,7 +843,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">'xx-small'</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">'xx-small'</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;xx-small&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;xx-small&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -818,7 +858,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">'x-small'</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">'x-small'</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;x-small&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;x-small&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -833,7 +873,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">'smaller'</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">'smaller'</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;smaller&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;smaller&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -848,7 +888,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">'small'</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">'small'</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;small&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;small&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -863,7 +903,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">'xx-large'</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">'xx-large'</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;xx-large&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;xx-large&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -878,7 +918,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">'x-large'</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">'x-large'</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;x-large&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;x-large&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -893,7 +933,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">'larger'</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">'larger'</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;larger&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;larger&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -908,7 +948,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">'large'</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">'large'</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;large&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;large&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -923,10 +963,10 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">'medium'</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">'medium'</span>;
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;medium&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;medium&#x27;</span>;
         <span class="hljs-keyword">else</span> {
             size = <span class="hljs-number">12</span>;
-            metric = <span class="hljs-string">'px'</span>
+            metric = <span class="hljs-string">&#x27;px&#x27;</span>
         }</pre></div></div>
             
         </li>
@@ -945,7 +985,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/.* (\d+\.\d+|\d+|\.\d+)(%|em|ch|ex|rem|vh|vw|vmin|vmax|px|cm|mm|in|pc|pt)?/i</span>.test(item)) {
             
             res = item.match(<span class="hljs-regexp">/.* (\d+\.\d+|\d+|\.\d+)(%|em|ch|ex|rem|vh|vw|vmin|vmax|px|cm|mm|in|pc|pt)?/i</span>);
-            size = (res[<span class="hljs-number">1</span>] !== <span class="hljs-string">'.'</span>) ? <span class="hljs-built_in">parseFloat</span>(res[<span class="hljs-number">1</span>]) : <span class="hljs-number">12</span>;
+            size = (res[<span class="hljs-number">1</span>] !== <span class="hljs-string">&#x27;.&#x27;</span>) ? <span class="hljs-built_in">parseFloat</span>(res[<span class="hljs-number">1</span>]) : <span class="hljs-number">12</span>;
             metric = res[<span class="hljs-number">2</span>];
         }</pre></div></div>
             
@@ -965,12 +1005,12 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/^(\d+\.\d+|\d+|\.\d+)(%|em|ch|ex|rem|vh|vw|vmin|vmax|px|cm|mm|in|pc|pt)?/i</span>.test(item)) {
             
             res = item.match(<span class="hljs-regexp">/^(\d+\.\d+|\d+|\.\d+)(%|em|ch|ex|rem|vh|vw|vmin|vmax|px|cm|mm|in|pc|pt)?/i</span>);
-            size = (res[<span class="hljs-number">1</span>] !== <span class="hljs-string">'.'</span>) ? <span class="hljs-built_in">parseFloat</span>(res[<span class="hljs-number">1</span>]) : <span class="hljs-number">12</span>;
+            size = (res[<span class="hljs-number">1</span>] !== <span class="hljs-string">&#x27;.&#x27;</span>) ? <span class="hljs-built_in">parseFloat</span>(res[<span class="hljs-number">1</span>]) : <span class="hljs-number">12</span>;
             metric = res[<span class="hljs-number">2</span>];
         }
 
-        <span class="hljs-keyword">this</span>.sizeValue = size;
-        <span class="hljs-keyword">this</span>.sizeMetric = metric;
+        <span class="hljs-built_in">this</span>.sizeValue = size;
+        <span class="hljs-built_in">this</span>.sizeMetric = metric;
     }
 };</pre></div></div>
             
@@ -991,12 +1031,12 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
     <span class="hljs-keyword">if</span> (xt(item)) {
 
-        S.style.call(<span class="hljs-keyword">this</span>, item);
-        S.variant.call(<span class="hljs-keyword">this</span>, item);
-        S.weight.call(<span class="hljs-keyword">this</span>, item);
-        S.stretch.call(<span class="hljs-keyword">this</span>, item);
-        S.size.call(<span class="hljs-keyword">this</span>, item);
-        S.family.call(<span class="hljs-keyword">this</span>, item);
+        S.style.call(<span class="hljs-built_in">this</span>, item);
+        S.variant.call(<span class="hljs-built_in">this</span>, item);
+        S.weight.call(<span class="hljs-built_in">this</span>, item);
+        S.stretch.call(<span class="hljs-built_in">this</span>, item);
+        S.size.call(<span class="hljs-built_in">this</span>, item);
+        S.family.call(<span class="hljs-built_in">this</span>, item);
     }
 };</pre></div></div>
             
@@ -1015,15 +1055,15 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>S.style = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">let</span> v = <span class="hljs-string">'normal'</span>;
+    <span class="hljs-keyword">let</span> v = <span class="hljs-string">&#x27;normal&#x27;</span>;
 
     <span class="hljs-keyword">if</span> (xt(item)) {
 
-        v = (item.indexOf(<span class="hljs-string">'italic'</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'italic'</span> : v;
-        v = (item.indexOf(<span class="hljs-string">'oblique'</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'oblique'</span> : v;
+        v = (item.indexOf(<span class="hljs-string">&#x27;italic&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;italic&#x27;</span> : v;
+        v = (item.indexOf(<span class="hljs-string">&#x27;oblique&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;oblique&#x27;</span> : v;
     }
 
-    <span class="hljs-keyword">this</span>.style = v;
+    <span class="hljs-built_in">this</span>.style = v;
 };</pre></div></div>
             
         </li>
@@ -1041,11 +1081,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>S.variant = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">let</span> v = <span class="hljs-string">'normal'</span>;
+    <span class="hljs-keyword">let</span> v = <span class="hljs-string">&#x27;normal&#x27;</span>;
 
-    v = (item.indexOf(<span class="hljs-string">'small-caps'</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'small-caps'</span> : v;
+    v = (item.indexOf(<span class="hljs-string">&#x27;small-caps&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;small-caps&#x27;</span> : v;
 
-    <span class="hljs-keyword">this</span>.variant = v;
+    <span class="hljs-built_in">this</span>.variant = v;
 };</pre></div></div>
             
         </li>
@@ -1063,7 +1103,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>S.weight = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">let</span> v = <span class="hljs-string">'normal'</span>;
+    <span class="hljs-keyword">let</span> v = <span class="hljs-string">&#x27;normal&#x27;</span>;
 
     <span class="hljs-keyword">if</span> (xt(item)) {</pre></div></div>
             
@@ -1083,9 +1123,9 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (item.toFixed) v = item;
         <span class="hljs-keyword">else</span> {
 
-            v = (item.indexOf(<span class="hljs-string">'bold'</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'bold'</span> : v;
-            v = (item.indexOf(<span class="hljs-string">'lighter'</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'lighter'</span> : v;
-            v = (item.indexOf(<span class="hljs-string">'bolder'</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'bolder'</span> : v;</pre></div></div>
+            v = (item.indexOf(<span class="hljs-string">&#x27;bold&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;bold&#x27;</span> : v;
+            v = (item.indexOf(<span class="hljs-string">&#x27;lighter&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;lighter&#x27;</span> : v;
+            v = (item.indexOf(<span class="hljs-string">&#x27;bolder&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;bolder&#x27;</span> : v;</pre></div></div>
             
         </li>
         
@@ -1100,15 +1140,15 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            v = (item.indexOf(<span class="hljs-string">' 100 '</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'100'</span> : v;
-            v = (item.indexOf(<span class="hljs-string">' 200 '</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'200'</span> : v;
-            v = (item.indexOf(<span class="hljs-string">' 300 '</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'300'</span> : v;
-            v = (item.indexOf(<span class="hljs-string">' 400 '</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'400'</span> : v;
-            v = (item.indexOf(<span class="hljs-string">' 500 '</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'500'</span> : v;
-            v = (item.indexOf(<span class="hljs-string">' 600 '</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'600'</span> : v;
-            v = (item.indexOf(<span class="hljs-string">' 700 '</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'700'</span> : v;
-            v = (item.indexOf(<span class="hljs-string">' 800 '</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'800'</span> : v;
-            v = (item.indexOf(<span class="hljs-string">' 900 '</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'900'</span> : v;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            v = (item.indexOf(<span class="hljs-string">&#x27; 100 &#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;100&#x27;</span> : v;
+            v = (item.indexOf(<span class="hljs-string">&#x27; 200 &#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;200&#x27;</span> : v;
+            v = (item.indexOf(<span class="hljs-string">&#x27; 300 &#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;300&#x27;</span> : v;
+            v = (item.indexOf(<span class="hljs-string">&#x27; 400 &#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;400&#x27;</span> : v;
+            v = (item.indexOf(<span class="hljs-string">&#x27; 500 &#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;500&#x27;</span> : v;
+            v = (item.indexOf(<span class="hljs-string">&#x27; 600 &#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;600&#x27;</span> : v;
+            v = (item.indexOf(<span class="hljs-string">&#x27; 700 &#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;700&#x27;</span> : v;
+            v = (item.indexOf(<span class="hljs-string">&#x27; 800 &#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;800&#x27;</span> : v;
+            v = (item.indexOf(<span class="hljs-string">&#x27; 900 &#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;900&#x27;</span> : v;</pre></div></div>
             
         </li>
         
@@ -1127,7 +1167,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         }
     }
 
-    <span class="hljs-keyword">this</span>.weight = v;
+    <span class="hljs-built_in">this</span>.weight = v;
 };</pre></div></div>
             
         </li>
@@ -1145,21 +1185,21 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>S.stretch = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">let</span> v = <span class="hljs-string">'normal'</span>;
+    <span class="hljs-keyword">let</span> v = <span class="hljs-string">&#x27;normal&#x27;</span>;
 
     <span class="hljs-keyword">if</span> (xt(item)) {
 
-        v = (item.indexOf(<span class="hljs-string">'semi-condensed'</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'semi-condensed'</span> : v;
-        v = (item.indexOf(<span class="hljs-string">'condensed'</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'condensed'</span> : v;
-        v = (item.indexOf(<span class="hljs-string">'extra-condensed'</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'extra-condensed'</span> : v;
-        v = (item.indexOf(<span class="hljs-string">'ultra-condensed'</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'ultra-condensed'</span> : v;
-        v = (item.indexOf(<span class="hljs-string">'semi-condensed'</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'semi-condensed'</span> : v;
-        v = (item.indexOf(<span class="hljs-string">'condensed'</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'condensed'</span> : v;
-        v = (item.indexOf(<span class="hljs-string">'extra-condensed'</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'extra-condensed'</span> : v;
-        v = (item.indexOf(<span class="hljs-string">'ultra-condensed'</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">'ultra-condensed'</span> : v;
+        v = (item.indexOf(<span class="hljs-string">&#x27;semi-condensed&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;semi-condensed&#x27;</span> : v;
+        v = (item.indexOf(<span class="hljs-string">&#x27;condensed&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;condensed&#x27;</span> : v;
+        v = (item.indexOf(<span class="hljs-string">&#x27;extra-condensed&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;extra-condensed&#x27;</span> : v;
+        v = (item.indexOf(<span class="hljs-string">&#x27;ultra-condensed&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;ultra-condensed&#x27;</span> : v;
+        v = (item.indexOf(<span class="hljs-string">&#x27;semi-condensed&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;semi-condensed&#x27;</span> : v;
+        v = (item.indexOf(<span class="hljs-string">&#x27;condensed&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;condensed&#x27;</span> : v;
+        v = (item.indexOf(<span class="hljs-string">&#x27;extra-condensed&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;extra-condensed&#x27;</span> : v;
+        v = (item.indexOf(<span class="hljs-string">&#x27;ultra-condensed&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;ultra-condensed&#x27;</span> : v;
     }
 
-    <span class="hljs-keyword">this</span>.stretch = v;
+    <span class="hljs-built_in">this</span>.stretch = v;
 };</pre></div></div>
             
         </li>
@@ -1181,7 +1221,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
         <span class="hljs-keyword">let</span> guess = item.match(<span class="hljs-regexp">/( xx-small| x-small| small| medium| large| x-large| xx-large| smaller| larger|\d%|\dem|\dch|\dex|\drem|\dvh|\dvw|\dvmin|\dvmax|\dpx|\dcm|\dmm|\din|\dpc|\dpt) (.*)$/i</span>);
 
-        <span class="hljs-keyword">this</span>.family = (guess &amp;&amp; guess[<span class="hljs-number">2</span>]) ? guess[<span class="hljs-number">2</span>] : item;
+        <span class="hljs-built_in">this</span>.family = (guess &amp;&amp; guess[<span class="hljs-number">2</span>]) ? guess[<span class="hljs-number">2</span>] : item;
     }
 };</pre></div></div>
             
@@ -1216,16 +1256,16 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>P.buildFont = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">scale = <span class="hljs-number">1</span></span>) </span>{
 
-    <span class="hljs-keyword">let</span> font = <span class="hljs-string">''</span>
+    <span class="hljs-keyword">let</span> font = <span class="hljs-string">&#x27;&#x27;</span>
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.style !== <span class="hljs-string">'normal'</span>) font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.style}</span> `</span>;
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.variant !== <span class="hljs-string">'normal'</span>) font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.variant}</span> `</span>;
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.weight !== <span class="hljs-string">'normal'</span>) font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.weight}</span> `</span>;
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.stretch !== <span class="hljs-string">'normal'</span>) font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.stretch}</span> `</span>;
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.sizeValue) font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.sizeValue * scale}</span><span class="hljs-subst">${<span class="hljs-keyword">this</span>.sizeMetric}</span> `</span>;
-    <span class="hljs-keyword">else</span> font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.sizeMetric}</span> `</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.style !== <span class="hljs-string">&#x27;normal&#x27;</span>) font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.style}</span> `</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.variant !== <span class="hljs-string">&#x27;normal&#x27;</span>) font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.variant}</span> `</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.weight !== <span class="hljs-string">&#x27;normal&#x27;</span>) font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.weight}</span> `</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.stretch !== <span class="hljs-string">&#x27;normal&#x27;</span>) font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.stretch}</span> `</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.sizeValue) font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.sizeValue * scale}</span><span class="hljs-subst">${<span class="hljs-built_in">this</span>.sizeMetric}</span> `</span>;
+    <span class="hljs-keyword">else</span> font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.sizeMetric}</span> `</span>;
 
-    font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.family}</span>`</span>;</pre></div></div>
+    font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.family}</span>`</span>;</pre></div></div>
             
         </li>
         
@@ -1264,9 +1304,9 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>P.update = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">scale = <span class="hljs-number">1</span>, items</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (items) <span class="hljs-keyword">this</span>.set(items);
+    <span class="hljs-keyword">if</span> (items) <span class="hljs-built_in">this</span>.set(items);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.buildFont(scale);
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.buildFont(scale);
 };</pre></div></div>
             
         </li>
@@ -1286,7 +1326,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> FontAttributes(items);
 };
 
-constructors.FontAttributes = FontAttributes;</pre></div></div>
+<span class="hljs-title">constructors</span>.<span class="hljs-title">FontAttributes</span> = <span class="hljs-title">FontAttributes</span>;</pre></div></div>
             
         </li>
         

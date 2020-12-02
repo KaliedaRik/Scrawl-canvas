@@ -4,7 +4,7 @@
 <head>
   <title>Phrase factory</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -110,6 +110,11 @@
                 </a>
               
                 
+                <a class="source" href="emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
                 <a class="source" href="filter.html">
                   ./source/factory/filter.js
                 </a>
@@ -150,6 +155,11 @@
                 </a>
               
                 
+                <a class="source" href="net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
                 <a class="source" href="oval.html">
                   ./source/factory/oval.js
                 </a>
@@ -157,6 +167,31 @@
                 
                 <a class="source" href="palette.html">
                   ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="particleForce.html">
+                  ./source/factory/particleForce.js
+                </a>
+              
+                
+                <a class="source" href="particleHistory.html">
+                  ./source/factory/particleHistory.js
+                </a>
+              
+                
+                <a class="source" href="particleSpring.html">
+                  ./source/factory/particleSpring.js
+                </a>
+              
+                
+                <a class="source" href="particleWorld.html">
+                  ./source/factory/particleWorld.js
                 </a>
               
                 
@@ -247,6 +282,11 @@
                 
                 <a class="source" href="ticker.html">
                   ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="tracer.html">
+                  ./source/factory/tracer.js
                 </a>
               
                 
@@ -474,16 +514,16 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, cell, cellnames, styles, stylesnames, artefact } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { scrawlCanvasHold } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/document.js'</span>;
-<span class="hljs-keyword">import</span> { mergeOver, pushUnique, xt, xta, isa_obj, isa_number } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">cell</span>, <span class="hljs-title">cellnames</span>, <span class="hljs-title">styles</span>, <span class="hljs-title">stylesnames</span>, <span class="hljs-title">artefact</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+<span class="hljs-keyword">import</span> { scrawlCanvasHold } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/document.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { mergeOver, pushUnique, xt, xta, isa_obj, isa_number } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { requestCell, releaseCell } <span class="hljs-keyword">from</span> <span class="hljs-string">'./cell.js'</span>;
+<span class="hljs-keyword">import</span> { requestCell, releaseCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./cell.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { makeFontAttributes } <span class="hljs-keyword">from</span> <span class="hljs-string">'./fontAttributes.js'</span>;
+<span class="hljs-keyword">import</span> { makeFontAttributes } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./fontAttributes.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/base.js'</span>;
-<span class="hljs-keyword">import</span> entityMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/entity.js'</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
+<span class="hljs-keyword">import</span> entityMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/entity.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -498,18 +538,18 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> fontHeightCalculator = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'div'</span>);
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> fontHeightCalculator = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;div&#x27;</span>);
 fontHeightCalculator.style.padding = <span class="hljs-number">0</span>;
 fontHeightCalculator.style.border = <span class="hljs-number">0</span>;
 fontHeightCalculator.style.margin = <span class="hljs-number">0</span>;
-fontHeightCalculator.style.height = <span class="hljs-string">'auto'</span>;
+fontHeightCalculator.style.height = <span class="hljs-string">&#x27;auto&#x27;</span>;
 fontHeightCalculator.style.lineHeight = <span class="hljs-number">1</span>;
-fontHeightCalculator.style.boxSizing = <span class="hljs-string">'border-box'</span>;
-fontHeightCalculator.innerHTML = <span class="hljs-string">'|/}ÁÅþ§¶¿∑ƒ⌈⌊qwertyd0123456789QWERTY'</span>;
-fontHeightCalculator.setAttribute(<span class="hljs-string">'aria-hidden'</span>, <span class="hljs-string">'true'</span>);
+fontHeightCalculator.style.boxSizing = <span class="hljs-string">&#x27;border-box&#x27;</span>;
+fontHeightCalculator.innerHTML = <span class="hljs-string">&#x27;|/}ÁÅþ§¶¿∑ƒ⌈⌊qwertyd0123456789QWERTY&#x27;</span>;
+fontHeightCalculator.setAttribute(<span class="hljs-string">&#x27;aria-hidden&#x27;</span>, <span class="hljs-string">&#x27;true&#x27;</span>);
 scrawlCanvasHold.appendChild(fontHeightCalculator);
 
-<span class="hljs-keyword">const</span> textEntityConverter = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'textarea'</span>);</pre></div></div>
+<span class="hljs-keyword">const</span> textEntityConverter = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;textarea&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -590,7 +630,7 @@ scrawlCanvasHold.appendChild(fontHeightCalculator);
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Phrase = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.fontAttributes = makeFontAttributes(items);
+    <span class="hljs-built_in">this</span>.fontAttributes = makeFontAttributes(items);
 
     <span class="hljs-keyword">delete</span> items.font;
     <span class="hljs-keyword">delete</span> items.style;
@@ -602,31 +642,31 @@ scrawlCanvasHold.appendChild(fontHeightCalculator);
     <span class="hljs-keyword">delete</span> items.sizeMetric;
     <span class="hljs-keyword">delete</span> items.family;
 
-    <span class="hljs-keyword">this</span>.entityInit(items);
+    <span class="hljs-built_in">this</span>.entityInit(items);
 
-    <span class="hljs-keyword">this</span>.sectionStyles = [];
-    <span class="hljs-keyword">this</span>.sectionClasses = {
-        <span class="hljs-string">'DEFAULTS'</span>: { <span class="hljs-attr">defaults</span>: <span class="hljs-literal">true</span> },
-        <span class="hljs-string">'BOLD'</span>: { <span class="hljs-attr">weight</span>: <span class="hljs-string">'bold'</span> },
-        <span class="hljs-string">'ITALIC'</span>: { <span class="hljs-attr">style</span>: <span class="hljs-string">'italic'</span> },
-        <span class="hljs-string">'SMALL-CAPS'</span>: { <span class="hljs-attr">variant</span>: <span class="hljs-string">'small-caps'</span> },
-        <span class="hljs-string">'HIGHLIGHT'</span>: { <span class="hljs-attr">highlight</span>: <span class="hljs-literal">true</span> },
-        <span class="hljs-string">'UNDERLINE'</span>: { <span class="hljs-attr">underline</span>: <span class="hljs-literal">true</span> },
-        <span class="hljs-string">'OVERLINE'</span>: { <span class="hljs-attr">overline</span>: <span class="hljs-literal">true</span> },
-        <span class="hljs-string">'/BOLD'</span>: { <span class="hljs-attr">weight</span>: <span class="hljs-string">'normal'</span> },
-        <span class="hljs-string">'/ITALIC'</span>: { <span class="hljs-attr">style</span>: <span class="hljs-string">'normal'</span> },
-        <span class="hljs-string">'/SMALL-CAPS'</span>: { <span class="hljs-attr">variant</span>: <span class="hljs-string">'normal'</span> },
-        <span class="hljs-string">'/HIGHLIGHT'</span>: { <span class="hljs-attr">highlight</span>: <span class="hljs-literal">false</span> },
-        <span class="hljs-string">'/UNDERLINE'</span>: { <span class="hljs-attr">underline</span>: <span class="hljs-literal">false</span> },
-        <span class="hljs-string">'/OVERLINE'</span>: { <span class="hljs-attr">overline</span>: <span class="hljs-literal">false</span> }
+    <span class="hljs-built_in">this</span>.sectionStyles = [];
+    <span class="hljs-built_in">this</span>.sectionClasses = {
+        <span class="hljs-string">&#x27;DEFAULTS&#x27;</span>: { <span class="hljs-attr">defaults</span>: <span class="hljs-literal">true</span> },
+        <span class="hljs-string">&#x27;BOLD&#x27;</span>: { <span class="hljs-attr">weight</span>: <span class="hljs-string">&#x27;bold&#x27;</span> },
+        <span class="hljs-string">&#x27;ITALIC&#x27;</span>: { <span class="hljs-attr">style</span>: <span class="hljs-string">&#x27;italic&#x27;</span> },
+        <span class="hljs-string">&#x27;SMALL-CAPS&#x27;</span>: { <span class="hljs-attr">variant</span>: <span class="hljs-string">&#x27;small-caps&#x27;</span> },
+        <span class="hljs-string">&#x27;HIGHLIGHT&#x27;</span>: { <span class="hljs-attr">highlight</span>: <span class="hljs-literal">true</span> },
+        <span class="hljs-string">&#x27;UNDERLINE&#x27;</span>: { <span class="hljs-attr">underline</span>: <span class="hljs-literal">true</span> },
+        <span class="hljs-string">&#x27;OVERLINE&#x27;</span>: { <span class="hljs-attr">overline</span>: <span class="hljs-literal">true</span> },
+        <span class="hljs-string">&#x27;/BOLD&#x27;</span>: { <span class="hljs-attr">weight</span>: <span class="hljs-string">&#x27;normal&#x27;</span> },
+        <span class="hljs-string">&#x27;/ITALIC&#x27;</span>: { <span class="hljs-attr">style</span>: <span class="hljs-string">&#x27;normal&#x27;</span> },
+        <span class="hljs-string">&#x27;/SMALL-CAPS&#x27;</span>: { <span class="hljs-attr">variant</span>: <span class="hljs-string">&#x27;normal&#x27;</span> },
+        <span class="hljs-string">&#x27;/HIGHLIGHT&#x27;</span>: { <span class="hljs-attr">highlight</span>: <span class="hljs-literal">false</span> },
+        <span class="hljs-string">&#x27;/UNDERLINE&#x27;</span>: { <span class="hljs-attr">underline</span>: <span class="hljs-literal">false</span> },
+        <span class="hljs-string">&#x27;/OVERLINE&#x27;</span>: { <span class="hljs-attr">overline</span>: <span class="hljs-literal">false</span> }
     };
 
-    <span class="hljs-keyword">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyText = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -643,8 +683,8 @@ scrawlCanvasHold.appendChild(fontHeightCalculator);
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Phrase.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">'Phrase'</span>;
-P.lib = <span class="hljs-string">'entity'</span>;
+P.type = <span class="hljs-string">&#x27;Phrase&#x27;</span>;
+P.lib = <span class="hljs-string">&#x27;entity&#x27;</span>;
 P.isArtefact = <span class="hljs-literal">true</span>;
 P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
             
@@ -680,12 +720,12 @@ P = entityMix(P);</pre></div></div>
               <h4 id="phrase-attributes">Phrase attributes</h4>
 <ul>
 <li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/position.html">position mixin</a>: <strong>group, visibility, order, start, <em>startX</em>, <em>startY</em>, handle, <em>handleX</em>, <em>handleY</em>, offset, <em>offsetX</em>, <em>offsetY</em>, dimensions, <em>width</em>, <em>height</em>, pivoted, mimicked, lockTo, <em>lockXTo</em>, <em>lockYTo</em>, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/position.html">position mixin</a>: <strong>group, visibility, order, start, <em>startX</em>, <em>startY</em>, handle, <em>handleX</em>, <em>handleY</em>, offset, <em>offsetX</em>, <em>offsetY</em>, dimensions, <em>width</em>, <em>height</em>, pivoted, mimicked, lockTo, <em>lockXTo</em>, <em>lockYTo</em>, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge, bringToFrontOnDrag</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/delta.html">delta mixin</a>: <strong>delta, noDeltaUpdates</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/pivot.html">pivot mixin</a>: <strong>pivot, pivotCorner, addPivotHandle, addPivotOffset, addPivotRotation</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/mimic.html">mimic mixin</a>: <strong>mimic, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/path.html">path mixin</a>: <strong>path, pathPosition, addPathHandle, addPathOffset, addPathRotation, constantPathSpeed</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/entity.html">entity mixin</a>: <strong>method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, <em>fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor</em></strong>.</li>
+<li>Attributes defined in the <a href="../mixin/entity.html">entity mixin</a>: <strong>method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, <em>fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor, filter</em></strong>.</li>
 <li>Attributes defined in the <a href="../mixin/anchor.html">anchor mixin</a>: <strong>anchor</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/filter.html">filter mixin</a>: <strong>filters, isStencil</strong>.</li>
 </ul>
@@ -707,7 +747,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    text: <span class="hljs-string">''</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    text: <span class="hljs-string">&#x27;&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -725,7 +765,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    width: <span class="hljs-string">'auto'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    width: <span class="hljs-string">&#x27;auto&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -792,7 +832,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    justify: <span class="hljs-string">'left'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    justify: <span class="hljs-string">&#x27;left&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -841,11 +881,11 @@ P = entityMix(P);</pre></div></div>
 <li>Add section style markup to the Phrase entity’s text attribute value.</li>
 </ol>
 <pre><code><span class="hljs-keyword">let</span> myPhrase = scrawl.makePhrase({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'my-phrase'</span>,
-    <span class="hljs-attr">text</span>: <span class="hljs-string">'This is §RED§some red text§DEFAULTS§ for demonstration.'</span>
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-phrase&#x27;</span>,
+    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;This is §RED§some red text§DEFAULTS§ for demonstration.&#x27;</span>
 });
 
-myPhrase.addSectionClass(<span class="hljs-string">'RED'</span>, { <span class="hljs-attr">fill</span>: <span class="hljs-string">'red'</span> });</code></pre>
+myPhrase.addSectionClass(<span class="hljs-string">&#x27;RED&#x27;</span>, { <span class="hljs-attr">fill</span>: <span class="hljs-string">&#x27;red&#x27;</span> });</code></pre>
 <p>The following classes are pre-defined for every Phrase entity:</p>
 <ul>
 <li><code>DEFAULTS</code> - remove all inline glyph styling from this point on</li>
@@ -859,7 +899,7 @@ myPhrase.addSectionClass(<span class="hljs-string">'RED'</span>, { <span class="
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    sectionClassMarker: <span class="hljs-string">'§'</span>,
+            <div class="content"><div class='highlight'><pre>    sectionClassMarker: <span class="hljs-string">&#x27;§&#x27;</span>,
     <span class="hljs-attr">sectionClasses</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
@@ -894,8 +934,8 @@ myPhrase.addSectionClass(<span class="hljs-string">'RED'</span>, { <span class="
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    overlinePosition: <span class="hljs-number">-0.1</span>,
-    <span class="hljs-attr">overlineStyle</span>: <span class="hljs-string">'rgb(250,0,0)'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    overlinePosition: -<span class="hljs-number">0.1</span>,
+    <span class="hljs-attr">overlineStyle</span>: <span class="hljs-string">&#x27;rgb(250,0,0)&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -911,7 +951,7 @@ myPhrase.addSectionClass(<span class="hljs-string">'RED'</span>, { <span class="
             </div>
             
             <div class="content"><div class='highlight'><pre>    underlinePosition: <span class="hljs-number">0.6</span>,
-    <span class="hljs-attr">underlineStyle</span>: <span class="hljs-string">'rgb(250,0,0)'</span>,</pre></div></div>
+    <span class="hljs-attr">underlineStyle</span>: <span class="hljs-string">&#x27;rgb(250,0,0)&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -926,7 +966,7 @@ myPhrase.addSectionClass(<span class="hljs-string">'RED'</span>, { <span class="
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    highlightStyle: <span class="hljs-string">'rgba(250,218,94,0.4)'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    highlightStyle: <span class="hljs-string">&#x27;rgba(250,218,94,0.4)&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -955,7 +995,7 @@ myPhrase.addSectionClass(<span class="hljs-string">'RED'</span>, { <span class="
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    boundingBoxColor: <span class="hljs-string">'rgba(0,0,0,0.5)'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    boundingBoxColor: <span class="hljs-string">&#x27;rgba(0,0,0,0.5)&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -1003,7 +1043,7 @@ myPhrase.addSectionClass(<span class="hljs-string">'RED'</span>, { <span class="
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    textPath: <span class="hljs-string">''</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    textPath: <span class="hljs-string">&#x27;&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -1063,7 +1103,7 @@ myPhrase.addSectionClass(<span class="hljs-string">'RED'</span>, { <span class="
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    textPathDirection: <span class="hljs-string">'ltr'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    textPathDirection: <span class="hljs-string">&#x27;ltr&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -1095,18 +1135,18 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.packetExclusions = pushUnique(P.packetExclusions, [<span class="hljs-string">'textPositions'</span>, <span class="hljs-string">'textLines'</span>, <span class="hljs-string">'textLineWidths'</span>, <span class="hljs-string">'textLineWords'</span>, <span class="hljs-string">'textGlyphs'</span>, <span class="hljs-string">'textGlyphWidths'</span>, <span class="hljs-string">'fontAttributes'</span>]);
+            <div class="content"><div class='highlight'><pre>P.packetExclusions = pushUnique(P.packetExclusions, [<span class="hljs-string">&#x27;textPositions&#x27;</span>, <span class="hljs-string">&#x27;textLines&#x27;</span>, <span class="hljs-string">&#x27;textLineWidths&#x27;</span>, <span class="hljs-string">&#x27;textLineWords&#x27;</span>, <span class="hljs-string">&#x27;textGlyphs&#x27;</span>, <span class="hljs-string">&#x27;textGlyphWidths&#x27;</span>, <span class="hljs-string">&#x27;fontAttributes&#x27;</span>]);
 
 P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) </span>{
 
-    <span class="hljs-keyword">let</span> stateCopy = <span class="hljs-built_in">JSON</span>.parse(<span class="hljs-keyword">this</span>.state.saveAsPacket(items))[<span class="hljs-number">3</span>];
+    <span class="hljs-keyword">let</span> stateCopy = <span class="hljs-built_in">JSON</span>.parse(<span class="hljs-built_in">this</span>.state.saveAsPacket(items))[<span class="hljs-number">3</span>];
     copy = mergeOver(copy, stateCopy);
 
-    <span class="hljs-keyword">let</span> fontAttributesCopy = <span class="hljs-built_in">JSON</span>.parse(<span class="hljs-keyword">this</span>.fontAttributes.saveAsPacket(items))[<span class="hljs-number">3</span>];
+    <span class="hljs-keyword">let</span> fontAttributesCopy = <span class="hljs-built_in">JSON</span>.parse(<span class="hljs-built_in">this</span>.fontAttributes.saveAsPacket(items))[<span class="hljs-number">3</span>];
     <span class="hljs-keyword">delete</span> fontAttributesCopy.name;
     copy = mergeOver(copy, fontAttributesCopy);
 
-    copy = <span class="hljs-keyword">this</span>.handlePacketAnchor(copy, items);
+    copy = <span class="hljs-built_in">this</span>.handlePacketAnchor(copy, items);
 
     <span class="hljs-keyword">return</span> copy;
 };</pre></div></div>
@@ -1140,7 +1180,7 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
             
             <div class="content"><div class='highlight'><pre>P.factoryKill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.exposedTextHold) <span class="hljs-keyword">this</span>.exposedTextHold.remove();
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.exposedTextHold) <span class="hljs-built_in">this</span>.exposedTextHold.remove();
 };</pre></div></div>
             
         </li>
@@ -1177,51 +1217,51 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
 
     <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
 
-        <span class="hljs-keyword">this</span>.handle[<span class="hljs-number">0</span>] = coord;
-        <span class="hljs-keyword">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.handle[<span class="hljs-number">0</span>] = coord;
+        <span class="hljs-built_in">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.dirtyText = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
     }
 };
 S.handleY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
     <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
 
-        <span class="hljs-keyword">this</span>.handle[<span class="hljs-number">1</span>] = coord;
-        <span class="hljs-keyword">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.handle[<span class="hljs-number">1</span>] = coord;
+        <span class="hljs-built_in">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.dirtyText = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
     }
 };
 S.handle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.setCoordinateHelper(<span class="hljs-string">'handle'</span>, x, y);
-    <span class="hljs-keyword">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.setCoordinateHelper(<span class="hljs-string">&#x27;handle&#x27;</span>, x, y);
+    <span class="hljs-built_in">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyText = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
 };
 D.handleX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
-    <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>.handle;
+    <span class="hljs-keyword">let</span> c = <span class="hljs-built_in">this</span>.handle;
     c[<span class="hljs-number">0</span>] = addStrings(c[<span class="hljs-number">0</span>], coord);
-    <span class="hljs-keyword">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyText = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
 };
 D.handleY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
-    <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>.handle;
+    <span class="hljs-keyword">let</span> c = <span class="hljs-built_in">this</span>.handle;
     c[<span class="hljs-number">1</span>] = addStrings(c[<span class="hljs-number">1</span>], coord);
-    <span class="hljs-keyword">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyText = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
 };
 D.handle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.setDeltaCoordinateHelper(<span class="hljs-string">'handle'</span>, x, y);
-    <span class="hljs-keyword">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.setDeltaCoordinateHelper(<span class="hljs-string">&#x27;handle&#x27;</span>, x, y);
+    <span class="hljs-built_in">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyText = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1239,15 +1279,15 @@ D.handle = <span class="hljs-function"><span class="hljs-keyword">function</span
             
             <div class="content"><div class='highlight'><pre>G.text = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.currentText || <span class="hljs-keyword">this</span>.text || <span class="hljs-string">''</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.currentText || <span class="hljs-built_in">this</span>.text || <span class="hljs-string">&#x27;&#x27;</span>;
 };
 S.text = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.text = ensureString(item);
+    <span class="hljs-built_in">this</span>.text = ensureString(item);
     
-    <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyText = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1263,13 +1303,13 @@ S.text = <span class="hljs-function"><span class="hljs-keyword">function</span> 
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.permittedJustifications = [<span class="hljs-string">'left'</span>, <span class="hljs-string">'right'</span>, <span class="hljs-string">'center'</span>, <span class="hljs-string">'full'</span>];
+            <div class="content"><div class='highlight'><pre>P.permittedJustifications = [<span class="hljs-string">&#x27;left&#x27;</span>, <span class="hljs-string">&#x27;right&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;full&#x27;</span>];
 S.justify = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.permittedJustifications.indexOf(item) &gt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">this</span>.justify = item;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.permittedJustifications.indexOf(item) &gt;= <span class="hljs-number">0</span>) <span class="hljs-built_in">this</span>.justify = item;
     
-    <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyText = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1287,22 +1327,22 @@ S.justify = <span class="hljs-function"><span class="hljs-keyword">function</spa
             
             <div class="content"><div class='highlight'><pre>S.width = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.dimensions[<span class="hljs-number">0</span>] = item;
+    <span class="hljs-built_in">this</span>.dimensions[<span class="hljs-number">0</span>] = item;
 
-    <span class="hljs-keyword">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyText = <span class="hljs-literal">true</span>;
 };
 D.width = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">let</span> c = <span class="hljs-keyword">this</span>.dimensions;
+    <span class="hljs-keyword">let</span> c = <span class="hljs-built_in">this</span>.dimensions;
     c[<span class="hljs-number">0</span>] = addStrings(c[<span class="hljs-number">0</span>], item);
 
-    <span class="hljs-keyword">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyText = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1320,23 +1360,23 @@ D.width = <span class="hljs-function"><span class="hljs-keyword">function</span>
             
             <div class="content"><div class='highlight'><pre>S.scale = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.scale = item;
+    <span class="hljs-built_in">this</span>.scale = item;
 
-    <span class="hljs-keyword">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyScale = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyScale = <span class="hljs-literal">true</span>;
 };
 D.scale = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.scale += item;
+    <span class="hljs-built_in">this</span>.scale += item;
 
-    <span class="hljs-keyword">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyScale = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyScale = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1354,7 +1394,7 @@ D.scale = <span class="hljs-function"><span class="hljs-keyword">function</span>
             
             <div class="content"><div class='highlight'><pre>S.lineHeight = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.lineHeight = ensurePositiveFloat(item, <span class="hljs-number">3</span>);</pre></div></div>
+    <span class="hljs-built_in">this</span>.lineHeight = ensurePositiveFloat(item, <span class="hljs-number">3</span>);</pre></div></div>
             
         </li>
         
@@ -1372,14 +1412,14 @@ D.scale = <span class="hljs-function"><span class="hljs-keyword">function</span>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lineHeight &lt; <span class="hljs-number">0.5</span>) <span class="hljs-keyword">this</span>.lineHeight = <span class="hljs-number">0.5</span>;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.lineHeight &lt; <span class="hljs-number">0.5</span>) <span class="hljs-built_in">this</span>.lineHeight = <span class="hljs-number">0.5</span>;
     
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyText = <span class="hljs-literal">true</span>;
 };
 D.lineHeight = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.lineHeight += ensureFloat(item, <span class="hljs-number">3</span>);</pre></div></div>
+    <span class="hljs-built_in">this</span>.lineHeight += ensureFloat(item, <span class="hljs-number">3</span>);</pre></div></div>
             
         </li>
         
@@ -1397,10 +1437,10 @@ D.lineHeight = <span class="hljs-function"><span class="hljs-keyword">function</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.lineHeight &lt; <span class="hljs-number">0.5</span>) <span class="hljs-keyword">this</span>.lineHeight = <span class="hljs-number">0.5</span>;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.lineHeight &lt; <span class="hljs-number">0.5</span>) <span class="hljs-built_in">this</span>.lineHeight = <span class="hljs-number">0.5</span>;
 
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyText = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1418,18 +1458,18 @@ D.lineHeight = <span class="hljs-function"><span class="hljs-keyword">function</
             
             <div class="content"><div class='highlight'><pre>S.letterSpacing = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.letterSpacing = ensurePositiveFloat(item, <span class="hljs-number">3</span>);
+    <span class="hljs-built_in">this</span>.letterSpacing = ensurePositiveFloat(item, <span class="hljs-number">3</span>);
 
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyText = <span class="hljs-literal">true</span>;
 };
 D.letterSpacing = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.letterSpacing += ensureFloat(item, <span class="hljs-number">3</span>);
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.letterSpacing &lt; <span class="hljs-number">0</span>) <span class="hljs-keyword">this</span>.letterSpacing = <span class="hljs-number">0</span>;
+    <span class="hljs-built_in">this</span>.letterSpacing += ensureFloat(item, <span class="hljs-number">3</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.letterSpacing &lt; <span class="hljs-number">0</span>) <span class="hljs-built_in">this</span>.letterSpacing = <span class="hljs-number">0</span>;
 
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyText = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1447,17 +1487,17 @@ D.letterSpacing = <span class="hljs-function"><span class="hljs-keyword">functio
             
             <div class="content"><div class='highlight'><pre>S.overlinePosition = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.overlinePosition = ensureFloat(item, <span class="hljs-number">3</span>);
+    <span class="hljs-built_in">this</span>.overlinePosition = ensureFloat(item, <span class="hljs-number">3</span>);
 
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyText = <span class="hljs-literal">true</span>;
 };
 D.overlinePosition = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.overlinePosition += ensureFloat(item, <span class="hljs-number">3</span>);
+    <span class="hljs-built_in">this</span>.overlinePosition += ensureFloat(item, <span class="hljs-number">3</span>);
 
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyText = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1475,17 +1515,17 @@ D.overlinePosition = <span class="hljs-function"><span class="hljs-keyword">func
             
             <div class="content"><div class='highlight'><pre>S.underlinePosition = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.underlinePosition = ensureFloat(item, <span class="hljs-number">3</span>);
+    <span class="hljs-built_in">this</span>.underlinePosition = ensureFloat(item, <span class="hljs-number">3</span>);
 
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyText = <span class="hljs-literal">true</span>;
 };
 D.underlinePosition = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.underlinePosition += ensureFloat(item, <span class="hljs-number">3</span>);
+    <span class="hljs-built_in">this</span>.underlinePosition += ensureFloat(item, <span class="hljs-number">3</span>);
 
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyText = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1503,11 +1543,11 @@ D.underlinePosition = <span class="hljs-function"><span class="hljs-keyword">fun
             
             <div class="content"><div class='highlight'><pre>S.textPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.textPath = item;
+    <span class="hljs-built_in">this</span>.textPath = item;
 
-    <span class="hljs-keyword">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyText = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1525,25 +1565,25 @@ D.underlinePosition = <span class="hljs-function"><span class="hljs-keyword">fun
             
             <div class="content"><div class='highlight'><pre>S.textPathPosition = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.textPathLoop) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.textPathLoop) {
 
         <span class="hljs-keyword">if</span> (item &lt; <span class="hljs-number">0</span>) item = <span class="hljs-built_in">Math</span>.abs(item);
         <span class="hljs-keyword">if</span> (item &gt; <span class="hljs-number">1</span>) item = item % <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">this</span>.textPathPosition = <span class="hljs-built_in">parseFloat</span>(item.toFixed(<span class="hljs-number">6</span>));
+        <span class="hljs-built_in">this</span>.textPathPosition = <span class="hljs-built_in">parseFloat</span>(item.toFixed(<span class="hljs-number">6</span>));
     }
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.textPathPosition = item;
+    <span class="hljs-keyword">else</span> <span class="hljs-built_in">this</span>.textPathPosition = item;
 };
 D.textPathPosition = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">let</span> newVal = <span class="hljs-keyword">this</span>.textPathPosition + item;
+    <span class="hljs-keyword">let</span> newVal = <span class="hljs-built_in">this</span>.textPathPosition + item;
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.textPathLoop) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.textPathLoop) {
 
         <span class="hljs-keyword">if</span> (newVal &lt; <span class="hljs-number">0</span>) newVal += <span class="hljs-number">1</span>;
         <span class="hljs-keyword">if</span> (newVal &gt; <span class="hljs-number">1</span>) newVal = newVal % <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">this</span>.textPathPosition = <span class="hljs-built_in">parseFloat</span>(newVal.toFixed(<span class="hljs-number">6</span>));
+        <span class="hljs-built_in">this</span>.textPathPosition = <span class="hljs-built_in">parseFloat</span>(newVal.toFixed(<span class="hljs-number">6</span>));
     }
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.textPathPosition = newVal;
+    <span class="hljs-keyword">else</span> <span class="hljs-built_in">this</span>.textPathPosition = newVal;
 };</pre></div></div>
             
         </li>
@@ -1583,14 +1623,14 @@ D.textPathPosition = <span class="hljs-function"><span class="hljs-keyword">func
             
             <div class="content"><div class='highlight'><pre>G.font = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.fontAttributes.get(<span class="hljs-string">'font'</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.fontAttributes.get(<span class="hljs-string">&#x27;font&#x27;</span>);
 };
 S.font = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.fontAttributes.set({<span class="hljs-attr">font</span>: item});
+    <span class="hljs-built_in">this</span>.fontAttributes.set({<span class="hljs-attr">font</span>: item});
 
-    <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1608,14 +1648,14 @@ S.font = <span class="hljs-function"><span class="hljs-keyword">function</span> 
             
             <div class="content"><div class='highlight'><pre>G.style = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.fontAttributes.get(<span class="hljs-string">'style'</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.fontAttributes.get(<span class="hljs-string">&#x27;style&#x27;</span>);
 };
 S.style = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.fontAttributes.set({<span class="hljs-attr">style</span>: item});
+    <span class="hljs-built_in">this</span>.fontAttributes.set({<span class="hljs-attr">style</span>: item});
 
-    <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1633,14 +1673,14 @@ S.style = <span class="hljs-function"><span class="hljs-keyword">function</span>
             
             <div class="content"><div class='highlight'><pre>G.variant = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.fontAttributes.get(<span class="hljs-string">'variant'</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.fontAttributes.get(<span class="hljs-string">&#x27;variant&#x27;</span>);
 };
 S.variant = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.fontAttributes.set({<span class="hljs-attr">variant</span>: item});
+    <span class="hljs-built_in">this</span>.fontAttributes.set({<span class="hljs-attr">variant</span>: item});
 
-    <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1658,14 +1698,14 @@ S.variant = <span class="hljs-function"><span class="hljs-keyword">function</spa
             
             <div class="content"><div class='highlight'><pre>G.weight = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.fontAttributes.get(<span class="hljs-string">'weight'</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.fontAttributes.get(<span class="hljs-string">&#x27;weight&#x27;</span>);
 };
 S.weight = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.fontAttributes.set({<span class="hljs-attr">weight</span>: item});
+    <span class="hljs-built_in">this</span>.fontAttributes.set({<span class="hljs-attr">weight</span>: item});
 
-    <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1683,14 +1723,14 @@ S.weight = <span class="hljs-function"><span class="hljs-keyword">function</span
             
             <div class="content"><div class='highlight'><pre>G.stretch = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.fontAttributes.get(<span class="hljs-string">'stretch'</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.fontAttributes.get(<span class="hljs-string">&#x27;stretch&#x27;</span>);
 };
 S.stretch = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.fontAttributes.set({<span class="hljs-attr">stretch</span>: item});
+    <span class="hljs-built_in">this</span>.fontAttributes.set({<span class="hljs-attr">stretch</span>: item});
 
-    <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1714,14 +1754,14 @@ S.stretch = <span class="hljs-function"><span class="hljs-keyword">function</spa
             
             <div class="content"><div class='highlight'><pre>G.size = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.fontAttributes.get(<span class="hljs-string">'size'</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.fontAttributes.get(<span class="hljs-string">&#x27;size&#x27;</span>);
 };
 S.size = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.fontAttributes.set({<span class="hljs-attr">size</span>: item});
+    <span class="hljs-built_in">this</span>.fontAttributes.set({<span class="hljs-attr">size</span>: item});
 
-    <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1739,21 +1779,21 @@ S.size = <span class="hljs-function"><span class="hljs-keyword">function</span> 
             
             <div class="content"><div class='highlight'><pre>G.sizeValue = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.fontAttributes.get(<span class="hljs-string">'sizeValue'</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.fontAttributes.get(<span class="hljs-string">&#x27;sizeValue&#x27;</span>);
 };
 S.sizeValue = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.fontAttributes.set({<span class="hljs-attr">sizeValue</span>: item});
+    <span class="hljs-built_in">this</span>.fontAttributes.set({<span class="hljs-attr">sizeValue</span>: item});
 
-    <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
 };
 D.sizeValue = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.fontAttributes.deltaSet({<span class="hljs-attr">sizeValue</span>: item});
+    <span class="hljs-built_in">this</span>.fontAttributes.deltaSet({<span class="hljs-attr">sizeValue</span>: item});
 
-    <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1771,14 +1811,14 @@ D.sizeValue = <span class="hljs-function"><span class="hljs-keyword">function</s
             
             <div class="content"><div class='highlight'><pre>G.sizeMetric = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.fontAttributes.get(<span class="hljs-string">'sizeMetric'</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.fontAttributes.get(<span class="hljs-string">&#x27;sizeMetric&#x27;</span>);
 };
 S.sizeMetric = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.fontAttributes.set({<span class="hljs-attr">sizeMetric</span>: item});
+    <span class="hljs-built_in">this</span>.fontAttributes.set({<span class="hljs-attr">sizeMetric</span>: item});
 
-    <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1796,14 +1836,14 @@ S.sizeMetric = <span class="hljs-function"><span class="hljs-keyword">function</
             
             <div class="content"><div class='highlight'><pre>G.family = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.fontAttributes.get(<span class="hljs-string">'family'</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.fontAttributes.get(<span class="hljs-string">&#x27;family&#x27;</span>);
 };
 S.family = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
     
-    <span class="hljs-keyword">this</span>.fontAttributes.set({<span class="hljs-attr">family</span>: item});
+    <span class="hljs-built_in">this</span>.fontAttributes.set({<span class="hljs-attr">family</span>: item});
 
-    <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1822,22 +1862,22 @@ S.family = <span class="hljs-function"><span class="hljs-keyword">function</span
             <div class="content"><div class='highlight'><pre>
 P.cleanDimensionsAdditionalActions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dimensions[<span class="hljs-number">0</span>] === <span class="hljs-string">'auto'</span>) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dimensions[<span class="hljs-number">0</span>] === <span class="hljs-string">&#x27;auto&#x27;</span>) {
 
-        <span class="hljs-keyword">this</span>.buildText();
+        <span class="hljs-built_in">this</span>.buildText();
 
         <span class="hljs-keyword">let</span> myCell = requestCell(),
             engine = myCell.engine;
 
-        engine.font = <span class="hljs-keyword">this</span>.fontAttributes.buildFont();
+        engine.font = <span class="hljs-built_in">this</span>.fontAttributes.buildFont();
 
-        <span class="hljs-keyword">this</span>.currentDimensions[<span class="hljs-number">0</span>] = <span class="hljs-built_in">Math</span>.ceil(engine.measureText(<span class="hljs-keyword">this</span>.currentText).width);
+        <span class="hljs-built_in">this</span>.currentDimensions[<span class="hljs-number">0</span>] = <span class="hljs-built_in">Math</span>.ceil(engine.measureText(<span class="hljs-built_in">this</span>.currentText).width);
 
         releaseCell(myCell);
     }
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.textLines) <span class="hljs-keyword">this</span>.currentDimensions[<span class="hljs-number">1</span>] = <span class="hljs-built_in">Math</span>.ceil((<span class="hljs-keyword">this</span>.textHeight * <span class="hljs-keyword">this</span>.textLines.length * <span class="hljs-keyword">this</span>.lineHeight) / <span class="hljs-keyword">this</span>.scale);
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.textLines) <span class="hljs-built_in">this</span>.currentDimensions[<span class="hljs-number">1</span>] = <span class="hljs-built_in">Math</span>.ceil((<span class="hljs-built_in">this</span>.textHeight * <span class="hljs-built_in">this</span>.textLines.length * <span class="hljs-built_in">this</span>.lineHeight) / <span class="hljs-built_in">this</span>.scale);
+    <span class="hljs-keyword">else</span> <span class="hljs-built_in">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1855,11 +1895,11 @@ P.cleanDimensionsAdditionalActions = <span class="hljs-function"><span class="hl
             
             <div class="content"><div class='highlight'><pre>P.setSectionStyles = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">text</span>) </span>{
 
-    <span class="hljs-keyword">let</span> search = <span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-keyword">this</span>.sectionClassMarker),
+    <span class="hljs-keyword">let</span> search = <span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-built_in">this</span>.sectionClassMarker),
         parseArray = text.split(search),
-        styles = <span class="hljs-keyword">this</span>.sectionStyles,
-        classes = <span class="hljs-keyword">this</span>.sectionClasses,
-        parsedText = <span class="hljs-string">''</span>,
+        styles = <span class="hljs-built_in">this</span>.sectionStyles,
+        classes = <span class="hljs-built_in">this</span>.sectionClasses,
+        parsedText = <span class="hljs-string">&#x27;&#x27;</span>,
         classObj, index, styleObj;
 
     styles.length = <span class="hljs-number">0</span>;
@@ -1898,22 +1938,22 @@ P.cleanDimensionsAdditionalActions = <span class="hljs-function"><span class="hl
 
     <span class="hljs-keyword">if</span> (xta(label, obj) &amp;&amp; label.substring &amp;&amp; isa_obj(obj)) {
 
-        <span class="hljs-keyword">this</span>.sectionClasses[label] = obj;
+        <span class="hljs-built_in">this</span>.sectionClasses[label] = obj;
     }
-    <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyText = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };
 
 P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">label</span>) </span>{
 
-    <span class="hljs-keyword">delete</span> <span class="hljs-keyword">this</span>.sectionClasses[label];
+    <span class="hljs-keyword">delete</span> <span class="hljs-built_in">this</span>.sectionClasses[label];
 
-    <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyText = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -1931,16 +1971,16 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
             
             <div class="content"><div class='highlight'><pre>P.getTextPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">let</span> path = <span class="hljs-keyword">this</span>.textPath;
+    <span class="hljs-keyword">let</span> path = <span class="hljs-built_in">this</span>.textPath;
 
     <span class="hljs-keyword">if</span> (path &amp;&amp; path.substring) {
 
-        path = <span class="hljs-keyword">this</span>.textPath = artefact[<span class="hljs-keyword">this</span>.textPath];
+        path = <span class="hljs-built_in">this</span>.textPath = artefact[<span class="hljs-built_in">this</span>.textPath];
 
-        <span class="hljs-keyword">if</span> (path.type === <span class="hljs-string">'Shape'</span> &amp;&amp; path.useAsPath) path.pathed.push(<span class="hljs-keyword">this</span>.name);
+        <span class="hljs-keyword">if</span> (path.type === <span class="hljs-string">&#x27;Shape&#x27;</span> &amp;&amp; path.useAsPath) path.pathed.push(<span class="hljs-built_in">this</span>.name);
         <span class="hljs-keyword">else</span> {
 
-            path = <span class="hljs-keyword">this</span>.path = <span class="hljs-literal">false</span>;
+            path = <span class="hljs-built_in">this</span>.path = <span class="hljs-literal">false</span>;
         }
     }
 
@@ -1979,34 +2019,34 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
             
             <div class="content"><div class='highlight'><pre>P.cleanPathObject = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">false</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.noPathUpdates || !<span class="hljs-keyword">this</span>.pathObject) {
+    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.noPathUpdates || !<span class="hljs-built_in">this</span>.pathObject) {
         
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyFont &amp;&amp; <span class="hljs-keyword">this</span>.fontAttributes) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyFont &amp;&amp; <span class="hljs-built_in">this</span>.fontAttributes) {
 
-            <span class="hljs-keyword">this</span>.dirtyFont = <span class="hljs-literal">false</span>;
-            <span class="hljs-keyword">this</span>.fontAttributes.buildFont(<span class="hljs-keyword">this</span>.scale);
-            <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">this</span>.dirtyMimicDimensions = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">this</span>.dirtyPositionSubscribers = <span class="hljs-literal">true</span>;
+            <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">false</span>;
+            <span class="hljs-built_in">this</span>.fontAttributes.buildFont(<span class="hljs-built_in">this</span>.scale);
+            <span class="hljs-built_in">this</span>.dirtyText = <span class="hljs-literal">true</span>;
+            <span class="hljs-built_in">this</span>.dirtyMimicDimensions = <span class="hljs-literal">true</span>;
+            <span class="hljs-built_in">this</span>.dirtyPositionSubscribers = <span class="hljs-literal">true</span>;
         }
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyText) <span class="hljs-keyword">this</span>.buildText();
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyText) <span class="hljs-built_in">this</span>.buildText();
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyHandle) <span class="hljs-keyword">this</span>.cleanHandle();
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyHandle) <span class="hljs-built_in">this</span>.cleanHandle();
 
-        <span class="hljs-keyword">let</span> p = <span class="hljs-keyword">this</span>.pathObject = <span class="hljs-keyword">new</span> Path2D();
+        <span class="hljs-keyword">let</span> p = <span class="hljs-built_in">this</span>.pathObject = <span class="hljs-keyword">new</span> Path2D();
         
-        <span class="hljs-keyword">let</span> handle = <span class="hljs-keyword">this</span>.currentHandle,
-            dims = <span class="hljs-keyword">this</span>.currentDimensions,
+        <span class="hljs-keyword">let</span> handle = <span class="hljs-built_in">this</span>.currentHandle,
+            dims = <span class="hljs-built_in">this</span>.currentDimensions,
 
-            scale = <span class="hljs-keyword">this</span>.currentScale,
+            scale = <span class="hljs-built_in">this</span>.currentScale,
             x = -handle[<span class="hljs-number">0</span>] * scale,
             y = -handle[<span class="hljs-number">1</span>] * scale,
             w = dims[<span class="hljs-number">0</span>] * scale,
             h = dims[<span class="hljs-number">1</span>] * scale;
 
-        <span class="hljs-keyword">this</span>.boxStartValues = [x, y];
+        <span class="hljs-built_in">this</span>.boxStartValues = [x, y];
 
         p.rect(x, y, w, h);
     }
@@ -2027,38 +2067,38 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
             
             <div class="content"><div class='highlight'><pre>P.buildText = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">false</span>;
+    <span class="hljs-built_in">this</span>.dirtyText = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> t = <span class="hljs-keyword">this</span>.convertTextEntityCharacters(<span class="hljs-keyword">this</span>.text);
+    <span class="hljs-keyword">let</span> t = <span class="hljs-built_in">this</span>.convertTextEntityCharacters(<span class="hljs-built_in">this</span>.text);
 
-    t = <span class="hljs-keyword">this</span>.setSectionStyles(t);
+    t = <span class="hljs-built_in">this</span>.setSectionStyles(t);
 
-    <span class="hljs-keyword">this</span>.currentText = t;
+    <span class="hljs-built_in">this</span>.currentText = t;
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(<span class="hljs-keyword">this</span>.currentDimensions[<span class="hljs-number">0</span>])) <span class="hljs-keyword">this</span>.dirtyText = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(<span class="hljs-built_in">this</span>.currentDimensions[<span class="hljs-number">0</span>])) <span class="hljs-built_in">this</span>.dirtyText = <span class="hljs-literal">true</span>;
     <span class="hljs-keyword">else</span> {
 
-        <span class="hljs-keyword">this</span>.calculateTextPositions(t);
+        <span class="hljs-built_in">this</span>.calculateTextPositions(t);
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.exposeText) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.exposeText) {
 
-            <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.exposedTextHold) {
+            <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.exposedTextHold) {
 
-                <span class="hljs-keyword">let</span> myhold = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'div'</span>);
-                myhold.id = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span>-text-hold`</span>;
-                myhold.setAttribute(<span class="hljs-string">'aria-live'</span>, <span class="hljs-string">'polite'</span>);
-                <span class="hljs-keyword">this</span>.exposedTextHold = myhold;
-                <span class="hljs-keyword">this</span>.exposedTextHoldAttached = <span class="hljs-literal">false</span>;
+                <span class="hljs-keyword">let</span> myhold = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;div&#x27;</span>);
+                myhold.id = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span>-text-hold`</span>;
+                myhold.setAttribute(<span class="hljs-string">&#x27;aria-live&#x27;</span>, <span class="hljs-string">&#x27;polite&#x27;</span>);
+                <span class="hljs-built_in">this</span>.exposedTextHold = myhold;
+                <span class="hljs-built_in">this</span>.exposedTextHoldAttached = <span class="hljs-literal">false</span>;
             }
 
-            <span class="hljs-keyword">this</span>.exposedTextHold.textContent = t;
+            <span class="hljs-built_in">this</span>.exposedTextHold.textContent = t;
 
-            <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.exposedTextHoldAttached) {
+            <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.exposedTextHoldAttached) {
 
-                <span class="hljs-keyword">if</span>(<span class="hljs-keyword">this</span>.currentHost &amp;&amp; <span class="hljs-keyword">this</span>.currentHost.controller &amp;&amp; <span class="hljs-keyword">this</span>.currentHost.controller.textHold) {
+                <span class="hljs-keyword">if</span>(<span class="hljs-built_in">this</span>.currentHost &amp;&amp; <span class="hljs-built_in">this</span>.currentHost.controller &amp;&amp; <span class="hljs-built_in">this</span>.currentHost.controller.textHold) {
 
-                    <span class="hljs-keyword">this</span>.currentHost.controller.textHold.appendChild(<span class="hljs-keyword">this</span>.exposedTextHold);
-                    <span class="hljs-keyword">this</span>.exposedTextHoldAttached = <span class="hljs-literal">true</span>;
+                    <span class="hljs-built_in">this</span>.currentHost.controller.textHold.appendChild(<span class="hljs-built_in">this</span>.exposedTextHold);
+                    <span class="hljs-built_in">this</span>.exposedTextHoldAttached = <span class="hljs-literal">true</span>;
                 }
             }
         }
@@ -2086,7 +2126,7 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
 
     <span class="hljs-keyword">let</span> mytext = item.trim();
 
-    mytext = mytext.replace(<span class="hljs-regexp">/[\s\uFEFF\xA0]+/g</span>, <span class="hljs-string">' '</span>);
+    mytext = mytext.replace(<span class="hljs-regexp">/[\s\uFEFF\xA0]+/g</span>, <span class="hljs-string">&#x27; &#x27;</span>);
 
     textEntityConverter.innerHTML = mytext;
     <span class="hljs-keyword">return</span> textEntityConverter.value;
@@ -2131,7 +2171,7 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
 
             self.dirtyPathObject = <span class="hljs-literal">true</span>;
             self.dirtyText = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">return</span> <span class="hljs-string">'black'</span>;
+            <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;black&#x27;</span>;
         }
 
         <span class="hljs-keyword">if</span> (item.substring) {
@@ -2164,8 +2204,8 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> myCell = requestCell(),
         engine = myCell.engine;
 
-    <span class="hljs-keyword">let</span> self = <span class="hljs-keyword">this</span>,
-        host = (<span class="hljs-keyword">this</span>.group &amp;&amp; <span class="hljs-keyword">this</span>.group.getHost) ? <span class="hljs-keyword">this</span>.group.getHost() : <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">let</span> self = <span class="hljs-built_in">this</span>,
+        host = (<span class="hljs-built_in">this</span>.group &amp;&amp; <span class="hljs-built_in">this</span>.group.getHost) ? <span class="hljs-built_in">this</span>.group.getHost() : <span class="hljs-literal">false</span>;
 
     <span class="hljs-keyword">let</span> textGlyphs, 
         textGlyphWidths = [], 
@@ -2181,45 +2221,45 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
     <span class="hljs-keyword">let</span> fragment, len, glyphArr, glyph, nextGlyph, glyphWidth, lineLen, totalLen,
         singles = [],
         pairs = [],
-        path = <span class="hljs-keyword">this</span>.getTextPath(),
+        path = <span class="hljs-built_in">this</span>.getTextPath(),
         direction, loop, rotate;
 
-    <span class="hljs-keyword">let</span> fontAttributes = <span class="hljs-keyword">this</span>.fontAttributes,
+    <span class="hljs-keyword">let</span> fontAttributes = <span class="hljs-built_in">this</span>.fontAttributes,
         glyphAttributes = fontAttributes.clone({});
 
-    <span class="hljs-keyword">let</span> sectionStyles = <span class="hljs-keyword">this</span>.sectionStyles;
+    <span class="hljs-keyword">let</span> sectionStyles = <span class="hljs-built_in">this</span>.sectionStyles;
 
-    <span class="hljs-keyword">let</span> state = <span class="hljs-keyword">this</span>.state,
+    <span class="hljs-keyword">let</span> state = <span class="hljs-built_in">this</span>.state,
         fontLibrary = {},
         fontArray = [];
 
-    <span class="hljs-keyword">let</span> scale = <span class="hljs-keyword">this</span>.currentScale,
-        dims = <span class="hljs-keyword">this</span>.currentDimensions,
+    <span class="hljs-keyword">let</span> scale = <span class="hljs-built_in">this</span>.currentScale,
+        dims = <span class="hljs-built_in">this</span>.currentDimensions,
         width = dims[<span class="hljs-number">0</span>] * scale,
-        treatWordAsGlyph = <span class="hljs-keyword">this</span>.treatWordAsGlyph,
-        lineHeight = <span class="hljs-keyword">this</span>.lineHeight,
-        justify = <span class="hljs-keyword">this</span>.justify,
+        treatWordAsGlyph = <span class="hljs-built_in">this</span>.treatWordAsGlyph,
+        lineHeight = <span class="hljs-built_in">this</span>.lineHeight,
+        justify = <span class="hljs-built_in">this</span>.justify,
         handle, handleX, handleY;
 
     <span class="hljs-keyword">let</span> defaultFont = fontAttributes.update(scale), 
         defaultFillStyle = makeStyle(state.fillStyle), 
         defaultStrokeStyle = makeStyle(state.strokeStyle), 
-        defaultSpace = <span class="hljs-keyword">this</span>.letterSpacing * scale, 
+        defaultSpace = <span class="hljs-built_in">this</span>.letterSpacing * scale, 
 
         currentFont = defaultFont, 
         currentFillStyle = defaultFillStyle, 
         currentStrokeStyle = defaultStrokeStyle, 
         currentSpace = defaultSpace;
 
-    <span class="hljs-keyword">let</span> highlightStyle = (<span class="hljs-keyword">this</span>.highlightStyle) ? makeStyle(<span class="hljs-keyword">this</span>.highlightStyle) : <span class="hljs-literal">false</span>,
+    <span class="hljs-keyword">let</span> highlightStyle = (<span class="hljs-built_in">this</span>.highlightStyle) ? makeStyle(<span class="hljs-built_in">this</span>.highlightStyle) : <span class="hljs-literal">false</span>,
         highlightFlag = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> underlineStyle = (<span class="hljs-keyword">this</span>.underlineStyle) ? makeStyle(<span class="hljs-keyword">this</span>.underlineStyle) : <span class="hljs-literal">false</span>,
-        underlinePosition = <span class="hljs-keyword">this</span>.underlinePosition,
+    <span class="hljs-keyword">let</span> underlineStyle = (<span class="hljs-built_in">this</span>.underlineStyle) ? makeStyle(<span class="hljs-built_in">this</span>.underlineStyle) : <span class="hljs-literal">false</span>,
+        underlinePosition = <span class="hljs-built_in">this</span>.underlinePosition,
         underlineFlag = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> overlineStyle = (<span class="hljs-keyword">this</span>.overlineStyle) ? makeStyle(<span class="hljs-keyword">this</span>.overlineStyle) : <span class="hljs-literal">false</span>,
-        overlinePosition = <span class="hljs-keyword">this</span>.overlinePosition,
+    <span class="hljs-keyword">let</span> overlineStyle = (<span class="hljs-built_in">this</span>.overlineStyle) ? makeStyle(<span class="hljs-built_in">this</span>.overlineStyle) : <span class="hljs-literal">false</span>,
+        overlinePosition = <span class="hljs-built_in">this</span>.overlinePosition,
         overlineFlag = <span class="hljs-literal">false</span>;
 
     <span class="hljs-keyword">let</span> maxHeight = <span class="hljs-number">0</span>;</pre></div></div>
@@ -2242,7 +2282,7 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    textGlyphs = (treatWordAsGlyph) ? mytext.split(<span class="hljs-string">' '</span>) : mytext.split(<span class="hljs-string">''</span>);
+            <div class="content"><div class='highlight'><pre>    textGlyphs = (treatWordAsGlyph) ? mytext.split(<span class="hljs-string">&#x27; &#x27;</span>) : mytext.split(<span class="hljs-string">&#x27;&#x27;</span>);
     fontArray.push(currentFont);</pre></div></div>
             
         </li>
@@ -2270,7 +2310,7 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
 
         textPositions[i] = [, , , , , , item, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>];
 
-        <span class="hljs-keyword">if</span> (item === <span class="hljs-string">' '</span>) spacesArray.push(i);
+        <span class="hljs-keyword">if</span> (item === <span class="hljs-string">&#x27; &#x27;</span>) spacesArray.push(i);
     }</pre></div></div>
             
         </li>
@@ -2515,7 +2555,7 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         glyphWidth = singles[i] + textGlyphWidths[i];
         textGlyphWidths[i] = glyphWidth;
 
-        <span class="hljs-keyword">if</span> (treatWordAsGlyph || glyph === <span class="hljs-string">' '</span>) ends = i;
+        <span class="hljs-keyword">if</span> (treatWordAsGlyph || glyph === <span class="hljs-string">&#x27; &#x27;</span>) ends = i;
 
         lineLen += glyphWidth;
         totalLen += glyphWidth;</pre></div></div>
@@ -2538,9 +2578,9 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (lineLen &gt;= width &amp;&amp; starts &lt; ends) {
 
-            fragment = textGlyphs.slice(starts, ends).join(<span class="hljs-string">''</span>);
+            fragment = textGlyphs.slice(starts, ends).join(<span class="hljs-string">&#x27;&#x27;</span>);
             textLines.push(fragment);
-            len = (treatWordAsGlyph) ? fragment.split(<span class="hljs-string">' '</span>).length - <span class="hljs-number">1</span> : fragment.split(<span class="hljs-string">' '</span>).length;
+            len = (treatWordAsGlyph) ? fragment.split(<span class="hljs-string">&#x27; &#x27;</span>).length - <span class="hljs-number">1</span> : fragment.split(<span class="hljs-string">&#x27; &#x27;</span>).length;
             textLineWords.push(len);
 
             len = textGlyphWidths.slice(starts, ends).reduce(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a + v, <span class="hljs-number">0</span>);
@@ -2583,7 +2623,7 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
                 fragment = mytext;
 
                 textLines.push(fragment);
-                textLineWords.push((treatWordAsGlyph) ? fragment.split(<span class="hljs-string">' '</span>).length - <span class="hljs-number">1</span> : fragment.split(<span class="hljs-string">' '</span>).length);
+                textLineWords.push((treatWordAsGlyph) ? fragment.split(<span class="hljs-string">&#x27; &#x27;</span>).length - <span class="hljs-number">1</span> : fragment.split(<span class="hljs-string">&#x27; &#x27;</span>).length);
                 textLineWidths.push(totalLen);
             }</pre></div></div>
             
@@ -2602,9 +2642,9 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
             
             <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">else</span> {
 
-                fragment = textGlyphs.slice(starts).join(<span class="hljs-string">''</span>);
+                fragment = textGlyphs.slice(starts).join(<span class="hljs-string">&#x27;&#x27;</span>);
                 textLines.push(fragment);
-                len = (treatWordAsGlyph) ? fragment.split(<span class="hljs-string">' '</span>).length - <span class="hljs-number">1</span> : fragment.split(<span class="hljs-string">' '</span>).length;
+                len = (treatWordAsGlyph) ? fragment.split(<span class="hljs-string">&#x27; &#x27;</span>).length - <span class="hljs-number">1</span> : fragment.split(<span class="hljs-string">&#x27; &#x27;</span>).length;
                 textLineWords.push(len);
 
                 len = textGlyphWidths.slice(starts).reduce(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a + v, <span class="hljs-number">0</span>);
@@ -2653,9 +2693,9 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
 
     dims[<span class="hljs-number">1</span>] = <span class="hljs-built_in">Math</span>.ceil((maxHeight * textLines.length * lineHeight) / scale);
 
-    <span class="hljs-keyword">this</span>.cleanHandle();
-    <span class="hljs-keyword">this</span>.dirtyHandle = <span class="hljs-literal">false</span>;
-    handle = <span class="hljs-keyword">this</span>.currentHandle;
+    <span class="hljs-built_in">this</span>.cleanHandle();
+    <span class="hljs-built_in">this</span>.dirtyHandle = <span class="hljs-literal">false</span>;
+    handle = <span class="hljs-built_in">this</span>.currentHandle;
     
     handleX = -handle[<span class="hljs-number">0</span>] * scale;
     handleY = -handle[<span class="hljs-number">1</span>] * scale;</pre></div></div>
@@ -2706,7 +2746,7 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (justify === <span class="hljs-string">'full'</span>) {
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (justify === <span class="hljs-string">&#x27;full&#x27;</span>) {
 
             cursor = <span class="hljs-number">0</span>;
             height = handleY;
@@ -2722,7 +2762,7 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
 
                     item = textPositions[cursor];
 
-                    <span class="hljs-keyword">if</span> (item[<span class="hljs-number">6</span>] === <span class="hljs-string">' '</span>) textGlyphWidths[cursor] += space;
+                    <span class="hljs-keyword">if</span> (item[<span class="hljs-number">6</span>] === <span class="hljs-string">&#x27; &#x27;</span>) textGlyphWidths[cursor] += space;
 
                     item[<span class="hljs-number">7</span>] = <span class="hljs-built_in">Math</span>.floor(len);
                     item[<span class="hljs-number">8</span>] = <span class="hljs-built_in">Math</span>.floor(height);
@@ -2754,7 +2794,17 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> {
 
             cursor = <span class="hljs-number">0</span>;
-            height = handleY;</pre></div></div>
+            height = handleY;
+
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = textLineWidths.length; i &lt; iz; i++) {
+
+                <span class="hljs-keyword">if</span> (justify === <span class="hljs-string">&#x27;right&#x27;</span>) len = (width - textLineWidths[i]) + handleX;
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (justify === <span class="hljs-string">&#x27;center&#x27;</span>) len = ((width - textLineWidths[i]) / <span class="hljs-number">2</span>) + handleX;
+                <span class="hljs-keyword">else</span> len = handleX;
+
+                <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = textLines[i].length; j &lt; jz; j++) {
+
+                    item = textPositions[cursor];</pre></div></div>
             
         </li>
         
@@ -2765,27 +2815,20 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-90">&#182;</a>
               </div>
-              <p>console.log(this.name, width, height, textLineWidths, handleX);</p>
+              <p>BUG: There’s an issue here which causes the function to fail when <code>treatWordAsGlyph</code> flag is set to true. Affects non-path-referencing Phrase entitys. This test to see if item exists is a temporary fix. </p>
+<ul>
+<li>Question: do we only care about treating word as glyph when it references a path? Probably no - we need to care about attempts to add space between letters (glyphs) as that may have an unwanted effect on heavily kerned fonts, or fonts with a lot of ligatures between various glyphs.</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>
-            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = textLineWidths.length; i &lt; iz; i++) {
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">if</span> (item) {
 
-                <span class="hljs-keyword">if</span> (justify === <span class="hljs-string">'right'</span>) len = (width - textLineWidths[i]) + handleX;
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (justify === <span class="hljs-string">'center'</span>) len = ((width - textLineWidths[i]) / <span class="hljs-number">2</span>) + handleX;
-                <span class="hljs-keyword">else</span> len = handleX;
-
-                <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = textLines[i].length; j &lt; jz; j++) {
-
-                    item = textPositions[cursor];
-
-                    item[<span class="hljs-number">7</span>] = <span class="hljs-built_in">Math</span>.floor(len);
-                    item[<span class="hljs-number">8</span>] = <span class="hljs-built_in">Math</span>.floor(height);
-                    item[<span class="hljs-number">9</span>] = textGlyphWidths[cursor];
-
+                        item[<span class="hljs-number">7</span>] = <span class="hljs-built_in">Math</span>.floor(len);
+                        item[<span class="hljs-number">8</span>] = <span class="hljs-built_in">Math</span>.floor(height);
+                        item[<span class="hljs-number">9</span>] = textGlyphWidths[cursor];
+                    }
                     len += textGlyphWidths[cursor];
-
                     cursor++;
                 }
 
@@ -2810,15 +2853,15 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.textGlyphs = textGlyphs;
-    <span class="hljs-keyword">this</span>.textGlyphWidths = textGlyphWidths;
-    <span class="hljs-keyword">this</span>.textLines = textLines;
-    <span class="hljs-keyword">this</span>.textLineWidths = textLineWidths;
-    <span class="hljs-keyword">this</span>.textLineWords = textLineWords;
-    <span class="hljs-keyword">this</span>.textPositions = textPositions;
-    <span class="hljs-keyword">this</span>.textHeight = maxHeight;
-    <span class="hljs-keyword">this</span>.textLength = totalLen;
-    <span class="hljs-keyword">this</span>.fontLibrary = fontLibrary;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.textGlyphs = textGlyphs;
+    <span class="hljs-built_in">this</span>.textGlyphWidths = textGlyphWidths;
+    <span class="hljs-built_in">this</span>.textLines = textLines;
+    <span class="hljs-built_in">this</span>.textLineWidths = textLineWidths;
+    <span class="hljs-built_in">this</span>.textLineWords = textLineWords;
+    <span class="hljs-built_in">this</span>.textPositions = textPositions;
+    <span class="hljs-built_in">this</span>.textHeight = maxHeight;
+    <span class="hljs-built_in">this</span>.textLength = totalLen;
+    <span class="hljs-built_in">this</span>.fontLibrary = fontLibrary;
 
     releaseCell(myCell);
 };</pre></div></div>
@@ -2851,34 +2894,34 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
             
             <div class="content"><div class='highlight'><pre>P.regularStampSynchronousActions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">let</span> dest = <span class="hljs-keyword">this</span>.currentHost, 
-        method = <span class="hljs-keyword">this</span>.method,
+    <span class="hljs-keyword">let</span> dest = <span class="hljs-built_in">this</span>.currentHost, 
+        method = <span class="hljs-built_in">this</span>.method,
         engine, i, iz, pos, data,
-        preStamper = <span class="hljs-keyword">this</span>.preStamper,
-        stamper = <span class="hljs-keyword">this</span>.stamper;
+        preStamper = <span class="hljs-built_in">this</span>.preStamper,
+        stamper = <span class="hljs-built_in">this</span>.stamper;
 
     <span class="hljs-keyword">if</span> (dest) {
 
         engine = dest.engine;
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.method === <span class="hljs-string">'none'</span>) <span class="hljs-keyword">this</span>.performRotation(engine);
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.method === <span class="hljs-string">&#x27;none&#x27;</span>) <span class="hljs-built_in">this</span>.performRotation(engine);
 
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.textPath) {
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.textPath) {
 
-            <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.noCanvasEngineUpdates) dest.setEngine(<span class="hljs-keyword">this</span>);
+            <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.noCanvasEngineUpdates) dest.setEngine(<span class="hljs-built_in">this</span>);
 
-            <span class="hljs-keyword">this</span>.getTextPath();
-            <span class="hljs-keyword">this</span>.calculateGlyphPathPositions();
+            <span class="hljs-built_in">this</span>.getTextPath();
+            <span class="hljs-built_in">this</span>.calculateGlyphPathPositions();
 
-            pos = <span class="hljs-keyword">this</span>.textPositions;
+            pos = <span class="hljs-built_in">this</span>.textPositions;
 
             <span class="hljs-keyword">let</span> item, pathData,
-                addTextPathRoll = <span class="hljs-keyword">this</span>.addTextPathRoll,
-                aPR = <span class="hljs-keyword">this</span>.addPathRotation,
-                cr = <span class="hljs-keyword">this</span>.currentRotation,
-                handle = <span class="hljs-keyword">this</span>.currentHandle;
+                addTextPathRoll = <span class="hljs-built_in">this</span>.addTextPathRoll,
+                aPR = <span class="hljs-built_in">this</span>.addPathRotation,
+                cr = <span class="hljs-built_in">this</span>.currentRotation,
+                handle = <span class="hljs-built_in">this</span>.currentHandle;
 
-            <span class="hljs-keyword">this</span>.addPathRotation = addTextPathRoll;
+            <span class="hljs-built_in">this</span>.addPathRotation = addTextPathRoll;
 
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = pos.length; i &lt; iz; i++) {
 
@@ -2888,34 +2931,34 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
 
                 <span class="hljs-keyword">if</span> (pathData) {
 
-                    <span class="hljs-keyword">this</span>.currentPathData = pathData;
-                    <span class="hljs-keyword">if</span> (addTextPathRoll) <span class="hljs-keyword">this</span>.currentRotation = pathData.angle;
+                    <span class="hljs-built_in">this</span>.currentPathData = pathData;
+                    <span class="hljs-keyword">if</span> (addTextPathRoll) <span class="hljs-built_in">this</span>.currentRotation = pathData.angle;
 
-                    dest.rotateDestination(engine, pathData.x, pathData.y, <span class="hljs-keyword">this</span>);
+                    dest.rotateDestination(engine, pathData.x, pathData.y, <span class="hljs-built_in">this</span>);
 
                     engine.translate(-handle[<span class="hljs-number">0</span>], -handle[<span class="hljs-number">1</span>]);
 
-                    data = preStamper(dest, engine, <span class="hljs-keyword">this</span>, item);
-                    stamper[method](engine, <span class="hljs-keyword">this</span>, data);
+                    data = preStamper(dest, engine, <span class="hljs-built_in">this</span>, item);
+                    stamper[method](engine, <span class="hljs-built_in">this</span>, data);
                 }
             }
-            <span class="hljs-keyword">this</span>.addPathRotation = aPR;
-            <span class="hljs-keyword">this</span>.currentRotation = cr;
+            <span class="hljs-built_in">this</span>.addPathRotation = aPR;
+            <span class="hljs-built_in">this</span>.currentRotation = cr;
         }
         <span class="hljs-keyword">else</span> {
 
-            <span class="hljs-keyword">this</span>.performRotation(engine);
+            <span class="hljs-built_in">this</span>.performRotation(engine);
 
-            <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.noCanvasEngineUpdates) dest.setEngine(<span class="hljs-keyword">this</span>);
+            <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.noCanvasEngineUpdates) dest.setEngine(<span class="hljs-built_in">this</span>);
 
-            pos = <span class="hljs-keyword">this</span>.textPositions;
+            pos = <span class="hljs-built_in">this</span>.textPositions;
 
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = pos.length; i &lt; iz; i++) {
 
-                data = preStamper(dest, engine, <span class="hljs-keyword">this</span>, pos[i]);
-                stamper[method](engine, <span class="hljs-keyword">this</span>, data);
+                data = preStamper(dest, engine, <span class="hljs-built_in">this</span>, pos[i]);
+                stamper[method](engine, <span class="hljs-built_in">this</span>, data);
             }
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.showBoundingBox) <span class="hljs-keyword">this</span>.drawBoundingBox(engine);
+            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.showBoundingBox) <span class="hljs-built_in">this</span>.drawBoundingBox(engine);
         }
     }
 };</pre></div></div>
@@ -2935,17 +2978,17 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
             
             <div class="content"><div class='highlight'><pre>P.calculateGlyphPathPositions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">let</span> path = <span class="hljs-keyword">this</span>.getTextPath(),
+    <span class="hljs-keyword">let</span> path = <span class="hljs-built_in">this</span>.getTextPath(),
         len = path.length,
-        textPos = <span class="hljs-keyword">this</span>.textPositions,
-        widths = <span class="hljs-keyword">this</span>.textGlyphWidths,
-        direction = (<span class="hljs-keyword">this</span>.textPathDirection === <span class="hljs-string">'ltr'</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>,
-        pathPos = <span class="hljs-keyword">this</span>.textPathPosition,
+        textPos = <span class="hljs-built_in">this</span>.textPositions,
+        widths = <span class="hljs-built_in">this</span>.textGlyphWidths,
+        direction = (<span class="hljs-built_in">this</span>.textPathDirection === <span class="hljs-string">&#x27;ltr&#x27;</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>,
+        pathPos = <span class="hljs-built_in">this</span>.textPathPosition,
         distance, posArray, i, iz, width,
-        justify = <span class="hljs-keyword">this</span>.justify,
-        loop = <span class="hljs-keyword">this</span>.textPathLoop,
+        justify = <span class="hljs-built_in">this</span>.justify,
+        loop = <span class="hljs-built_in">this</span>.textPathLoop,
         localPathPos,
-        pathSpeed = <span class="hljs-keyword">this</span>.constantPathSpeed;
+        pathSpeed = <span class="hljs-built_in">this</span>.constantPathSpeed;
 
     <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = textPos.length; i &lt; iz; i++) {</pre></div></div>
             
@@ -2978,12 +3021,12 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
 
         <span class="hljs-keyword">switch</span> (justify) {
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">'center'</span> :
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;center&#x27;</span> :
                 localPathPos = pathPos + ((width / <span class="hljs-number">2</span>) / len);
                 posArray[<span class="hljs-number">7</span>] = -width / <span class="hljs-number">2</span>;
                 <span class="hljs-keyword">break</span>;
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">'right'</span> :
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;right&#x27;</span> :
                 localPathPos = pathPos + (width / len);
                 posArray[<span class="hljs-number">7</span>] = -width;
                 <span class="hljs-keyword">break</span>;
@@ -3240,7 +3283,7 @@ data[3] - width</p>
             <div class="content"><div class='highlight'><pre>    clear: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine, entity, data</span>) </span>{ 
 
         <span class="hljs-keyword">let</span> gco = engine.globalCompositeOperation;
-        engine.globalCompositeOperation = <span class="hljs-string">'destination-out'</span>;
+        engine.globalCompositeOperation = <span class="hljs-string">&#x27;destination-out&#x27;</span>;
         engine.fillText(...data);
         engine.globalCompositeOperation = gco;
     },    
@@ -3262,14 +3305,14 @@ data[3] - width</p>
             <div class="content"><div class='highlight'><pre>P.drawBoundingBox = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
 
     engine.save();
-    engine.strokeStyle = <span class="hljs-keyword">this</span>.boundingBoxColor;
+    engine.strokeStyle = <span class="hljs-built_in">this</span>.boundingBoxColor;
     engine.lineWidth = <span class="hljs-number">1</span>;
-    engine.globalCompositeOperation = <span class="hljs-string">'source-over'</span>;
+    engine.globalCompositeOperation = <span class="hljs-string">&#x27;source-over&#x27;</span>;
     engine.globalAlpha = <span class="hljs-number">1</span>;
     engine.shadowOffsetX = <span class="hljs-number">0</span>;
     engine.shadowOffsetY = <span class="hljs-number">0</span>;
     engine.shadowBlur = <span class="hljs-number">0</span>;
-    engine.stroke(<span class="hljs-keyword">this</span>.pathObject);
+    engine.stroke(<span class="hljs-built_in">this</span>.pathObject);
     engine.restore();
 };</pre></div></div>
             
@@ -3292,13 +3335,13 @@ data[3] - width</p>
             
             <div class="content"><div class='highlight'><pre>P.performRotation = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
 
-    <span class="hljs-keyword">let</span> dest = <span class="hljs-keyword">this</span>.currentHost;
+    <span class="hljs-keyword">let</span> dest = <span class="hljs-built_in">this</span>.currentHost;
 
     <span class="hljs-keyword">if</span> (dest) {
 
-        <span class="hljs-keyword">let</span> [x, y] = <span class="hljs-keyword">this</span>.currentStampPosition;
+        <span class="hljs-keyword">let</span> [x, y] = <span class="hljs-built_in">this</span>.currentStampPosition;
 
-        dest.rotateDestination(engine, x, y, <span class="hljs-keyword">this</span>);
+        dest.rotateDestination(engine, x, y, <span class="hljs-built_in">this</span>);
     }
 };</pre></div></div>
             
@@ -3314,37 +3357,37 @@ data[3] - width</p>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.makePhrase({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'myphrase_fill'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myphrase_fill&#x27;</span>,
 
-    <span class="hljs-attr">text</span>: <span class="hljs-string">'H&amp;epsilon;lj&amp;ouml;!'</span>,
-    <span class="hljs-attr">font</span>: <span class="hljs-string">'bold 40px Garamond, serif'</span>,
+    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;H&amp;epsilon;lj&amp;ouml;!&#x27;</span>,
+    <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;bold 40px Garamond, serif&#x27;</span>,
 
     <span class="hljs-attr">width</span>: <span class="hljs-number">120</span>,
 
-    <span class="hljs-attr">startX</span>: <span class="hljs-string">'14%'</span>,
-    <span class="hljs-attr">startY</span>: <span class="hljs-string">'28%'</span>,
-    <span class="hljs-attr">handleX</span>: <span class="hljs-string">'center'</span>,
-    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'center'</span>,
+    <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;14%&#x27;</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;28%&#x27;</span>,
+    <span class="hljs-attr">handleX</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
+    <span class="hljs-attr">handleY</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
 
-    <span class="hljs-attr">justify</span>: <span class="hljs-string">'center'</span>,
+    <span class="hljs-attr">justify</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
     <span class="hljs-attr">lineHeight</span>: <span class="hljs-number">1</span>,
 
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'green'</span>,
-    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">'gold'</span>,
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;green&#x27;</span>,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;gold&#x27;</span>,
 
     <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
-    <span class="hljs-attr">lineJoin</span>: <span class="hljs-string">'round'</span>,
+    <span class="hljs-attr">lineJoin</span>: <span class="hljs-string">&#x27;round&#x27;</span>,
 
     <span class="hljs-attr">shadowOffsetX</span>: <span class="hljs-number">2</span>,
     <span class="hljs-attr">shadowOffsetY</span>: <span class="hljs-number">2</span>,
     <span class="hljs-attr">shadowBlur</span>: <span class="hljs-number">2</span>,
-    <span class="hljs-attr">shadowColor</span>: <span class="hljs-string">'black'</span>,
+    <span class="hljs-attr">shadowColor</span>: <span class="hljs-string">&#x27;black&#x27;</span>,
 
 }).clone({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'myphrase_draw'</span>,
-    <span class="hljs-attr">startX</span>: <span class="hljs-string">'38%'</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">'draw'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myphrase_draw&#x27;</span>,
+    <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;38%&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
 });</code></pre>
 
             </div>
@@ -3353,7 +3396,7 @@ data[3] - width</p>
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Phrase(items);
 };
 
-constructors.Phrase = Phrase;</pre></div></div>
+<span class="hljs-title">constructors</span>.<span class="hljs-title">Phrase</span> = <span class="hljs-title">Phrase</span>;</pre></div></div>
             
         </li>
         

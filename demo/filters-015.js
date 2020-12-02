@@ -28,7 +28,17 @@ const piccy = scrawl.makePicture({
     filter: 'url(#svg-noise)',
 });
 
-// #### Scene animation
+
+// #### SVG filter
+// We create the filter in the HTML script, not here:
+// ```
+// <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+//   <filter id="svg-noise">
+//     <feTurbulence type="fractalNoise" baseFrequency="0.01 0.04" result="NOISE" numOctaves="2" />
+//     <feDisplacementMap in="SourceGraphic" in2="NOISE" scale="20" xChannelSelector="R" yChannelSelector="R"></feDisplacementMap>
+//   </filter>
+// </svg>
+// ```
 let bfx = document.querySelector('#bfx'),
     bfy = document.querySelector('#bfy'),
     octaves = document.querySelector('#octaves'),
@@ -45,6 +55,8 @@ scale.value = 20;
 xChannelSelector.options.selectedIndex = 0;
 yChannelSelector.options.selectedIndex = 0;
 
+
+// #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 

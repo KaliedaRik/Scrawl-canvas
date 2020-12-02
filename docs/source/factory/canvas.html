@@ -4,7 +4,7 @@
 <head>
   <title>Canvas factory</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -110,6 +110,11 @@
                 </a>
               
                 
+                <a class="source" href="emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
                 <a class="source" href="filter.html">
                   ./source/factory/filter.js
                 </a>
@@ -150,6 +155,11 @@
                 </a>
               
                 
+                <a class="source" href="net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
                 <a class="source" href="oval.html">
                   ./source/factory/oval.js
                 </a>
@@ -157,6 +167,31 @@
                 
                 <a class="source" href="palette.html">
                   ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="particleForce.html">
+                  ./source/factory/particleForce.js
+                </a>
+              
+                
+                <a class="source" href="particleHistory.html">
+                  ./source/factory/particleHistory.js
+                </a>
+              
+                
+                <a class="source" href="particleSpring.html">
+                  ./source/factory/particleSpring.js
+                </a>
+              
+                
+                <a class="source" href="particleWorld.html">
+                  ./source/factory/particleWorld.js
                 </a>
               
                 
@@ -247,6 +282,11 @@
                 
                 <a class="source" href="ticker.html">
                   ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="tracer.html">
+                  ./source/factory/tracer.js
                 </a>
               
                 
@@ -454,18 +494,18 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { cell, constructors, artefact, group } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { rootElements, setRootElementsSort, setCurrentCanvas, domShow, scrawlCanvasHold } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/document.js'</span>;
-<span class="hljs-keyword">import</span> { mergeOver, pushUnique, removeItem, xt, λ<span class="hljs-keyword">this</span>, λ<span class="hljs-literal">null</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
-<span class="hljs-keyword">import</span> { uiSubscribedElements } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/userInteraction.js'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { cell, <span class="hljs-title">constructors</span>, <span class="hljs-title">artefact</span>, <span class="hljs-title">group</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+<span class="hljs-keyword">import</span> { rootElements, setRootElementsSort, setCurrentCanvas, domShow, scrawlCanvasHold } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/document.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { mergeOver, pushUnique, removeItem, xt, λ<span class="hljs-built_in">this</span>, λ<span class="hljs-literal">null</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { uiSubscribedElements } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/userInteraction.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { makeState } <span class="hljs-keyword">from</span> <span class="hljs-string">'./state.js'</span>;
-<span class="hljs-keyword">import</span> { makeCell } <span class="hljs-keyword">from</span> <span class="hljs-string">'./cell.js'</span>;
-<span class="hljs-keyword">import</span> { makeCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">'./coordinate.js'</span>;
+<span class="hljs-keyword">import</span> { makeState } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./state.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { makeCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./cell.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { makeCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./coordinate.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/base.js'</span>;
-<span class="hljs-keyword">import</span> domMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/dom.js'</span>;
-<span class="hljs-keyword">import</span> displayMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/displayShape.js'</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
+<span class="hljs-keyword">import</span> domMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/dom.js&#x27;</span>;
+<span class="hljs-keyword">import</span> displayMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/displayShape.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -484,46 +524,46 @@
 
     <span class="hljs-keyword">let</span> g, el;
 
-    <span class="hljs-keyword">this</span>.makeName(items.name);
-    <span class="hljs-keyword">this</span>.register();
-    <span class="hljs-keyword">this</span>.initializePositions();
+    <span class="hljs-built_in">this</span>.makeName(items.name);
+    <span class="hljs-built_in">this</span>.register();
+    <span class="hljs-built_in">this</span>.initializePositions();
 
-    <span class="hljs-keyword">this</span>.dimensions[<span class="hljs-number">0</span>] = <span class="hljs-number">300</span>;
-    <span class="hljs-keyword">this</span>.dimensions[<span class="hljs-number">1</span>] = <span class="hljs-number">150</span>;
+    <span class="hljs-built_in">this</span>.dimensions[<span class="hljs-number">0</span>] = <span class="hljs-number">300</span>;
+    <span class="hljs-built_in">this</span>.dimensions[<span class="hljs-number">1</span>] = <span class="hljs-number">150</span>;
 
-    <span class="hljs-keyword">this</span>.pathCorners = [];
-    <span class="hljs-keyword">this</span>.css = {};
-    <span class="hljs-keyword">this</span>.here = {};
-    <span class="hljs-keyword">this</span>.perspective = {
+    <span class="hljs-built_in">this</span>.pathCorners = [];
+    <span class="hljs-built_in">this</span>.css = {};
+    <span class="hljs-built_in">this</span>.here = {};
+    <span class="hljs-built_in">this</span>.perspective = {
 
-        <span class="hljs-attr">x</span>: <span class="hljs-string">'50%'</span>,
-        <span class="hljs-attr">y</span>: <span class="hljs-string">'50%'</span>,
+        <span class="hljs-attr">x</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+        <span class="hljs-attr">y</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
         <span class="hljs-attr">z</span>: <span class="hljs-number">0</span>
     };
-    <span class="hljs-keyword">this</span>.dirtyPerspective = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPerspective = <span class="hljs-literal">true</span>;
 
-    <span class="hljs-keyword">this</span>.initializeDomLayout(items);
+    <span class="hljs-built_in">this</span>.initializeDomLayout(items);
 
-    <span class="hljs-keyword">this</span>.set(<span class="hljs-keyword">this</span>.defs);
+    <span class="hljs-built_in">this</span>.set(<span class="hljs-built_in">this</span>.defs);
 
-    <span class="hljs-keyword">if</span> (!items.label) items.label = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span> canvas element`</span>;
+    <span class="hljs-keyword">if</span> (!items.label) items.label = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> canvas element`</span>;
 
-    <span class="hljs-keyword">this</span>.initializeDisplayShapeActions();
+    <span class="hljs-built_in">this</span>.initializeDisplayShapeActions();
 
-    <span class="hljs-keyword">this</span>.set(items);
+    <span class="hljs-built_in">this</span>.set(items);
 
-    <span class="hljs-keyword">this</span>.cleanDimensions();
+    <span class="hljs-built_in">this</span>.cleanDimensions();
 
-    el = <span class="hljs-keyword">this</span>.domElement;
+    el = <span class="hljs-built_in">this</span>.domElement;
 
     <span class="hljs-keyword">if</span> (el) {
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.trackHere) pushUnique(uiSubscribedElements, <span class="hljs-keyword">this</span>.name);
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.trackHere) pushUnique(uiSubscribedElements, <span class="hljs-built_in">this</span>.name);
 
-        <span class="hljs-keyword">this</span>.engine = <span class="hljs-keyword">this</span>.domElement.getContext(<span class="hljs-string">'2d'</span>);
+        <span class="hljs-built_in">this</span>.engine = <span class="hljs-built_in">this</span>.domElement.getContext(<span class="hljs-string">&#x27;2d&#x27;</span>);
 
-        <span class="hljs-keyword">this</span>.state = makeState({
-            <span class="hljs-attr">engine</span>: <span class="hljs-keyword">this</span>.engine
+        <span class="hljs-built_in">this</span>.state = makeState({
+            <span class="hljs-attr">engine</span>: <span class="hljs-built_in">this</span>.engine
         });</pre></div></div>
             
         </li>
@@ -539,10 +579,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">this</span>.cells = [];
-        <span class="hljs-keyword">this</span>.cellBatchesClear = [];
-        <span class="hljs-keyword">this</span>.cellBatchesCompile = [];
-        <span class="hljs-keyword">this</span>.cellBatchesShow = [];</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-built_in">this</span>.cells = [];
+        <span class="hljs-built_in">this</span>.cellBatchesClear = [];
+        <span class="hljs-built_in">this</span>.cellBatchesCompile = [];
+        <span class="hljs-built_in">this</span>.cellBatchesShow = [];</pre></div></div>
             
         </li>
         
@@ -558,19 +598,19 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> cellArgs = {
-            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span>_base`</span>,
+            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span>_base`</span>,
             <span class="hljs-attr">element</span>: <span class="hljs-literal">false</span>,
-            <span class="hljs-attr">width</span>: <span class="hljs-keyword">this</span>.currentDimensions[<span class="hljs-number">0</span>],
-            <span class="hljs-attr">height</span>: <span class="hljs-keyword">this</span>.currentDimensions[<span class="hljs-number">1</span>],
+            <span class="hljs-attr">width</span>: <span class="hljs-built_in">this</span>.currentDimensions[<span class="hljs-number">0</span>],
+            <span class="hljs-attr">height</span>: <span class="hljs-built_in">this</span>.currentDimensions[<span class="hljs-number">1</span>],
             <span class="hljs-attr">cleared</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">compiled</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span>,
             <span class="hljs-attr">isBase</span>: <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">host</span>: <span class="hljs-keyword">this</span>.name,
-            <span class="hljs-attr">controller</span>: <span class="hljs-keyword">this</span>,
+            <span class="hljs-attr">host</span>: <span class="hljs-built_in">this</span>.name,
+            <span class="hljs-attr">controller</span>: <span class="hljs-built_in">this</span>,
             <span class="hljs-attr">order</span>: <span class="hljs-number">10</span>,
         };
-        <span class="hljs-keyword">this</span>.base = <span class="hljs-keyword">this</span>.buildCell(cellArgs);</pre></div></div>
+        <span class="hljs-built_in">this</span>.base = <span class="hljs-built_in">this</span>.buildCell(cellArgs);</pre></div></div>
             
         </li>
         
@@ -585,7 +625,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        pushUnique(rootElements, <span class="hljs-keyword">this</span>.name);
+            <div class="content"><div class='highlight'><pre>        pushUnique(rootElements, <span class="hljs-built_in">this</span>.name);
         setRootElementsSort();</pre></div></div>
             
         </li>
@@ -601,60 +641,60 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!el.getAttribute(<span class="hljs-string">'role'</span>)) el.setAttribute(<span class="hljs-string">'role'</span>, <span class="hljs-string">'img'</span>);
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!el.getAttribute(<span class="hljs-string">&#x27;role&#x27;</span>)) el.setAttribute(<span class="hljs-string">&#x27;role&#x27;</span>, <span class="hljs-string">&#x27;img&#x27;</span>);
 
-        <span class="hljs-keyword">let</span> navigation = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'nav'</span>);
-        navigation.id = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span>-navigation`</span>;
-        navigation.style.width = <span class="hljs-string">'0px'</span>;
-        navigation.style.height = <span class="hljs-string">'0px'</span>;
-        navigation.style.maxWidth = <span class="hljs-string">'0px'</span>;
-        navigation.style.maxHeight = <span class="hljs-string">'0px'</span>;
-        navigation.style.border = <span class="hljs-string">'0px'</span>;
-        navigation.style.padding = <span class="hljs-string">'0px'</span>;
-        navigation.style.margin = <span class="hljs-string">'0px'</span>;
-        navigation.style.overflow = <span class="hljs-string">'hidden'</span>;
-        <span class="hljs-keyword">this</span>.navigation = navigation;
+        <span class="hljs-keyword">let</span> navigation = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;nav&#x27;</span>);
+        navigation.id = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span>-navigation`</span>;
+        navigation.style.width = <span class="hljs-string">&#x27;0px&#x27;</span>;
+        navigation.style.height = <span class="hljs-string">&#x27;0px&#x27;</span>;
+        navigation.style.maxWidth = <span class="hljs-string">&#x27;0px&#x27;</span>;
+        navigation.style.maxHeight = <span class="hljs-string">&#x27;0px&#x27;</span>;
+        navigation.style.border = <span class="hljs-string">&#x27;0px&#x27;</span>;
+        navigation.style.padding = <span class="hljs-string">&#x27;0px&#x27;</span>;
+        navigation.style.margin = <span class="hljs-string">&#x27;0px&#x27;</span>;
+        navigation.style.overflow = <span class="hljs-string">&#x27;hidden&#x27;</span>;
+        <span class="hljs-built_in">this</span>.navigation = navigation;
         el.appendChild(navigation);
 
-        <span class="hljs-keyword">let</span> textHold = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'div'</span>);
-        textHold.id = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span>-text-hold`</span>;
-        textHold.style.width = <span class="hljs-string">'0px'</span>;
-        textHold.style.height = <span class="hljs-string">'0px'</span>;
-        textHold.style.maxWidth = <span class="hljs-string">'0px'</span>;
-        textHold.style.maxHeight = <span class="hljs-string">'0px'</span>;
-        textHold.style.border = <span class="hljs-string">'0px'</span>;
-        textHold.style.padding = <span class="hljs-string">'0px'</span>;
-        textHold.style.margin = <span class="hljs-string">'0px'</span>;
-        textHold.style.overflow = <span class="hljs-string">'hidden'</span>;
-        <span class="hljs-keyword">this</span>.textHold = textHold;
+        <span class="hljs-keyword">let</span> textHold = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;div&#x27;</span>);
+        textHold.id = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span>-text-hold`</span>;
+        textHold.style.width = <span class="hljs-string">&#x27;0px&#x27;</span>;
+        textHold.style.height = <span class="hljs-string">&#x27;0px&#x27;</span>;
+        textHold.style.maxWidth = <span class="hljs-string">&#x27;0px&#x27;</span>;
+        textHold.style.maxHeight = <span class="hljs-string">&#x27;0px&#x27;</span>;
+        textHold.style.border = <span class="hljs-string">&#x27;0px&#x27;</span>;
+        textHold.style.padding = <span class="hljs-string">&#x27;0px&#x27;</span>;
+        textHold.style.margin = <span class="hljs-string">&#x27;0px&#x27;</span>;
+        textHold.style.overflow = <span class="hljs-string">&#x27;hidden&#x27;</span>;
+        <span class="hljs-built_in">this</span>.textHold = textHold;
         el.appendChild(textHold);
 
-        <span class="hljs-keyword">let</span> ariaLabel = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'div'</span>);
-        ariaLabel.id = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span>-ARIA-label`</span>;
-        ariaLabel.textContent = <span class="hljs-keyword">this</span>.label;
-        <span class="hljs-keyword">this</span>.ariaLabelElement = ariaLabel;
+        <span class="hljs-keyword">let</span> ariaLabel = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;div&#x27;</span>);
+        ariaLabel.id = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span>-ARIA-label`</span>;
+        ariaLabel.textContent = <span class="hljs-built_in">this</span>.label;
+        <span class="hljs-built_in">this</span>.ariaLabelElement = ariaLabel;
         scrawlCanvasHold.appendChild(ariaLabel);
-        el.setAttribute(<span class="hljs-string">'aria-labelledby'</span>, ariaLabel.id);
-        el.setAttribute(<span class="hljs-string">'aria-live'</span>, <span class="hljs-string">'polite'</span>);
+        el.setAttribute(<span class="hljs-string">&#x27;aria-labelledby&#x27;</span>, ariaLabel.id);
+        el.setAttribute(<span class="hljs-string">&#x27;aria-live&#x27;</span>, <span class="hljs-string">&#x27;polite&#x27;</span>);
 
-        <span class="hljs-keyword">let</span> ariaDescription = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'div'</span>);
-        ariaDescription.id = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span>-ARIA-description`</span>;
-        ariaDescription.textContent = <span class="hljs-keyword">this</span>.description;
-        <span class="hljs-keyword">this</span>.ariaDescriptionElement = ariaDescription;
+        <span class="hljs-keyword">let</span> ariaDescription = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;div&#x27;</span>);
+        ariaDescription.id = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span>-ARIA-description`</span>;
+        ariaDescription.textContent = <span class="hljs-built_in">this</span>.description;
+        <span class="hljs-built_in">this</span>.ariaDescriptionElement = ariaDescription;
         scrawlCanvasHold.appendChild(ariaDescription);
-        el.setAttribute(<span class="hljs-string">'aria-describedby'</span>, ariaDescription.id);
-        el.setAttribute(<span class="hljs-string">'aria-live'</span>, <span class="hljs-string">'polite'</span>);
+        el.setAttribute(<span class="hljs-string">&#x27;aria-describedby&#x27;</span>, ariaDescription.id);
+        el.setAttribute(<span class="hljs-string">&#x27;aria-live&#x27;</span>, <span class="hljs-string">&#x27;polite&#x27;</span>);
 
-        <span class="hljs-keyword">this</span>.cleanAria();
+        <span class="hljs-built_in">this</span>.cleanAria();
     }
 
-    <span class="hljs-keyword">this</span>.dirtyCells = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.apply();
+    <span class="hljs-built_in">this</span>.dirtyCells = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.apply();
 
-    <span class="hljs-keyword">this</span>.dirtyDomDimensions = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">if</span> (items.setAsCurrentCanvas) <span class="hljs-keyword">this</span>.setAsCurrentCanvas();
+    <span class="hljs-built_in">this</span>.dirtyDomDimensions = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">if</span> (items.setAsCurrentCanvas) <span class="hljs-built_in">this</span>.setAsCurrentCanvas();
     
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -671,8 +711,8 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Canvas.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">'Canvas'</span>;
-P.lib = <span class="hljs-string">'canvas'</span>;
+P.type = <span class="hljs-string">&#x27;Canvas&#x27;</span>;
+P.lib = <span class="hljs-string">&#x27;canvas&#x27;</span>;
 P.isArtefact = <span class="hljs-literal">true</span>;
 P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
             
@@ -710,7 +750,7 @@ P = displayMix(P);</pre></div></div>
               <h4 id="canvas-attributes">Canvas attributes</h4>
 <ul>
 <li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/position.html">position mixin</a>: <strong>group, visibility, order, start, <em>startX</em>, <em>startY</em>, handle, <em>handleX</em>, <em>handleY</em>, offset, <em>offsetX</em>, <em>offsetY</em>, dimensions, <em>width</em>, <em>height</em>, pivoted, mimicked, lockTo, <em>lockXTo</em>, <em>lockYTo</em>, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/position.html">position mixin</a>: <strong>group, visibility, order, start, <em>startX</em>, <em>startY</em>, handle, <em>handleX</em>, <em>handleY</em>, offset, <em>offsetX</em>, <em>offsetY</em>, dimensions, <em>width</em>, <em>height</em>, pivoted, mimicked, lockTo, <em>lockXTo</em>, <em>lockYTo</em>, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge, bringToFrontOnDrag</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/delta.html">delta mixin</a>: <strong>delta, noDeltaUpdates</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/pivot.html">pivot mixin</a>: <strong>pivot, pivotCorner, addPivotHandle, addPivotOffset, addPivotRotation</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/mimic.html">mimic mixin</a>: <strong>mimic, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic</strong>.</li>
@@ -737,7 +777,7 @@ P = displayMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    position: <span class="hljs-string">'relative'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    position: <span class="hljs-string">&#x27;relative&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -768,7 +808,7 @@ P = displayMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    fit: <span class="hljs-string">'none'</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    fit: <span class="hljs-string">&#x27;none&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -821,9 +861,9 @@ P = displayMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    title: <span class="hljs-string">''</span>,
-    <span class="hljs-attr">label</span>: <span class="hljs-string">''</span>,
-    <span class="hljs-attr">description</span>: <span class="hljs-string">''</span>,
+            <div class="content"><div class='highlight'><pre>    title: <span class="hljs-string">&#x27;&#x27;</span>,
+    <span class="hljs-attr">label</span>: <span class="hljs-string">&#x27;&#x27;</span>,
+    <span class="hljs-attr">description</span>: <span class="hljs-string">&#x27;&#x27;</span>,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
@@ -846,9 +886,9 @@ P.processPacketOut = λ<span class="hljs-literal">null</span>;
 P.finalizePacketOut = λ<span class="hljs-literal">null</span>;
 P.saveAsPacket = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">return</span> <span class="hljs-string">`[<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span>, <span class="hljs-subst">${<span class="hljs-keyword">this</span>.type}</span>, <span class="hljs-subst">${<span class="hljs-keyword">this</span>.lib}</span>, {}]`</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-string">`[<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span>, <span class="hljs-subst">${<span class="hljs-built_in">this</span>.type}</span>, <span class="hljs-subst">${<span class="hljs-built_in">this</span>.lib}</span>, {}]`</span>
 };
-P.clone = λ<span class="hljs-keyword">this</span>;</pre></div></div>
+P.clone = λ<span class="hljs-built_in">this</span>;</pre></div></div>
             
         </li>
         
@@ -860,14 +900,9 @@ P.clone = λ<span class="hljs-keyword">this</span>;</pre></div></div>
                 <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <h4 id="kill-functionality">Kill functionality</h4>
+<p>P.kill = function () {</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>P.kill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">let</span> name = <span class="hljs-keyword">this</span>.name,
-        host = <span class="hljs-keyword">this</span>.host,
-        h, g;</pre></div></div>
             
         </li>
         
@@ -877,6 +912,185 @@ P.clone = λ<span class="hljs-keyword">this</span>;</pre></div></div>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <pre><code><span class="hljs-keyword">let</span> name = <span class="hljs-built_in">this</span>.name,
+    host = <span class="hljs-built_in">this</span>.host,
+    h, g;</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <pre><code><span class="hljs-comment">// rootElements and uiSubscribedElements arrays</span>
+removeItem(rootElements, name);
+setRootElementsSort();</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <pre><code>removeItem(uiSubscribedElements, name);</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <pre><code><span class="hljs-comment">// Host and host Group</span>
+<span class="hljs-keyword">if</span> (host &amp;&amp; host !== <span class="hljs-string">&#x27;root&#x27;</span>) {</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <pre><code>    h = (<span class="hljs-built_in">this</span>.currentHost) ? <span class="hljs-built_in">this</span>.currentHost : artefact[host];</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <pre><code>    <span class="hljs-keyword">if</span> (h) {</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <pre><code>        h.removeGroups(name);</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <pre><code>        g = group[h.name];
+        <span class="hljs-keyword">if</span> (g) g.removeArtefacts(name);
+    }
+}</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <pre><code><span class="hljs-comment">// Canvas Group</span>
+<span class="hljs-keyword">if</span> (group[name]) group[name].kill();</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <pre><code><span class="hljs-comment">// Base Cell</span>
+<span class="hljs-built_in">this</span>.base.kill();</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <pre><code><span class="hljs-comment">// DOM removals</span>
+<span class="hljs-built_in">this</span>.navigation.remove();
+<span class="hljs-built_in">this</span>.textHold.remove();
+<span class="hljs-built_in">this</span>.ariaLabelElement.remove();
+<span class="hljs-built_in">this</span>.ariaDescriptionElement.remove();
+<span class="hljs-built_in">this</span>.domElement.remove();</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <pre><code><span class="hljs-comment">// Scrawl-canvas library</span>
+<span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.deregister();</code></pre>
+<p>}</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.factoryKill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">let</span> name = <span class="hljs-built_in">this</span>.name,
+        host = <span class="hljs-built_in">this</span>.host,
+        h, g;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>rootElements and uiSubscribedElements arrays</p>
 
@@ -890,19 +1104,19 @@ P.clone = λ<span class="hljs-keyword">this</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p>Host and host Group</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (host &amp;&amp; host !== <span class="hljs-string">'root'</span>) {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (host &amp;&amp; host !== <span class="hljs-string">&#x27;root&#x27;</span>) {
 
-        h = (<span class="hljs-keyword">this</span>.currentHost) ? <span class="hljs-keyword">this</span>.currentHost : artefact[host];
+        h = (<span class="hljs-built_in">this</span>.currentHost) ? <span class="hljs-built_in">this</span>.currentHost : artefact[host];
 
         <span class="hljs-keyword">if</span> (h) {
 
@@ -916,11 +1130,11 @@ P.clone = λ<span class="hljs-keyword">this</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p>Canvas Group</p>
 
@@ -931,61 +1145,46 @@ P.clone = λ<span class="hljs-keyword">this</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-23">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p>Base Cell</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.base.kill();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.base.kill();</pre></div></div>
             
         </li>
         
         
-        <li id="section-24">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p>DOM removals</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.navigation.remove();
-    <span class="hljs-keyword">this</span>.textHold.remove();
-    <span class="hljs-keyword">this</span>.ariaLabelElement.remove();
-    <span class="hljs-keyword">this</span>.ariaDescriptionElement.remove();
-    <span class="hljs-keyword">this</span>.domElement.remove();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.navigation.remove();
+    <span class="hljs-built_in">this</span>.textHold.remove();
+    <span class="hljs-built_in">this</span>.ariaLabelElement.remove();
+    <span class="hljs-built_in">this</span>.ariaDescriptionElement.remove();
+    <span class="hljs-built_in">this</span>.domElement.remove();
+};</pre></div></div>
             
         </li>
         
         
-        <li id="section-25">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
-              </div>
-              <p>Scrawl-canvas library</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.deregister();
-}</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-26">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -998,259 +1197,20 @@ P.clone = λ<span class="hljs-keyword">this</span>;</pre></div></div>
         </li>
         
         
-        <li id="section-27">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
-              </div>
-              <p><code>fit</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.fitDefaults = [<span class="hljs-string">'fill'</span>, <span class="hljs-string">'contain'</span>, <span class="hljs-string">'cover'</span>];
-S.fit = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.fit = (<span class="hljs-keyword">this</span>.fitDefaults.indexOf(item) &gt;= <span class="hljs-number">0</span>) ? item : <span class="hljs-string">'none'</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-28">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
-              </div>
-              <p><code>title</code> - String</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>S.title = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.title = item;
-    <span class="hljs-keyword">this</span>.dirtyAria = <span class="hljs-literal">true</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
-              </div>
-              <p><code>label</code> - String</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>S.label = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.label = item;
-    <span class="hljs-keyword">this</span>.dirtyAria = <span class="hljs-literal">true</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-30">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
-              </div>
-              <p><code>description</code> - String</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>S.description = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">this</span>.description = item;
-    <span class="hljs-keyword">this</span>.dirtyAria = <span class="hljs-literal">true</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-31">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
-              </div>
-              <p><code>trackHere</code> - Boolean</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>S.trackHere = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">bool</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (xt(bool)) {
-
-        <span class="hljs-keyword">if</span> (bool) pushUnique(uiSubscribedElements, <span class="hljs-keyword">this</span>.name);
-        <span class="hljs-keyword">else</span> removeItem(uiSubscribedElements, <span class="hljs-keyword">this</span>.name);
-
-        <span class="hljs-keyword">this</span>.trackHere = bool;
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-32">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
-              </div>
-              <h5 id="get-and-set-base-cell-attributes">Get and set base cell attributes</h5>
-<p>For convenience, Scrawl-canvas allows us to get/set a limited number of base Cell attributes via their Canvas wrapper’s <code>get</code>, <code>set</code> and <code>deltaSet</code> functions. We can set and deltaSet other base Cell attributes by invoking the <code>mycanvas.setBase</code> and <code>mycanvas.deltaSetBase</code> functions.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-33">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
-              </div>
-              <p><code>backgroundColor</code> - String. We can set the base Cell’s background color to any CSS color String value</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>G.backgroundColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.base.backgroundColor;
-};
-S.backgroundColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.base) {
-
-        <span class="hljs-keyword">this</span>.base.set({
-            <span class="hljs-attr">backgroundColor</span>: item
-        });
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-34">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
-              </div>
-              <p><code>alpha</code> - float Number between 0.0 and 1.0. When the base Cell stamps itself onto the Canvas wrapper’s &lt;canvas&gt; element, it can set the element’s engine to a <code>globalAlpha</code> value stored in the Cell’s alpha attribute.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>G.alpha = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.base.alpha;
-};
-S.alpha = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.base) {
-
-        <span class="hljs-keyword">this</span>.base.set({
-            <span class="hljs-attr">alpha</span>: item
-        });
-    }
-};
-D.alpha = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.base) {
-
-        <span class="hljs-keyword">this</span>.base.deltaSet({
-            <span class="hljs-attr">alpha</span>: item
-        });
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-35">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
-              </div>
-              <p><code>composite</code> - String. When the base Cell stamps itself onto the Canvas wrapper’s &lt;canvas&gt; element, it can set the element’s engine to a <code>globalCompositeOperation</code> value stored in the Cell’s composite attribute.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>G.composite = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.base.composite;
-};
-S.composite = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.base) {
-        <span class="hljs-keyword">this</span>.base.set({
-            <span class="hljs-attr">composite</span>: item
-        });
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-36">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
-              </div>
-              <h4 id="prototype-functions">Prototype functions</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-37">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
-              </div>
-              <p><code>setAsCurrentCanvas</code> - invoke function (without arguments) to make this Canvas wrapper the <strong>current canvas</strong> for future entity generation operations. This is additional to the <code>scrawl.setCurrentCanvas</code> function.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.setAsCurrentCanvas = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.base) setCurrentCanvas(<span class="hljs-keyword">this</span>);
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
-              <p><code>setBase</code> - pass the argument object through to the base Cell’s <code>set</code> function.</p>
+              <p><code>fit</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.setBase = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.fitDefaults = [<span class="hljs-string">&#x27;fill&#x27;</span>, <span class="hljs-string">&#x27;contain&#x27;</span>, <span class="hljs-string">&#x27;cover&#x27;</span>];
+S.fit = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.base) {
-
-        <span class="hljs-keyword">this</span>.base.set(items);
-        <span class="hljs-keyword">this</span>.setBaseHelper();
-    }
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-built_in">this</span>.fit = (<span class="hljs-built_in">this</span>.fitDefaults.indexOf(item) &gt;= <span class="hljs-number">0</span>) ? item : <span class="hljs-string">&#x27;none&#x27;</span>;
 };</pre></div></div>
             
         </li>
@@ -1262,18 +1222,14 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
-              <p><code>deltaSetBase</code> - pass the argument object through to the base Cell’s <code>deltaSet</code> function.</p>
+              <p><code>title</code> - String</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.deltaSetBase = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.title = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.base) {
-
-        <span class="hljs-keyword">this</span>.base.deltaSet(items);
-        <span class="hljs-keyword">this</span>.setBaseHelper();
-    }
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-built_in">this</span>.title = item;
+    <span class="hljs-built_in">this</span>.dirtyAria = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1285,13 +1241,14 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
-              <p>Internal function - passes the Canvas wrapper’s current <strong>here</strong> object and <strong>fit</strong> attribute to the base Cell for further processing</p>
+              <p><code>label</code> - String</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.updateBaseHere = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.label = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.base) <span class="hljs-keyword">this</span>.base.updateBaseHere(<span class="hljs-keyword">this</span>.here, <span class="hljs-keyword">this</span>.fit);
+    <span class="hljs-built_in">this</span>.label = item;
+    <span class="hljs-built_in">this</span>.dirtyAria = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1303,26 +1260,14 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
-              <p>Internal helper function</p>
+              <p><code>description</code> - String</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.setBaseHelper = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.description = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">let</span> items = {};
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.base.dirtyScale) items.dirtyScale = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.base.dirtyDimensions) items.dirtyDimensions = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.base.dirtyLock) items.dirtyLock = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.base.dirtyStart) items.dirtyStart = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.base.dirtyOffset) items.dirtyOffset = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.base.dirtyHandle) items.dirtyHandle = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.base.dirtyRotation) items.dirtyRotation = <span class="hljs-literal">true</span>;
-
-    <span class="hljs-keyword">this</span>.cleanCells();
-    <span class="hljs-keyword">this</span>.base.prepareStamp();
-
-    <span class="hljs-keyword">this</span>.updateCells(items);
+    <span class="hljs-built_in">this</span>.description = item;
+    <span class="hljs-built_in">this</span>.dirtyAria = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1334,13 +1279,267 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
+              <p><code>trackHere</code> - Boolean</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.trackHere = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">bool</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (xt(bool)) {
+
+        <span class="hljs-keyword">if</span> (bool) pushUnique(uiSubscribedElements, <span class="hljs-built_in">this</span>.name);
+        <span class="hljs-keyword">else</span> removeItem(uiSubscribedElements, <span class="hljs-built_in">this</span>.name);
+
+        <span class="hljs-built_in">this</span>.trackHere = bool;
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <h5 id="get-and-set-base-cell-attributes">Get and set base cell attributes</h5>
+<p>For convenience, Scrawl-canvas allows us to get/set a limited number of base Cell attributes via their Canvas wrapper’s <code>get</code>, <code>set</code> and <code>deltaSet</code> functions. We can set and deltaSet other base Cell attributes by invoking the <code>mycanvas.setBase</code> and <code>mycanvas.deltaSetBase</code> functions.</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              <p><code>backgroundColor</code> - String. We can set the base Cell’s background color to any CSS color String value</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>G.backgroundColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.base.backgroundColor;
+};
+S.backgroundColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.base) {
+
+        <span class="hljs-built_in">this</span>.base.set({
+            <span class="hljs-attr">backgroundColor</span>: item
+        });
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
+              <p><code>alpha</code> - float Number between 0.0 and 1.0. When the base Cell stamps itself onto the Canvas wrapper’s &lt;canvas&gt; element, it can set the element’s engine to a <code>globalAlpha</code> value stored in the Cell’s alpha attribute.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>G.alpha = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.base.alpha;
+};
+S.alpha = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.base) {
+
+        <span class="hljs-built_in">this</span>.base.set({
+            <span class="hljs-attr">alpha</span>: item
+        });
+    }
+};
+D.alpha = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.base) {
+
+        <span class="hljs-built_in">this</span>.base.deltaSet({
+            <span class="hljs-attr">alpha</span>: item
+        });
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-46">&#182;</a>
+              </div>
+              <p><code>composite</code> - String. When the base Cell stamps itself onto the Canvas wrapper’s &lt;canvas&gt; element, it can set the element’s engine to a <code>globalCompositeOperation</code> value stored in the Cell’s composite attribute.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>G.composite = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.base.composite;
+};
+S.composite = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.base) {
+        <span class="hljs-built_in">this</span>.base.set({
+            <span class="hljs-attr">composite</span>: item
+        });
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-47">&#182;</a>
+              </div>
+              <h4 id="prototype-functions">Prototype functions</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-48">&#182;</a>
+              </div>
+              <p><code>setAsCurrentCanvas</code> - invoke function (without arguments) to make this Canvas wrapper the <strong>current canvas</strong> for future entity generation operations. This is additional to the <code>scrawl.setCurrentCanvas</code> function.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.setAsCurrentCanvas = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.base) setCurrentCanvas(<span class="hljs-built_in">this</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-49">&#182;</a>
+              </div>
+              <p><code>setBase</code> - pass the argument object through to the base Cell’s <code>set</code> function.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.setBase = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.base) {
+
+        <span class="hljs-built_in">this</span>.base.set(items);
+        <span class="hljs-built_in">this</span>.setBaseHelper();
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-50">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-50">&#182;</a>
+              </div>
+              <p><code>deltaSetBase</code> - pass the argument object through to the base Cell’s <code>deltaSet</code> function.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.deltaSetBase = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.base) {
+
+        <span class="hljs-built_in">this</span>.base.deltaSet(items);
+        <span class="hljs-built_in">this</span>.setBaseHelper();
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-51">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-51">&#182;</a>
+              </div>
+              <p>Internal function - passes the Canvas wrapper’s current <strong>here</strong> object and <strong>fit</strong> attribute to the base Cell for further processing</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.updateBaseHere = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.base) <span class="hljs-built_in">this</span>.base.updateBaseHere(<span class="hljs-built_in">this</span>.here, <span class="hljs-built_in">this</span>.fit);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-52">&#182;</a>
+              </div>
+              <p>Internal helper function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.setBaseHelper = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">let</span> items = {};
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.base.dirtyScale) items.dirtyScale = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.base.dirtyDimensions) items.dirtyDimensions = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.base.dirtyLock) items.dirtyLock = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.base.dirtyStart) items.dirtyStart = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.base.dirtyOffset) items.dirtyOffset = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.base.dirtyHandle) items.dirtyHandle = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.base.dirtyRotation) items.dirtyRotation = <span class="hljs-literal">true</span>;
+
+    <span class="hljs-built_in">this</span>.cleanCells();
+    <span class="hljs-built_in">this</span>.base.prepareStamp();
+
+    <span class="hljs-built_in">this</span>.updateCells(items);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-53">&#182;</a>
+              </div>
               <p><code>updateCells</code> - internal function. Iterate through all Cells registered in the wrapper’s <strong>cells</strong> Array and set a range of dirty flags on them, for future processing by each Cell.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>P.updateCells = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.cells.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
+    <span class="hljs-built_in">this</span>.cells.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
         <span class="hljs-keyword">let</span> mycell = cell[name];
 
@@ -1360,11 +1559,11 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-43">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
               <p><code>buildCell</code> - internal helper function, called by the Canvas constructor</p>
 
@@ -1374,23 +1573,23 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
 
     <span class="hljs-keyword">let</span> host = items.host || <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">if</span> (!host) items.host = <span class="hljs-keyword">this</span>.base.name;
+    <span class="hljs-keyword">if</span> (!host) items.host = <span class="hljs-built_in">this</span>.base.name;
 
     <span class="hljs-keyword">let</span> mycell = makeCell(items);
     
-    <span class="hljs-keyword">this</span>.addCell(mycell);
-    <span class="hljs-keyword">this</span>.cleanCells();
+    <span class="hljs-built_in">this</span>.addCell(mycell);
+    <span class="hljs-built_in">this</span>.cleanCells();
     <span class="hljs-keyword">return</span> mycell;
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-44">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
               <p><code>cleanDimensionsAdditionalActions</code> - overwrites mixin/position function. Promulgates canvas dimension changes through to all Cells in the wrapper’s cells Array.</p>
 
@@ -1398,26 +1597,26 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
             
             <div class="content"><div class='highlight'><pre>P.cleanDimensionsAdditionalActions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.cells) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.cells) {
 
-        <span class="hljs-keyword">this</span>.updateCells({
+        <span class="hljs-built_in">this</span>.updateCells({
             <span class="hljs-attr">dirtyDimensions</span>: <span class="hljs-literal">true</span>,
         });
     }
 
-    <span class="hljs-keyword">this</span>.dirtyDomDimensions = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyDisplayShape = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">this</span>.dirtyDisplayArea = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyDomDimensions = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyDisplayShape = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyDisplayArea = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-45">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
               <p><code>addCell</code> - add a Cell object to the wrapper’s cells Array; argument can be the Cell’s name-String, or the Cell object itself</p>
 
@@ -1429,9 +1628,9 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
 
     <span class="hljs-keyword">if</span> (item) {
 
-        pushUnique(<span class="hljs-keyword">this</span>.cells, item);
+        pushUnique(<span class="hljs-built_in">this</span>.cells, item);
         cell[item].prepareStamp();
-        <span class="hljs-keyword">this</span>.dirtyCells = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.dirtyCells = <span class="hljs-literal">true</span>;
     }
     <span class="hljs-keyword">return</span> item;
 };</pre></div></div>
@@ -1439,11 +1638,11 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-46">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
               <p><code>removeCell</code> - remove a Cell object from the wrapper’s cells Array; argument can be the Cell’s name-String, or the Cell object itself</p>
 
@@ -1455,20 +1654,20 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
 
     <span class="hljs-keyword">if</span> (item) {
 
-        removeItem(<span class="hljs-keyword">this</span>.cells, item);
-        <span class="hljs-keyword">this</span>.dirtyCells = <span class="hljs-literal">true</span>;
+        removeItem(<span class="hljs-built_in">this</span>.cells, item);
+        <span class="hljs-built_in">this</span>.dirtyCells = <span class="hljs-literal">true</span>;
     }
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-47">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-58">&#182;</a>
               </div>
               <p><code>killCell</code> - invoke a Cell object’s <strong>kill</strong> function; argument can be the Cell’s name-String, or the Cell object itself</p>
 
@@ -1480,18 +1679,18 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
 
     <span class="hljs-keyword">if</span> (mycell) mycell.kill();
 
-    <span class="hljs-keyword">this</span>.dirtyCells = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-built_in">this</span>.dirtyCells = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-48">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+                <a class="pilcrow" href="#section-59">&#182;</a>
               </div>
               <h5 id="display-cycle-functions">Display cycle functions</h5>
 
@@ -1500,11 +1699,11 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-49">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
+                <a class="pilcrow" href="#section-60">&#182;</a>
               </div>
               <p><code>clear</code> - For Cell objects in the wrapper’s <strong>cells</strong> (and associated) Arrays (returns a Promise):</p>
 <ul>
@@ -1515,7 +1714,7 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
             
             <div class="content"><div class='highlight'><pre>P.clear = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">let</span> self = <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">let</span> self = <span class="hljs-built_in">this</span>;
 
     <span class="hljs-keyword">if</span> (self.dirtyCells) self.cleanCells();
 
@@ -1545,11 +1744,11 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-50">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
+                <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
               <p><code>compile</code> - For Cell objects in the wrapper’s <strong>cells</strong> (and associated) Arrays (returns a Promise):</p>
 <ul>
@@ -1561,7 +1760,7 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
             
             <div class="content"><div class='highlight'><pre>P.compile = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">let</span> self = <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">let</span> self = <span class="hljs-built_in">this</span>;
 
     <span class="hljs-keyword">if</span> (self.dirtyCells) self.cleanCells();
 
@@ -1598,11 +1797,11 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-51">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+                <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
               <p><code>show</code> - For Cell objects in the wrapper’s <strong>cells</strong> (and associated) Arrays (returns a Promise):</p>
 <ul>
@@ -1619,7 +1818,7 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
             
             <div class="content"><div class='highlight'><pre>P.show = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
 
-    <span class="hljs-keyword">let</span> self = <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">let</span> self = <span class="hljs-built_in">this</span>;
 
     <span class="hljs-keyword">if</span> (self.dirtyCells) self.cleanCells();
 
@@ -1649,7 +1848,7 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
 
                     domShow();
 
-                    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.dirtyAria) <span class="hljs-keyword">this</span>.cleanAria();
+                    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyAria) <span class="hljs-built_in">this</span>.cleanAria();
 
                     resolve(<span class="hljs-literal">true</span>);
                 })
@@ -1663,11 +1862,11 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-52">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+                <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
               <p><code>render</code> - orchestrate a single Display cycle - clear, then compile, then show (returns a Promise).</p>
 
@@ -1675,26 +1874,26 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
             
             <div class="content"><div class='highlight'><pre>P.render = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">let</span> self = <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">let</span> self = <span class="hljs-built_in">this</span>;
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve</span>) =&gt;</span> {
 
         self.clear()
-        .then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> self.compile())
-        .then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> self.show())
-        .then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> resolve(<span class="hljs-literal">true</span>))
-        .catch(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> resolve(<span class="hljs-literal">false</span>));
+        .then(<span class="hljs-function">() =&gt;</span> self.compile())
+        .then(<span class="hljs-function">() =&gt;</span> self.show())
+        .then(<span class="hljs-function">() =&gt;</span> resolve(<span class="hljs-literal">true</span>))
+        .catch(<span class="hljs-function">() =&gt;</span> resolve(<span class="hljs-literal">false</span>));
     });
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-53">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+                <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
               <p><code>cleanCells</code> - internal function triggered each time there is an update to the <strong>cells</strong> Array attribute, or a constituent Cell sets the Canvas wrapper’s <code>dirtyCell</code> flag.</p>
 <ul>
@@ -1709,12 +1908,12 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
             
             <div class="content"><div class='highlight'><pre>P.cleanCells = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">this</span>.dirtyCells = <span class="hljs-literal">false</span>;
+    <span class="hljs-built_in">this</span>.dirtyCells = <span class="hljs-literal">false</span>;
 
     <span class="hljs-keyword">let</span> tempClear = [],
         tempCompile = [],
         tempShow = [],
-        cells = <span class="hljs-keyword">this</span>.cells,
+        cells = <span class="hljs-built_in">this</span>.cells,
         order;
 
     cells.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
@@ -1744,19 +1943,19 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
         }
     });
 
-    <span class="hljs-keyword">this</span>.cellBatchesClear = [].concat(tempClear);
-    <span class="hljs-keyword">this</span>.cellBatchesCompile = tempCompile.reduce(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a.concat(v), []);
-    <span class="hljs-keyword">this</span>.cellBatchesShow = tempShow.reduce(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a.concat(v), []);
+    <span class="hljs-built_in">this</span>.cellBatchesClear = [].concat(tempClear);
+    <span class="hljs-built_in">this</span>.cellBatchesCompile = tempCompile.reduce(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a.concat(v), []);
+    <span class="hljs-built_in">this</span>.cellBatchesShow = tempShow.reduce(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a.concat(v), []);
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-54">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
+                <a class="pilcrow" href="#section-65">&#182;</a>
               </div>
               <h5 id="handling-dom-events">Handling DOM events</h5>
 <p><code>cascadeEventAction</code> - The Canvas wrapper’s &lt;canvas&gt; element is part of the DOM, thus it is able to participate in all normal DOM events. We use the cascadeEventAction function to tell the wrapper which of the events it receives should be cascaded down to its constituent Cell objects and, in turn, their Groups’ artefacts. </p>
@@ -1770,9 +1969,9 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
             
             <div class="content"><div class='highlight'><pre>P.cascadeEventAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">action</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.currentActiveEntityNames) <span class="hljs-keyword">this</span>.currentActiveEntityNames = [];
+    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.currentActiveEntityNames) <span class="hljs-built_in">this</span>.currentActiveEntityNames = [];
 
-    <span class="hljs-keyword">let</span> currentActiveEntityNames = <span class="hljs-keyword">this</span>.currentActiveEntityNames,
+    <span class="hljs-keyword">let</span> currentActiveEntityNames = <span class="hljs-built_in">this</span>.currentActiveEntityNames,
         testActiveEntityObjects = [],
         testActiveEntityNames = [],
         newActiveEntityObjects = [],
@@ -1783,11 +1982,11 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-55">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+                <a class="pilcrow" href="#section-66">&#182;</a>
               </div>
               <ol>
 <li>Find all entitys currently colliding with the mouse/touch coordinate over the canvas</li>
@@ -1795,7 +1994,7 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.cells.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.cells.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
         <span class="hljs-keyword">let</span> myCell = cell[name];
 
@@ -1807,11 +2006,11 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-56">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+                <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
               <ol start="2">
 <li>Process the returned test results</li>
@@ -1845,11 +2044,11 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-57">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
+                <a class="pilcrow" href="#section-68">&#182;</a>
               </div>
               <ol start="3">
 <li>Trigger the required action on each affected entity</li>
@@ -1875,23 +2074,23 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
 
     <span class="hljs-keyword">switch</span> (action) {
 
-        <span class="hljs-keyword">case</span> <span class="hljs-string">'down'</span> :
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;down&#x27;</span> :
             currentActiveEntityObjects.forEach(<span class="hljs-function"><span class="hljs-params">art</span> =&gt;</span> art.onDown());
             <span class="hljs-keyword">break</span>;
 
-        <span class="hljs-keyword">case</span> <span class="hljs-string">'up'</span> :
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;up&#x27;</span> :
             currentActiveEntityObjects.forEach(<span class="hljs-function"><span class="hljs-params">art</span> =&gt;</span> art.onUp());
             <span class="hljs-keyword">break</span>;
 
-        <span class="hljs-keyword">case</span> <span class="hljs-string">'enter'</span> :
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;enter&#x27;</span> :
             newActiveEntityObjects.forEach(<span class="hljs-function"><span class="hljs-params">art</span> =&gt;</span> art.onEnter());
             <span class="hljs-keyword">break</span>;
 
-        <span class="hljs-keyword">case</span> <span class="hljs-string">'leave'</span> :
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;leave&#x27;</span> :
             doLeave();
             <span class="hljs-keyword">break</span>;
 
-        <span class="hljs-keyword">case</span> <span class="hljs-string">'move'</span> :
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;move&#x27;</span> :
             doLeave();
             newActiveEntityObjects.forEach(<span class="hljs-function"><span class="hljs-params">art</span> =&gt;</span> art.onEnter());
             <span class="hljs-keyword">break</span>;
@@ -1900,11 +2099,11 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-58">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
+                <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
               <ol start="4">
 <li>Cleanup and return</li>
@@ -1912,19 +2111,19 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.currentActiveEntityNames = newActiveEntityNames.concat(knownActiveEntityNames);
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.currentActiveEntityNames = newActiveEntityNames.concat(knownActiveEntityNames);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.currentActiveEntityNames;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.currentActiveEntityNames;
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-59">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
+                <a class="pilcrow" href="#section-70">&#182;</a>
               </div>
               <p><code>cleanAria</code> - internal function; transfers updated <strong>title</strong>, <strong>label</strong> and <strong>description</strong> attribute values into the relevant DOM elements</p>
 
@@ -1932,20 +2131,20 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
             
             <div class="content"><div class='highlight'><pre>P.cleanAria = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">this</span>.dirtyAria = <span class="hljs-literal">false</span>;
-    <span class="hljs-keyword">this</span>.domElement.setAttribute(<span class="hljs-string">'title'</span>, <span class="hljs-keyword">this</span>.title);
-    <span class="hljs-keyword">this</span>.ariaLabelElement.textContent = <span class="hljs-keyword">this</span>.label;
-    <span class="hljs-keyword">this</span>.ariaDescriptionElement.textContent = <span class="hljs-keyword">this</span>.description;
+    <span class="hljs-built_in">this</span>.dirtyAria = <span class="hljs-literal">false</span>;
+    <span class="hljs-built_in">this</span>.domElement.setAttribute(<span class="hljs-string">&#x27;title&#x27;</span>, <span class="hljs-built_in">this</span>.title);
+    <span class="hljs-built_in">this</span>.ariaLabelElement.textContent = <span class="hljs-built_in">this</span>.label;
+    <span class="hljs-built_in">this</span>.ariaDescriptionElement.textContent = <span class="hljs-built_in">this</span>.description;
 }</pre></div></div>
             
         </li>
         
         
-        <li id="section-60">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+                <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
@@ -1955,16 +2154,16 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Canvas(items);
 };
 
-constructors.Canvas = Canvas;</pre></div></div>
+<span class="hljs-title">constructors</span>.<span class="hljs-title">Canvas</span> = <span class="hljs-title">Canvas</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-61">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+                <a class="pilcrow" href="#section-72">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

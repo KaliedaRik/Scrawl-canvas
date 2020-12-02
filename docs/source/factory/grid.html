@@ -4,7 +4,7 @@
 <head>
   <title>Grid factory</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -110,6 +110,11 @@
                 </a>
               
                 
+                <a class="source" href="emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
                 <a class="source" href="filter.html">
                   ./source/factory/filter.js
                 </a>
@@ -150,6 +155,11 @@
                 </a>
               
                 
+                <a class="source" href="net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
                 <a class="source" href="oval.html">
                   ./source/factory/oval.js
                 </a>
@@ -157,6 +167,31 @@
                 
                 <a class="source" href="palette.html">
                   ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="particleForce.html">
+                  ./source/factory/particleForce.js
+                </a>
+              
+                
+                <a class="source" href="particleHistory.html">
+                  ./source/factory/particleHistory.js
+                </a>
+              
+                
+                <a class="source" href="particleSpring.html">
+                  ./source/factory/particleSpring.js
+                </a>
+              
+                
+                <a class="source" href="particleWorld.html">
+                  ./source/factory/particleWorld.js
                 </a>
               
                 
@@ -247,6 +282,11 @@
                 
                 <a class="source" href="ticker.html">
                   ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="tracer.html">
+                  ./source/factory/tracer.js
                 </a>
               
                 
@@ -452,13 +492,13 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, entity } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { mergeOver, pushUnique, isa_number, isa_obj, λ<span class="hljs-literal">null</span>, xt, xta } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">entity</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+<span class="hljs-keyword">import</span> { mergeOver, pushUnique, isa_number, isa_obj, λ<span class="hljs-literal">null</span>, xt, xta } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { requestCell, releaseCell } <span class="hljs-keyword">from</span> <span class="hljs-string">'./cell.js'</span>;
+<span class="hljs-keyword">import</span> { requestCell, releaseCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./cell.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/base.js'</span>;
-<span class="hljs-keyword">import</span> entityMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/entity.js'</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
+<span class="hljs-keyword">import</span> entityMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/entity.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -475,46 +515,46 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Grid = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.tileFill = [];
-    <span class="hljs-keyword">this</span>.tileSources = [];
+    <span class="hljs-built_in">this</span>.tileFill = [];
+    <span class="hljs-built_in">this</span>.tileSources = [];
 
-    <span class="hljs-keyword">this</span>.entityInit(items);
+    <span class="hljs-built_in">this</span>.entityInit(items);
 
     <span class="hljs-keyword">if</span> (!items.tileSources) {
 
-        <span class="hljs-keyword">this</span>.tileSources = [].concat([{
+        <span class="hljs-built_in">this</span>.tileSources = [].concat([{
 
-            <span class="hljs-attr">type</span>: <span class="hljs-string">'color'</span>,
-            <span class="hljs-attr">source</span>: <span class="hljs-string">'#000000'</span>,
+            <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;color&#x27;</span>,
+            <span class="hljs-attr">source</span>: <span class="hljs-string">&#x27;#000000&#x27;</span>,
         },
         {
 
-            <span class="hljs-attr">type</span>: <span class="hljs-string">'color'</span>,
-            <span class="hljs-attr">source</span>: <span class="hljs-string">'#ffffff'</span>,
+            <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;color&#x27;</span>,
+            <span class="hljs-attr">source</span>: <span class="hljs-string">&#x27;#ffffff&#x27;</span>,
         }]);
     }
 
     <span class="hljs-keyword">if</span> (!items.tileFill) {
 
-        <span class="hljs-keyword">this</span>.tileFill.length = <span class="hljs-keyword">this</span>.columns * <span class="hljs-keyword">this</span>.rows;
-        <span class="hljs-keyword">this</span>.tileFill.fill(<span class="hljs-number">0</span>);
+        <span class="hljs-built_in">this</span>.tileFill.length = <span class="hljs-built_in">this</span>.columns * <span class="hljs-built_in">this</span>.rows;
+        <span class="hljs-built_in">this</span>.tileFill.fill(<span class="hljs-number">0</span>);
     }
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(items.tileFill) &amp;&amp; <span class="hljs-keyword">this</span>.tileFill.length === items.tileFill.length) {
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(items.tileFill) &amp;&amp; <span class="hljs-built_in">this</span>.tileFill.length === items.tileFill.length) {
 
-        <span class="hljs-keyword">this</span>.tileFill = items.tileFill;
+        <span class="hljs-built_in">this</span>.tileFill = items.tileFill;
     }
 
-    <span class="hljs-keyword">this</span>.tilePaths = [];
-    <span class="hljs-keyword">this</span>.tileRealCoordinates = [];
-    <span class="hljs-keyword">this</span>.tileVirtualCoordinates = [];
+    <span class="hljs-built_in">this</span>.tilePaths = [];
+    <span class="hljs-built_in">this</span>.tileRealCoordinates = [];
+    <span class="hljs-built_in">this</span>.tileVirtualCoordinates = [];
 
     <span class="hljs-keyword">if</span> (!items.dimensions) {
 
-        <span class="hljs-keyword">if</span> (!items.width) <span class="hljs-keyword">this</span>.currentDimensions[<span class="hljs-number">0</span>] = <span class="hljs-keyword">this</span>.dimensions[<span class="hljs-number">0</span>] = <span class="hljs-number">20</span>;
-        <span class="hljs-keyword">if</span> (!items.height) <span class="hljs-keyword">this</span>.currentDimensions[<span class="hljs-number">1</span>] = <span class="hljs-keyword">this</span>.dimensions[<span class="hljs-number">1</span>] = <span class="hljs-number">20</span>;
+        <span class="hljs-keyword">if</span> (!items.width) <span class="hljs-built_in">this</span>.currentDimensions[<span class="hljs-number">0</span>] = <span class="hljs-built_in">this</span>.dimensions[<span class="hljs-number">0</span>] = <span class="hljs-number">20</span>;
+        <span class="hljs-keyword">if</span> (!items.height) <span class="hljs-built_in">this</span>.currentDimensions[<span class="hljs-number">1</span>] = <span class="hljs-built_in">this</span>.dimensions[<span class="hljs-number">1</span>] = <span class="hljs-number">20</span>;
     }
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -531,8 +571,8 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Grid.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">'Grid'</span>;
-P.lib = <span class="hljs-string">'entity'</span>;
+P.type = <span class="hljs-string">&#x27;Grid&#x27;</span>;
+P.lib = <span class="hljs-string">&#x27;entity&#x27;</span>;
 P.isArtefact = <span class="hljs-literal">true</span>;
 P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
             
@@ -568,12 +608,12 @@ P = entityMix(P);</pre></div></div>
               <h4 id="grid-attributes">Grid attributes</h4>
 <ul>
 <li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/position.html">position mixin</a>: <strong>group, visibility, order, start, <em>startX</em>, <em>startY</em>, handle, <em>handleX</em>, <em>handleY</em>, offset, <em>offsetX</em>, <em>offsetY</em>, dimensions, <em>width</em>, <em>height</em>, pivoted, mimicked, lockTo, <em>lockXTo</em>, <em>lockYTo</em>, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/position.html">position mixin</a>: <strong>group, visibility, order, start, <em>startX</em>, <em>startY</em>, handle, <em>handleX</em>, <em>handleY</em>, offset, <em>offsetX</em>, <em>offsetY</em>, dimensions, <em>width</em>, <em>height</em>, pivoted, mimicked, lockTo, <em>lockXTo</em>, <em>lockYTo</em>, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge, bringToFrontOnDrag</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/delta.html">delta mixin</a>: <strong>delta, noDeltaUpdates</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/pivot.html">pivot mixin</a>: <strong>pivot, pivotCorner, addPivotHandle, addPivotOffset, addPivotRotation</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/mimic.html">mimic mixin</a>: <strong>mimic, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/path.html">path mixin</a>: <strong>path, pathPosition, addPathHandle, addPathOffset, addPathRotation, constantPathSpeed</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/entity.html">entity mixin</a>: <strong>method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, <em>fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor</em></strong>.</li>
+<li>Attributes defined in the <a href="../mixin/entity.html">entity mixin</a>: <strong>method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, <em>fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor, filter</em></strong>.</li>
 <li>Attributes defined in the <a href="../mixin/anchor.html">anchor mixin</a>: <strong>anchor</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/filter.html">filter mixin</a>: <strong>filters, isStencil</strong>.</li>
 </ul>
@@ -671,7 +711,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    gutterColor: <span class="hljs-string">'#808080'</span>,
+            <div class="content"><div class='highlight'><pre>    gutterColor: <span class="hljs-string">&#x27;#808080&#x27;</span>,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
@@ -688,12 +728,12 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.packetExclusions = pushUnique(P.packetExclusions, [<span class="hljs-string">'tileSources'</span>]);
+            <div class="content"><div class='highlight'><pre>P.packetExclusions = pushUnique(P.packetExclusions, [<span class="hljs-string">&#x27;tileSources&#x27;</span>]);
 
 P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) </span>{
 
     <span class="hljs-keyword">let</span> cSources = copy.tileSources = [],
-        tSources = <span class="hljs-keyword">this</span>.tileSources;
+        tSources = <span class="hljs-built_in">this</span>.tileSources;
 
     tSources.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
 
@@ -705,10 +745,10 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
 
     <span class="hljs-keyword">if</span> (isa_obj(copy.gutterColor)) copy.gutterColor = copy.gutterColor.name;
 
-    <span class="hljs-keyword">let</span> stateCopy = <span class="hljs-built_in">JSON</span>.parse(<span class="hljs-keyword">this</span>.state.saveAsPacket(items))[<span class="hljs-number">3</span>];
+    <span class="hljs-keyword">let</span> stateCopy = <span class="hljs-built_in">JSON</span>.parse(<span class="hljs-built_in">this</span>.state.saveAsPacket(items))[<span class="hljs-number">3</span>];
     copy = mergeOver(copy, stateCopy);
 
-    copy = <span class="hljs-keyword">this</span>.handlePacketAnchor(copy, items);
+    copy = <span class="hljs-built_in">this</span>.handlePacketAnchor(copy, items);
 
     <span class="hljs-keyword">return</span> copy;
 };</pre></div></div>
@@ -777,16 +817,16 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
 
         <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Number</span>.isInteger(item)) item = <span class="hljs-built_in">parseInt</span>(item, <span class="hljs-number">10</span>);
 
-        <span class="hljs-keyword">if</span> (item !== <span class="hljs-keyword">this</span>.columns) {
+        <span class="hljs-keyword">if</span> (item !== <span class="hljs-built_in">this</span>.columns) {
 
             <span class="hljs-keyword">let</span> i, iz, j, 
-                currentFill = <span class="hljs-keyword">this</span>.tileFill,
-                currentCols = <span class="hljs-keyword">this</span>.columns,
+                currentFill = <span class="hljs-built_in">this</span>.tileFill,
+                currentCols = <span class="hljs-built_in">this</span>.columns,
                 newFill = [];
 
-            <span class="hljs-keyword">this</span>.columns = item;
+            <span class="hljs-built_in">this</span>.columns = item;
 
-            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = <span class="hljs-keyword">this</span>.rows; i &lt; iz; i++) {
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = <span class="hljs-built_in">this</span>.rows; i &lt; iz; i++) {
 
                 <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; item; j++) {
 
@@ -794,10 +834,10 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
                     <span class="hljs-keyword">else</span> newFill.push(<span class="hljs-number">0</span>);
                 }
             } 
-            <span class="hljs-keyword">this</span>.tileFill = newFill;
+            <span class="hljs-built_in">this</span>.tileFill = newFill;
         }
     }
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
 };
 D.columns = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
@@ -820,18 +860,18 @@ D.columns = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
         <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Number</span>.isInteger(item)) item = <span class="hljs-built_in">parseInt</span>(item, <span class="hljs-number">10</span>);
 
-        <span class="hljs-keyword">if</span> (item !== <span class="hljs-keyword">this</span>.rows) {
+        <span class="hljs-keyword">if</span> (item !== <span class="hljs-built_in">this</span>.rows) {
 
-            <span class="hljs-keyword">let</span> currentRows = <span class="hljs-keyword">this</span>.rows;
+            <span class="hljs-keyword">let</span> currentRows = <span class="hljs-built_in">this</span>.rows;
 
-            <span class="hljs-keyword">this</span>.rows = item;
+            <span class="hljs-built_in">this</span>.rows = item;
 
-            <span class="hljs-keyword">this</span>.tileFill.length = <span class="hljs-keyword">this</span>.columns * item;
+            <span class="hljs-built_in">this</span>.tileFill.length = <span class="hljs-built_in">this</span>.columns * item;
 
-            <span class="hljs-keyword">if</span> (currentRows &lt; item) <span class="hljs-keyword">this</span>.tileFill.fill(<span class="hljs-number">0</span>, currentRows * <span class="hljs-keyword">this</span>.columns);
+            <span class="hljs-keyword">if</span> (currentRows &lt; item) <span class="hljs-built_in">this</span>.tileFill.fill(<span class="hljs-number">0</span>, currentRows * <span class="hljs-built_in">this</span>.columns);
         }
     }
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
 };
 D.rows = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
@@ -870,7 +910,7 @@ D.rows = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
         <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Number</span>.isInteger(val)) val = <span class="hljs-built_in">parseInt</span>(val, <span class="hljs-number">10</span>);
 
-        <span class="hljs-keyword">this</span>.tileFill.fill(val);
+        <span class="hljs-built_in">this</span>.tileFill.fill(val);
     }
 };</pre></div></div>
             
@@ -893,7 +933,7 @@ D.rows = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>P.setTilesTo = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">tiles, val</span>) </span>{
 
-    <span class="hljs-keyword">let</span> tileFill = <span class="hljs-keyword">this</span>.tileFill;
+    <span class="hljs-keyword">let</span> tileFill = <span class="hljs-built_in">this</span>.tileFill;
 
     <span class="hljs-keyword">if</span> (xt(tiles) &amp;&amp; isa_number(val)) {
 
@@ -931,7 +971,7 @@ D.rows = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
     <span class="hljs-keyword">if</span> (isa_number(index) &amp;&amp; isa_obj(obj)) {
 
-        <span class="hljs-keyword">if</span> (obj.type &amp;&amp; obj.source) <span class="hljs-keyword">this</span>.tileSources[index] = obj;
+        <span class="hljs-keyword">if</span> (obj.type &amp;&amp; obj.source) <span class="hljs-built_in">this</span>.tileSources[index] = obj;
     }
 };</pre></div></div>
             
@@ -956,9 +996,9 @@ D.rows = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
     <span class="hljs-keyword">if</span> (isa_number(index) &amp;&amp; index) {
 
-        <span class="hljs-keyword">this</span>.tileSources[index] = <span class="hljs-literal">null</span>;
+        <span class="hljs-built_in">this</span>.tileSources[index] = <span class="hljs-literal">null</span>;
 
-        <span class="hljs-keyword">this</span>.tileFill = <span class="hljs-keyword">this</span>.tileFill.map(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item === index ? <span class="hljs-number">0</span> : item);
+        <span class="hljs-built_in">this</span>.tileFill = <span class="hljs-built_in">this</span>.tileFill.map(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item === index ? <span class="hljs-number">0</span> : item);
     }
 };</pre></div></div>
             
@@ -983,8 +1023,8 @@ D.rows = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
     <span class="hljs-keyword">if</span> (isa_number(row)) {
 
-        <span class="hljs-keyword">if</span> (!isa_number(col)) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.tileFill[row];
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.tileFill[(row * <span class="hljs-keyword">this</span>.rows) + col];
+        <span class="hljs-keyword">if</span> (!isa_number(col)) <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.tileFill[row];
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.tileFill[(row * <span class="hljs-built_in">this</span>.rows) + col];
     }
 };</pre></div></div>
             
@@ -1003,7 +1043,7 @@ D.rows = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>P.getTilesUsingSource = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">index</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (isa_number(index)) <span class="hljs-keyword">this</span>.tileFill.map(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item === index ? <span class="hljs-number">1</span> : <span class="hljs-number">0</span>);
+    <span class="hljs-keyword">if</span> (isa_number(index)) <span class="hljs-built_in">this</span>.tileFill.map(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item === index ? <span class="hljs-number">1</span> : <span class="hljs-number">0</span>);
 };</pre></div></div>
             
         </li>
@@ -1021,17 +1061,17 @@ D.rows = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>P.cleanPathObject = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">this</span>.dirtyPathObject = <span class="hljs-literal">false</span>;
+    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.noPathUpdates || !<span class="hljs-keyword">this</span>.pathObject) {
+    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.noPathUpdates || !<span class="hljs-built_in">this</span>.pathObject) {
 
-        <span class="hljs-keyword">let</span> p = <span class="hljs-keyword">this</span>.pathObject = <span class="hljs-keyword">new</span> Path2D(),
+        <span class="hljs-keyword">let</span> p = <span class="hljs-built_in">this</span>.pathObject = <span class="hljs-keyword">new</span> Path2D(),
             rowLines = <span class="hljs-keyword">new</span> Path2D(),
             colLines = <span class="hljs-keyword">new</span> Path2D();
         
-        <span class="hljs-keyword">let</span> handle = <span class="hljs-keyword">this</span>.currentStampHandlePosition,
-            scale = <span class="hljs-keyword">this</span>.currentScale,
-            dims = <span class="hljs-keyword">this</span>.currentDimensions;
+        <span class="hljs-keyword">let</span> handle = <span class="hljs-built_in">this</span>.currentStampHandlePosition,
+            scale = <span class="hljs-built_in">this</span>.currentScale,
+            dims = <span class="hljs-built_in">this</span>.currentDimensions;
 
         <span class="hljs-keyword">let</span> x = -handle[<span class="hljs-number">0</span>] * scale,
             y = -handle[<span class="hljs-number">1</span>] * scale,
@@ -1040,13 +1080,13 @@ D.rows = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
         p.rect(x, y, w, h);
 
-        <span class="hljs-keyword">let</span> cols = <span class="hljs-keyword">this</span>.columns,
-            rows = <span class="hljs-keyword">this</span>.rows,
+        <span class="hljs-keyword">let</span> cols = <span class="hljs-built_in">this</span>.columns,
+            rows = <span class="hljs-built_in">this</span>.rows,
             colWidth = w / cols,
             rowHeight = h / rows,
-            paths = <span class="hljs-keyword">this</span>.tilePaths,
-            real = <span class="hljs-keyword">this</span>.tileRealCoordinates,
-            virtual = <span class="hljs-keyword">this</span>.tileVirtualCoordinates,
+            paths = <span class="hljs-built_in">this</span>.tilePaths,
+            real = <span class="hljs-built_in">this</span>.tileRealCoordinates,
+            virtual = <span class="hljs-built_in">this</span>.tileVirtualCoordinates,
             i, j, cx, cy;
 
         rowLines.moveTo(x, y);
@@ -1059,7 +1099,7 @@ D.rows = λ<span class="hljs-literal">null</span>;</pre></div></div>
             rowLines.moveTo(x, ry);
             rowLines.lineTo(x + w, ry);
         }
-        <span class="hljs-keyword">this</span>.rowLines = rowLines;
+        <span class="hljs-built_in">this</span>.rowLines = rowLines;
 
         colLines.moveTo(x, y);
         colLines.lineTo(x, y + h);
@@ -1071,7 +1111,7 @@ D.rows = λ<span class="hljs-literal">null</span>;</pre></div></div>
             colLines.moveTo(cx, y);
             colLines.lineTo(cx, y + h);
         }
-        <span class="hljs-keyword">this</span>.columnLines = colLines;
+        <span class="hljs-built_in">this</span>.columnLines = colLines;
 
         paths.length = <span class="hljs-number">0</span>;
         real.length = <span class="hljs-number">0</span>;
@@ -1094,8 +1134,8 @@ D.rows = λ<span class="hljs-literal">null</span>;</pre></div></div>
             }
         }
 
-        <span class="hljs-keyword">this</span>.currentTileWidth = colWidth;
-        <span class="hljs-keyword">this</span>.currentTileHeight = rowHeight;
+        <span class="hljs-built_in">this</span>.currentTileWidth = colWidth;
+        <span class="hljs-built_in">this</span>.currentTileHeight = rowHeight;
     }
 };</pre></div></div>
             
@@ -1149,17 +1189,17 @@ D.rows = λ<span class="hljs-literal">null</span>;</pre></div></div>
         compEngine = composer.engine,
         compCanvas = composer.element;
 
-    <span class="hljs-keyword">let</span> tileSources = <span class="hljs-keyword">this</span>.tileSources,
-        tileFill = <span class="hljs-keyword">this</span>.tileFill,
-        tilePaths = <span class="hljs-keyword">this</span>.tilePaths,
-        tileRealCoords = <span class="hljs-keyword">this</span>.tileRealCoordinates,
-        tileVirtualCoords = <span class="hljs-keyword">this</span>.tileVirtualCoordinates,
-        winding = <span class="hljs-keyword">this</span>.winding,
-        tileWidth = <span class="hljs-keyword">this</span>.currentTileWidth,
-        tileHeight = <span class="hljs-keyword">this</span>.currentTileHeight,
-        scale = <span class="hljs-keyword">this</span>.scale;
+    <span class="hljs-keyword">let</span> tileSources = <span class="hljs-built_in">this</span>.tileSources,
+        tileFill = <span class="hljs-built_in">this</span>.tileFill,
+        tilePaths = <span class="hljs-built_in">this</span>.tilePaths,
+        tileRealCoords = <span class="hljs-built_in">this</span>.tileRealCoordinates,
+        tileVirtualCoords = <span class="hljs-built_in">this</span>.tileVirtualCoordinates,
+        winding = <span class="hljs-built_in">this</span>.winding,
+        tileWidth = <span class="hljs-built_in">this</span>.currentTileWidth,
+        tileHeight = <span class="hljs-built_in">this</span>.currentTileHeight,
+        scale = <span class="hljs-built_in">this</span>.scale;
 
-    <span class="hljs-keyword">let</span> dims = <span class="hljs-keyword">this</span>.currentDimensions;
+    <span class="hljs-keyword">let</span> dims = <span class="hljs-built_in">this</span>.currentDimensions;
 
     <span class="hljs-keyword">let</span> currentPicture;</pre></div></div>
             
@@ -1195,21 +1235,21 @@ D.rows = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
             <span class="hljs-keyword">switch</span> (obj.type) {
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'color'</span> :
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;color&#x27;</span> :
 
                     engine.fillStyle = obj.source;
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'cellGradient'</span> :
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;cellGradient&#x27;</span> :
 
-                    <span class="hljs-keyword">this</span>.lockFillStyleToEntity = <span class="hljs-literal">false</span>;
-                    engine.fillStyle = obj.source.getData(<span class="hljs-keyword">this</span>, <span class="hljs-keyword">this</span>.currentHost);
+                    <span class="hljs-built_in">this</span>.lockFillStyleToEntity = <span class="hljs-literal">false</span>;
+                    engine.fillStyle = obj.source.getData(<span class="hljs-built_in">this</span>, <span class="hljs-built_in">this</span>.currentHost);
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'gridGradient'</span> :
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;gridGradient&#x27;</span> :
 
-                    <span class="hljs-keyword">this</span>.lockFillStyleToEntity = <span class="hljs-literal">true</span>;
-                    engine.fillStyle = obj.source.getData(<span class="hljs-keyword">this</span>, <span class="hljs-keyword">this</span>.currentHost);
+                    <span class="hljs-built_in">this</span>.lockFillStyleToEntity = <span class="hljs-literal">true</span>;
+                    engine.fillStyle = obj.source.getData(<span class="hljs-built_in">this</span>, <span class="hljs-built_in">this</span>.currentHost);
                     <span class="hljs-keyword">break</span>;
             }
         }</pre></div></div>
@@ -1246,7 +1286,7 @@ D.rows = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">case</span> <span class="hljs-string">'gridPicture'</span> :
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;gridPicture&#x27;</span> :
 
                     currentPicture = (obj.source.substring) ? entity[obj.source] : obj.source;
 
@@ -1254,29 +1294,29 @@ D.rows = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
                         compCanvas.width = dims[<span class="hljs-number">0</span>] * scale;
                         compCanvas.height = dims[<span class="hljs-number">1</span>] * scale;
-                        compEngine.globalCompositeOperation = <span class="hljs-string">'source-over'</span>;
-                        compEngine.fillStyle = <span class="hljs-string">'#000000'</span>;
+                        compEngine.globalCompositeOperation = <span class="hljs-string">&#x27;source-over&#x27;</span>;
+                        compEngine.fillStyle = <span class="hljs-string">&#x27;#000000&#x27;</span>;
 
                         validTiles.forEach(<span class="hljs-function">(<span class="hljs-params">tile, pos</span>) =&gt;</span> {
 
                             <span class="hljs-keyword">if</span> (tile) compEngine.fillRect(tileVirtualCoords[pos][<span class="hljs-number">0</span>], tileVirtualCoords[pos][<span class="hljs-number">1</span>], tileWidth, tileHeight);
                         });
 
-                        compEngine.globalCompositeOperation = <span class="hljs-string">'source-in'</span>;
+                        compEngine.globalCompositeOperation = <span class="hljs-string">&#x27;source-in&#x27;</span>;
 
                         currentPicture.simpleStamp(composer, {
                             <span class="hljs-attr">startX</span>: <span class="hljs-number">0</span>,
                             <span class="hljs-attr">startY</span>: <span class="hljs-number">0</span>,
                             <span class="hljs-attr">width</span>: dims[<span class="hljs-number">0</span>] * scale,
                             <span class="hljs-attr">height</span>: dims[<span class="hljs-number">1</span>] * scale,
-                            <span class="hljs-attr">method</span>: <span class="hljs-string">'fill'</span>
+                            <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>
                         });
 
                         engine.drawImage(compCanvas, tileRealCoords[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>], tileRealCoords[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]);
                     }
                     <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">'tilePicture'</span> :
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;tilePicture&#x27;</span> :
 
                     currentPicture = (obj.source.substring) ? entity[obj.source] : obj.source;
 
@@ -1284,14 +1324,14 @@ D.rows = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
                         compCanvas.width = tileWidth;
                         compCanvas.height = tileHeight;
-                        compEngine.globalCompositeOperation = <span class="hljs-string">'source-over'</span>;
+                        compEngine.globalCompositeOperation = <span class="hljs-string">&#x27;source-over&#x27;</span>;
 
                         currentPicture.simpleStamp(composer, {
                             <span class="hljs-attr">startX</span>: <span class="hljs-number">0</span>,
                             <span class="hljs-attr">startY</span>: <span class="hljs-number">0</span>,
                             <span class="hljs-attr">width</span>: tileWidth,
                             <span class="hljs-attr">height</span>: tileHeight,
-                            <span class="hljs-attr">method</span>: <span class="hljs-string">'fill'</span>
+                            <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>
                         });
 
                         validTiles.forEach(<span class="hljs-function">(<span class="hljs-params">tile, pos</span>) =&gt;</span> tile &amp;&amp; engine.drawImage(compCanvas, tileRealCoords[pos][<span class="hljs-number">0</span>], tileRealCoords[pos][<span class="hljs-number">1</span>]));
@@ -1305,9 +1345,9 @@ D.rows = λ<span class="hljs-literal">null</span>;</pre></div></div>
         }
     });
 
-    <span class="hljs-keyword">let</span> gColor = <span class="hljs-keyword">this</span>.gutterColor,
-        gRow = <span class="hljs-keyword">this</span>.rowGutterWidth,
-        gCol = <span class="hljs-keyword">this</span>.columnGutterWidth,
+    <span class="hljs-keyword">let</span> gColor = <span class="hljs-built_in">this</span>.gutterColor,
+        gRow = <span class="hljs-built_in">this</span>.rowGutterWidth,
+        gCol = <span class="hljs-built_in">this</span>.columnGutterWidth,
         gObject;
 
     <span class="hljs-keyword">if</span>(xt(gColor)) {</pre></div></div>
@@ -1328,8 +1368,8 @@ D.rows = λ<span class="hljs-literal">null</span>;</pre></div></div>
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (gColor.substring) {
 
             gObject = {
-                <span class="hljs-attr">type</span>: <span class="hljs-string">'color'</span>,
-                <span class="hljs-attr">source</span>: <span class="hljs-keyword">this</span>.gutterColor
+                <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;color&#x27;</span>,
+                <span class="hljs-attr">source</span>: <span class="hljs-built_in">this</span>.gutterColor
             };
         }
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isa_obj(gColor)) gObject = gColor;
@@ -1350,19 +1390,19 @@ D.rows = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">switch</span> (gObject.type) {
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">'cellGradient'</span> :
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;cellGradient&#x27;</span> :
 
-                <span class="hljs-keyword">this</span>.lockFillStyleToEntity = <span class="hljs-literal">false</span>;
-                engine.strokeStyle = gObject.source.getData(<span class="hljs-keyword">this</span>, <span class="hljs-keyword">this</span>.currentHost);
+                <span class="hljs-built_in">this</span>.lockFillStyleToEntity = <span class="hljs-literal">false</span>;
+                engine.strokeStyle = gObject.source.getData(<span class="hljs-built_in">this</span>, <span class="hljs-built_in">this</span>.currentHost);
                 <span class="hljs-keyword">break</span>;
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">'gridGradient'</span> :
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;gridGradient&#x27;</span> :
 
-                <span class="hljs-keyword">this</span>.lockFillStyleToEntity = <span class="hljs-literal">true</span>;
-                engine.strokeStyle = gObject.source.getData(<span class="hljs-keyword">this</span>, <span class="hljs-keyword">this</span>.currentHost);
+                <span class="hljs-built_in">this</span>.lockFillStyleToEntity = <span class="hljs-literal">true</span>;
+                engine.strokeStyle = gObject.source.getData(<span class="hljs-built_in">this</span>, <span class="hljs-built_in">this</span>.currentHost);
                 <span class="hljs-keyword">break</span>;
 
-            <span class="hljs-keyword">case</span> <span class="hljs-string">'color'</span> :
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;color&#x27;</span> :
 
                 engine.strokeStyle = gObject.source;
                 <span class="hljs-keyword">break</span>;
@@ -1386,8 +1426,8 @@ D.rows = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">case</span> <span class="hljs-string">'gridPicture'</span> :
-            <span class="hljs-keyword">case</span> <span class="hljs-string">'tilePicture'</span> :
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;gridPicture&#x27;</span> :
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;tilePicture&#x27;</span> :
 
                 <span class="hljs-keyword">if</span>(gRow || gCol) {
 
@@ -1395,37 +1435,37 @@ D.rows = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
                     <span class="hljs-keyword">if</span> (currentPicture.simpleStamp) {
 
-                        <span class="hljs-keyword">let</span> handle = <span class="hljs-keyword">this</span>.currentStampHandlePosition,
-                            scale = <span class="hljs-keyword">this</span>.currentScale,
+                        <span class="hljs-keyword">let</span> handle = <span class="hljs-built_in">this</span>.currentStampHandlePosition,
+                            scale = <span class="hljs-built_in">this</span>.currentScale,
                             x = handle[<span class="hljs-number">0</span>] * scale,
                             y = handle[<span class="hljs-number">1</span>] * scale;
                             
                         compCanvas.width = dims[<span class="hljs-number">0</span>] * scale;
                         compCanvas.height = dims[<span class="hljs-number">1</span>] * scale;
-                        compEngine.globalCompositeOperation = <span class="hljs-string">'source-over'</span>;
-                        compEngine.strokeStyle = <span class="hljs-string">'#000000'</span>;
+                        compEngine.globalCompositeOperation = <span class="hljs-string">&#x27;source-over&#x27;</span>;
+                        compEngine.strokeStyle = <span class="hljs-string">&#x27;#000000&#x27;</span>;
                         compEngine.translate(x, y);
 
                         <span class="hljs-keyword">if</span> (gRow) {
 
                             compEngine.lineWidth = gRow;
-                            compEngine.stroke(<span class="hljs-keyword">this</span>.rowLines);
+                            compEngine.stroke(<span class="hljs-built_in">this</span>.rowLines);
                         }
 
                         <span class="hljs-keyword">if</span> (gCol) {
 
                             compEngine.lineWidth = gCol;
-                            compEngine.stroke(<span class="hljs-keyword">this</span>.columnLines);
+                            compEngine.stroke(<span class="hljs-built_in">this</span>.columnLines);
                         }
 
-                        compEngine.globalCompositeOperation = <span class="hljs-string">'source-in'</span>;
+                        compEngine.globalCompositeOperation = <span class="hljs-string">&#x27;source-in&#x27;</span>;
 
                         currentPicture.simpleStamp(composer, {
                             <span class="hljs-attr">startX</span>: <span class="hljs-number">0</span>,
                             <span class="hljs-attr">startY</span>: <span class="hljs-number">0</span>,
                             <span class="hljs-attr">width</span>: dims[<span class="hljs-number">0</span>] * scale,
                             <span class="hljs-attr">height</span>: dims[<span class="hljs-number">1</span>] * scale,
-                            <span class="hljs-attr">method</span>: <span class="hljs-string">'fill'</span>
+                            <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>
                         });
 
                         engine.drawImage(compCanvas, tileRealCoords[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>], tileRealCoords[<span class="hljs-number">0</span>][<span class="hljs-number">1</span>]);
@@ -1452,13 +1492,13 @@ D.rows = λ<span class="hljs-literal">null</span>;</pre></div></div>
                 <span class="hljs-keyword">if</span> (gRow) {
 
                     engine.lineWidth = gRow;
-                    engine.stroke(<span class="hljs-keyword">this</span>.rowLines);
+                    engine.stroke(<span class="hljs-built_in">this</span>.rowLines);
                 }
 
                 <span class="hljs-keyword">if</span> (gCol) {
 
                     engine.lineWidth = gCol;
-                    engine.stroke(<span class="hljs-keyword">this</span>.columnLines);
+                    engine.stroke(<span class="hljs-built_in">this</span>.columnLines);
                 }
         }
     }
@@ -1483,7 +1523,7 @@ D.rows = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>P.fill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.performFill(engine);
+    <span class="hljs-built_in">this</span>.performFill(engine);
 };</pre></div></div>
             
         </li>
@@ -1501,11 +1541,11 @@ D.rows = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>P.drawAndFill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
 
-    <span class="hljs-keyword">let</span> p = <span class="hljs-keyword">this</span>.pathObject;
+    <span class="hljs-keyword">let</span> p = <span class="hljs-built_in">this</span>.pathObject;
 
     engine.stroke(p);
-    <span class="hljs-keyword">this</span>.currentHost.clearShadow();
-    <span class="hljs-keyword">this</span>.performFill(engine);
+    <span class="hljs-built_in">this</span>.currentHost.clearShadow();
+    <span class="hljs-built_in">this</span>.performFill(engine);
 };</pre></div></div>
             
         </li>
@@ -1523,11 +1563,11 @@ D.rows = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>P.fillAndDraw = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
 
-    <span class="hljs-keyword">let</span> p = <span class="hljs-keyword">this</span>.pathObject;
+    <span class="hljs-keyword">let</span> p = <span class="hljs-built_in">this</span>.pathObject;
 
     engine.stroke(p);
-    <span class="hljs-keyword">this</span>.currentHost.clearShadow();
-    <span class="hljs-keyword">this</span>.performFill(engine);
+    <span class="hljs-built_in">this</span>.currentHost.clearShadow();
+    <span class="hljs-built_in">this</span>.performFill(engine);
     engine.stroke(p);
 };</pre></div></div>
             
@@ -1546,10 +1586,10 @@ D.rows = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>P.drawThenFill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
 
-    <span class="hljs-keyword">let</span> p = <span class="hljs-keyword">this</span>.pathObject;
+    <span class="hljs-keyword">let</span> p = <span class="hljs-built_in">this</span>.pathObject;
 
     engine.stroke(p);
-    <span class="hljs-keyword">this</span>.performFill(engine);
+    <span class="hljs-built_in">this</span>.performFill(engine);
 };</pre></div></div>
             
         </li>
@@ -1567,9 +1607,9 @@ D.rows = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>P.fillThenDraw = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
 
-    <span class="hljs-keyword">let</span> p = <span class="hljs-keyword">this</span>.pathObject;
+    <span class="hljs-keyword">let</span> p = <span class="hljs-built_in">this</span>.pathObject;
 
-    <span class="hljs-keyword">this</span>.performFill(engine);
+    <span class="hljs-built_in">this</span>.performFill(engine);
     engine.stroke(p);
 };</pre></div></div>
             
@@ -1600,11 +1640,11 @@ D.rows = λ<span class="hljs-literal">null</span>;</pre></div></div>
             <div class="content"><div class='highlight'><pre>
 P.checkHit = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = [], mycell</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.noUserInteraction) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.noUserInteraction) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.pathObject || <span class="hljs-keyword">this</span>.dirtyPathObject) {
+    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.pathObject || <span class="hljs-built_in">this</span>.dirtyPathObject) {
 
-        <span class="hljs-keyword">this</span>.cleanPathObject();
+        <span class="hljs-built_in">this</span>.cleanPathObject();
     }
 
     <span class="hljs-keyword">let</span> tests = (!<span class="hljs-built_in">Array</span>.isArray(items)) ?  [items] : items,
@@ -1617,12 +1657,12 @@ P.checkHit = <span class="hljs-function"><span class="hljs-keyword">function</sp
     }
 
     <span class="hljs-keyword">let</span> engine = mycell.engine,
-        stamp = <span class="hljs-keyword">this</span>.currentStampPosition,
+        stamp = <span class="hljs-built_in">this</span>.currentStampPosition,
         x = stamp[<span class="hljs-number">0</span>],
         y = stamp[<span class="hljs-number">1</span>],
         isGood, tx, ty,
         tiles = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>(),
-        tilePaths = <span class="hljs-keyword">this</span>.tilePaths;
+        tilePaths = <span class="hljs-built_in">this</span>.tilePaths;
 
     <span class="hljs-keyword">const</span> getCoords = <span class="hljs-function">(<span class="hljs-params">coords</span>) =&gt;</span> {
 
@@ -1645,16 +1685,16 @@ P.checkHit = <span class="hljs-function"><span class="hljs-keyword">function</sp
         <span class="hljs-keyword">return</span> [<span class="hljs-literal">true</span>, x, y];
     }
 
-    mycell.rotateDestination(engine, x, y, <span class="hljs-keyword">this</span>);
+    mycell.rotateDestination(engine, x, y, <span class="hljs-built_in">this</span>);
 
     <span class="hljs-keyword">if</span> (tests.some(<span class="hljs-function"><span class="hljs-params">test</span> =&gt;</span> {
 
         [isGood, tx, ty] = getCoords(test);
 
         <span class="hljs-keyword">if</span> (!isGood) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> engine.isPointInPath(<span class="hljs-keyword">this</span>.pathObject, tx, ty, <span class="hljs-keyword">this</span>.winding);
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> engine.isPointInPath(<span class="hljs-built_in">this</span>.pathObject, tx, ty, <span class="hljs-built_in">this</span>.winding);
 
-    }, <span class="hljs-keyword">this</span>)) {
+    }, <span class="hljs-built_in">this</span>)) {
 
         tests.forEach(<span class="hljs-function"><span class="hljs-params">test</span> =&gt;</span> {
 
@@ -1664,7 +1704,7 @@ P.checkHit = <span class="hljs-function"><span class="hljs-keyword">function</sp
 
                 tilePaths.some(<span class="hljs-function">(<span class="hljs-params">path, index</span>) =&gt;</span> {
 
-                    <span class="hljs-keyword">if</span> (engine.isPointInPath(path, tx, ty, <span class="hljs-keyword">this</span>.winding)) {
+                    <span class="hljs-keyword">if</span> (engine.isPointInPath(path, tx, ty, <span class="hljs-built_in">this</span>.winding)) {
 
                         tiles.add(index);
                         <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
@@ -1680,7 +1720,7 @@ P.checkHit = <span class="hljs-function"><span class="hljs-keyword">function</sp
             <span class="hljs-attr">x</span>: tx,
             <span class="hljs-attr">y</span>: ty,
             <span class="hljs-attr">tiles</span>: [...tiles],
-            <span class="hljs-attr">artefact</span>: <span class="hljs-keyword">this</span>
+            <span class="hljs-attr">artefact</span>: <span class="hljs-built_in">this</span>
         };
     }
     
@@ -1700,19 +1740,19 @@ P.checkHit = <span class="hljs-function"><span class="hljs-keyword">function</sp
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code><span class="hljs-keyword">let</span> blueSource = {
-    <span class="hljs-attr">type</span>: <span class="hljs-string">'color'</span>,
-    <span class="hljs-attr">source</span>: <span class="hljs-string">'aliceblue'</span>,
+    <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;color&#x27;</span>,
+    <span class="hljs-attr">source</span>: <span class="hljs-string">&#x27;aliceblue&#x27;</span>,
 };
 
 <span class="hljs-keyword">let</span> myGrid = scrawl.makeGrid({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'test-grid'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;test-grid&#x27;</span>,
 
-    <span class="hljs-attr">startX</span>: <span class="hljs-string">'center'</span>,
-    <span class="hljs-attr">startY</span>: <span class="hljs-string">'center'</span>,
+    <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
 
-    <span class="hljs-attr">handleX</span>: <span class="hljs-string">'center'</span>,
-    <span class="hljs-attr">handleY</span>: <span class="hljs-string">'center'</span>,
+    <span class="hljs-attr">handleX</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
+    <span class="hljs-attr">handleY</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
 
     <span class="hljs-attr">width</span>: <span class="hljs-number">300</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-number">200</span>,
@@ -1721,8 +1761,8 @@ P.checkHit = <span class="hljs-function"><span class="hljs-keyword">function</sp
     <span class="hljs-attr">rows</span>: <span class="hljs-number">6</span>,
 
     <span class="hljs-attr">tileSources</span>: [blueSource, {
-        <span class="hljs-attr">type</span>: <span class="hljs-string">'color'</span>,
-        <span class="hljs-attr">source</span>: <span class="hljs-string">'red'</span>,
+        <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;color&#x27;</span>,
+        <span class="hljs-attr">source</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
     }],
 });</code></pre>
 
@@ -1732,7 +1772,7 @@ P.checkHit = <span class="hljs-function"><span class="hljs-keyword">function</sp
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Grid(items);
 };
 
-constructors.Grid = Grid;</pre></div></div>
+<span class="hljs-title">constructors</span>.<span class="hljs-title">Grid</span> = <span class="hljs-title">Grid</span>;</pre></div></div>
             
         </li>
         

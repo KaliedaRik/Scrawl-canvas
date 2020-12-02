@@ -4,7 +4,7 @@
 <head>
   <title>Delta mixin</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -110,6 +110,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
                 <a class="source" href="../factory/filter.html">
                   ./source/factory/filter.js
                 </a>
@@ -150,6 +155,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
                 <a class="source" href="../factory/oval.html">
                   ./source/factory/oval.js
                 </a>
@@ -157,6 +167,31 @@
                 
                 <a class="source" href="../factory/palette.html">
                   ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleForce.html">
+                  ./source/factory/particleForce.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleHistory.html">
+                  ./source/factory/particleHistory.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleSpring.html">
+                  ./source/factory/particleSpring.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleWorld.html">
+                  ./source/factory/particleWorld.js
                 </a>
               
                 
@@ -247,6 +282,11 @@
                 
                 <a class="source" href="../factory/ticker.html">
                   ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="../factory/tracer.html">
+                  ./source/factory/tracer.js
                 </a>
               
                 
@@ -422,7 +462,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { mergeOver, mergeDiscard, xt } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { mergeOver, mergeDiscard, xt } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -474,10 +514,10 @@
 <span class="hljs-comment">// - it will move to the right and upwards until the `delta` values are updated</span>
 <span class="hljs-comment">// - animation will stop when the `noDeltaUpdates` flag is set</span>
 <span class="hljs-keyword">let</span> myBlock = scrawl.makeBlock({
-    <span class="hljs-attr">start</span>: [<span class="hljs-string">'left'</span>, <span class="hljs-number">500</span>],
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;left&#x27;</span>, <span class="hljs-number">500</span>],
     <span class="hljs-attr">delta</span>: {
         <span class="hljs-attr">startX</span>: <span class="hljs-number">0.5</span>,
-        <span class="hljs-attr">startY</span>: <span class="hljs-string">'-0.3'</span>,
+        <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;-0.3&#x27;</span>,
     },
     <span class="hljs-attr">noDeltaUpdates</span>: <span class="hljs-literal">false</span>,
 });</code></pre>
@@ -563,7 +603,7 @@
             
             <div class="content"><div class='highlight'><pre>    S.delta = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (items) <span class="hljs-keyword">this</span>.delta = mergeDiscard(<span class="hljs-keyword">this</span>.delta, items);
+        <span class="hljs-keyword">if</span> (items) <span class="hljs-built_in">this</span>.delta = mergeDiscard(<span class="hljs-built_in">this</span>.delta, items);
     };</pre></div></div>
             
         </li>
@@ -594,10 +634,10 @@
             
             <div class="content"><div class='highlight'><pre>    P.updateByDelta = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-<span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.name == <span class="hljs-string">'kaliedoscope-clock-background'</span>) <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.name, <span class="hljs-string">'updateByDelta'</span>)
-        <span class="hljs-keyword">this</span>.setDelta(<span class="hljs-keyword">this</span>.delta);
+<span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.name == <span class="hljs-string">&#x27;kaliedoscope-clock-background&#x27;</span>) <span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">this</span>.name, <span class="hljs-string">&#x27;updateByDelta&#x27;</span>)
+        <span class="hljs-built_in">this</span>.setDelta(<span class="hljs-built_in">this</span>.delta);
 
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
     };</pre></div></div>
             
         </li>
@@ -617,17 +657,17 @@
 
         <span class="hljs-keyword">let</span> temp = {};
         
-        <span class="hljs-built_in">Object</span>.entries(<span class="hljs-keyword">this</span>.delta).forEach(<span class="hljs-function">(<span class="hljs-params">[key, val]</span>) =&gt;</span> {
+        <span class="hljs-built_in">Object</span>.entries(<span class="hljs-built_in">this</span>.delta).forEach(<span class="hljs-function">(<span class="hljs-params">[key, val]</span>) =&gt;</span> {
 
-            <span class="hljs-keyword">if</span> (val.substring) val = -(<span class="hljs-built_in">parseFloat</span>(val)) + <span class="hljs-string">'%'</span>;
+            <span class="hljs-keyword">if</span> (val.substring) val = -(<span class="hljs-built_in">parseFloat</span>(val)) + <span class="hljs-string">&#x27;%&#x27;</span>;
             <span class="hljs-keyword">else</span> val = -val;
 
             temp[key] = val;
         });
 
-        <span class="hljs-keyword">this</span>.setDelta(temp);
+        <span class="hljs-built_in">this</span>.setDelta(temp);
 
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
     };</pre></div></div>
             
         </li>
@@ -650,7 +690,7 @@
             
             <div class="content"><div class='highlight'><pre>    P.setDeltaValues = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-        <span class="hljs-keyword">let</span> delta = <span class="hljs-keyword">this</span>.delta, 
+        <span class="hljs-keyword">let</span> delta = <span class="hljs-built_in">this</span>.delta, 
             oldVal, action;
 
         <span class="hljs-built_in">Object</span>.entries(items).forEach(<span class="hljs-function">(<span class="hljs-params">[key, requirement]</span>) =&gt;</span> {
@@ -663,7 +703,7 @@
 
                 <span class="hljs-keyword">switch</span> (action) {
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'reverse'</span> :
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;reverse&#x27;</span> :
                         <span class="hljs-keyword">if</span> (oldVal.toFixed) delta[key] = -oldVal;</pre></div></div>
             
         </li>
@@ -681,7 +721,7 @@
             
             <div class="content"><div class='highlight'><pre>                        <span class="hljs-keyword">break</span>;
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'zero'</span> :
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;zero&#x27;</span> :
                         <span class="hljs-keyword">if</span> (oldVal.toFixed) delta[key] = <span class="hljs-number">0</span>;</pre></div></div>
             
         </li>
@@ -699,21 +739,21 @@
             
             <div class="content"><div class='highlight'><pre>                        <span class="hljs-keyword">break</span>;
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'add'</span> :
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;add&#x27;</span> :
                         <span class="hljs-keyword">break</span>;
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'subtract'</span> :
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;subtract&#x27;</span> :
                         <span class="hljs-keyword">break</span>;
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'multiply'</span> :
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;multiply&#x27;</span> :
                         <span class="hljs-keyword">break</span>;
 
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">'divide'</span> :
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;divide&#x27;</span> :
                         <span class="hljs-keyword">break</span>;
                 }
             }
         })
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
     };</pre></div></div>
             
         </li>

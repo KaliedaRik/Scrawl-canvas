@@ -4,7 +4,7 @@
 <head>
   <title>Anchor mixin</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -110,6 +110,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
                 <a class="source" href="../factory/filter.html">
                   ./source/factory/filter.js
                 </a>
@@ -150,6 +155,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
                 <a class="source" href="../factory/oval.html">
                   ./source/factory/oval.js
                 </a>
@@ -157,6 +167,31 @@
                 
                 <a class="source" href="../factory/palette.html">
                   ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleForce.html">
+                  ./source/factory/particleForce.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleHistory.html">
+                  ./source/factory/particleHistory.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleSpring.html">
+                  ./source/factory/particleSpring.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleWorld.html">
+                  ./source/factory/particleWorld.js
                 </a>
               
                 
@@ -247,6 +282,11 @@
                 
                 <a class="source" href="../factory/ticker.html">
                   ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="../factory/tracer.html">
+                  ./source/factory/tracer.js
                 </a>
               
                 
@@ -423,10 +463,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { canvas } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { mergeOver } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
-<span class="hljs-keyword">import</span> { makeAnchor } <span class="hljs-keyword">from</span> <span class="hljs-string">'../factory/anchor.js'</span>;
-<span class="hljs-keyword">import</span> { scrawlNavigationHold } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/document.js'</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { canvas } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { mergeOver } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { makeAnchor } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/anchor.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { scrawlNavigationHold } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/document.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -519,7 +559,7 @@
             
             <div class="content"><div class='highlight'><pre>    P.demolishAnchor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.demolish();
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.anchor) <span class="hljs-built_in">this</span>.anchor.demolish();
     };</pre></div></div>
             
         </li>
@@ -578,13 +618,13 @@ artefact.anchorBlurAction        ~~&gt;  anchor.blurAction</code></pre>
             
             <div class="content"><div class='highlight'><pre>    G.anchorDescription = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.anchor.get(<span class="hljs-string">'description'</span>);
-        <span class="hljs-keyword">return</span> <span class="hljs-string">''</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.anchor) <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.anchor.get(<span class="hljs-string">&#x27;description&#x27;</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;&#x27;</span>;
     };
     S.anchorDescription = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.description(item);
+        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.anchor) <span class="hljs-built_in">this</span>.buildAnchor();
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.anchor) <span class="hljs-built_in">this</span>.anchor.setters.description(item);
     };</pre></div></div>
             
         </li>
@@ -602,13 +642,13 @@ artefact.anchorBlurAction        ~~&gt;  anchor.blurAction</code></pre>
             
             <div class="content"><div class='highlight'><pre>    G.anchorType = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.anchor.get(<span class="hljs-string">'type'</span>);
-        <span class="hljs-keyword">return</span> <span class="hljs-string">''</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.anchor) <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.anchor.get(<span class="hljs-string">&#x27;type&#x27;</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;&#x27;</span>;
     };
     S.anchorType = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.anchorType(item);
+        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.anchor) <span class="hljs-built_in">this</span>.buildAnchor();
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.anchor) <span class="hljs-built_in">this</span>.anchor.setters.anchorType(item);
     };</pre></div></div>
             
         </li>
@@ -626,13 +666,13 @@ artefact.anchorBlurAction        ~~&gt;  anchor.blurAction</code></pre>
             
             <div class="content"><div class='highlight'><pre>    G.anchorTarget = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.anchor.get(<span class="hljs-string">'target'</span>);
-        <span class="hljs-keyword">return</span> <span class="hljs-string">''</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.anchor) <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.anchor.get(<span class="hljs-string">&#x27;target&#x27;</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;&#x27;</span>;
     };
     S.anchorTarget = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.target(item);
+        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.anchor) <span class="hljs-built_in">this</span>.buildAnchor();
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.anchor) <span class="hljs-built_in">this</span>.anchor.setters.target(item);
     };</pre></div></div>
             
         </li>
@@ -650,13 +690,13 @@ artefact.anchorBlurAction        ~~&gt;  anchor.blurAction</code></pre>
             
             <div class="content"><div class='highlight'><pre>    G.anchorRel = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.anchor.get(<span class="hljs-string">'rel'</span>);
-        <span class="hljs-keyword">return</span> <span class="hljs-string">''</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.anchor) <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.anchor.get(<span class="hljs-string">&#x27;rel&#x27;</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;&#x27;</span>;
     };
     S.anchorRel = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.rel(item);
+        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.anchor) <span class="hljs-built_in">this</span>.buildAnchor();
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.anchor) <span class="hljs-built_in">this</span>.anchor.setters.rel(item);
     };</pre></div></div>
             
         </li>
@@ -674,13 +714,13 @@ artefact.anchorBlurAction        ~~&gt;  anchor.blurAction</code></pre>
             
             <div class="content"><div class='highlight'><pre>    G.anchorReferrerPolicy = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.anchor.get(<span class="hljs-string">'referrerpolicy'</span>);
-        <span class="hljs-keyword">return</span> <span class="hljs-string">''</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.anchor) <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.anchor.get(<span class="hljs-string">&#x27;referrerpolicy&#x27;</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;&#x27;</span>;
     };
     S.anchorReferrerPolicy = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.referrerpolicy(item);
+        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.anchor) <span class="hljs-built_in">this</span>.buildAnchor();
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.anchor) <span class="hljs-built_in">this</span>.anchor.setters.referrerpolicy(item);
     };</pre></div></div>
             
         </li>
@@ -698,13 +738,13 @@ artefact.anchorBlurAction        ~~&gt;  anchor.blurAction</code></pre>
             
             <div class="content"><div class='highlight'><pre>    G.anchorPing = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.anchor.get(<span class="hljs-string">'ping'</span>);
-        <span class="hljs-keyword">return</span> <span class="hljs-string">''</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.anchor) <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.anchor.get(<span class="hljs-string">&#x27;ping&#x27;</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;&#x27;</span>;
     };
     S.anchorPing = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.ping(item);
+        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.anchor) <span class="hljs-built_in">this</span>.buildAnchor();
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.anchor) <span class="hljs-built_in">this</span>.anchor.setters.ping(item);
     };</pre></div></div>
             
         </li>
@@ -722,13 +762,13 @@ artefact.anchorBlurAction        ~~&gt;  anchor.blurAction</code></pre>
             
             <div class="content"><div class='highlight'><pre>    G.anchorHreflang = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.anchor.get(<span class="hljs-string">'hreflang'</span>);
-        <span class="hljs-keyword">return</span> <span class="hljs-string">''</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.anchor) <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.anchor.get(<span class="hljs-string">&#x27;hreflang&#x27;</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;&#x27;</span>;
     };
     S.anchorHreflang = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.hreflang(item);
+        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.anchor) <span class="hljs-built_in">this</span>.buildAnchor();
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.anchor) <span class="hljs-built_in">this</span>.anchor.setters.hreflang(item);
     };</pre></div></div>
             
         </li>
@@ -746,13 +786,13 @@ artefact.anchorBlurAction        ~~&gt;  anchor.blurAction</code></pre>
             
             <div class="content"><div class='highlight'><pre>    G.anchorHref = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.anchor.get(<span class="hljs-string">'href'</span>);
-        <span class="hljs-keyword">return</span> <span class="hljs-string">''</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.anchor) <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.anchor.get(<span class="hljs-string">&#x27;href&#x27;</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;&#x27;</span>;
     };
     S.anchorHref = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.href(item);
+        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.anchor) <span class="hljs-built_in">this</span>.buildAnchor();
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.anchor) <span class="hljs-built_in">this</span>.anchor.setters.href(item);
     };</pre></div></div>
             
         </li>
@@ -770,13 +810,13 @@ artefact.anchorBlurAction        ~~&gt;  anchor.blurAction</code></pre>
             
             <div class="content"><div class='highlight'><pre>    G.anchorDownload = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.anchor.get(<span class="hljs-string">'download'</span>);
-        <span class="hljs-keyword">return</span> <span class="hljs-string">''</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.anchor) <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.anchor.get(<span class="hljs-string">&#x27;download&#x27;</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;&#x27;</span>;
     };
     S.anchorDownload = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.download(item);
+        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.anchor) <span class="hljs-built_in">this</span>.buildAnchor();
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.anchor) <span class="hljs-built_in">this</span>.anchor.setters.download(item);
     };</pre></div></div>
             
         </li>
@@ -794,8 +834,8 @@ artefact.anchorBlurAction        ~~&gt;  anchor.blurAction</code></pre>
             
             <div class="content"><div class='highlight'><pre>    S.anchorFocusAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.focusAction(item);
+        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.anchor) <span class="hljs-built_in">this</span>.buildAnchor();
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.anchor) <span class="hljs-built_in">this</span>.anchor.setters.focusAction(item);
     };</pre></div></div>
             
         </li>
@@ -813,8 +853,8 @@ artefact.anchorBlurAction        ~~&gt;  anchor.blurAction</code></pre>
             
             <div class="content"><div class='highlight'><pre>    S.anchorBlurAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor();
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.setters.blurAction(item);
+        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.anchor) <span class="hljs-built_in">this</span>.buildAnchor();
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.anchor) <span class="hljs-built_in">this</span>.anchor.setters.blurAction(item);
     };</pre></div></div>
             
         </li>
@@ -830,15 +870,15 @@ artefact.anchorBlurAction        ~~&gt;  anchor.blurAction</code></pre>
 <pre><code>artefact.set({
 
     <span class="hljs-attr">anchor</span>: {
-        <span class="hljs-attr">description</span>: <span class="hljs-string">'value'</span>,
-        <span class="hljs-attr">type</span>: <span class="hljs-string">'value'</span>,
-        <span class="hljs-attr">target</span>: <span class="hljs-string">'value'</span>,
-        <span class="hljs-attr">rel</span>: <span class="hljs-string">'value'</span>,
-        <span class="hljs-attr">referrerPolicy</span>: <span class="hljs-string">'value'</span>,
-        <span class="hljs-attr">ping</span>: <span class="hljs-string">'value'</span>,
-        <span class="hljs-attr">hreflang</span>: <span class="hljs-string">'value'</span>,
-        <span class="hljs-attr">href</span>: <span class="hljs-string">'value'</span>,
-        <span class="hljs-attr">download</span>: <span class="hljs-string">'value'</span>,
+        <span class="hljs-attr">description</span>: <span class="hljs-string">&#x27;value&#x27;</span>,
+        <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;value&#x27;</span>,
+        <span class="hljs-attr">target</span>: <span class="hljs-string">&#x27;value&#x27;</span>,
+        <span class="hljs-attr">rel</span>: <span class="hljs-string">&#x27;value&#x27;</span>,
+        <span class="hljs-attr">referrerPolicy</span>: <span class="hljs-string">&#x27;value&#x27;</span>,
+        <span class="hljs-attr">ping</span>: <span class="hljs-string">&#x27;value&#x27;</span>,
+        <span class="hljs-attr">hreflang</span>: <span class="hljs-string">&#x27;value&#x27;</span>,
+        <span class="hljs-attr">href</span>: <span class="hljs-string">&#x27;value&#x27;</span>,
+        <span class="hljs-attr">download</span>: <span class="hljs-string">&#x27;value&#x27;</span>,
     },
 });</code></pre>
 
@@ -846,8 +886,8 @@ artefact.anchorBlurAction        ~~&gt;  anchor.blurAction</code></pre>
             
             <div class="content"><div class='highlight'><pre>    S.anchor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.buildAnchor(items);
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.anchor.set(items);
+        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.anchor) <span class="hljs-built_in">this</span>.buildAnchor(items);
+        <span class="hljs-keyword">else</span> <span class="hljs-built_in">this</span>.anchor.set(items);
     };</pre></div></div>
             
         </li>
@@ -880,15 +920,15 @@ artefact.anchorBlurAction        ~~&gt;  anchor.blurAction</code></pre>
             
             <div class="content"><div class='highlight'><pre>    P.buildAnchor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.demolish();
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.anchor) <span class="hljs-built_in">this</span>.anchor.demolish();
 
-        <span class="hljs-keyword">if</span> (!items.name) items.name = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span>-anchor`</span>;
-        <span class="hljs-keyword">if</span> (!items.description) items.description = <span class="hljs-string">`Anchor link for <span class="hljs-subst">${<span class="hljs-keyword">this</span>.name}</span> <span class="hljs-subst">${<span class="hljs-keyword">this</span>.type}</span>`</span>;
+        <span class="hljs-keyword">if</span> (!items.name) items.name = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span>-anchor`</span>;
+        <span class="hljs-keyword">if</span> (!items.description) items.description = <span class="hljs-string">`Anchor link for <span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> <span class="hljs-subst">${<span class="hljs-built_in">this</span>.type}</span>`</span>;
 
-        items.host = <span class="hljs-keyword">this</span>;
-        items.hold = <span class="hljs-keyword">this</span>.getAnchorHold();
+        items.host = <span class="hljs-built_in">this</span>;
+        items.hold = <span class="hljs-built_in">this</span>.getAnchorHold();
 
-        <span class="hljs-keyword">this</span>.anchor = makeAnchor(items);
+        <span class="hljs-built_in">this</span>.anchor = makeAnchor(items);
     };</pre></div></div>
             
         </li>
@@ -906,20 +946,20 @@ artefact.anchorBlurAction        ~~&gt;  anchor.blurAction</code></pre>
             
             <div class="content"><div class='highlight'><pre>    P.getAnchorHold = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">let</span> entityHost = <span class="hljs-keyword">this</span>.currentHost;
+        <span class="hljs-keyword">let</span> entityHost = <span class="hljs-built_in">this</span>.currentHost;
 
         <span class="hljs-keyword">if</span> (entityHost) {
 
-            <span class="hljs-keyword">if</span> (entityHost.type === <span class="hljs-string">'Canvas'</span>) <span class="hljs-keyword">return</span> entityHost.navigation;
+            <span class="hljs-keyword">if</span> (entityHost.type === <span class="hljs-string">&#x27;Canvas&#x27;</span>) <span class="hljs-keyword">return</span> entityHost.navigation;
 
-            <span class="hljs-keyword">if</span> (entityHost.type === <span class="hljs-string">'Cell'</span>) {
+            <span class="hljs-keyword">if</span> (entityHost.type === <span class="hljs-string">&#x27;Cell&#x27;</span>) {
 
                 <span class="hljs-keyword">let</span> cellHost = (entityHost.currentHost) ? entityHost.currentHost : canvas[entityHost.host];
 
-                <span class="hljs-keyword">if</span> (cellHost &amp;&amp; cellHost.type === <span class="hljs-string">'Canvas'</span>) <span class="hljs-keyword">return</span> cellHost.navigation;
+                <span class="hljs-keyword">if</span> (cellHost &amp;&amp; cellHost.type === <span class="hljs-string">&#x27;Canvas&#x27;</span>) <span class="hljs-keyword">return</span> cellHost.navigation;
             }
         }
-        <span class="hljs-keyword">this</span>.dirtyAnchorHold = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.dirtyAnchorHold = <span class="hljs-literal">true</span>;
 
         <span class="hljs-keyword">return</span> scrawlNavigationHold;
     }</pre></div></div>
@@ -939,7 +979,7 @@ artefact.anchorBlurAction        ~~&gt;  anchor.blurAction</code></pre>
             
             <div class="content"><div class='highlight'><pre>    P.rebuildAnchor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.build();
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.anchor) <span class="hljs-built_in">this</span>.anchor.build();
     };</pre></div></div>
             
         </li>
@@ -957,7 +997,7 @@ artefact.anchorBlurAction        ~~&gt;  anchor.blurAction</code></pre>
             
             <div class="content"><div class='highlight'><pre>    P.clickAnchor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.anchor) <span class="hljs-keyword">this</span>.anchor.click();
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.anchor) <span class="hljs-built_in">this</span>.anchor.click();
     };</pre></div></div>
             
         </li>

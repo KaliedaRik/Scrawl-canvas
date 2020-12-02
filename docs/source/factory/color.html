@@ -4,7 +4,7 @@
 <head>
   <title>Color factory</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -110,6 +110,11 @@
                 </a>
               
                 
+                <a class="source" href="emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
                 <a class="source" href="filter.html">
                   ./source/factory/filter.js
                 </a>
@@ -150,6 +155,11 @@
                 </a>
               
                 
+                <a class="source" href="net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
                 <a class="source" href="oval.html">
                   ./source/factory/oval.js
                 </a>
@@ -157,6 +167,31 @@
                 
                 <a class="source" href="palette.html">
                   ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="particleForce.html">
+                  ./source/factory/particleForce.js
+                </a>
+              
+                
+                <a class="source" href="particleHistory.html">
+                  ./source/factory/particleHistory.js
+                </a>
+              
+                
+                <a class="source" href="particleSpring.html">
+                  ./source/factory/particleSpring.js
+                </a>
+              
+                
+                <a class="source" href="particleWorld.html">
+                  ./source/factory/particleWorld.js
                 </a>
               
                 
@@ -247,6 +282,11 @@
                 
                 <a class="source" href="ticker.html">
                   ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="tracer.html">
+                  ./source/factory/tracer.js
                 </a>
               
                 
@@ -467,10 +507,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, entity } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { mergeOver, xt, xtGet, isa_obj } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">entity</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+<span class="hljs-keyword">import</span> { mergeOver, xt, xtGet, isa_obj } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/base.js'</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -487,18 +527,18 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Color = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.makeName(items.name);
-    <span class="hljs-keyword">this</span>.register();
-    <span class="hljs-keyword">this</span>.set(<span class="hljs-keyword">this</span>.defs);
-    <span class="hljs-keyword">this</span>.set(items);
+    <span class="hljs-built_in">this</span>.makeName(items.name);
+    <span class="hljs-built_in">this</span>.register();
+    <span class="hljs-built_in">this</span>.set(<span class="hljs-built_in">this</span>.defs);
+    <span class="hljs-built_in">this</span>.set(items);
 
-    <span class="hljs-keyword">if</span> (xt(items.color)) <span class="hljs-keyword">this</span>.convert(items.color);
+    <span class="hljs-keyword">if</span> (xt(items.color)) <span class="hljs-built_in">this</span>.convert(items.color);
 
-    <span class="hljs-keyword">if</span> (items.random) <span class="hljs-keyword">this</span>.generateRandomColor(items);
+    <span class="hljs-keyword">if</span> (items.random) <span class="hljs-built_in">this</span>.generateRandomColor(items);
 
-    <span class="hljs-keyword">this</span>.checkValues();
+    <span class="hljs-built_in">this</span>.checkValues();
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -515,8 +555,8 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Color.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">'Color'</span>;
-P.lib = <span class="hljs-string">'styles'</span>;
+P.type = <span class="hljs-string">&#x27;Color&#x27;</span>;
+P.lib = <span class="hljs-string">&#x27;styles&#x27;</span>;
 P.isArtefact = <span class="hljs-literal">false</span>;
 P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
             
@@ -760,7 +800,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>P.kill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">let</span> myname = <span class="hljs-keyword">this</span>.name;</pre></div></div>
+    <span class="hljs-keyword">let</span> myname = <span class="hljs-built_in">this</span>.name;</pre></div></div>
             
         </li>
         
@@ -802,9 +842,9 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.deregister();
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.deregister();
     
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -837,28 +877,28 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
     <span class="hljs-keyword">if</span> (!xt(item)) {
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.opaque) <span class="hljs-keyword">return</span> <span class="hljs-string">`rgb(<span class="hljs-subst">${<span class="hljs-keyword">this</span>.r || <span class="hljs-number">0</span>}</span>, <span class="hljs-subst">${<span class="hljs-keyword">this</span>.g || <span class="hljs-number">0</span>}</span>, <span class="hljs-subst">${<span class="hljs-keyword">this</span>.b || <span class="hljs-number">0</span>}</span>)`</span>;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-string">`rgba(<span class="hljs-subst">${<span class="hljs-keyword">this</span>.r || <span class="hljs-number">0</span>}</span>, <span class="hljs-subst">${<span class="hljs-keyword">this</span>.g || <span class="hljs-number">0</span>}</span>, <span class="hljs-subst">${<span class="hljs-keyword">this</span>.b || <span class="hljs-number">0</span>}</span>, <span class="hljs-subst">${<span class="hljs-keyword">this</span>.a || <span class="hljs-number">1</span>}</span>)`</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.opaque) <span class="hljs-keyword">return</span> <span class="hljs-string">`rgb(<span class="hljs-subst">${<span class="hljs-built_in">this</span>.r || <span class="hljs-number">0</span>}</span>, <span class="hljs-subst">${<span class="hljs-built_in">this</span>.g || <span class="hljs-number">0</span>}</span>, <span class="hljs-subst">${<span class="hljs-built_in">this</span>.b || <span class="hljs-number">0</span>}</span>)`</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-string">`rgba(<span class="hljs-subst">${<span class="hljs-built_in">this</span>.r || <span class="hljs-number">0</span>}</span>, <span class="hljs-subst">${<span class="hljs-built_in">this</span>.g || <span class="hljs-number">0</span>}</span>, <span class="hljs-subst">${<span class="hljs-built_in">this</span>.b || <span class="hljs-number">0</span>}</span>, <span class="hljs-subst">${<span class="hljs-built_in">this</span>.a || <span class="hljs-number">1</span>}</span>)`</span>;
     }
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item === <span class="hljs-string">'random'</span>) {
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item === <span class="hljs-string">&#x27;random&#x27;</span>) {
 
-        <span class="hljs-keyword">this</span>.generateRandomColor();
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.get();
+        <span class="hljs-built_in">this</span>.generateRandomColor();
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.get();
     }
     <span class="hljs-keyword">else</span>{
 
-        <span class="hljs-keyword">let</span> getter = <span class="hljs-keyword">this</span>.getters[item];
+        <span class="hljs-keyword">let</span> getter = <span class="hljs-built_in">this</span>.getters[item];
 
-        <span class="hljs-keyword">if</span> (getter) <span class="hljs-keyword">return</span> getter.call(<span class="hljs-keyword">this</span>);
+        <span class="hljs-keyword">if</span> (getter) <span class="hljs-keyword">return</span> getter.call(<span class="hljs-built_in">this</span>);
 
         <span class="hljs-keyword">else</span> {
 
-            <span class="hljs-keyword">let</span> def = <span class="hljs-keyword">this</span>.defs[item];
+            <span class="hljs-keyword">let</span> def = <span class="hljs-built_in">this</span>.defs[item];
 
-            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> def != <span class="hljs-string">'undefined'</span>) {
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> def != <span class="hljs-string">&#x27;undefined&#x27;</span>) {
 
-                <span class="hljs-keyword">let</span> val = <span class="hljs-keyword">this</span>[item];
-                <span class="hljs-keyword">return</span> (<span class="hljs-keyword">typeof</span> val != <span class="hljs-string">'undefined'</span>) ? val : def;
+                <span class="hljs-keyword">let</span> val = <span class="hljs-built_in">this</span>[item];
+                <span class="hljs-keyword">return</span> (<span class="hljs-keyword">typeof</span> val != <span class="hljs-string">&#x27;undefined&#x27;</span>) ? val : def;
             }
             <span class="hljs-keyword">return</span> undef;
         }
@@ -882,27 +922,57 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
     <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Object</span>.keys(items).length) {
 
-        <span class="hljs-keyword">let</span> setters = <span class="hljs-keyword">this</span>.setters,
-            defs = <span class="hljs-keyword">this</span>.defs,
+        <span class="hljs-keyword">let</span> setters = <span class="hljs-built_in">this</span>.setters,
+            defs = <span class="hljs-built_in">this</span>.defs,
             predefined;
 
         <span class="hljs-built_in">Object</span>.entries(items).forEach(<span class="hljs-function">(<span class="hljs-params">[key, value]</span>) =&gt;</span> {
 
-            <span class="hljs-keyword">if</span> (key !== <span class="hljs-string">'name'</span>) {
+            <span class="hljs-keyword">if</span> (key !== <span class="hljs-string">&#x27;name&#x27;</span>) {
 
                 predefined = setters[key];
 
-                <span class="hljs-keyword">if</span> (predefined) predefined.call(<span class="hljs-keyword">this</span>, value);
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] !== <span class="hljs-string">'undefined'</span>) <span class="hljs-keyword">this</span>[key] = value;
+                <span class="hljs-keyword">if</span> (predefined) predefined.call(<span class="hljs-built_in">this</span>, value);
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] !== <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-built_in">this</span>[key] = value;
             }
-        }, <span class="hljs-keyword">this</span>);
+        }, <span class="hljs-built_in">this</span>);
     }
 
-    <span class="hljs-keyword">if</span> (items.random) <span class="hljs-keyword">this</span>.generateRandomColor(items);
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (items.color) <span class="hljs-keyword">this</span>.convert(items.color);
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.checkValues();
+    <span class="hljs-keyword">if</span> (items.random) <span class="hljs-built_in">this</span>.generateRandomColor(items);
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (items.color) <span class="hljs-built_in">this</span>.convert(items.color);
+    <span class="hljs-keyword">else</span> <span class="hljs-built_in">this</span>.checkValues();
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+};
+
+P.setColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.convert(item);
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+};
+
+P.setMinimumColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.convert(item);
+
+    <span class="hljs-built_in">this</span>.rMin = <span class="hljs-built_in">this</span>.r;
+    <span class="hljs-built_in">this</span>.gMin = <span class="hljs-built_in">this</span>.g;
+    <span class="hljs-built_in">this</span>.bMin = <span class="hljs-built_in">this</span>.b;
+    <span class="hljs-built_in">this</span>.aMin = <span class="hljs-built_in">this</span>.a;
+
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+};
+
+P.setMaximumColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.convert(item);
+
+    <span class="hljs-built_in">this</span>.rMax = <span class="hljs-built_in">this</span>.r;
+    <span class="hljs-built_in">this</span>.gMax = <span class="hljs-built_in">this</span>.g;
+    <span class="hljs-built_in">this</span>.bMax = <span class="hljs-built_in">this</span>.b;
+    <span class="hljs-built_in">this</span>.aMax = <span class="hljs-built_in">this</span>.a;
+
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -933,11 +1003,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>P.getData = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.autoUpdate) <span class="hljs-keyword">this</span>.update();
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.autoUpdate) <span class="hljs-built_in">this</span>.update();
 
-    <span class="hljs-keyword">this</span>.checkValues();
+    <span class="hljs-built_in">this</span>.checkValues();
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.get();
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.get();
 };</pre></div></div>
             
         </li>
@@ -958,28 +1028,28 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
     <span class="hljs-keyword">let</span> round = <span class="hljs-built_in">Math</span>.round,
         rnd = <span class="hljs-built_in">Math</span>.random;
 
-    <span class="hljs-keyword">let</span> rMax = <span class="hljs-keyword">this</span>.rMax = xtGet(items.rMax, <span class="hljs-keyword">this</span>.rMax, <span class="hljs-number">255</span>),
-        gMax = <span class="hljs-keyword">this</span>.gMax = xtGet(items.gMax, <span class="hljs-keyword">this</span>.gMax, <span class="hljs-number">255</span>),
-        bMax = <span class="hljs-keyword">this</span>.bMax = xtGet(items.bMax, <span class="hljs-keyword">this</span>.bMax, <span class="hljs-number">255</span>);
+    <span class="hljs-keyword">let</span> rMax = <span class="hljs-built_in">this</span>.rMax = xtGet(items.rMax, <span class="hljs-built_in">this</span>.rMax, <span class="hljs-number">255</span>),
+        gMax = <span class="hljs-built_in">this</span>.gMax = xtGet(items.gMax, <span class="hljs-built_in">this</span>.gMax, <span class="hljs-number">255</span>),
+        bMax = <span class="hljs-built_in">this</span>.bMax = xtGet(items.bMax, <span class="hljs-built_in">this</span>.bMax, <span class="hljs-number">255</span>);
 
-    <span class="hljs-keyword">let</span> rMin = <span class="hljs-keyword">this</span>.rMin = xtGet(items.rMin, <span class="hljs-keyword">this</span>.rMin, <span class="hljs-number">0</span>),
-        gMin = <span class="hljs-keyword">this</span>.gMin = xtGet(items.gMin, <span class="hljs-keyword">this</span>.gMin, <span class="hljs-number">0</span>),
-        bMin = <span class="hljs-keyword">this</span>.bMin = xtGet(items.bMin, <span class="hljs-keyword">this</span>.bMin, <span class="hljs-number">0</span>);
+    <span class="hljs-keyword">let</span> rMin = <span class="hljs-built_in">this</span>.rMin = xtGet(items.rMin, <span class="hljs-built_in">this</span>.rMin, <span class="hljs-number">0</span>),
+        gMin = <span class="hljs-built_in">this</span>.gMin = xtGet(items.gMin, <span class="hljs-built_in">this</span>.gMin, <span class="hljs-number">0</span>),
+        bMin = <span class="hljs-built_in">this</span>.bMin = xtGet(items.bMin, <span class="hljs-built_in">this</span>.bMin, <span class="hljs-number">0</span>);
 
-    <span class="hljs-keyword">this</span>.r = items.r || round((rnd() * (rMax - rMin)) + rMin);
-    <span class="hljs-keyword">this</span>.g = items.g || round((rnd() * (gMax - gMin)) + gMin);
-    <span class="hljs-keyword">this</span>.b = items.b || round((rnd() * (bMax - bMin)) + bMin);
+    <span class="hljs-built_in">this</span>.r = items.r || round((rnd() * (rMax - rMin)) + rMin);
+    <span class="hljs-built_in">this</span>.g = items.g || round((rnd() * (gMax - gMin)) + gMin);
+    <span class="hljs-built_in">this</span>.b = items.b || round((rnd() * (bMax - bMin)) + bMin);
 
-    <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.opaque) {
+    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.opaque) {
 
-        aMax = <span class="hljs-keyword">this</span>.aMax = xtGet(items.aMax, <span class="hljs-keyword">this</span>.aMax, <span class="hljs-number">1</span>);
-        aMin = <span class="hljs-keyword">this</span>.aMin = xtGet(items.aMin, <span class="hljs-keyword">this</span>.aMin, <span class="hljs-number">0</span>);
-        <span class="hljs-keyword">this</span>.a = items.a || (rnd() * (aMax - aMin)) + aMin;
+        aMax = <span class="hljs-built_in">this</span>.aMax = xtGet(items.aMax, <span class="hljs-built_in">this</span>.aMax, <span class="hljs-number">1</span>);
+        aMin = <span class="hljs-built_in">this</span>.aMin = xtGet(items.aMin, <span class="hljs-built_in">this</span>.aMin, <span class="hljs-number">0</span>);
+        <span class="hljs-built_in">this</span>.a = items.a || (rnd() * (aMax - aMin)) + aMin;
     }
 
-    <span class="hljs-keyword">this</span>.checkValues();
+    <span class="hljs-built_in">this</span>.checkValues();
     
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -998,17 +1068,17 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             <div class="content"><div class='highlight'><pre>P.checkValues = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
     <span class="hljs-keyword">let</span> f = <span class="hljs-built_in">Math</span>.floor,
-        r = f(<span class="hljs-keyword">this</span>.r) || <span class="hljs-number">0</span>,
-        g = f(<span class="hljs-keyword">this</span>.g) || <span class="hljs-number">0</span>,
-        b = f(<span class="hljs-keyword">this</span>.b) || <span class="hljs-number">0</span>,
-        a = <span class="hljs-keyword">this</span>.a || <span class="hljs-number">1</span>;
+        r = f(<span class="hljs-built_in">this</span>.r) || <span class="hljs-number">0</span>,
+        g = f(<span class="hljs-built_in">this</span>.g) || <span class="hljs-number">0</span>,
+        b = f(<span class="hljs-built_in">this</span>.b) || <span class="hljs-number">0</span>,
+        a = <span class="hljs-built_in">this</span>.a || <span class="hljs-number">1</span>;
 
-    <span class="hljs-keyword">this</span>.r = (r &gt; <span class="hljs-number">255</span>) ? <span class="hljs-number">255</span> : ((r &lt; <span class="hljs-number">0</span>) ? <span class="hljs-number">0</span> : r);
-    <span class="hljs-keyword">this</span>.g = (g &gt; <span class="hljs-number">255</span>) ? <span class="hljs-number">255</span> : ((g &lt; <span class="hljs-number">0</span>) ? <span class="hljs-number">0</span> : g);
-    <span class="hljs-keyword">this</span>.b = (b &gt; <span class="hljs-number">255</span>) ? <span class="hljs-number">255</span> : ((b &lt; <span class="hljs-number">0</span>) ? <span class="hljs-number">0</span> : b);
-    <span class="hljs-keyword">this</span>.a = (a &gt; <span class="hljs-number">1</span>) ? <span class="hljs-number">1</span> : ((a &lt; <span class="hljs-number">0</span>) ? <span class="hljs-number">0</span> : a);
+    <span class="hljs-built_in">this</span>.r = (r &gt; <span class="hljs-number">255</span>) ? <span class="hljs-number">255</span> : ((r &lt; <span class="hljs-number">0</span>) ? <span class="hljs-number">0</span> : r);
+    <span class="hljs-built_in">this</span>.g = (g &gt; <span class="hljs-number">255</span>) ? <span class="hljs-number">255</span> : ((g &lt; <span class="hljs-number">0</span>) ? <span class="hljs-number">0</span> : g);
+    <span class="hljs-built_in">this</span>.b = (b &gt; <span class="hljs-number">255</span>) ? <span class="hljs-number">255</span> : ((b &lt; <span class="hljs-number">0</span>) ? <span class="hljs-number">0</span> : b);
+    <span class="hljs-built_in">this</span>.a = (a &gt; <span class="hljs-number">1</span>) ? <span class="hljs-number">1</span> : ((a &lt; <span class="hljs-number">0</span>) ? <span class="hljs-number">0</span> : a);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -1024,31 +1094,31 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.updateArray = [<span class="hljs-string">'r'</span>, <span class="hljs-string">'g'</span>, <span class="hljs-string">'b'</span>, <span class="hljs-string">'a'</span>];
+            <div class="content"><div class='highlight'><pre>P.updateArray = [<span class="hljs-string">&#x27;r&#x27;</span>, <span class="hljs-string">&#x27;g&#x27;</span>, <span class="hljs-string">&#x27;b&#x27;</span>, <span class="hljs-string">&#x27;a&#x27;</span>];
 P.update = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">if</span> (!xt(<span class="hljs-keyword">this</span>.rCurrent)) <span class="hljs-keyword">this</span>.rCurrent = <span class="hljs-keyword">this</span>.r;
-    <span class="hljs-keyword">if</span> (!xt(<span class="hljs-keyword">this</span>.gCurrent)) <span class="hljs-keyword">this</span>.gCurrent = <span class="hljs-keyword">this</span>.g;
-    <span class="hljs-keyword">if</span> (!xt(<span class="hljs-keyword">this</span>.bCurrent)) <span class="hljs-keyword">this</span>.bCurrent = <span class="hljs-keyword">this</span>.b;
-    <span class="hljs-keyword">if</span> (!xt(<span class="hljs-keyword">this</span>.aCurrent)) <span class="hljs-keyword">this</span>.aCurrent = <span class="hljs-keyword">this</span>.a;
+    <span class="hljs-keyword">if</span> (!xt(<span class="hljs-built_in">this</span>.rCurrent)) <span class="hljs-built_in">this</span>.rCurrent = <span class="hljs-built_in">this</span>.r;
+    <span class="hljs-keyword">if</span> (!xt(<span class="hljs-built_in">this</span>.gCurrent)) <span class="hljs-built_in">this</span>.gCurrent = <span class="hljs-built_in">this</span>.g;
+    <span class="hljs-keyword">if</span> (!xt(<span class="hljs-built_in">this</span>.bCurrent)) <span class="hljs-built_in">this</span>.bCurrent = <span class="hljs-built_in">this</span>.b;
+    <span class="hljs-keyword">if</span> (!xt(<span class="hljs-built_in">this</span>.aCurrent)) <span class="hljs-built_in">this</span>.aCurrent = <span class="hljs-built_in">this</span>.a;
 
-    <span class="hljs-keyword">let</span> list = <span class="hljs-keyword">this</span>.updateArray;
+    <span class="hljs-keyword">let</span> list = <span class="hljs-built_in">this</span>.updateArray;
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.rShift || <span class="hljs-keyword">this</span>.gShift || <span class="hljs-keyword">this</span>.bShift || <span class="hljs-keyword">this</span>.aShift) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.rShift || <span class="hljs-built_in">this</span>.gShift || <span class="hljs-built_in">this</span>.bShift || <span class="hljs-built_in">this</span>.aShift) {
 
         list.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
 
-            <span class="hljs-keyword">let</span> shift = <span class="hljs-keyword">this</span>[item + <span class="hljs-string">'Shift'</span>];
+            <span class="hljs-keyword">let</span> shift = <span class="hljs-built_in">this</span>[item + <span class="hljs-string">&#x27;Shift&#x27;</span>];
         
             <span class="hljs-keyword">if</span> (shift) {
 
-                <span class="hljs-keyword">this</span>[<span class="hljs-string">`<span class="hljs-subst">${item}</span>Current`</span>] += shift;
+                <span class="hljs-built_in">this</span>[<span class="hljs-string">`<span class="hljs-subst">${item}</span>Current`</span>] += shift;
 
-                <span class="hljs-keyword">let</span> col = <span class="hljs-keyword">this</span>[item],
-                    min = <span class="hljs-keyword">this</span>[<span class="hljs-string">`<span class="hljs-subst">${item}</span>Min`</span>],
-                    max = <span class="hljs-keyword">this</span>[<span class="hljs-string">`<span class="hljs-subst">${item}</span>Max`</span>],
-                    bounce = <span class="hljs-keyword">this</span>[<span class="hljs-string">`<span class="hljs-subst">${item}</span>Bounce`</span>],
-                    current = <span class="hljs-keyword">this</span>[<span class="hljs-string">`<span class="hljs-subst">${item}</span>Current`</span>],
+                <span class="hljs-keyword">let</span> col = <span class="hljs-built_in">this</span>[item],
+                    min = <span class="hljs-built_in">this</span>[<span class="hljs-string">`<span class="hljs-subst">${item}</span>Min`</span>],
+                    max = <span class="hljs-built_in">this</span>[<span class="hljs-string">`<span class="hljs-subst">${item}</span>Max`</span>],
+                    bounce = <span class="hljs-built_in">this</span>[<span class="hljs-string">`<span class="hljs-subst">${item}</span>Bounce`</span>],
+                    current = <span class="hljs-built_in">this</span>[<span class="hljs-string">`<span class="hljs-subst">${item}</span>Current`</span>],
 
                     temp = <span class="hljs-built_in">Math</span>.floor(current + shift);
 
@@ -1062,12 +1132,12 @@ P.update = <span class="hljs-function"><span class="hljs-keyword">function</span
                     }
                 }
                 
-                <span class="hljs-keyword">this</span>[item] = temp;
-                <span class="hljs-keyword">this</span>[<span class="hljs-string">`<span class="hljs-subst">${item}</span>Shift`</span>] = shift;
+                <span class="hljs-built_in">this</span>[item] = temp;
+                <span class="hljs-built_in">this</span>[<span class="hljs-string">`<span class="hljs-subst">${item}</span>Shift`</span>] = shift;
             }
-        }, <span class="hljs-keyword">this</span>);
+        }, <span class="hljs-built_in">this</span>);
     }
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -1117,7 +1187,7 @@ P.update = <span class="hljs-function"><span class="hljs-keyword">function</span
             
             <div class="content"><div class='highlight'><pre>        round = <span class="hljs-built_in">Math</span>.round;
 
-    items = (items.substring) ? items : <span class="hljs-string">''</span>;
+    items = (items.substring) ? items : <span class="hljs-string">&#x27;&#x27;</span>;
 
     <span class="hljs-keyword">if</span> (items.length) {
 
@@ -1127,7 +1197,7 @@ P.update = <span class="hljs-function"><span class="hljs-keyword">function</span
         b = <span class="hljs-number">0</span>;
         a = <span class="hljs-number">1</span>;
         
-        <span class="hljs-keyword">if</span> (items[<span class="hljs-number">0</span>] === <span class="hljs-string">'#'</span>) {
+        <span class="hljs-keyword">if</span> (items[<span class="hljs-number">0</span>] === <span class="hljs-string">&#x27;#&#x27;</span>) {
         
             <span class="hljs-keyword">if</span> (items.length &lt; <span class="hljs-number">5</span>) {
         
@@ -1198,10 +1268,10 @@ P.update = <span class="hljs-function"><span class="hljs-keyword">function</span
             <div class="content"><div class='highlight'><pre>            r = g = b = a = <span class="hljs-number">0</span>;
 
         }
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (items === <span class="hljs-string">'transparent'</span>) r = g = b = a = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (items === <span class="hljs-string">&#x27;transparent&#x27;</span>) r = g = b = a = <span class="hljs-number">0</span>;
         <span class="hljs-keyword">else</span> {
 
-            temp = <span class="hljs-keyword">this</span>.colorLibrary[items];
+            temp = <span class="hljs-built_in">this</span>.colorLibrary[items];
 
             <span class="hljs-keyword">if</span> (temp) {
             
@@ -1212,15 +1282,15 @@ P.update = <span class="hljs-function"><span class="hljs-keyword">function</span
             }
         }
 
-        <span class="hljs-keyword">this</span>.r = r;
-        <span class="hljs-keyword">this</span>.g = g;
-        <span class="hljs-keyword">this</span>.b = b;
-        <span class="hljs-keyword">this</span>.a = a;
+        <span class="hljs-built_in">this</span>.r = r;
+        <span class="hljs-built_in">this</span>.g = g;
+        <span class="hljs-built_in">this</span>.b = b;
+        <span class="hljs-built_in">this</span>.a = a;
         
-        <span class="hljs-keyword">this</span>.checkValues();
+        <span class="hljs-built_in">this</span>.checkValues();
     }
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -1237,152 +1307,152 @@ P.update = <span class="hljs-function"><span class="hljs-keyword">function</span
             </div>
             
             <div class="content"><div class='highlight'><pre>P.colorLibrary = {
-    <span class="hljs-attr">aliceblue</span>: <span class="hljs-string">'f0f8ff'</span>,
-    <span class="hljs-attr">antiquewhite</span>: <span class="hljs-string">'faebd7'</span>,
-    <span class="hljs-attr">aqua</span>: <span class="hljs-string">'00ffff'</span>,
-    <span class="hljs-attr">aquamarine</span>: <span class="hljs-string">'7fffd4'</span>,
-    <span class="hljs-attr">azure</span>: <span class="hljs-string">'f0ffff'</span>,
-    <span class="hljs-attr">beige</span>: <span class="hljs-string">'f5f5dc'</span>,
-    <span class="hljs-attr">bisque</span>: <span class="hljs-string">'ffe4c4'</span>,
-    <span class="hljs-attr">black</span>: <span class="hljs-string">'000000'</span>,
-    <span class="hljs-attr">blanchedalmond</span>: <span class="hljs-string">'ffe4c4'</span>,
-    <span class="hljs-attr">blue</span>: <span class="hljs-string">'0000ff'</span>,
-    <span class="hljs-attr">blueviolet</span>: <span class="hljs-string">'8a2be2'</span>,
-    <span class="hljs-attr">brown</span>: <span class="hljs-string">'a52a2a'</span>,
-    <span class="hljs-attr">burlywood</span>: <span class="hljs-string">'deb887'</span>,
-    <span class="hljs-attr">cadetblue</span>: <span class="hljs-string">'5f9ea0'</span>,
-    <span class="hljs-attr">chartreuse</span>: <span class="hljs-string">'7fff00'</span>,
-    <span class="hljs-attr">chocolate</span>: <span class="hljs-string">'d2691e'</span>,
-    <span class="hljs-attr">coral</span>: <span class="hljs-string">'ff7f50'</span>,
-    <span class="hljs-attr">cornflowerblue</span>: <span class="hljs-string">'6495ed'</span>,
-    <span class="hljs-attr">cornsilk</span>: <span class="hljs-string">'fff8dc'</span>,
-    <span class="hljs-attr">crimson</span>: <span class="hljs-string">'dc143c'</span>,
-    <span class="hljs-attr">darkblue</span>: <span class="hljs-string">'00008b'</span>,
-    <span class="hljs-attr">darkcyan</span>: <span class="hljs-string">'008b8b'</span>,
-    <span class="hljs-attr">darkgoldenrod</span>: <span class="hljs-string">'b8860b'</span>,
-    <span class="hljs-attr">darkgray</span>: <span class="hljs-string">'a9a9a9'</span>,
-    <span class="hljs-attr">darkgreen</span>: <span class="hljs-string">'006400'</span>,
-    <span class="hljs-attr">darkgrey</span>: <span class="hljs-string">'a9a9a9'</span>,
-    <span class="hljs-attr">darkkhaki</span>: <span class="hljs-string">'bdb76b'</span>,
-    <span class="hljs-attr">darkmagenta</span>: <span class="hljs-string">'8b008b'</span>,
-    <span class="hljs-attr">darkolivegreen</span>: <span class="hljs-string">'556b2f'</span>,
-    <span class="hljs-attr">darkorange</span>: <span class="hljs-string">'ff8c00'</span>,
-    <span class="hljs-attr">darkorchid</span>: <span class="hljs-string">'9932cc'</span>,
-    <span class="hljs-attr">darkred</span>: <span class="hljs-string">'8b0000'</span>,
-    <span class="hljs-attr">darksalmon</span>: <span class="hljs-string">'e9967a'</span>,
-    <span class="hljs-attr">darkseagreen</span>: <span class="hljs-string">'8fbc8f'</span>,
-    <span class="hljs-attr">darkslateblue</span>: <span class="hljs-string">'483d8b'</span>,
-    <span class="hljs-attr">darkslategray</span>: <span class="hljs-string">'2f4f4f'</span>,
-    <span class="hljs-attr">darkslategrey</span>: <span class="hljs-string">'2f4f4f'</span>,
-    <span class="hljs-attr">darkturquoise</span>: <span class="hljs-string">'00ced1'</span>,
-    <span class="hljs-attr">darkviolet</span>: <span class="hljs-string">'9400d3'</span>,
-    <span class="hljs-attr">deeppink</span>: <span class="hljs-string">'ff1493'</span>,
-    <span class="hljs-attr">deepskyblue</span>: <span class="hljs-string">'00bfff'</span>,
-    <span class="hljs-attr">dimgray</span>: <span class="hljs-string">'696969'</span>,
-    <span class="hljs-attr">dimgrey</span>: <span class="hljs-string">'696969'</span>,
-    <span class="hljs-attr">dodgerblue</span>: <span class="hljs-string">'1e90ff'</span>,
-    <span class="hljs-attr">firebrick</span>: <span class="hljs-string">'b22222'</span>,
-    <span class="hljs-attr">floralwhite</span>: <span class="hljs-string">'fffaf0'</span>,
-    <span class="hljs-attr">forestgreen</span>: <span class="hljs-string">'228b22'</span>,
-    <span class="hljs-attr">fuchsia</span>: <span class="hljs-string">'ff00ff'</span>,
-    <span class="hljs-attr">gainsboro</span>: <span class="hljs-string">'dcdcdc'</span>,
-    <span class="hljs-attr">ghostwhite</span>: <span class="hljs-string">'f8f8ff'</span>,
-    <span class="hljs-attr">gold</span>: <span class="hljs-string">'ffd700'</span>,
-    <span class="hljs-attr">goldenrod</span>: <span class="hljs-string">'daa520'</span>,
-    <span class="hljs-attr">gray</span>: <span class="hljs-string">'808080'</span>,
-    <span class="hljs-attr">green</span>: <span class="hljs-string">'008000'</span>,
-    <span class="hljs-attr">greenyellow</span>: <span class="hljs-string">'adff2f'</span>,
-    <span class="hljs-attr">grey</span>: <span class="hljs-string">'808080'</span>,
-    <span class="hljs-attr">honeydew</span>: <span class="hljs-string">'f0fff0'</span>,
-    <span class="hljs-attr">hotpink</span>: <span class="hljs-string">'ff69b4'</span>,
-    <span class="hljs-attr">indianred</span>: <span class="hljs-string">'cd5c5c'</span>,
-    <span class="hljs-attr">indigo</span>: <span class="hljs-string">'4b0082'</span>,
-    <span class="hljs-attr">ivory</span>: <span class="hljs-string">'fffff0'</span>,
-    <span class="hljs-attr">khaki</span>: <span class="hljs-string">'f0e68c'</span>,
-    <span class="hljs-attr">lavender</span>: <span class="hljs-string">'e6e6fa'</span>,
-    <span class="hljs-attr">lavenderblush</span>: <span class="hljs-string">'fff0f5'</span>,
-    <span class="hljs-attr">lawngreen</span>: <span class="hljs-string">'7cfc00'</span>,
-    <span class="hljs-attr">lemonchiffon</span>: <span class="hljs-string">'fffacd'</span>,
-    <span class="hljs-attr">lightblue</span>: <span class="hljs-string">'add8e6'</span>,
-    <span class="hljs-attr">lightcoral</span>: <span class="hljs-string">'f08080'</span>,
-    <span class="hljs-attr">lightcyan</span>: <span class="hljs-string">'e0ffff'</span>,
-    <span class="hljs-attr">lightgoldenrodyellow</span>: <span class="hljs-string">'fafad2'</span>,
-    <span class="hljs-attr">lightgray</span>: <span class="hljs-string">'d3d3d3'</span>,
-    <span class="hljs-attr">lightgreen</span>: <span class="hljs-string">'90ee90'</span>,
-    <span class="hljs-attr">lightgrey</span>: <span class="hljs-string">'d3d3d3'</span>,
-    <span class="hljs-attr">lightpink</span>: <span class="hljs-string">'ffb6c1'</span>,
-    <span class="hljs-attr">lightsalmon</span>: <span class="hljs-string">'ffa07a'</span>,
-    <span class="hljs-attr">lightseagreen</span>: <span class="hljs-string">'20b2aa'</span>,
-    <span class="hljs-attr">lightskyblue</span>: <span class="hljs-string">'87cefa'</span>,
-    <span class="hljs-attr">lightslategray</span>: <span class="hljs-string">'778899'</span>,
-    <span class="hljs-attr">lightslategrey</span>: <span class="hljs-string">'778899'</span>,
-    <span class="hljs-attr">lightsteelblue</span>: <span class="hljs-string">'b0c4de'</span>,
-    <span class="hljs-attr">lightyellow</span>: <span class="hljs-string">'ffffe0'</span>,
-    <span class="hljs-attr">lime</span>: <span class="hljs-string">'00ff00'</span>,
-    <span class="hljs-attr">limegreen</span>: <span class="hljs-string">'32cd32'</span>,
-    <span class="hljs-attr">linen</span>: <span class="hljs-string">'faf0e6'</span>,
-    <span class="hljs-attr">maroon</span>: <span class="hljs-string">'800000'</span>,
-    <span class="hljs-attr">mediumaquamarine</span>: <span class="hljs-string">'66cdaa'</span>,
-    <span class="hljs-attr">mediumblue</span>: <span class="hljs-string">'0000cd'</span>,
-    <span class="hljs-attr">mediumorchid</span>: <span class="hljs-string">'ba55d3'</span>,
-    <span class="hljs-attr">mediumpurple</span>: <span class="hljs-string">'9370db'</span>,
-    <span class="hljs-attr">mediumseagreen</span>: <span class="hljs-string">'3cb371'</span>,
-    <span class="hljs-attr">mediumslateblue</span>: <span class="hljs-string">'7b68ee'</span>,
-    <span class="hljs-attr">mediumspringgreen</span>: <span class="hljs-string">'00fa9a'</span>,
-    <span class="hljs-attr">mediumturquoise</span>: <span class="hljs-string">'48d1cc'</span>,
-    <span class="hljs-attr">mediumvioletred</span>: <span class="hljs-string">'c71585'</span>,
-    <span class="hljs-attr">midnightblue</span>: <span class="hljs-string">'191970'</span>,
-    <span class="hljs-attr">mintcream</span>: <span class="hljs-string">'f5fffa'</span>,
-    <span class="hljs-attr">mistyrose</span>: <span class="hljs-string">'ffe4e1'</span>,
-    <span class="hljs-attr">moccasin</span>: <span class="hljs-string">'ffe4b5'</span>,
-    <span class="hljs-attr">navajowhite</span>: <span class="hljs-string">'ffdead'</span>,
-    <span class="hljs-attr">navy</span>: <span class="hljs-string">'000080'</span>,
-    <span class="hljs-attr">oldlace</span>: <span class="hljs-string">'fdf5e6'</span>,
-    <span class="hljs-attr">olive</span>: <span class="hljs-string">'808000'</span>,
-    <span class="hljs-attr">olivedrab</span>: <span class="hljs-string">'6b8e23'</span>,
-    <span class="hljs-attr">orange</span>: <span class="hljs-string">'ffa500'</span>,
-    <span class="hljs-attr">orangered</span>: <span class="hljs-string">'ff4500'</span>,
-    <span class="hljs-attr">orchid</span>: <span class="hljs-string">'da70d6'</span>,
-    <span class="hljs-attr">palegoldenrod</span>: <span class="hljs-string">'eee8aa'</span>,
-    <span class="hljs-attr">palegreen</span>: <span class="hljs-string">'98fb98'</span>,
-    <span class="hljs-attr">paleturquoise</span>: <span class="hljs-string">'afeeee'</span>,
-    <span class="hljs-attr">palevioletred</span>: <span class="hljs-string">'db7093'</span>,
-    <span class="hljs-attr">papayawhip</span>: <span class="hljs-string">'ffefd5'</span>,
-    <span class="hljs-attr">peachpuff</span>: <span class="hljs-string">'ffdab9'</span>,
-    <span class="hljs-attr">peru</span>: <span class="hljs-string">'cd853f'</span>,
-    <span class="hljs-attr">pink</span>: <span class="hljs-string">'ffc0cb'</span>,
-    <span class="hljs-attr">plum</span>: <span class="hljs-string">'dda0dd'</span>,
-    <span class="hljs-attr">powderblue</span>: <span class="hljs-string">'b0e0e6'</span>,
-    <span class="hljs-attr">purple</span>: <span class="hljs-string">'800080'</span>,
-    <span class="hljs-attr">rebeccapurple</span>: <span class="hljs-string">'663399'</span>,
-    <span class="hljs-attr">red</span>: <span class="hljs-string">'ff0000'</span>,
-    <span class="hljs-attr">rosybrown</span>: <span class="hljs-string">'bc8f8f'</span>,
-    <span class="hljs-attr">royalblue</span>: <span class="hljs-string">'4169e1'</span>,
-    <span class="hljs-attr">saddlebrown</span>: <span class="hljs-string">'8b4513'</span>,
-    <span class="hljs-attr">salmon</span>: <span class="hljs-string">'fa8072'</span>,
-    <span class="hljs-attr">sandybrown</span>: <span class="hljs-string">'f4a460'</span>,
-    <span class="hljs-attr">seagreen</span>: <span class="hljs-string">'2e8b57'</span>,
-    <span class="hljs-attr">seashell</span>: <span class="hljs-string">'fff5ee'</span>,
-    <span class="hljs-attr">sienna</span>: <span class="hljs-string">'a0522d'</span>,
-    <span class="hljs-attr">silver</span>: <span class="hljs-string">'c0c0c0'</span>,
-    <span class="hljs-attr">skyblue</span>: <span class="hljs-string">'87ceeb'</span>,
-    <span class="hljs-attr">slateblue</span>: <span class="hljs-string">'6a5acd'</span>,
-    <span class="hljs-attr">slategray</span>: <span class="hljs-string">'708090'</span>,
-    <span class="hljs-attr">slategrey</span>: <span class="hljs-string">'708090'</span>,
-    <span class="hljs-attr">snow</span>: <span class="hljs-string">'fffafa'</span>,
-    <span class="hljs-attr">springgreen</span>: <span class="hljs-string">'00ff7f'</span>,
-    <span class="hljs-attr">steelblue</span>: <span class="hljs-string">'4682b4'</span>,
-    <span class="hljs-attr">tan</span>: <span class="hljs-string">'d2b48c'</span>,
-    <span class="hljs-attr">teal</span>: <span class="hljs-string">'008080'</span>,
-    <span class="hljs-attr">thistle</span>: <span class="hljs-string">'d8bfd8'</span>,
-    <span class="hljs-attr">tomato</span>: <span class="hljs-string">'ff6347'</span>,
-    <span class="hljs-attr">turquoise</span>: <span class="hljs-string">'40e0d0'</span>,
-    <span class="hljs-attr">violet</span>: <span class="hljs-string">'ee82ee'</span>,
-    <span class="hljs-attr">wheat</span>: <span class="hljs-string">'f5deb3'</span>,
-    <span class="hljs-attr">white</span>: <span class="hljs-string">'ffffff'</span>,
-    <span class="hljs-attr">whitesmoke</span>: <span class="hljs-string">'f5f5f5'</span>,
-    <span class="hljs-attr">yellow</span>: <span class="hljs-string">'ffff00'</span>,
-    <span class="hljs-attr">yellowgreen</span>: <span class="hljs-string">'9acd32'</span>
+    <span class="hljs-attr">aliceblue</span>: <span class="hljs-string">&#x27;f0f8ff&#x27;</span>,
+    <span class="hljs-attr">antiquewhite</span>: <span class="hljs-string">&#x27;faebd7&#x27;</span>,
+    <span class="hljs-attr">aqua</span>: <span class="hljs-string">&#x27;00ffff&#x27;</span>,
+    <span class="hljs-attr">aquamarine</span>: <span class="hljs-string">&#x27;7fffd4&#x27;</span>,
+    <span class="hljs-attr">azure</span>: <span class="hljs-string">&#x27;f0ffff&#x27;</span>,
+    <span class="hljs-attr">beige</span>: <span class="hljs-string">&#x27;f5f5dc&#x27;</span>,
+    <span class="hljs-attr">bisque</span>: <span class="hljs-string">&#x27;ffe4c4&#x27;</span>,
+    <span class="hljs-attr">black</span>: <span class="hljs-string">&#x27;000000&#x27;</span>,
+    <span class="hljs-attr">blanchedalmond</span>: <span class="hljs-string">&#x27;ffe4c4&#x27;</span>,
+    <span class="hljs-attr">blue</span>: <span class="hljs-string">&#x27;0000ff&#x27;</span>,
+    <span class="hljs-attr">blueviolet</span>: <span class="hljs-string">&#x27;8a2be2&#x27;</span>,
+    <span class="hljs-attr">brown</span>: <span class="hljs-string">&#x27;a52a2a&#x27;</span>,
+    <span class="hljs-attr">burlywood</span>: <span class="hljs-string">&#x27;deb887&#x27;</span>,
+    <span class="hljs-attr">cadetblue</span>: <span class="hljs-string">&#x27;5f9ea0&#x27;</span>,
+    <span class="hljs-attr">chartreuse</span>: <span class="hljs-string">&#x27;7fff00&#x27;</span>,
+    <span class="hljs-attr">chocolate</span>: <span class="hljs-string">&#x27;d2691e&#x27;</span>,
+    <span class="hljs-attr">coral</span>: <span class="hljs-string">&#x27;ff7f50&#x27;</span>,
+    <span class="hljs-attr">cornflowerblue</span>: <span class="hljs-string">&#x27;6495ed&#x27;</span>,
+    <span class="hljs-attr">cornsilk</span>: <span class="hljs-string">&#x27;fff8dc&#x27;</span>,
+    <span class="hljs-attr">crimson</span>: <span class="hljs-string">&#x27;dc143c&#x27;</span>,
+    <span class="hljs-attr">darkblue</span>: <span class="hljs-string">&#x27;00008b&#x27;</span>,
+    <span class="hljs-attr">darkcyan</span>: <span class="hljs-string">&#x27;008b8b&#x27;</span>,
+    <span class="hljs-attr">darkgoldenrod</span>: <span class="hljs-string">&#x27;b8860b&#x27;</span>,
+    <span class="hljs-attr">darkgray</span>: <span class="hljs-string">&#x27;a9a9a9&#x27;</span>,
+    <span class="hljs-attr">darkgreen</span>: <span class="hljs-string">&#x27;006400&#x27;</span>,
+    <span class="hljs-attr">darkgrey</span>: <span class="hljs-string">&#x27;a9a9a9&#x27;</span>,
+    <span class="hljs-attr">darkkhaki</span>: <span class="hljs-string">&#x27;bdb76b&#x27;</span>,
+    <span class="hljs-attr">darkmagenta</span>: <span class="hljs-string">&#x27;8b008b&#x27;</span>,
+    <span class="hljs-attr">darkolivegreen</span>: <span class="hljs-string">&#x27;556b2f&#x27;</span>,
+    <span class="hljs-attr">darkorange</span>: <span class="hljs-string">&#x27;ff8c00&#x27;</span>,
+    <span class="hljs-attr">darkorchid</span>: <span class="hljs-string">&#x27;9932cc&#x27;</span>,
+    <span class="hljs-attr">darkred</span>: <span class="hljs-string">&#x27;8b0000&#x27;</span>,
+    <span class="hljs-attr">darksalmon</span>: <span class="hljs-string">&#x27;e9967a&#x27;</span>,
+    <span class="hljs-attr">darkseagreen</span>: <span class="hljs-string">&#x27;8fbc8f&#x27;</span>,
+    <span class="hljs-attr">darkslateblue</span>: <span class="hljs-string">&#x27;483d8b&#x27;</span>,
+    <span class="hljs-attr">darkslategray</span>: <span class="hljs-string">&#x27;2f4f4f&#x27;</span>,
+    <span class="hljs-attr">darkslategrey</span>: <span class="hljs-string">&#x27;2f4f4f&#x27;</span>,
+    <span class="hljs-attr">darkturquoise</span>: <span class="hljs-string">&#x27;00ced1&#x27;</span>,
+    <span class="hljs-attr">darkviolet</span>: <span class="hljs-string">&#x27;9400d3&#x27;</span>,
+    <span class="hljs-attr">deeppink</span>: <span class="hljs-string">&#x27;ff1493&#x27;</span>,
+    <span class="hljs-attr">deepskyblue</span>: <span class="hljs-string">&#x27;00bfff&#x27;</span>,
+    <span class="hljs-attr">dimgray</span>: <span class="hljs-string">&#x27;696969&#x27;</span>,
+    <span class="hljs-attr">dimgrey</span>: <span class="hljs-string">&#x27;696969&#x27;</span>,
+    <span class="hljs-attr">dodgerblue</span>: <span class="hljs-string">&#x27;1e90ff&#x27;</span>,
+    <span class="hljs-attr">firebrick</span>: <span class="hljs-string">&#x27;b22222&#x27;</span>,
+    <span class="hljs-attr">floralwhite</span>: <span class="hljs-string">&#x27;fffaf0&#x27;</span>,
+    <span class="hljs-attr">forestgreen</span>: <span class="hljs-string">&#x27;228b22&#x27;</span>,
+    <span class="hljs-attr">fuchsia</span>: <span class="hljs-string">&#x27;ff00ff&#x27;</span>,
+    <span class="hljs-attr">gainsboro</span>: <span class="hljs-string">&#x27;dcdcdc&#x27;</span>,
+    <span class="hljs-attr">ghostwhite</span>: <span class="hljs-string">&#x27;f8f8ff&#x27;</span>,
+    <span class="hljs-attr">gold</span>: <span class="hljs-string">&#x27;ffd700&#x27;</span>,
+    <span class="hljs-attr">goldenrod</span>: <span class="hljs-string">&#x27;daa520&#x27;</span>,
+    <span class="hljs-attr">gray</span>: <span class="hljs-string">&#x27;808080&#x27;</span>,
+    <span class="hljs-attr">green</span>: <span class="hljs-string">&#x27;008000&#x27;</span>,
+    <span class="hljs-attr">greenyellow</span>: <span class="hljs-string">&#x27;adff2f&#x27;</span>,
+    <span class="hljs-attr">grey</span>: <span class="hljs-string">&#x27;808080&#x27;</span>,
+    <span class="hljs-attr">honeydew</span>: <span class="hljs-string">&#x27;f0fff0&#x27;</span>,
+    <span class="hljs-attr">hotpink</span>: <span class="hljs-string">&#x27;ff69b4&#x27;</span>,
+    <span class="hljs-attr">indianred</span>: <span class="hljs-string">&#x27;cd5c5c&#x27;</span>,
+    <span class="hljs-attr">indigo</span>: <span class="hljs-string">&#x27;4b0082&#x27;</span>,
+    <span class="hljs-attr">ivory</span>: <span class="hljs-string">&#x27;fffff0&#x27;</span>,
+    <span class="hljs-attr">khaki</span>: <span class="hljs-string">&#x27;f0e68c&#x27;</span>,
+    <span class="hljs-attr">lavender</span>: <span class="hljs-string">&#x27;e6e6fa&#x27;</span>,
+    <span class="hljs-attr">lavenderblush</span>: <span class="hljs-string">&#x27;fff0f5&#x27;</span>,
+    <span class="hljs-attr">lawngreen</span>: <span class="hljs-string">&#x27;7cfc00&#x27;</span>,
+    <span class="hljs-attr">lemonchiffon</span>: <span class="hljs-string">&#x27;fffacd&#x27;</span>,
+    <span class="hljs-attr">lightblue</span>: <span class="hljs-string">&#x27;add8e6&#x27;</span>,
+    <span class="hljs-attr">lightcoral</span>: <span class="hljs-string">&#x27;f08080&#x27;</span>,
+    <span class="hljs-attr">lightcyan</span>: <span class="hljs-string">&#x27;e0ffff&#x27;</span>,
+    <span class="hljs-attr">lightgoldenrodyellow</span>: <span class="hljs-string">&#x27;fafad2&#x27;</span>,
+    <span class="hljs-attr">lightgray</span>: <span class="hljs-string">&#x27;d3d3d3&#x27;</span>,
+    <span class="hljs-attr">lightgreen</span>: <span class="hljs-string">&#x27;90ee90&#x27;</span>,
+    <span class="hljs-attr">lightgrey</span>: <span class="hljs-string">&#x27;d3d3d3&#x27;</span>,
+    <span class="hljs-attr">lightpink</span>: <span class="hljs-string">&#x27;ffb6c1&#x27;</span>,
+    <span class="hljs-attr">lightsalmon</span>: <span class="hljs-string">&#x27;ffa07a&#x27;</span>,
+    <span class="hljs-attr">lightseagreen</span>: <span class="hljs-string">&#x27;20b2aa&#x27;</span>,
+    <span class="hljs-attr">lightskyblue</span>: <span class="hljs-string">&#x27;87cefa&#x27;</span>,
+    <span class="hljs-attr">lightslategray</span>: <span class="hljs-string">&#x27;778899&#x27;</span>,
+    <span class="hljs-attr">lightslategrey</span>: <span class="hljs-string">&#x27;778899&#x27;</span>,
+    <span class="hljs-attr">lightsteelblue</span>: <span class="hljs-string">&#x27;b0c4de&#x27;</span>,
+    <span class="hljs-attr">lightyellow</span>: <span class="hljs-string">&#x27;ffffe0&#x27;</span>,
+    <span class="hljs-attr">lime</span>: <span class="hljs-string">&#x27;00ff00&#x27;</span>,
+    <span class="hljs-attr">limegreen</span>: <span class="hljs-string">&#x27;32cd32&#x27;</span>,
+    <span class="hljs-attr">linen</span>: <span class="hljs-string">&#x27;faf0e6&#x27;</span>,
+    <span class="hljs-attr">maroon</span>: <span class="hljs-string">&#x27;800000&#x27;</span>,
+    <span class="hljs-attr">mediumaquamarine</span>: <span class="hljs-string">&#x27;66cdaa&#x27;</span>,
+    <span class="hljs-attr">mediumblue</span>: <span class="hljs-string">&#x27;0000cd&#x27;</span>,
+    <span class="hljs-attr">mediumorchid</span>: <span class="hljs-string">&#x27;ba55d3&#x27;</span>,
+    <span class="hljs-attr">mediumpurple</span>: <span class="hljs-string">&#x27;9370db&#x27;</span>,
+    <span class="hljs-attr">mediumseagreen</span>: <span class="hljs-string">&#x27;3cb371&#x27;</span>,
+    <span class="hljs-attr">mediumslateblue</span>: <span class="hljs-string">&#x27;7b68ee&#x27;</span>,
+    <span class="hljs-attr">mediumspringgreen</span>: <span class="hljs-string">&#x27;00fa9a&#x27;</span>,
+    <span class="hljs-attr">mediumturquoise</span>: <span class="hljs-string">&#x27;48d1cc&#x27;</span>,
+    <span class="hljs-attr">mediumvioletred</span>: <span class="hljs-string">&#x27;c71585&#x27;</span>,
+    <span class="hljs-attr">midnightblue</span>: <span class="hljs-string">&#x27;191970&#x27;</span>,
+    <span class="hljs-attr">mintcream</span>: <span class="hljs-string">&#x27;f5fffa&#x27;</span>,
+    <span class="hljs-attr">mistyrose</span>: <span class="hljs-string">&#x27;ffe4e1&#x27;</span>,
+    <span class="hljs-attr">moccasin</span>: <span class="hljs-string">&#x27;ffe4b5&#x27;</span>,
+    <span class="hljs-attr">navajowhite</span>: <span class="hljs-string">&#x27;ffdead&#x27;</span>,
+    <span class="hljs-attr">navy</span>: <span class="hljs-string">&#x27;000080&#x27;</span>,
+    <span class="hljs-attr">oldlace</span>: <span class="hljs-string">&#x27;fdf5e6&#x27;</span>,
+    <span class="hljs-attr">olive</span>: <span class="hljs-string">&#x27;808000&#x27;</span>,
+    <span class="hljs-attr">olivedrab</span>: <span class="hljs-string">&#x27;6b8e23&#x27;</span>,
+    <span class="hljs-attr">orange</span>: <span class="hljs-string">&#x27;ffa500&#x27;</span>,
+    <span class="hljs-attr">orangered</span>: <span class="hljs-string">&#x27;ff4500&#x27;</span>,
+    <span class="hljs-attr">orchid</span>: <span class="hljs-string">&#x27;da70d6&#x27;</span>,
+    <span class="hljs-attr">palegoldenrod</span>: <span class="hljs-string">&#x27;eee8aa&#x27;</span>,
+    <span class="hljs-attr">palegreen</span>: <span class="hljs-string">&#x27;98fb98&#x27;</span>,
+    <span class="hljs-attr">paleturquoise</span>: <span class="hljs-string">&#x27;afeeee&#x27;</span>,
+    <span class="hljs-attr">palevioletred</span>: <span class="hljs-string">&#x27;db7093&#x27;</span>,
+    <span class="hljs-attr">papayawhip</span>: <span class="hljs-string">&#x27;ffefd5&#x27;</span>,
+    <span class="hljs-attr">peachpuff</span>: <span class="hljs-string">&#x27;ffdab9&#x27;</span>,
+    <span class="hljs-attr">peru</span>: <span class="hljs-string">&#x27;cd853f&#x27;</span>,
+    <span class="hljs-attr">pink</span>: <span class="hljs-string">&#x27;ffc0cb&#x27;</span>,
+    <span class="hljs-attr">plum</span>: <span class="hljs-string">&#x27;dda0dd&#x27;</span>,
+    <span class="hljs-attr">powderblue</span>: <span class="hljs-string">&#x27;b0e0e6&#x27;</span>,
+    <span class="hljs-attr">purple</span>: <span class="hljs-string">&#x27;800080&#x27;</span>,
+    <span class="hljs-attr">rebeccapurple</span>: <span class="hljs-string">&#x27;663399&#x27;</span>,
+    <span class="hljs-attr">red</span>: <span class="hljs-string">&#x27;ff0000&#x27;</span>,
+    <span class="hljs-attr">rosybrown</span>: <span class="hljs-string">&#x27;bc8f8f&#x27;</span>,
+    <span class="hljs-attr">royalblue</span>: <span class="hljs-string">&#x27;4169e1&#x27;</span>,
+    <span class="hljs-attr">saddlebrown</span>: <span class="hljs-string">&#x27;8b4513&#x27;</span>,
+    <span class="hljs-attr">salmon</span>: <span class="hljs-string">&#x27;fa8072&#x27;</span>,
+    <span class="hljs-attr">sandybrown</span>: <span class="hljs-string">&#x27;f4a460&#x27;</span>,
+    <span class="hljs-attr">seagreen</span>: <span class="hljs-string">&#x27;2e8b57&#x27;</span>,
+    <span class="hljs-attr">seashell</span>: <span class="hljs-string">&#x27;fff5ee&#x27;</span>,
+    <span class="hljs-attr">sienna</span>: <span class="hljs-string">&#x27;a0522d&#x27;</span>,
+    <span class="hljs-attr">silver</span>: <span class="hljs-string">&#x27;c0c0c0&#x27;</span>,
+    <span class="hljs-attr">skyblue</span>: <span class="hljs-string">&#x27;87ceeb&#x27;</span>,
+    <span class="hljs-attr">slateblue</span>: <span class="hljs-string">&#x27;6a5acd&#x27;</span>,
+    <span class="hljs-attr">slategray</span>: <span class="hljs-string">&#x27;708090&#x27;</span>,
+    <span class="hljs-attr">slategrey</span>: <span class="hljs-string">&#x27;708090&#x27;</span>,
+    <span class="hljs-attr">snow</span>: <span class="hljs-string">&#x27;fffafa&#x27;</span>,
+    <span class="hljs-attr">springgreen</span>: <span class="hljs-string">&#x27;00ff7f&#x27;</span>,
+    <span class="hljs-attr">steelblue</span>: <span class="hljs-string">&#x27;4682b4&#x27;</span>,
+    <span class="hljs-attr">tan</span>: <span class="hljs-string">&#x27;d2b48c&#x27;</span>,
+    <span class="hljs-attr">teal</span>: <span class="hljs-string">&#x27;008080&#x27;</span>,
+    <span class="hljs-attr">thistle</span>: <span class="hljs-string">&#x27;d8bfd8&#x27;</span>,
+    <span class="hljs-attr">tomato</span>: <span class="hljs-string">&#x27;ff6347&#x27;</span>,
+    <span class="hljs-attr">turquoise</span>: <span class="hljs-string">&#x27;40e0d0&#x27;</span>,
+    <span class="hljs-attr">violet</span>: <span class="hljs-string">&#x27;ee82ee&#x27;</span>,
+    <span class="hljs-attr">wheat</span>: <span class="hljs-string">&#x27;f5deb3&#x27;</span>,
+    <span class="hljs-attr">white</span>: <span class="hljs-string">&#x27;ffffff&#x27;</span>,
+    <span class="hljs-attr">whitesmoke</span>: <span class="hljs-string">&#x27;f5f5f5&#x27;</span>,
+    <span class="hljs-attr">yellow</span>: <span class="hljs-string">&#x27;ffff00&#x27;</span>,
+    <span class="hljs-attr">yellowgreen</span>: <span class="hljs-string">&#x27;9acd32&#x27;</span>
 };</pre></div></div>
             
         </li>
@@ -1397,7 +1467,7 @@ P.update = <span class="hljs-function"><span class="hljs-keyword">function</span
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.makeColor({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'myColorObject'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myColorObject&#x27;</span>,
 
     <span class="hljs-attr">r</span>: <span class="hljs-number">100</span>,
     <span class="hljs-attr">g</span>: <span class="hljs-number">50</span>,
@@ -1405,7 +1475,7 @@ P.update = <span class="hljs-function"><span class="hljs-keyword">function</span
 
     <span class="hljs-attr">rShift</span>: <span class="hljs-number">0.1</span>,
     <span class="hljs-attr">gShift</span>: <span class="hljs-number">1</span>,
-    <span class="hljs-attr">bShift</span>: <span class="hljs-number">-1.3</span>,
+    <span class="hljs-attr">bShift</span>: -<span class="hljs-number">1.3</span>,
 
     <span class="hljs-attr">rBounce</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">gBounce</span>: <span class="hljs-literal">true</span>,
@@ -1420,7 +1490,7 @@ P.update = <span class="hljs-function"><span class="hljs-keyword">function</span
 
 scrawl.makeBlock({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'block-tester'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;block-tester&#x27;</span>,
 
     <span class="hljs-attr">width</span>: <span class="hljs-number">120</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-number">40</span>,
@@ -1428,8 +1498,8 @@ scrawl.makeBlock({
     <span class="hljs-attr">startX</span>: <span class="hljs-number">60</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-number">60</span>,
 
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'myColorObject'</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">'fill'</span>,
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;myColorObject&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
 });</code></pre>
 
             </div>
@@ -1439,7 +1509,7 @@ scrawl.makeBlock({
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Color(items);
 };
 
-constructors.Color = Color;</pre></div></div>
+<span class="hljs-title">constructors</span>.<span class="hljs-title">Color</span> = <span class="hljs-title">Color</span>;</pre></div></div>
             
         </li>
         

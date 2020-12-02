@@ -4,7 +4,7 @@
 <head>
   <title>Tetragon factory</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
 </head>
 <body>
@@ -110,6 +110,11 @@
                 </a>
               
                 
+                <a class="source" href="emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
                 <a class="source" href="filter.html">
                   ./source/factory/filter.js
                 </a>
@@ -150,6 +155,11 @@
                 </a>
               
                 
+                <a class="source" href="net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
                 <a class="source" href="oval.html">
                   ./source/factory/oval.js
                 </a>
@@ -157,6 +167,31 @@
                 
                 <a class="source" href="palette.html">
                   ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="particleForce.html">
+                  ./source/factory/particleForce.js
+                </a>
+              
+                
+                <a class="source" href="particleHistory.html">
+                  ./source/factory/particleHistory.js
+                </a>
+              
+                
+                <a class="source" href="particleSpring.html">
+                  ./source/factory/particleSpring.js
+                </a>
+              
+                
+                <a class="source" href="particleWorld.html">
+                  ./source/factory/particleWorld.js
                 </a>
               
                 
@@ -247,6 +282,11 @@
                 
                 <a class="source" href="ticker.html">
                   ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="tracer.html">
+                  ./source/factory/tracer.js
                 </a>
               
                 
@@ -482,11 +522,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/library.js'</span>;
-<span class="hljs-keyword">import</span> { mergeOver } <span class="hljs-keyword">from</span> <span class="hljs-string">'../core/utilities.js'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+<span class="hljs-keyword">import</span> { mergeOver } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/base.js'</span>;
-<span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">'../mixin/shapeBasic.js'</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
+<span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shapeBasic.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -503,8 +543,8 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Tetragon = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.shapeInit(items);
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+    <span class="hljs-built_in">this</span>.shapeInit(items);
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
         </li>
@@ -521,8 +561,8 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Tetragon.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">'Tetragon'</span>;
-P.lib = <span class="hljs-string">'entity'</span>;
+P.type = <span class="hljs-string">&#x27;Tetragon&#x27;</span>;
+P.lib = <span class="hljs-string">&#x27;entity&#x27;</span>;
 P.isArtefact = <span class="hljs-literal">true</span>;
 P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
             
@@ -558,12 +598,12 @@ P = shapeMix(P);</pre></div></div>
               <h4 id="tetragon-attributes">Tetragon attributes</h4>
 <ul>
 <li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/position.html">position mixin</a>: <strong>group, visibility, order, start, <em>startX</em>, <em>startY</em>, handle, <em>handleX</em>, <em>handleY</em>, offset, <em>offsetX</em>, <em>offsetY</em>, dimensions, <em>width</em>, <em>height</em>, pivoted, mimicked, lockTo, <em>lockXTo</em>, <em>lockYTo</em>, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/position.html">position mixin</a>: <strong>group, visibility, order, start, <em>startX</em>, <em>startY</em>, handle, <em>handleX</em>, <em>handleY</em>, offset, <em>offsetX</em>, <em>offsetY</em>, dimensions, <em>width</em>, <em>height</em>, pivoted, mimicked, lockTo, <em>lockXTo</em>, <em>lockYTo</em>, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge, bringToFrontOnDrag</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/delta.html">delta mixin</a>: <strong>delta, noDeltaUpdates</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/pivot.html">pivot mixin</a>: <strong>pivot, pivotCorner, addPivotHandle, addPivotOffset, addPivotRotation</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/mimic.html">mimic mixin</a>: <strong>mimic, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/path.html">path mixin</a>: <strong>path, pathPosition, addPathHandle, addPathOffset, addPathRotation, constantPathSpeed</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/entity.html">entity mixin</a>: <strong>method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, <em>fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor</em></strong>.</li>
+<li>Attributes defined in the <a href="../mixin/entity.html">entity mixin</a>: <strong>method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, <em>fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor, filter</em></strong>.</li>
 <li>Attributes defined in the <a href="../mixin/anchor.html">anchor mixin</a>: <strong>anchor</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/filter.html">filter mixin</a>: <strong>filters, isStencil</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/shapeBasic.html">shapeBasic mixin</a>: <strong>species, useAsPath, precision, pathDefinition, showBoundingBox, boundingBoxColor, minimumBoundingBoxDimensions, constantPathSpeed</strong>.</li>
@@ -640,53 +680,53 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
 S.radius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.setRectHelper(item, [<span class="hljs-string">'radiusX'</span>, <span class="hljs-string">'radiusY'</span>]);
+    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusX&#x27;</span>, <span class="hljs-string">&#x27;radiusY&#x27;</span>]);
 };
 S.radiusX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.setRectHelper(item, [<span class="hljs-string">'radiusX'</span>]);
+    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusX&#x27;</span>]);
 };
 S.radiusY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.setRectHelper(item, [<span class="hljs-string">'radiusY'</span>]);
+    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusY&#x27;</span>]);
 };
 D.radius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.deltaRectHelper(item, [<span class="hljs-string">'radiusX'</span>, <span class="hljs-string">'radiusY'</span>]);
+    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusX&#x27;</span>, <span class="hljs-string">&#x27;radiusY&#x27;</span>]);
 };
 D.radiusX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.deltaRectHelper(item, [<span class="hljs-string">'radiusX'</span>]);
+    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusX&#x27;</span>]);
 };
 D.radiusY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.deltaRectHelper(item, [<span class="hljs-string">'radiusY'</span>]);
+    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusY&#x27;</span>]);
 };
 
 S.intersectA = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.intersectA = item;
-    <span class="hljs-keyword">this</span>.updateDirty();
+    <span class="hljs-built_in">this</span>.intersectA = item;
+    <span class="hljs-built_in">this</span>.updateDirty();
 };
 S.intersectB = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.intersectB = item;
-    <span class="hljs-keyword">this</span>.updateDirty();
+    <span class="hljs-built_in">this</span>.intersectB = item;
+    <span class="hljs-built_in">this</span>.updateDirty();
 };
 D.intersectA = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">if</span> (item.toFixed) {
 
-        <span class="hljs-keyword">this</span>.intersectA += item;
-        <span class="hljs-keyword">this</span>.updateDirty();
+        <span class="hljs-built_in">this</span>.intersectA += item;
+        <span class="hljs-built_in">this</span>.updateDirty();
     }
 };
 D.intersectB = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">if</span> (item.toFixed) {
 
-        <span class="hljs-keyword">this</span>.intersectB += item;
-        <span class="hljs-keyword">this</span>.updateDirty();
+        <span class="hljs-built_in">this</span>.intersectB += item;
+        <span class="hljs-built_in">this</span>.updateDirty();
     }
 };</pre></div></div>
             
@@ -718,12 +758,12 @@ D.intersectB = <span class="hljs-function"><span class="hljs-keyword">function</
             
             <div class="content"><div class='highlight'><pre>P.setRectHelper = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item, corners</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.updateDirty();
+    <span class="hljs-built_in">this</span>.updateDirty();
 
     corners.forEach(<span class="hljs-function"><span class="hljs-params">corner</span> =&gt;</span> {
 
-        <span class="hljs-keyword">this</span>[corner] = item;
-    }, <span class="hljs-keyword">this</span>);
+        <span class="hljs-built_in">this</span>[corner] = item;
+    }, <span class="hljs-built_in">this</span>);
 };</pre></div></div>
             
         </li>
@@ -741,12 +781,12 @@ D.intersectB = <span class="hljs-function"><span class="hljs-keyword">function</
             
             <div class="content"><div class='highlight'><pre>P.deltaRectHelper = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item, corners</span>) </span>{
 
-    <span class="hljs-keyword">this</span>.updateDirty();
+    <span class="hljs-built_in">this</span>.updateDirty();
 
     corners.forEach(<span class="hljs-function"><span class="hljs-params">corner</span> =&gt;</span> {
 
-        <span class="hljs-keyword">this</span>[corner] = addStrings(<span class="hljs-keyword">this</span>[corner], item);
-    }, <span class="hljs-keyword">this</span>);
+        <span class="hljs-built_in">this</span>[corner] = addStrings(<span class="hljs-built_in">this</span>[corner], item);
+    }, <span class="hljs-built_in">this</span>);
 };</pre></div></div>
             
         </li>
@@ -764,12 +804,12 @@ D.intersectB = <span class="hljs-function"><span class="hljs-keyword">function</
             
             <div class="content"><div class='highlight'><pre>P.cleanSpecies = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">this</span>.dirtySpecies = <span class="hljs-literal">false</span>;
+    <span class="hljs-built_in">this</span>.dirtySpecies = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> p = <span class="hljs-string">'M0,0'</span>;
-    p = <span class="hljs-keyword">this</span>.makeTetragonPath();
+    <span class="hljs-keyword">let</span> p = <span class="hljs-string">&#x27;M0,0&#x27;</span>;
+    p = <span class="hljs-built_in">this</span>.makeTetragonPath();
 
-    <span class="hljs-keyword">this</span>.pathDefinition = p;
+    <span class="hljs-built_in">this</span>.pathDefinition = p;
 };</pre></div></div>
             
         </li>
@@ -787,8 +827,8 @@ D.intersectB = <span class="hljs-function"><span class="hljs-keyword">function</
             
             <div class="content"><div class='highlight'><pre>P.makeTetragonPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">let</span> radiusX = <span class="hljs-keyword">this</span>.radiusX,
-        radiusY = <span class="hljs-keyword">this</span>.radiusY,
+    <span class="hljs-keyword">let</span> radiusX = <span class="hljs-built_in">this</span>.radiusX,
+        radiusY = <span class="hljs-built_in">this</span>.radiusY,
         width, height;
 
     <span class="hljs-keyword">if</span> (radiusX.substring || radiusY.substring) {</pre></div></div>
@@ -823,7 +863,7 @@ height = ry * 2;</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>
-        <span class="hljs-keyword">let</span> host = <span class="hljs-keyword">this</span>.getHost();
+        <span class="hljs-keyword">let</span> host = <span class="hljs-built_in">this</span>.getHost();
 
         <span class="hljs-keyword">if</span> (host) {
 
@@ -842,12 +882,12 @@ height = ry * 2;</p>
         height = radiusY * <span class="hljs-number">2</span>;
     }
 
-    <span class="hljs-keyword">let</span> port = <span class="hljs-built_in">parseFloat</span>((width * <span class="hljs-keyword">this</span>.intersectX).toFixed(<span class="hljs-number">2</span>)),
+    <span class="hljs-keyword">let</span> port = <span class="hljs-built_in">parseFloat</span>((width * <span class="hljs-built_in">this</span>.intersectX).toFixed(<span class="hljs-number">2</span>)),
         starboard = <span class="hljs-built_in">parseFloat</span>((width - port).toFixed(<span class="hljs-number">2</span>)),
-        fore = <span class="hljs-built_in">parseFloat</span>((height * <span class="hljs-keyword">this</span>.intersectY).toFixed(<span class="hljs-number">2</span>)),
+        fore = <span class="hljs-built_in">parseFloat</span>((height * <span class="hljs-built_in">this</span>.intersectY).toFixed(<span class="hljs-number">2</span>)),
         aft = <span class="hljs-built_in">parseFloat</span>((height - fore).toFixed(<span class="hljs-number">2</span>));
 
-    <span class="hljs-keyword">let</span> myData = <span class="hljs-string">'m0,0'</span>;
+    <span class="hljs-keyword">let</span> myData = <span class="hljs-string">&#x27;m0,0&#x27;</span>;
 
     myData += <span class="hljs-string">`l<span class="hljs-subst">${starboard}</span>,<span class="hljs-subst">${fore}</span> <span class="hljs-subst">${-starboard}</span>,<span class="hljs-subst">${aft}</span> <span class="hljs-subst">${-port}</span>,<span class="hljs-subst">${-aft}</span> <span class="hljs-subst">${port}</span>,<span class="hljs-subst">${-fore}</span>z`</span>;
 
@@ -856,11 +896,11 @@ height = ry * 2;</p>
 
 P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-keyword">this</span>.localBox;
+    <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-built_in">this</span>.localBox;
 
-    <span class="hljs-keyword">this</span>.pathDefinition = <span class="hljs-keyword">this</span>.pathDefinition.replace(<span class="hljs-string">'m0,0'</span>, <span class="hljs-string">`m<span class="hljs-subst">${-x}</span>,<span class="hljs-subst">${-y}</span>`</span>);
+    <span class="hljs-built_in">this</span>.pathDefinition = <span class="hljs-built_in">this</span>.pathDefinition.replace(<span class="hljs-string">&#x27;m0,0&#x27;</span>, <span class="hljs-string">`m<span class="hljs-subst">${-x}</span>,<span class="hljs-subst">${-y}</span>`</span>);
 
-    <span class="hljs-keyword">this</span>.pathCalculatedOnce = <span class="hljs-literal">false</span>;</pre></div></div>
+    <span class="hljs-built_in">this</span>.pathCalculatedOnce = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -878,7 +918,7 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.calculateLocalPath(<span class="hljs-keyword">this</span>.pathDefinition, <span class="hljs-literal">true</span>);
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.calculateLocalPath(<span class="hljs-built_in">this</span>.pathDefinition, <span class="hljs-literal">true</span>);
 };</pre></div></div>
             
         </li>
@@ -914,10 +954,10 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
 </ul>
 <pre><code>scrawl.makeTetragon({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'diamond'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;diamond&#x27;</span>,
 
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">'lightGreen'</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">'fillAndDraw'</span>,
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;lightGreen&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillAndDraw&#x27;</span>,
 
     <span class="hljs-attr">startX</span>: <span class="hljs-number">20</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-number">750</span>,
@@ -930,11 +970,11 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeTetragon = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
-    items.species = <span class="hljs-string">'tetragon'</span>;
+    items.species = <span class="hljs-string">&#x27;tetragon&#x27;</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Tetragon(items);
 };
 
-constructors.Tetragon = Tetragon;</pre></div></div>
+<span class="hljs-title">constructors</span>.<span class="hljs-title">Tetragon</span> = <span class="hljs-title">Tetragon</span>;</pre></div></div>
             
         </li>
         

@@ -28,9 +28,20 @@ const piccy = scrawl.makePicture({
     filter: 'url(#svg-blur)',
 });
 
-// #### Scene animation
+
+// #### SVG filter
+// We create the filter in the HTML script, not here:
+// ```
+// <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+//   <filter id="svg-blur">
+//     <feGaussianBlur in="SourceGraphic" stdDeviation="5" edgeMode="duplicate" />
+//   </filter>
+// </svg>
+// ```
 let feGaussianBlur = document.querySelector('feGaussianBlur');
 
+
+// #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
 
