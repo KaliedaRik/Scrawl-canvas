@@ -65,7 +65,7 @@ scrawl.makeFilter({
 });
 
 
-// Crezate a Shape entity to act as a path for our Tracer entitys
+// Create a Shape entity to act as a path for our Tracer entitys
 scrawl.makeShape({
 
     name: 'my-arrow',

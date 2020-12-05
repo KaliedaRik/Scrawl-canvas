@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 040</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    .controls {
+      grid-template-columns: 1fr 2fr 1fr 2fr;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 040</h1>
+  <h2>Trace out a Shape path over time</h2>
+
+  <div class="controls">
+    
+    <div class="yellow label">Progress</div>
+    <div class="yellow"><input class="controlItem" id="progress" type="range" value="0" min="0" max="100" step="0.005" /></div>
+
+    <div class="yellow label">Scale</div>
+    <div class="yellow"><input class="controlItem" id="scale" type="range" value="0.4" min="0.1" max="0.6" step="0.01" /></div>
+    
+    <div class="pink label">Tween</div>
+    <div class="pink">
+      <select class="controlItem" id="tween">
+        <option value="halt">Halt</option>
+        <option value="run">Run</option>
+      </select>
+    </div>
+
+    <div class="yellow label">Roll</div>
+    <div class="yellow"><input class="controlItem" id="roll" type="range" value="-90" min="-180" max="180" step="0.1" /></div>
+
+  </div>
+
+  <canvas id="mycanvas" width="600" height="400"></canvas>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+
+    <ul>
+      <li></li>
+    </ul>
+
+    <p><a href="../docs/demo/canvas-040.html">Annotated code</a></p>
+  </div>
+
+  <script src="canvas-040.js" type="module"></script>
+
+</body>
+
+</html>
