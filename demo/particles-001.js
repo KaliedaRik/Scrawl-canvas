@@ -40,13 +40,7 @@ let myWorld = scrawl.makeWorld({
             setter: function (item) { this.testCoordinate.set(item) },
         },
 
-        // We will store a user-updatable CSS color string - `particleColor` - in the World object, which we can later reference in our Emitter entity's `stampAction` function
-        {
-            key: 'particleColor', 
-            defaultValue: '#F0F8FF',
-        },
-
-        // We will also store a user-updatable Number value - `alphaDecay` - which we will use in the `stampAction` function to tweak the particle effect that we are trying to achieve
+        // We will store a user-updatable Number value - `alphaDecay` - which we will use in the `stampAction` function to tweak the particle effect that we are trying to achieve
         {
             key: 'alphaDecay', 
             defaultValue: 6,
@@ -102,6 +96,10 @@ const myEmitter = scrawl.makeEmitter({
     rangeZ: -1,
     rangeFromZ: -0.2,
 
+    // We can assign a range of colors to our particle - we'll start the demo with the minimum and maximum fillStyle colors set to the same color
+    fillMinimumColor: '#f0f8ff',
+    fillMaximumColor: '#f0f8ff',
+
     // The `stampAction` function describes the steps that our Emitter will take to draw each of its particles onto the host canvas screen.
     // + In this instance, we have not supplied the Emitter with an `artefact`; instead we will draw directly on the host object's &lt;canvas> element.
     stampAction: function (artefact, particle, host) {
@@ -112,14 +110,13 @@ const myEmitter = scrawl.makeEmitter({
             remaining, radius, alpha, x, y, z,
             endRad = Math.PI * 2;
 
+        let colorFactory = this.fillColorFactory;
+
         // Start by saving the engine's current state.
         engine.save();
 
-        // We are using the same color for all of the Emitter's particles, which we've stored in a user-defined attribute in the World obvject.
-        engine.fillStyle = myWorld.get('particleColor');
-
-        // Start a new path
-        engine.beginPath();
+        // // We are using the same color for all of the Emitter's particles, which we've stored in a user-defined attribute in the World obvject.
+        // engine.fillStyle = myWorld.get('particleColor');
 
         // We are going to display all of the particle's most recent tick positions, as saved in their `history` array
         history.forEach((p, index) => {
@@ -144,18 +141,29 @@ const myEmitter = scrawl.makeEmitter({
             // Only draw this historical instance of the particle if it will be visible
             if (radius > 0 && alpha > 0) {
 
+                // Start a new path
+                engine.beginPath();
+
                 // Move the path to the correct position
                 engine.moveTo(x, y);
 
                 // Define the circle to be drawn at those coordinates
                 engine.arc(x, y, radius, 0, endRad);
+
+                // Set the engine's globalAlpha attribute
+                engine.globalAlpha = alpha;
+
+                // Set the engine's fillStyle attribute - we're using a range color here
+                // + We request the color from the emitter's fillColorFactory using the `get` function
+                // + When `alpha == 1` the color factory will return the maximum color string
+                // + When `alpha == 0` the color factory will return the minimum color
+                // + values between 0 and 1 return a ranged color between the minimum and maximum colors
+                engine.fillStyle = colorFactory.get(alpha);
+
+                // Perform the fill for this particle
+                engine.fill();
             }
         });
-        // Set the engine's globalAlpha attribute
-        engine.globalAlpha = alpha;
-
-        // Perform the fill for this particle
-        engine.fill();
 
         // Restore the engine's state.
         engine.restore();
@@ -175,7 +183,8 @@ let report = function () {
         historyCount;
 
     let worldSpeed = document.querySelector('#world-speed'),
-        colorController = document.querySelector('#color-controller'),
+        maxColorController = document.querySelector('#maxcolor-controller'),
+        minColorController = document.querySelector('#mincolor-controller'),
         colorAlpha = document.querySelector('#color-alpha'),
         background = document.querySelector('#background'),
         historyLength = document.querySelector('#historyLength'),
@@ -208,7 +217,7 @@ let report = function () {
     Stamps per display: ${historyCount}
 
     backgroundColor: ${background.value}, tickMultiplier: ${worldSpeed.value}
-    particleColor: ${colorController.value}, alphaDecay: ${colorAlpha.value}
+    maxColor: ${maxColorController.value}, minColor: ${minColorController.value}, alphaDecay: ${colorAlpha.value}
 
     killAfterTime: ${killAfterTime.value}, killAfterTimeVariation: ${killAfterTimeVariation.value}
 
@@ -261,7 +270,6 @@ scrawl.observeAndUpdate({
 
     updates: {
 
-        'color-controller': ['particleColor', 'raw'],
         'world-speed': ['tickMultiplier', 'float'],
         'color-alpha': ['alphaDecay', 'float'],
     },
@@ -278,6 +286,8 @@ scrawl.observeAndUpdate({
     preventDefault: true,
 
     updates: {
+        'maxcolor-controller': ['fillMaximumColor', 'raw'],
+        'mincolor-controller': ['fillMinimumColor', 'raw'],
         generationRate: ['generationRate', 'int'],
         historyLength: ['historyLength', 'int'],
         killAfterTime: ['killAfterTime', 'float'],
@@ -329,7 +339,8 @@ const useGravity = function () {
 }();
 scrawl.addNativeListener(['input', 'change'], useGravity, '#gravity');
 
-document.querySelector('#color-controller').value = '#F0F8FF';
+document.querySelector('#maxcolor-controller').value = '#F0F8FF';
+document.querySelector('#mincolor-controller').value = '#F0F8FF';
 document.querySelector('#world-speed').value = 2;
 document.querySelector('#color-alpha').value = 6;
 document.querySelector('#gravity').value = 'no';

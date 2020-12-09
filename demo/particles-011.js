@@ -92,6 +92,15 @@ scrawl.makeShape({
 
 // #### Particle physics animation scene
 
+// Tracer entitys don't have any color control built in; we need to create our own color factory
+let colorFactory = scrawl.makeColor({
+
+    name: 'tracer-3-color-factory',
+
+    minimumColor: 'red',
+    maximumColor: 'blue',
+});
+
 // Create a Tracer entity
 // + Note that Tracers do not require a World object, cannot process Force objects, and cannot be connected together using Spring objects.
 scrawl.makeTracer({
@@ -197,10 +206,13 @@ scrawl.makeTracer({
         history.forEach((p, index) => {
 
             [remaining, z, ...start] = p;
+
+            let magicNumber = (len - index) / len;
             
             artefact.simpleStamp(host, {
                 start,
-                scale: ((len - index) / len) * 2,
+                scale: magicNumber * 3,
+                fillStyle: colorFactory.get(magicNumber),
             });
         });
     },

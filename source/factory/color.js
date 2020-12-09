@@ -150,13 +150,19 @@ P.get = function (item) {
 
     if (!xt(item)) {
 
-        if (this.opaque) return `rgb(${this.r || 0}, ${this.g || 0}, ${this.b || 0})`;
-        else return `rgba(${this.r || 0}, ${this.g || 0}, ${this.b || 0}, ${this.a || 1})`;
+        let {r, g, b, a} = this;
+
+        if (this.opaque) return `rgb(${r}, ${g}, ${b})`;
+        else return `rgba(${r}, ${g}, ${b}, ${a})`;
     }
     else if (item === 'random') {
 
         this.generateRandomColor();
         return this.get();
+    }
+    else if (item.toFixed) {
+
+        return this.getRangeColor(item);
     }
     else{
 
@@ -201,19 +207,28 @@ P.set = function (items = {}) {
     }
 
     if (items.random) this.generateRandomColor(items);
-    else if (items.color) this.convert(items.color);
+    // else if (items.color) this.convert(items.color);
     else this.checkValues();
 
     return this;
 };
 
+// #### Get, Set, deltaSet
+let S = P.setters;
+
+S.color = function (item) {
+
+    this.convert(item);
+};
 P.setColor = function (item) {
 
     this.convert(item);
     return this;
 };
 
-P.setMinimumColor = function (item) {
+S.minimumColor = function (item) {
+
+    let {r, g, b, a} = this;
 
     this.convert(item);
 
@@ -222,10 +237,33 @@ P.setMinimumColor = function (item) {
     this.bMin = this.b;
     this.aMin = this.a;
 
+    this.r = r;
+    this.g = g;
+    this.b = b;
+    this.a = a;
+};
+P.setMinimumColor = function (item) {
+
+    let {r, g, b, a} = this;
+
+    this.convert(item);
+
+    this.rMin = this.r;
+    this.gMin = this.g;
+    this.bMin = this.b;
+    this.aMin = this.a;
+
+    this.r = r;
+    this.g = g;
+    this.b = b;
+    this.a = a;
+
     return this;
 };
 
-P.setMaximumColor = function (item) {
+S.maximumColor = function (item) {
+
+    let {r, g, b, a} = this;
 
     this.convert(item);
 
@@ -233,6 +271,27 @@ P.setMaximumColor = function (item) {
     this.gMax = this.g;
     this.bMax = this.b;
     this.aMax = this.a;
+
+    this.r = r;
+    this.g = g;
+    this.b = b;
+    this.a = a;
+};
+P.setMaximumColor = function (item) {
+
+    let {r, g, b, a} = this;
+
+    this.convert(item);
+
+    this.rMax = this.r;
+    this.gMax = this.g;
+    this.bMax = this.b;
+    this.aMax = this.a;
+
+    this.r = r;
+    this.g = g;
+    this.b = b;
+    this.a = a;
 
     return this;
 };
@@ -277,6 +336,41 @@ P.generateRandomColor = function (items = {}) {
     this.checkValues();
     
     return this;
+};
+
+// `getRangeColor` - function which generates a color in the rtange between the minimum and maximum colors. 
+// + when the argument is `0` the minimum color is returned; values below 0 are rounded up to 0
+// + when the argument is `1` the maximum color is returned; values above 1 are rounded down to 1
+// + values between `0` and `1` will return a blended color between the minimum and maximum colors
+// + non-Number arguments should return the Color's current color value
+P.getRangeColor = function (item) {
+
+    if (xt(item) && item.toFixed) {
+
+        let floor = Math.floor;
+
+        let {rMin, gMin, bMin, aMin, rMax, gMax, bMax, aMax} = this;
+
+        if (item > 1) item = 1;
+        else if (item < 0) item = 0;
+
+        if (isNaN(item)) item = 1;
+
+        let r = floor(rMin + ((rMax - rMin) * item));
+        let g = floor(gMin + ((gMax - gMin) * item));
+        let b = floor(bMin + ((bMax - bMin) * item));
+        let a = floor(aMin + ((aMax - aMin) * item));
+
+        if (this.opaque) return `rgb(${r}, ${g}, ${b})`;
+        else return `rgba(${r}, ${g}, ${b}, ${a})`;
+    }
+    else {
+
+        let {r, g, b, a} = this;
+
+        if (this.opaque) return `rgb(${r}, ${g}, ${b})`;
+        else return `rgba(${r}, ${g}, ${b}, ${a})`;
+    }
 };
 
 // Internal function to make sure channel attribute values are in their correct format and ranges

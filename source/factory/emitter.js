@@ -286,6 +286,7 @@ S.artefact = function (item) {
     if (art) this.artefact = art;
 };
 
+// To generate along a path, or in an area, we set the `generateAlongPath` or `generateInArea` attributes to the (path-based) artefact we shall be using for the template. This can be the artefact's String name, or the artefact object itself
 S.generateAlongPath = function (item) {
 
     let art;
@@ -308,14 +309,31 @@ S.generateInArea = function (item) {
     else this.generateInArea = false;
 };
 
+// Color management - we can set these attributes (`fillColor fillMinimumColor fillMaximumColor, strokeColor strokeMinimumColor strokeMaximumColor`) on the Emitter object - the setter functions pass the color value onto the appropriate color factory for processing and update
 S.fillColor = function (item) {
 
-    if (isa_obj(item)) this.fillColorFactory.set(item);
+    this.fillColorFactory.set({color: item});
+};
+S.fillMinimumColor = function (item) {
+
+    this.fillColorFactory.set({minimumColor: item});
+};
+S.fillMaximumColor = function (item) {
+
+    this.fillColorFactory.set({maximumColor: item});
 };
 
 S.strokeColor = function (item) {
 
-    if (isa_obj(item)) this.fillColorFactory.set(item);
+    this.strokeColorFactory.set({color: item});
+};
+S.strokeMinimumColor = function (item) {
+
+    this.strokeColorFactory.set({minimumColor: item});
+};
+S.strokeMaximumColor = function (item) {
+
+    this.strokeColorFactory.set({maximumColor: item});
 };
 
 S.hitRadius = function (item) {

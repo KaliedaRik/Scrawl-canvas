@@ -27,11 +27,14 @@
     <div class="green label">World speed</div>
     <div class="green"><input class="controlItem" id="world-speed" type="range" value="2" min="0.5" max="4" step="0.01" /></div>
 
-    <div class="green label">World color</div>
-    <div class="green"><input class="controlItem" id="color-controller" type="color" value="#f0f8ff" /></div>
-
     <div class="green label">World alpha decay</div>
     <div class="green"><input class="controlItem" id="color-alpha" type="range" value="6" min="1" max="10" step="0.1" /></div>
+
+    <div class="green label">Maximum color</div>
+    <div class="green"><input class="controlItem" id="maxcolor-controller" type="color" value="#f0f8ff" /></div>
+
+    <div class="green label">Minimum color</div>
+    <div class="green"><input class="controlItem" id="mincolor-controller" type="color" value="#f0f8ff" /></div>
 
     <div class="green label">Background color</div>
     <div class="green"><input class="controlItem" id="background" type="color" value="#000040" /></div>
@@ -43,9 +46,6 @@
         <option value="yes">true</option>
       </select>
     </div>
-
-    <div class="pink label">&nbsp;</div>
-    <div class="pink">&nbsp;</div>
 
     <div class="blue label">Generation rate (per sec)</div>
     <div class="blue"><input class="controlItem" id="generationRate" type="range" value="60" min="0" max="200" step="1" /></div>
@@ -78,7 +78,7 @@
     <div class="yellow"><input class="controlItem" id="rangefrom_z" type="range" value="-0.2" min="-2" max="2" step="0.1" /></div>
   </div>
 
-  <canvas id="mycanvas" width="600" height="600"></canvas>
+  <canvas id="mycanvas" width="600" height="400"></canvas>
 
   <p id="reportmessage"></p>
 
