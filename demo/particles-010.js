@@ -20,7 +20,7 @@ scrawl.makeShape({
 
     pathDefinition: 'M266.2,703.1 h-178 L375.1,990 l287-286.9 H481.9 C507.4,365,683.4,91.9,911.8,25.5 877,15.4,840.9,10,803.9,10 525.1,10,295.5,313.4,266.2,703.1 z',
 
-    start: ['33%', '33%'],
+    start: ['25%', '25%'],
     handle: ['center', 'center'],
 
     scale: 0.3,
@@ -34,7 +34,12 @@ scrawl.makeShape({
 }).clone({
 
     name: 'my-second-template-arrow',
-    start: ['67%', '67%'],
+    start: ['50%', '50%'],
+
+}).clone({
+
+    name: 'my-third-template-arrow',
+    start: ['75%', '75%'],
 });
 
 
@@ -139,6 +144,19 @@ const myNet = scrawl.makeNet({
     artefact: scrawl.library.artefact['particle-wheel-1'].clone({
         name: 'particle-wheel-2',
     }),
+
+// Clone again
+}).clone({
+
+    name: 'hub-spoke-arrow',
+    generate: 'hub-spoke',
+    shapeTemplate: 'my-third-template-arrow',
+
+    artefact: scrawl.library.artefact['particle-wheel-1'].clone({
+        name: 'particle-wheel-3',
+    }),
+
+    postGenerate: function () {},
 });
 
 
@@ -175,7 +193,7 @@ scrawl.makeGroup({
 
     name: 'my-draggable-group',
 
-}).addArtefacts('weak-arrow', 'strong-arrow');
+}).addArtefacts('weak-arrow', 'strong-arrow', 'hub-spoke-arrow');
 
 scrawl.makeDragZone({
 
