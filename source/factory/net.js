@@ -1078,6 +1078,23 @@ const generators = {
                     springMaker(f, t, `${name}-${precision - 1}-0`);
                 }
 
+                for (i = 0; i < precision - 2; i++) {
+
+                    f = particle[`${name}-${i}`];
+                    t = particle[`${name}-${i + 2}`];
+                    springMaker(f, t, `${name}-${i}~${name}-${i + 2}`);
+                }
+
+                if (joinTemplateEnds) {
+
+                    f = particle[`${name}-${precision - 2}`];
+                    t = particle[`${name}-${0}`];
+                    springMaker(f, t, `${name}-${precision - 2}~${name}-${0}`);
+
+                    f = particle[`${name}-${precision - 1}`];
+                    t = particle[`${name}-${1}`];
+                    springMaker(f, t, `${name}-${precision - 1}~${name}-${1}`);
+                }
             }
             else if (['Block', 'Cell', 'Element', 'Grid', 'Phrase', 'Picture', 'Stack'].indexOf(host.type) >= 0) {
 

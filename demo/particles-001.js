@@ -107,7 +107,10 @@ const myEmitter = scrawl.makeEmitter({
         // We obtain the [canvas element's 2D rendering context](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D) - which we will call the ___engine___ - from the function's `host` argument.
         let engine = host.engine,
             history = particle.history,
-            remaining, radius, alpha, x, y, z,
+            len = history.length,
+            remaining, radius, alpha, 
+            alphaDecay = myWorld.alphaDecay, 
+            colorRange, x, y, z,
             endRad = Math.PI * 2;
 
         let colorFactory = this.fillColorFactory;
@@ -136,7 +139,10 @@ const myEmitter = scrawl.makeEmitter({
             radius = 6 * (1 + (z / 3));
 
             // As the particle ages, we want it to appear to be more transparent - note that the _remaining_ value represents time remaining before the particle dies, not how long the particle has been alive.
-            alpha = remaining / myWorld.alphaDecay;
+            alpha = remaining / alphaDecay;
+
+            // Another ageing mecahnism can be constructed using the index value vs the history array's length.
+            colorRange = index / len;
 
             // Only draw this historical instance of the particle if it will be visible
             if (radius > 0 && alpha > 0) {
@@ -158,7 +164,7 @@ const myEmitter = scrawl.makeEmitter({
                 // + When `alpha == 1` the color factory will return the maximum color string
                 // + When `alpha == 0` the color factory will return the minimum color
                 // + values between 0 and 1 return a ranged color between the minimum and maximum colors
-                engine.fillStyle = colorFactory.get(alpha);
+                engine.fillStyle = colorFactory.get(colorRange);
 
                 // Perform the fill for this particle
                 engine.fill();

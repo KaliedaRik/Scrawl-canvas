@@ -99,7 +99,8 @@ const myNet = scrawl.makeNet({
     showSprings: true,
     showSpringsColor: 'azure',
 
-    springConstant: 300,
+    springConstant: 100,
+    damperConstant: 1,
 
     engine: 'runge-kutta',
 
@@ -155,8 +156,6 @@ const myNet = scrawl.makeNet({
     artefact: scrawl.library.artefact['particle-wheel-1'].clone({
         name: 'particle-wheel-3',
     }),
-
-    postGenerate: function () {},
 });
 
 
