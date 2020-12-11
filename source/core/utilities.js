@@ -90,6 +90,18 @@ const convertTime = (item) => {
 };
 
 
+// __correctForZero__ checks and corrects for minor deviations from zero (eNumbers)
+const correctForZero = (item) => {
+
+    if (!item.toFixed) return item;
+    if (item == 0) return item;
+    if (isNaN(item)) return 0;
+    if (item < -0.000001) return item;
+    if (item > 0.000001) return item;
+    return 0;
+};
+
+
 // __λ functions__ helps us avoid errors when invoking a function attribute settable by the coder
 const λnull = () => {};
 const λthis = function () { return this; };
@@ -289,6 +301,7 @@ const xto = (...args) => (args.find(item => typeof item != 'undefined')) ? true 
 export {
     addStrings,
     convertTime,
+    correctForZero,
     λnull,
     λthis,
     λpromise,

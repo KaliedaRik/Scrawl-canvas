@@ -356,6 +356,10 @@ P.regularStampSynchronousActions = function () {
 
         engine.save();
         engine.strokeStyle = showSpringsColor;
+        engine.shadowOffsetX = 0,
+        engine.shadowOffsetY = 0,
+        engine.shadowBlur = 0,
+        engine.shadowColor = 'rgba(0,0,0,0)',
         engine.lineWidth = 1;
         engine.setTransform(1, 0, 0, 1, 0, 0);
         engine.beginPath();
@@ -388,6 +392,10 @@ P.regularStampSynchronousActions = function () {
         engine.save();
         engine.lineWidth = 1;
         engine.strokeStyle = hitRadiusColor;
+        engine.shadowOffsetX = 0,
+        engine.shadowOffsetY = 0,
+        engine.shadowBlur = 0,
+        engine.shadowColor = 'rgba(0,0,0,0)',
 
         engine.setTransform(1, 0, 0, 1, 0, 0);
         engine.beginPath();

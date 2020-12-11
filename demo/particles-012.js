@@ -38,6 +38,7 @@ const myNet = scrawl.makeNet({
     postGenerate: function () {
 
         const regex = RegExp('-0-[0-9]+$');
+        // const regex = RegExp('-0-(0|4|8|12|16)+$');
 
         this.particleStore.forEach(p => {
 
@@ -68,12 +69,13 @@ const myNet = scrawl.makeNet({
     forces: ['gravity'],
 
     mass: 3,
-    springConstant: 100,
+    springConstant: 200,
 
     engine: 'runge-kutta',
 
-    showHitRadius: true,
-    hitRadiusColor: 'lightGray',
+    showSpringsColor: 'lightGray',
+    showSprings: true,
+
     particlesAreDraggable: true,
 
     artefact: scrawl.makeBlock({
@@ -360,9 +362,8 @@ scrawl.makeEmitter({
 
     forces: ['gravity'],
 
-    generationRate: 20,
-    killAfterTime: 5,
-    killAfterTimeVariation: 0.1,
+    generationRate: 10,
+    killAfterTime: 4,
 
     rangeX: 20,
     rangeFromX: -10,
@@ -373,32 +374,48 @@ scrawl.makeEmitter({
     rangeZ: -1,
     rangeFromZ: -0.2,
 
+    fillMinimumColor: 'yellow',
+    fillMaximumColor: 'red',
+
     stampAction: function (artefact, particle, host) {
 
         let engine = host.engine,
             history = particle.history,
+            len = history.length,
             remaining, radius, alpha, x, y, z,
             endRad = Math.PI * 2;
 
+        let colorFactory = this.fillColorFactory;
+
         engine.save();
         engine.setTransform(1, 0, 0, 1, 0, 0);
-        engine.fillStyle = 'orchid';
 
-        engine.beginPath();
-        history.forEach((p, index) => {
+        if (len > 0) {
 
-            [remaining, z, x, y] = p;
-            radius = 5 * (1 + (z / 3));
-            alpha = remaining / 8;
+            [remaining, z, x, y] = history[0];
 
-            if (radius > 0) {
+            alpha = remaining / 7;
+
+            if (alpha > 0) {
 
                 engine.globalAlpha = alpha;
-                engine.moveTo(x, y);
-                engine.arc(x, y, radius, 0, endRad);
+
+                history.forEach((p, index) => {
+
+                    [remaining, z, x, y] = p;
+                    radius = 2 * (1 + (z / 6));
+
+                    if (radius > 0) {
+
+                        engine.beginPath();
+                        engine.moveTo(x, y);
+                        engine.arc(x, y, radius, 0, endRad);
+                        engine.fillStyle = colorFactory.get(1 - (index / len));
+                        engine.fill();
+                    }
+                });
             }
-        });
-        engine.fill();
+        }
         engine.restore();
     },
 });
@@ -424,15 +441,19 @@ scrawl.makePolyline({
     name: 'polyline-2',
     lockTo: 'start',
 
-    tension: 0.2,
+    tension: 0.4,
     closed: true,
     useParticlesAsPins: true,
 
     mapToPins: true,
-    pins: ['test-net-0-1', 'test-net-0-4', 'test-net-0-7', 'test-net-0-11', 'test-net-0-15', 'test-net-1-16', 'test-net-4-16', 'test-net-7-16', 'test-net-10-16', 'test-net-13-16', 'test-net-14-15', 'test-net-14-11', 'test-net-14-7', 'test-net-14-4', 'test-net-14-1', 'test-net-13-0', 'test-net-10-0', 'test-net-7-0', 'test-net-4-0', 'test-net-1-0'],
+    pins: ['test-net-0-1', 'test-net-0-2', 'test-net-0-3', 'test-net-0-4', 'test-net-0-5', 'test-net-0-6', 'test-net-0-7', 'test-net-0-8', 'test-net-0-9', 'test-net-0-10', 'test-net-0-11', 'test-net-0-12', 'test-net-0-13', 'test-net-0-14', 'test-net-0-15', 'test-net-1-16', 'test-net-2-16', 'test-net-3-16', 'test-net-4-16', 'test-net-5-16', 'test-net-6-16', 'test-net-7-16', 'test-net-8-16', 'test-net-9-16', 'test-net-10-16', 'test-net-11-16', 'test-net-12-16', 'test-net-13-16', 'test-net-14-15', 'test-net-14-14', 'test-net-14-13', 'test-net-14-12', 'test-net-14-11', 'test-net-14-10', 'test-net-14-9', 'test-net-14-8', 'test-net-14-7', 'test-net-14-6', 'test-net-14-5', 'test-net-14-4', 'test-net-14-3', 'test-net-14-2', 'test-net-14-1', 'test-net-13-0', 'test-net-12-0', 'test-net-11-0', 'test-net-10-0', 'test-net-9-0', 'test-net-8-0', 'test-net-7-0', 'test-net-6-0', 'test-net-5-0', 'test-net-4-0', 'test-net-3-0', 'test-net-2-0', 'test-net-1-0'],
 
-    lineWidth: 4,
     strokeStyle: 'rosybrown',
+
+    shadowOffsetX: 3,
+    shadowOffsetY: 3,
+    shadowBlur: 2,
+    shadowColor: 'black',
 });
 
 
@@ -443,6 +464,8 @@ let report = function () {
     let testTicker = Date.now(),
         testTime, testNow, dragging,
         testMessage = document.querySelector('#reportmessage');
+
+    let linecheck = scrawl.library.entity['polyline-2'];
 
     return function () {
 

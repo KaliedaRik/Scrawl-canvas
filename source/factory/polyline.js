@@ -34,7 +34,7 @@
 
 // #### Imports
 import { constructors, artefact, particle } from '../core/library.js';
-import { mergeOver, isa_obj, isa_boolean, pushUnique, xt, xta, removeItem } from '../core/utilities.js';
+import { mergeOver, isa_obj, isa_boolean, pushUnique, xt, xta, removeItem, correctForZero } from '../core/utilities.js';
 
 import { makeCoordinate } from '../factory/coordinate.js';
 
@@ -448,7 +448,7 @@ P.buildLine = function (x, y, coords) {
 
     for (let i = 2; i < coords.length; i += 6) {
 
-        p += `${coords[i] - x},${coords[i + 1] - y} `;
+        p += `${correctForZero(coords[i] - x)},${correctForZero(coords[i + 1] - y)} `;
 
         x = coords[i];
         y = coords[i + 1];
@@ -464,7 +464,7 @@ P.buildCurve = function (x, y, coords) {
 
     for (let i = 0; i < coords.length; i += 2) {
 
-        p += `${coords[i] - x},${coords[i + 1] - y} `;
+        p += `${correctForZero(coords[i] - x)},${correctForZero(coords[i + 1] - y)} `;
 
         counter++;
 
