@@ -877,13 +877,19 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
     <span class="hljs-keyword">if</span> (!xt(item)) {
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.opaque) <span class="hljs-keyword">return</span> <span class="hljs-string">`rgb(<span class="hljs-subst">${<span class="hljs-built_in">this</span>.r || <span class="hljs-number">0</span>}</span>, <span class="hljs-subst">${<span class="hljs-built_in">this</span>.g || <span class="hljs-number">0</span>}</span>, <span class="hljs-subst">${<span class="hljs-built_in">this</span>.b || <span class="hljs-number">0</span>}</span>)`</span>;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-string">`rgba(<span class="hljs-subst">${<span class="hljs-built_in">this</span>.r || <span class="hljs-number">0</span>}</span>, <span class="hljs-subst">${<span class="hljs-built_in">this</span>.g || <span class="hljs-number">0</span>}</span>, <span class="hljs-subst">${<span class="hljs-built_in">this</span>.b || <span class="hljs-number">0</span>}</span>, <span class="hljs-subst">${<span class="hljs-built_in">this</span>.a || <span class="hljs-number">1</span>}</span>)`</span>;
+        <span class="hljs-keyword">let</span> {r, g, b, a} = <span class="hljs-built_in">this</span>;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.opaque) <span class="hljs-keyword">return</span> <span class="hljs-string">`rgb(<span class="hljs-subst">${r}</span>, <span class="hljs-subst">${g}</span>, <span class="hljs-subst">${b}</span>)`</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-string">`rgba(<span class="hljs-subst">${r}</span>, <span class="hljs-subst">${g}</span>, <span class="hljs-subst">${b}</span>, <span class="hljs-subst">${a}</span>)`</span>;
     }
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item === <span class="hljs-string">&#x27;random&#x27;</span>) {
 
         <span class="hljs-built_in">this</span>.generateRandomColor();
         <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.get();
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.toFixed) {
+
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.getRangeColor(item);
     }
     <span class="hljs-keyword">else</span>{
 
@@ -938,42 +944,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         }, <span class="hljs-built_in">this</span>);
     }
 
-    <span class="hljs-keyword">if</span> (items.random) <span class="hljs-built_in">this</span>.generateRandomColor(items);
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (items.color) <span class="hljs-built_in">this</span>.convert(items.color);
-    <span class="hljs-keyword">else</span> <span class="hljs-built_in">this</span>.checkValues();
-
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
-};
-
-P.setColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-built_in">this</span>.convert(item);
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
-};
-
-P.setMinimumColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-built_in">this</span>.convert(item);
-
-    <span class="hljs-built_in">this</span>.rMin = <span class="hljs-built_in">this</span>.r;
-    <span class="hljs-built_in">this</span>.gMin = <span class="hljs-built_in">this</span>.g;
-    <span class="hljs-built_in">this</span>.bMin = <span class="hljs-built_in">this</span>.b;
-    <span class="hljs-built_in">this</span>.aMin = <span class="hljs-built_in">this</span>.a;
-
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
-};
-
-P.setMaximumColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-built_in">this</span>.convert(item);
-
-    <span class="hljs-built_in">this</span>.rMax = <span class="hljs-built_in">this</span>.r;
-    <span class="hljs-built_in">this</span>.gMax = <span class="hljs-built_in">this</span>.g;
-    <span class="hljs-built_in">this</span>.bMax = <span class="hljs-built_in">this</span>.b;
-    <span class="hljs-built_in">this</span>.aMax = <span class="hljs-built_in">this</span>.a;
-
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
-};</pre></div></div>
+    <span class="hljs-keyword">if</span> (items.random) <span class="hljs-built_in">this</span>.generateRandomColor(items);</pre></div></div>
             
         </li>
         
@@ -984,9 +955,14 @@ P.setMaximumColor = <span class="hljs-function"><span class="hljs-keyword">funct
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
-              <h4 id="prototype-functions">Prototype functions</h4>
+              <p>else if (items.color) this.convert(items.color);</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-built_in">this</span>.checkValues();
+
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+};</pre></div></div>
             
         </li>
         
@@ -996,6 +972,114 @@ P.setMaximumColor = <span class="hljs-function"><span class="hljs-keyword">funct
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> S = P.setters;
+
+S.color = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.convert(item);
+};
+P.setColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.convert(item);
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+};
+
+S.minimumColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">let</span> {r, g, b, a} = <span class="hljs-built_in">this</span>;
+
+    <span class="hljs-built_in">this</span>.convert(item);
+
+    <span class="hljs-built_in">this</span>.rMin = <span class="hljs-built_in">this</span>.r;
+    <span class="hljs-built_in">this</span>.gMin = <span class="hljs-built_in">this</span>.g;
+    <span class="hljs-built_in">this</span>.bMin = <span class="hljs-built_in">this</span>.b;
+    <span class="hljs-built_in">this</span>.aMin = <span class="hljs-built_in">this</span>.a;
+
+    <span class="hljs-built_in">this</span>.r = r;
+    <span class="hljs-built_in">this</span>.g = g;
+    <span class="hljs-built_in">this</span>.b = b;
+    <span class="hljs-built_in">this</span>.a = a;
+};
+P.setMinimumColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">let</span> {r, g, b, a} = <span class="hljs-built_in">this</span>;
+
+    <span class="hljs-built_in">this</span>.convert(item);
+
+    <span class="hljs-built_in">this</span>.rMin = <span class="hljs-built_in">this</span>.r;
+    <span class="hljs-built_in">this</span>.gMin = <span class="hljs-built_in">this</span>.g;
+    <span class="hljs-built_in">this</span>.bMin = <span class="hljs-built_in">this</span>.b;
+    <span class="hljs-built_in">this</span>.aMin = <span class="hljs-built_in">this</span>.a;
+
+    <span class="hljs-built_in">this</span>.r = r;
+    <span class="hljs-built_in">this</span>.g = g;
+    <span class="hljs-built_in">this</span>.b = b;
+    <span class="hljs-built_in">this</span>.a = a;
+
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+};
+
+S.maximumColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">let</span> {r, g, b, a} = <span class="hljs-built_in">this</span>;
+
+    <span class="hljs-built_in">this</span>.convert(item);
+
+    <span class="hljs-built_in">this</span>.rMax = <span class="hljs-built_in">this</span>.r;
+    <span class="hljs-built_in">this</span>.gMax = <span class="hljs-built_in">this</span>.g;
+    <span class="hljs-built_in">this</span>.bMax = <span class="hljs-built_in">this</span>.b;
+    <span class="hljs-built_in">this</span>.aMax = <span class="hljs-built_in">this</span>.a;
+
+    <span class="hljs-built_in">this</span>.r = r;
+    <span class="hljs-built_in">this</span>.g = g;
+    <span class="hljs-built_in">this</span>.b = b;
+    <span class="hljs-built_in">this</span>.a = a;
+};
+P.setMaximumColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">let</span> {r, g, b, a} = <span class="hljs-built_in">this</span>;
+
+    <span class="hljs-built_in">this</span>.convert(item);
+
+    <span class="hljs-built_in">this</span>.rMax = <span class="hljs-built_in">this</span>.r;
+    <span class="hljs-built_in">this</span>.gMax = <span class="hljs-built_in">this</span>.g;
+    <span class="hljs-built_in">this</span>.bMax = <span class="hljs-built_in">this</span>.b;
+    <span class="hljs-built_in">this</span>.aMax = <span class="hljs-built_in">this</span>.a;
+
+    <span class="hljs-built_in">this</span>.r = r;
+    <span class="hljs-built_in">this</span>.g = g;
+    <span class="hljs-built_in">this</span>.b = b;
+    <span class="hljs-built_in">this</span>.a = a;
+
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <h4 id="prototype-functions">Prototype functions</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p><code>getData</code> function called by Cell objects when calculating required updates to its CanvasRenderingContext2D engine, specifically for an entity’s <strong>fillStyle</strong>, <strong>strokeStyle</strong> and <strong>shadowColor</strong> attributes.</p>
 
@@ -1013,11 +1097,11 @@ P.setMaximumColor = <span class="hljs-function"><span class="hljs-keyword">funct
         </li>
         
         
-        <li id="section-29">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p><code>generateRandomColor</code> function asks the Color object to supply a random color, as restricted by its channel minimum and maximum attributes</p>
 
@@ -1055,11 +1139,60 @@ P.setMaximumColor = <span class="hljs-function"><span class="hljs-keyword">funct
         </li>
         
         
-        <li id="section-30">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p><code>getRangeColor</code> - function which generates a color in the rtange between the minimum and maximum colors. </p>
+<ul>
+<li>when the argument is <code>0</code> the minimum color is returned; values below 0 are rounded up to 0</li>
+<li>when the argument is <code>1</code> the maximum color is returned; values above 1 are rounded down to 1</li>
+<li>values between <code>0</code> and <code>1</code> will return a blended color between the minimum and maximum colors</li>
+<li>non-Number arguments should return the Color’s current color value</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.getRangeColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (xt(item) &amp;&amp; item.toFixed) {
+
+        <span class="hljs-keyword">let</span> floor = <span class="hljs-built_in">Math</span>.floor;
+
+        <span class="hljs-keyword">let</span> {rMin, gMin, bMin, aMin, rMax, gMax, bMax, aMax} = <span class="hljs-built_in">this</span>;
+
+        <span class="hljs-keyword">if</span> (item &gt; <span class="hljs-number">1</span>) item = <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item &lt; <span class="hljs-number">0</span>) item = <span class="hljs-number">0</span>;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(item)) item = <span class="hljs-number">1</span>;
+
+        <span class="hljs-keyword">let</span> r = floor(rMin + ((rMax - rMin) * item));
+        <span class="hljs-keyword">let</span> g = floor(gMin + ((gMax - gMin) * item));
+        <span class="hljs-keyword">let</span> b = floor(bMin + ((bMax - bMin) * item));
+        <span class="hljs-keyword">let</span> a = floor(aMin + ((aMax - aMin) * item));
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.opaque) <span class="hljs-keyword">return</span> <span class="hljs-string">`rgb(<span class="hljs-subst">${r}</span>, <span class="hljs-subst">${g}</span>, <span class="hljs-subst">${b}</span>)`</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-string">`rgba(<span class="hljs-subst">${r}</span>, <span class="hljs-subst">${g}</span>, <span class="hljs-subst">${b}</span>, <span class="hljs-subst">${a}</span>)`</span>;
+    }
+    <span class="hljs-keyword">else</span> {
+
+        <span class="hljs-keyword">let</span> {r, g, b, a} = <span class="hljs-built_in">this</span>;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.opaque) <span class="hljs-keyword">return</span> <span class="hljs-string">`rgb(<span class="hljs-subst">${r}</span>, <span class="hljs-subst">${g}</span>, <span class="hljs-subst">${b}</span>)`</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-string">`rgba(<span class="hljs-subst">${r}</span>, <span class="hljs-subst">${g}</span>, <span class="hljs-subst">${b}</span>, <span class="hljs-subst">${a}</span>)`</span>;
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p>Internal function to make sure channel attribute values are in their correct format and ranges</p>
 
@@ -1084,11 +1217,11 @@ P.setMaximumColor = <span class="hljs-function"><span class="hljs-keyword">funct
         </li>
         
         
-        <li id="section-31">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p><code>update</code> function - adds the channel <strong>shift</strong> attributes to the r, g, b and a attributes. This functionality can be automated by setting the <strong>autoUpdate</strong> Boolean flag to true</p>
 
@@ -1143,11 +1276,11 @@ P.update = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-32">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <p><code>updateByDelta</code> - alias for the <strong>update</strong> function</p>
 
@@ -1158,11 +1291,11 @@ P.update = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-33">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
               <p>We can also set a Color object to a new color value by invoking its <code>convert</code> function. Any CSS color string can be used as an argument (with exceptions - see above)</p>
 
@@ -1175,11 +1308,11 @@ P.update = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-34">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>dec = this.toDecimal,</p>
 
@@ -1253,11 +1386,11 @@ P.update = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-35">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p>the spec explanation can be found here <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value">https://developer.mozilla.org/en-US/docs/Web/CSS/color_value</a></p>
 <p>see <a href="http://www.niwa.nu/2013/05/math-behind-colorspace-conversions-rgb-hsl/">http://www.niwa.nu/2013/05/math-behind-colorspace-conversions-rgb-hsl/</a> for one way we can approach converting hsl values to rgb</p>
@@ -1296,11 +1429,11 @@ P.update = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-36">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p>Color keywords harvested from <a href="https://developer.mozilla.org/en/docs/Web/CSS/color_value">https://developer.mozilla.org/en/docs/Web/CSS/color_value</a></p>
 
@@ -1458,11 +1591,11 @@ P.update = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-37">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.makeColor({
@@ -1514,11 +1647,11 @@ scrawl.makeBlock({
         </li>
         
         
-        <li id="section-38">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

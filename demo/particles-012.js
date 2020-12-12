@@ -38,7 +38,6 @@ const myNet = scrawl.makeNet({
     postGenerate: function () {
 
         const regex = RegExp('-0-[0-9]+$');
-        // const regex = RegExp('-0-(0|4|8|12|16)+$');
 
         this.particleStore.forEach(p => {
 

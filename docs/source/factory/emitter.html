@@ -1140,9 +1140,22 @@ S.artefact = <span class="hljs-function"><span class="hljs-keyword">function</sp
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isa_obj(item) &amp;&amp; item.isArtefact) art = item;
 
     <span class="hljs-keyword">if</span> (art) <span class="hljs-built_in">this</span>.artefact = art;
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>To generate along a path, or in an area, we set the <code>generateAlongPath</code> or <code>generateInArea</code> attributes to the (path-based) artefact we shall be using for the template. This can be the artefact’s String name, or the artefact object itself</p>
 
-S.generateAlongPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.generateAlongPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">let</span> art;
 
@@ -1162,16 +1175,45 @@ S.generateInArea = <span class="hljs-function"><span class="hljs-keyword">functi
 
     <span class="hljs-keyword">if</span> (art) <span class="hljs-built_in">this</span>.generateInArea = art;
     <span class="hljs-keyword">else</span> <span class="hljs-built_in">this</span>.generateInArea = <span class="hljs-literal">false</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>Color management - we can set these attributes (<code>fillColor fillMinimumColor fillMaximumColor, strokeColor strokeMinimumColor strokeMaximumColor</code>) on the Emitter object - the setter functions pass the color value onto the appropriate color factory for processing and update</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.fillColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.fillColorFactory.set({<span class="hljs-attr">color</span>: item});
 };
+S.fillMinimumColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-S.fillColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+    <span class="hljs-built_in">this</span>.fillColorFactory.set({<span class="hljs-attr">minimumColor</span>: item});
+};
+S.fillMaximumColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (isa_obj(item)) <span class="hljs-built_in">this</span>.fillColorFactory.set(item);
+    <span class="hljs-built_in">this</span>.fillColorFactory.set({<span class="hljs-attr">maximumColor</span>: item});
 };
 
 S.strokeColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (isa_obj(item)) <span class="hljs-built_in">this</span>.fillColorFactory.set(item);
+    <span class="hljs-built_in">this</span>.strokeColorFactory.set({<span class="hljs-attr">color</span>: item});
+};
+S.strokeMinimumColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.strokeColorFactory.set({<span class="hljs-attr">minimumColor</span>: item});
+};
+S.strokeMaximumColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.strokeColorFactory.set({<span class="hljs-attr">maximumColor</span>: item});
 };
 
 S.hitRadius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
@@ -1212,11 +1254,11 @@ D.height = D.width;</pre></div></div>
         </li>
         
         
-        <li id="section-35">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -1225,11 +1267,11 @@ D.height = D.width;</pre></div></div>
         </li>
         
         
-        <li id="section-36">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p><code>prepareStamp</code> - internal - overwrites the entity mixin function</p>
 
@@ -1271,11 +1313,11 @@ D.height = D.width;</pre></div></div>
         </li>
         
         
-        <li id="section-37">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p>Functionality specific to Emitter entitys</p>
 
@@ -1288,11 +1330,11 @@ D.height = D.width;</pre></div></div>
         </li>
         
         
-        <li id="section-38">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <p>Create thew generator choke, if necessary</p>
 
@@ -1306,11 +1348,11 @@ D.height = D.width;</pre></div></div>
         </li>
         
         
-        <li id="section-39">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p>Check through particles, removing all particles that have completed their lives</p>
 
@@ -1332,11 +1374,11 @@ D.height = D.width;</pre></div></div>
         </li>
         
         
-        <li id="section-40">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p>Determine how many new particles need to be generated</p>
 
@@ -1347,11 +1389,11 @@ D.height = D.width;</pre></div></div>
         </li>
         
         
-        <li id="section-41">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
               <p>Need to prevent generation of new particles if the elapsed time is due to the user focussing on another tab in the browser before returning to the tab running this Scrawl-canvas animation</p>
 
@@ -1382,11 +1424,11 @@ D.height = D.width;</pre></div></div>
         </li>
         
         
-        <li id="section-42">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
               <p>We only update the choke value after particles have been generated</p>
 <ul>
@@ -1403,11 +1445,11 @@ D.height = D.width;</pre></div></div>
         </li>
         
         
-        <li id="section-43">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
               <p><code>addParticles</code> - internal function called by <code>prepareStamp</code> … if you are not a fan of overly-complex functions, look away now.</p>
 <p>We can add particles to an emitter in a number of different ways, determined by the setting of two flag attributes on the emitter. The flags are actioned in the following order:</p>
@@ -1431,11 +1473,11 @@ D.height = D.width;</pre></div></div>
         </li>
         
         
-        <li id="section-44">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
               <p>internal helper functions, used when creating the particle</p>
 
@@ -1454,11 +1496,11 @@ D.height = D.width;</pre></div></div>
         </li>
         
         
-        <li id="section-45">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
               <p>The emitter object retains details of the initial values required for eachg particle it generates</p>
 
@@ -1472,11 +1514,11 @@ D.height = D.width;</pre></div></div>
         </li>
         
         
-        <li id="section-46">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
               <p>Use an artefact’s current area location to determine where the particle will be generated</p>
 
@@ -1564,11 +1606,11 @@ D.height = D.width;</pre></div></div>
         </li>
         
         
-        <li id="section-47">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
               <p>Use an Shape-based entity’s path to determine where the particle will be generated</p>
 
@@ -1616,11 +1658,11 @@ D.height = D.width;</pre></div></div>
         </li>
         
         
-        <li id="section-48">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+                <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
               <p>Generate the particle using the emitter’s start coordinate, or a reference artifact’s coordinate</p>
 
@@ -1668,11 +1710,11 @@ D.height = D.width;</pre></div></div>
         </li>
         
         
-        <li id="section-49">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
+                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
               <p><code>regularStampSynchronousActions</code> - overwriters the functionality defined in the entity.js mixin</p>
 
@@ -1692,11 +1734,11 @@ D.height = D.width;</pre></div></div>
         </li>
         
         
-        <li id="section-50">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
+                <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
               <p>If the user has focussed on another tab in the browser before returning to the tab running this Scrawl-canvas animation, then we risk breaking the page by continuing the animation with the existing particles - simplest solution is to remove all the particles and, in effect, restarting the emitter’s animation.</p>
 
@@ -1715,11 +1757,11 @@ D.height = D.width;</pre></div></div>
         </li>
         
         
-        <li id="section-51">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+                <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
               <p>Perform canvas drawing before the main (developer-defined) <code>stampAction</code> function</p>
 
@@ -1736,11 +1778,11 @@ D.height = D.width;</pre></div></div>
         </li>
         
         
-        <li id="section-52">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+                <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
               <p>Perform further canvas drawing after the main (developer-defined) <code>stampAction</code> function</p>
 
@@ -1770,11 +1812,11 @@ D.height = D.width;</pre></div></div>
         </li>
         
         
-        <li id="section-53">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
               <p><code>checkHit</code> - overwrites the function defined in mixin/position.js</p>
 <ul>
@@ -1830,11 +1872,11 @@ D.height = D.width;</pre></div></div>
         </li>
         
         
-        <li id="section-54">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code><span class="hljs-keyword">let</span> myWorld = scrawl.makeWorld({
@@ -1907,11 +1949,11 @@ scrawl.makeEmitter({
         </li>
         
         
-        <li id="section-55">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

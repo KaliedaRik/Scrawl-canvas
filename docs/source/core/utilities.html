@@ -586,6 +586,29 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
+              <p><strong>correctForZero</strong> checks and corrects for minor deviations from zero (eNumbers)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> correctForZero = <span class="hljs-function">(<span class="hljs-params">item</span>) =&gt;</span> {
+
+    <span class="hljs-keyword">if</span> (!item.toFixed) <span class="hljs-keyword">return</span> item;
+    <span class="hljs-keyword">if</span> (item == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> item;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(item)) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">if</span> (item &lt; -<span class="hljs-number">0.000001</span>) <span class="hljs-keyword">return</span> item;
+    <span class="hljs-keyword">if</span> (item &gt; <span class="hljs-number">0.000001</span>) <span class="hljs-keyword">return</span> item;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
               <p><strong>λ functions</strong> helps us avoid errors when invoking a function attribute settable by the coder</p>
 
             </div>
@@ -597,11 +620,11 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <p><strong>generateUuid</strong> is a simple (crude) uuid generator 
 <a href="http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript">http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript</a>
@@ -622,11 +645,11 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <p><strong>generateUuid</strong> is a simple (crude) uuid generator 
 <a href="https://gist.github.com/SimonHoiberg/ad2710c8626c5a74cddd8f6385795cc0">https://gist.github.com/SimonHoiberg/ad2710c8626c5a74cddd8f6385795cc0</a>
@@ -642,11 +665,11 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <p>__isa_boolean__ checks to make sure the argument is a boolean</p>
 
@@ -657,11 +680,11 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <p>__isa_canvas__ checks to make sure the argument is a DOM &lt;canvas&gt; element</p>
 
@@ -672,11 +695,11 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <p>__isa_dom__ checks to make sure the argument is a DOM element of some sort</p>
 
@@ -687,11 +710,11 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
         </li>
         
         
-        <li id="section-12">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <p>__isa_fn__ checks to make sure the argument is a JavaScript function object</p>
 
@@ -702,11 +725,11 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p>__isa_number__ checks to make sure the argument is true number (excluding NaN)</p>
 
@@ -717,11 +740,11 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p>__isa_obj__ checks to make sure the argument is a JavaScript Object</p>
 
@@ -732,11 +755,11 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <p>__isa_quaternion__ checks to make sure the argument is a Scrawl-canvas Quaternion object</p>
 
@@ -747,11 +770,11 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p><strong>mergeInto</strong> takes two objects and merges the attributes of one into the other. This function mutates the ‘original’ object rather than generating a third, new onject</p>
 <p>Example:</p>
@@ -777,11 +800,11 @@ scrawl.utils.mergeInto(original, additional);
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p><strong>mergeOver</strong> takes two objects and writes the attributes of one over the other. This function mutates the ‘original’ object rather than generating a third, new onject</p>
 <p>Example:</p>
@@ -807,11 +830,11 @@ scrawl.utils.mergeOver(original, additional);
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p><strong>mergeDiscard</strong> iterates over the additional object to perform a mergeOver operation, and also removing attributes from the original object where they have been set to null in the additional object</p>
 <p>Example:</p>
@@ -838,11 +861,11 @@ scrawl.utils.mergeOver(original, additional);
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p><strong>pushUnique</strong> adds a value to the end of an array, if that value is not already present in the array. This function mutates the array</p>
 <p>Example:</p>
@@ -876,11 +899,11 @@ scrawl.utils.pushUnique(myarray, <span class="hljs-string">&#x27;banana&#x27;</s
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p><strong>removeItem</strong> removes a value from an array. This function mutates the array</p>
 <p>Example:</p>
@@ -909,11 +932,11 @@ scrawl.utils.removeItem(myarray, <span class="hljs-string">&#x27;apple&#x27;</sp
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p><strong>xt</strong> checks to see if argument exists (is not ‘undefined’)</p>
 
@@ -924,11 +947,11 @@ scrawl.utils.removeItem(myarray, <span class="hljs-string">&#x27;apple&#x27;</sp
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p><strong>xta</strong> checks to make sure that all the arguments supplied to the function exist (none are ‘undefined’)</p>
 
@@ -939,11 +962,11 @@ scrawl.utils.removeItem(myarray, <span class="hljs-string">&#x27;apple&#x27;</sp
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p><strong>xtGet</strong> returns the first existing (not ‘undefined’) argument supplied to the function</p>
 
@@ -954,11 +977,11 @@ scrawl.utils.removeItem(myarray, <span class="hljs-string">&#x27;apple&#x27;</sp
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p><strong>xto</strong> checks to make sure that at least one of the arguments supplied to the function exists (is not ‘undefined’)</p>
 
@@ -969,11 +992,11 @@ scrawl.utils.removeItem(myarray, <span class="hljs-string">&#x27;apple&#x27;</sp
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 
@@ -982,6 +1005,7 @@ scrawl.utils.removeItem(myarray, <span class="hljs-string">&#x27;apple&#x27;</sp
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
     addStrings,
     convertTime,
+    correctForZero,
     λ<span class="hljs-literal">null</span>,
     λ<span class="hljs-built_in">this</span>,
     λpromise,

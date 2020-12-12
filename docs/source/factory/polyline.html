@@ -516,7 +516,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">artefact</span>, <span class="hljs-title">particle</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
-<span class="hljs-keyword">import</span> { mergeOver, isa_obj, isa_boolean, pushUnique, xt, xta, removeItem } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { mergeOver, isa_obj, isa_boolean, pushUnique, xt, xta, removeItem, correctForZero } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/coordinate.js&#x27;</span>;
 
@@ -1226,7 +1226,7 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
 
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">2</span>; i &lt; coords.length; i += <span class="hljs-number">6</span>) {
 
-        p += <span class="hljs-string">`<span class="hljs-subst">${coords[i] - x}</span>,<span class="hljs-subst">${coords[i + <span class="hljs-number">1</span>] - y}</span> `</span>;
+        p += <span class="hljs-string">`<span class="hljs-subst">${correctForZero(coords[i] - x)}</span>,<span class="hljs-subst">${correctForZero(coords[i + <span class="hljs-number">1</span>] - y)}</span> `</span>;
 
         x = coords[i];
         y = coords[i + <span class="hljs-number">1</span>];
@@ -1254,7 +1254,7 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
 
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; coords.length; i += <span class="hljs-number">2</span>) {
 
-        p += <span class="hljs-string">`<span class="hljs-subst">${coords[i] - x}</span>,<span class="hljs-subst">${coords[i + <span class="hljs-number">1</span>] - y}</span> `</span>;
+        p += <span class="hljs-string">`<span class="hljs-subst">${correctForZero(coords[i] - x)}</span>,<span class="hljs-subst">${correctForZero(coords[i + <span class="hljs-number">1</span>] - y)}</span> `</span>;
 
         counter++;
 

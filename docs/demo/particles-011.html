@@ -215,6 +215,16 @@
                 </a>
               
                 
+                <a class="source" href="canvas-040.html">
+                  ./demo/canvas-040.js
+                </a>
+              
+                
+                <a class="source" href="canvas-041.html">
+                  ./demo/canvas-041.js
+                </a>
+              
+                
                 <a class="source" href="component-001.html">
                   ./demo/component-001.js
                 </a>
@@ -595,7 +605,7 @@ scrawl.makeFilter({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>Crezate a Shape entity to act as a path for our Tracer entitys</p>
+              <p>Create a Shape entity to act as a path for our Tracer entitys</p>
 
             </div>
             
@@ -644,6 +654,27 @@ scrawl.makeFilter({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
+              <p>Tracer entitys don’t have any color control built in; we need to create our own color factory</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> colorFactory = scrawl.makeColor({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;tracer-3-color-factory&#x27;</span>,
+
+    <span class="hljs-attr">minimumColor</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
+    <span class="hljs-attr">maximumColor</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
               <p>Create a Tracer entity</p>
 <ul>
 <li>Note that Tracers do not require a World object, cannot process Force objects, and cannot be connected together using Spring objects.</li>
@@ -660,11 +691,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <p>We will delta-animate this Tracer alonbg the path of our Shape entity</p>
 
@@ -699,11 +730,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <p>This Tracer will produce a ‘dashed’ effect, by displaying discrete ranges of its history</p>
 
@@ -727,11 +758,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <p>Clone the Tracer entity</p>
 
@@ -751,11 +782,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <p>Our second Tracer shows a ‘tail-fade’ effect</p>
 
@@ -784,11 +815,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-12">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <p>Clone the second Tracer entity</p>
 
@@ -807,11 +838,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p>This Tracer varies its scale to create a ‘teardrop’ effect</p>
 
@@ -826,10 +857,13 @@ scrawl.makeFilter({
         history.forEach(<span class="hljs-function">(<span class="hljs-params">p, index</span>) =&gt;</span> {
 
             [remaining, z, ...start] = p;
+
+            <span class="hljs-keyword">let</span> magicNumber = (len - index) / len;
             
             artefact.simpleStamp(host, {
                 start,
-                <span class="hljs-attr">scale</span>: ((len - index) / len) * <span class="hljs-number">2</span>,
+                <span class="hljs-attr">scale</span>: magicNumber * <span class="hljs-number">3</span>,
+                <span class="hljs-attr">fillStyle</span>: colorFactory.get(magicNumber),
             });
         });
     },
@@ -838,11 +872,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -868,11 +902,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -888,11 +922,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <h4 id="user-interaction">User interaction</h4>
 <p>Make the arrow draggable</p>
@@ -915,11 +949,11 @@ scrawl.makeDragZone({
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>Action user choice to apply a filter to a Tracer entity</p>
 
@@ -943,11 +977,11 @@ scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <s
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 
