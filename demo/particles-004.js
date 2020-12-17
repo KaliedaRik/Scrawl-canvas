@@ -13,7 +13,19 @@ canvas.setBase({
 });
 
 
-// Create user-controllable Bezier entity 
+// #### Particle physics animation scene
+
+// Create a World object which we can then assign to the particle emitter
+let myWorld = scrawl.makeWorld({
+
+    name: 'demo-world',
+    tickMultiplier: 2,
+});
+
+
+// #### User-controlled bezier curve with star emitter along its length
+
+// Pins to control the shape of the bezier 
 scrawl.makeWheel({
 
     name: 'pin-1',
@@ -44,20 +56,21 @@ scrawl.makeWheel({
     startX: 525,
 });
 
+// A group to help manage pin drag-and-drop functionality
 let pins = scrawl.makeGroup({
 
     name: 'my-pins',
-    host: canvas.base.name,
 
 }).addArtefacts('pin-1', 'pin-2', 'pin-3', 'pin-4');
 
-
-scrawl.makeBezier({
+// Bezier curve using pins as its control points
+const userControlledBezier = scrawl.makeBezier({
 
     name: 'my-bezier',
 
     pivot: 'pin-1',
     lockTo: 'pivot',
+    // start: [75, 200],
     useStartAsControlPoint: true,
 
     startControlPivot: 'pin-2',
@@ -74,75 +87,107 @@ scrawl.makeBezier({
     useAsPath: true,
 });
 
+// Star entity template
+const stars = scrawl.makeStar({
 
-// #### Particle physics animation scene
+    name: 'particle-star-template',
 
-// Create a World object which we can then assign to the particle emitter
-let myWorld = scrawl.makeWorld({
+    radius1: 6,
+    radius2: 4,
 
-    name: 'demo-world',
-    tickMultiplier: 2,
+    points: 5,
+
+    handle: ['center', 'center'],
+
+    fillStyle: 'gold',
+    method: 'fillThenDraw',
+    visibility: false, 
+
+    noUserInteraction: true,
+    noPositionDependencies: true,
+    noFilters: true,
+    noDeltaUpdates: true,
 });
 
-// Create the particle Emitter entity
-scrawl.makeEmitter({
+// Particle Emitter entity using the bezier curve as its emission line
+let emitter = scrawl.makeEmitter({
 
-    name: 'line-emitter',
+    name: 'emitter-1',
     world: myWorld,
 
-    generationRate: 120,
+    generationRate: 20,
     killAfterTime: 5,
-
-    rangeY: 10,
-    rangeFromY: 10,
-
-    rangeZ: -1,
-    rangeFromZ: -0.2,
 
     // We tell the Emitter to generate its particles along our curve by setting its `generateAlongPath` attribute to the Bezier entity's String name, or the entity object itself.
     generateAlongPath: 'my-bezier',
 
-    // We can define an entity to be used as the Emitter's stamp at the same time as we define the Emitter itself
-    artefact: scrawl.makeStar({
-
-        name: 'particle-star-entity',
-
-        radius1: 12,
-        radius2: 8,
-
-        points: 5,
-
-        handle: ['center', 'center'],
-
-        fillStyle: 'gold',
-        method: 'fillThenDraw',
-        visibility: false, 
-
-        noUserInteraction: true,
-        noPositionDependencies: true,
-        noFilters: true,
-        noDeltaUpdates: true,
-    }),
+    artefact: stars.clone({ name: 'stars-1' }),
 
     stampAction: function (artefact, particle, host) {
 
         let history = particle.history,
-            remaining, globalAlpha, scale, start, z, roll;
+            remaining, start, z;
 
-        history.forEach((p, index) => {
+        if (history.length) {
 
-            [remaining, z, ...start] = p;
-            globalAlpha = remaining / 6;
-            scale = 1 + (z / 3);
+            [remaining, z, ...start] = history[0];
 
-            if (globalAlpha > 0 && scale > 0) {
+            artefact.simpleStamp(host, {
 
-                roll = globalAlpha * 720;
-
-                artefact.simpleStamp(host, {start, scale, globalAlpha, roll});
-            }
-        });
+                start, 
+                globalAlpha: remaining / 5,
+            });
+        }
     },
+});
+
+
+// #### Other examples of emission along a path
+
+// Static line
+scrawl.makeLine({
+
+    name: 'line-1',
+    start: [50, 50],
+    end: [550, 50],
+    strokeStyle: 'green',
+    method: 'draw',
+    roll: 10,
+    useAsPath: true,
+});
+
+emitter.clone({
+
+    name: 'emitter-2',
+    artefact: stars.clone({ 
+        name: 'stars-2',
+        fillStyle: 'red',
+    }),
+    generateAlongPath: 'line-1',
+});
+
+
+// Static oval
+scrawl.makeOval({
+
+    name: 'oval-1',
+    start: ['center', 320],
+    handle: ['center', 'center'],
+    radiusX: 90,
+    radiusY: 50,
+    strokeStyle: 'green',
+    method: 'draw',
+    useAsPath: true,
+});
+
+emitter.clone({
+
+    name: 'emitter-3',
+    artefact: stars.clone({ 
+        name: 'stars-3',
+        fillStyle: 'blue',
+    }),
+    generateAlongPath: 'oval-1',
 });
 
 // #### Scene animation
@@ -153,26 +198,13 @@ let report = function () {
         testTime, testNow, dragging,
         testMessage = document.querySelector('#reportmessage');
 
-    let particlenames = scrawl.library.particlenames,
-        particle = scrawl.library.particle,
-        historyCount;
-
     return function () {
 
         testNow = Date.now();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        historyCount = 0;
-        particlenames.forEach(n => {
-
-            let p = particle[n];
-            if (p) historyCount += p.history.length;
-        });
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Particles: ${particlenames.length}
-    Stamps per display: ${historyCount}`;
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
     };
 }();
 

@@ -479,6 +479,16 @@
                   ./demo/particles-012.js
                 </a>
               
+                
+                <a class="source" href="particles-013.html">
+                  ./demo/particles-013.js
+                </a>
+              
+                
+                <a class="source" href="particles-014.html">
+                  ./demo/particles-014.js
+                </a>
+              
             </div>
           </div>
         </li>
@@ -549,9 +559,13 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> drawBlade = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> drawBlade = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine, rotation = <span class="hljs-number">0</span></span>) </span>{
 
     engine.save();
+
+    engine.translate(<span class="hljs-number">200</span>, <span class="hljs-number">200</span>);
+    engine.rotate(rotation * <span class="hljs-built_in">Math</span>.PI / <span class="hljs-number">180</span>);
+    engine.translate(-<span class="hljs-number">200</span>, -<span class="hljs-number">200</span>);
 
     engine.translate(<span class="hljs-number">71</span>, <span class="hljs-number">25</span>);
 
@@ -644,7 +658,9 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeAnimation({</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> rotation = <span class="hljs-number">0</span>;
+
+scrawl.makeAnimation({</pre></div></div>
             
         </li>
         
@@ -711,7 +727,7 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            .then(<span class="hljs-function">() =&gt;</span> <span class="hljs-built_in">Promise</span>.resolve(drawBlade(canvas.base.engine)))
+            <div class="content"><div class='highlight'><pre>            .then(<span class="hljs-function">() =&gt;</span> <span class="hljs-built_in">Promise</span>.resolve(drawBlade(canvas.base.engine, ++rotation)))
 
             .then(<span class="hljs-function">() =&gt;</span> canvas.show())</pre></div></div>
             

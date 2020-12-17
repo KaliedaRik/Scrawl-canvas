@@ -157,9 +157,18 @@ scrawl.makeLoom({
 
 // #### User interaction
 // Function to check whether mouse cursor is over stack, and lock the element artefact accordingly
+
+// A group to help manage pin drag-and-drop functionality
+scrawl.makeGroup({
+
+    name: 'draggable-artefacts',
+
+}).addArtefacts(element);
+
 scrawl.makeDragZone({
 
     zone: stack,
+    collisionGroup: 'draggable-artefacts',
     endOn: ['up', 'leave'],
 });
 

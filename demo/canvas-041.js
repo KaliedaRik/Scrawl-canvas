@@ -14,9 +14,13 @@ canvas.setBase({
 
 // Create a function to draw stuff on a canvas
 // + Code taken from this blog site post: [Bartosz Ciechanowski - Cameras and lenses, 7 December 2020](https://ciechanow.ski/cameras-and-lenses/) ... specifically [this JS file](https://ciechanow.ski/js/lenses.js)
-const drawBlade = function (engine) {
+const drawBlade = function (engine, rotation = 0) {
 
     engine.save();
+
+    engine.translate(200, 200);
+    engine.rotate(rotation * Math.PI / 180);
+    engine.translate(-200, -200);
 
     engine.translate(71, 25);
 
@@ -74,6 +78,8 @@ const report = function () {
 // + We can use `makeAnimation` instead of `makeRender`
 // + In the `fn` function, we need to return a Promise
 // + Inside the Promise, we construct our Display cycle, which is a promise-based chain of functions
+let rotation = 0;
+
 scrawl.makeAnimation({
 
     // Give our animation a name, in case we want to retrieve it from te Scrawl-canvas library later
@@ -91,7 +97,7 @@ scrawl.makeAnimation({
             Promise.resolve(canvas.clear())
 
             // In this instance, we're using our `drawBlade()` function instead of the built-in `compile` function
-            .then(() => Promise.resolve(drawBlade(canvas.base.engine)))
+            .then(() => Promise.resolve(drawBlade(canvas.base.engine, ++rotation)))
 
             .then(() => canvas.show())
 

@@ -464,8 +464,6 @@ let report = function () {
         testTime, testNow, dragging,
         testMessage = document.querySelector('#reportmessage');
 
-    let linecheck = scrawl.library.entity['polyline-2'];
-
     return function () {
 
         testNow = Date.now();

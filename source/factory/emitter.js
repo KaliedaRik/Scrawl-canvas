@@ -31,6 +31,7 @@ import { currentGroup } from '../core/document.js';
 import { requestParticle, releaseParticle } from './particle.js';
 import { requestCell, releaseCell } from './cell.js';
 import { makeVector, requestVector, releaseVector } from './vector.js';
+import { requestCoordinate, releaseCoordinate } from './coordinate.js';
 import { makeColor } from './color.js';
 
 import baseMix from '../mixin/base.js';
@@ -132,6 +133,9 @@ let defaultAttributes = {
     // + `generateInArea` takes precedence over `generateAlongPath`, which in turn takes precedence over the default coordinate behaviour
     generateAlongPath: false,
     generateInArea: false,
+
+    // __generationChoke__ - Number measuring milliseconds (default: 15) - because both `generateAlongPath` and `generateInArea` functionalities use a `while` loop, we need a way to break out of those loops should they fail to generate an acceptable coordinate within a given amount of time. This attribute sets the maximum time the entity will spend on generating semi-random coordinates during any one Display cycle loop.
+    generationChoke: 15,
 
     // Emitter entitys will continuously generate new particles (up to the limit set in the `particleCount` attribute). The `killAfterTime`, `killRadius` and `killBeyondCanvas` attributes set out the circumstances in which existing particles will be removed from the entity's `particleStore` attribute
     // + __killAfterTime__ - a positive float Number - sets the maximum time (measured in ___seconds___) that a particle will live before it is killed and removed. This time is set on particle generation and is not updatable. We can add some randomness to the time through the __killAfterTimeVariation__ attribute.
@@ -480,19 +484,22 @@ P.prepareStamp = function () {
 // + ___mouse___ - use the mouse/touch/pointer cursor value as the emitter's coordinate
 P.addParticles = function (req) {
 
+    const rnd = Math.random;
+
     // internal helper functions, used when creating the particle
     const calc = function (item, itemVar) {
-        return item + ((Math.random() * itemVar * 2) - itemVar);
+        return item + ((rnd() * itemVar * 2) - itemVar);
     };
 
     const velocityCalc = function (item, itemVar) {
-        return item + (Math.random() * itemVar);
+        return item + (rnd() * itemVar);
     };
 
-    let i, p, cx, cy, temp;
+    let i, p, cx, cy, 
+        timeChoke = Date.now();
 
     // The emitter object retains details of the initial values required for eachg particle it generates
-    let {historyLength, engine, forces, mass, massVariation, fillColorFactory, strokeColorFactory, range, rangeFrom, currentStampPosition, particleStore, killAfterTime, killAfterTimeVariation, killRadius, killRadiusVariation, killBeyondCanvas, currentRotation, generateAlongPath, generateInArea} = this;
+    let {historyLength, engine, forces, mass, massVariation, fillColorFactory, strokeColorFactory, range, rangeFrom, currentStampPosition, particleStore, killAfterTime, killAfterTimeVariation, killRadius, killRadiusVariation, killBeyondCanvas, currentRotation, generateAlongPath, generateInArea, generationChoke} = this;
 
     let {x, y, z} = range;
     let {x:fx, y:fy, z:fz} = rangeFrom;
@@ -500,96 +507,101 @@ P.addParticles = function (req) {
     // Use an artefact's current area location to determine where the particle will be generated
     if (generateInArea) {
 
-        if (!generateInArea.pathObject || generateInArea.dirtyPathObject) generateInArea.cleanPathObject();
+        let host = this.currentHost;
 
-        const testCell = requestCell(),
-            testEngine = testCell.engine,
-            testVector = requestVector();
+        if (host) {
 
-        let {pathObject, winding, currentStampPosition, currentStampHandlePosition, currentDimensions} = generateInArea;
+            const hostCanvas = host.element;
 
-        let [testX, testY] = currentStampPosition;
-        let [handleX, handleY] = currentStampHandlePosition;
-        let [width, height] = currentDimensions;
+            const {width, height} = hostCanvas;
 
-        let testRoll = generateInArea.currentRotation,
-            testScale = generateInArea.currentScale,
-            testUpend = generateInArea.flipUpend,
-            testReverse = generateInArea.flipReverse;
+            if (!generateInArea.pathObject || generateInArea.dirtyPathObject) generateInArea.cleanPathObject();
 
-        if (!xt(generateInArea.species)) {
+            const testCell = requestCell(),
+                testEngine = testCell.engine,
+                coord = requestCoordinate();
 
-            width *= testScale;
-            height *= testScale;
-            handleX *= testScale;
-            handleY *= testScale;
-        }
+            let {pathObject, winding, currentStart} = generateInArea;
 
-        testCell.rotateDestination(testEngine, testX, testY, generateInArea);
+            [cx, cy] = currentStart;
 
-        const test = (item) => testEngine.isPointInPath(pathObject, item.x, item.y, winding);
+            const test = (item) => testEngine.isPointInPath(pathObject, ...item, winding);
+
+            testCell.rotateDestination(testEngine, cx, cy, generateInArea);
             
-        for (i = 0; i < req; i++) {
+            GenerateInAreaLoops:    
+            for (i = 0; i < req; i++) {
 
-            let coordFlag = false;
+                let coordFlag = false;
 
-            while (!coordFlag) {
+                while (!coordFlag) {
 
-                testVector.set((Math.random() * width), (Math.random() * height)).vectorSubtractArray([handleX, handleY]);
+                    if (timeChoke + generationChoke < Date.now()) break GenerateInAreaLoops;
 
-                if (testReverse) testVector.x = -testVector.x
-                if (testUpend) testVector.y = -testVector.y
+                    coord.set(rnd() * width, rnd() * height);
 
-                testVector.rotate(testRoll).vectorAddArray(currentStampPosition);
+                    if (test(coord)) coordFlag = true;
+                }
 
-                if (test(testVector)) coordFlag = true;
+                p = requestParticle();
+
+                p.set({
+                    positionX: coord[0],
+                    positionY: coord[1],
+                    positionZ: 0,
+
+                    velocityX: velocityCalc(fx, x),
+                    velocityY: velocityCalc(fy, y),
+                    velocityZ: velocityCalc(fz, z),
+
+                    historyLength, 
+                    engine, 
+                    forces, 
+
+                    mass: calc(mass, massVariation), 
+
+                    fill: fillColorFactory.get('random'),
+                    stroke: strokeColorFactory.get('random'),
+                });
+
+                let timeKill = Math.abs(calc(killAfterTime, killAfterTimeVariation));
+                let radiusKill = Math.abs(calc(killRadius, killRadiusVariation));
+
+                p.run(timeKill, radiusKill, killBeyondCanvas);
+
+                particleStore.push(p);
             }
-
-            p = requestParticle();
-
-            p.set({
-                positionX: testVector.x,
-                positionY: testVector.y,
-                positionZ: 0,
-
-                velocityX: velocityCalc(fx, x),
-                velocityY: velocityCalc(fy, y),
-                velocityZ: velocityCalc(fz, z),
-
-                historyLength, 
-                engine, 
-                forces, 
-
-                mass: calc(mass, massVariation), 
-
-                fill: fillColorFactory.get('random'),
-                stroke: strokeColorFactory.get('random'),
-            });
-
-            let timeKill = Math.abs(calc(killAfterTime, killAfterTimeVariation));
-            let radiusKill = Math.abs(calc(killRadius, killRadiusVariation));
-
-            p.run(timeKill, radiusKill, killBeyondCanvas);
-
-            particleStore.push(p);
+            releaseCell(testCell);
+            releaseCoordinate(coord);
         }
-        releaseCell(testCell);
-        releaseVector(testVector);
     }
     // Use an Shape-based entity's path to determine where the particle will be generated
     else if (generateAlongPath) {
 
         if (generateAlongPath.useAsPath) {
 
+            if (!generateAlongPath.pathObject || generateAlongPath.dirtyPathObject) generateAlongPath.cleanPathObject();
+
+            GenerateAlongPathLoops:
             for (i = 0; i < req; i++) {
 
-                temp = generateAlongPath.getPathPositionData(Math.random(), true);
+                let coord = false,
+                    coordFlag = false;
+
+                while (!coordFlag) {
+
+                    if (timeChoke + generationChoke < Date.now()) break GenerateAlongPathLoops;
+
+                    coord = generateAlongPath.getPathPositionData(rnd(), true);
+                    
+                    if (coord) coordFlag = true;
+                }
 
                 p = requestParticle();
 
                 p.set({
-                    positionX: temp.x,
-                    positionY: temp.y,
+                    positionX: coord.x,
+                    positionY: coord.y,
                     positionZ: 0,
 
                     velocityX: velocityCalc(fx, x),

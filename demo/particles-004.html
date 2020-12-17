@@ -29,11 +29,9 @@
       <li>Create a Bezier entity along which the Emitter can generate particles, together with user-controlled Wheel entitys to shape the curve.</li>
       <li>Create a particle world object, a Star entity, and a particle Emitter entity using them.</li>
       <li>Check that the Emitter entity generates particles along the entire length of the Bezier curve.</li>
+      <li>Create additional, non-user-interactive shape-based entitys (Line, Oval); clone the Emitter entity (and its artefact), assigning each to the new entitys.</li>
+      <li>Check that the cloned Emitter entity generate particles along the entire length of the Line and Oval paths.</li>
     </ul>
-
-    <h4>Known issue</h4> 
-
-    <p>The Emitter entity sometimes generates a few particles away from the path - in this instance some distance beneath the path and, occasionally, in the top-left hand corner of the canvas/Cell. Needs to be investigated and fixed - all particles must originate on the line.</p>
 
     <p><a href="../docs/demo/particles-004.html">Annotated code</a></p>
   </div>

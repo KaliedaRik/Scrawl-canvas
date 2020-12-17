@@ -479,6 +479,16 @@
                   ./demo/particles-012.js
                 </a>
               
+                
+                <a class="source" href="particles-013.html">
+                  ./demo/particles-013.js
+                </a>
+              
+                
+                <a class="source" href="particles-014.html">
+                  ./demo/particles-014.js
+                </a>
+              
             </div>
           </div>
         </li>
@@ -528,8 +538,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> ga = <span class="hljs-built_in">window</span>[<span class="hljs-built_in">window</span>[<span class="hljs-string">&#x27;GoogleAnalyticsObject&#x27;</span>] || <span class="hljs-string">&#x27;ga&#x27;</span>],
-    myTracker;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> ga = <span class="hljs-built_in">window</span>[<span class="hljs-built_in">window</span>[<span class="hljs-string">&#x27;GoogleAnalyticsObject&#x27;</span>] || <span class="hljs-string">&#x27;ga&#x27;</span>];
+<span class="hljs-keyword">let</span> myTracker;</pre></div></div>
             
         </li>
         
@@ -832,11 +842,11 @@ scrawl.makeAction({
     <span class="hljs-attr">time</span>: <span class="hljs-string">&#x27;0%&#x27;</span>,
 
     <span class="hljs-attr">action</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ 
-        myTracker.send(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Ticker progress&#x27;</span>, <span class="hljs-string">&#x27;Ticker loop starting (forwards)&#x27;</span>, <span class="hljs-string">`Action <span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> on <span class="hljs-subst">${<span class="hljs-built_in">this</span>.ticker}</span>`</span>) ;
+        <span class="hljs-keyword">if</span> (myTracker) myTracker.send(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Ticker progress&#x27;</span>, <span class="hljs-string">&#x27;Ticker loop starting (forwards)&#x27;</span>, <span class="hljs-string">`Action <span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> on <span class="hljs-subst">${<span class="hljs-built_in">this</span>.ticker}</span>`</span>) ;
     },
 
     <span class="hljs-attr">revert</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ 
-        myTracker.send(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Ticker progress&#x27;</span>, <span class="hljs-string">&#x27;Ticker loop starting (reversed)&#x27;</span>, <span class="hljs-string">`Action <span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> on <span class="hljs-subst">${<span class="hljs-built_in">this</span>.ticker}</span>`</span>); 
+        <span class="hljs-keyword">if</span> (myTracker) myTracker.send(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Ticker progress&#x27;</span>, <span class="hljs-string">&#x27;Ticker loop starting (reversed)&#x27;</span>, <span class="hljs-string">`Action <span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> on <span class="hljs-subst">${<span class="hljs-built_in">this</span>.ticker}</span>`</span>); 
     },
 
 }).clone({
@@ -845,11 +855,11 @@ scrawl.makeAction({
     <span class="hljs-attr">time</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
 
     <span class="hljs-attr">action</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ 
-        myTracker.send(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Ticker progress&#x27;</span>, <span class="hljs-string">&#x27;100% complete (forwards)&#x27;</span>, <span class="hljs-string">`Action <span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> on <span class="hljs-subst">${<span class="hljs-built_in">this</span>.ticker}</span>`</span>); 
+        <span class="hljs-keyword">if</span> (myTracker) myTracker.send(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Ticker progress&#x27;</span>, <span class="hljs-string">&#x27;100% complete (forwards)&#x27;</span>, <span class="hljs-string">`Action <span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> on <span class="hljs-subst">${<span class="hljs-built_in">this</span>.ticker}</span>`</span>); 
     },
 
     <span class="hljs-attr">revert</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ 
-        myTracker.send(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Ticker progress&#x27;</span>, <span class="hljs-string">&#x27;100% complete (reversed)&#x27;</span>, <span class="hljs-string">`Action <span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> on <span class="hljs-subst">${<span class="hljs-built_in">this</span>.ticker}</span>`</span>); 
+        <span class="hljs-keyword">if</span> (myTracker) myTracker.send(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Ticker progress&#x27;</span>, <span class="hljs-string">&#x27;100% complete (reversed)&#x27;</span>, <span class="hljs-string">`Action <span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> on <span class="hljs-subst">${<span class="hljs-built_in">this</span>.ticker}</span>`</span>); 
     },
 
 }).clone({
@@ -858,11 +868,11 @@ scrawl.makeAction({
     <span class="hljs-attr">time</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
 
     <span class="hljs-attr">action</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ 
-        myTracker.send(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Ticker progress&#x27;</span>, <span class="hljs-string">&#x27;50% complete (forwards)&#x27;</span>, <span class="hljs-string">`Action <span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> on <span class="hljs-subst">${<span class="hljs-built_in">this</span>.ticker}</span>`</span>); 
+        <span class="hljs-keyword">if</span> (myTracker) myTracker.send(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Ticker progress&#x27;</span>, <span class="hljs-string">&#x27;50% complete (forwards)&#x27;</span>, <span class="hljs-string">`Action <span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> on <span class="hljs-subst">${<span class="hljs-built_in">this</span>.ticker}</span>`</span>); 
     },
 
     <span class="hljs-attr">revert</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ 
-        myTracker.send(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Ticker progress&#x27;</span>, <span class="hljs-string">&#x27;50% complete (reversed)&#x27;</span>, <span class="hljs-string">`Action <span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> on <span class="hljs-subst">${<span class="hljs-built_in">this</span>.ticker}</span>`</span>); 
+        <span class="hljs-keyword">if</span> (myTracker) myTracker.send(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Ticker progress&#x27;</span>, <span class="hljs-string">&#x27;50% complete (reversed)&#x27;</span>, <span class="hljs-string">`Action <span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> on <span class="hljs-subst">${<span class="hljs-built_in">this</span>.ticker}</span>`</span>); 
     },
 });</pre></div></div>
             
@@ -884,11 +894,11 @@ scrawl.makeAction({
 smallboat.set({
 
     <span class="hljs-attr">onHalt</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ 
-        myTracker.send(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Tween state&#x27;</span>, <span class="hljs-string">&#x27;halt&#x27;</span>, <span class="hljs-string">`Tween <span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> on <span class="hljs-subst">${<span class="hljs-built_in">this</span>.ticker}</span>`</span>) 
+        <span class="hljs-keyword">if</span> (myTracker) myTracker.send(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Tween state&#x27;</span>, <span class="hljs-string">&#x27;halt&#x27;</span>, <span class="hljs-string">`Tween <span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> on <span class="hljs-subst">${<span class="hljs-built_in">this</span>.ticker}</span>`</span>) 
     },
 
     <span class="hljs-attr">onResume</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ 
-        myTracker.send(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Tween state&#x27;</span>, <span class="hljs-string">&#x27;resume&#x27;</span>, <span class="hljs-string">`Tween <span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> on <span class="hljs-subst">${<span class="hljs-built_in">this</span>.ticker}</span>`</span>) 
+        <span class="hljs-keyword">if</span> (myTracker) myTracker.send(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Tween state&#x27;</span>, <span class="hljs-string">&#x27;resume&#x27;</span>, <span class="hljs-string">`Tween <span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> on <span class="hljs-subst">${<span class="hljs-built_in">this</span>.ticker}</span>`</span>) 
     },
 });</pre></div></div>
             

@@ -8,13 +8,18 @@
   <title>Demo Canvas 041</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    canvas {
+      margin: 0 auto;
+    }
+  </style>
 </head>
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 041</h1>
   <h2>Access and use a canvas context engine using the makeAnimation factory</h2>
 
-  <canvas id="mycanvas" width="600" height="400"></canvas>
+  <canvas id="mycanvas" width="400" height="400"></canvas>
 
   <p id="reportmessage"></p>
 
@@ -22,7 +27,8 @@
     <h4>Test purpose</h4>
 
     <ul>
-      <li></li>
+      <li>Define a function which uses CanvasRenderingContext2D API instructions to draw a shape on the canvas.</li>
+      <li>Use the <b>renderAnimation</b> factory function to create a Display cycle which makes use of our drawing function to animate the shape.</li>  
     </ul>
 
     <p><a href="../docs/demo/canvas-041.html">Annotated code</a></p>
