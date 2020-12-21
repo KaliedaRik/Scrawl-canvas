@@ -380,7 +380,7 @@ P.checkValues = function () {
         r = f(this.r) || 0,
         g = f(this.g) || 0,
         b = f(this.b) || 0,
-        a = this.a || 1;
+        a = this.a;
 
     this.r = (r > 255) ? 255 : ((r < 0) ? 0 : r);
     this.g = (g > 255) ? 255 : ((g < 0) ? 0 : g);
@@ -444,7 +444,6 @@ P.updateByDelta = P.update;
 P.convert = function (items) {
 
     let r, g, b, a, temp,
-        // dec = this.toDecimal,
         round = Math.round;
 
     items = (items.substring) ? items : '';
@@ -459,17 +458,31 @@ P.convert = function (items) {
         
         if (items[0] === '#') {
         
-            if (items.length < 5) {
+            if (items.length == 4) {
         
                 r = parseInt(items[1] + items[1], 16);
                 g = parseInt(items[2] + items[2], 16);
                 b = parseInt(items[3] + items[3], 16);
             }
-            else if (items.length < 8) {
+            else if (items.length == 5) {
+        
+                r = parseInt(items[1] + items[1], 16);
+                g = parseInt(items[2] + items[2], 16);
+                b = parseInt(items[3] + items[3], 16);
+                a = parseInt(items[4] + items[4], 16) / 255;
+            }
+            else if (items.length == 7) {
         
                 r = parseInt(items[1] + items[2], 16);
                 g = parseInt(items[3] + items[4], 16);
                 b = parseInt(items[5] + items[6], 16);
+            }
+            else if (items.length == 9) {
+        
+                r = parseInt(items[1] + items[2], 16);
+                g = parseInt(items[3] + items[4], 16);
+                b = parseInt(items[5] + items[6], 16);
+                a = parseInt(items[7] + items[8], 16) / 255;
             }
         }
         else if (/rgb\(/.test(items)) {
@@ -498,14 +511,14 @@ P.convert = function (items) {
                 r = round((temp[0] / 100) * 255);
                 g = round((temp[1] / 100) * 255);
                 b = round((temp[2] / 100) * 255);
-                a = round(temp[3] / 100);
+                a = temp[3] / 100;
             }
             else {
             
                 r = round(temp[0]);
                 g = round(temp[1]);
                 b = round(temp[2]);
-                a = round(temp[3]);
+                a = temp[3];
             }
         }
         else if (/hsl\(/.test(items) || /hsla\(/.test(items)) {
@@ -515,10 +528,19 @@ P.convert = function (items) {
             // see http://www.niwa.nu/2013/05/math-behind-colorspace-conversions-rgb-hsl/ for one way we can approach converting hsl values to rgb
             //
             // currently, knock down to transparent black
-            r = g = b = a = 0;
+            r = 0;
+            g = 0;
+            b = 0;
+            a = 0;
 
         }
-        else if (items === 'transparent') r = g = b = a = 0;
+        else if (items === 'transparent') {
+
+            r = 0;
+            g = 0;
+            b = 0;
+            a = 0;
+        }
         else {
 
             temp = this.colorLibrary[items];
