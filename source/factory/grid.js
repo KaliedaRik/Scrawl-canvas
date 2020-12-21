@@ -296,9 +296,13 @@ P.getTileSource = function (row, col) {
 };
 
 // `getTilesUsingSource` - returns an Array of tileFill index Numbers representing tiles that are currently using the tileSource Object at the given tileSource index.
-P.getTilesUsingSource = function (index) {
+P.getTilesUsingSource = function (key) {
 
-    if (isa_number(index)) this.tileFill.map(item => item === index ? 1 : 0);
+    let res = [];
+
+    if (isa_number(key)) this.tileFill.forEach((val, index) => val == key && res.push(index));
+
+    return res;
 };
 
 
