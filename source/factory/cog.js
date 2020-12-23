@@ -92,7 +92,7 @@ let defaultAttributes = {
     innerControlsOffset: 0,
     points: 0,
     twist: 0,
-    useBezierCurve: true,
+    curve: 'bezier',
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -204,10 +204,18 @@ D.twist = function (item) {
 };
 
 // __useBezierCurve__
-S.useBezierCurve = function (item) {
+S.curve = function (item) {
 
-    this.useBezierCurve = item;
-    this.updateDirty();
+    if (item && ['line', 'quadratic', 'bezier'].indexOf(item) >= 0) {
+
+        this.curve = item;
+        this.updateDirty();
+    }
+    else {
+
+        this.curve = 'bezier';
+        this.updateDirty();
+    }
 };
 
 // #### Prototype functions
@@ -227,7 +235,7 @@ P.cleanSpecies = function () {
 // `makeCogPath` - internal helper function - called by `cleanSpecies`
 P.makeCogPath = function () {
 
-    let {points, twist, outerRadius, innerRadius, outerControlsDistance, innerControlsDistance, outerControlsOffset, innerControlsOffset, useBezierCurve} = this;
+    let {points, twist, outerRadius, innerRadius, outerControlsDistance, innerControlsDistance, outerControlsOffset, innerControlsOffset, curve} = this;
 
     let turn = 360 / points,
         xPts = [],
@@ -268,7 +276,7 @@ P.makeCogPath = function () {
 
     xPts.push(currentPointX);
 
-    if (useBezierCurve) {
+    if (curve == 'bezier') {
 
         for (i = 0; i < points; i++) {
 
@@ -302,6 +310,39 @@ P.makeCogPath = function () {
             deltaX = parseFloat((outerPointTrail.x - currentPointX).toFixed(1));
             deltaY = parseFloat((outerPointTrail.y - currentPointY).toFixed(1));
             myPath += `${deltaX},${deltaY} `;
+
+            deltaX = parseFloat((outerPoint.x - currentPointX).toFixed(1));
+            currentPointX += deltaX;
+            xPts.push(currentPointX);
+            deltaY = parseFloat((outerPoint.y - currentPointY).toFixed(1));
+            currentPointY += deltaY;
+            myPath += `${deltaX},${deltaY} `;
+        }
+    }
+    else if (curve == 'quadratic') {
+
+        for (i = 0; i < points; i++) {
+
+            deltaX = parseFloat((outerPointLead.x - currentPointX).toFixed(1));
+            deltaY = parseFloat((outerPointLead.y - currentPointY).toFixed(1));
+            myPath += `${deltaX},${deltaY} `;
+
+            innerPoint.rotate(turn);
+            innerPointLead.rotate(turn);
+
+            deltaX = parseFloat((innerPoint.x - currentPointX).toFixed(1));
+            currentPointX += deltaX;
+            xPts.push(currentPointX);
+            deltaY = parseFloat((innerPoint.y - currentPointY).toFixed(1));
+            currentPointY += deltaY;
+            myPath += `${deltaX},${deltaY} `;
+
+            deltaX = parseFloat((innerPointLead.x - currentPointX).toFixed(1));
+            deltaY = parseFloat((innerPointLead.y - currentPointY).toFixed(1));
+            myPath += `${deltaX},${deltaY} `;
+
+            outerPoint.rotate(turn);
+            outerPointLead.rotate(turn);
 
             deltaX = parseFloat((outerPoint.x - currentPointX).toFixed(1));
             currentPointX += deltaX;
@@ -371,7 +412,9 @@ P.makeCogPath = function () {
     myMin = Math.min(...xPts);
     myXoffset = Math.abs(myMin).toFixed(1);
 
-    return `m${myXoffset},0${useBezierCurve ? 'c' : 'l'}${myPath}z`;
+    if (curve == 'bezier') return `m${myXoffset},0c${myPath}z`;
+    if (curve == 'quadratic') return `m${myXoffset},0q${myPath}z`;
+    return `m${myXoffset},0l${myPath}z`;
 };
 
 
@@ -382,8 +425,11 @@ P.makeCogPath = function () {
 // + __outerRadius__ (required) - the _outer_ radius representing the distance between the center of the Shape and the tips of its (acute angle) points.
 // + __innerRadius__ (required) - the _inner_ radius representing the distance between the center of the Shape and the obtuse angle at the valley between the tips of its (acute angle) points.
 // + ... where these radius values are supplied as %Strings, they are calculated as relative to the canvas/cell ___width___ value.
+// + __outerControlsDistance__, __innerControlsDistance__ - a Number value measuring the distance from each point to its leading and trailing control points - use this to create more square pegs (useBezierCurve: false) or a more curved tooth outline
+// + __outerControlsOffset__, __innerControlsOffset__ - a Number value which can be used to offset the control points so that the trailing control point is more distant than the leading control point (or vice versa)
 // + __points__ (required) - a positive integer Number representing the number of points the star will have.
 // + __twist__ - a float Number representing the degrees by which the star's second radius will be rotated out of line from its first radius; the default value `0` will produce a star with all of its sides of equal length and the star's valleys falling midway between its connecting points.
+// + __curve__ - String: one of 'bezier' (default); 'quadratic'; or 'line' - when this flag is set, the entity will be built using the appropriate curve.
 // + Note that the use of _inner_ and _outer_ above is purely descriptive: `innerRadius` can be larger than `outerRadius`
 //
 // ```

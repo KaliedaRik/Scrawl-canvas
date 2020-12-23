@@ -323,7 +323,7 @@ scrawl.makeCog({
     fillStyle: 'orchid',
     lineWidth: 2,
     method: 'fillAndDraw',
-    useBezierCurve: false,
+    curve: 'line',
 
     showBoundingBox: true,
     useAsPath: true,
@@ -341,9 +341,38 @@ scrawl.makeCog({
 });
 
 scrawl.makeCog({
-    name: 'smooth-cog',
+    name: 'hill-cog',
     startX: 20,
     startY: 1980,
+    outerRadius: 80,
+    innerRadius: 65,
+    outerControlsDistance: 4,
+    innerControlsDistance: 2,
+    points: 20,
+    fillStyle: 'slategrey',
+    lineWidth: 2,
+    method: 'fillAndDraw',
+    curve: 'quadratic',
+
+    showBoundingBox: true,
+    useAsPath: true,
+
+}).clone({
+    name: 'blade-hill-cog',
+    outerControlsOffset: 5,
+    startX: 220,
+
+}).clone({
+    name: 'twist-hill-cog',
+    startX: 420,
+    outerControlsOffset: 0,
+    twist: 15,
+});
+
+scrawl.makeCog({
+    name: 'smooth-cog',
+    startX: 20,
+    startY: 2170,
     outerRadius: 80,
     innerRadius: 60,
     outerControlsDistance: 10,
@@ -560,34 +589,49 @@ scrawl.makePicture({
     pathPosition: 0.75,
 
 }).clone({
-    name: '_blade-tooth-cog',
-    path: 'blade-tooth-cog',
-    pathPosition: 0.2,
-
-}).clone({
-    name: '_twist-tooth-cog',
-    path: 'twist-tooth-cog',
-    pathPosition: 0.4,
-
-}).clone({
     name: '_tooth-cog',
     path: 'tooth-cog',
     pathPosition: 0,
 
 }).clone({
+    name: '_blade-tooth-cog',
+    path: 'blade-tooth-cog',
+    pathPosition: 0.3,
+
+}).clone({
+    name: '_twist-tooth-cog',
+    path: 'twist-tooth-cog',
+    pathPosition: 0.6,
+
+}).clone({
+    name: '_hill-cog',
+    path: 'hill-cog',
+    pathPosition: 0.1,
+
+}).clone({
+    name: '_blade-hill-cog',
+    path: 'blade-hill-cog',
+    pathPosition: 0.4,
+
+}).clone({
+    name: '_twist-hill-cog',
+    path: 'twist-hill-cog',
+    pathPosition: 0.7,
+
+}).clone({
     name: '_smooth-cog',
     path: 'smooth-cog',
-    pathPosition: 0.6,
+    pathPosition: 0.2,
 
 }).clone({
     name: '_blade-smooth-cog',
     path: 'blade-smooth-cog',
-    pathPosition: 0.8,
+    pathPosition: 0.5,
 
 }).clone({
     name: '_twist-smooth-cog',
     path: 'twist-smooth-cog',
-    pathPosition: 1,
+    pathPosition: 0.8,
 });
 
 
