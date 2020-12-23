@@ -505,7 +505,7 @@
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
               <h1 id="demo-canvas-019">Demo Canvas 019</h1>
-<p>Artefact collision detection</p>
+<p>Gradient and Color factories - transparency</p>
 
             </div>
             
@@ -518,9 +518,404 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>Collision detection functionality was removed from the Scrawl-canvas code base from v8.2.0</p>
+              <p><a href="../../demo/canvas-018.html">Run code</a></p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <h4 id="scene-setup">Scene setup</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvases = scrawl.library.canvas,
+    entitys = scrawl.library.entity,
+    c1 = canvases[<span class="hljs-string">&#x27;canvas-1&#x27;</span>],
+    c2 = canvases[<span class="hljs-string">&#x27;canvas-2&#x27;</span>],
+    c3 = canvases[<span class="hljs-string">&#x27;canvas-3&#x27;</span>],
+    c4 = canvases[<span class="hljs-string">&#x27;canvas-4&#x27;</span>];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Import the images we defined in the DOM (in &lt;img&gt; elements)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.importDomImage(<span class="hljs-string">&#x27;.places&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>For this scene, we’ll build a data structure which we can iterate over, to build the entitys, assets and gradients required by the scene</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> data = [
+    {
+        <span class="hljs-attr">canvas</span>: c1,
+        <span class="hljs-attr">image</span>: <span class="hljs-string">&#x27;hackney&#x27;</span>,
+        <span class="hljs-attr">transparency</span>: <span class="hljs-string">&#x27;transparent&#x27;</span>,
+    },
+    {
+        <span class="hljs-attr">canvas</span>: c2,
+        <span class="hljs-attr">image</span>: <span class="hljs-string">&#x27;heathrow&#x27;</span>,
+        <span class="hljs-attr">transparency</span>: <span class="hljs-string">&#x27;rgba(0,0,0,0)&#x27;</span>,
+    },
+    {
+        <span class="hljs-attr">canvas</span>: c3,
+        <span class="hljs-attr">image</span>: <span class="hljs-string">&#x27;kingston&#x27;</span>,
+        <span class="hljs-attr">transparency</span>: <span class="hljs-string">&#x27;#00000000&#x27;</span>,
+    },
+    {
+        <span class="hljs-attr">canvas</span>: c4,
+        <span class="hljs-attr">image</span>: <span class="hljs-string">&#x27;burglary&#x27;</span>,
+        <span class="hljs-attr">transparency</span>: <span class="hljs-string">&#x27;#0000&#x27;</span>,
+    },
+];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>This array will hold a set of functions which we will invoke in turn at the start of each Display cycle</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> checkFunctions = [];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>The blur filter is temporary - we use it once on each image to generate a blurred version of that image</p>
+<ul>
+<li>We do it this way because the blur filter is computationally very expensive - capturing a blurred version of the image is a lot better for end user power consumption</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.makeFilter({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;blur&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;blur&#x27;</span>,
+    <span class="hljs-attr">radius</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">passes</span>: <span class="hljs-number">2</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Iterate through our data array to create Scrawl-canvas objects</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>data.forEach(<span class="hljs-function"><span class="hljs-params">scene</span> =&gt;</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>The original picture, with the blur filter applied to it</p>
+<ul>
+<li>We will remove the filter in a later step</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> entity = scrawl.makePicture({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>-original`</span>,
+        <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.canvas.base.name}</span>`</span>,
+
+        <span class="hljs-attr">asset</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>`</span>,
+
+        <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+        <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+
+        <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;blur&#x27;</span>],
+        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>A one-off instruction to tell Scrawl-canvas to create an image asset from our Picture entity the next time it performs a Display cycle</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    scrawl.createImageFromEntity(entity, <span class="hljs-literal">true</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>The purpose of this demo is to test the various ways we can define ‘transparency’ in Scrawl-canvas Color objects and Gradients - tests a set of Color factory bugs uncovered and fixed in v8.3.2</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    scrawl.makeRadialGradient({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>-gradient`</span>,
+        <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;50%&#x27;</span>, <span class="hljs-string">&#x27;50%&#x27;</span>],
+        <span class="hljs-attr">end</span>: [<span class="hljs-string">&#x27;50%&#x27;</span>, <span class="hljs-string">&#x27;50%&#x27;</span>],
+        <span class="hljs-attr">startRadius</span>: <span class="hljs-string">&#x27;5%&#x27;</span>,
+        <span class="hljs-attr">endRadius</span>: <span class="hljs-string">&#x27;20%&#x27;</span>,
+    })
+    .updateColor(<span class="hljs-number">0</span>, <span class="hljs-string">`<span class="hljs-subst">${scene.transparency}</span>`</span>)
+    .updateColor(<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;black&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Apply the gradient to the scene via a Block entity</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> filterBlock = scrawl.makeBlock({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>-block`</span>,
+        <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.canvas.base.name}</span>`</span>,
+
+        <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+        <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+        <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;200%&#x27;</span>, <span class="hljs-string">&#x27;200%&#x27;</span>],
+
+        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>-gradient`</span>,
+        <span class="hljs-attr">lockFillStyleToEntity</span>: <span class="hljs-literal">true</span>,
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Check whether the mouse cursor is hovering over this canvas, and update the filter Block entity’s positioning accordingly</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> f = <span class="hljs-function">() =&gt;</span> {
+
+        <span class="hljs-keyword">const</span> here = scene.canvas.here,
+            block = filterBlock;
+
+        <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+            block.set({
+                <span class="hljs-attr">lockTo</span>: (here.active) ? <span class="hljs-string">&#x27;mouse&#x27;</span> : <span class="hljs-string">&#x27;start&#x27;</span>,
+            });
+        }
+    };
+    checkFunctions.push(f());
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>This function will run once, at the end of the first Display cycle</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> postInitialization = <span class="hljs-function">() =&gt;</span> {
+
+    data.forEach(<span class="hljs-function"><span class="hljs-params">scene</span> =&gt;</span> {
+
+        <span class="hljs-keyword">let</span> original = entitys[<span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>-original`</span>];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Update our original Picture entity, in particular to remove the blur filter and set up its composition in the scene</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        original.set({
+            <span class="hljs-attr">filters</span>: [],
+            <span class="hljs-attr">order</span>: <span class="hljs-number">2</span>,
+            <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;destination-over&#x27;</span>,
+        });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Create a second Picture entity using the blurred image asset Scrawl-canvas created for us during the first iteration of the Display cycle.</p>
+<ul>
+<li>Note that we’ve asked Scrawl-canvas to create an &lt;img&gt; element (outside of the DOM) from our original Picture’s blurred output. Element creation takes time (it’s an asynchronous action), which means that our new Picture entity won’t show up for up to a second after the demo starts running.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        original.clone({
+            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>-blurred`</span>,
+            <span class="hljs-attr">asset</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>-original-image`</span>,
+            <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
+            <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;source-atop&#x27;</span>,
+        });
+    });
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <h4 id="scene-animation">Scene animation</h4>
+<p>Function to display frames-per-second data, and other information relevant to the demo</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+        testTime, testNow, dragging,
+        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+        testNow = <span class="hljs-built_in">Date</span>.now();
+        testTime = testNow - testTicker;
+        testTicker = testNow;
+
+        <span class="hljs-keyword">if</span> (testTime) testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>For some reason the approach taken in this Demo is breaking the report function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> testMessage.textContent = <span class="hljs-string">`testTime: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; testNow: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testNow)}</span>ms; testTicker: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTicker)}</span>ms`</span>;
+    };
+}();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Create the Display cycle animation</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.makeRender({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
+    <span class="hljs-attr">target</span>: [c1, c2, c3, c4],
+
+    <span class="hljs-attr">afterCreated</span>: postInitialization,
+    <span class="hljs-attr">commence</span>: <span class="hljs-function">() =&gt;</span> checkFunctions.forEach(<span class="hljs-function"><span class="hljs-params">f</span> =&gt;</span> f()),
+    <span class="hljs-attr">afterShow</span>: report,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <h4 id="development-and-testing">Development and testing</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
             
         </li>
         

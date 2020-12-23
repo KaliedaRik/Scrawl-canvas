@@ -8,14 +8,58 @@
   <title>Demo Canvas 019</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    img {
+      display: none;
+    }
+    canvas {
+      display: block;
+      margin: 0 auto 1em;
+      border: 1px solid red;
+    }
+    .controls {
+      grid-template-columns: 1fr 1fr;
+    }
+  </style>
 </head>
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 019</h1>
-  <h2>Artefact collision detection</h2>
-  <h3>Drag and drop the artefacts around the canvas</h3>
+  <h2>Gradient and Color factories - transparency</h2>
 
-  <p>Collision detection functionality was removed from the Scrawl-canvas code base from v8.2.0</p>
+  <div class="controls">
+    <canvas id="canvas-1" width="400" height="400"></canvas>
+    <canvas id="canvas-2" width="400" height="400"></canvas>
+    <canvas id="canvas-3" width="400" height="400"></canvas>
+    <canvas id="canvas-4" width="400" height="400"></canvas>
+  </div>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Use the four canvases to display a separate image, defined in the DOM.</li>
+      <li>Check that the `scrawl.createImageFromEntity` functionality works, and that we can capture and use blurred images created dynamically from the originals.</li>
+      <li>Create four (radial) gradients, each with a transparent hole in the middle. We are testing the following values for CSS transparency:</li>
+      <ul>
+        <li>"transparent"</li>
+        <li>"rgba(0,0,0,0)"</li>
+        <li>"#00000000"</li>
+        <li>"#0000"</li>
+      </ul>
+      <li>Check that all canvases display as expected, with in-focus areas of the image centred either on the mouse cursor, or in the middle of the canvas.</li>
+    </ul>
+    <p><a href="../docs/demo/canvas-019.html">Annotated code</a></p>
+  </div>
+
+  <img id="hackney" src="img/hackney-grey.jpg" class="places" />
+  <img id="heathrow" src="img/heathrow-grey.jpg" class="places" />
+  <img id="kingston" src="img/kingston-grey.jpg" class="places" />
+  <img id="burglary" src="img/burglary-grey.jpg" class="places" />
+
+  <script src="canvas-019.js" type="module"></script>
 
 </body>
 

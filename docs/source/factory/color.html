@@ -1204,7 +1204,7 @@ P.setMaximumColor = <span class="hljs-function"><span class="hljs-keyword">funct
         r = f(<span class="hljs-built_in">this</span>.r) || <span class="hljs-number">0</span>,
         g = f(<span class="hljs-built_in">this</span>.g) || <span class="hljs-number">0</span>,
         b = f(<span class="hljs-built_in">this</span>.b) || <span class="hljs-number">0</span>,
-        a = <span class="hljs-built_in">this</span>.a || <span class="hljs-number">1</span>;
+        a = <span class="hljs-built_in">this</span>.a;
 
     <span class="hljs-built_in">this</span>.r = (r &gt; <span class="hljs-number">255</span>) ? <span class="hljs-number">255</span> : ((r &lt; <span class="hljs-number">0</span>) ? <span class="hljs-number">0</span> : r);
     <span class="hljs-built_in">this</span>.g = (g &gt; <span class="hljs-number">255</span>) ? <span class="hljs-number">255</span> : ((g &lt; <span class="hljs-number">0</span>) ? <span class="hljs-number">0</span> : g);
@@ -1303,22 +1303,8 @@ P.update = <span class="hljs-function"><span class="hljs-keyword">function</span
             
             <div class="content"><div class='highlight'><pre>P.convert = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
 
-    <span class="hljs-keyword">let</span> r, g, b, a, temp,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-37">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
-              </div>
-              <p>dec = this.toDecimal,</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        round = <span class="hljs-built_in">Math</span>.round;
+    <span class="hljs-keyword">let</span> r, g, b, a, temp,
+        round = <span class="hljs-built_in">Math</span>.round;
 
     items = (items.substring) ? items : <span class="hljs-string">&#x27;&#x27;</span>;
 
@@ -1332,17 +1318,31 @@ P.update = <span class="hljs-function"><span class="hljs-keyword">function</span
         
         <span class="hljs-keyword">if</span> (items[<span class="hljs-number">0</span>] === <span class="hljs-string">&#x27;#&#x27;</span>) {
         
-            <span class="hljs-keyword">if</span> (items.length &lt; <span class="hljs-number">5</span>) {
+            <span class="hljs-keyword">if</span> (items.length == <span class="hljs-number">4</span>) {
         
                 r = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">1</span>] + items[<span class="hljs-number">1</span>], <span class="hljs-number">16</span>);
                 g = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">2</span>] + items[<span class="hljs-number">2</span>], <span class="hljs-number">16</span>);
                 b = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">3</span>] + items[<span class="hljs-number">3</span>], <span class="hljs-number">16</span>);
             }
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (items.length &lt; <span class="hljs-number">8</span>) {
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (items.length == <span class="hljs-number">5</span>) {
+        
+                r = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">1</span>] + items[<span class="hljs-number">1</span>], <span class="hljs-number">16</span>);
+                g = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">2</span>] + items[<span class="hljs-number">2</span>], <span class="hljs-number">16</span>);
+                b = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">3</span>] + items[<span class="hljs-number">3</span>], <span class="hljs-number">16</span>);
+                a = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">4</span>] + items[<span class="hljs-number">4</span>], <span class="hljs-number">16</span>) / <span class="hljs-number">255</span>;
+            }
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (items.length == <span class="hljs-number">7</span>) {
         
                 r = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">1</span>] + items[<span class="hljs-number">2</span>], <span class="hljs-number">16</span>);
                 g = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">3</span>] + items[<span class="hljs-number">4</span>], <span class="hljs-number">16</span>);
                 b = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">5</span>] + items[<span class="hljs-number">6</span>], <span class="hljs-number">16</span>);
+            }
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (items.length == <span class="hljs-number">9</span>) {
+        
+                r = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">1</span>] + items[<span class="hljs-number">2</span>], <span class="hljs-number">16</span>);
+                g = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">3</span>] + items[<span class="hljs-number">4</span>], <span class="hljs-number">16</span>);
+                b = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">5</span>] + items[<span class="hljs-number">6</span>], <span class="hljs-number">16</span>);
+                a = <span class="hljs-built_in">parseInt</span>(items[<span class="hljs-number">7</span>] + items[<span class="hljs-number">8</span>], <span class="hljs-number">16</span>) / <span class="hljs-number">255</span>;
             }
         }
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/rgb\(/</span>.test(items)) {
@@ -1371,14 +1371,14 @@ P.update = <span class="hljs-function"><span class="hljs-keyword">function</span
                 r = round((temp[<span class="hljs-number">0</span>] / <span class="hljs-number">100</span>) * <span class="hljs-number">255</span>);
                 g = round((temp[<span class="hljs-number">1</span>] / <span class="hljs-number">100</span>) * <span class="hljs-number">255</span>);
                 b = round((temp[<span class="hljs-number">2</span>] / <span class="hljs-number">100</span>) * <span class="hljs-number">255</span>);
-                a = round(temp[<span class="hljs-number">3</span>] / <span class="hljs-number">100</span>);
+                a = temp[<span class="hljs-number">3</span>] / <span class="hljs-number">100</span>;
             }
             <span class="hljs-keyword">else</span> {
             
                 r = round(temp[<span class="hljs-number">0</span>]);
                 g = round(temp[<span class="hljs-number">1</span>]);
                 b = round(temp[<span class="hljs-number">2</span>]);
-                a = round(temp[<span class="hljs-number">3</span>]);
+                a = temp[<span class="hljs-number">3</span>];
             }
         }
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/hsl\(/</span>.test(items) || <span class="hljs-regexp">/hsla\(/</span>.test(items)) {</pre></div></div>
@@ -1386,11 +1386,11 @@ P.update = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-38">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>the spec explanation can be found here <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color_value">https://developer.mozilla.org/en-US/docs/Web/CSS/color_value</a></p>
 <p>see <a href="http://www.niwa.nu/2013/05/math-behind-colorspace-conversions-rgb-hsl/">http://www.niwa.nu/2013/05/math-behind-colorspace-conversions-rgb-hsl/</a> for one way we can approach converting hsl values to rgb</p>
@@ -1398,10 +1398,19 @@ P.update = <span class="hljs-function"><span class="hljs-keyword">function</span
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            r = g = b = a = <span class="hljs-number">0</span>;
+            <div class="content"><div class='highlight'><pre>            r = <span class="hljs-number">0</span>;
+            g = <span class="hljs-number">0</span>;
+            b = <span class="hljs-number">0</span>;
+            a = <span class="hljs-number">0</span>;
 
         }
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (items === <span class="hljs-string">&#x27;transparent&#x27;</span>) r = g = b = a = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (items === <span class="hljs-string">&#x27;transparent&#x27;</span>) {
+
+            r = <span class="hljs-number">0</span>;
+            g = <span class="hljs-number">0</span>;
+            b = <span class="hljs-number">0</span>;
+            a = <span class="hljs-number">0</span>;
+        }
         <span class="hljs-keyword">else</span> {
 
             temp = <span class="hljs-built_in">this</span>.colorLibrary[items];
@@ -1429,11 +1438,11 @@ P.update = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-39">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
               <p>Color keywords harvested from <a href="https://developer.mozilla.org/en/docs/Web/CSS/color_value">https://developer.mozilla.org/en/docs/Web/CSS/color_value</a></p>
 
@@ -1591,11 +1600,11 @@ P.update = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-40">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.makeColor({
@@ -1647,11 +1656,11 @@ scrawl.makeBlock({
         </li>
         
         
-        <li id="section-41">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

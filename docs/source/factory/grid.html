@@ -1041,9 +1041,13 @@ D.rows = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.getTilesUsingSource = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">index</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.getTilesUsingSource = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">key</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (isa_number(index)) <span class="hljs-built_in">this</span>.tileFill.map(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item === index ? <span class="hljs-number">1</span> : <span class="hljs-number">0</span>);
+    <span class="hljs-keyword">let</span> res = [];
+
+    <span class="hljs-keyword">if</span> (isa_number(key)) <span class="hljs-built_in">this</span>.tileFill.forEach(<span class="hljs-function">(<span class="hljs-params">val, index</span>) =&gt;</span> val == key &amp;&amp; res.push(index));
+
+    <span class="hljs-keyword">return</span> res;
 };</pre></div></div>
             
         </li>
