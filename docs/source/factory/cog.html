@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Tetragon factory</title>
+  <title>Cog factory</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
@@ -449,8 +449,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <h1 id="tetragon-factory">Tetragon factory</h1>
-<p>A factory for generating various straight-line tetragonal shape-based entitys</p>
+              <h1 id="cog-factory">Cog factory</h1>
+<p>A factory for generating star shape-based entitys</p>
 <p>Path-defined entitys represent a diverse range of shapes rendered onto a DOM &lt;canvas&gt; element using the Canvas API’s <a href="https://developer.mozilla.org/en-US/docs/Web/API/Path2D">Path2D interface</a>. They use the <a href="../mixin/shapeBasic.html">shapeBasic</a> and <a href="../mixin/shapePathCalculation.html">shapePathCalculation</a> (some also use <a href="../mixin/shapeCurve.html">shapeCurve</a>) mixins to define much of their functionality.</p>
 <p>All path-defined entitys can be positioned, cloned, filtered etc:</p>
 <ul>
@@ -530,6 +530,8 @@
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
 <span class="hljs-keyword">import</span> { mergeOver } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
+<span class="hljs-keyword">import</span> { requestVector, releaseVector } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./vector.js&#x27;</span>;
+
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 <span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shapeBasic.js&#x27;</span>;</pre></div></div>
             
@@ -542,11 +544,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <h4 id="tetragon-constructor">Tetragon constructor</h4>
+              <h4 id="cog-constructor">Cog constructor</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Tetragon = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Cog = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
 
     <span class="hljs-built_in">this</span>.shapeInit(items);
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
@@ -561,12 +563,12 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <h4 id="tetragon-prototype">Tetragon prototype</h4>
+              <h4 id="cog-prototype">Cog prototype</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Tetragon.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">&#x27;Tetragon&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Cog.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
+P.type = <span class="hljs-string">&#x27;Cog&#x27;</span>;
 P.lib = <span class="hljs-string">&#x27;entity&#x27;</span>;
 P.isArtefact = <span class="hljs-literal">true</span>;
 P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
@@ -600,7 +602,7 @@ P = shapeMix(P);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <h4 id="tetragon-attributes">Tetragon attributes</h4>
+              <h4 id="cog-attributes">Cog attributes</h4>
 <ul>
 <li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/position.html">position mixin</a>: <strong>group, visibility, order, start, <em>startX</em>, <em>startY</em>, handle, <em>handleX</em>, <em>handleY</em>, offset, <em>offsetX</em>, <em>offsetY</em>, dimensions, <em>width</em>, <em>height</em>, pivoted, mimicked, lockTo, <em>lockXTo</em>, <em>lockYTo</em>, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge, bringToFrontOnDrag</strong>.</li>
@@ -618,10 +620,15 @@ P = shapeMix(P);</pre></div></div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {
 
-    <span class="hljs-attr">radiusX</span>: <span class="hljs-number">5</span>,
-    <span class="hljs-attr">radiusY</span>: <span class="hljs-number">5</span>,
-    <span class="hljs-attr">intersectX</span>: <span class="hljs-number">0.5</span>,
-    <span class="hljs-attr">intersectY</span>: <span class="hljs-number">0.5</span>,
+    <span class="hljs-attr">outerRadius</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">innerRadius</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">outerControlsDistance</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">innerControlsDistance</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">outerControlsOffset</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">innerControlsOffset</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">points</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">twist</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">useBezierCurve</span>: <span class="hljs-literal">true</span>,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
@@ -681,59 +688,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> S = P.setters,
-    D = P.deltaSetters;
-
-S.radius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusX&#x27;</span>, <span class="hljs-string">&#x27;radiusY&#x27;</span>]);
-};
-S.radiusX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusX&#x27;</span>]);
-};
-S.radiusY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusY&#x27;</span>]);
-};
-D.radius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusX&#x27;</span>, <span class="hljs-string">&#x27;radiusY&#x27;</span>]);
-};
-D.radiusX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusX&#x27;</span>]);
-};
-D.radiusY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusY&#x27;</span>]);
-};
-
-S.intersectA = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-built_in">this</span>.intersectA = item;
-    <span class="hljs-built_in">this</span>.updateDirty();
-};
-S.intersectB = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-built_in">this</span>.intersectB = item;
-    <span class="hljs-built_in">this</span>.updateDirty();
-};
-D.intersectA = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (item.toFixed) {
-
-        <span class="hljs-built_in">this</span>.intersectA += item;
-        <span class="hljs-built_in">this</span>.updateDirty();
-    }
-};
-D.intersectB = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (item.toFixed) {
-
-        <span class="hljs-built_in">this</span>.intersectB += item;
-        <span class="hljs-built_in">this</span>.updateDirty();
-    }
-};</pre></div></div>
+    D = P.deltaSetters;</pre></div></div>
             
         </li>
         
@@ -744,9 +699,30 @@ D.intersectB = <span class="hljs-function"><span class="hljs-keyword">function</
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <h4 id="prototype-functions">Prototype functions</h4>
+              <p><strong>outerRadius</strong>, <strong>innerRadius</strong></p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>S.outerRadius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.outerRadius = item;
+    <span class="hljs-built_in">this</span>.updateDirty();
+};
+D.outerRadius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.outerRadius += item;
+    <span class="hljs-built_in">this</span>.updateDirty();
+};
+S.innerRadius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.innerRadius = item;
+    <span class="hljs-built_in">this</span>.updateDirty();
+};
+D.innerRadius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.innerRadius += item;
+    <span class="hljs-built_in">this</span>.updateDirty();
+};</pre></div></div>
             
         </li>
         
@@ -757,18 +733,29 @@ D.intersectB = <span class="hljs-function"><span class="hljs-keyword">function</
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p><code>setRectHelper</code> - internal setter helper function</p>
+              <p><strong>outerControlsDistance</strong>, <strong>innerControlsDistance</strong></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.setRectHelper = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item, corners</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.outerControlsDistance = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
+    <span class="hljs-built_in">this</span>.outerControlsDistance = item;
     <span class="hljs-built_in">this</span>.updateDirty();
+};
+D.outerControlsDistance = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    corners.forEach(<span class="hljs-function"><span class="hljs-params">corner</span> =&gt;</span> {
+    <span class="hljs-built_in">this</span>.outerControlsDistance += item;
+    <span class="hljs-built_in">this</span>.updateDirty();
+};
+S.innerControlsDistance = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-built_in">this</span>[corner] = item;
-    }, <span class="hljs-built_in">this</span>);
+    <span class="hljs-built_in">this</span>.innerControlsDistance = item;
+    <span class="hljs-built_in">this</span>.updateDirty();
+};
+D.innerControlsDistance = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.innerControlsDistance += item;
+    <span class="hljs-built_in">this</span>.updateDirty();
 };</pre></div></div>
             
         </li>
@@ -780,18 +767,29 @@ D.intersectB = <span class="hljs-function"><span class="hljs-keyword">function</
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p><code>deltaRectHelper</code> - internal setter helper function</p>
+              <p><strong>outerControlsOffset</strong>, <strong>innerControlsOffset</strong></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.deltaRectHelper = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item, corners</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.outerControlsOffset = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
+    <span class="hljs-built_in">this</span>.outerControlsOffset = item;
     <span class="hljs-built_in">this</span>.updateDirty();
+};
+D.outerControlsOffset = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    corners.forEach(<span class="hljs-function"><span class="hljs-params">corner</span> =&gt;</span> {
+    <span class="hljs-built_in">this</span>.outerControlsOffset += item;
+    <span class="hljs-built_in">this</span>.updateDirty();
+};
+S.innerControlsOffset = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-built_in">this</span>[corner] = addStrings(<span class="hljs-built_in">this</span>[corner], item);
-    }, <span class="hljs-built_in">this</span>);
+    <span class="hljs-built_in">this</span>.innerControlsOffset = item;
+    <span class="hljs-built_in">this</span>.updateDirty();
+};
+D.innerControlsOffset = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.innerControlsOffset += item;
+    <span class="hljs-built_in">this</span>.updateDirty();
 };</pre></div></div>
             
         </li>
@@ -803,18 +801,19 @@ D.intersectB = <span class="hljs-function"><span class="hljs-keyword">function</
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p><code>cleanSpecies</code> - internal helper function - called by <code>prepareStamp</code></p>
+              <p><strong>points</strong></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.cleanSpecies = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.points = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-built_in">this</span>.dirtySpecies = <span class="hljs-literal">false</span>;
+    <span class="hljs-built_in">this</span>.points = item;
+    <span class="hljs-built_in">this</span>.updateDirty();
+};
+D.points = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">let</span> p = <span class="hljs-string">&#x27;M0,0&#x27;</span>;
-    p = <span class="hljs-built_in">this</span>.makeTetragonPath();
-
-    <span class="hljs-built_in">this</span>.pathDefinition = p;
+    <span class="hljs-built_in">this</span>.points += item;
+    <span class="hljs-built_in">this</span>.updateDirty();
 };</pre></div></div>
             
         </li>
@@ -826,17 +825,20 @@ D.intersectB = <span class="hljs-function"><span class="hljs-keyword">function</
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p><code>makeTetragonPath</code> - internal helper function - called by <code>cleanSpecies</code></p>
+              <p><strong>twist</strong></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.makeTetragonPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.twist = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">let</span> radiusX = <span class="hljs-built_in">this</span>.radiusX,
-        radiusY = <span class="hljs-built_in">this</span>.radiusY,
-        width, height;
+    <span class="hljs-built_in">this</span>.twist = item;
+    <span class="hljs-built_in">this</span>.updateDirty();
+};
+D.twist = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (radiusX.substring || radiusY.substring) {</pre></div></div>
+    <span class="hljs-built_in">this</span>.twist += item;
+    <span class="hljs-built_in">this</span>.updateDirty();
+};</pre></div></div>
             
         </li>
         
@@ -847,11 +849,15 @@ D.intersectB = <span class="hljs-function"><span class="hljs-keyword">function</
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>let here = this.getHere(),
-    rx = (radiusX.substring) ? (parseFloat(radiusX) / 100) * here.w : radiusX,
-    ry = (radiusY.substring) ? (parseFloat(radiusY) / 100) * here.h : radiusY;</p>
+              <p><strong>useBezierCurve</strong></p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>S.useBezierCurve = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.useBezierCurve = item;
+    <span class="hljs-built_in">this</span>.updateDirty();
+};</pre></div></div>
             
         </li>
         
@@ -862,50 +868,9 @@ D.intersectB = <span class="hljs-function"><span class="hljs-keyword">function</
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <p>width = rx * 2;
-height = ry * 2;</p>
+              <h4 id="prototype-functions">Prototype functions</h4>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>
-        <span class="hljs-keyword">let</span> host = <span class="hljs-built_in">this</span>.getHost();
-
-        <span class="hljs-keyword">if</span> (host) {
-
-            <span class="hljs-keyword">let</span> [hW, hH] = host.currentDimensions;
-
-            <span class="hljs-keyword">let</span> rx = (radiusX.substring) ? (<span class="hljs-built_in">parseFloat</span>(radiusX) / <span class="hljs-number">100</span>) * hW : radiusX,
-                ry = (radiusY.substring) ? (<span class="hljs-built_in">parseFloat</span>(radiusY) / <span class="hljs-number">100</span>) * hH : radiusY;
-
-            width = rx * <span class="hljs-number">2</span>;
-            height = ry * <span class="hljs-number">2</span>;
-        } 
-    }
-    <span class="hljs-keyword">else</span> {
-
-        width = radiusX * <span class="hljs-number">2</span>;
-        height = radiusY * <span class="hljs-number">2</span>;
-    }
-
-    <span class="hljs-keyword">let</span> port = <span class="hljs-built_in">parseFloat</span>((width * <span class="hljs-built_in">this</span>.intersectX).toFixed(<span class="hljs-number">2</span>)),
-        starboard = <span class="hljs-built_in">parseFloat</span>((width - port).toFixed(<span class="hljs-number">2</span>)),
-        fore = <span class="hljs-built_in">parseFloat</span>((height * <span class="hljs-built_in">this</span>.intersectY).toFixed(<span class="hljs-number">2</span>)),
-        aft = <span class="hljs-built_in">parseFloat</span>((height - fore).toFixed(<span class="hljs-number">2</span>));
-
-    <span class="hljs-keyword">let</span> myData = <span class="hljs-string">&#x27;m0,0&#x27;</span>;
-
-    myData += <span class="hljs-string">`l<span class="hljs-subst">${starboard}</span>,<span class="hljs-subst">${fore}</span> <span class="hljs-subst">${-starboard}</span>,<span class="hljs-subst">${aft}</span> <span class="hljs-subst">${-port}</span>,<span class="hljs-subst">${-aft}</span> <span class="hljs-subst">${port}</span>,<span class="hljs-subst">${-fore}</span>z`</span>;
-
-    <span class="hljs-keyword">return</span> myData;
-};
-
-P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-built_in">this</span>.localBox;
-
-    <span class="hljs-built_in">this</span>.pathDefinition = <span class="hljs-built_in">this</span>.pathDefinition.replace(<span class="hljs-string">&#x27;m0,0&#x27;</span>, <span class="hljs-string">`m<span class="hljs-subst">${-x}</span>,<span class="hljs-subst">${-y}</span>`</span>);
-
-    <span class="hljs-built_in">this</span>.pathCalculatedOnce = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -916,14 +881,18 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <p>ALWAYS, when invoking <code>calculateLocalPath</code> from <code>calculateLocalPathAdditionalActions</code>, include the second argument, set to <code>true</code>! Failure to do this leads to an infinite loop which will make your machine weep.</p>
-<ul>
-<li>We need to recalculate the local path to take into account the offset required to put the Tetragon entity’s start coordinates at the top-left of the local box, and to recalculate the data used by other artefacts to place themselves on, or move along, its path.</li>
-</ul>
+              <p><code>cleanSpecies</code> - internal helper function - called by <code>prepareStamp</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.calculateLocalPath(<span class="hljs-built_in">this</span>.pathDefinition, <span class="hljs-literal">true</span>);
+            <div class="content"><div class='highlight'><pre>P.cleanSpecies = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-built_in">this</span>.dirtySpecies = <span class="hljs-literal">false</span>;
+
+    <span class="hljs-keyword">let</span> p = <span class="hljs-string">&#x27;M0,0&#x27;</span>;
+    p = <span class="hljs-built_in">this</span>.makeCogPath();
+
+    <span class="hljs-built_in">this</span>.pathDefinition = p;
 };</pre></div></div>
             
         </li>
@@ -935,9 +904,158 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <h4 id="factories">Factories</h4>
+              <p><code>makeCogPath</code> - internal helper function - called by <code>cleanSpecies</code></p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>P.makeCogPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">let</span> {points, twist, outerRadius, innerRadius, outerControlsDistance, innerControlsDistance, outerControlsOffset, innerControlsOffset, useBezierCurve} = <span class="hljs-built_in">this</span>;
+
+    <span class="hljs-keyword">let</span> turn = <span class="hljs-number">360</span> / points,
+        xPts = [],
+        currentTrailX, currentTrailY, currentPointX, currentPointY, currentLeadX, currentLeadY, 
+        controlStartX, controlStartY, deltaX, deltaY, controlEndX, controlEndY,
+        myMin, myXoffset, myYoffset, i,
+        myPath = <span class="hljs-string">&#x27;&#x27;</span>;
+
+    <span class="hljs-keyword">if</span> (outerRadius.substring || innerRadius.substring) {
+
+        <span class="hljs-keyword">let</span> host = <span class="hljs-built_in">this</span>.getHost();
+
+        <span class="hljs-keyword">if</span> (host) {
+
+            <span class="hljs-keyword">let</span> [hW, hH] = host.currentDimensions;
+
+            outerRadius = (outerRadius.substring) ? (<span class="hljs-built_in">parseFloat</span>(outerRadius) / <span class="hljs-number">100</span>) * hW : outerRadius;
+            innerRadius = (innerRadius.substring) ? (<span class="hljs-built_in">parseFloat</span>(innerRadius) / <span class="hljs-number">100</span>) * hW : innerRadius;
+        } 
+    }
+
+    <span class="hljs-keyword">let</span> outerPoint = requestVector({<span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: -outerRadius}),
+        innerPoint = requestVector({<span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: -innerRadius}),
+        outerPointLead = requestVector({<span class="hljs-attr">x</span>: outerControlsDistance + outerControlsOffset, <span class="hljs-attr">y</span>: -outerRadius}),
+        innerPointTrail = requestVector({<span class="hljs-attr">x</span>: -innerControlsDistance + innerControlsOffset, <span class="hljs-attr">y</span>: -innerRadius}),
+        innerPointLead = requestVector({<span class="hljs-attr">x</span>: innerControlsDistance + innerControlsOffset, <span class="hljs-attr">y</span>: -innerRadius}),
+        outerPointTrail = requestVector({<span class="hljs-attr">x</span>: -outerControlsDistance + outerControlsOffset, <span class="hljs-attr">y</span>: -outerRadius});
+
+    innerPointTrail.rotate(-turn/<span class="hljs-number">2</span>);
+    innerPointTrail.rotate(twist);
+    innerPoint.rotate(-turn/<span class="hljs-number">2</span>);
+    innerPoint.rotate(twist);
+    innerPointLead.rotate(-turn/<span class="hljs-number">2</span>);
+    innerPointLead.rotate(twist);
+
+    currentPointX = outerPoint.x;
+    currentPointY = outerPoint.y;
+
+    xPts.push(currentPointX);
+
+    <span class="hljs-keyword">if</span> (useBezierCurve) {
+
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; points; i++) {
+
+            deltaX = <span class="hljs-built_in">parseFloat</span>((outerPointLead.x - currentPointX).toFixed(<span class="hljs-number">1</span>));
+            deltaY = <span class="hljs-built_in">parseFloat</span>((outerPointLead.y - currentPointY).toFixed(<span class="hljs-number">1</span>));
+            myPath += <span class="hljs-string">`<span class="hljs-subst">${deltaX}</span>,<span class="hljs-subst">${deltaY}</span> `</span>;
+
+            innerPointTrail.rotate(turn);
+            innerPoint.rotate(turn);
+            innerPointLead.rotate(turn);
+
+            deltaX = <span class="hljs-built_in">parseFloat</span>((innerPointTrail.x - currentPointX).toFixed(<span class="hljs-number">1</span>));
+            deltaY = <span class="hljs-built_in">parseFloat</span>((innerPointTrail.y - currentPointY).toFixed(<span class="hljs-number">1</span>));
+            myPath += <span class="hljs-string">`<span class="hljs-subst">${deltaX}</span>,<span class="hljs-subst">${deltaY}</span> `</span>;
+
+            deltaX = <span class="hljs-built_in">parseFloat</span>((innerPoint.x - currentPointX).toFixed(<span class="hljs-number">1</span>));
+            currentPointX += deltaX;
+            xPts.push(currentPointX);
+            deltaY = <span class="hljs-built_in">parseFloat</span>((innerPoint.y - currentPointY).toFixed(<span class="hljs-number">1</span>));
+            currentPointY += deltaY;
+            myPath += <span class="hljs-string">`<span class="hljs-subst">${deltaX}</span>,<span class="hljs-subst">${deltaY}</span> `</span>;
+
+            deltaX = <span class="hljs-built_in">parseFloat</span>((innerPointLead.x - currentPointX).toFixed(<span class="hljs-number">1</span>));
+            deltaY = <span class="hljs-built_in">parseFloat</span>((innerPointLead.y - currentPointY).toFixed(<span class="hljs-number">1</span>));
+            myPath += <span class="hljs-string">`<span class="hljs-subst">${deltaX}</span>,<span class="hljs-subst">${deltaY}</span> `</span>;
+
+            outerPointTrail.rotate(turn);
+            outerPoint.rotate(turn);
+            outerPointLead.rotate(turn);
+
+            deltaX = <span class="hljs-built_in">parseFloat</span>((outerPointTrail.x - currentPointX).toFixed(<span class="hljs-number">1</span>));
+            deltaY = <span class="hljs-built_in">parseFloat</span>((outerPointTrail.y - currentPointY).toFixed(<span class="hljs-number">1</span>));
+            myPath += <span class="hljs-string">`<span class="hljs-subst">${deltaX}</span>,<span class="hljs-subst">${deltaY}</span> `</span>;
+
+            deltaX = <span class="hljs-built_in">parseFloat</span>((outerPoint.x - currentPointX).toFixed(<span class="hljs-number">1</span>));
+            currentPointX += deltaX;
+            xPts.push(currentPointX);
+            deltaY = <span class="hljs-built_in">parseFloat</span>((outerPoint.y - currentPointY).toFixed(<span class="hljs-number">1</span>));
+            currentPointY += deltaY;
+            myPath += <span class="hljs-string">`<span class="hljs-subst">${deltaX}</span>,<span class="hljs-subst">${deltaY}</span> `</span>;
+        }
+    }
+    <span class="hljs-keyword">else</span> {
+
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; points; i++) {
+
+            deltaX = <span class="hljs-built_in">parseFloat</span>((outerPointLead.x - currentPointX).toFixed(<span class="hljs-number">1</span>));
+            currentPointX += deltaX;
+            xPts.push(currentPointX);
+            deltaY = <span class="hljs-built_in">parseFloat</span>((outerPointLead.y - currentPointY).toFixed(<span class="hljs-number">1</span>));
+            currentPointY += deltaY;
+            myPath += <span class="hljs-string">`<span class="hljs-subst">${deltaX}</span>,<span class="hljs-subst">${deltaY}</span> `</span>;
+
+            innerPointTrail.rotate(turn);
+            innerPoint.rotate(turn);
+            innerPointLead.rotate(turn);
+
+            deltaX = <span class="hljs-built_in">parseFloat</span>((innerPointTrail.x - currentPointX).toFixed(<span class="hljs-number">1</span>));
+            currentPointX += deltaX;
+            xPts.push(currentPointX);
+            deltaY = <span class="hljs-built_in">parseFloat</span>((innerPointTrail.y - currentPointY).toFixed(<span class="hljs-number">1</span>));
+            currentPointY += deltaY;
+            myPath += <span class="hljs-string">`<span class="hljs-subst">${deltaX}</span>,<span class="hljs-subst">${deltaY}</span> `</span>;
+
+            deltaX = <span class="hljs-built_in">parseFloat</span>((innerPoint.x - currentPointX).toFixed(<span class="hljs-number">1</span>));
+            currentPointX += deltaX;
+            xPts.push(currentPointX);
+            deltaY = <span class="hljs-built_in">parseFloat</span>((innerPoint.y - currentPointY).toFixed(<span class="hljs-number">1</span>));
+            currentPointY += deltaY;
+            myPath += <span class="hljs-string">`<span class="hljs-subst">${deltaX}</span>,<span class="hljs-subst">${deltaY}</span> `</span>;
+
+            deltaX = <span class="hljs-built_in">parseFloat</span>((innerPointLead.x - currentPointX).toFixed(<span class="hljs-number">1</span>));
+            currentPointX += deltaX;
+            xPts.push(currentPointX);
+            deltaY = <span class="hljs-built_in">parseFloat</span>((innerPointLead.y - currentPointY).toFixed(<span class="hljs-number">1</span>));
+            currentPointY += deltaY;
+            myPath += <span class="hljs-string">`<span class="hljs-subst">${deltaX}</span>,<span class="hljs-subst">${deltaY}</span> `</span>;
+
+            outerPointTrail.rotate(turn);
+            outerPoint.rotate(turn);
+            outerPointLead.rotate(turn);
+
+            deltaX = <span class="hljs-built_in">parseFloat</span>((outerPointTrail.x - currentPointX).toFixed(<span class="hljs-number">1</span>));
+            currentPointX += deltaX;
+            xPts.push(currentPointX);
+            deltaY = <span class="hljs-built_in">parseFloat</span>((outerPointTrail.y - currentPointY).toFixed(<span class="hljs-number">1</span>));
+            currentPointY += deltaY;
+            myPath += <span class="hljs-string">`<span class="hljs-subst">${deltaX}</span>,<span class="hljs-subst">${deltaY}</span> `</span>;
+
+            deltaX = <span class="hljs-built_in">parseFloat</span>((outerPoint.x - currentPointX).toFixed(<span class="hljs-number">1</span>));
+            currentPointX += deltaX;
+            xPts.push(currentPointX);
+            deltaY = <span class="hljs-built_in">parseFloat</span>((outerPoint.y - currentPointY).toFixed(<span class="hljs-number">1</span>));
+            currentPointY += deltaY;
+            myPath += <span class="hljs-string">`<span class="hljs-subst">${deltaX}</span>,<span class="hljs-subst">${deltaY}</span> `</span>;
+        }
+    }
+    releaseVector(outerPoint, outerPointLead, outerPointTrail, innerPoint, innerPointLead, innerPointTrail);
+
+    myMin = <span class="hljs-built_in">Math</span>.min(...xPts);
+    myXoffset = <span class="hljs-built_in">Math</span>.abs(myMin).toFixed(<span class="hljs-number">1</span>);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-string">`m<span class="hljs-subst">${myXoffset}</span>,0<span class="hljs-subst">${useBezierCurve ? <span class="hljs-string">&#x27;c&#x27;</span> : <span class="hljs-string">&#x27;l&#x27;</span>}</span><span class="hljs-subst">${myPath}</span>z`</span>;
+};</pre></div></div>
             
         </li>
         
@@ -948,38 +1066,9 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <h5 id="maketetragon">makeTetragon</h5>
-<p>Scrawl-canvas uses lines internally to create the Shape path. </p>
-<ul>
-<li>The main shape of the tetragon is determined by differing radius lengths in the <code>x</code> and <code>y</code> directions, as set by the attributes <strong>radiusX</strong> and <strong>radiusY</strong>; to set both radiuses to the same value, use <strong><em>radius</em></strong> instead.</li>
-<li>The radius values can be: <em>absolute</em> (using Number values); or <em>relative</em> using %-String values - with the y radius representing a portion of the Cell container’s height and the x radius the Cell’s width.</li>
-<li>The radiuses (as diameter lines) cross in the middle of the tetragon shape. We can move the position of where the intersection happens by setting a float Number value between <code>0.0 - 1.0</code> (or beyond those limits) for the <strong>intersectX</strong> and <strong>intersectY</strong> attributes. </li>
-<li><code>intersectX</code> (default: <code>0.5</code>) represents the point at which the <code>y</code> diameter crosses the <code>x</code> diameter, with <code>0</code> being the left end and <code>1</code> being the right end.</li>
-<li><code>intersectY</code> (default: <code>0.5</code>) represents the point at which the <code>x</code> diameter crosses the <code>y</code> diameter, with <code>0</code> being the top end and <code>1</code> being the bottom end.</li>
-</ul>
-<pre><code>scrawl.makeTetragon({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;diamond&#x27;</span>,
-
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;lightGreen&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillAndDraw&#x27;</span>,
-
-    <span class="hljs-attr">startX</span>: <span class="hljs-number">20</span>,
-    <span class="hljs-attr">startY</span>: <span class="hljs-number">750</span>,
-
-    <span class="hljs-attr">radiusX</span>: <span class="hljs-number">40</span>,
-    <span class="hljs-attr">radiusY</span>: <span class="hljs-number">60</span>,
-});</code></pre>
+              <h4 id="factories">Factories</h4>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeTetragon = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
-
-    items.species = <span class="hljs-string">&#x27;tetragon&#x27;</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Tetragon(items);
-};
-
-<span class="hljs-title">constructors</span>.<span class="hljs-title">Tetragon</span> = <span class="hljs-title">Tetragon</span>;</pre></div></div>
             
         </li>
         
@@ -990,12 +1079,56 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
+              <h5 id="makestar">makeStar</h5>
+<p>Accepts argument with attributes:</p>
+<ul>
+<li><strong>outerRadius</strong> (required) - the <em>outer</em> radius representing the distance between the center of the Shape and the tips of its (acute angle) points.</li>
+<li><strong>innerRadius</strong> (required) - the <em>inner</em> radius representing the distance between the center of the Shape and the obtuse angle at the valley between the tips of its (acute angle) points.</li>
+<li>… where these radius values are supplied as %Strings, they are calculated as relative to the canvas/cell <strong><em>width</em></strong> value.</li>
+<li><strong>points</strong> (required) - a positive integer Number representing the number of points the star will have.</li>
+<li><strong>twist</strong> - a float Number representing the degrees by which the star’s second radius will be rotated out of line from its first radius; the default value <code>0</code> will produce a star with all of its sides of equal length and the star’s valleys falling midway between its connecting points.</li>
+<li>Note that the use of <em>inner</em> and <em>outer</em> above is purely descriptive: <code>innerRadius</code> can be larger than <code>outerRadius</code></li>
+</ul>
+<pre><code>scrawl.makeCog({
+
+  <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;smooth-cog&#x27;</span>,
+  <span class="hljs-attr">startX</span>: <span class="hljs-number">20</span>,
+  <span class="hljs-attr">startY</span>: <span class="hljs-number">1980</span>,
+  <span class="hljs-attr">outerRadius</span>: <span class="hljs-number">80</span>,
+  <span class="hljs-attr">innerRadius</span>: <span class="hljs-number">60</span>,
+  <span class="hljs-attr">outerControlsDistance</span>: <span class="hljs-number">10</span>,
+  <span class="hljs-attr">innerControlsDistance</span>: <span class="hljs-number">6</span>,
+  <span class="hljs-attr">points</span>: <span class="hljs-number">12</span>,
+  <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;coral&#x27;</span>,
+  <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
+  <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillAndDraw&#x27;</span>,
+});</code></pre>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeCog = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+
+    items.species = <span class="hljs-string">&#x27;cog&#x27;</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Cog(items);
+};
+
+<span class="hljs-title">constructors</span>.<span class="hljs-title">Cog</span> = <span class="hljs-title">Cog</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
               <h4 id="exports">Exports</h4>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
-    makeTetragon,
+    makeCog,
 };</pre></div></div>
             
         </li>

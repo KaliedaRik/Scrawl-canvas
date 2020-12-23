@@ -97,6 +97,11 @@ import {
 
 
 import { 
+    makeCog,
+} from './factory/cog.js';
+
+
+import { 
     makeColor,
 } from './factory/color.js';
 
@@ -356,6 +361,10 @@ export default {
 
     // factory/block.js
     makeBlock,
+
+
+    // factory/cog.js
+    makeCog,
 
 
     // factory/color.js

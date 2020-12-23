@@ -505,7 +505,7 @@
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
               <h1 id="demo-canvas-013">Demo Canvas 013</h1>
-<p>Path-defined entitys: Oval, Rectangle, Line, Quadratic, Bezier, Tetragon, Polygon, Star, Spiral</p>
+<p>Path-defined entitys: Oval, Rectangle, Line, Quadratic, Bezier, Tetragon, Polygon, Star, Spiral, Cog</p>
 
             </div>
             
@@ -957,6 +957,76 @@ canvas.set({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
+              <h5 id="makecog-factory-function">makeCog factory function</h5>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.makeCog({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;tooth-cog&#x27;</span>,
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-number">1790</span>,
+    <span class="hljs-attr">outerRadius</span>: <span class="hljs-number">80</span>,
+    <span class="hljs-attr">innerRadius</span>: <span class="hljs-number">65</span>,
+    <span class="hljs-attr">outerControlsDistance</span>: <span class="hljs-number">4</span>,
+    <span class="hljs-attr">innerControlsDistance</span>: <span class="hljs-number">2</span>,
+    <span class="hljs-attr">points</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;orchid&#x27;</span>,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillAndDraw&#x27;</span>,
+    <span class="hljs-attr">useBezierCurve</span>: <span class="hljs-literal">false</span>,
+
+    <span class="hljs-attr">showBoundingBox</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
+
+}).clone({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;blade-tooth-cog&#x27;</span>,
+    <span class="hljs-attr">outerControlsOffset</span>: <span class="hljs-number">5</span>,
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">220</span>,
+
+}).clone({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;twist-tooth-cog&#x27;</span>,
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">420</span>,
+    <span class="hljs-attr">outerControlsOffset</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">twist</span>: <span class="hljs-number">15</span>,
+});
+
+scrawl.makeCog({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;smooth-cog&#x27;</span>,
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-number">1980</span>,
+    <span class="hljs-attr">outerRadius</span>: <span class="hljs-number">80</span>,
+    <span class="hljs-attr">innerRadius</span>: <span class="hljs-number">60</span>,
+    <span class="hljs-attr">outerControlsDistance</span>: <span class="hljs-number">10</span>,
+    <span class="hljs-attr">innerControlsDistance</span>: <span class="hljs-number">6</span>,
+    <span class="hljs-attr">points</span>: <span class="hljs-number">12</span>,
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;coral&#x27;</span>,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillAndDraw&#x27;</span>,
+
+    <span class="hljs-attr">showBoundingBox</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
+
+}).clone({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;blade-smooth-cog&#x27;</span>,
+    <span class="hljs-attr">outerControlsOffset</span>: <span class="hljs-number">15</span>,
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">220</span>,
+
+}).clone({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;twist-smooth-cog&#x27;</span>,
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">420</span>,
+    <span class="hljs-attr">outerControlsOffset</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">twist</span>: <span class="hljs-number">15</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
               <h4 id="development-and-testing">Development and testing</h4>
 <p>Create entitys to use the above Shape entitys as paths along which they can be animated</p>
 
@@ -1149,16 +1219,46 @@ canvas.set({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_spiral4&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;spiral4&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.75</span>,
+
+}).clone({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_blade-tooth-cog&#x27;</span>,
+    <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;blade-tooth-cog&#x27;</span>,
+    <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.2</span>,
+
+}).clone({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_twist-tooth-cog&#x27;</span>,
+    <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;twist-tooth-cog&#x27;</span>,
+    <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.4</span>,
+
+}).clone({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_tooth-cog&#x27;</span>,
+    <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;tooth-cog&#x27;</span>,
+    <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0</span>,
+
+}).clone({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_smooth-cog&#x27;</span>,
+    <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;smooth-cog&#x27;</span>,
+    <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.6</span>,
+
+}).clone({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_blade-smooth-cog&#x27;</span>,
+    <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;blade-smooth-cog&#x27;</span>,
+    <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.8</span>,
+
+}).clone({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_twist-smooth-cog&#x27;</span>,
+    <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;twist-smooth-cog&#x27;</span>,
+    <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">1</span>,
 });</pre></div></div>
             
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1184,11 +1284,11 @@ canvas.set({
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <p>Create the Display cycle animation</p>
 

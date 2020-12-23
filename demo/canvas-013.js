@@ -1,5 +1,5 @@
 // # Demo Canvas 013 
-// Path-defined entitys: Oval, Rectangle, Line, Quadratic, Bezier, Tetragon, Polygon, Star, Spiral
+// Path-defined entitys: Oval, Rectangle, Line, Quadratic, Bezier, Tetragon, Polygon, Star, Spiral, Cog
 
 // [Run code](../../demo/canvas-013.html)
 import scrawl from '../source/scrawl.js'
@@ -310,6 +310,64 @@ scrawl.makeSpiral({
     drawFromLoop: 3,
 });
 
+// ##### makeCog factory function 
+scrawl.makeCog({
+    name: 'tooth-cog',
+    startX: 20,
+    startY: 1790,
+    outerRadius: 80,
+    innerRadius: 65,
+    outerControlsDistance: 4,
+    innerControlsDistance: 2,
+    points: 20,
+    fillStyle: 'orchid',
+    lineWidth: 2,
+    method: 'fillAndDraw',
+    useBezierCurve: false,
+
+    showBoundingBox: true,
+    useAsPath: true,
+
+}).clone({
+    name: 'blade-tooth-cog',
+    outerControlsOffset: 5,
+    startX: 220,
+
+}).clone({
+    name: 'twist-tooth-cog',
+    startX: 420,
+    outerControlsOffset: 0,
+    twist: 15,
+});
+
+scrawl.makeCog({
+    name: 'smooth-cog',
+    startX: 20,
+    startY: 1980,
+    outerRadius: 80,
+    innerRadius: 60,
+    outerControlsDistance: 10,
+    innerControlsDistance: 6,
+    points: 12,
+    fillStyle: 'coral',
+    lineWidth: 2,
+    method: 'fillAndDraw',
+
+    showBoundingBox: true,
+    useAsPath: true,
+
+}).clone({
+    name: 'blade-smooth-cog',
+    outerControlsOffset: 15,
+    startX: 220,
+
+}).clone({
+    name: 'twist-smooth-cog',
+    startX: 420,
+    outerControlsOffset: 0,
+    twist: 15,
+});
+
 
 // #### Development and testing
 // Create entitys to use the above Shape entitys as paths along which they can be animated
@@ -500,6 +558,36 @@ scrawl.makePicture({
     name: '_spiral4',
     path: 'spiral4',
     pathPosition: 0.75,
+
+}).clone({
+    name: '_blade-tooth-cog',
+    path: 'blade-tooth-cog',
+    pathPosition: 0.2,
+
+}).clone({
+    name: '_twist-tooth-cog',
+    path: 'twist-tooth-cog',
+    pathPosition: 0.4,
+
+}).clone({
+    name: '_tooth-cog',
+    path: 'tooth-cog',
+    pathPosition: 0,
+
+}).clone({
+    name: '_smooth-cog',
+    path: 'smooth-cog',
+    pathPosition: 0.6,
+
+}).clone({
+    name: '_blade-smooth-cog',
+    path: 'blade-smooth-cog',
+    pathPosition: 0.8,
+
+}).clone({
+    name: '_twist-smooth-cog',
+    path: 'twist-smooth-cog',
+    pathPosition: 1,
 });
 
 
