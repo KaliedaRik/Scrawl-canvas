@@ -652,16 +652,19 @@ export default function (P = {}) {
             this.lockTo[1] = item;
         }
         this.dirtyLock = true;
+        this.dirtyStampPositions = true;
     };
     S.lockXTo = function (item) {
 
         this.lockTo[0] = item;
         this.dirtyLock = true;
+        this.dirtyStampPositions = true;
     };
     S.lockYTo = function (item) {
 
         this.lockTo[1] = item;
         this.dirtyLock = true;
+        this.dirtyStampPositions = true;
     };
 
 // __roll__

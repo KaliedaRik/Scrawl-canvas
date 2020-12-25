@@ -792,6 +792,12 @@ export default function (P = {}) {
         engine.stroke(p);
     };
 
+// `clip` - restrict drawing activities to the entity's enclosed area
+    P.clip = function (engine) {
+
+        engine.clip(this.pathObject, this.winding);
+     };
+
 // `clear` - remove everything that would have been covered if the entity had performed fill (including shadow)
     P.clear = function (engine) {
 

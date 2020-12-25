@@ -141,6 +141,36 @@ scrawl.makeStar({
     radius2: 80,
 });
 
+scrawl.makeCog({
+
+    name: 'static-cog',
+
+    start: ['center', 'center'],
+    handle: ['center', 'center'],
+
+    outerRadius: 180,
+    innerRadius: 160,
+    outerControlsDistance: 10,
+    innerControlsDistance: 6,
+
+    points: 36,
+    strokeStyle: 'coral',
+    lineWidth: 8,
+    method: 'draw',
+
+}).clone({
+
+    name: 'responsive-cog',
+
+    outerRadius: `${(180/400) * 100}%`,
+    innerRadius: `${(160/400) * 100}%`,
+    outerControlsDistance: `${(10/400) * 100}%`,
+    innerControlsDistance: `${(6/400) * 100}%`,
+
+    strokeStyle: 'orchid',
+    lineWidth: 4,
+});
+
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {

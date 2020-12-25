@@ -128,6 +128,10 @@ scrawl.makePhrase({
 
     name: 'test-phrase-7',
 
+    // Test to see if we can load a webfont from a remote server and see it show up in the canvas element
+    // + If the test fails then the phrase will display as 46pt sans-serif
+    font: '46px "Mountains of Christmas"',
+
     startX: '0%',
     startY: '10%',
 

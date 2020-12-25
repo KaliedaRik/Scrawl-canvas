@@ -1316,6 +1316,14 @@ P.regularStampSynchronousActions = function () {
 
         if (this.method === 'none') this.performRotation(engine);
 
+        // Scrawl-canvas clips canvases to the Phrase's hit area
+        // + To 'clip' to the text, use stamp order and globalCompositeOperation instead
+        else if (this.method === 'clip') {
+
+            this.performRotation(engine);
+            engine.clip(this.pathObject, this.winding);
+        }
+
         else if (this.textPath) {
 
             if (!this.noCanvasEngineUpdates) dest.setEngine(this);

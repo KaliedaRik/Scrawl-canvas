@@ -271,7 +271,11 @@ P.stamp = function () {
                         filterCell.element.width = dims[0];
                         filterCell.element.height = dims[1];
                     }
+                    filterCell.engine.save();
                 }
+                // We save/restore the canvas engine at this point because some entitys may have their `method` attribute set to `clip` and the only way to get rid of a clip region from an engine is to save the engine before applying the clip, then restoring the engine afterwards
+                // + This has implications for tracking engine attributes
+                else currentHost.engine.save();
 
                 // Prepare the Group's artefacts for the forthcoming stamp activity
                 self.prepareStamp(filterCell);
@@ -280,12 +284,30 @@ P.stamp = function () {
                 self.stampAction(filterCell)
                 .then(res => {
 
-                    if (filterCell) releaseCell(filterCell);
+                    if (filterCell) {
+
+                        filterCell.engine.restore();
+                        releaseCell(filterCell);
+                    }
+                    else {
+
+                        currentHost.engine.restore();
+                        currentHost.setEngineFromState(currentHost.engine);
+                    }
                     resolve(self.name);
                 })
                 .catch(err => {
 
-                    if (filterCell) releaseCell(filterCell);
+                    if (filterCell) {
+
+                        filterCell.engine.restore();
+                        releaseCell(filterCell);
+                    }
+                    else {
+
+                        currentHost.engine.restore();
+                        currentHost.setEngineFromState(currentHost.engine);
+                    }
                     reject(err)
                 });
             }

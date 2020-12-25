@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Demo Canvas 042</title>
+
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    .controls {
+      grid-template-columns: 1fr 2fr;
+    }
+    img {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 042</h1>
+  <h2>Canvas entity clip regions</h2>
+
+  <div class="controls">
+
+    <div class="blue label">Clip entity</div>
+    <div class="blue"><select class="controlItem" id="clip-entity">
+        <option value="block-clipper">Block</option>
+        <option value="phrase-clipper">Phrase</option>
+        <option value="wheel-clipper">Wheel</option>
+        <option disabled>──────────</option>
+        <option value="cog-clipper">Cog</option>
+        <option value="oval-clipper">Oval</option>
+        <option value="polygon-clipper">Polygon</option>
+        <option value="polyline-clipper">Polyline</option>
+        <option value="rectangle-clipper">Rectangle</option>
+        <option value="shape-clipper">Shape</option>
+        <option value="spiral-clipper">Spiral</option>
+        <option value="star-clipper">Star</option>
+        <option value="tetragon-clipper">Tetragon</option>
+      </select>
+    </div>
+  </div>
+
+  <canvas id="mycanvas" width="600" height="400"></canvas>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Create a series of Scrawl-canvas entity objects that use 'clip' as their stamping method</li>
+      <li>Load and use an image to be used as a Picture entity</li>
+      <li>Check that the clipped entitys successfully limit the Picture entity to filling in the currently selected entity's shape.</li>
+      <li>Make sure that the clip region is removed at the end of each display cycle (by using a delta roll animation on the clipping entity)</li>
+    </ul>
+    <p>Note: it is often better to use entity stamp order, together with compositing - globalCompositeOperation - to achieve a clipping effect. For more complex scenes, these can be performed in their own cell, with the results added to the canvas during the Display cycle's show phase.</p>
+    <p><a href="../docs/demo/canvas-042.html">Annotated code</a></p>
+  </div>
+
+  <img id="factory" src="img/canalFactory-800.png" class="canal" />
+
+  <script src="canvas-042.js" type="module"></script>
+
+</body>
+
+</html>

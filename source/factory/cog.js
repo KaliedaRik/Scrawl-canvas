@@ -28,7 +28,7 @@
 // #### Demos:
 // + [Canvas-011](../../demo/canvas-011.html) - Shape entity (make, clone, method); drag and drop shape entitys
 // + [Canvas-012](../../demo/canvas-012.html) - Shape entity position; shape entity as a path for other artefacts to follow
-// + [Canvas-013](../../demo/canvas-013.html) - Path-defined entitys: oval, rectangle, line, quadratic, bezier, tetragon, polygon, star, spiral
+// + [Canvas-013](../../demo/canvas-013.html) - Path-defined entitys: oval, rectangle, line, quadratic, bezier, tetragon, polygon, star, spiral, cog
 // + [Canvas-014](../../demo/canvas-014.html) - Line, quadratic and bezier entitys - control lock alternatives
 // + [Canvas-018](../../demo/canvas-018.html) - Phrase entity - text along a path
 // + [Canvas-024](../../demo/canvas-024.html) - Loom entity functionality
@@ -244,7 +244,7 @@ P.makeCogPath = function () {
         myMin, myXoffset, myYoffset, i,
         myPath = '';
 
-    if (outerRadius.substring || innerRadius.substring) {
+    if (outerRadius.substring || innerRadius.substring || outerControlsDistance.substring || innerControlsDistance.substring || outerControlsOffset.substring || innerControlsOffset.substring) {
 
         let host = this.getHost();
 
@@ -254,6 +254,10 @@ P.makeCogPath = function () {
 
             outerRadius = (outerRadius.substring) ? (parseFloat(outerRadius) / 100) * hW : outerRadius;
             innerRadius = (innerRadius.substring) ? (parseFloat(innerRadius) / 100) * hW : innerRadius;
+            outerControlsDistance = (outerControlsDistance.substring) ? (parseFloat(outerControlsDistance) / 100) * hW : outerControlsDistance;
+            innerControlsDistance = (innerControlsDistance.substring) ? (parseFloat(innerControlsDistance) / 100) * hW : innerControlsDistance;
+            outerControlsOffset = (outerControlsOffset.substring) ? (parseFloat(outerControlsOffset) / 100) * hW : outerControlsOffset;
+            innerControlsOffset = (innerControlsOffset.substring) ? (parseFloat(innerControlsOffset) / 100) * hW : innerControlsOffset;
         } 
     }
 
