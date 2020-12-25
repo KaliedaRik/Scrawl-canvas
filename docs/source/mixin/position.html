@@ -1557,16 +1557,19 @@ myBlock.setDelta({
             <span class="hljs-built_in">this</span>.lockTo[<span class="hljs-number">1</span>] = item;
         }
         <span class="hljs-built_in">this</span>.dirtyLock = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
     };
     S.lockXTo = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
         <span class="hljs-built_in">this</span>.lockTo[<span class="hljs-number">0</span>] = item;
         <span class="hljs-built_in">this</span>.dirtyLock = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
     };
     S.lockYTo = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
         <span class="hljs-built_in">this</span>.lockTo[<span class="hljs-number">1</span>] = item;
         <span class="hljs-built_in">this</span>.dirtyLock = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>

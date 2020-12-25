@@ -502,7 +502,7 @@
 <ul>
 <li><a href="../../demo/canvas-011.html">Canvas-011</a> - Shape entity (make, clone, method); drag and drop shape entitys</li>
 <li><a href="../../demo/canvas-012.html">Canvas-012</a> - Shape entity position; shape entity as a path for other artefacts to follow</li>
-<li><a href="../../demo/canvas-013.html">Canvas-013</a> - Path-defined entitys: oval, rectangle, line, quadratic, bezier, tetragon, polygon, star, spiral</li>
+<li><a href="../../demo/canvas-013.html">Canvas-013</a> - Path-defined entitys: oval, rectangle, line, quadratic, bezier, tetragon, polygon, star, spiral, cog</li>
 <li><a href="../../demo/canvas-014.html">Canvas-014</a> - Line, quadratic and bezier entitys - control lock alternatives</li>
 <li><a href="../../demo/canvas-018.html">Canvas-018</a> - Phrase entity - text along a path</li>
 <li><a href="../../demo/canvas-024.html">Canvas-024</a> - Loom entity functionality</li>
@@ -927,7 +927,7 @@ D.twist = <span class="hljs-function"><span class="hljs-keyword">function</span>
         myMin, myXoffset, myYoffset, i,
         myPath = <span class="hljs-string">&#x27;&#x27;</span>;
 
-    <span class="hljs-keyword">if</span> (outerRadius.substring || innerRadius.substring) {
+    <span class="hljs-keyword">if</span> (outerRadius.substring || innerRadius.substring || outerControlsDistance.substring || innerControlsDistance.substring || outerControlsOffset.substring || innerControlsOffset.substring) {
 
         <span class="hljs-keyword">let</span> host = <span class="hljs-built_in">this</span>.getHost();
 
@@ -937,6 +937,10 @@ D.twist = <span class="hljs-function"><span class="hljs-keyword">function</span>
 
             outerRadius = (outerRadius.substring) ? (<span class="hljs-built_in">parseFloat</span>(outerRadius) / <span class="hljs-number">100</span>) * hW : outerRadius;
             innerRadius = (innerRadius.substring) ? (<span class="hljs-built_in">parseFloat</span>(innerRadius) / <span class="hljs-number">100</span>) * hW : innerRadius;
+            outerControlsDistance = (outerControlsDistance.substring) ? (<span class="hljs-built_in">parseFloat</span>(outerControlsDistance) / <span class="hljs-number">100</span>) * hW : outerControlsDistance;
+            innerControlsDistance = (innerControlsDistance.substring) ? (<span class="hljs-built_in">parseFloat</span>(innerControlsDistance) / <span class="hljs-number">100</span>) * hW : innerControlsDistance;
+            outerControlsOffset = (outerControlsOffset.substring) ? (<span class="hljs-built_in">parseFloat</span>(outerControlsOffset) / <span class="hljs-number">100</span>) * hW : outerControlsOffset;
+            innerControlsOffset = (innerControlsOffset.substring) ? (<span class="hljs-built_in">parseFloat</span>(innerControlsOffset) / <span class="hljs-number">100</span>) * hW : innerControlsOffset;
         } 
     }
 

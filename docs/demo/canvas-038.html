@@ -225,6 +225,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-042.html">
+                  ./demo/canvas-042.js
+                </a>
+              
+                
                 <a class="source" href="component-001.html">
                   ./demo/component-001.js
                 </a>
@@ -683,6 +688,36 @@ scrawl.makeStar({
 
     <span class="hljs-attr">radius1</span>: <span class="hljs-number">120</span>,
     <span class="hljs-attr">radius2</span>: <span class="hljs-number">80</span>,
+});
+
+scrawl.makeCog({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;static-cog&#x27;</span>,
+
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+
+    <span class="hljs-attr">outerRadius</span>: <span class="hljs-number">180</span>,
+    <span class="hljs-attr">innerRadius</span>: <span class="hljs-number">160</span>,
+    <span class="hljs-attr">outerControlsDistance</span>: <span class="hljs-number">10</span>,
+    <span class="hljs-attr">innerControlsDistance</span>: <span class="hljs-number">6</span>,
+
+    <span class="hljs-attr">points</span>: <span class="hljs-number">36</span>,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;coral&#x27;</span>,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">8</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
+
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;responsive-cog&#x27;</span>,
+
+    <span class="hljs-attr">outerRadius</span>: <span class="hljs-string">`<span class="hljs-subst">${(<span class="hljs-number">180</span>/<span class="hljs-number">400</span>) * <span class="hljs-number">100</span>}</span>%`</span>,
+    <span class="hljs-attr">innerRadius</span>: <span class="hljs-string">`<span class="hljs-subst">${(<span class="hljs-number">160</span>/<span class="hljs-number">400</span>) * <span class="hljs-number">100</span>}</span>%`</span>,
+    <span class="hljs-attr">outerControlsDistance</span>: <span class="hljs-string">`<span class="hljs-subst">${(<span class="hljs-number">10</span>/<span class="hljs-number">400</span>) * <span class="hljs-number">100</span>}</span>%`</span>,
+    <span class="hljs-attr">innerControlsDistance</span>: <span class="hljs-string">`<span class="hljs-subst">${(<span class="hljs-number">6</span>/<span class="hljs-number">400</span>) * <span class="hljs-number">100</span>}</span>%`</span>,
+
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;orchid&#x27;</span>,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">4</span>,
 });</pre></div></div>
             
         </li>
