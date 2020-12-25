@@ -1,6 +1,6 @@
 {
   "name": "scrawl-canvas",
-  "version": "8.3.2",
+  "version": "8.3.3",
   "description": "Version 8.3.3 - 25 Dec 2020",
   "main": "min/scrawl.js",
   "scripts": {
