@@ -1,5 +1,5 @@
 # Scrawl-canvas Library 
-Version: `8.3.2 - 24 Dec 2020` 
+Version: `8.3.2 - 25 Dec 2020` 
 
 Scrawl-canvas website: [scrawl-v8.rikweb.org.uk](https://scrawl-v8.rikweb.org.uk).
 
