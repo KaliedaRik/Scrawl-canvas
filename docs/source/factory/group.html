@@ -1090,7 +1090,7 @@ else if (item) return artefact[item] || cell[item] || null;</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">else</span> currentHost.engine.save();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (currentHost.engine) currentHost.engine.save();</pre></div></div>
             
         </li>
         
@@ -1130,8 +1130,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
                     }
                     <span class="hljs-keyword">else</span> {
 
-                        currentHost.engine.restore();
-                        currentHost.setEngineFromState(currentHost.engine);
+                        <span class="hljs-keyword">if</span> (currentHost.engine) {
+
+                            currentHost.engine.restore();
+                            currentHost.setEngineFromState(currentHost.engine);
+                        }
                     }
                     resolve(self.name);
                 })
@@ -1144,8 +1147,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
                     }
                     <span class="hljs-keyword">else</span> {
 
-                        currentHost.engine.restore();
-                        currentHost.setEngineFromState(currentHost.engine);
+                        <span class="hljs-keyword">if</span> (currentHost.engine) {
+
+                            currentHost.engine.restore();
+                            currentHost.setEngineFromState(currentHost.engine);
+                        }
                     }
                     reject(err)
                 });

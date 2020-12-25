@@ -275,7 +275,7 @@ P.stamp = function () {
                 }
                 // We save/restore the canvas engine at this point because some entitys may have their `method` attribute set to `clip` and the only way to get rid of a clip region from an engine is to save the engine before applying the clip, then restoring the engine afterwards
                 // + This has implications for tracking engine attributes
-                else currentHost.engine.save();
+                else if (currentHost.engine) currentHost.engine.save();
 
                 // Prepare the Group's artefacts for the forthcoming stamp activity
                 self.prepareStamp(filterCell);
@@ -291,8 +291,11 @@ P.stamp = function () {
                     }
                     else {
 
-                        currentHost.engine.restore();
-                        currentHost.setEngineFromState(currentHost.engine);
+                        if (currentHost.engine) {
+
+                            currentHost.engine.restore();
+                            currentHost.setEngineFromState(currentHost.engine);
+                        }
                     }
                     resolve(self.name);
                 })
@@ -305,8 +308,11 @@ P.stamp = function () {
                     }
                     else {
 
-                        currentHost.engine.restore();
-                        currentHost.setEngineFromState(currentHost.engine);
+                        if (currentHost.engine) {
+
+                            currentHost.engine.restore();
+                            currentHost.setEngineFromState(currentHost.engine);
+                        }
                     }
                     reject(err)
                 });
