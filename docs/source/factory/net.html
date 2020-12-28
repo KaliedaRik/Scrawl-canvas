@@ -1300,6 +1300,14 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
 
     <span class="hljs-keyword">let</span> {world, <span class="hljs-attr">artefact</span>:art, particleStore, springs, generate, postGenerate, stampAction, lastUpdated, resetAfterBlur, showSprings, showSpringsColor, showHitRadius, hitRadius, hitRadiusColor} = <span class="hljs-built_in">this</span>;
 
+    <span class="hljs-keyword">let</span> globalAlpha = <span class="hljs-number">1</span>,
+        globalCompositeOperation = <span class="hljs-string">&#x27;source-over&#x27;</span>;
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.state) {
+        globalAlpha = <span class="hljs-built_in">this</span>.state.globalAlpha;
+        globalCompositeOperation = <span class="hljs-built_in">this</span>.state.globalCompositeOperation;
+    }
+
     <span class="hljs-keyword">let</span> host = <span class="hljs-built_in">this</span>.currentHost;</pre></div></div>
             
         </li>
@@ -1398,6 +1406,8 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
         <span class="hljs-keyword">let</span> engine = host.engine;
 
         engine.save();
+        engine.globalAlpha = globalAlpha;
+        engine.globalCompositeOperation = globalCompositeOperation;
         engine.strokeStyle = showSpringsColor;
         engine.shadowOffsetX = <span class="hljs-number">0</span>,
         engine.shadowOffsetY = <span class="hljs-number">0</span>,
@@ -1459,6 +1469,8 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
         <span class="hljs-keyword">let</span> engine = host.engine;
 
         engine.save();
+        engine.globalAlpha = globalAlpha;
+        engine.globalCompositeOperation = globalCompositeOperation;
         engine.lineWidth = <span class="hljs-number">1</span>;
         engine.strokeStyle = hitRadiusColor;
         engine.shadowOffsetX = <span class="hljs-number">0</span>,

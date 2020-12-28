@@ -1237,9 +1237,9 @@ P.getHost = function () {
 
         if (host) this.currentHost = host;
         
-        return (host) ? this.currentHost : currentCorePosition;
+        return (host) ? this.currentHost : false;
     }
-    return currentCorePosition;
+    return false;
 };
 
 

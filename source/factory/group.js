@@ -141,6 +141,13 @@ P.kill = function (killArtefacts = false) {
     return this.deregister();
 }
 
+P.killArtefacts = function () {
+
+    this.artefactBuckets.forEach(item => item.kill());
+
+    return this;
+}
+
 
 // #### Get, Set, deltaSet
 let G = P.getters,

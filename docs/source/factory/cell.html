@@ -2757,9 +2757,9 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
 
         <span class="hljs-keyword">if</span> (host) <span class="hljs-built_in">this</span>.currentHost = host;
         
-        <span class="hljs-keyword">return</span> (host) ? <span class="hljs-built_in">this</span>.currentHost : currentCorePosition;
+        <span class="hljs-keyword">return</span> (host) ? <span class="hljs-built_in">this</span>.currentHost : <span class="hljs-literal">false</span>;
     }
-    <span class="hljs-keyword">return</span> currentCorePosition;
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 };</pre></div></div>
             
         </li>

@@ -319,6 +319,14 @@ P.regularStampSynchronousActions = function () {
 
     let {world, artefact:art, particleStore, springs, generate, postGenerate, stampAction, lastUpdated, resetAfterBlur, showSprings, showSpringsColor, showHitRadius, hitRadius, hitRadiusColor} = this;
 
+    let globalAlpha = 1,
+        globalCompositeOperation = 'source-over';
+
+    if (this.state) {
+        globalAlpha = this.state.globalAlpha;
+        globalCompositeOperation = this.state.globalCompositeOperation;
+    }
+
     let host = this.currentHost;
 
     // The particle system is a physics system, which means we need to advance it by a small amount of time as part of each Display cycle
@@ -355,6 +363,8 @@ P.regularStampSynchronousActions = function () {
         let engine = host.engine;
 
         engine.save();
+        engine.globalAlpha = globalAlpha;
+        engine.globalCompositeOperation = globalCompositeOperation;
         engine.strokeStyle = showSpringsColor;
         engine.shadowOffsetX = 0,
         engine.shadowOffsetY = 0,
@@ -390,6 +400,8 @@ P.regularStampSynchronousActions = function () {
         let engine = host.engine;
 
         engine.save();
+        engine.globalAlpha = globalAlpha;
+        engine.globalCompositeOperation = globalCompositeOperation;
         engine.lineWidth = 1;
         engine.strokeStyle = hitRadiusColor;
         engine.shadowOffsetX = 0,
