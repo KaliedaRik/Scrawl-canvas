@@ -12,7 +12,7 @@
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Particles test 014</h1>
-  <h2>Hearts and stars</h2>
+  <h2>Emitter functionality: generate from existing particles</h2>
 
   <canvas id="mycanvas" width="600" height="600"></canvas>
 
@@ -21,7 +21,9 @@
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li></li>
+      <li>Create a point emitter which generates new particles that take their initial positions from existing particles.</li>
+      <li>Check that the generated particles move only at specific angles (multiples of 45 degrees)</li>
+      <li>Check that the tween correctly updates the color range for new particles</li>
     </ul>
     <p><a href="../docs/demo/particles-014.html">Annotated code</a></p>
   </div>

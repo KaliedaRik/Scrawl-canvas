@@ -1,268 +1,242 @@
 // # Demo Canvas 044 
-// Spiral charts
+// Building more complex patterns
 
 // [Run code](../../demo/canvas-044.html)
 import scrawl from '../source/scrawl.js';
 
+
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
 
-// Function to fetch and parse Wikipedia page view timeseries data
-const getData = (page = 'Cat') => {
-
-    return new Promise((resolve, reject) => {
-
-        const data = {
-            page: '',
-            max: 0,
-            min: 0,
-            fromdate: '20200101',
-            todate: '20200101',
-            sunday: [], 
-            monday: [], 
-            tuesday: [], 
-            wednesday: [], 
-            thursday: [], 
-            friday: [], 
-            saturday: [], 
-        };
-
-        let t = new Date(),
-            f = new Date();
-
-        t.setDate(t.getDate() - 1);
-        f.setFullYear(f.getFullYear() - 3);
-
-        let fromdate = f.toISOString().split('T')[0].replace(/-/g, ''),
-            todate = t.toISOString().split('T')[0].replace(/-/g, ''),
-            dayCounter = f.getDay(),
-            maxViews = 0, minViews = -1;
-
-        let url = `https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/user/${page}/daily/${fromdate}/${todate}`;
-
-        fetch(url)
-        .then(response => response.json())
-        .then(dataObject => {
-
-            let dataArray = dataObject.items;
-
-            let results = [[],[],[],[],[],[],[]];
-
-            dataArray.forEach(d => {
-
-                let views = d.views;
-
-                maxViews = (views > maxViews) ? views : maxViews;
-
-                if (minViews < 0) minViews = maxViews;
-                else minViews = (views < minViews) ? views : minViews;
-
-                results[dayCounter].push(views);
-
-                dayCounter++;
-                dayCounter = dayCounter % 7;
-            });
-
-            data.page = page;
-            data.max = maxViews;
-            data.min = minViews;
-            data.fromdate = fromdate;
-            data.todate = todate;
-            data.sun = results[0];
-            data.mon = results[1];
-            data.tue = results[2];
-            data.wed = results[3];
-            data.thu = results[4];
-            data.fri = results[5];
-            data.sat = results[6];
-
-            resolve(data);
-        })
-        .catch(e => {
-
-            console.log(e);
-            reject(data);
-        });
-    });
-};
-
-// Function to build a new chart
-const buildChart = function (page, canvasWrapper, reqs = {}) {
-
-    // We will eventually return a Picture entity to the calling invocation - but generating it takes time, hence we return a promise and resolve the Picture entity in due course
-    return new Promise((resolve, reject) => {
-
-        // We will create a new Cell for the chart, fabricate the required entitys, render the Cell, then capture the output into a single Picture entity which we assign to the canvasWrapper's Group. After this all completes we can kill the Cell, its Group, and all of the Group's entitys
-        const cell = canvasWrapper.buildCell({
-            name: `${page}-cell`,
-            width: 400, // reqs.size
-            height: 400, // reqs.size
-            cleared: false,
-            compiled: false,
-            shown: false,
-            backgroundColor: 'transparent', // reqs.backgroundColor
-        });
-
-        const chartGroup = scrawl.library.group[cell.name];
-
-        // Use Color objects to determine the appropriate color for each charted view value. Again, we'll kill these objects once we've finished with them
-        const lowViewsFactory = scrawl.makeColor({
-            name: `${page}-low-views`,
-            minimumColor: 'azure', // reqs.minimumColor
-            maximumColor: 'blue', // reqs.medialColor
-        });
-
-        const highViewsFactory = scrawl.makeColor({
-            name: `${page}-high-views`,
-            minimumColor: 'blue', // reqs.medialColor
-            maximumColor: 'red', // reqs.maximumColor
-        });
-
-        // We start by retrieving the data from Wikipedia
-        getData(page)
-        .then(data => {
-
-            // Some initial calculations
-            const maxViews = data.max,
-                minViews = data.min,
-                medianViews = (maxViews - minViews) / 2;
-
-            const maxDataLen = Math.max(data.mon.length, data.tue.length, data.wed.length, data.thu.length, data.fri.length, data.sat.length, data.sun.length);
-
-            // Each day series is a spiral of Line entitys. We'll cut down on the code by creating a factory to generate each day's spiral
-            const buildDayChart = function (dayData, offsetVal, dayName, missFirst) {
-
-                let currentWeek, currentYear, nextWeek, nextYear;
-
-                for (let i = 0, iz = dayData.length - 2; i < iz; i++) {
-
-                    if (missFirst) {
-
-                        currentWeek = (i + 1) % 52;
-                        currentYear = Math.floor((i + 1) / 52);
-
-                        nextWeek = (i + 2) % 52;
-                        nextYear = Math.floor((i + 2) / 52);
-
-                        nextWeek = nextWeek % 52;
-                    }
-                    else {
-
-                        currentWeek = i % 52;
-                        currentYear = Math.floor(i / 52);
-
-                        nextWeek = (i + 1) % 52;
-                        nextYear = Math.floor((i + 1) / 52);
-
-                        nextWeek = nextWeek % 52;
-                    }
-
-                    let views = dayData[i] - minViews,
-                        dataColor;
-
-                    // Get the appropriate color for this data point's value
-                    if (views < medianViews) dataColor = lowViewsFactory.getRangeColor(views / medianViews);
-                    else dataColor = highViewsFactory.getRangeColor((views - medianViews) / medianViews);
-
-                    // Each line represents a siongle data point, positioned in its appropriate place on the spiral by reference to the chart's spoke lines
-                    scrawl.makeLine({
-
-                        name: `${page}-${dayName}-line-${i}`,
-                        group: chartGroup,
-
-                        lineWidth: 5,
-                        strokeStyle: dataColor,
-
-                        path: `${page}-week-line-${currentWeek}`,
-                        pathPosition: (currentYear * 0.33) + offsetVal,
-                        lockTo: 'path',
-
-                        endPath: `${page}-week-line-${nextWeek}`,
-                        endPathPosition: (nextYear * 0.33) + offsetVal,
-                        endLockTo: 'path',
-
-                        method: 'draw',
-                    });
-                }
-            }
-
-            // A year is made up of 52 weeks. We create 52 Line entity spokes around a central point to act as the frame for our chart. By setting an appropriate value for each Line's handleY and roll attributes means that when it comes to building the day spirals we just need to pivot those Lines to our spokes - positioning made easy!
-            for (let i = 0; i < 52; i++) {
-
-                scrawl.makeLine({
-
-                    name: `${page}-week-line-${i}`,
-                    group: chartGroup,
-
-                    start: [200, 220],
-                    end: [200, (220 - 120)],
-                    handle: [0, ((i / 52) * (120 / 3)) + 30],
-                    roll: (i / 52) * 360,
-                    useAsPath: true,
-
-                    // We don't need to see the spokes in the finished chart; we just need them positioned correctly
-                    method: 'none',
-                });
-            }
-
-            // Build each day's spiral
-            buildDayChart(data.mon, 0, 'mon', (data.mon.length < maxDataLen) ? true : false);
-            buildDayChart(data.tue, 0.042, 'tue', (data.tue.length < maxDataLen) ? true : false);
-            buildDayChart(data.wed, 0.084, 'wed', (data.wed.length < maxDataLen) ? true : false);
-            buildDayChart(data.thu, 0.126, 'thu', (data.thu.length < maxDataLen) ? true : false);
-            buildDayChart(data.fri, 0.168, 'fri', (data.fri.length < maxDataLen) ? true : false);
-            buildDayChart(data.sat, 0.21, 'sat', (data.sat.length < maxDataLen) ? true : false);
-            buildDayChart(data.sun, 0.252, 'sun', (data.sun.length < maxDataLen) ? true : false);
-
-            // Now all the chart entitys have been created, we no longer need the Color objects
-            lowViewsFactory.kill();
-            highViewsFactory.kill();
-
-            // We will render this Cell manually, outside of the Display cycle animation loop
-            return cell.clear();
-        })
-        .then(res => {
-
-            // Setup the cell to capture its image as it compiles ...
-            scrawl.createImageFromCell(cell, true);
-
-            // ... and invoke the compile step
-            cell.compile()
-        })
-        .then(res => {
-
-            // The compile step will (eventually) add a hidden &lt;img> element to the DOM. This means we no longer require the Cell or its entitys. We need to kill the Cell's Group before we kill the Cell itself
-            chartGroup.kill(true);
-            cell.kill();
-
-            // Now we can create a single Picture entity for display in the canvasWrapper's &lt;canvas> element
-            let img = scrawl.makePicture({
-                name: `${page}-chart-image`,
-                group: canvasWrapper.base.name,
-
-                asset: `${page}-cell-image`,
-
-                dimensions: ['100%', '100%'],
-                copyDimensions: ['100%', '100%'],
-            });
-
-            resolve(img);
-        })
-        .catch(e => {
-
-            console.log('buildChart error', e);
-            resolve(false);
-        });
-    });
-
-};
-
-// Initiate the process on page load
-let currentPage = false;
-
-buildChart('Cat', canvas, {})
-.then(res => currentPage = res)
-.catch(e => {});
+canvas.setBase({
+    backgroundColor: 'azure',
+    // The order in which we compile Cells becomes important when building more complex patterns with additional Cells
+    compileOrder: 2,
+});
+
+// STEP 1. We define a gradient, then apply it to some Blocks we create in a new canvas Cell. This gives us a more interesting gradient pattern than the default 'linear' and 'radial' gradients supplied by the Canvas API
+scrawl.makeGradient({
+    name: 'linear',
+    endX: '100%',
+    endY: '100%',
+})
+.updateColor(0, 'white')
+.updateColor(420, 'red')
+.updateColor(500, 'yellow')
+.updateColor(580, 'red')
+.updateColor(999, 'black');
+
+canvas.buildCell({
+    name: 'gradient-sub-pattern',
+    dimensions: [50, 50],
+    shown: false,
+    compileOrder: 0,
+});
+
+// Populate our new Cell with blocks using our linear gradient
+scrawl.makeBlock({
+    name: 'gradient-block-br',
+    group: 'gradient-sub-pattern',
+    dimensions: [25, 25],
+    start: ['center', 'center'],
+    fillStyle: 'linear',
+    lockFillStyleToEntity: true,
+}).clone({
+    name: 'gradient-block-bl',
+    roll: 90,
+}).clone({
+    name: 'gradient-block-tl',
+    roll: 180,
+}).clone({
+    name: 'gradient-block-tr',
+    roll: 270,
+});
+
+// STEP 2: We have a pattern that we can use, but we can make it even more interesting using an SVG turbulence-and-displacement filter. We define the SVG in the HTML code, then apply it to a new Cell we create for the effect.
+canvas.buildCell({
+    name: 'warped-pattern',
+    dimensions: [400, 400],
+    shown: false,
+    compileOrder: 1,
+});
+
+scrawl.makeBlock({
+    name: 'warped-pattern-block',
+    group: 'warped-pattern',
+    dimensions: [900, 900],
+    start: ['center', 'center'],
+    handle: ['center', 'center'],
+    roll: 45,
+    fillStyle: 'gradient-sub-pattern',
+    filter: 'url(#svg-noise)',
+});
+
+// STEP 3: We can animate our SVG filter using a combination of a Scrawl-canvas World object and some SC tweens
+const turbulence = document.querySelector('feTurbulence');
+const displacement = document.querySelector('feDisplacementMap');
+
+const myWorld = scrawl.makeWorld({
+    name: 'svg-filter-accessor',
+    userAttributes: [
+        {
+            key: 'baseFreqX', 
+            defaultValue: 0,
+            setter: function (item) {
+                this.baseFreqX = item;
+                turbulence.setAttribute('baseFrequency', `${this.baseFreqX} ${this.baseFreqY}`);
+            },
+        },
+        {
+            key: 'baseFreqY', 
+            defaultValue: 0,
+            setter: function (item) {
+                this.baseFreqY = item;
+                turbulence.setAttribute('baseFrequency', `${this.baseFreqX} ${this.baseFreqY}`);
+            },
+        },
+        {
+            key: 'scale', 
+            defaultValue: 0,
+            setter: function (item) {
+                this.scale = item;
+                displacement.setAttribute('scale', `${this.scale}`);
+            },
+        }
+    ],
+});
+
+scrawl.makeTween({
+    name: 'horizontal-turbulence',
+    duration: 6000,
+    targets: myWorld,
+    cycles: 0,
+    reverseOnCycleEnd: true,
+    definitions: [
+        {
+            attribute: 'baseFreqX',
+            start: 0.01,
+            end: 0.025,
+            engine: 'easeOutIn'
+        },
+    ]
+}).run();
+
+scrawl.makeTween({
+    name: 'vertical-turbulence',
+    duration: 7000,
+    targets: myWorld,
+    cycles: 0,
+    reverseOnCycleEnd: true,
+    definitions: [
+        {
+            attribute: 'baseFreqY',
+            start: 0.01,
+            end: 0.025,
+            engine: 'easeOutIn'
+        },
+    ]
+}).run();
+
+scrawl.makeTween({
+    name: 'scale-displacement',
+    duration: 10000,
+    targets: myWorld,
+    cycles: 0,
+    reverseOnCycleEnd: true,
+    definitions: [
+        {
+            attribute: 'scale',
+            start: 15,
+            end: 25,
+            engine: 'easeOutIn'
+        },
+    ]
+}).run();
+
+// STEP 4. We are now in a position where we can use our Cells as pattern fills for some SC entitys.
+scrawl.makePolygon({
+    name: 'hex',
+    sides: 6,
+    radius: 90,
+    roll: 30,
+    start: [470, 140],
+    lineWidth: 2,
+    strokeStyle: 'green',
+    lineJoin: 'round',
+    method: 'fillThenDraw',
+    // To use a Cell as a pattern we just assign its name to the entity's fillStyle attribute
+    fillStyle: 'warped-pattern',
+});
+
+
+// STEP 5. If we want, we can add filters to our entitys, to give our pattern a different look.
+scrawl.makeFilter({
+    name: 'notred',
+    method: 'notred',
+}).clone({
+    name: 'sepia',
+    method: 'sepia',
+}).clone({
+    name: 'invert',
+    method: 'invert',
+});
+
+scrawl.makeOval({
+    name: 'egg',
+    radiusX: 60,
+    radiusY: 80,
+    roll: 30,
+    intersectY: 0.6,
+    start: [70, 210],
+    lineWidth: 2,
+    strokeStyle: 'green',
+    lineJoin: 'round',
+    method: 'fillThenDraw',
+    fillStyle: 'warped-pattern',
+    filters: ['sepia'],
+});
+
+scrawl.makeTetragon({
+    name: 'arrow',
+    start: [160, 290],
+    fillStyle: 'warped-pattern',
+    radiusX: 60,
+    radiusY: 80,
+    intersectY: 1.2,
+    intersectX: 0.32,
+    roll: -60,
+    filters: ['invert'],
+    lineWidth: 2,
+    strokeStyle: 'green',
+    lineJoin: 'round',
+    method: 'fillThenDraw',
+});
+
+// STEP 6. There's one additional thing we can do with our pattern - pass it into a Pattern object where we can warp and resize it. Then we can apply it to entitys via the Pattern object.
+scrawl.makePattern({
+    name: 'wavy-pattern',
+    asset: 'warped-pattern',
+    matrixB: 0.7,
+    matrixF: -150,
+});
+
+scrawl.makeBlock({
+    name: 'boring-block',
+    start: [50, 50],
+    dimensions: [140, 170],
+    fillStyle: 'wavy-pattern',
+    lineWidth: 2,
+    strokeStyle: 'green',
+    lineJoin: 'round',
+    method: 'fillThenDraw',
+
+}).clone({
+    name: 'tipsy-block',
+    start: [250, 130],
+    dimensions: [210, 90],
+    roll: -30,
+    filters: ['notred'],
+});
 
 
 // #### Scene animation
@@ -279,8 +253,7 @@ let report = function () {
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-Entity count: ${scrawl.library.entitynames.length}`;
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
     };
 }();
 
@@ -292,26 +265,10 @@ scrawl.makeRender({
     afterShow: report,
 });
 
-// #### User interaction
-scrawl.addNativeListener('click', () => {
-
-    let page = document.querySelector('#wikipedia-page').value;
-
-    if (page) {
-
-        buildChart(page, canvas, {})
-        .then(res => {
-
-            if (currentPage) currentPage.kill();
-            currentPage = res;
-        })
-        .catch(e => {
-
-            console.log('main invoker error', e);
-        });
-    };
-}, '#page-request');
-
+scrawl.makeDragZone({
+    zone: canvas,
+    endOn: ['up', 'leave'],
+});
 
 // #### Development and testing
 console.log(scrawl.library);

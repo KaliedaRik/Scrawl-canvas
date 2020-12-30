@@ -796,7 +796,10 @@ P = entityMix(P);</pre></div></div>
             </div>
             
             <div class="content"><div class='highlight'><pre>    generateAlongPath: <span class="hljs-literal">false</span>,
-    <span class="hljs-attr">generateInArea</span>: <span class="hljs-literal">false</span>,</pre></div></div>
+    <span class="hljs-attr">generateInArea</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">generateFromExistingParticles</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">generateFromExistingParticleHistories</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">limitDirectionToAngleMultiples</span>: <span class="hljs-number">0</span>,</pre></div></div>
             
         </li>
         
@@ -1514,7 +1517,7 @@ D.height = D.width;</pre></div></div>
         <span class="hljs-keyword">return</span> item + (rnd() * itemVar);
     };
 
-    <span class="hljs-keyword">let</span> i, p, cx, cy, 
+    <span class="hljs-keyword">let</span> i, p, cx, cy,
         timeChoke = <span class="hljs-built_in">Date</span>.now();</pre></div></div>
             
         </li>
@@ -1530,7 +1533,7 @@ D.height = D.width;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> {historyLength, engine, forces, mass, massVariation, fillColorFactory, strokeColorFactory, range, rangeFrom, currentStampPosition, particleStore, killAfterTime, killAfterTimeVariation, killRadius, killRadiusVariation, killBeyondCanvas, currentRotation, generateAlongPath, generateInArea, generationChoke} = <span class="hljs-built_in">this</span>;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> {historyLength, engine, forces, mass, massVariation, fillColorFactory, strokeColorFactory, range, rangeFrom, currentStampPosition, particleStore, killAfterTime, killAfterTimeVariation, killRadius, killRadiusVariation, killBeyondCanvas, currentRotation, generateAlongPath, generateInArea, generateFromExistingParticles, generateFromExistingParticleHistories, limitDirectionToAngleMultiples, generationChoke} = <span class="hljs-built_in">this</span>;
 
     <span class="hljs-keyword">let</span> {x, y, z} = range;
     <span class="hljs-keyword">let</span> {<span class="hljs-attr">x</span>:fx, <span class="hljs-attr">y</span>:fy, <span class="hljs-attr">z</span>:fz} = rangeFrom;</pre></div></div>
@@ -1693,6 +1696,172 @@ D.height = D.width;</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
+              <p>TODO: documentation</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (generateFromExistingParticleHistories) {
+        <span class="hljs-keyword">let</span> len = particleStore.length,
+            v, r, parent, history, ignore1, ignore2, startval,
+            res = requestVector();
+
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; req; i++) {
+
+            <span class="hljs-keyword">if</span> (len) {
+
+                parent = particleStore[<span class="hljs-built_in">Math</span>.floor(<span class="hljs-built_in">Math</span>.random() * len)];
+                history = parent.history;
+
+                <span class="hljs-keyword">if</span> (history &amp;&amp; history.length &gt; <span class="hljs-number">1</span>) {
+
+                    [ignore1, ignore2, ...startval] = history[<span class="hljs-built_in">Math</span>.floor(<span class="hljs-built_in">Math</span>.random() * history.length)];
+
+                    <span class="hljs-keyword">if</span> (startval) res.setFromArray(startval);
+                    <span class="hljs-keyword">else</span> res.setFromVector(parent.position);
+                }
+                <span class="hljs-keyword">else</span> res.setFromVector(parent.position);
+            }
+            <span class="hljs-keyword">else</span> res.setFromArray(currentStampPosition);
+
+            p = requestParticle();
+
+            p.set({
+                <span class="hljs-attr">positionX</span>: res.x,
+                <span class="hljs-attr">positionY</span>: res.y,
+                <span class="hljs-attr">positionZ</span>: res.z,
+
+                historyLength, 
+                engine, 
+                forces, 
+
+                <span class="hljs-attr">mass</span>: calc(mass, massVariation), 
+
+                <span class="hljs-attr">fill</span>: fillColorFactory.get(<span class="hljs-string">&#x27;random&#x27;</span>),
+                <span class="hljs-attr">stroke</span>: strokeColorFactory.get(<span class="hljs-string">&#x27;random&#x27;</span>),
+            });
+
+            <span class="hljs-keyword">if</span> (limitDirectionToAngleMultiples) {
+
+                res.zero();
+                r = <span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">360</span> / limitDirectionToAngleMultiples)
+                res.x = velocityCalc(fx, x);
+                res.rotate((<span class="hljs-built_in">Math</span>.floor(<span class="hljs-built_in">Math</span>.random() * r)) * limitDirectionToAngleMultiples);
+
+                p.set({
+                    <span class="hljs-attr">velocityX</span>: res.x,
+                    <span class="hljs-attr">velocityY</span>: res.y,
+                    <span class="hljs-attr">velocityZ</span>: velocityCalc(fz, z),
+                });
+            }
+            <span class="hljs-keyword">else</span> {
+
+                p.set({
+                    <span class="hljs-attr">velocityX</span>: velocityCalc(fx, x),
+                    <span class="hljs-attr">velocityY</span>: velocityCalc(fy, y),
+                    <span class="hljs-attr">velocityZ</span>: velocityCalc(fz, z),
+                });
+            }
+            releaseVector(res);
+
+            p.velocity.rotate(currentRotation);
+
+            <span class="hljs-keyword">let</span> timeKill = <span class="hljs-built_in">Math</span>.abs(calc(killAfterTime, killAfterTimeVariation));
+            <span class="hljs-keyword">let</span> radiusKill = <span class="hljs-built_in">Math</span>.abs(calc(killRadius, killRadiusVariation));
+
+            p.run(timeKill, radiusKill, killBeyondCanvas);
+
+            particleStore.push(p);
+        }
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-52">&#182;</a>
+              </div>
+              <p>TODO: documentation</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (generateFromExistingParticles) {
+
+        <span class="hljs-keyword">let</span> len = particleStore.length,
+            v, r, parent,
+            res = requestVector();
+
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; req; i++) {
+
+            <span class="hljs-keyword">if</span> (len) {
+
+                parent = particleStore[<span class="hljs-built_in">Math</span>.floor(<span class="hljs-built_in">Math</span>.random() * len)];
+                res.setFromVector(parent.position);
+            }
+            <span class="hljs-keyword">else</span> res.setFromArray(currentStampPosition);
+
+            p = requestParticle();
+
+            p.set({
+                <span class="hljs-attr">positionX</span>: res.x,
+                <span class="hljs-attr">positionY</span>: res.y,
+                <span class="hljs-attr">positionZ</span>: res.z,
+
+                historyLength, 
+                engine, 
+                forces, 
+
+                <span class="hljs-attr">mass</span>: calc(mass, massVariation), 
+
+                <span class="hljs-attr">fill</span>: fillColorFactory.get(<span class="hljs-string">&#x27;random&#x27;</span>),
+                <span class="hljs-attr">stroke</span>: strokeColorFactory.get(<span class="hljs-string">&#x27;random&#x27;</span>),
+            });
+
+            <span class="hljs-keyword">if</span> (limitDirectionToAngleMultiples) {
+
+                res.zero();
+                r = <span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">360</span> / limitDirectionToAngleMultiples)
+                res.x = velocityCalc(fx, x);
+                res.rotate((<span class="hljs-built_in">Math</span>.floor(<span class="hljs-built_in">Math</span>.random() * r)) * limitDirectionToAngleMultiples);
+
+                p.set({
+                    <span class="hljs-attr">velocityX</span>: res.x,
+                    <span class="hljs-attr">velocityY</span>: res.y,
+                    <span class="hljs-attr">velocityZ</span>: velocityCalc(fz, z),
+                });
+            }
+            <span class="hljs-keyword">else</span> {
+
+                p.set({
+                    <span class="hljs-attr">velocityX</span>: velocityCalc(fx, x),
+                    <span class="hljs-attr">velocityY</span>: velocityCalc(fy, y),
+                    <span class="hljs-attr">velocityZ</span>: velocityCalc(fz, z),
+                });
+            }
+            releaseVector(res);
+
+            p.velocity.rotate(currentRotation);
+
+            <span class="hljs-keyword">let</span> timeKill = <span class="hljs-built_in">Math</span>.abs(calc(killAfterTime, killAfterTimeVariation));
+            <span class="hljs-keyword">let</span> radiusKill = <span class="hljs-built_in">Math</span>.abs(calc(killRadius, killRadiusVariation));
+
+            p.run(timeKill, radiusKill, killBeyondCanvas);
+
+            particleStore.push(p);
+        }
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-53">&#182;</a>
+              </div>
               <p>Generate the particle using the emitter’s start coordinate, or a reference artifact’s coordinate</p>
 
             </div>
@@ -1739,11 +1908,11 @@ D.height = D.width;</pre></div></div>
         </li>
         
         
-        <li id="section-52">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+                <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
               <p><code>regularStampSynchronousActions</code> - overwriters the functionality defined in the entity.js mixin</p>
 
@@ -1763,11 +1932,11 @@ D.height = D.width;</pre></div></div>
         </li>
         
         
-        <li id="section-53">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
               <p>If the user has focussed on another tab in the browser before returning to the tab running this Scrawl-canvas animation, then we risk breaking the page by continuing the animation with the existing particles - simplest solution is to remove all the particles and, in effect, restarting the emitter’s animation.</p>
 
@@ -1786,11 +1955,11 @@ D.height = D.width;</pre></div></div>
         </li>
         
         
-        <li id="section-54">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
               <p>Perform canvas drawing before the main (developer-defined) <code>stampAction</code> function</p>
 
@@ -1807,11 +1976,11 @@ D.height = D.width;</pre></div></div>
         </li>
         
         
-        <li id="section-55">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
               <p>Perform further canvas drawing after the main (developer-defined) <code>stampAction</code> function</p>
 
@@ -1841,11 +2010,11 @@ D.height = D.width;</pre></div></div>
         </li>
         
         
-        <li id="section-56">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+                <a class="pilcrow" href="#section-58">&#182;</a>
               </div>
               <p><code>checkHit</code> - overwrites the function defined in mixin/position.js</p>
 <ul>
@@ -1901,11 +2070,11 @@ D.height = D.width;</pre></div></div>
         </li>
         
         
-        <li id="section-57">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
+                <a class="pilcrow" href="#section-59">&#182;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code><span class="hljs-keyword">let</span> myWorld = scrawl.makeWorld({
@@ -1978,11 +2147,11 @@ scrawl.makeEmitter({
         </li>
         
         
-        <li id="section-58">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
+                <a class="pilcrow" href="#section-60">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 
