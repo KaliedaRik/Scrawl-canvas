@@ -240,6 +240,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-045.html">
+                  ./demo/canvas-045.js
+                </a>
+              
+                
                 <a class="source" href="component-001.html">
                   ./demo/component-001.js
                 </a>
@@ -563,12 +568,133 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.library.canvas.mycanvas;
+            <div class="content"><div class='highlight'><pre>scrawl.importDomImage(<span class="hljs-string">&#x27;.ohara-koson&#x27;</span>)
+<span class="hljs-keyword">const</span> canvas = scrawl.library.canvas.mycanvas;
 
-canvas.setBase({
-    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;azure&#x27;</span>,
-    <span class="hljs-attr">compileOrder</span>: <span class="hljs-number">1</span>,
-});</pre></div></div>
+
+<span class="hljs-keyword">const</span> spinFactory = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name, radius, order, duration, clockwise</span>) </span>{
+
+    scrawl.makeGroup({
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-group`</span>,
+        <span class="hljs-attr">host</span>: canvas.base.name,
+        order,
+    });
+
+    <span class="hljs-keyword">const</span> clipper = scrawl.makeWheel({
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-clip-<span class="hljs-subst">${radius}</span>`</span>,
+        <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-group`</span>,
+        <span class="hljs-attr">start</span>: [<span class="hljs-number">200</span>, <span class="hljs-number">250</span>],
+        <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+        radius,
+        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;clip&#x27;</span>,
+
+        <span class="hljs-attr">onEnter</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <span class="hljs-keyword">if</span> (!tween.isRunning()) tween.run();
+        },
+
+        <span class="hljs-attr">onLeave</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <span class="hljs-keyword">if</span> (!tween.isRunning()) tween.run();
+        },
+    });
+
+    <span class="hljs-keyword">const</span> tween = scrawl.makeTween({
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-tween-<span class="hljs-subst">${radius}</span>`</span>,
+        <span class="hljs-attr">targets</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-clip-<span class="hljs-subst">${radius}</span>`</span>,
+        duration,
+        <span class="hljs-attr">definitions</span>: [
+            {
+                <span class="hljs-attr">attribute</span>: <span class="hljs-string">&#x27;roll&#x27;</span>,
+                <span class="hljs-attr">start</span>: (clockwise) ? <span class="hljs-number">0</span> : <span class="hljs-number">360</span>,
+                <span class="hljs-attr">end</span>: (clockwise) ? <span class="hljs-number">360</span> : <span class="hljs-number">0</span>,
+                <span class="hljs-attr">engine</span>: <span class="hljs-string">&#x27;easeOutIn&#x27;</span>,
+            },
+        ],
+    });
+
+    scrawl.makePicture({
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-hoop-<span class="hljs-subst">${radius}</span>`</span>,
+        <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-group`</span>,
+        <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;songbird&#x27;</span>,
+
+        <span class="hljs-attr">pivot</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-clip-<span class="hljs-subst">${radius}</span>`</span>,
+        <span class="hljs-attr">addPivotRotation</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
+
+        <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+        <span class="hljs-attr">dimensions</span>: [radius * <span class="hljs-number">2</span>, radius * <span class="hljs-number">2</span>],
+        <span class="hljs-attr">copyDimensions</span>: [radius * <span class="hljs-number">2</span>, radius * <span class="hljs-number">2</span>],
+        <span class="hljs-attr">copyStart</span>: [<span class="hljs-number">200</span> - radius, <span class="hljs-number">250</span> - radius],
+    });
+
+    <span class="hljs-keyword">return</span> clipper;
+}
+
+
+<span class="hljs-keyword">const</span> outer = spinFactory(<span class="hljs-string">&#x27;outer-ring&#x27;</span>, <span class="hljs-number">170</span>, <span class="hljs-number">1</span>, <span class="hljs-string">&#x27;4s&#x27;</span>, <span class="hljs-literal">true</span>);
+<span class="hljs-keyword">const</span> middleThin = spinFactory(<span class="hljs-string">&#x27;thin-ring&#x27;</span>, <span class="hljs-number">130</span>, <span class="hljs-number">2</span>, <span class="hljs-string">&#x27;2.6s&#x27;</span>, <span class="hljs-literal">true</span>);
+<span class="hljs-keyword">const</span> middleThick = spinFactory(<span class="hljs-string">&#x27;thick-ring&#x27;</span>, <span class="hljs-number">120</span>, <span class="hljs-number">3</span>, <span class="hljs-string">&#x27;5.3s&#x27;</span>, <span class="hljs-literal">false</span>);
+<span class="hljs-keyword">const</span> inner = spinFactory(<span class="hljs-string">&#x27;inner-ring&#x27;</span>, <span class="hljs-number">60</span>, <span class="hljs-number">4</span>, <span class="hljs-string">&#x27;4s&#x27;</span>, <span class="hljs-literal">true</span>);
+<span class="hljs-keyword">const</span> center = spinFactory(<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-number">20</span>, <span class="hljs-number">5</span>, <span class="hljs-string">&#x27;4s&#x27;</span>, <span class="hljs-literal">false</span>);
+
+scrawl.makeFilter({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
+}).clone({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;green&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;green&#x27;</span>,
+}).clone({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
+});
+
+scrawl.makePhrase({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;painting-details&#x27;</span>,
+    <span class="hljs-attr">text</span>: <span class="hljs-string">`Songbird and flowering camellia §GRAY§(1910 - 1930)
+§ITALIC§Ohara Koson (Japanese, 1877-1945)`</span>,
+    <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;15px Arial, sans-serif&#x27;</span>,
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;10%&#x27;</span>, <span class="hljs-string">&#x27;72%&#x27;</span>],
+    <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;80%&#x27;</span>,
+    <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">order</span>: <span class="hljs-number">8</span>,
+}).addSectionClass(<span class="hljs-string">&#x27;GRAY&#x27;</span>, { <span class="hljs-attr">fill</span>: <span class="hljs-string">&#x27;gray&#x27;</span> });
+
+<span class="hljs-keyword">const</span> detailsTween = scrawl.makeTween({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;show-details&#x27;</span>,
+    <span class="hljs-attr">targets</span>: <span class="hljs-string">&#x27;painting-details&#x27;</span>,
+    <span class="hljs-attr">duration</span>: <span class="hljs-number">5000</span>,
+    <span class="hljs-attr">cycles</span>: <span class="hljs-number">2</span>,
+    <span class="hljs-attr">reverseOnCycleEnd</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">definitions</span>: [
+        {
+            <span class="hljs-attr">attribute</span>: <span class="hljs-string">&#x27;globalAlpha&#x27;</span>,
+            <span class="hljs-attr">start</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">end</span>: <span class="hljs-number">1</span>,
+            <span class="hljs-attr">engine</span>: <span class="hljs-string">&#x27;easeIn5&#x27;</span>,
+        },
+    ],
+});
+
+scrawl.makeBlock({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;details-trigger&#x27;</span>,
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;72%&#x27;</span>, <span class="hljs-string">&#x27;76%&#x27;</span>],
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;12%&#x27;</span>, <span class="hljs-string">&#x27;16%&#x27;</span>],
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;none&#x27;</span>,
+    <span class="hljs-attr">onEnter</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ 
+        <span class="hljs-keyword">if</span> (!detailsTween.isRunning()) detailsTween.run();
+    },
+});
+
+<span class="hljs-keyword">const</span> background = scrawl.makePicture({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;koson-songbird&#x27;</span>,
+    <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;songbird&#x27;</span>,
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+    <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+    <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;destination-over&#x27;</span>,
+    <span class="hljs-attr">order</span>: <span class="hljs-number">10</span>,
+});
+
+
+scrawl.addListener(<span class="hljs-string">&#x27;move&#x27;</span>, <span class="hljs-function">() =&gt;</span> canvas.cascadeEventAction(<span class="hljs-string">&#x27;move&#x27;</span>), canvas.domElement);</pre></div></div>
             
         </li>
         
@@ -578,252 +704,6 @@ canvas.setBase({
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
-              </div>
-              <p>THE RING FACTORY
-We could put this code into its own file, then import it into any animation where we need to construct a ring of entitys</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> buildEntityRing = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (!items.canvas || !items.entity || !items.name) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-
-    <span class="hljs-keyword">let</span> canvas = items.canvas,
-        name = items.name,
-        entity = items.entity,
-        dimensions = items.dimensions || <span class="hljs-number">400</span>,
-        buildStartAngle = items.buildStartAngle || -<span class="hljs-number">45</span>,
-        buildEndAngle = items.buildEndAngle || <span class="hljs-number">225</span>,
-        buildStepAngle = items.buildStepAngle || <span class="hljs-number">15</span>,
-        buildOffset = items.buildOffset || <span class="hljs-number">0</span>,
-        reflectOnly = items.reflectOnly || <span class="hljs-literal">false</span>;
-
-    <span class="hljs-keyword">const</span> cell = canvas.buildCell({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-cell`</span>,
-        <span class="hljs-attr">dimensions</span>: [dimensions, dimensions],
-        <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span>,
-        <span class="hljs-attr">compileOrder</span>: <span class="hljs-number">0</span>,
-    });
-
-    <span class="hljs-keyword">const</span> clip = scrawl.makeGroup({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-clip-group`</span>,
-        <span class="hljs-attr">host</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-cell`</span>,
-        <span class="hljs-attr">order</span>: <span class="hljs-number">0</span>,
-    });
-
-    <span class="hljs-keyword">const</span> reflect = scrawl.makeGroup({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-reflect-group`</span>,
-        <span class="hljs-attr">host</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-cell`</span>,
-        <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
-    });
-
-    scrawl.makeBlock({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-clipper`</span>,
-        <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-clip-group`</span>,
-        <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;left&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-        <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;50%&#x27;</span>],
-        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;clip&#x27;</span>
-    });
-
-    <span class="hljs-keyword">let</span> v = scrawl.requestVector(<span class="hljs-number">0</span>, buildOffset);
-    v.rotate(buildStartAngle);
-
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = buildStartAngle; i &lt;= buildEndAngle; i += buildStepAngle) {
-
-        entity.clone({
-            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-ringitem-<span class="hljs-subst">${i}</span>`</span>,
-            <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-clip-group`</span>,
-            <span class="hljs-attr">roll</span>: i,
-            <span class="hljs-attr">offset</span>: [v.x, v.y],
-        });
-
-        v.rotate(buildStepAngle);
-    }
-
-    scrawl.releaseVector(v);
-
-    scrawl.makePicture({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-reflection`</span>,
-        <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-reflect-group`</span>,
-        <span class="hljs-attr">asset</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-cell`</span>,
-
-        <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;25%&#x27;</span>],
-        <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-        <span class="hljs-attr">flipUpend</span>: <span class="hljs-literal">true</span>,
-        <span class="hljs-attr">flipReverse</span>: !reflectOnly,
-
-        <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;50%&#x27;</span>],
-        <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;50%&#x27;</span>],
-        <span class="hljs-attr">copyStartY</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
-
-        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
-    });
-
-    entity.set({
-        <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
-    });
-
-    <span class="hljs-keyword">return</span> {
-        cell,
-        <span class="hljs-attr">kill</span>: <span class="hljs-function">() =&gt;</span> {
-
-            clip.kill(<span class="hljs-literal">true</span>);
-            reflect.kill(<span class="hljs-literal">true</span>);
-            cell.kill();
-        },
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <p>Some gradients for our scene</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> parasolGradient = scrawl.makeGradient({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;parasol-gradient&#x27;</span>,
-    <span class="hljs-attr">endY</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-    <span class="hljs-attr">paletteEnd</span>: <span class="hljs-number">299</span>,
-})
-.updateColor(<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;red&#x27;</span>)
-.updateColor(<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;transparent&#x27;</span>);
-
-scrawl.makeGradient({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;plank-gradient&#x27;</span>,
-    <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-})
-.updateColor(<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;gold&#x27;</span>)
-.updateColor(<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;green&#x27;</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <p>A parasol compound-entity</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> parasol = buildEntityRing({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;parasol&#x27;</span>,
-    canvas,
-
-    <span class="hljs-attr">dimensions</span>: <span class="hljs-number">400</span>,
-    <span class="hljs-attr">buildStartAngle</span>: -<span class="hljs-number">20</span>,
-    <span class="hljs-attr">buildEndAngle</span>: <span class="hljs-number">200</span>,
-    <span class="hljs-attr">buildStepAngle</span>: <span class="hljs-number">5</span>,
-    <span class="hljs-attr">reflectOnly</span>: <span class="hljs-literal">false</span>,
-
-    <span class="hljs-attr">entity</span>: scrawl.makeBlock({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;parasol-template&#x27;</span>,
-        <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-        <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">200</span>, <span class="hljs-number">18</span>],
-        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
-        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;parasol-gradient&#x27;</span>,
-        <span class="hljs-attr">lockFillStyleToEntity</span>: <span class="hljs-literal">true</span>,
-    }),
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <p>A ring-of-planks compound-entity</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> plank = buildEntityRing({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;plank&#x27;</span>,
-    canvas,
-
-    <span class="hljs-attr">dimensions</span>: <span class="hljs-number">600</span>,
-    <span class="hljs-attr">buildStartAngle</span>: -<span class="hljs-number">90</span>,
-    <span class="hljs-attr">buildEndAngle</span>: <span class="hljs-number">210</span>,
-    <span class="hljs-attr">buildStepAngle</span>: <span class="hljs-number">30</span>,
-    <span class="hljs-attr">buildOffset</span>: <span class="hljs-number">190</span>,
-    <span class="hljs-attr">reflectOnly</span>: <span class="hljs-literal">false</span>,
-
-    <span class="hljs-attr">entity</span>: scrawl.makeBlock({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;plank-template&#x27;</span>,
-        <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-        <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;top&#x27;</span>],
-        <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">150</span>, <span class="hljs-number">30</span>],
-        <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
-        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;plank-gradient&#x27;</span>,
-        <span class="hljs-attr">lockFillStyleToEntity</span>: <span class="hljs-literal">true</span>,
-        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
-        <span class="hljs-attr">delta</span>: {
-            <span class="hljs-attr">roll</span>: <span class="hljs-number">0.3</span>,
-        },
-    }),
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <p>We can now use our compound entitys to create a scene</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>scrawl.makePicture({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;plank-picture&#x27;</span>,
-    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-    <span class="hljs-attr">asset</span>: plank.cell.name,
-    <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">600</span>, <span class="hljs-number">600</span>],
-    <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
-    <span class="hljs-attr">delta</span>: {
-        <span class="hljs-attr">roll</span>: -<span class="hljs-number">0.25</span>,
-    }
-});
-
-scrawl.makePicture({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;parasol-picture&#x27;</span>,
-    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-    <span class="hljs-attr">asset</span>: parasol.cell,
-    <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">400</span>, <span class="hljs-number">400</span>],
-    <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
-    <span class="hljs-attr">scale</span>: <span class="hljs-number">0.8</span>,
-    <span class="hljs-attr">delta</span>: {
-        <span class="hljs-attr">roll</span>: <span class="hljs-number">0.1</span>,
-    }
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -849,11 +729,11 @@ scrawl.makePicture({
         </li>
         
         
-        <li id="section-9">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -869,63 +749,11 @@ scrawl.makePicture({
         </li>
         
         
-        <li id="section-10">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
-              </div>
-              <p>And some additional animation for the parasol gradient</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> ticker = scrawl.makeTicker({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;parasol-gradient-ticker&#x27;</span>,
-    <span class="hljs-attr">cycles</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">duration</span>: <span class="hljs-string">&#x27;12s&#x27;</span>,
-});
-
-scrawl.makeTween({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;parasol-start-palette-tween&#x27;</span>,
-    <span class="hljs-attr">targets</span>: parasolGradient,
-    <span class="hljs-attr">ticker</span>: <span class="hljs-string">&#x27;parasol-gradient-ticker&#x27;</span>,
-    <span class="hljs-attr">duration</span>: <span class="hljs-string">&#x27;60%&#x27;</span>,
-    <span class="hljs-attr">time</span>: <span class="hljs-string">&#x27;10%&#x27;</span>,
-    <span class="hljs-attr">reverseOnCycleEnd</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">definitions</span>: [
-        {
-            <span class="hljs-attr">attribute</span>: <span class="hljs-string">&#x27;paletteStart&#x27;</span>,
-            <span class="hljs-attr">start</span>: <span class="hljs-number">0</span>,
-            <span class="hljs-attr">end</span>: <span class="hljs-number">700</span>,
-            <span class="hljs-attr">integer</span>: <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">engine</span>: <span class="hljs-string">&#x27;easeOutIn&#x27;</span>,
-        }
-    ]
-}).clone({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;parasol-end-palette-tween&#x27;</span>,
-    <span class="hljs-attr">time</span>: <span class="hljs-string">&#x27;30%&#x27;</span>,
-    <span class="hljs-attr">definitions</span>: [
-        {
-            <span class="hljs-attr">attribute</span>: <span class="hljs-string">&#x27;paletteEnd&#x27;</span>,
-            <span class="hljs-attr">start</span>: <span class="hljs-number">299</span>,
-            <span class="hljs-attr">end</span>: <span class="hljs-number">999</span>,
-            <span class="hljs-attr">integer</span>: <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">engine</span>: <span class="hljs-string">&#x27;easeOutIn&#x27;</span>,
-        }
-    ]
-});
-
-ticker.run();</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 
