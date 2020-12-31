@@ -15,7 +15,7 @@ canvas.buildCell({
 
     name: 'trace-chamber',
     dimensions: ['100%', '100%'],
-    cleared: false,
+    clearAlpha: 0.9925,
 });
 
 let lowAdjuster = scrawl.makeColor({

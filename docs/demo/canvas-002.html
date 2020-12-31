@@ -580,7 +580,7 @@
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.library.artefact.mycanvas;
 
 canvas.setBase({
-    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;aliceblue&#x27;</span>,
+    <span class="hljs-attr">clearAlpha</span>: <span class="hljs-number">0.9</span>,
 });</pre></div></div>
             
         </li>
@@ -900,11 +900,29 @@ mywheel.clone({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <h4 id="development-and-testing">Development and testing</h4>
+              <h4 id="user-interaction">User interaction</h4>
+<p>Setup form observer functionality. We’re doing it this way (wrapped in a function) so we can test that it can be killed, and then recreated, later</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.observeAndUpdate({
+
+    <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
+    <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,
+
+    <span class="hljs-attr">target</span>: canvas.base,
+
+    <span class="hljs-attr">useNativeListener</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">preventDefault</span>: <span class="hljs-literal">true</span>,
+
+    <span class="hljs-attr">updates</span>: {
+
+        <span class="hljs-attr">backgroundColor</span>: [<span class="hljs-string">&#x27;backgroundColor&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
+        <span class="hljs-attr">clearAlpha</span>: [<span class="hljs-string">&#x27;clearAlpha&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
+    },
+});
+<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#backgroundColor&#x27;</span>).value = <span class="hljs-string">&#x27;&#x27;</span>;
+<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#clearAlpha&#x27;</span>).value = <span class="hljs-number">0.9</span>;</pre></div></div>
             
         </li>
         
@@ -914,6 +932,21 @@ mywheel.clone({
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <h4 id="development-and-testing">Development and testing</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p>To test kill functionality</p>
 

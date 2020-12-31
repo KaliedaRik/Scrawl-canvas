@@ -9,7 +9,7 @@ import scrawl from '../source/scrawl.js'
 let canvas = scrawl.library.artefact.mycanvas;
 
 canvas.setBase({
-    backgroundColor: 'aliceblue',
+    clearAlpha: 0.9,
 });
 
 
@@ -216,6 +216,28 @@ scrawl.makeRender({
     commence: mouseCheck,
     afterShow: report,
 });
+
+
+// #### User interaction
+// Setup form observer functionality. We're doing it this way (wrapped in a function) so we can test that it can be killed, and then recreated, later
+scrawl.observeAndUpdate({
+
+    event: ['input', 'change'],
+    origin: '.controlItem',
+
+    target: canvas.base,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+
+        backgroundColor: ['backgroundColor', 'raw'],
+        clearAlpha: ['clearAlpha', 'float'],
+    },
+});
+document.querySelector('#backgroundColor').value = '';
+document.querySelector('#clearAlpha').value = 0.9;
 
 // #### Development and testing
 console.log(scrawl.library);
