@@ -24,6 +24,13 @@ export default function (P = {}) {
         asset: null,
 
 
+// __removeAssetOnKill__ - A flag that determines whether, when the entity object is killed (has its `kill` function invoked), the kill functionality should cascade to the asset object.
+// + `false` (default) - do not cascade the kill action
+// + any value that is not false - remove the asset wrapper object
+// + value is a truthy String - for example, `'dom'` - also remove the underlying asset element from the DOM
+        removeAssetOnKill: false,
+
+
 // ##### Spritesheet-specific attributes
         spriteIsRunning: false,
         spriteLastFrameChange: 0,

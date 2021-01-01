@@ -40,7 +40,7 @@
 // #### Imports
 import { constructors, asset, artefact } from '../core/library.js';
 
-import { mergeOver, xta, addStrings, pushUnique, removeItem } from '../core/utilities.js';
+import { mergeOver, xta, addStrings, pushUnique, removeItem, isa_obj } from '../core/utilities.js';
 
 import { gettableVideoAssetAtributes, settableVideoAssetAtributes } from './videoAsset.js';
 import { gettableImageAssetAtributes, settableImageAssetAtributes } from './imageAsset.js';
@@ -144,17 +144,18 @@ P.packetObjects = pushUnique(P.packetObjects, ['asset']);
 
 
 // #### Kill management
-// P.kill = function () {
+P.factoryKill = function (killAsset = false) {
 
-//     this.asset.unsubscribe(this);
-//     if (this.group && this.group.name) this.group.removeArtefacts(this.name);
-//     this.demolishAnchor();
-//     this.deregister();
-//     return this;
-// };
-P.factoryKill = function () {
+    let { asset, removeAssetOnKill } = this;
 
-    this.asset.unsubscribe(this);
+    if (isa_obj(asset)) asset.unsubscribe(this);
+
+    // Cascade kill invocation to the asset object, if required
+    if (removeAssetOnKill) {
+
+        if (removeAssetOnKill.substring) asset.kill(true);
+        else asset.kill();
+    }
 };
 
 // #### Get, Set, deltaSet
