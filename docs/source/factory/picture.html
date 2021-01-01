@@ -522,7 +522,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">asset</span>, <span class="hljs-title">artefact</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
 
-<span class="hljs-keyword">import</span> { mergeOver, xta, addStrings, pushUnique, removeItem } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { mergeOver, xta, addStrings, pushUnique, removeItem, isa_obj } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { gettableVideoAssetAtributes, settableVideoAssetAtributes } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./videoAsset.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { gettableImageAssetAtributes, settableImageAssetAtributes } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./imageAsset.js&#x27;</span>;
@@ -755,9 +755,14 @@ P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">&#x27;a
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
-<p>P.kill = function () {</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>P.factoryKill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">killAsset = <span class="hljs-literal">false</span></span>) </span>{
+
+    <span class="hljs-keyword">let</span> { asset, removeAssetOnKill } = <span class="hljs-built_in">this</span>;
+
+    <span class="hljs-keyword">if</span> (isa_obj(asset)) asset.unsubscribe(<span class="hljs-built_in">this</span>);</pre></div></div>
             
         </li>
         
@@ -768,18 +773,15 @@ P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">&#x27;a
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <pre><code><span class="hljs-built_in">this</span>.asset.unsubscribe(<span class="hljs-built_in">this</span>);
-<span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.group &amp;&amp; <span class="hljs-built_in">this</span>.group.name) <span class="hljs-built_in">this</span>.group.removeArtefacts(<span class="hljs-built_in">this</span>.name);
-<span class="hljs-built_in">this</span>.demolishAnchor();
-<span class="hljs-built_in">this</span>.deregister();
-<span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;</code></pre>
-<p>};</p>
+              <p>Cascade kill invocation to the asset object, if required</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.factoryKill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (removeAssetOnKill) {
 
-    <span class="hljs-built_in">this</span>.asset.unsubscribe(<span class="hljs-built_in">this</span>);
+        <span class="hljs-keyword">if</span> (removeAssetOnKill.substring) asset.kill(<span class="hljs-literal">true</span>);
+        <span class="hljs-keyword">else</span> asset.kill();
+    }
 };</pre></div></div>
             
         </li>
