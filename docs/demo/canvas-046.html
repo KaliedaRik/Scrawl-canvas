@@ -787,12 +787,7 @@
             <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
             <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
 
-            <span class="hljs-attr">asset</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-cell-image`</span>,
-            <span class="hljs-attr">removeAssetOnKill</span>: <span class="hljs-literal">true</span>,
-
-            <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">600</span>, <span class="hljs-number">600</span>],
-            <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-number">600</span>, <span class="hljs-number">600</span>],
-        });</pre></div></div>
+            <span class="hljs-attr">asset</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-cell-image`</span>,</pre></div></div>
             
         </li>
         
@@ -802,6 +797,25 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>‘dom’ - is the magic String that tells Scrawl-canvas to remove both the asset wrapper object, and the &lt;img&gt; element itself. Any other non-false value will cause only the asset wrapper object to remove itself.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            removeAssetOnKill: <span class="hljs-string">&#x27;dom&#x27;</span>,
+
+            <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">600</span>, <span class="hljs-number">600</span>],
+            <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-number">600</span>, <span class="hljs-number">600</span>],
+        });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p>Create the Tween that will animate the Picture entity</p>
 
@@ -816,11 +830,11 @@
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <p>The Tween will run once and then destroy the Picture, the &lt;img&gt; element and its asset wrapper, and then itself</p>
 
@@ -861,11 +875,11 @@
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>Cell clear and compile functions return promises, thus we need to catch errors</p>
 
@@ -877,11 +891,11 @@
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <h4 id="scene-setup">Scene setup</h4>
 
@@ -892,11 +906,11 @@
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>Create a fade effect at the cell level - without this, the smoke ring just looks like a squiggly line</p>
 
@@ -909,11 +923,11 @@
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -945,11 +959,11 @@ Tweens: <span class="hljs-subst">${scrawl.library.tweennames.join(<span class="h
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -965,11 +979,11 @@ Tweens: <span class="hljs-subst">${scrawl.library.tweennames.join(<span class="h
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>The tween runs for 16 seconds, and we want a regular supply of rings … so we release some initially to get the scene running</p>
 
@@ -983,41 +997,61 @@ Tweens: <span class="hljs-subst">${scrawl.library.tweennames.join(<span class="h
         </li>
         
         
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
-              </div>
-              <p>We also want to halt the tweens when the browser page loses focus, and resume them when it regains focus</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">window</span>.addEventListener(<span class="hljs-string">&#x27;blur&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
-
-    scrawl.library.animationtickersnames.forEach(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> {
-        <span class="hljs-keyword">let</span> ticker = scrawl.library.animationtickers[t];
-        <span class="hljs-keyword">if</span> (ticker) ticker.halt();
-    });
-    render.halt();
-});
-<span class="hljs-built_in">window</span>.addEventListener(<span class="hljs-string">&#x27;focus&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
-
-    scrawl.library.animationtickersnames.forEach(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> {
-        <span class="hljs-keyword">let</span> ticker = scrawl.library.animationtickers[t];
-        <span class="hljs-keyword">if</span> (ticker) ticker.resume();
-    });
-    render.run();
-});</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>We also want to halt the animation when the browser page loses focus, and resume them when it regains focus</p>
+<ul>
+<li>We could use<code> scrawl.stopCoreAnimationLoop()</code> and <code>scrawl.startCoreAnimationLoop()</code> to achieve this, but that action will stop ALL canvas animations on the page, not just this demo.</li>
+<li>Instead, we can halt/resume/run our render animation, and also any existing smoke ring Tweens.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">window</span>.addEventListener(<span class="hljs-string">&#x27;blur&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
+    scrawl.library.animationtickersnames.forEach(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> {
+        <span class="hljs-keyword">if</span> (t.indexOf(<span class="hljs-string">&#x27;ring&#x27;</span>) === <span class="hljs-number">0</span>) {
+            <span class="hljs-keyword">let</span> ticker = scrawl.library.animationtickers[t];
+            <span class="hljs-keyword">if</span> (ticker) ticker.halt();
+        }
+    });
+    render.halt();
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>We could add the focus event listener the same as we did the blur listener, or we can add it using Scrawl-canvas functionality:</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.addNativeListener(<span class="hljs-string">&#x27;focus&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
+    scrawl.library.animationtickersnames.forEach(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> {
+        <span class="hljs-keyword">if</span>(t.indexOf(<span class="hljs-string">&#x27;ring&#x27;</span>) === <span class="hljs-number">0</span>) {
+            <span class="hljs-keyword">let</span> ticker = scrawl.library.animationtickers[t];
+            <span class="hljs-keyword">if</span> (ticker) ticker.resume();
+        }
+    });
+    render.run();
+}, <span class="hljs-built_in">window</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

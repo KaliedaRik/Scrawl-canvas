@@ -8,13 +8,81 @@
   <title>Demo DOM 013</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    #mystack {
+      border-width: 0;
+      margin: 0 auto;
+      overflow: hidden;
+      width: 600px;
+      height: 600px;
+    }
+
+    .controls {
+      grid-template-columns: 1fr 2fr 2fr 1fr 2fr 2fr;
+    }
+  </style>
 </head>
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - DOM test 013</h1>
-  <h2>Artefact collision detection - DOM artefacts</h2>
+  <h2>Track mouse movements over a 3d rotated and scaled canvas element</h2>
 
-  <p>Collision detection functionality was removed from the Scrawl-canvas code base from v8.2.0</p>
+  <div class="controls">
+
+    <div class="green label">Start</div>
+    <div class="green">X: <input class="controlItem" id="start_xAbsolute" type="range" value="300" min="0" max="600" step="1" /></div>
+    <div class="green">Y: <input class="controlItem" id="start_yAbsolute" type="range" value="300" min="0" max="600" step="1" /></div>
+
+    <div class="green label">Dimensions</div>
+    <div class="green">W: <input class="controlItem" id="width" type="range" value="400" min="0" max="600" step="10" /></div>
+    <div class="green">H: <input class="controlItem" id="height" type="range" value="400" min="0" max="600" step="10" /></div>
+
+    <div class="green label">Handles</div>
+    <div class="green">X: <input class="controlItem" id="handle_xAbsolute" type="range" value="200" min="-200" max="600" step="1" /></div>
+    <div class="green">Y: <input class="controlItem" id="handle_yAbsolute" type="range" value="200" min="-200" max="600" step="1" /></div>
+
+    <div class="green label">Offset</div>
+    <div class="green">X: <input class="controlItem" id="offset_xAbsolute" type="range" value="0" min="-200" max="200" step="1" /></div>
+    <div class="green">Y: <input class="controlItem" id="offset_yAbsolute" type="range" value="0" min="-200" max="200" step="1" /></div>
+
+    <div class="yellow label">Roll</div>
+    <div class="yellow"><input class="controlItem" id="roll" type="range" value="0" min="0" max="360" step="1" /></div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Pitch</div>
+    <div class="yellow"><input class="controlItem" id="pitch" type="range" value="0" min="0" max="360" step="1" /></div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Yaw</div>
+    <div class="yellow"><input class="controlItem" id="yaw" type="range" value="0" min="0" max="360" step="1" /></div>
+    <div class="yellow">&nbsp;</div>
+
+    <div class="yellow label">Scale</div>
+    <div class="yellow"><input class="controlItem" id="scale" type="range" value="1" min="0.2" max="2" step="0.02" /></div>
+    <div class="yellow">&nbsp;</div>
+  </div>
+
+  <div id="mystack" data-stack>
+    <canvas id="mycanvas" width="400" height="400"></canvas>
+  </div>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+
+    <ul>
+      <li>Create a Scrawl-canvas stack &lt;div>, containing a &lt;canvas> element.</li>
+      <li>Set the canvas so that it uses a local mouse tracking function</li>
+      <li>Add a Wheel entity to the canvas, which will track the mouse cursor's position</li>
+      <li>Add a second Wheel entity whose position we shall manually update so that it matches the mouse event object's `offsetX` and `offsetY` values</li>
+      <li>Position and rotate the canvas within the stack, checking repeatedly that both Wheel entitys continue to track the mouse cursor position</li>
+    </ul>
+
+    <p><a href="../docs/demo/dom-013.html">Annotated code</a></p>
+  </div>
+
+  <script src="dom-013.js" type="module"></script>
 
 </body>
 

@@ -88,7 +88,9 @@ const buildSmokeRing = function (namespace, canvasWrapper, color) {
             handle: ['center', 'center'],
 
             asset: `${namespace}-cell-image`,
-            removeAssetOnKill: true,
+
+            // 'dom' - is the magic String that tells Scrawl-canvas to remove both the asset wrapper object, and the &lt;img> element itself. Any other non-false value will cause only the asset wrapper object to remove itself.
+            removeAssetOnKill: 'dom',
 
             dimensions: [600, 600],
             copyDimensions: [600, 600],
@@ -187,23 +189,29 @@ setTimeout(() => buildSmokeRing(`initRingSecond`, canvas, colorMaker.getRangeCol
 setTimeout(() => buildSmokeRing(`initRingThird`, canvas, colorMaker.getRangeColor(Math.random())), 8100);
 setTimeout(() => buildSmokeRing(`initRingFourth`, canvas, colorMaker.getRangeColor(Math.random())), 12300);
 
-// We also want to halt the tweens when the browser page loses focus, and resume them when it regains focus
+// We also want to halt the animation when the browser page loses focus, and resume them when it regains focus
+// + We could use` scrawl.stopCoreAnimationLoop()` and `scrawl.startCoreAnimationLoop()` to achieve this, but that action will stop ALL canvas animations on the page, not just this demo.
+// + Instead, we can halt/resume/run our render animation, and also any existing smoke ring Tweens.
 window.addEventListener('blur', () => {
-
     scrawl.library.animationtickersnames.forEach(t => {
-        let ticker = scrawl.library.animationtickers[t];
-        if (ticker) ticker.halt();
+        if (t.indexOf('ring') === 0) {
+            let ticker = scrawl.library.animationtickers[t];
+            if (ticker) ticker.halt();
+        }
     });
     render.halt();
 });
-window.addEventListener('focus', () => {
 
+// We could add the focus event listener the same as we did the blur listener, or we can add it using Scrawl-canvas functionality:
+scrawl.addNativeListener('focus', () => {
     scrawl.library.animationtickersnames.forEach(t => {
-        let ticker = scrawl.library.animationtickers[t];
-        if (ticker) ticker.resume();
+        if(t.indexOf('ring') === 0) {
+            let ticker = scrawl.library.animationtickers[t];
+            if (ticker) ticker.resume();
+        }
     });
     render.run();
-});
+}, window);
 
 
 // #### Development and testing

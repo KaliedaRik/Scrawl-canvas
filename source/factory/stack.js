@@ -90,8 +90,6 @@ const Stack = function (items = {}) {
 
     if (el) {
 
-        if (this.trackHere) pushUnique(uiSubscribedElements, this.name);
-
         if (el.getAttribute('data-group') === 'root') {
 
             pushUnique(rootElements, this.name);
@@ -138,8 +136,8 @@ let defaultAttributes = {
     position: 'relative',
     perspective: null,
 
-// __trackHere__ - Boolean flag to indicate whether the Stack object should participate in the Scrawl-canvas mouse/touch tracking functionality; the functionality can be switched off by setting the flag to false (via `set`).
-    trackHere: true,
+// __trackHere__ 
+    trackHere: 'subscribe',
 
 // TODO: This is all about a mad idea we may have for making stacks 'responsive' to viewport changes. It needs a lot more thinking through. Search on 'isResponsive' to find the relevant function below
     isResponsive: false,
@@ -160,31 +158,6 @@ P.saveAsPacket = function () {
 P.clone = λthis;
 
 
-// #### Kill functionality
-// P.kill = function () {
-
-//     let myname = this.name;
-
-//     // rootElements and uiSubscribedElements arrays
-//     removeItem(rootElements, myname);
-//     setRootElementsSort();
-
-//     removeItem(uiSubscribedElements, myname);
-
-//     // Groups
-//     if (group[myname]) group[myname].kill();
-
-//     Object.entries(artefact).forEach(([name, art]) => {
-
-//         if (art.host === myname) art.kill();
-//     });
-
-//     // DOM removals
-//     this.domElement.remove();
-
-//     // Scrawl-canvas library
-//     return this.deregister();
-// }
 // #### Kill functionality
 P.factoryKill = function () {
 
@@ -207,8 +180,6 @@ P.factoryKill = function () {
     // DOM removals
     this.domElement.remove();
 }
-
-
 
 
 // #### Get, Set, deltaSet

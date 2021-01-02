@@ -1241,7 +1241,10 @@ P.updateBaseHere = function (controllerHere, fit) {
 
         let active = controllerHere.active;
 
-        if (dims[0] !== controllerHere.w || dims[1] !== controllerHere.h) {
+        let controllerWidth = (controllerHere.localListener) ? controllerHere.originalWidth : controllerHere.w;
+        let controllerHeight = (controllerHere.localListener) ? controllerHere.originalHeight : controllerHere.h;
+
+        if (dims[0] !== controllerWidth || dims[1] !== controllerHeight) {
 
             if (!this.basePaste) this.basePaste = [];
 
@@ -1249,8 +1252,8 @@ P.updateBaseHere = function (controllerHere, fit) {
 
             let localWidth = dims[0],
                 localHeight = dims[1],
-                remoteWidth = controllerHere.w,
-                remoteHeight = controllerHere.h,
+                remoteWidth = controllerWidth,
+                remoteHeight = controllerHeight,
                 remoteX = controllerHere.x,
                 remoteY = controllerHere.y;
 
@@ -1306,8 +1309,8 @@ P.updateBaseHere = function (controllerHere, fit) {
 
             here.x = controllerHere.x;
             here.y = controllerHere.y;
-            here.w = controllerHere.w;
-            here.h = controllerHere.h;
+            here.w = controllerWidth;
+            here.h = controllerHeight;
             here.active = active;
         }
         controllerHere.baseActive = active;

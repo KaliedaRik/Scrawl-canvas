@@ -619,36 +619,38 @@
 
         targets.forEach(<span class="hljs-function"><span class="hljs-params">target</span> =&gt;</span> {
 
-            <span class="hljs-keyword">if</span> (!isa_dom(target)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/document actionMouseListener() error - bad target: <span class="hljs-subst">${myevent}</span>, <span class="hljs-subst">${target}</span>`</span>);
+            <span class="hljs-keyword">if</span> (isa_dom(target) || target.document || target.characterSet) {
+                
+                <span class="hljs-keyword">switch</span> (myevent) {
+                
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;move&#x27;</span>:
+                        target[action](<span class="hljs-string">&#x27;mousemove&#x27;</span>, fn, <span class="hljs-literal">false</span>);
+                        target[action](<span class="hljs-string">&#x27;touchmove&#x27;</span>, fn, <span class="hljs-literal">false</span>);
+                        target[action](<span class="hljs-string">&#x27;touchfollow&#x27;</span>, fn, <span class="hljs-literal">false</span>);
+                        <span class="hljs-keyword">break</span>;
 
-            <span class="hljs-keyword">switch</span> (myevent) {
-            
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;move&#x27;</span>:
-                    target[action](<span class="hljs-string">&#x27;mousemove&#x27;</span>, fn, <span class="hljs-literal">false</span>);
-                    target[action](<span class="hljs-string">&#x27;touchmove&#x27;</span>, fn, <span class="hljs-literal">false</span>);
-                    target[action](<span class="hljs-string">&#x27;touchfollow&#x27;</span>, fn, <span class="hljs-literal">false</span>);
-                    <span class="hljs-keyword">break</span>;
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;up&#x27;</span>:
+                        target[action](<span class="hljs-string">&#x27;mouseup&#x27;</span>, fn, <span class="hljs-literal">false</span>);
+                        target[action](<span class="hljs-string">&#x27;touchend&#x27;</span>, fn, <span class="hljs-literal">false</span>);
+                        <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;up&#x27;</span>:
-                    target[action](<span class="hljs-string">&#x27;mouseup&#x27;</span>, fn, <span class="hljs-literal">false</span>);
-                    target[action](<span class="hljs-string">&#x27;touchend&#x27;</span>, fn, <span class="hljs-literal">false</span>);
-                    <span class="hljs-keyword">break</span>;
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;down&#x27;</span>:
+                        target[action](<span class="hljs-string">&#x27;mousedown&#x27;</span>, fn, <span class="hljs-literal">false</span>);
+                        target[action](<span class="hljs-string">&#x27;touchstart&#x27;</span>, fn, <span class="hljs-literal">false</span>);
+                        <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;down&#x27;</span>:
-                    target[action](<span class="hljs-string">&#x27;mousedown&#x27;</span>, fn, <span class="hljs-literal">false</span>);
-                    target[action](<span class="hljs-string">&#x27;touchstart&#x27;</span>, fn, <span class="hljs-literal">false</span>);
-                    <span class="hljs-keyword">break</span>;
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;leave&#x27;</span>:
+                        target[action](<span class="hljs-string">&#x27;mouseleave&#x27;</span>, fn, <span class="hljs-literal">false</span>);
+                        target[action](<span class="hljs-string">&#x27;touchleave&#x27;</span>, fn, <span class="hljs-literal">false</span>);
+                        <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;leave&#x27;</span>:
-                    target[action](<span class="hljs-string">&#x27;mouseleave&#x27;</span>, fn, <span class="hljs-literal">false</span>);
-                    target[action](<span class="hljs-string">&#x27;touchleave&#x27;</span>, fn, <span class="hljs-literal">false</span>);
-                    <span class="hljs-keyword">break</span>;
-
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;enter&#x27;</span>:
-                    target[action](<span class="hljs-string">&#x27;mouseenter&#x27;</span>, fn, <span class="hljs-literal">false</span>);
-                    target[action](<span class="hljs-string">&#x27;touchenter&#x27;</span>, fn, <span class="hljs-literal">false</span>);
-                    <span class="hljs-keyword">break</span>;
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;enter&#x27;</span>:
+                        target[action](<span class="hljs-string">&#x27;mouseenter&#x27;</span>, fn, <span class="hljs-literal">false</span>);
+                        target[action](<span class="hljs-string">&#x27;touchenter&#x27;</span>, fn, <span class="hljs-literal">false</span>);
+                        <span class="hljs-keyword">break</span>;
+                }
             }
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/document actionMouseListener() error - bad target: <span class="hljs-subst">${myevent}</span>, <span class="hljs-subst">${target}</span>`</span>);
         });
     });
 };
@@ -659,30 +661,32 @@
 
         targets.forEach(<span class="hljs-function"><span class="hljs-params">target</span> =&gt;</span> {
 
-            <span class="hljs-keyword">if</span> (!isa_dom(target)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/document actionPointerListener() error - bad target: <span class="hljs-subst">${myevent}</span>, <span class="hljs-subst">${target}</span>`</span>);
+            <span class="hljs-keyword">if</span> (isa_dom(target) || target.document || target.characterSet) {
 
-            <span class="hljs-keyword">switch</span> (myevent) {
-            
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;move&#x27;</span>:
-                    target[action](<span class="hljs-string">&#x27;pointermove&#x27;</span>, fn, <span class="hljs-literal">false</span>);
-                    <span class="hljs-keyword">break</span>;
+                <span class="hljs-keyword">switch</span> (myevent) {
+                
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;move&#x27;</span>:
+                        target[action](<span class="hljs-string">&#x27;pointermove&#x27;</span>, fn, <span class="hljs-literal">false</span>);
+                        <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;up&#x27;</span>:
-                    target[action](<span class="hljs-string">&#x27;pointerup&#x27;</span>, fn, <span class="hljs-literal">false</span>);
-                    <span class="hljs-keyword">break</span>;
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;up&#x27;</span>:
+                        target[action](<span class="hljs-string">&#x27;pointerup&#x27;</span>, fn, <span class="hljs-literal">false</span>);
+                        <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;down&#x27;</span>:
-                    target[action](<span class="hljs-string">&#x27;pointerdown&#x27;</span>, fn, <span class="hljs-literal">false</span>);
-                    <span class="hljs-keyword">break</span>;
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;down&#x27;</span>:
+                        target[action](<span class="hljs-string">&#x27;pointerdown&#x27;</span>, fn, <span class="hljs-literal">false</span>);
+                        <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;leave&#x27;</span>:
-                    target[action](<span class="hljs-string">&#x27;pointerleave&#x27;</span>, fn, <span class="hljs-literal">false</span>);
-                    <span class="hljs-keyword">break</span>;
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;leave&#x27;</span>:
+                        target[action](<span class="hljs-string">&#x27;pointerleave&#x27;</span>, fn, <span class="hljs-literal">false</span>);
+                        <span class="hljs-keyword">break</span>;
 
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;enter&#x27;</span>:
-                    target[action](<span class="hljs-string">&#x27;pointerenter&#x27;</span>, fn, <span class="hljs-literal">false</span>);
-                    <span class="hljs-keyword">break</span>;
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;enter&#x27;</span>:
+                        target[action](<span class="hljs-string">&#x27;pointerenter&#x27;</span>, fn, <span class="hljs-literal">false</span>);
+                        <span class="hljs-keyword">break</span>;
+                }
             }
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/document actionPointerListener() error - bad target: <span class="hljs-subst">${myevent}</span>, <span class="hljs-subst">${target}</span>`</span>);
         });
     });
 };</pre></div></div>
@@ -702,7 +706,7 @@
 <ul>
 <li><strong>evt</strong> - String name of the event (‘click’, ‘input’, ‘change’, etc), or an array of such strings</li>
 <li><strong>fn</strong> - the function to be called when the event listener(s) trigger</li>
-<li><strong>targ</strong> - either the DOM element object, or an array of DOM element objects, or a query selector String</li>
+<li><strong>targ</strong> - either the DOM element object, or an array of DOM element objects, or a query selector String. Note that <code>window</code> and ``</li>
 </ul>
 
             </div>
@@ -766,9 +770,9 @@
 
         targets.forEach(<span class="hljs-function"><span class="hljs-params">target</span> =&gt;</span> {
 
-            <span class="hljs-keyword">if</span> (!isa_dom(target)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/document actionNativeListener() error - bad target: <span class="hljs-subst">${myevent}</span>, <span class="hljs-subst">${target}</span>`</span>);
+            <span class="hljs-keyword">if</span> (isa_dom(target) || target.document || target.characterSet) target[action](myevent, fn, <span class="hljs-literal">false</span>);
 
-            target[action](myevent, fn, <span class="hljs-literal">false</span>);
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/document actionNativeListener() error - bad target: <span class="hljs-subst">${myevent}</span>, <span class="hljs-subst">${target}</span>`</span>);
         });
     });
 };</pre></div></div>

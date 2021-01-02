@@ -29,8 +29,13 @@
   <div class="testinfo">
     <h4>Test purpose</h4>
 
+    <p>The main purpose of this demo is to check that we can create cells, groups and entitys on the fly, grab an image of their display and then remove them; then create a Picture entity to display the captured image, and a Tween object that will animate the entity and destroy itself and the entity when it completes. As part of its destruction, the Tween will generate a new smoke ring.</p>
+
     <ul>
-      <li></li>
+      <li>Check that additional Cells and Groups are created and destroyed - if the smoke ring shows, but no additional Cells/Groups are listed, then things are working.</li>
+      <li>Check that assets, entitys and tweens are listed only while active, and are removed from the library when the associated Tween completes its cycle.</li>
+      <li>Check also that the generated &lt;img> elements are removed from the DOM.</li>
+      <li>Check that the animation halts whenever the browser page loses focus (for whatever reason), and restarts whenever it regains focus.</li>
     </ul>
 
     <p><a href="../docs/demo/canvas-046.html">Annotated code</a></p>

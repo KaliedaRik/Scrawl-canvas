@@ -14,7 +14,7 @@
 // #### Imports
 import { constructors, artefact } from '../core/library.js';
 import { mergeOver, pushUnique, removeItem, isa_obj, isa_dom, isa_quaternion, xt, xta, λnull } from '../core/utilities.js';
-import { uiSubscribedElements, currentCorePosition, applyCoreResizeListener } from '../core/userInteraction.js';
+import { uiSubscribedElements, currentCorePosition, applyCoreResizeListener, addLocalMouseMoveListener, removeLocalMouseMoveListener } from '../core/userInteraction.js';
 import { addDomShowElement, setDomShowRequired, domShow } from '../core/document.js';
 
 import { makeQuaternion, requestQuaternion, releaseQuaternion } from '../factory/quaternion.js';
@@ -80,10 +80,15 @@ export default function (P = {}) {
 // + triggers as part of the [userInteraction](../core/userInteraction.html) `updateUiSubscribedElement` functionality
         checkForResize: false,
 
-// __trackHere__ - Boolean flag - when set, Scrawl-canvas will track mouse/touch cursor's _local_ position (relative to top-left corner) over the wrapper's DOM element
-// + Stack and Canvas wrappers have this flag set to true, by default
-// + Element wrappers default to false, as expected
-        trackHere: false,
+// __trackHere__ - String flag - when set, Scrawl-canvas will track mouse/touch cursor's _local_ position (relative to top-left corner) over the wrapper's DOM element
+// + Stack and Canvas wrappers have this flag set to true `subscribe`, by default
+// + Element wrappers default to false `''`, as expected
+// + The value can also be set to `'local'`, which will set up a local listener to help track mouse movements across a 3d rotated DOM element
+// + ___BE AWARE___ that setting the value to `'local'` is an _experimental technology!_ There are a number of issues surrounding the functionality - principally that we lose the ability to dynamically resize the rotated element/canvas: changing the element's dimensions will lead to inaccuracies in mouse cursor positioning!
+        trackHere: '',
+
+// __activePadding__ - Number - if the `trackHere` attribute is set to `'local'` then the here object will generally remain true whatever the position of the mouse cursor - this is because here coordinates are only updated as the cursor moves over the element, not when it moves beyond its borders. The activePadding Number supplies a padding area along the inside edge of the element - if the mouse moves into this area then a the here.active boolean will become false. This is not foolproof because it will often miss a rapidly moving cursor!
+        activePadding: 5,
 
 // __domAttributes__ - pseudo-attribute which is not retained by the wrapper object. See `updateDomAttributes` function below for details on how to use this functionality when creating or updating (via `set`), for example, Element objects
     };
@@ -153,14 +158,24 @@ export default function (P = {}) {
     let S = P.setters,
         D = P.deltaSetters;
 
-// `trackHere`
-    S.trackHere = function (item) {
+S.trackHere = function(val) {
 
-        this.trackHere = item;
-        
-        if (item) pushUnique(uiSubscribedElements, this.name);
-        else removeItem(uiSubscribedElements, this.name);
-    };
+    if (xt(val)) {
+
+        if (val) {
+
+            pushUnique(uiSubscribedElements, this.name);
+
+            if (val === 'local') addLocalMouseMoveListener(this);
+        }
+        else {
+
+            removeItem(uiSubscribedElements, this.name);
+            removeLocalMouseMoveListener(this);
+        }
+        this.trackHere = val;
+    }
+};
 
 // `position`
     S.position = function (item) {

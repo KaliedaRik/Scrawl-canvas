@@ -480,7 +480,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">artefact</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
 <span class="hljs-keyword">import</span> { mergeOver, pushUnique, removeItem, isa_obj, isa_dom, isa_quaternion, xt, xta, λ<span class="hljs-literal">null</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { uiSubscribedElements, currentCorePosition, applyCoreResizeListener } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/userInteraction.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { uiSubscribedElements, currentCorePosition, applyCoreResizeListener, addLocalMouseMoveListener, removeLocalMouseMoveListener } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/userInteraction.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { addDomShowElement, setDomShowRequired, domShow } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/document.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeQuaternion, requestQuaternion, releaseQuaternion } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/quaternion.js&#x27;</span>;
@@ -677,15 +677,17 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p><strong>trackHere</strong> - Boolean flag - when set, Scrawl-canvas will track mouse/touch cursor’s <em>local</em> position (relative to top-left corner) over the wrapper’s DOM element</p>
+              <p><strong>trackHere</strong> - String flag - when set, Scrawl-canvas will track mouse/touch cursor’s <em>local</em> position (relative to top-left corner) over the wrapper’s DOM element</p>
 <ul>
-<li>Stack and Canvas wrappers have this flag set to true, by default</li>
-<li>Element wrappers default to false, as expected</li>
+<li>Stack and Canvas wrappers have this flag set to true <code>subscribe</code>, by default</li>
+<li>Element wrappers default to false <code>&#39;&#39;</code>, as expected</li>
+<li>The value can also be set to <code>&#39;local&#39;</code>, which will set up a local listener to help track mouse movements across a 3d rotated DOM element</li>
+<li><strong><em>BE AWARE</em></strong> that setting the value to <code>&#39;local&#39;</code> is an <em>experimental technology!</em> There are a number of issues surrounding the functionality - principally that we lose the ability to dynamically resize the rotated element/canvas: changing the element’s dimensions will lead to inaccuracies in mouse cursor positioning!</li>
 </ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        trackHere: <span class="hljs-literal">false</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        trackHere: <span class="hljs-string">&#x27;&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -695,6 +697,21 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p><strong>activePadding</strong> - Number - if the <code>trackHere</code> attribute is set to <code>&#39;local&#39;</code> then the here object will generally remain true whatever the position of the mouse cursor - this is because here coordinates are only updated as the cursor moves over the element, not when it moves beyond its borders. The activePadding Number supplies a padding area along the inside edge of the element - if the mouse moves into this area then a the here.active boolean will become false. This is not foolproof because it will often miss a rapidly moving cursor!</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        activePadding: <span class="hljs-number">5</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p><strong>domAttributes</strong> - pseudo-attribute which is not retained by the wrapper object. See <code>updateDomAttributes</code> function below for details on how to use this functionality when creating or updating (via <code>set</code>), for example, Element objects</p>
 
@@ -706,11 +723,11 @@
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
@@ -722,11 +739,11 @@
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p><code>processDOMPacketOut</code> - internal helper function</p>
 
@@ -740,11 +757,11 @@
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p><code>processFactoryPacketOut</code> - internal helper function</p>
 
@@ -762,11 +779,11 @@
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p><code>finalizePacketOut</code> - internal helper function</p>
 
@@ -795,11 +812,11 @@
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p><code>postCloneAction</code> - internal helper function</p>
@@ -819,32 +836,16 @@
         </li>
         
         
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
-              </div>
-              <h4 id="kill-management">Kill management</h4>
-<p>No additional kill functionality required</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+              <h4 id="kill-management">Kill management</h4>
+<p>No additional kill functionality required</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> S = P.setters,
-        D = P.deltaSetters;</pre></div></div>
             
         </li>
         
@@ -855,17 +856,31 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <p><code>trackHere</code></p>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    S.trackHere = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> S = P.setters,
+        D = P.deltaSetters;
 
-        <span class="hljs-built_in">this</span>.trackHere = item;
-        
-        <span class="hljs-keyword">if</span> (item) pushUnique(uiSubscribedElements, <span class="hljs-built_in">this</span>.name);
-        <span class="hljs-keyword">else</span> removeItem(uiSubscribedElements, <span class="hljs-built_in">this</span>.name);
-    };</pre></div></div>
+S.trackHere = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">val</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (xt(val)) {
+
+        <span class="hljs-keyword">if</span> (val) {
+
+            pushUnique(uiSubscribedElements, <span class="hljs-built_in">this</span>.name);
+
+            <span class="hljs-keyword">if</span> (val === <span class="hljs-string">&#x27;local&#x27;</span>) addLocalMouseMoveListener(<span class="hljs-built_in">this</span>);
+        }
+        <span class="hljs-keyword">else</span> {
+
+            removeItem(uiSubscribedElements, <span class="hljs-built_in">this</span>.name);
+            removeLocalMouseMoveListener(<span class="hljs-built_in">this</span>);
+        }
+        <span class="hljs-built_in">this</span>.trackHere = val;
+    }
+};</pre></div></div>
             
         </li>
         

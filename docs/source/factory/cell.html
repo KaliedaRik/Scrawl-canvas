@@ -2585,7 +2585,10 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
 
         <span class="hljs-keyword">let</span> active = controllerHere.active;
 
-        <span class="hljs-keyword">if</span> (dims[<span class="hljs-number">0</span>] !== controllerHere.w || dims[<span class="hljs-number">1</span>] !== controllerHere.h) {
+        <span class="hljs-keyword">let</span> controllerWidth = (controllerHere.localListener) ? controllerHere.originalWidth : controllerHere.w;
+        <span class="hljs-keyword">let</span> controllerHeight = (controllerHere.localListener) ? controllerHere.originalHeight : controllerHere.h;
+
+        <span class="hljs-keyword">if</span> (dims[<span class="hljs-number">0</span>] !== controllerWidth || dims[<span class="hljs-number">1</span>] !== controllerHeight) {
 
             <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.basePaste) <span class="hljs-built_in">this</span>.basePaste = [];
 
@@ -2593,8 +2596,8 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
 
             <span class="hljs-keyword">let</span> localWidth = dims[<span class="hljs-number">0</span>],
                 localHeight = dims[<span class="hljs-number">1</span>],
-                remoteWidth = controllerHere.w,
-                remoteHeight = controllerHere.h,
+                remoteWidth = controllerWidth,
+                remoteHeight = controllerHeight,
                 remoteX = controllerHere.x,
                 remoteY = controllerHere.y;
 
@@ -2650,8 +2653,8 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
 
             here.x = controllerHere.x;
             here.y = controllerHere.y;
-            here.w = controllerHere.w;
-            here.h = controllerHere.h;
+            here.w = controllerWidth;
+            here.h = controllerHeight;
             here.active = active;
         }
         controllerHere.baseActive = active;

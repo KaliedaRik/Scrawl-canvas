@@ -714,20 +714,10 @@
 
     <span class="hljs-keyword">let</span> here = dom.here;
 
-    here.x = <span class="hljs-built_in">Math</span>.round(currentCorePosition.x - dox);
-    here.y = <span class="hljs-built_in">Math</span>.round(currentCorePosition.y - doy);
     here.w = <span class="hljs-built_in">Math</span>.round(dims.width);
     here.h = <span class="hljs-built_in">Math</span>.round(dims.height);
-    here.normX = (here.w) ? here.x / here.w : <span class="hljs-literal">false</span>;
-    here.normY = (here.h) ? here.y / here.h : <span class="hljs-literal">false</span>;
-    here.offsetX = dox;
-    here.offsetY = doy;
-    here.type = currentCorePosition.type;
-    here.active = <span class="hljs-literal">true</span>;
 
-    <span class="hljs-keyword">if</span> (here.normX &lt; <span class="hljs-number">0</span> || here.normX &gt; <span class="hljs-number">1</span> || here.normY &lt; <span class="hljs-number">0</span> || here.normY &gt; <span class="hljs-number">1</span>) here.active = <span class="hljs-literal">false</span>;
-
-    <span class="hljs-keyword">if</span> (dom.type === <span class="hljs-string">&#x27;Canvas&#x27;</span>) dom.updateBaseHere(here, dom.fit);</pre></div></div>
+    here.type = currentCorePosition.type;</pre></div></div>
             
         </li>
         
@@ -737,6 +727,49 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>DOM-based artefacts have the option of creating a local mouse move event listener, which better tracks mouse movements across them when their element has been rotated in three dimensions. This if/else </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!dom.localMouseListener) {
+
+        here.localListener = <span class="hljs-literal">false</span>;
+        here.active = <span class="hljs-literal">true</span>;
+
+        here.x = <span class="hljs-built_in">Math</span>.round(currentCorePosition.x - dox);
+        here.y = <span class="hljs-built_in">Math</span>.round(currentCorePosition.y - doy);
+
+        here.normX = (here.w) ? here.x / here.w : <span class="hljs-literal">false</span>;
+        here.normY = (here.h) ? here.y / here.h : <span class="hljs-literal">false</span>;
+        here.offsetX = dox;
+        here.offsetY = doy;
+
+        <span class="hljs-keyword">if</span> (here.normX &lt; <span class="hljs-number">0</span> || here.normX &gt; <span class="hljs-number">1</span> || here.normY &lt; <span class="hljs-number">0</span> || here.normY &gt; <span class="hljs-number">1</span>) here.active = <span class="hljs-literal">false</span>;
+    }
+    <span class="hljs-keyword">else</span> {
+
+        here.localListener = <span class="hljs-literal">true</span>;
+        here.active = <span class="hljs-literal">false</span>;
+
+        here.normX = (here.originalWidth) ? here.x / here.originalWidth : <span class="hljs-literal">false</span>;
+        here.normY = (here.originalHeight) ? here.y / here.originalHeight : <span class="hljs-literal">false</span>;
+        here.offsetX = dox;
+        here.offsetY = doy;
+
+        <span class="hljs-keyword">if</span> (here.x &gt; dom.activePadding &amp;&amp; here.x &lt; here.originalWidth - dom.activePadding &amp;&amp; here.y &gt; <span class="hljs-number">0</span> + dom.activePadding &amp;&amp; here.y &lt; here.originalHeight - dom.activePadding) here.active = <span class="hljs-literal">true</span>;
+    }
+
+    <span class="hljs-keyword">if</span> (dom.type === <span class="hljs-string">&#x27;Canvas&#x27;</span>) dom.updateBaseHere(here, dom.fit);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p>Automatically check for element resize</p>
 <ul>
@@ -755,11 +788,11 @@
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <p>Regardless of the setting of &lt;canvas&gt; element’s <code>boxSizing</code> style attribute:</p>
 <ul>
@@ -790,11 +823,11 @@
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>Stack and Element artefacts resize test.</p>
 <ul>
@@ -817,11 +850,56 @@
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Internal functions that get triggered when setting a DOM-based artefact’s <code>trackHere</code> attribute. They add/remove an event listener to the artefact’s domElement.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> addLocalMouseMoveListener = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">wrapper</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (isa_obj(wrapper)) {
+
+        <span class="hljs-keyword">if</span> (wrapper.localMouseListener) wrapper.localMouseListener();
+
+        <span class="hljs-keyword">if</span> (!wrapper.here) wrapper.here = {};
+
+        wrapper.here.originalWidth = wrapper.currentDimensions[<span class="hljs-number">0</span>];
+        wrapper.here.originalHeight = wrapper.currentDimensions[<span class="hljs-number">1</span>];
+
+        wrapper.localMouseListener = addListener(<span class="hljs-string">&#x27;move&#x27;</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>{
+
+            <span class="hljs-keyword">if</span> (wrapper.here) {
+
+                wrapper.here.x = <span class="hljs-built_in">Math</span>.round(<span class="hljs-built_in">parseFloat</span>(e.offsetX));
+                wrapper.here.y = <span class="hljs-built_in">Math</span>.round(<span class="hljs-built_in">parseFloat</span>(e.offsetY));
+            }
+        }, wrapper.domElement);
+    }
+};
+
+<span class="hljs-keyword">const</span> removeLocalMouseMoveListener = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">wrapper</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (isa_obj(wrapper)) {
+
+        <span class="hljs-keyword">if</span> (wrapper.localMouseListener) wrapper.localMouseListener();
+
+        wrapper.localMouseListener = <span class="hljs-literal">false</span>;
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>Animation object which checks whether any window event listeners have fired, and actions accordingly</p>
 
@@ -852,11 +930,11 @@
         </li>
         
         
-        <li id="section-18">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p><code>Exported functions</code> (to modules and the scrawl object). Event listeners can be a drain on web page efficiency. If a web page contains only static canvas (and/or stack) displays, with no requirement for user interaction, we can minimize Scrawl-canvas’s impact on those pages by switching off the core listeners (and also the core animation loop).</p>
 
@@ -884,11 +962,11 @@
         </li>
         
         
-        <li id="section-19">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>Helper function</p>
 
@@ -925,11 +1003,11 @@
         </li>
         
         
-        <li id="section-20">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p><code>Exported functions</code> (to modules). Invoke the resize and/or scroll event listeners once, outside the regular requestAnimationFrame tick.</p>
 
@@ -950,11 +1028,11 @@
         </li>
         
         
-        <li id="section-21">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <h4 id="convenience-functions">Convenience functions</h4>
 <p>Okay, so I got very bored of writing boilerplate to react to various form elements user interactions across the demos. So I wrote some functions to setup (and take down) batches of DOM event listeners to make my life easier. These are:</p>
@@ -976,11 +1054,11 @@
         </li>
         
         
-        <li id="section-22">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p><code>Exported function</code> (to modules and the scrawl object). Capture changes in a form and apply them to a target Scrawl-canvas artefact, asset, style, group, etc object</p>
 
@@ -1113,11 +1191,11 @@
         </li>
         
         
-        <li id="section-23">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <h4 id="drag-and-drop-zones">Drag-and-drop zones.</h4>
 <p><strong>makeDragZone</strong> is an attempt to make setting up drag-and-drop functionality within a Scrawl-canvas stack or canvas as simple as possible</p>
@@ -1145,11 +1223,11 @@
         </li>
         
         
-        <li id="section-24">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p><code>Exported function</code> (to modules and the scrawl object). Add drag-and-drop functionality to a canvas or stack.</p>
 
@@ -1162,11 +1240,11 @@
         </li>
         
         
-        <li id="section-25">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p><code>zone</code> is required</p>
 <ul>
@@ -1188,11 +1266,11 @@
         </li>
         
         
-        <li id="section-26">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p><code>collisionGroup</code> is optional; defaults to zone’s namesake group</p>
 <ul>
@@ -1213,11 +1291,11 @@
         </li>
         
         
-        <li id="section-27">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p><code>coordinateSource</code> will be an object containing <code>x</code> and <code>y</code> attributes</p>
 <ul>
@@ -1242,11 +1320,11 @@
         </li>
         
         
-        <li id="section-28">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p><code>startOn</code>, <code>endOn</code> - if supplied, then need to be arrays</p>
 
@@ -1258,11 +1336,11 @@
         </li>
         
         
-        <li id="section-29">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p>We can only drag one artefact at a time; that artefact - alongside the hit coordinate’s x and y values -  is stored in the <code>current</code> variable</p>
 
@@ -1273,11 +1351,11 @@
         </li>
         
         
-        <li id="section-30">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p><code>updateOnStart</code>, <code>updateOnEnd</code> - if supplied, then need to be functions</p>
 
@@ -1292,11 +1370,11 @@
         </li>
         
         
-        <li id="section-31">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p><code>exposeCurrentArtefact</code> - if supplied, then needs to be a boolean</p>
 
@@ -1364,11 +1442,11 @@
         </li>
         
         
-        <li id="section-32">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 
@@ -1377,6 +1455,8 @@
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
     uiSubscribedElements,
     currentCorePosition,
+    addLocalMouseMoveListener,
+    removeLocalMouseMoveListener,
     startCoreListeners,
     stopCoreListeners,
     applyCoreResizeListener,

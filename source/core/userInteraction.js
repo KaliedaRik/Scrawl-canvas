@@ -130,18 +130,39 @@ const updateUiSubscribedElement = function (art) {
 
     let here = dom.here;
 
-    here.x = Math.round(currentCorePosition.x - dox);
-    here.y = Math.round(currentCorePosition.y - doy);
     here.w = Math.round(dims.width);
     here.h = Math.round(dims.height);
-    here.normX = (here.w) ? here.x / here.w : false;
-    here.normY = (here.h) ? here.y / here.h : false;
-    here.offsetX = dox;
-    here.offsetY = doy;
-    here.type = currentCorePosition.type;
-    here.active = true;
 
-    if (here.normX < 0 || here.normX > 1 || here.normY < 0 || here.normY > 1) here.active = false;
+    here.type = currentCorePosition.type;
+
+    // DOM-based artefacts have the option of creating a local mouse move event listener, which better tracks mouse movements across them when their element has been rotated in three dimensions. This if/else 
+    if (!dom.localMouseListener) {
+
+        here.localListener = false;
+        here.active = true;
+
+        here.x = Math.round(currentCorePosition.x - dox);
+        here.y = Math.round(currentCorePosition.y - doy);
+
+        here.normX = (here.w) ? here.x / here.w : false;
+        here.normY = (here.h) ? here.y / here.h : false;
+        here.offsetX = dox;
+        here.offsetY = doy;
+
+        if (here.normX < 0 || here.normX > 1 || here.normY < 0 || here.normY > 1) here.active = false;
+    }
+    else {
+
+        here.localListener = true;
+        here.active = false;
+
+        here.normX = (here.originalWidth) ? here.x / here.originalWidth : false;
+        here.normY = (here.originalHeight) ? here.y / here.originalHeight : false;
+        here.offsetX = dox;
+        here.offsetY = doy;
+
+        if (here.x > dom.activePadding && here.x < here.originalWidth - dom.activePadding && here.y > 0 + dom.activePadding && here.y < here.originalHeight - dom.activePadding) here.active = true;
+    }
 
     if (dom.type === 'Canvas') dom.updateBaseHere(here, dom.fit);
 
@@ -185,6 +206,39 @@ const updateUiSubscribedElement = function (art) {
                 });
             }
         }
+    }
+};
+
+// Internal functions that get triggered when setting a DOM-based artefact's `trackHere` attribute. They add/remove an event listener to the artefact's domElement.
+const addLocalMouseMoveListener = function (wrapper) {
+
+    if (isa_obj(wrapper)) {
+
+        if (wrapper.localMouseListener) wrapper.localMouseListener();
+
+        if (!wrapper.here) wrapper.here = {};
+
+        wrapper.here.originalWidth = wrapper.currentDimensions[0];
+        wrapper.here.originalHeight = wrapper.currentDimensions[1];
+
+        wrapper.localMouseListener = addListener('move', function (e) {
+
+            if (wrapper.here) {
+
+                wrapper.here.x = Math.round(parseFloat(e.offsetX));
+                wrapper.here.y = Math.round(parseFloat(e.offsetY));
+            }
+        }, wrapper.domElement);
+    }
+};
+
+const removeLocalMouseMoveListener = function (wrapper) {
+
+    if (isa_obj(wrapper)) {
+
+        if (wrapper.localMouseListener) wrapper.localMouseListener();
+
+        wrapper.localMouseListener = false;
     }
 };
 
@@ -562,6 +616,8 @@ const makeDragZone = function (items = {}) {
 export {
     uiSubscribedElements,
     currentCorePosition,
+    addLocalMouseMoveListener,
+    removeLocalMouseMoveListener,
     startCoreListeners,
     stopCoreListeners,
     applyCoreResizeListener,
