@@ -947,8 +947,6 @@ P.show = function () {
 
         if (engine) {
 
-            engine.filter = self.filter;
-
             let floor = Math.floor,
                 hostDimensions = host.currentDimensions,
                 destWidth = floor(hostDimensions[0]),
@@ -971,6 +969,8 @@ P.show = function () {
             engine.save();
             engine.setTransform(1, 0, 0, 1, 0, 0);
                 
+            engine.filter = self.filter;
+
             if (self.isBase) {
 
                 if (!self.basePaste) self.basePaste = [];
