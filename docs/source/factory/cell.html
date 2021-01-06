@@ -2115,8 +2115,6 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
 
         <span class="hljs-keyword">if</span> (engine) {
 
-            engine.filter = self.filter;
-
             <span class="hljs-keyword">let</span> floor = <span class="hljs-built_in">Math</span>.floor,
                 hostDimensions = host.currentDimensions,
                 destWidth = floor(hostDimensions[<span class="hljs-number">0</span>]),
@@ -2153,6 +2151,8 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
             engine.save();
             engine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
                 
+            engine.filter = self.filter;
+
             <span class="hljs-keyword">if</span> (self.isBase) {
 
                 <span class="hljs-keyword">if</span> (!self.basePaste) self.basePaste = [];
