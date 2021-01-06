@@ -397,7 +397,7 @@ const addCanvas = function (items = {}) {
         position: position,
         setInitialDimensions: false,
         setAsCurrentCanvas: (xt(items.setAsCurrentCanvas)) ? items.setAsCurrentCanvas : true,
-        trackHere: (xt(items.trackHere)) ? items.trackHere : true,
+        trackHere: (xt(items.trackHere)) ? items.trackHere : 'subscribe',
     });
 
     delete items.group;

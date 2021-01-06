@@ -72,12 +72,8 @@ const Element = function (items = {}) {
 
     el = this.domElement;
 
-    if (el) {
+    if (el) el.id = this.name;
 
-        el.id = this.name;
-
-        if (this.trackHere) pushUnique(uiSubscribedElements, this.name);
-    }
     this.apply();
     
     return this;

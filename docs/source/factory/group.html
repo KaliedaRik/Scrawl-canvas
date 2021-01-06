@@ -764,6 +764,13 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.deregister();
+}
+
+P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-built_in">this</span>.artefactBuckets.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.kill());
+
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 }</pre></div></div>
             
         </li>

@@ -94,36 +94,38 @@ const actionMouseListener = function (events, fn, targets, action) {
 
         targets.forEach(target => {
 
-            if (!isa_dom(target)) throw new Error(`core/document actionMouseListener() error - bad target: ${myevent}, ${target}`);
+            if (isa_dom(target) || target.document || target.characterSet) {
+                
+                switch (myevent) {
+                
+                    case 'move':
+                        target[action]('mousemove', fn, false);
+                        target[action]('touchmove', fn, false);
+                        target[action]('touchfollow', fn, false);
+                        break;
 
-            switch (myevent) {
-            
-                case 'move':
-                    target[action]('mousemove', fn, false);
-                    target[action]('touchmove', fn, false);
-                    target[action]('touchfollow', fn, false);
-                    break;
+                    case 'up':
+                        target[action]('mouseup', fn, false);
+                        target[action]('touchend', fn, false);
+                        break;
 
-                case 'up':
-                    target[action]('mouseup', fn, false);
-                    target[action]('touchend', fn, false);
-                    break;
+                    case 'down':
+                        target[action]('mousedown', fn, false);
+                        target[action]('touchstart', fn, false);
+                        break;
 
-                case 'down':
-                    target[action]('mousedown', fn, false);
-                    target[action]('touchstart', fn, false);
-                    break;
+                    case 'leave':
+                        target[action]('mouseleave', fn, false);
+                        target[action]('touchleave', fn, false);
+                        break;
 
-                case 'leave':
-                    target[action]('mouseleave', fn, false);
-                    target[action]('touchleave', fn, false);
-                    break;
-
-                case 'enter':
-                    target[action]('mouseenter', fn, false);
-                    target[action]('touchenter', fn, false);
-                    break;
+                    case 'enter':
+                        target[action]('mouseenter', fn, false);
+                        target[action]('touchenter', fn, false);
+                        break;
+                }
             }
+            else throw new Error(`core/document actionMouseListener() error - bad target: ${myevent}, ${target}`);
         });
     });
 };
@@ -134,30 +136,32 @@ const actionPointerListener = function (events, fn, targets, action) {
 
         targets.forEach(target => {
 
-            if (!isa_dom(target)) throw new Error(`core/document actionPointerListener() error - bad target: ${myevent}, ${target}`);
+            if (isa_dom(target) || target.document || target.characterSet) {
 
-            switch (myevent) {
-            
-                case 'move':
-                    target[action]('pointermove', fn, false);
-                    break;
+                switch (myevent) {
+                
+                    case 'move':
+                        target[action]('pointermove', fn, false);
+                        break;
 
-                case 'up':
-                    target[action]('pointerup', fn, false);
-                    break;
+                    case 'up':
+                        target[action]('pointerup', fn, false);
+                        break;
 
-                case 'down':
-                    target[action]('pointerdown', fn, false);
-                    break;
+                    case 'down':
+                        target[action]('pointerdown', fn, false);
+                        break;
 
-                case 'leave':
-                    target[action]('pointerleave', fn, false);
-                    break;
+                    case 'leave':
+                        target[action]('pointerleave', fn, false);
+                        break;
 
-                case 'enter':
-                    target[action]('pointerenter', fn, false);
-                    break;
+                    case 'enter':
+                        target[action]('pointerenter', fn, false);
+                        break;
+                }
             }
+            else throw new Error(`core/document actionPointerListener() error - bad target: ${myevent}, ${target}`);
         });
     });
 };
@@ -169,7 +173,7 @@ const actionPointerListener = function (events, fn, targets, action) {
 // The function requires three arguments:
 // + __evt__ - String name of the event ('click', 'input', 'change', etc), or an array of such strings
 // + __fn__ - the function to be called when the event listener(s) trigger
-// + __targ__ - either the DOM element object, or an array of DOM element objects, or a query selector String
+// + __targ__ - either the DOM element object, or an array of DOM element objects, or a query selector String. Note that `window` and ``
 
 // `Exported function` (to modules and scrawl object). Returns a kill function which, when invoked (no arguments required), will remove the event listener(s) from all DOM elements to which they have been attached.
 const addNativeListener = function (evt, fn, targ) {
@@ -206,9 +210,9 @@ const actionNativeListener = function (evt, fn, targ, action) {
 
         targets.forEach(target => {
 
-            if (!isa_dom(target)) throw new Error(`core/document actionNativeListener() error - bad target: ${myevent}, ${target}`);
+            if (isa_dom(target) || target.document || target.characterSet) target[action](myevent, fn, false);
 
-            target[action](myevent, fn, false);
+            else throw new Error(`core/document actionNativeListener() error - bad target: ${myevent}, ${target}`);
         });
     });
 };

@@ -230,6 +230,26 @@
                 </a>
               
                 
+                <a class="source" href="canvas-043.html">
+                  ./demo/canvas-043.js
+                </a>
+              
+                
+                <a class="source" href="canvas-044.html">
+                  ./demo/canvas-044.js
+                </a>
+              
+                
+                <a class="source" href="canvas-045.html">
+                  ./demo/canvas-045.js
+                </a>
+              
+                
+                <a class="source" href="canvas-046.html">
+                  ./demo/canvas-046.js
+                </a>
+              
+                
                 <a class="source" href="component-001.html">
                   ./demo/component-001.js
                 </a>
@@ -252,6 +272,16 @@
                 
                 <a class="source" href="component-005.html">
                   ./demo/component-005.js
+                </a>
+              
+                
+                <a class="source" href="component-006.html">
+                  ./demo/component-006.js
+                </a>
+              
+                
+                <a class="source" href="component-007.html">
+                  ./demo/component-007.js
                 </a>
               
                 
@@ -492,6 +522,21 @@
                 
                 <a class="source" href="particles-014.html">
                   ./demo/particles-014.js
+                </a>
+              
+                
+                <a class="source" href="particles-015.html">
+                  ./demo/particles-015.js
+                </a>
+              
+                
+                <a class="source" href="temp-001.html">
+                  ./demo/temp-001.js
+                </a>
+              
+                
+                <a class="source" href="temp-inkscapeSvgFilters.html">
+                  ./demo/temp-inkscapeSvgFilters.js
                 </a>
               
             </div>
@@ -861,11 +906,7 @@
 
     <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        <span class="hljs-keyword">if</span> (testTime) testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;</pre></div></div>
+        testNow = <span class="hljs-built_in">Date</span>.now();</pre></div></div>
             
         </li>
         
@@ -876,11 +917,17 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>For some reason the approach taken in this Demo is breaking the report function</p>
+              <p>Because we are using the same render object to animate all four canvases, this report function gets run four times for each Display cycle (once each time each canvas is rendered). The fix is to choke the functionality so it actions only after a given number of milliseconds since it was last run - typically 2 milliseconds is enough to ensure the action only runs once per cycle.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> testMessage.textContent = <span class="hljs-string">`testTime: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; testNow: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testNow)}</span>ms; testTicker: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTicker)}</span>ms`</span>;
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (testNow - testTicker &gt; <span class="hljs-number">2</span>) {
+
+            testTime = testNow - testTicker;
+            testTicker = testNow;
+
+            testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
+        }
     };
 }();</pre></div></div>
             

@@ -152,13 +152,15 @@ let report = function () {
     return function () {
 
         testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
 
-        if (testTime) testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+        // Because we are using the same render object to animate all four canvases, this report function gets run four times for each Display cycle (once each time each canvas is rendered). The fix is to choke the functionality so it actions only after a given number of milliseconds since it was last run - typically 2 milliseconds is enough to ensure the action only runs once per cycle.
+        if (testNow - testTicker > 2) {
 
-        // For some reason the approach taken in this Demo is breaking the report function
-        else testMessage.textContent = `testTime: ${Math.ceil(testTime)}ms; testNow: ${Math.ceil(testNow)}ms; testTicker: ${Math.ceil(testTicker)}ms`;
+            testTime = testNow - testTicker;
+            testTicker = testNow;
+
+            testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+        }
     };
 }();
 

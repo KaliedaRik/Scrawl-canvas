@@ -81,12 +81,12 @@ P.finalizePacketOut = function (copy, items) {
 // #### Kill management
 P.kill = function () {
 
-    let myname = this.name;
+    let { name, asset, removeAssetOnKill } = this;
 
-    if (isa_obj(this.asset)) this.asset.unsubscribe(this);
+    if (isa_obj(asset)) asset.unsubscribe(this);
 
     // Remove style from all entity state objects
-    Object.entries(entity).forEach(([name, ent]) => {
+    Object.entries(entity).forEach(([label, ent]) => {
 
         let state = ent.state;
 
@@ -95,10 +95,17 @@ P.kill = function () {
             let fill = state.fillStyle,
                 stroke = state.strokeStyle;
 
-            if (isa_obj(fill) && fill.name === myname) state.fillStyle = state.defs.fillStyle;
-            if (isa_obj(stroke) && stroke.name === myname) state.strokeStyle = state.defs.strokeStyle;
+            if (isa_obj(fill) && fill.name === name) state.fillStyle = state.defs.fillStyle;
+            if (isa_obj(stroke) && stroke.name === name) state.strokeStyle = state.defs.strokeStyle;
         }
     });
+
+    // Cascade kill invocation to the asset object, if required
+    if (removeAssetOnKill) {
+
+        if (removeAssetOnKill.substring) asset.kill(true);
+        else asset.kill();
+    }
     
     // Remove style from the Scrawl-canvas library
     this.deregister();

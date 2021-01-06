@@ -569,12 +569,8 @@ Element  ~~&gt; Entity (eg Block)  </code></pre>
 
     el = <span class="hljs-built_in">this</span>.domElement;
 
-    <span class="hljs-keyword">if</span> (el) {
+    <span class="hljs-keyword">if</span> (el) el.id = <span class="hljs-built_in">this</span>.name;
 
-        el.id = <span class="hljs-built_in">this</span>.name;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.trackHere) pushUnique(uiSubscribedElements, <span class="hljs-built_in">this</span>.name);
-    }
     <span class="hljs-built_in">this</span>.apply();
     
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;

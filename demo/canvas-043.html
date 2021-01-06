@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Demo Canvas 043</title>
+
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    img {
+      display: none;
+    }
+    canvas {
+      border: 1px solid red;
+      margin: 0 auto 1em;
+    }
+    p {
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 043</h1>
+  <h2>Test various clipping strategies</h2>
+
+  <p>Applying more than one clipped region to a scene, using Groups to separate them:</p>
+  <canvas id="canvas1" width="600" height="400"></canvas>
+
+  <p>Generate and use Picture entitys from clipped scenes rendered in their own cells:</p>
+  <canvas id="canvas2" width="600" height="400"></canvas>
+
+  <h3>Note that Phrase entitys cannot clip to the letters.<br />For these, we have to use alternative solutions.</h3>
+
+  <p>Emulate clipping to a Phrase entity using a composite scene rendered in its own cell:</p>
+  <canvas id="canvas3" width="600" height="400"></canvas>
+
+  <p>... Once we have the clipped text in its own cell, we could then generate a Picture entity from it (not tested in this demo).</p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>A set of three canvases to test clipping, and clip-to-text emulation.</li>
+      <li>For all canvases, the shape/phrase entitys should clip the image; as they rotate, the image they contain should rotate with them.</li>
+      <li>All entitys should be draggable, including the Cell entity (pivoted to a draggable Block entity)</li>
+    </ul>
+    <p><a href="../docs/demo/canvas-043.html">Annotated code</a></p>
+  </div>
+
+  <img id="factory" src="img/canalFactory-800.png" class="canal" />
+
+  <script src="canvas-043.js" type="module"></script>
+
+</body>
+
+</html>

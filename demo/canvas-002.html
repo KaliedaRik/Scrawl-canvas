@@ -8,11 +8,32 @@
   <title>Demo Canvas 002</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    .controls {
+      grid-template-columns: 1fr 2fr 1fr 2fr;
+    }
+  </style>
+
 </head>
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 002</h1>
   <h2>Block and wheel entity positioning (start, pivot, mimic, mouse)</h2>
+
+  <div class="controls">
+    <div class="yellow label">backgroundColor</div>
+    <div class="yellow">
+      <select class="controlItem" id="backgroundColor">
+        <option value="">none</option>
+        <option value="aliceblue">aliceblue</option>
+        <option value="beige">beige</option>
+        <option value="honeydew">honeydew</option>
+      </select>
+    </div>
+
+    <div class="pink label">clearAlpha</div>
+    <div class="pink"><input class="controlItem" id="clearAlpha" type="range" value="0" min="0" max="1" step="0.005" /></div>
+  </div>
 
   <canvas id="mycanvas" width="600" height="400"></canvas>
 
@@ -25,6 +46,11 @@
       <li>Position the entitys on the canvas using start (default) attributes, alongside pivot and mimic attributes</li>
       <li>Check that when an entity mimics or pivots on an entity that itself mimics or pivots another entity, everything positions as expected</li>
       <li>Kill and resurrect several entitys to make sure they remove themselves entirely from the Scrawl-canvas system, and cleanly recreate themselves from saved packets</li>
+    </ul>
+    <p>Also:</p>
+    <ul>
+      <li>Check that the Cell responds correctly to changes in its backgroundColor value</li>
+      <li>Check that the Cell responds correctly to changes in its clearAlpha value, and that the clearAlpha effect only displays when the backgroundColor value is set to an empty string (the "none" option)</li>
     </ul>
     <p><a href="../docs/demo/canvas-002.html">Annotated code</a></p>
   </div>

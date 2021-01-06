@@ -124,6 +124,7 @@ P.isAsset = true;
 
 // #### Mixins
 // + [base](../mixin/base.html)
+// + [asset](../mixin/asset.html) - goes above position mixin because asset objects use the kill function defined in this mixin, but Cells need to follow the position mixin formula (which includes a call to the factoryKill function)
 // + [position](../mixin/position.html)
 // + [delta](../mixin/delta.html)
 // + [pivot](../mixin/pivot.html)
@@ -131,10 +132,10 @@ P.isAsset = true;
 // + [path](../mixin/path.html)
 // + [anchor](../mixin/anchor.html)
 // + [cascade](../mixin/cascade.html)
-// + [asset](../mixin/asset.html)
 // + [pattern](../mixin/pattern.html)
 // + [filter](../mixin/filter.html)
 P = baseMix(P);
+P = assetMix(P);
 P = positionMix(P);
 P = deltaMix(P);
 P = pivotMix(P);
@@ -142,7 +143,6 @@ P = mimicMix(P);
 P = pathMix(P);
 P = anchorMix(P);
 P = cascadeMix(P);
-P = assetMix(P);
 P = patternMix(P);
 P = filterMix(P);
 
@@ -181,6 +181,10 @@ let defaultAttributes = {
 // By default, cells have a background color of `rgba(0,0,0,0)` - transparent black, which gets applied as the end step in the clear part of the display cycle. Setting the __backgroundColor__ attribute ensures the Cell will use that color instead. Any CSS color String is a valid argument (but not gradients or patterns, which get applied at a later stage in the Display cycle).
 // + Base cells can have this attribute set via their controller Canvas.
     backgroundColor: '',
+
+
+// __clearAlpha__ - a Number with a value between 0 and 1. When not zero, the cell will not clear itself; rather it will copy its current contents, clear itself, set its globalAlpha to this value, copy back its contents (now faded) and then restore its globalAlpha value
+    clearAlpha: 0,
 
 
 // Non-base Cells will stamp themselves onto the 'base' Cell as part of the Display cycle's show stage. We can mediate this action by setting the Cell's __alpha__ and __composite__ attributes to valid Rendering2DContext `globalAlpha` and `globalCompositeOperation` values.
@@ -230,62 +234,6 @@ P.clone = λthis;
 
 
 // #### Kill functionality
-// P.kill = function () {
-
-//     let myname = this.name
-
-//     // Remove artefact from all canvases
-//     Object.entries(canvas).forEach(([name, cvs]) => {
-
-//         if (cvs.cells.indexOf(myname) >= 0) cvs.removeCell(myname);
-
-//         if (cvs.base && cvs.base.name === myname) {
-
-//             cvs.set({
-//                 visibility: false,
-//             });
-//         }
-//     });
-
-//     // If the artefact has an anchor, it needs to be removed
-//     if (this.anchor) this.demolishAnchor();
-
-//     // Remove from other artefacts
-//     Object.entries(artefact).forEach(([name, art]) => {
-
-//         if (art.name !== myname) {
-
-//             if (art.pivot && art.pivot.name === myname) art.set({ pivot: false});
-//             if (art.mimic && art.mimic.name === myname) art.set({ mimic: false});
-//             if (art.path && art.path.name === myname) art.set({ path: false});
-
-//             let state = art.state;
-
-//             if (state) {
-
-//                 let fill = state.fillStyle,
-//                     stroke = state.strokeStyle;
-
-//                 if (fill.name && fill.name === myname) state.fillStyle = state.defs.fillStyle;
-//                 if (stroke.name && stroke.name === myname) state.strokeStyle = state.defs.strokeStyle;
-//             }
-//         }
-//     });
-
-//     // Remove from tweens and actions targets arrays
-//     Object.entries(tween).forEach(([name, t]) => {
-
-//         if (t.checkForTarget(myname)) t.removeFromTargets(this);
-//     });
-
-//     // Kill group
-//     if (group[this.name]) group[this.name].kill();
-
-//     // Remove artefact from the Scrawl-canvas library
-//     this.deregister();
-    
-//     return this;
-// };
 P.factoryKill = function () {
 
     let myname = this.name
@@ -489,6 +437,29 @@ D.stashHeight = function (val) {
 
     let c = this.stashDimensions;
     c[1] = addStrings(c[1], val);
+};
+
+S.clearAlpha = function (val) {
+
+    if (val.toFixed) {
+
+        if (val > 1) val = 1;
+        else if (val < 0) val = 0;
+
+        this.clearAlpha = val;
+    }
+};
+D.clearAlpha = function (val) {
+
+    if (val.toFixed) {
+
+        val += this.clearAlpha;
+
+        if (val > 1) val = 1;
+        else if (val < 0) val = 0;
+
+        this.clearAlpha = val;
+    }
 };
 
 
@@ -861,31 +832,47 @@ P.clear = function () {
 
     return new Promise((resolve) => {
 
-        let engine = self.engine,
-            bgc = self.backgroundColor;
+        const {element, engine, backgroundColor, clearAlpha, currentDimensions} = self;
+        const [width, height] = currentDimensions;
 
         self.prepareStamp();
 
-        let w = self.currentDimensions[0],
-            h = self.currentDimensions[1];
-
         engine.setTransform(1,0,0,1,0,0);
 
-        if (bgc) {
+        if (backgroundColor) {
 
             let tempBackground = engine.fillStyle,
                 tempGCO = engine.globalCompositeOperation,
                 tempAlpha = engine.globalAlpha;
 
-            engine.fillStyle = bgc;
+            engine.fillStyle = backgroundColor;
             engine.globalCompositeOperation = 'source-over';
             engine.globalAlpha = 1;
-            engine.fillRect(0, 0, w, h);
+            engine.fillRect(0, 0, width, height);
             engine.fillStyle = tempBackground;
             engine.globalCompositeOperation = tempGCO;
             engine.globalAlpha = tempAlpha;
         }
-        else engine.clearRect(0, 0, w, h);
+        else if (clearAlpha) {
+
+            let tempCell = requestCell();
+            
+            let {engine:tempEngine, element:tempEl} = tempCell;
+
+            tempEl.width = width;
+            tempEl.height = height;
+
+            let data = engine.getImageData(0, 0, width, height);
+            tempEngine.putImageData(data, 0, 0);
+
+            let oldAlpha = engine.globalAlpha;
+
+            engine.clearRect(0, 0, width, height);
+            engine.globalAlpha = clearAlpha;
+            engine.drawImage(tempEl, 0, 0);
+            engine.globalAlpha = oldAlpha;
+        }
+        else engine.clearRect(0, 0, width, height);
 
         resolve(true);
     });
@@ -960,8 +947,6 @@ P.show = function () {
 
         if (engine) {
 
-            engine.filter = self.filter;
-
             let floor = Math.floor,
                 hostDimensions = host.currentDimensions,
                 destWidth = floor(hostDimensions[0]),
@@ -984,6 +969,8 @@ P.show = function () {
             engine.save();
             engine.setTransform(1, 0, 0, 1, 0, 0);
                 
+            engine.filter = self.filter;
+
             if (self.isBase) {
 
                 if (!self.basePaste) self.basePaste = [];
@@ -1237,9 +1224,9 @@ P.getHost = function () {
 
         if (host) this.currentHost = host;
         
-        return (host) ? this.currentHost : currentCorePosition;
+        return (host) ? this.currentHost : false;
     }
-    return currentCorePosition;
+    return false;
 };
 
 
@@ -1254,7 +1241,10 @@ P.updateBaseHere = function (controllerHere, fit) {
 
         let active = controllerHere.active;
 
-        if (dims[0] !== controllerHere.w || dims[1] !== controllerHere.h) {
+        let controllerWidth = (controllerHere.localListener) ? controllerHere.originalWidth : controllerHere.w;
+        let controllerHeight = (controllerHere.localListener) ? controllerHere.originalHeight : controllerHere.h;
+
+        if (dims[0] !== controllerWidth || dims[1] !== controllerHeight) {
 
             if (!this.basePaste) this.basePaste = [];
 
@@ -1262,8 +1252,8 @@ P.updateBaseHere = function (controllerHere, fit) {
 
             let localWidth = dims[0],
                 localHeight = dims[1],
-                remoteWidth = controllerHere.w,
-                remoteHeight = controllerHere.h,
+                remoteWidth = controllerWidth,
+                remoteHeight = controllerHeight,
                 remoteX = controllerHere.x,
                 remoteY = controllerHere.y;
 
@@ -1319,8 +1309,8 @@ P.updateBaseHere = function (controllerHere, fit) {
 
             here.x = controllerHere.x;
             here.y = controllerHere.y;
-            here.w = controllerHere.w;
-            here.h = controllerHere.h;
+            here.w = controllerWidth;
+            here.h = controllerHeight;
             here.active = active;
         }
         controllerHere.baseActive = active;

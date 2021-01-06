@@ -7,130 +7,116 @@ import scrawl from '../source/scrawl.js';
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
 
-
 canvas.setBase({
-    backgroundColor: 'honeydew',
+    backgroundColor: 'azure',
+});
+
+canvas.buildCell({
+
+    name: 'trace-chamber',
+    dimensions: ['100%', '100%'],
+    clearAlpha: 0.9925,
+});
+
+let lowAdjuster = scrawl.makeColor({
+    name: 'low-adjuster',
+    minimumColor: 'black',
+    maximumColor: 'blue',
+});
+
+let highAdjuster = scrawl.makeColor({
+    name: 'high-adjuster',
+    minimumColor: 'red',
+    maximumColor: 'lightblue',
+});
+
+let myWorld = scrawl.makeWorld({
+    name: 'demo-world',
+    tickMultiplier: 2,
+    userAttributes: [
+        {
+            key: 'rangeColorValue', 
+            defaultValue: 0,
+            setter: function (item) { 
+
+                this.rangeColorValue = item;
+
+                emitter.set({
+                    fillMinimumColor: lowAdjuster.getRangeColor(item),
+                    fillMaximumColor: highAdjuster.getRangeColor(item),
+                });
+            },
+        },
+    ],
 });
 
 
-const myHeart = scrawl.makeShape({
-  
-    name: 'myheart',
+let emitter = scrawl.makeEmitter({
 
-    pathDefinition: 'M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z',
+    name: 'emitter-1',
+    group: 'trace-chamber',
 
-    start: ['center', '55%'],
-    handle: ['center', 'center'],
-    fillStyle: 'red',
-    strokeStyle: 'darkred',
-    lineWidth: 3,
-    method: 'fillThenDraw',
-    scaleOutline: false,
+    start: ['center', 'center'],
 
-    useAsPath: true,
-    precision: 2,
-});
+    world: myWorld,
 
-for (let i = 0; i < 1; i += 0.1) {
-  
-    myHeart.clone({
-
-        name: `pathHeart-${i}`,
-        fillStyle: 'pink',
-        strokeStyle: 'indianred',
-        lineWidth: 2,
-        useAsPath: false,
-        roll: 180,
-        handleY: '30%',
-
-        path: myHeart,
-        pathPosition: i + 0.05,
-        constantPathSpeed: true,
-        addPathRotation: true,
-        lockTo: 'path',
-    });
-}
-
-scrawl.makeEmitter({
-  
-    name: 'star-particles',
-
-    world: scrawl.makeWorld({
-        name: 'demo-world',
-        tickMultiplier: 2,
-    }),
-
-    artefact: scrawl.makeStar({
-        name: 'particle-star-entity',
-        radius1: 18,
-        radius2: 8,
-        points: 5,
-        handle: ['center', 'center'],
-        method: 'fillThenDraw',
-        visibility: false, 
-    }),
-
-    rangeX: 80,
-    rangeFromX: -40,
-    rangeY: -40,
-    rangeFromY: -30,
-    rangeZ: -1,
-    rangeFromZ: -0.2,
-
-    generateInArea: myHeart,
-    generationRate: 100,
-    killAfterTime: 5,
+    generationRate: 50,
+    killAfterTime: 1.5,
     killBeyondCanvas: true,
 
-    fillMinimumColor: 'yellow',
-    fillMaximumColor: 'gold',
+    // ...
+    generateFromExistingParticles: true,
+
+    fillMinimumColor: 'black',
+    fillMaximumColor: 'red',
+
+    rangeX: 40,
+    rangeFromX: -20,
+    limitDirectionToAngleMultiples: 45,
+    // rangeY: 40,
+    // rangeFromY: -20,
+    // rangeZ: -1,
+    // rangeFromZ: -0.2,
+
+    artefact: scrawl.makeWheel({
+        name: 'trace',
+        radius: 2,
+    }),
 
     stampAction: function (artefact, particle, host) {
 
         let history = particle.history,
-            remaining, globalAlpha, scale, start, z, roll;
+            remaining, start, z;
 
-        if (history[0]) {
+        if (history.length) {
 
             [remaining, z, ...start] = history[0];
-            globalAlpha = remaining / 5;
-            scale = 1 + (z / 3);
 
-            if (globalAlpha > 0 && scale > 0) {
-
-                roll = globalAlpha * 720;
-
-                artefact.simpleStamp(host, {
-                    start, 
-                    scale, 
-                    globalAlpha, 
-                    roll,
-                    fillStyle: particle.fill,
-                });
-            }
+            artefact.simpleStamp(host, { 
+                start,
+                fillStyle: particle.fill,
+            });
         }
     },
 });
 
 scrawl.makeTween({
-  
-    name: 'heartbeat',
 
-    duration: 1600,
-    reverseOnCycleEnd: true,
+    name: 'color-adjuster',
+    duration: '100s',
     cycles: 0,
-    targets: myHeart,
+    reverseOnCycleEnd: true,
+
+    targets: myWorld,
 
     definitions: [
         {
-            attribute: 'scale',
-            start: 8,
-            end: 12,
-            engine: 'easeIn',
-        }
+            attribute: 'rangeColorValue',
+            start: 0,
+            end: 1,
+        },
     ],
 }).run();
-
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo

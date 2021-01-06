@@ -82,8 +82,6 @@ const Canvas = function (items = {}) {
 
     if (el) {
 
-        if (this.trackHere) pushUnique(uiSubscribedElements, this.name);
-
         this.engine = this.domElement.getContext('2d');
 
         this.state = makeState({
@@ -207,8 +205,8 @@ let defaultAttributes = {
     position: 'relative',
 
 
-// __trackHere__ - Boolean flag to indicate whether the Canvas object should participate in the Scrawl-canvas mouse/touch tracking functionality; the functionality can be switched off by setting the flag to false (via `set`).
-    trackHere: true,
+// __trackHere__
+    trackHere: 'subscribe',
 
 // __fit__ - String indicating how the base Cell should copy its contents over to the &lt;canvas> element as the final step in the Display cycle. Accepted values are: `fill`, `contain`, `cover`, `none` (but not `scale-down`).
 // 
@@ -251,48 +249,6 @@ P.clone = λthis;
 
 
 // #### Kill functionality
-// P.kill = function () {
-
-//     let name = this.name,
-//         host = this.host,
-//         h, g;
-
-//     // rootElements and uiSubscribedElements arrays
-//     removeItem(rootElements, name);
-//     setRootElementsSort();
-
-//     removeItem(uiSubscribedElements, name);
-
-//     // Host and host Group
-//     if (host && host !== 'root') {
-
-//         h = (this.currentHost) ? this.currentHost : artefact[host];
-
-//         if (h) {
-
-//             h.removeGroups(name);
-
-//             g = group[h.name];
-//             if (g) g.removeArtefacts(name);
-//         }
-//     }
-
-//     // Canvas Group
-//     if (group[name]) group[name].kill();
-
-//     // Base Cell
-//     this.base.kill();
-
-//     // DOM removals
-//     this.navigation.remove();
-//     this.textHold.remove();
-//     this.ariaLabelElement.remove();
-//     this.ariaDescriptionElement.remove();
-//     this.domElement.remove();
-
-//     // Scrawl-canvas library
-//     return this.deregister();
-// }
 P.factoryKill = function () {
 
     let name = this.name,
@@ -367,17 +323,6 @@ S.description = function (item) {
     this.dirtyAria = true;
 };
 
-// `trackHere` - Boolean
-S.trackHere = function(bool) {
-
-    if (xt(bool)) {
-
-        if (bool) pushUnique(uiSubscribedElements, this.name);
-        else removeItem(uiSubscribedElements, this.name);
-
-        this.trackHere = bool;
-    }
-};
 
 // ##### Get and set base cell attributes
 // For convenience, Scrawl-canvas allows us to get/set a limited number of base Cell attributes via their Canvas wrapper's `get`, `set` and `deltaSet` functions. We can set and deltaSet other base Cell attributes by invoking the `mycanvas.setBase` and `mycanvas.deltaSetBase` functions.

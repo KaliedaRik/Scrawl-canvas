@@ -133,6 +133,9 @@ let defaultAttributes = {
     // + `generateInArea` takes precedence over `generateAlongPath`, which in turn takes precedence over the default coordinate behaviour
     generateAlongPath: false,
     generateInArea: false,
+    generateFromExistingParticles: false,
+    generateFromExistingParticleHistories: false,
+    limitDirectionToAngleMultiples: 0,
 
     // __generationChoke__ - Number measuring milliseconds (default: 15) - because both `generateAlongPath` and `generateInArea` functionalities use a `while` loop, we need a way to break out of those loops should they fail to generate an acceptable coordinate within a given amount of time. This attribute sets the maximum time the entity will spend on generating semi-random coordinates during any one Display cycle loop.
     generationChoke: 15,
@@ -495,11 +498,11 @@ P.addParticles = function (req) {
         return item + (rnd() * itemVar);
     };
 
-    let i, p, cx, cy, 
+    let i, p, cx, cy,
         timeChoke = Date.now();
 
     // The emitter object retains details of the initial values required for eachg particle it generates
-    let {historyLength, engine, forces, mass, massVariation, fillColorFactory, strokeColorFactory, range, rangeFrom, currentStampPosition, particleStore, killAfterTime, killAfterTimeVariation, killRadius, killRadiusVariation, killBeyondCanvas, currentRotation, generateAlongPath, generateInArea, generationChoke} = this;
+    let {historyLength, engine, forces, mass, massVariation, fillColorFactory, strokeColorFactory, range, rangeFrom, currentStampPosition, particleStore, killAfterTime, killAfterTimeVariation, killRadius, killRadiusVariation, killBeyondCanvas, currentRotation, generateAlongPath, generateInArea, generateFromExistingParticles, generateFromExistingParticleHistories, limitDirectionToAngleMultiples, generationChoke} = this;
 
     let {x, y, z} = range;
     let {x:fx, y:fy, z:fz} = rangeFrom;
@@ -625,6 +628,146 @@ P.addParticles = function (req) {
 
                 particleStore.push(p);
             }
+        }
+    }
+    // TODO: documentation
+    else if (generateFromExistingParticleHistories) {
+        let len = particleStore.length,
+            v, r, parent, history, ignore1, ignore2, startval,
+            res = requestVector();
+
+        for (i = 0; i < req; i++) {
+
+            if (len) {
+
+                parent = particleStore[Math.floor(Math.random() * len)];
+                history = parent.history;
+
+                if (history && history.length > 1) {
+
+                    [ignore1, ignore2, ...startval] = history[Math.floor(Math.random() * history.length)];
+
+                    if (startval) res.setFromArray(startval);
+                    else res.setFromVector(parent.position);
+                }
+                else res.setFromVector(parent.position);
+            }
+            else res.setFromArray(currentStampPosition);
+
+            p = requestParticle();
+
+            p.set({
+                positionX: res.x,
+                positionY: res.y,
+                positionZ: res.z,
+
+                historyLength, 
+                engine, 
+                forces, 
+
+                mass: calc(mass, massVariation), 
+
+                fill: fillColorFactory.get('random'),
+                stroke: strokeColorFactory.get('random'),
+            });
+
+            if (limitDirectionToAngleMultiples) {
+
+                res.zero();
+                r = Math.floor(360 / limitDirectionToAngleMultiples)
+                res.x = velocityCalc(fx, x);
+                res.rotate((Math.floor(Math.random() * r)) * limitDirectionToAngleMultiples);
+
+                p.set({
+                    velocityX: res.x,
+                    velocityY: res.y,
+                    velocityZ: velocityCalc(fz, z),
+                });
+            }
+            else {
+
+                p.set({
+                    velocityX: velocityCalc(fx, x),
+                    velocityY: velocityCalc(fy, y),
+                    velocityZ: velocityCalc(fz, z),
+                });
+            }
+            releaseVector(res);
+
+            p.velocity.rotate(currentRotation);
+
+            let timeKill = Math.abs(calc(killAfterTime, killAfterTimeVariation));
+            let radiusKill = Math.abs(calc(killRadius, killRadiusVariation));
+
+            p.run(timeKill, radiusKill, killBeyondCanvas);
+
+            particleStore.push(p);
+        }
+    }
+    // TODO: documentation
+    else if (generateFromExistingParticles) {
+
+        let len = particleStore.length,
+            v, r, parent,
+            res = requestVector();
+
+        for (i = 0; i < req; i++) {
+
+            if (len) {
+
+                parent = particleStore[Math.floor(Math.random() * len)];
+                res.setFromVector(parent.position);
+            }
+            else res.setFromArray(currentStampPosition);
+
+            p = requestParticle();
+
+            p.set({
+                positionX: res.x,
+                positionY: res.y,
+                positionZ: res.z,
+
+                historyLength, 
+                engine, 
+                forces, 
+
+                mass: calc(mass, massVariation), 
+
+                fill: fillColorFactory.get('random'),
+                stroke: strokeColorFactory.get('random'),
+            });
+
+            if (limitDirectionToAngleMultiples) {
+
+                res.zero();
+                r = Math.floor(360 / limitDirectionToAngleMultiples)
+                res.x = velocityCalc(fx, x);
+                res.rotate((Math.floor(Math.random() * r)) * limitDirectionToAngleMultiples);
+
+                p.set({
+                    velocityX: res.x,
+                    velocityY: res.y,
+                    velocityZ: velocityCalc(fz, z),
+                });
+            }
+            else {
+
+                p.set({
+                    velocityX: velocityCalc(fx, x),
+                    velocityY: velocityCalc(fy, y),
+                    velocityZ: velocityCalc(fz, z),
+                });
+            }
+            releaseVector(res);
+
+            p.velocity.rotate(currentRotation);
+
+            let timeKill = Math.abs(calc(killAfterTime, killAfterTimeVariation));
+            let radiusKill = Math.abs(calc(killRadius, killRadiusVariation));
+
+            p.run(timeKill, radiusKill, killBeyondCanvas);
+
+            particleStore.push(p);
         }
     }
     // Generate the particle using the emitter's start coordinate, or a reference artifact's coordinate

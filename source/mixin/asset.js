@@ -75,10 +75,11 @@ export default function (P = {}) {
 
 
 // #### Kill management
-// TODO 
-// + work out whether, and how, we get rid of an asset wrapper. 
-// + if we get rid of the wrapper, do we also get rid of the source element?
-// + This functionality disabled at the moment, both here and in the asset factories (except cell)
+    P.kill = function (removeDomEntity = false) {
+
+        if (removeDomEntity && this.source) this.source.remove();
+        return this.deregister();
+    };
 
 
 // #### Get, Set, deltaSet

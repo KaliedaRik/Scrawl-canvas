@@ -230,6 +230,26 @@
                 </a>
               
                 
+                <a class="source" href="canvas-043.html">
+                  ./demo/canvas-043.js
+                </a>
+              
+                
+                <a class="source" href="canvas-044.html">
+                  ./demo/canvas-044.js
+                </a>
+              
+                
+                <a class="source" href="canvas-045.html">
+                  ./demo/canvas-045.js
+                </a>
+              
+                
+                <a class="source" href="canvas-046.html">
+                  ./demo/canvas-046.js
+                </a>
+              
+                
                 <a class="source" href="component-001.html">
                   ./demo/component-001.js
                 </a>
@@ -252,6 +272,16 @@
                 
                 <a class="source" href="component-005.html">
                   ./demo/component-005.js
+                </a>
+              
+                
+                <a class="source" href="component-006.html">
+                  ./demo/component-006.js
+                </a>
+              
+                
+                <a class="source" href="component-007.html">
+                  ./demo/component-007.js
                 </a>
               
                 
@@ -494,6 +524,21 @@
                   ./demo/particles-014.js
                 </a>
               
+                
+                <a class="source" href="particles-015.html">
+                  ./demo/particles-015.js
+                </a>
+              
+                
+                <a class="source" href="temp-001.html">
+                  ./demo/temp-001.js
+                </a>
+              
+                
+                <a class="source" href="temp-inkscapeSvgFilters.html">
+                  ./demo/temp-inkscapeSvgFilters.js
+                </a>
+              
             </div>
           </div>
         </li>
@@ -544,129 +589,62 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.library.canvas.mycanvas;
 
-
 canvas.setBase({
-    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;honeydew&#x27;</span>,
+    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;azure&#x27;</span>,
 });
 
+canvas.buildCell({
 
-<span class="hljs-keyword">const</span> myHeart = scrawl.makeShape({
-  
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myheart&#x27;</span>,
-
-    <span class="hljs-attr">pathDefinition</span>: <span class="hljs-string">&#x27;M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z&#x27;</span>,
-
-    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;55%&#x27;</span>],
-    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
-    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;darkred&#x27;</span>,
-    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">3</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
-    <span class="hljs-attr">scaleOutline</span>: <span class="hljs-literal">false</span>,
-
-    <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">precision</span>: <span class="hljs-number">2</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;trace-chamber&#x27;</span>,
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+    <span class="hljs-attr">clearAlpha</span>: <span class="hljs-number">0.9925</span>,
 });
 
-<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">1</span>; i += <span class="hljs-number">0.1</span>) {
-  
-    myHeart.clone({
-
-        <span class="hljs-attr">name</span>: <span class="hljs-string">`pathHeart-<span class="hljs-subst">${i}</span>`</span>,
-        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;pink&#x27;</span>,
-        <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;indianred&#x27;</span>,
-        <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
-        <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">false</span>,
-        <span class="hljs-attr">roll</span>: <span class="hljs-number">180</span>,
-        <span class="hljs-attr">handleY</span>: <span class="hljs-string">&#x27;30%&#x27;</span>,
-
-        <span class="hljs-attr">path</span>: myHeart,
-        <span class="hljs-attr">pathPosition</span>: i + <span class="hljs-number">0.05</span>,
-        <span class="hljs-attr">constantPathSpeed</span>: <span class="hljs-literal">true</span>,
-        <span class="hljs-attr">addPathRotation</span>: <span class="hljs-literal">true</span>,
-        <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;path&#x27;</span>,
-    });
-}
-
-scrawl.makeEmitter({
-  
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;star-particles&#x27;</span>,
-
-    <span class="hljs-attr">world</span>: scrawl.makeWorld({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-world&#x27;</span>,
-        <span class="hljs-attr">tickMultiplier</span>: <span class="hljs-number">2</span>,
-    }),
-
-    <span class="hljs-attr">artefact</span>: scrawl.makeStar({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;particle-star-entity&#x27;</span>,
-        <span class="hljs-attr">radius1</span>: <span class="hljs-number">18</span>,
-        <span class="hljs-attr">radius2</span>: <span class="hljs-number">8</span>,
-        <span class="hljs-attr">points</span>: <span class="hljs-number">5</span>,
-        <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
-        <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>, 
-    }),
-
-    <span class="hljs-attr">rangeX</span>: <span class="hljs-number">80</span>,
-    <span class="hljs-attr">rangeFromX</span>: -<span class="hljs-number">40</span>,
-    <span class="hljs-attr">rangeY</span>: -<span class="hljs-number">40</span>,
-    <span class="hljs-attr">rangeFromY</span>: -<span class="hljs-number">30</span>,
-    <span class="hljs-attr">rangeZ</span>: -<span class="hljs-number">1</span>,
-    <span class="hljs-attr">rangeFromZ</span>: -<span class="hljs-number">0.2</span>,
-
-    <span class="hljs-attr">generateInArea</span>: myHeart,
-    <span class="hljs-attr">generationRate</span>: <span class="hljs-number">100</span>,
-    <span class="hljs-attr">killAfterTime</span>: <span class="hljs-number">5</span>,
-    <span class="hljs-attr">killBeyondCanvas</span>: <span class="hljs-literal">true</span>,
-
-    <span class="hljs-attr">fillMinimumColor</span>: <span class="hljs-string">&#x27;yellow&#x27;</span>,
-    <span class="hljs-attr">fillMaximumColor</span>: <span class="hljs-string">&#x27;gold&#x27;</span>,
-
-    <span class="hljs-attr">stampAction</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) </span>{
-
-        <span class="hljs-keyword">let</span> history = particle.history,
-            remaining, globalAlpha, scale, start, z, roll;
-
-        <span class="hljs-keyword">if</span> (history[<span class="hljs-number">0</span>]) {
-
-            [remaining, z, ...start] = history[<span class="hljs-number">0</span>];
-            globalAlpha = remaining / <span class="hljs-number">5</span>;
-            scale = <span class="hljs-number">1</span> + (z / <span class="hljs-number">3</span>);
-
-            <span class="hljs-keyword">if</span> (globalAlpha &gt; <span class="hljs-number">0</span> &amp;&amp; scale &gt; <span class="hljs-number">0</span>) {
-
-                roll = globalAlpha * <span class="hljs-number">720</span>;
-
-                artefact.simpleStamp(host, {
-                    start, 
-                    scale, 
-                    globalAlpha, 
-                    roll,
-                    <span class="hljs-attr">fillStyle</span>: particle.fill,
-                });
-            }
-        }
-    },
+<span class="hljs-keyword">let</span> lowAdjuster = scrawl.makeColor({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;low-adjuster&#x27;</span>,
+    <span class="hljs-attr">minimumColor</span>: <span class="hljs-string">&#x27;black&#x27;</span>,
+    <span class="hljs-attr">maximumColor</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
 });
 
-scrawl.makeTween({
-  
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;heartbeat&#x27;</span>,
+<span class="hljs-keyword">let</span> highAdjuster = scrawl.makeColor({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;high-adjuster&#x27;</span>,
+    <span class="hljs-attr">minimumColor</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
+    <span class="hljs-attr">maximumColor</span>: <span class="hljs-string">&#x27;lightblue&#x27;</span>,
+});
 
-    <span class="hljs-attr">duration</span>: <span class="hljs-number">1600</span>,
-    <span class="hljs-attr">reverseOnCycleEnd</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">cycles</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">targets</span>: myHeart,
-
-    <span class="hljs-attr">definitions</span>: [
+<span class="hljs-keyword">let</span> myWorld = scrawl.makeWorld({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-world&#x27;</span>,
+    <span class="hljs-attr">tickMultiplier</span>: <span class="hljs-number">2</span>,
+    <span class="hljs-attr">userAttributes</span>: [
         {
-            <span class="hljs-attr">attribute</span>: <span class="hljs-string">&#x27;scale&#x27;</span>,
-            <span class="hljs-attr">start</span>: <span class="hljs-number">8</span>,
-            <span class="hljs-attr">end</span>: <span class="hljs-number">12</span>,
-            <span class="hljs-attr">engine</span>: <span class="hljs-string">&#x27;easeIn&#x27;</span>,
-        }
+            <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;rangeColorValue&#x27;</span>, 
+            <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">setter</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{ 
+
+                <span class="hljs-built_in">this</span>.rangeColorValue = item;
+
+                emitter.set({
+                    <span class="hljs-attr">fillMinimumColor</span>: lowAdjuster.getRangeColor(item),
+                    <span class="hljs-attr">fillMaximumColor</span>: highAdjuster.getRangeColor(item),
+                });
+            },
+        },
     ],
-}).run();</pre></div></div>
+});
+
+
+<span class="hljs-keyword">let</span> emitter = scrawl.makeEmitter({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;emitter-1&#x27;</span>,
+    <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;trace-chamber&#x27;</span>,
+
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+
+    <span class="hljs-attr">world</span>: myWorld,
+
+    <span class="hljs-attr">generationRate</span>: <span class="hljs-number">50</span>,
+    <span class="hljs-attr">killAfterTime</span>: <span class="hljs-number">1.5</span>,
+    <span class="hljs-attr">killBeyondCanvas</span>: <span class="hljs-literal">true</span>,</pre></div></div>
             
         </li>
         
@@ -676,6 +654,85 @@ scrawl.makeTween({
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>…</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    generateFromExistingParticles: <span class="hljs-literal">true</span>,
+
+    <span class="hljs-attr">fillMinimumColor</span>: <span class="hljs-string">&#x27;black&#x27;</span>,
+    <span class="hljs-attr">fillMaximumColor</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
+
+    <span class="hljs-attr">rangeX</span>: <span class="hljs-number">40</span>,
+    <span class="hljs-attr">rangeFromX</span>: -<span class="hljs-number">20</span>,
+    <span class="hljs-attr">limitDirectionToAngleMultiples</span>: <span class="hljs-number">45</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>rangeY: 40,
+rangeFromY: -20,
+rangeZ: -1,
+rangeFromZ: -0.2,</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+    <span class="hljs-attr">artefact</span>: scrawl.makeWheel({
+        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;trace&#x27;</span>,
+        <span class="hljs-attr">radius</span>: <span class="hljs-number">2</span>,
+    }),
+
+    <span class="hljs-attr">stampAction</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) </span>{
+
+        <span class="hljs-keyword">let</span> history = particle.history,
+            remaining, start, z;
+
+        <span class="hljs-keyword">if</span> (history.length) {
+
+            [remaining, z, ...start] = history[<span class="hljs-number">0</span>];
+
+            artefact.simpleStamp(host, { 
+                start,
+                <span class="hljs-attr">fillStyle</span>: particle.fill,
+            });
+        }
+    },
+});
+
+scrawl.makeTween({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;color-adjuster&#x27;</span>,
+    <span class="hljs-attr">duration</span>: <span class="hljs-string">&#x27;100s&#x27;</span>,
+    <span class="hljs-attr">cycles</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">reverseOnCycleEnd</span>: <span class="hljs-literal">true</span>,
+
+    <span class="hljs-attr">targets</span>: myWorld,
+
+    <span class="hljs-attr">definitions</span>: [
+        {
+            <span class="hljs-attr">attribute</span>: <span class="hljs-string">&#x27;rangeColorValue&#x27;</span>,
+            <span class="hljs-attr">start</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">end</span>: <span class="hljs-number">1</span>,
+        },
+    ],
+}).run();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -701,11 +758,11 @@ scrawl.makeTween({
         </li>
         
         
-        <li id="section-5">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -721,11 +778,11 @@ scrawl.makeTween({
         </li>
         
         
-        <li id="section-6">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

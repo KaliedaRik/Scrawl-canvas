@@ -647,14 +647,14 @@
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
-<p>TODO </p>
-<ul>
-<li>work out whether, and how, we get rid of an asset wrapper. </li>
-<li>if we get rid of the wrapper, do we also get rid of the source element?</li>
-<li>This functionality disabled at the moment, both here and in the asset factories (except cell)</li>
-</ul>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.kill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">removeDomEntity = <span class="hljs-literal">false</span></span>) </span>{
+
+        <span class="hljs-keyword">if</span> (removeDomEntity &amp;&amp; <span class="hljs-built_in">this</span>.source) <span class="hljs-built_in">this</span>.source.remove();
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.deregister();
+    };</pre></div></div>
             
         </li>
         
