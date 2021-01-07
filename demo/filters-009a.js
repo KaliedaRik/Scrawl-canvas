@@ -1,7 +1,7 @@
-// # Demo Filters 005 
-// Filter parameters: channelstep
+// # Demo Filters 009 
+// Filter parameters: chroma
 
-// [Run code](../../demo/filters-005.html)
+// [Run code](../../demo/filters-009.html)
 import scrawl from '../source/scrawl.js';
 
 // #### Scene setup
@@ -9,16 +9,24 @@ const canvas = scrawl.library.canvas.mycanvas;
 
 scrawl.importDomImage('.flowers');
 
+canvas.setBase({
+    backgroundColor: 'black',
+})
+
 
 // Create the filter
+// + Chroma filters can have more than one range; each range array should be added to the `ranges` attribute
 const myFilter = scrawl.makeFilter({
 
-    name: 'channelstep',
-    method: 'channelstep',
+    name: 'chromakey',
+    method: 'chromakey',
 
-    red: 1,
-    green: 1,
-    blue: 1,
+    red: 0,
+    green: 127,
+    blue: 0,
+
+    opaqueAt: 1,
+    transparentAt: 0,
 });
 
 
@@ -37,7 +45,7 @@ scrawl.makePicture({
 
     method: 'fill',
 
-    filters: ['channelstep'],
+    filters: ['chromakey'],
 });
 
 
@@ -49,9 +57,9 @@ let report = function () {
         testTime, testNow,
         testMessage = document.querySelector('#reportmessage');
 
-    let red = document.querySelector('#red'),
-        green = document.querySelector('#green'),
-        blue = document.querySelector('#blue');
+    let col = document.querySelector('#color'),
+        trans = document.querySelector('#transparentAt'),
+        opaq = document.querySelector('#opaqueAt');
 
     return function () {
 
@@ -60,9 +68,9 @@ let report = function () {
         testTicker = testNow;
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    red: ${red.value}
-    green: ${green.value}
-    blue: ${blue.value}`;
+    Key color: ${col.value}
+    Transparent at: ${trans.value}
+    Opaque at: ${opaq.value}`;
     };
 }();
 
@@ -78,6 +86,27 @@ const demoAnimation = scrawl.makeRender({
 
 // #### User interaction
 // Setup form observer functionality
+const interpretColors = function () {
+
+    const converter = scrawl.makeColor({
+        name: 'converter',
+    });
+
+    const color = document.querySelector('#color');
+
+    return function () {
+
+        converter.convert(color.value);
+
+        myFilter.set({
+            red: converter.r,
+            green: converter.g,
+            blue: converter.b,
+        });
+    }
+}();
+scrawl.addNativeListener(['input', 'change'], interpretColors, '.controlItem');
+
 scrawl.observeAndUpdate({
 
     event: ['input', 'change'],
@@ -89,19 +118,15 @@ scrawl.observeAndUpdate({
     preventDefault: true,
 
     updates: {
-
-        red: ['red', 'float'],
-        green: ['green', 'float'],
-        blue: ['blue', 'float'],
+        transparentAt: ['transparentAt', 'float'],
+        opaqueAt: ['opaqueAt', 'float'],
         opacity: ['opacity', 'float'],
     },
 });
 
+
 // Setup form
-document.querySelector('#red').value = 1;
-document.querySelector('#green').value = 1;
-document.querySelector('#blue').value = 1;
-document.querySelector('#opacity').value = 1;
+document.querySelector('#color').value = '#007700';
 
 
 // #### Development and testing

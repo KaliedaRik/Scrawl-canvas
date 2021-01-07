@@ -111,6 +111,7 @@ scrawl.observeAndUpdate({
         blueInRed: ['blueInRed', 'float'],
         blueInGreen: ['blueInGreen', 'float'],
         blueInBlue: ['blueInBlue', 'float'],
+        opacity: ['opacity', 'float'],
     },
 });
 
@@ -124,6 +125,7 @@ document.querySelector('#greenInBlue').value = 0;
 document.querySelector('#blueInRed').value = 0;
 document.querySelector('#blueInGreen').value = 0;
 document.querySelector('#blueInBlue').value = 1;
+document.querySelector('#opacity').value = 1;
 
 
 // #### Development and testing

@@ -103,11 +103,18 @@ const demoAnimation = scrawl.makeRender({
 // #### User interaction
 scrawl.addNativeListener(['input', 'change'], (e) => {
 
+    levelFilters.forEach(f => f.set({ opacity: parseFloat(e.target.value) }));
+
+}, '#opacity');
+
+scrawl.addNativeListener(['input', 'change'], (e) => {
+
     levelFilters.forEach(f => f.set({ level: parseFloat(e.target.value) }));
 
-}, '#level')
+}, '#level');
 
 // Setup form
+document.querySelector('#opacity').value = 1;
 document.querySelector('#level').value = 1;
 
 

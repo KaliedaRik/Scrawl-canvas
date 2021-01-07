@@ -59,6 +59,9 @@ const Filter = function (items = {}) {
     this.makeName(items.name);
     this.register();
     this.set(this.defs);
+
+    this.actions = [];
+
     this.set(items);
     return this;
 };
@@ -79,6 +82,12 @@ P = baseMix(P);
 // #### Filter attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 let defaultAttributes = {
+
+    opacity: 1,
+    opaqueAt: 1,
+    transparentAt: 0,
+
+    actions: null,
 
 
 // All filters need to set out their __method__. For preset methods, a method string (eg 'grayscale', 'sepia') is sufficient. Bespoke methods require a function
@@ -112,6 +121,7 @@ let defaultAttributes = {
     red: 0,
     green: 0,
     blue: 0,
+    alpha: 255,
 
 
 // The `tint` method uses nine attributes
@@ -288,25 +298,28 @@ const releaseFilterWorker = function (f) {
 // By default, Scrawl-canvas is distributed in a bundler-safe form
 
 // BUNDLED SITE
-import { filterUrl } from '../worker/filter-stringed.js';                       
+// import { filterUrl } from '../worker/filter-stringed.js';                       
 
 // __buildFilterWorker__ - create a new filter web worker
 const buildFilterWorker = function () {
 
     // MODERN SITE
-    // let path = import.meta.url.slice(0, -('factory/filter.js'.length)); 
+    let path = import.meta.url.slice(0, -('factory/filter.js'.length)); 
 
     // MODERN SITE    
-    // let filterUrl = (window.scrawlEnvironmentOffscreenCanvasSupported) ?    
+    let filterUrl = (window.scrawlEnvironmentOffscreenCanvasSupported) ?    
 
     // MODERN SITE 
-    //     `${path}worker/filter_canvas.js` :    
+        // `${path}worker/filter_canvas.js` :    
+        // `${path}worker/filter.js` :    
+        `${path}worker/new-filter.js` :    
 
     // MODERN SITE                              
-    //     `${path}worker/filter.js`;                                           
+        // `${path}worker/filter.js`;                                           
+        `${path}worker/new-filter.js`;  
 
-    // BUNDLED SITE
-    return new Worker(filterUrl);                                               
+    // MODERN and BUNDLED SITE
+    return new Worker(filterUrl);
 };
 
 

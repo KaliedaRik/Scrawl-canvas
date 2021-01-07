@@ -93,6 +93,7 @@ scrawl.observeAndUpdate({
         red: ['red', 'float'],
         green: ['green', 'float'],
         blue: ['blue', 'float'],
+        opacity: ['opacity', 'float'],
     },
 });
 
@@ -100,6 +101,7 @@ scrawl.observeAndUpdate({
 document.querySelector('#red').value = 1;
 document.querySelector('#green').value = 1;
 document.querySelector('#blue').value = 1;
+document.querySelector('#opacity').value = 1;
 
 
 // #### Development and testing

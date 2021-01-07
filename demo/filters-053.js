@@ -1,7 +1,7 @@
-// # Demo Filters 013 
+// # Demo Filters 053 
 // SVG-based filter example: posterize
 
-// [Run code](../../demo/filters-013.html)
+// [Run code](../../demo/filters-053.html)
 import scrawl from '../source/scrawl.js';
 
 // #### Scene setup

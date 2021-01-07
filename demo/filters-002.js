@@ -6,7 +6,8 @@ import scrawl from '../source/scrawl.js';
 
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+const canvas = scrawl.library.canvas.mycanvas,
+    filter = scrawl.library.filter;
 
 scrawl.importDomImage('.flowers');
 
@@ -233,7 +234,8 @@ let report = function () {
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
+    opacity: ${filter.red.opacity}`;
     };
 }();
 
@@ -245,6 +247,32 @@ const demoAnimation = scrawl.makeRender({
     target: canvas,
     afterShow: report,
 });
+
+
+// #### User interaction
+const myFilters = [
+    filter.red,
+    filter.green,
+    filter.blue,
+    filter.cyan,
+    filter.magenta,
+    filter.yellow,
+    filter.notred,
+    filter.notgreen,
+    filter.notblue,
+    filter.grayscale,
+    filter.sepia,
+    filter.invert
+];
+
+scrawl.addNativeListener(['input', 'change'], (e) => {
+
+    myFilters.forEach(f => f.set({ opacity: parseFloat(e.target.value) }));
+
+}, '#opacity');
+
+// Setup form
+document.querySelector('#opacity').value = 1;
 
 
 // #### Development and testing

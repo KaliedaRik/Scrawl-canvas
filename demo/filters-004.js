@@ -95,6 +95,11 @@ scrawl.addNativeListener(
 
 scrawl.addNativeListener(
     ['input', 'change'], 
+    (e) => myFilter.set({ opacity: parseFloat(e.target.value) }), 
+    '#opacity');
+
+scrawl.addNativeListener(
+    ['input', 'change'], 
     (e) => {
 
         converter.convert(e.target.value);
@@ -125,6 +130,7 @@ scrawl.addNativeListener(
 document.querySelector('#lowColor').value = '#000000';
 document.querySelector('#highColor').value = '#ffffff';
 document.querySelector('#level').value = 127;
+document.querySelector('#opacity').value = 1;
 
 
 // #### Development and testing

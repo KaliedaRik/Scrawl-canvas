@@ -1,7 +1,7 @@
-// # Demo Filters 014 
+// # Demo Filters 054 
 // SVG-based filter example: duotone
 
-// [Run code](../../demo/filters-014.html)
+// [Run code](../../demo/filters-054.html)
 import scrawl from '../source/scrawl.js';
 
 // #### Scene setup

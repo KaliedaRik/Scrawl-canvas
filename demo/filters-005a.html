@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Demo Filters 005</title>
+  <title>Demo Filters 005a</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
@@ -19,19 +19,22 @@
 </head>
 
 <body>
-  <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 005</h1>
-  <h2>Parameters for: channelstep filter</h2>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 005a</h1>
+  <h2>Parameters for: channelLevels filter</h2>
 
   <div class="controls">
 
     <div class="pink label">Red</div>
-    <div class="pink"><input class="controlItem" id="red" type="range" value="1" min="1" max="255" step="0.1" /></div>
+    <div class="pink"><input class="controlItem" id="red" type="text" value="50, 200" /></div>
 
     <div class="green label">Green</div>
-    <div class="green"><input class="controlItem" id="green" type="range" value="1" min="1" max="255" step="0.1" /></div>
+    <div class="green"><input class="controlItem" id="green" type="text" value="60, 220, 150" /></div>
 
     <div class="blue label">Blue</div>
-    <div class="blue"><input class="controlItem" id="blue" type="range" value="1" min="1" max="255" step="0.1" /></div>
+    <div class="blue"><input class="controlItem" id="blue" type="text" value="40, 180" /></div>
+
+    <div class="lavender label">Alpha</div>
+    <div class="lavender"><input class="controlItem" id="alpha" type="text" value="" /></div>
 
     <div class="yellow label">Opacity</div>
     <div class="yellow"><input class="controlItem" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
@@ -49,14 +52,14 @@
 
     <ul>
       <li>Create a test Picture entity</li>
-      <li>Create a channelstep filter and apply it to the test entity</li>
+      <li>Create a channelLevels filter and apply it to the test entity</li>
       <li>Update filter attributes and observe the effect they have on the entity</li>
     </ul>
 
-    <p><a href="../docs/demo/filters-005.html">Annotated code</a></p>
+    <p><a href="../docs/demo/filters-005a.html">Annotated code</a></p>
   </div>
 
-  <script src="filters-005.js" type="module"></script>
+  <script src="filters-005a.js" type="module"></script>
 
 </body>
 

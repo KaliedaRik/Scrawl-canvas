@@ -1,7 +1,7 @@
-// # Demo Filters 005 
-// Filter parameters: channelstep
+// # Demo Filters 004 
+// Filter parameters: flood
 
-// [Run code](../../demo/filters-005.html)
+// [Run code](../../demo/filters-004.html)
 import scrawl from '../source/scrawl.js';
 
 // #### Scene setup
@@ -13,12 +13,13 @@ scrawl.importDomImage('.flowers');
 // Create the filter
 const myFilter = scrawl.makeFilter({
 
-    name: 'channelstep',
-    method: 'channelstep',
+    name: 'flood',
+    method: 'flood',
 
-    red: 1,
-    green: 1,
-    blue: 1,
+    red: 0,
+    green: 0,
+    blue: 0,
+    alpha: 255
 });
 
 
@@ -37,7 +38,7 @@ scrawl.makePicture({
 
     method: 'fill',
 
-    filters: ['channelstep'],
+    filters: ['flood'],
 });
 
 
@@ -49,9 +50,7 @@ let report = function () {
         testTime, testNow,
         testMessage = document.querySelector('#reportmessage');
 
-    let red = document.querySelector('#red'),
-        green = document.querySelector('#green'),
-        blue = document.querySelector('#blue');
+    let flood = document.querySelector('#flood');
 
     return function () {
 
@@ -60,9 +59,7 @@ let report = function () {
         testTicker = testNow;
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    red: ${red.value}
-    green: ${green.value}
-    blue: ${blue.value}`;
+    flood color: ${flood.value}`;
     };
 }();
 
@@ -77,30 +74,32 @@ const demoAnimation = scrawl.makeRender({
 
 
 // #### User interaction
-// Setup form observer functionality
-scrawl.observeAndUpdate({
-
-    event: ['input', 'change'],
-    origin: '.controlItem',
-
-    target: myFilter,
-
-    useNativeListener: true,
-    preventDefault: true,
-
-    updates: {
-
-        red: ['red', 'float'],
-        green: ['green', 'float'],
-        blue: ['blue', 'float'],
-        opacity: ['opacity', 'float'],
-    },
+// Use a color object to convert between CSS hexadecimal and RGB decimal colors
+const converter = scrawl.makeColor({
+    name: 'converter',
 });
 
+scrawl.addNativeListener(
+    ['input', 'change'], 
+    (e) => myFilter.set({ opacity: parseFloat(e.target.value) }), 
+    '#opacity');
+
+scrawl.addNativeListener(
+    ['input', 'change'], 
+    (e) => {
+
+        converter.convert(e.target.value);
+
+        myFilter.set({ 
+            red: converter.r,
+            green: converter.g,
+            blue: converter.b,
+        });
+    }, 
+    '#flood');
+
 // Setup form
-document.querySelector('#red').value = 1;
-document.querySelector('#green').value = 1;
-document.querySelector('#blue').value = 1;
+document.querySelector('#flood').value = '#000000';
 document.querySelector('#opacity').value = 1;
 
 

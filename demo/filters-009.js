@@ -112,13 +112,18 @@ const interpretColors = function () {
         })
     }
 }();
-
 scrawl.addNativeListener(['input', 'change'], interpretColors, '.controlItem');
+
+scrawl.addNativeListener(
+    ['input', 'change'], 
+    (e) => myFilter.set({ opacity: parseFloat(e.target.value) }), 
+    '#opacity');
 
 
 // Setup form
 document.querySelector('#lowColor').value = '#000000';
 document.querySelector('#highColor').value = '#5c7f5c';
+document.querySelector('#opacity').value = 1;
 
 
 // #### Development and testing
