@@ -1,7 +1,7 @@
-// # Demo Filters 009 
-// Filter parameters: chroma
+// # Demo Filters 011 
+// Filter parameters: chromakey
 
-// [Run code](../../demo/filters-009.html)
+// [Run code](../../demo/filters-011.html)
 import scrawl from '../source/scrawl.js';
 
 // #### Scene setup

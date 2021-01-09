@@ -11,6 +11,8 @@ canvas.set({
     css: {
       display: 'inline-block',
     },
+}).setBase({
+    compileOrder: 1,
 });
 
 scrawl.importDomImage('.flowers');
@@ -21,8 +23,7 @@ let blurFilter = scrawl.makeFilter({
 
     name: 'blur',
     method: 'blur',
-    radius: 1,
-    shrinkingRadius: false,
+    radius: 10,
     includeAlpha: false,
     passes: 1,
 });
@@ -92,21 +93,28 @@ scrawl.observeAndUpdate({
         radius: ['radius', 'round'],
         passes: ['passes', 'round'],
 
-        shrinkingRadius: ['shrinkingRadius', 'boolean'],
+        includeRed: ['includeRed', 'boolean'],
+        includeGreen: ['includeGreen', 'boolean'],
+        includeBlue: ['includeBlue', 'boolean'],
         includeAlpha: ['includeAlpha', 'boolean'],
 
         processHorizontal: ['processHorizontal', 'boolean'],
         processVertical: ['processVertical', 'boolean'],
+
+        opacity: ['opacity', 'float'],
     },
 });
 
 // Setup form
-document.querySelector('#radius').value = 1;
+document.querySelector('#radius').value = 10;
 document.querySelector('#passes').value = 1;
-document.querySelector('#shrinkingRadius').options.selectedIndex = 0;
+document.querySelector('#includeRed').options.selectedIndex = 1;
+document.querySelector('#includeGreen').options.selectedIndex = 1;
+document.querySelector('#includeBlue').options.selectedIndex = 1;
 document.querySelector('#includeAlpha').options.selectedIndex = 0;
 document.querySelector('#processHorizontal').options.selectedIndex = 1;
 document.querySelector('#processVertical').options.selectedIndex = 1;
+document.querySelector('#opacity').value = 1;
 
 
 // #### Development and testing

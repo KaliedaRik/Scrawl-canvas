@@ -1,5 +1,5 @@
 // # Demo Filters 010 
-// Filter parameters: matrix, matrix5
+// Filter parameters: chroma
 
 // [Run code](../../demo/filters-010.html)
 import scrawl from '../source/scrawl.js';
@@ -10,26 +10,19 @@ const canvas = scrawl.library.canvas.mycanvas;
 scrawl.importDomImage('.flowers');
 
 
-// Create the filters
-const matrix3 = scrawl.makeFilter({
+// Create the filter
+// + Chroma filters can have more than one range; each range array should be added to the `ranges` attribute
+const myFilter = scrawl.makeFilter({
 
-    name: 'matrix3',
-    method: 'matrix',
+    name: 'chroma',
+    method: 'chroma',
 
-    weights: [0, 0, 0, 0, 1, 0, 0, 0, 0],
-});
-
-const matrix5 = scrawl.makeFilter({
-
-    name: 'matrix5',
-    method: 'matrix5',
-
-    weights: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    ranges: [[0, 0, 0, 92, 127, 92]],
 });
 
 
 // Create the target entity
-const target = scrawl.makePicture({
+scrawl.makePicture({
 
     name: 'base-piccy',
 
@@ -43,7 +36,7 @@ const target = scrawl.makePicture({
 
     method: 'fill',
 
-    filters: ['matrix3'],
+    filters: ['chroma'],
 });
 
 
@@ -65,8 +58,9 @@ let report = function () {
         testTicker = testNow;
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    matrix3: ${matrix3.weights}
-    matrix5: ${matrix5.weights}`;
+    low color: ${lowCol.value}
+    high color: ${highCol.value}
+    range: [${myFilter.ranges}]`;
     };
 }();
 
@@ -82,99 +76,54 @@ const demoAnimation = scrawl.makeRender({
 
 // #### User interaction
 // Setup form observer functionality
-const changeMatrix = function () {
+const interpretColors = function () {
 
-    const selector = document.querySelector('#selectMatrix');
+    const converter = scrawl.makeColor({
+        name: 'converter',
+    });
 
-    return function () {
+    const lowColor = document.querySelector('#lowColor');
+    const highColor = document.querySelector('#highColor');
 
-        target.set({
-            filters: [selector.value],
-        });
-    }
-}();
-scrawl.addNativeListener(['input', 'change'], changeMatrix, '#selectMatrix');
-
-const updateWeights = function () {
-
-    const m11 = document.querySelector('#m11');
-    const m12 = document.querySelector('#m12');
-    const m13 = document.querySelector('#m13');
-    const m14 = document.querySelector('#m14');
-    const m15 = document.querySelector('#m15');
-    const m21 = document.querySelector('#m21');
-    const m22 = document.querySelector('#m22');
-    const m23 = document.querySelector('#m23');
-    const m24 = document.querySelector('#m24');
-    const m25 = document.querySelector('#m25');
-    const m31 = document.querySelector('#m31');
-    const m32 = document.querySelector('#m32');
-    const m33 = document.querySelector('#m33');
-    const m34 = document.querySelector('#m34');
-    const m35 = document.querySelector('#m35');
-    const m41 = document.querySelector('#m41');
-    const m42 = document.querySelector('#m42');
-    const m43 = document.querySelector('#m43');
-    const m44 = document.querySelector('#m44');
-    const m45 = document.querySelector('#m45');
-    const m51 = document.querySelector('#m51');
-    const m52 = document.querySelector('#m52');
-    const m53 = document.querySelector('#m53');
-    const m54 = document.querySelector('#m54');
-    const m55 = document.querySelector('#m55');
-
-    let weights3, weights5;
+    let lowRed = 0,
+        lowGreen = 0,
+        lowBlue = 0,
+        highRed = 92,
+        highGreen = 127,
+        highBlue = 92;
 
     return function () {
 
-        weights3 = [parseFloat(m22.value), parseFloat(m23.value), parseFloat(m24.value), 
-                    parseFloat(m32.value), parseFloat(m33.value), parseFloat(m34.value), 
-                    parseFloat(m42.value), parseFloat(m43.value), parseFloat(m44.value)];
+        converter.convert(lowColor.value);
 
-        weights5 = [parseFloat(m11.value), parseFloat(m12.value), parseFloat(m13.value), parseFloat(m14.value), parseFloat(m15.value), 
-                    parseFloat(m21.value), parseFloat(m22.value), parseFloat(m23.value), parseFloat(m24.value), parseFloat(m25.value), 
-                    parseFloat(m31.value), parseFloat(m32.value), parseFloat(m33.value), parseFloat(m34.value), parseFloat(m35.value), 
-                    parseFloat(m41.value), parseFloat(m42.value), parseFloat(m43.value), parseFloat(m44.value), parseFloat(m45.value), 
-                    parseFloat(m51.value), parseFloat(m52.value), parseFloat(m53.value), parseFloat(m54.value), parseFloat(m55.value)];
+        lowRed = converter.r;
+        lowGreen = converter.g;
+        lowBlue = converter.b;
 
-        matrix3.set({
-            weights: weights3,
-        });
+        converter.convert(highColor.value);
 
-        matrix5.set({
-            weights: weights5,
-        });
+        highRed = converter.r;
+        highGreen = converter.g;
+        highBlue = converter.b;
+
+        myFilter.set({
+
+            ranges: [[lowRed, lowGreen, lowBlue, highRed, highGreen, highBlue]],
+        })
     }
 }();
-scrawl.addNativeListener(['input', 'change'], updateWeights, '.weight');
+scrawl.addNativeListener(['input', 'change'], interpretColors, '.controlItem');
+
+scrawl.addNativeListener(
+    ['input', 'change'], 
+    (e) => myFilter.set({ opacity: parseFloat(e.target.value) }), 
+    '#opacity');
+
 
 // Setup form
-document.querySelector('#selectMatrix').value = 'matrix3';
-document.querySelector('#m11').value = 0;
-document.querySelector('#m12').value = 0;
-document.querySelector('#m13').value = 0;
-document.querySelector('#m14').value = 0;
-document.querySelector('#m15').value = 0;
-document.querySelector('#m21').value = 0;
-document.querySelector('#m22').value = 0;
-document.querySelector('#m23').value = 0;
-document.querySelector('#m24').value = 0;
-document.querySelector('#m25').value = 0;
-document.querySelector('#m31').value = 0;
-document.querySelector('#m32').value = 0;
-document.querySelector('#m33').value = 1;
-document.querySelector('#m34').value = 0;
-document.querySelector('#m35').value = 0;
-document.querySelector('#m41').value = 0;
-document.querySelector('#m42').value = 0;
-document.querySelector('#m43').value = 0;
-document.querySelector('#m44').value = 0;
-document.querySelector('#m45').value = 0;
-document.querySelector('#m51').value = 0;
-document.querySelector('#m52').value = 0;
-document.querySelector('#m53').value = 0;
-document.querySelector('#m54').value = 0;
-document.querySelector('#m55').value = 0;
+document.querySelector('#lowColor').value = '#000000';
+document.querySelector('#highColor').value = '#5c7f5c';
+document.querySelector('#opacity').value = 1;
 
 
 // #### Development and testing

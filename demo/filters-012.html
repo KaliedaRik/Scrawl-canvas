@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Filters 012</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    .controls {
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+      width: 400px;
+      margin: 0 auto;
+    }
+    img {
+      display: none;
+    }
+    canvas {
+      margin: 0 auto;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 012</h1>
+  <h2>Parameters for: matrix, matrix5 filters</h2>
+
+  <div class="controls">
+
+    <div class="yellow">
+      <select class="controlItem matrix-type" id="selectMatrix">
+        <option value="matrix3">3 &times; 3</option>
+        <option value="matrix5">5 &times; 5</option>
+      </select>
+    </div>
+    <div>&nbsp;</div>
+    <div>&nbsp;</div>
+    <div>&nbsp;</div>
+    <div>&nbsp;</div>
+
+
+    <div class="green"><input class="controlItem weight" id="m11" type="number" min="-5" max="5" step="0.1" value="0" /></div>
+    <div class="green"><input class="controlItem weight" id="m12" type="number" min="-5" max="5" step="0.1" value="0" /></div>
+    <div class="green"><input class="controlItem weight" id="m13" type="number" min="-5" max="5" step="0.1" value="0" /></div>
+    <div class="green"><input class="controlItem weight" id="m14" type="number" min="-5" max="5" step="0.1" value="0" /></div>
+    <div class="green"><input class="controlItem weight" id="m15" type="number" min="-5" max="5" step="0.1" value="0" /></div>
+
+    <div class="green"><input class="controlItem weight" id="m21" type="number" min="-5" max="5" step="0.1" value="0" /></div>
+    <div class="blue"><input class="controlItem weight" id="m22" type="number" min="-5" max="5" step="0.1" value="0" /></div>
+    <div class="blue"><input class="controlItem weight" id="m23" type="number" min="-5" max="5" step="0.1" value="0" /></div>
+    <div class="blue"><input class="controlItem weight" id="m24" type="number" min="-5" max="5" step="0.1" value="0" /></div>
+    <div class="green"><input class="controlItem weight" id="m25" type="number" min="-5" max="5" step="0.1" value="0" /></div>
+
+    <div class="green"><input class="controlItem weight" id="m31" type="number" min="-5" max="5" step="0.1" value="0" /></div>
+    <div class="blue"><input class="controlItem weight" id="m32" type="number" min="-5" max="5" step="0.1" value="0" /></div>
+    <div class="pink"><input class="controlItem weight" id="m33" type="number" min="-5" max="5" step="0.1" value="1" /></div>
+    <div class="blue"><input class="controlItem weight" id="m34" type="number" min="-5" max="5" step="0.1" value="0" /></div>
+    <div class="green"><input class="controlItem weight" id="m35" type="number" min="-5" max="5" step="0.1" value="0" /></div>
+
+    <div class="green"><input class="controlItem weight" id="m41" type="number" min="-5" max="5" step="0.1" value="0" /></div>
+    <div class="blue"><input class="controlItem weight" id="m42" type="number" min="-5" max="5" step="0.1" value="0" /></div>
+    <div class="blue"><input class="controlItem weight" id="m43" type="number" min="-5" max="5" step="0.1" value="0" /></div>
+    <div class="blue"><input class="controlItem weight" id="m44" type="number" min="-5" max="5" step="0.1" value="0" /></div>
+    <div class="green"><input class="controlItem weight" id="m45" type="number" min="-5" max="5" step="0.1" value="0" /></div>
+
+    <div class="green"><input class="controlItem weight" id="m51" type="number" min="-5" max="5" step="0.1" value="0" /></div>
+    <div class="green"><input class="controlItem weight" id="m52" type="number" min="-5" max="5" step="0.1" value="0" /></div>
+    <div class="green"><input class="controlItem weight" id="m53" type="number" min="-5" max="5" step="0.1" value="0" /></div>
+    <div class="green"><input class="controlItem weight" id="m54" type="number" min="-5" max="5" step="0.1" value="0" /></div>
+    <div class="green"><input class="controlItem weight" id="m55" type="number" min="-5" max="5" step="0.1" value="0" /></div>
+  </div>
+
+  <canvas id="mycanvas" width="400" height="400"></canvas>
+
+  <img id="iris" src="img/iris.png" class="flowers" />
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+
+    <ul>
+      <li>Create a test Picture entity</li>
+      <li>Create matrix, matrix5 filters; apply them to the test entity</li>
+      <li>Update filter attributes and observe the effect they have on the entity</li>
+    </ul>
+
+    <p><a href="../docs/demo/filters-012.html">Annotated code</a></p>
+  </div>
+
+  <script src="filters-012.js" type="module"></script>
+
+</body>
+
+</html>

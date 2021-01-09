@@ -87,6 +87,15 @@ let defaultAttributes = {
     opaqueAt: 1,
     transparentAt: 0,
 
+    includeRed: true,
+    includeGreen: true,
+    includeBlue: true,
+    includeAlpha: false, 
+    excludeRed: false,
+    excludeGreen: false,
+    excludeBlue: false,
+    excludeAlpha: true, 
+
     actions: null,
 
 

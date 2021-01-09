@@ -17,7 +17,9 @@ let packet, packetImageObject, imageData, packetFiltersArray;
 let source,
     work,
     interim,
-    actions;
+    actions,
+    grid,
+    blurGrid;
 
 const createResultObject = function (len) {
 
@@ -176,6 +178,20 @@ const cacheOutput = function (name, obj, caller) {
     interim[name] = obj;
 };
 
+const copyOver = function (f, t) {
+
+    let {r:fromR, g:fromG, b:fromB, a:fromA } = f;
+    let {r:toR, g:toG, b:toB, a:toA } = t;
+
+    for (let i = 0; i < fromR.length; i++) {
+
+        toR[i] = fromR[i];
+        toG[i] = fromG[i];
+        toB[i] = fromB[i];
+        toA[i] = fromA[i];
+    }
+};
+
 const processResults = function (store, incoming, ratio) {
 
     let sR = store.r,
@@ -188,16 +204,7 @@ const processResults = function (store, incoming, ratio) {
         iB = incoming.b,
         iA = incoming.a;
 
-    if (ratio === 1) {
-
-        for (let i = 0, iz = sR.length; i < iz; i++) {
-
-            sR[i] = iR[i];
-            sG[i] = iG[i];
-            sB[i] = iB[i];
-            sA[i] = iA[i];
-        }
-    }
+    if (ratio === 1) copyOver(incoming, store);
     else if (ratio > 0) {
 
         antiRatio = 1 - ratio;
@@ -211,7 +218,6 @@ const processResults = function (store, incoming, ratio) {
         }
     }
 };
-
 
 const theBigActionsObject = {
 
@@ -228,15 +234,8 @@ const theBigActionsObject = {
         if (includeGreen) divisor++;
         if (includeBlue) divisor++;
 
-        let inR = input.r,
-            inG = input.g,
-            inB = input.b,
-            inA = input.a;
-
-        let outR = output.r,
-            outG = output.g,
-            outB = output.b,
-            outA = output.a;
+        const {r:inR, g:inG, b:inB, a:inA} = input;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
 
         for (let i = 0; i < len; i++) {
 
@@ -290,15 +289,8 @@ const theBigActionsObject = {
         if (includeGreen) divisor++;
         if (includeBlue) divisor++;
 
-        let inR = input.r,
-            inG = input.g,
-            inB = input.b,
-            inA = input.a;
-
-        let outR = output.r,
-            outG = output.g,
-            outB = output.b,
-            outA = output.a;
+        const {r:inR, g:inG, b:inB, a:inA} = input;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
 
         for (let i = 0; i < len; i++) {
 
@@ -332,23 +324,17 @@ const theBigActionsObject = {
 
         const {opacity, includeRed, includeGreen, includeBlue, excludeRed, excludeGreen, excludeBlue, out} = requirements;
 
-        let inR = input.r,
-            inG = input.g,
-            inB = input.b,
-            inA = input.a;
-
-        let outR = output.r,
-            outG = output.g,
-            outB = output.b,
-            outA = output.a;
+        const {r:inR, g:inG, b:inB, a:inA} = input;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
 
         for (let i = 0; i < len; i++) {
 
             outR[i] = (includeRed) ? inA[i] : ((excludeRed) ? 0 : inR[i]);
             outR[i] = (includeGreen) ? inA[i] : ((excludeGreen) ? 0 : inG[i]);
             outR[i] = (includeBlue) ? inA[i] : ((excludeBlue) ? 0 : inB[i]);
-            outA[i] = 255;
         }
+        outA.fill(255, 0, outA.length - 1);
+
         if (out) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
     },
@@ -361,15 +347,8 @@ const theBigActionsObject = {
 
         const {opacity, includeRed, includeGreen, includeBlue, includeAlpha, out} = requirements;
 
-        let inR = input.r,
-            inG = input.g,
-            inB = input.b,
-            inA = input.a;
-
-        let outR = output.r,
-            outG = output.g,
-            outB = output.b,
-            outA = output.a;
+        const {r:inR, g:inG, b:inB, a:inA} = input;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
 
         for (let i = 0; i < len; i++) {
 
@@ -390,15 +369,8 @@ const theBigActionsObject = {
 
         const {opacity, includeRed, includeGreen, includeBlue, level, out} = requirements;
 
-        let inR = input.r,
-            inG = input.g,
-            inB = input.b,
-            inA = input.a;
-
-        let outR = output.r,
-            outG = output.g,
-            outB = output.b,
-            outA = output.a;
+        const {r:inR, g:inG, b:inB, a:inA} = input;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
 
         for (let i = 0; i < len; i++) {
 
@@ -407,6 +379,7 @@ const theBigActionsObject = {
             outB[i] = (includeBlue) ? inB[i] *= level : inB[i];
             outA[i] = inA[i];
         }
+
         if (out) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
     },
@@ -419,15 +392,8 @@ const theBigActionsObject = {
 
         const {opacity, includeRed, includeGreen, includeBlue, level, out} = requirements;
 
-        let inR = input.r,
-            inG = input.g,
-            inB = input.b,
-            inA = input.a;
-
-        let outR = output.r,
-            outG = output.g,
-            outB = output.b,
-            outA = output.a;
+        const {r:inR, g:inG, b:inB, a:inA} = input;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
 
         for (let i = 0; i < len; i++) {
             outR[i] = (includeRed) ? 127 + ((inR[i] - 127) * level) : inR[i];
@@ -435,6 +401,7 @@ const theBigActionsObject = {
             outB[i] = (includeBlue) ? 127 + ((inB[i] - 127) * level) : inB[i];
             outA[i] = inA[i];
         }
+
         if (out) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
     },
@@ -452,15 +419,8 @@ const theBigActionsObject = {
         if (blue == null) blue = 1;
         if (alpha == null) alpha = 1;
 
-        let inR = input.r,
-            inG = input.g,
-            inB = input.b,
-            inA = input.a;
-
-        let outR = output.r,
-            outG = output.g,
-            outB = output.b,
-            outA = output.a;
+        const {r:inR, g:inG, b:inB, a:inA} = input;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
 
         for (let i = 0; i < len; i++) {
             outR[i] = inR[i] * red;
@@ -485,15 +445,8 @@ const theBigActionsObject = {
         if (green == null) green = 1;
         if (blue == null) blue = 1;
 
-        let inR = input.r,
-            inG = input.g,
-            inB = input.b,
-            inA = input.a;
-
-        let outR = output.r,
-            outG = output.g,
-            outB = output.b,
-            outA = output.a;
+        const {r:inR, g:inG, b:inB, a:inA} = input;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
 
         for (let i = 0; i < len; i++) {
             outR[i] = floor(inR[i] / red) * red;
@@ -501,6 +454,7 @@ const theBigActionsObject = {
             outB[i] = floor(inB[i] / blue) * blue;
             outA[i] = inA[i];
         }
+
         if (out) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
     },
@@ -524,15 +478,8 @@ const theBigActionsObject = {
 
         const {opacity, red, green, blue, alpha, out} = requirements;
 
-        let inR = input.r,
-            inG = input.g,
-            inB = input.b,
-            inA = input.a;
-
-        let outR = output.r,
-            outG = output.g,
-            outB = output.b,
-            outA = output.a;
+        const {r:inR, g:inG, b:inB, a:inA} = input;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
 
         for (let i = 0; i < len; i++) {
             outR[i] = getValue(inR[i], red);
@@ -567,15 +514,8 @@ const theBigActionsObject = {
             return ((diff - transparent) / range) * 255;
         };
 
-        let inR = input.r,
-            inG = input.g,
-            inB = input.b,
-            inA = input.a;
-
-        let outR = output.r,
-            outG = output.g,
-            outB = output.b,
-            outA = output.a;
+        const {r:inR, g:inG, b:inB, a:inA} = input;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
 
         for (let i = 0; i < len; i++) {
             outR[i] = inR[i];
@@ -602,17 +542,13 @@ const theBigActionsObject = {
         if (blue == null) blue = 0;
         if (alpha == null) alpha = 255;
 
-        let outR = output.r,
-            outG = output.g,
-            outB = output.b,
-            outA = output.a;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
 
-        for (let i = 0; i < len; i++) {
-            outR[i] = red;
-            outG[i] = green;
-            outB[i] = blue;
-            outA[i] = alpha;
-        }
+        outR.fill(red, 0, len - 1);
+        outG.fill(green, 0, len - 1);
+        outB.fill(blue, 0, len - 1);
+        outA.fill(alpha, 0, len - 1);
+
         if (out) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
     },
@@ -635,15 +571,8 @@ const theBigActionsObject = {
         if (blueInGreen == null) blueInGreen = 0;
         if (blueInBlue == null) blueInBlue = 1;
 
-        let inR = input.r,
-            inG = input.g,
-            inB = input.b,
-            inA = input.a;
-
-        let outR = output.r,
-            outG = output.g,
-            outB = output.b,
-            outA = output.a;
+        const {r:inR, g:inG, b:inB, a:inA} = input;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
 
         for (let i = 0; i < len; i++) {
 
@@ -656,6 +585,7 @@ const theBigActionsObject = {
             outB[i] = Math.floor((r * redInBlue) + (g * greenInBlue) + (b * blueInBlue));
             outA[i] = inA[i];
         }
+
         if (out) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
     },
@@ -668,15 +598,8 @@ const theBigActionsObject = {
 
         const {opacity, out} = requirements;
 
-        let inR = input.r,
-            inG = input.g,
-            inB = input.b,
-            inA = input.a;
-
-        let outR = output.r,
-            outG = output.g,
-            outB = output.b,
-            outA = output.a;
+        const {r:inR, g:inG, b:inB, a:inA} = input;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
 
         for (let i = 0; i < len; i++) {
 
@@ -687,6 +610,7 @@ const theBigActionsObject = {
             outB[i] = gray;
             outA[i] = inA[i];
         }
+
         if (out) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
     },
@@ -699,15 +623,8 @@ const theBigActionsObject = {
 
         const {opacity, ranges, out} = requirements;
 
-        let inR = input.r,
-            inG = input.g,
-            inB = input.b,
-            inA = input.a;
-
-        let outR = output.r,
-            outG = output.g,
-            outB = output.b,
-            outA = output.a;
+        const {r:inR, g:inG, b:inB, a:inA} = input;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
 
         for (let j = 0; j < len; j++) {
 
@@ -734,6 +651,7 @@ const theBigActionsObject = {
             outB[j] = inB[j];
             outA[j] = (flag) ? 0 : inA[j];
         }
+
         if (out) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
     },
@@ -744,24 +662,66 @@ const theBigActionsObject = {
 
         let len = input.r.length;
 
-        const {opacity, out} = requirements;
+        let {opacity, radius, passes, processVertical, processHorizontal, includeRed, includeGreen, includeBlue, includeAlpha, grid, verticalBlurGrid, horizontalBlurGrid, out} = requirements;
 
-        let inR = input.r,
-            inG = input.g,
-            inB = input.b,
-            inA = input.a;
+        // Any required precalculations
+        if (!grid || !verticalBlurGrid || !horizontalBlurGrid) {
 
-        let outR = output.r,
-            outG = output.g,
-            outB = output.b,
-            outA = output.a;
+        }
 
-        for (let i = 0; i < len; i++) {
+        // Perform blur action
+        const {r:inR, g:inG, b:inB, a:inA} = input;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
 
-            outR[i] = inR[i];
-            outG[i] = inG[i];
-            outB[i] = inB[i];
-            outA[i] = inA[i];
+        const hold = createResultObject(len);
+        const {r:holdR, g:holdG, b:holdB, a:holdA} = hold;
+
+        const getValue = function (flag, gridStore, step, holdChannel) {
+
+            if (flag) {
+
+                let h = gridStore[step],
+                    l = h.length,
+                    total = 0;
+
+                for (let t = 0; t < l; t++) {
+                    total += holdChannel[h[t]];
+                }
+                return total / l;
+            }
+            return holdChannel[step];
+        }
+
+        if (!passes || (!processHorizontal && !processVertical)) copyOver(input, output);
+        else {
+
+            copyOver(input, hold);
+
+            for (let pass = 0; pass < passes; pass++) {
+
+                if (processHorizontal) {
+
+                    for (let k = 0; k < len; k++) {
+                        outR[k] = getValue(includeRed, horizontalBlurGrid, k, holdR);
+                        outG[k] = getValue(includeGreen, horizontalBlurGrid, k, holdG);
+                        outB[k] = getValue(includeBlue, horizontalBlurGrid, k, holdB);
+                        outA[k] = getValue(includeAlpha, horizontalBlurGrid, k, holdA);
+                    }
+                    copyOver(output, hold);
+                }
+
+                if (processVertical) {
+
+
+                    for (let k = 0; k < len; k++) {
+                        outR[k] = getValue(includeRed, verticalBlurGrid, k, holdR);
+                        outG[k] = getValue(includeGreen, verticalBlurGrid, k, holdG);
+                        outB[k] = getValue(includeBlue, verticalBlurGrid, k, holdB);
+                        outA[k] = getValue(includeAlpha, verticalBlurGrid, k, holdA);
+                    }
+                    copyOver(output, hold);
+                }
+            }
         }
         if (out) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
@@ -775,15 +735,8 @@ const theBigActionsObject = {
 
         const {opacity, low, high, level, out} = requirements;
 
-        let inR = input.r,
-            inG = input.g,
-            inB = input.b,
-            inA = input.a;
-
-        let outR = output.r,
-            outG = output.g,
-            outB = output.b,
-            outA = output.a;
+        const {r:inR, g:inG, b:inB, a:inA} = input;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
 
         let [lowR, lowG, lowB] = low;
         let [highR, highG, highB] = high;
@@ -804,9 +757,9 @@ const theBigActionsObject = {
                 outG[i] = highG;
                 outB[i] = highB;
             }
-
             outA[i] = inA[i];
         }
+
         if (out) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
     },
@@ -841,15 +794,8 @@ const theBigActionsObject = {
                 isAlpha = true;
         }
 
-        let inR = input.r,
-            inG = input.g,
-            inB = input.b,
-            inA = input.a;
-
-        let outR = output.r,
-            outG = output.g,
-            outB = output.b,
-            outA = output.a;
+        const {r:inR, g:inG, b:inB, a:inA} = input;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
 
         for (let i = 0; i < len; i++) {
 
@@ -1065,87 +1011,109 @@ const thePreprocessObject = {
 
     channelLevels: function (f) {
 
-        let redValues = (f.red != null) ? f.red : [],
-            greenValues = (f.green != null) ? f.green : [],
-            blueValues = (f.blue != null) ? f.blue : [],
-            alphaValues = (f.alpha != null) ? f.alpha : [];
+        let redArray, greenArray, blueArray, alphaArray,
+            precalculationsRequired = false;
 
-        redValues = redValues.map(v => parseInt(v, 10));
-        greenValues = greenValues.map(v => parseInt(v, 10));
-        blueValues = blueValues.map(v => parseInt(v, 10));
-        alphaValues = alphaValues.map(v => parseInt(v, 10));
+        if (f.calculationCache) {
 
-        redValues.sort((a, b) => a - b);
-        greenValues.sort((a, b) => a - b);
-        blueValues.sort((a, b) => a - b);
-        alphaValues.sort((a, b) => a - b);
+            redArray = f.calculationCache.redArray || [];
+            greenArray = f.calculationCache.greenArray || [];
+            blueArray = f.calculationCache.blueArray || [];
+            alphaArray = f.calculationCache.alphaArray || [];
+        }
+        else {
 
-        let redArray = [],
-            greenArray = [],
-            blueArray = [],
+            precalculationsRequired = true;
+            f.calculationCache = {};
+            redArray = [];
+            greenArray = [];
+            blueArray = [];
             alphaArray = [];
-
-        if (redValues.length) {
-
-            if (redValues.length === 1) redArray.push([0, 255, redValues[0]]);
-            else {
-
-                for (let i = 0, iz = redValues.length; i < iz; i++) {
-
-                    let starts = (i == 0) ? 0 : Math.ceil(redValues[i - 1] + ((redValues[i] - redValues[i - 1]) / 2));
-
-                    let ends = (i == iz - 1) ? 255 : Math.floor(redValues[i] + ((redValues[i + 1] - redValues[i]) / 2));
-
-                    redArray.push([starts, ends, redValues[i]]);
-                }
-            }
         }
 
-        if (greenValues.length) {
+        if (precalculationsRequired) {
 
-            if (greenValues.length === 1) greenArray.push([0, 255, greenValues[0]]);
-            else {
+            let redValues = (f.red != null) ? f.red : [],
+                greenValues = (f.green != null) ? f.green : [],
+                blueValues = (f.blue != null) ? f.blue : [],
+                alphaValues = (f.alpha != null) ? f.alpha : [];
 
-                for (let i = 0, iz = greenValues.length; i < iz; i++) {
+            redValues = redValues.map(v => parseInt(v, 10));
+            greenValues = greenValues.map(v => parseInt(v, 10));
+            blueValues = blueValues.map(v => parseInt(v, 10));
+            alphaValues = alphaValues.map(v => parseInt(v, 10));
 
-                    let starts = (i == 0) ? 0 : Math.ceil(greenValues[i - 1] + ((greenValues[i] - greenValues[i - 1]) / 2));
+            redValues.sort((a, b) => a - b);
+            greenValues.sort((a, b) => a - b);
+            blueValues.sort((a, b) => a - b);
+            alphaValues.sort((a, b) => a - b);
 
-                    let ends = (i == iz - 1) ? 255 : Math.floor(greenValues[i] + ((greenValues[i + 1] - greenValues[i]) / 2));
+            if (redValues.length) {
 
-                    greenArray.push([starts, ends, greenValues[i]]);
+                if (redValues.length === 1) redArray.push([0, 255, redValues[0]]);
+                else {
+
+                    for (let i = 0, iz = redValues.length; i < iz; i++) {
+
+                        let starts = (i == 0) ? 0 : Math.ceil(redValues[i - 1] + ((redValues[i] - redValues[i - 1]) / 2));
+
+                        let ends = (i == iz - 1) ? 255 : Math.floor(redValues[i] + ((redValues[i + 1] - redValues[i]) / 2));
+
+                        redArray.push([starts, ends, redValues[i]]);
+                    }
                 }
+                f.calculationCache.redArray = redArray;
             }
-        }
 
-        if (blueValues.length) {
+            if (greenValues.length) {
 
-            if (blueValues.length === 1) blueArray.push([0, 255, blueValues[0]]);
-            else {
+                if (greenValues.length === 1) greenArray.push([0, 255, greenValues[0]]);
+                else {
 
-                for (let i = 0, iz = blueValues.length; i < iz; i++) {
+                    for (let i = 0, iz = greenValues.length; i < iz; i++) {
 
-                    let starts = (i == 0) ? 0 : Math.ceil(blueValues[i - 1] + ((blueValues[i] - blueValues[i - 1]) / 2));
+                        let starts = (i == 0) ? 0 : Math.ceil(greenValues[i - 1] + ((greenValues[i] - greenValues[i - 1]) / 2));
 
-                    let ends = (i == iz - 1) ? 255 : Math.floor(blueValues[i] + ((blueValues[i + 1] - blueValues[i]) / 2));
+                        let ends = (i == iz - 1) ? 255 : Math.floor(greenValues[i] + ((greenValues[i + 1] - greenValues[i]) / 2));
 
-                    blueArray.push([starts, ends, blueValues[i]]);
+                        greenArray.push([starts, ends, greenValues[i]]);
+                    }
                 }
+                f.calculationCache.greenArray = greenArray;
             }
-        }
 
-        if (alphaValues.length) {
+            if (blueValues.length) {
 
-            if (alphaValues.length === 1) alphaArray.push([0, 255, alphaValues[0]]);
-            else {
+                if (blueValues.length === 1) blueArray.push([0, 255, blueValues[0]]);
+                else {
 
-                for (let i = 0, iz = alphaValues.length; i < iz; i++) {
+                    for (let i = 0, iz = blueValues.length; i < iz; i++) {
 
-                    let starts = (i == 0) ? 0 : Math.ceil(alphaValues[i - 1] + ((alphaValues[i] - alphaValues[i - 1]) / 2));
+                        let starts = (i == 0) ? 0 : Math.ceil(blueValues[i - 1] + ((blueValues[i] - blueValues[i - 1]) / 2));
 
-                    let ends = (i == iz - 1) ? 255 : Math.floor(alphaValues[i] + ((alphaValues[i + 1] - alphaValues[i]) / 2));
+                        let ends = (i == iz - 1) ? 255 : Math.floor(blueValues[i] + ((blueValues[i + 1] - blueValues[i]) / 2));
 
-                    alphaArray.push([starts, ends, alphaValues[i]]);
+                        blueArray.push([starts, ends, blueValues[i]]);
+                    }
                 }
+                f.calculationCache.blueArray = blueArray;
+            }
+
+            if (alphaValues.length) {
+
+                if (alphaValues.length === 1) alphaArray.push([0, 255, alphaValues[0]]);
+                else {
+
+                    for (let i = 0, iz = alphaValues.length; i < iz; i++) {
+
+                        let starts = (i == 0) ? 0 : Math.ceil(alphaValues[i - 1] + ((alphaValues[i] - alphaValues[i - 1]) / 2));
+
+                        let ends = (i == iz - 1) ? 255 : Math.floor(alphaValues[i] + ((alphaValues[i + 1] - alphaValues[i]) / 2));
+
+                        alphaArray.push([starts, ends, alphaValues[i]]);
+                    }
+                }
+                f.calculationCache.alphaArray = alphaArray;
             }
         }
 
@@ -1201,9 +1169,103 @@ const thePreprocessObject = {
 
     blur: function (f) {
 
+        let grid, verticalBlurGrid, horizontalBlurGrid,
+            precalculationsRequired = false;
+
+        if (f.calculationCache) {
+
+            grid = f.calculationCache.grid || [];
+            verticalBlurGrid = f.calculationCache.verticalBlurGrid || [];
+            horizontalBlurGrid = f.calculationCache.horizontalBlurGrid || [];
+        }
+        else {
+
+            precalculationsRequired = true;
+            f.calculationCache = {};
+            grid = [];
+            verticalBlurGrid = [];
+            horizontalBlurGrid = [];
+        }
+
+        if (precalculationsRequired) {
+
+            let counter = 0;
+            let radius = (f.radius != null) ? f.radius : 1;
+            let x, y, c
+
+            // build the grid 2d array
+            for (y = 0, yz = packetImageObject.height; y < yz; y++) {
+
+                let row = [];
+
+                for (x = 0, xz = packetImageObject.width; x < xz; x++) {
+                    
+                    row.push(counter);
+                    counter++;
+                }
+                grid.push(row);
+            }
+
+            let gridHeight = grid.length,
+                gridWidth = grid[0].length,
+                rowLen = gridWidth - 1,
+                colLen = gridHeight - 1;
+
+            // build horizontalBlurGrid 2d array
+            for (y = 0; y < gridHeight; y++) {
+
+                let startCell = grid[y][0],
+                    endCell = grid[y][rowLen];
+
+                for (x = 0; x < gridWidth; x++) {
+
+                    let cellsToProcess = [];
+
+                    for (c = x - radius, cz = x + radius + 1; c < cz; c++) {
+
+                        if (c < 0) cellsToProcess.push(startCell);
+                        else if (c > rowLen) cellsToProcess.push(endCell);
+                        else cellsToProcess.push(grid[y][c]);
+                    }
+                    horizontalBlurGrid[(y * gridHeight) + x] = cellsToProcess;
+                }
+            }
+
+            // build verticalBlurGrid 2d array
+            for (x = 0; x < gridWidth; x++) {
+
+                let startCell = grid[0][x],
+                    endCell = grid[colLen][x];
+
+                for (y = 0; y < gridHeight; y++) {
+
+                    let cellsToProcess = [];
+
+                    for (c = y - radius, cz = y + radius + 1; c < cz; c++) {
+
+                        if (c < 0) cellsToProcess.push(startCell);
+                        else if (c > colLen) cellsToProcess.push(endCell);
+                        else cellsToProcess.push(grid[c][x]);
+                    }
+                    verticalBlurGrid[(y * gridHeight) + x] = cellsToProcess;
+                }
+            }
+        }
+
         f.actions = [{
             action: 'blur',
             opacity: (f.opacity != null) ? f.opacity : 1,
+            includeRed: (f.includeRed != null) ? f.includeRed : true,
+            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
+            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
+            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
+            processHorizontal: (f.processHorizontal != null) ? f.processHorizontal : true,
+            processVertical: (f.processVertical != null) ? f.processVertical : true,
+            radius: (f.radius != null) ? f.radius : 1,
+            passes: (f.passes != null) ? f.passes : 1,
+            grid,
+            verticalBlurGrid,
+            horizontalBlurGrid,
         }];
     },
 }

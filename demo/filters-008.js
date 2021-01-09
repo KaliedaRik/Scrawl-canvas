@@ -1,5 +1,5 @@
 // # Demo Filters 008 
-// Filter parameters: pixelate
+// Filter parameters: tint
 
 // [Run code](../../demo/filters-008.html)
 import scrawl from '../source/scrawl.js';
@@ -13,13 +13,18 @@ scrawl.importDomImage('.flowers');
 // Create the filter
 const myFilter = scrawl.makeFilter({
 
-    name: 'pixelate',
-    method: 'pixelate',
+    name: 'tint',
+    method: 'tint',
 
-    tileWidth: 10,
-    tileHeight: 10,
-    offsetX: 0,
-    offsetY: 0,
+    redInRed: 1,
+    redInGreen: 0,
+    redInBlue: 0,
+    greenInRed: 0,
+    greenInGreen: 1,
+    greenInBlue: 0,
+    blueInRed: 0,
+    blueInGreen: 0,
+    blueInBlue: 1,
 });
 
 
@@ -38,7 +43,7 @@ scrawl.makePicture({
 
     method: 'fill',
 
-    filters: ['pixelate'],
+    filters: ['tint'],
 });
 
 
@@ -50,10 +55,15 @@ let report = function () {
         testTime, testNow,
         testMessage = document.querySelector('#reportmessage');
 
-    let tile_width = document.querySelector('#tile_width'),
-        tile_height = document.querySelector('#tile_height'),
-        offset_x = document.querySelector('#offset_x'),
-        offset_y = document.querySelector('#offset_y');
+    let redInRed = document.querySelector('#redInRed'),
+        greenInRed = document.querySelector('#greenInRed'),
+        blueInRed = document.querySelector('#blueInRed'),
+        redInGreen = document.querySelector('#redInGreen'),
+        greenInGreen = document.querySelector('#greenInGreen'),
+        blueInGreen = document.querySelector('#blueInGreen'),
+        redInBlue = document.querySelector('#redInBlue'),
+        greenInBlue = document.querySelector('#greenInBlue'),
+        blueInBlue = document.querySelector('#blueInBlue');
 
     return function () {
 
@@ -62,8 +72,9 @@ let report = function () {
         testTicker = testNow;
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Tile dimensions - width: ${tile_width.value} height: ${tile_height.value}
-    Offset - x: ${offset_x.value} y: ${offset_y.value}`;
+    In Red -   red: ${redInRed.value} green: ${greenInRed.value} blue: ${blueInRed.value}
+    In Green - red: ${redInGreen.value} green: ${greenInGreen.value} blue: ${blueInGreen.value}
+    In Blue -  red: ${redInBlue.value} green: ${greenInBlue.value} blue: ${blueInBlue.value}`;
     };
 }();
 
@@ -91,18 +102,30 @@ scrawl.observeAndUpdate({
 
     updates: {
 
-        tile_width: ['tileWidth', 'round'],
-        tile_height: ['tileHeight', 'round'],
-        offset_x: ['offsetX', 'round'],
-        offset_y: ['offsetY', 'round'],
+        redInRed: ['redInRed', 'float'],
+        redInGreen: ['redInGreen', 'float'],
+        redInBlue: ['redInBlue', 'float'],
+        greenInRed: ['greenInRed', 'float'],
+        greenInGreen: ['greenInGreen', 'float'],
+        greenInBlue: ['greenInBlue', 'float'],
+        blueInRed: ['blueInRed', 'float'],
+        blueInGreen: ['blueInGreen', 'float'],
+        blueInBlue: ['blueInBlue', 'float'],
+        opacity: ['opacity', 'float'],
     },
 });
 
 // Setup form
-document.querySelector('#tile_width').value = 10;
-document.querySelector('#tile_height').value = 10;
-document.querySelector('#offset_x').value = 0;
-document.querySelector('#offset_y').value = 0;
+document.querySelector('#redInRed').value = 1;
+document.querySelector('#redInGreen').value = 0;
+document.querySelector('#redInBlue').value = 0;
+document.querySelector('#greenInRed').value = 0;
+document.querySelector('#greenInGreen').value = 1;
+document.querySelector('#greenInBlue').value = 0;
+document.querySelector('#blueInRed').value = 0;
+document.querySelector('#blueInGreen').value = 0;
+document.querySelector('#blueInBlue').value = 1;
+document.querySelector('#opacity').value = 1;
 
 
 // #### Development and testing

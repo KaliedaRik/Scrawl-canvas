@@ -1,5 +1,5 @@
 // # Demo Filters 006 
-// Filter parameters: channels
+// Filter parameters: channelLevels
 
 // [Run code](../../demo/filters-006.html)
 import scrawl from '../source/scrawl.js';
@@ -13,12 +13,13 @@ scrawl.importDomImage('.flowers');
 // Create the filter
 const myFilter = scrawl.makeFilter({
 
-    name: 'channels',
-    method: 'channels',
+    name: 'channelLevels',
+    method: 'channelLevels',
 
-    red: 1,
-    green: 1,
-    blue: 1,
+    red: [50, 200],
+    green: [60, 220, 150],
+    blue: [40, 180],
+    alpha: [],
 });
 
 
@@ -37,7 +38,7 @@ scrawl.makePicture({
 
     method: 'fill',
 
-    filters: ['channels'],
+    filters: ['channelLevels'],
 });
 
 
@@ -51,6 +52,7 @@ let report = function () {
 
     let red = document.querySelector('#red'),
         green = document.querySelector('#green'),
+        alpha = document.querySelector('#alpha'),
         blue = document.querySelector('#blue');
 
     return function () {
@@ -60,9 +62,10 @@ let report = function () {
         testTicker = testNow;
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    red: ${red.value}
-    green: ${green.value}
-    blue: ${blue.value}`;
+    red: [${red.value}]
+    green: [${green.value}]
+    blue: [${blue.value}]
+    alpha: [${alpha.value}]`;
     };
 }();
 
@@ -77,30 +80,35 @@ const demoAnimation = scrawl.makeRender({
 
 
 // #### User interaction
-// Setup form observer functionality
-scrawl.observeAndUpdate({
+scrawl.addNativeListener(
+    ['input', 'change'], 
+    (e) => {
 
-    event: ['input', 'change'],
-    origin: '.controlItem',
+        let a;
 
-    target: myFilter,
+        if (e.target.id === 'opacity') a = e.target.value;
+        else {
 
-    useNativeListener: true,
-    preventDefault: true,
+            let temp = e.target.value.split(',');
+            a = [];
 
-    updates: {
+            temp.forEach(t => {
+                let n = parseInt(t, 10);
+                if (n.toFixed && !isNaN(n)) a.push(n)
+            });
+        }
 
-        red: ['red', 'float'],
-        green: ['green', 'float'],
-        blue: ['blue', 'float'],
-        opacity: ['opacity', 'float'],
-    },
-});
+        myFilter.set({ 
+            [e.target.id]: a,
+        });
+    }, 
+    '.controlItem');
 
 // Setup form
-document.querySelector('#red').value = 1;
-document.querySelector('#green').value = 1;
-document.querySelector('#blue').value = 1;
+document.querySelector('#red').value = '50, 200';
+document.querySelector('#green').value = '60, 220, 150';
+document.querySelector('#blue').value = '40, 180';
+document.querySelector('#alpha').value = '';
 document.querySelector('#opacity').value = 1;
 
 

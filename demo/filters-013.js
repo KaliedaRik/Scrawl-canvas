@@ -1,7 +1,7 @@
-// # Demo Filters 005a 
-// Filter parameters: channelLevels
+// # Demo Filters 013 
+// Filter parameters: flood
 
-// [Run code](../../demo/filters-005a.html)
+// [Run code](../../demo/filters-013.html)
 import scrawl from '../source/scrawl.js';
 
 // #### Scene setup
@@ -13,13 +13,13 @@ scrawl.importDomImage('.flowers');
 // Create the filter
 const myFilter = scrawl.makeFilter({
 
-    name: 'channelLevels',
-    method: 'channelLevels',
+    name: 'flood',
+    method: 'flood',
 
-    red: [50, 200],
-    green: [60, 220, 150],
-    blue: [40, 180],
-    alpha: [],
+    red: 0,
+    green: 0,
+    blue: 0,
+    alpha: 255
 });
 
 
@@ -38,7 +38,7 @@ scrawl.makePicture({
 
     method: 'fill',
 
-    filters: ['channelLevels'],
+    filters: ['flood'],
 });
 
 
@@ -50,10 +50,7 @@ let report = function () {
         testTime, testNow,
         testMessage = document.querySelector('#reportmessage');
 
-    let red = document.querySelector('#red'),
-        green = document.querySelector('#green'),
-        alpha = document.querySelector('#alpha'),
-        blue = document.querySelector('#blue');
+    let flood = document.querySelector('#flood');
 
     return function () {
 
@@ -62,10 +59,7 @@ let report = function () {
         testTicker = testNow;
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    red: [${red.value}]
-    green: [${green.value}]
-    blue: [${blue.value}]
-    alpha: [${alpha.value}]`;
+    flood color: ${flood.value}`;
     };
 }();
 
@@ -80,35 +74,32 @@ const demoAnimation = scrawl.makeRender({
 
 
 // #### User interaction
+// Use a color object to convert between CSS hexadecimal and RGB decimal colors
+const converter = scrawl.makeColor({
+    name: 'converter',
+});
+
+scrawl.addNativeListener(
+    ['input', 'change'], 
+    (e) => myFilter.set({ opacity: parseFloat(e.target.value) }), 
+    '#opacity');
+
 scrawl.addNativeListener(
     ['input', 'change'], 
     (e) => {
 
-        let a;
-
-        if (e.target.id === 'opacity') a = e.target.value;
-        else {
-
-            let temp = e.target.value.split(',');
-            a = [];
-
-            temp.forEach(t => {
-                let n = parseInt(t, 10);
-                if (n.toFixed && !isNaN(n)) a.push(n)
-            });
-        }
+        converter.convert(e.target.value);
 
         myFilter.set({ 
-            [e.target.id]: a,
+            red: converter.r,
+            green: converter.g,
+            blue: converter.b,
         });
     }, 
-    '.controlItem');
+    '#flood');
 
 // Setup form
-document.querySelector('#red').value = '50, 200';
-document.querySelector('#green').value = '60, 220, 150';
-document.querySelector('#blue').value = '40, 180';
-document.querySelector('#alpha').value = '';
+document.querySelector('#flood').value = '#000000';
 document.querySelector('#opacity').value = 1;
 
 
