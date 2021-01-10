@@ -95,6 +95,13 @@ scrawl.observeAndUpdate({
         tile_height: ['tileHeight', 'round'],
         offset_x: ['offsetX', 'round'],
         offset_y: ['offsetY', 'round'],
+
+        includeRed: ['includeRed', 'boolean'],
+        includeGreen: ['includeGreen', 'boolean'],
+        includeBlue: ['includeBlue', 'boolean'],
+        includeAlpha: ['includeAlpha', 'boolean'],
+
+        opacity: ['opacity', 'float'],
     },
 });
 
@@ -103,6 +110,11 @@ document.querySelector('#tile_width').value = 10;
 document.querySelector('#tile_height').value = 10;
 document.querySelector('#offset_x').value = 0;
 document.querySelector('#offset_y').value = 0;
+document.querySelector('#includeRed').options.selectedIndex = 1;
+document.querySelector('#includeGreen').options.selectedIndex = 1;
+document.querySelector('#includeBlue').options.selectedIndex = 1;
+document.querySelector('#includeAlpha').options.selectedIndex = 0;
+document.querySelector('#opacity').value = 1;
 
 
 // #### Development and testing

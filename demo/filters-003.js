@@ -101,19 +101,62 @@ const demoAnimation = scrawl.makeRender({
 
 
 // #### User interaction
-scrawl.addNativeListener(['input', 'change'], (e) => {
+// scrawl.addNativeListener(['input', 'change'], (e) => {
 
-    levelFilters.forEach(f => f.set({ opacity: parseFloat(e.target.value) }));
+//     levelFilters.forEach(f => f.set({ opacity: parseFloat(e.target.value) }));
 
-}, '#opacity');
+// }, '#opacity');
 
-scrawl.addNativeListener(['input', 'change'], (e) => {
+// scrawl.addNativeListener(['input', 'change'], (e) => {
 
-    levelFilters.forEach(f => f.set({ level: parseFloat(e.target.value) }));
+//     levelFilters.forEach(f => f.set({ level: parseFloat(e.target.value) }));
 
-}, '#level');
+// }, '#level');
+
+scrawl.observeAndUpdate({
+
+    event: ['input', 'change'],
+    origin: '.controlItem',
+
+    target: filter.brightness,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+
+        includeRed: ['includeRed', 'boolean'],
+        includeGreen: ['includeGreen', 'boolean'],
+        includeBlue: ['includeBlue', 'boolean'],
+        opacity: ['opacity', 'float'],
+        level: ['level', 'float'],
+    },
+});
+
+scrawl.observeAndUpdate({
+
+    event: ['input', 'change'],
+    origin: '.controlItem',
+
+    target: filter.saturation,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+
+        includeRed: ['includeRed', 'boolean'],
+        includeGreen: ['includeGreen', 'boolean'],
+        includeBlue: ['includeBlue', 'boolean'],
+        opacity: ['opacity', 'float'],
+        level: ['level', 'float'],
+    },
+});
 
 // Setup form
+document.querySelector('#includeRed').options.selectedIndex = 1;
+document.querySelector('#includeGreen').options.selectedIndex = 1;
+document.querySelector('#includeBlue').options.selectedIndex = 1;
 document.querySelector('#opacity').value = 1;
 document.querySelector('#level').value = 1;
 

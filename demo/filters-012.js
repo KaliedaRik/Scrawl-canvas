@@ -148,6 +148,48 @@ const updateWeights = function () {
 }();
 scrawl.addNativeListener(['input', 'change'], updateWeights, '.weight');
 
+scrawl.observeAndUpdate({
+
+    event: ['input', 'change'],
+    origin: '.controlItem',
+
+    target: matrix3,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+
+        includeRed: ['includeRed', 'boolean'],
+        includeGreen: ['includeGreen', 'boolean'],
+        includeBlue: ['includeBlue', 'boolean'],
+        includeAlpha: ['includeAlpha', 'boolean'],
+
+        opacity: ['opacity', 'float'],
+    },
+});
+
+scrawl.observeAndUpdate({
+
+    event: ['input', 'change'],
+    origin: '.controlItem',
+
+    target: matrix5,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+
+        includeRed: ['includeRed', 'boolean'],
+        includeGreen: ['includeGreen', 'boolean'],
+        includeBlue: ['includeBlue', 'boolean'],
+        includeAlpha: ['includeAlpha', 'boolean'],
+
+        opacity: ['opacity', 'float'],
+    },
+});
+
 // Setup form
 document.querySelector('#selectMatrix').value = 'matrix3';
 document.querySelector('#m11').value = 0;
@@ -175,6 +217,11 @@ document.querySelector('#m52').value = 0;
 document.querySelector('#m53').value = 0;
 document.querySelector('#m54').value = 0;
 document.querySelector('#m55').value = 0;
+document.querySelector('#includeRed').options.selectedIndex = 1;
+document.querySelector('#includeGreen').options.selectedIndex = 1;
+document.querySelector('#includeBlue').options.selectedIndex = 1;
+document.querySelector('#includeAlpha').options.selectedIndex = 0;
+document.querySelector('#opacity').value = 1;
 
 
 // #### Development and testing

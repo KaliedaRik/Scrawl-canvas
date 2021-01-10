@@ -151,29 +151,249 @@ onerror = function (e) {
     postMessage(packet);
 };
 
-const getInputAndOutputObjects = function (requirements) {
+const buildImageGrid = function () {
 
-    // we default the input to the work channel
-    let input = work;
+    if (packetImageObject) {
 
-    if (requirements.in) {
+        let grid = [],
+            counter = 0;
 
-        // the requirements can ask us to use the original source as the input
-        if (requirements.in == 'source') input = source;
+        for (let y = 0, yz = packetImageObject.height; y < yz; y++) {
 
-        // or it may need to act on the results of a previous action
-        else if (interim[requirements.in]) input = interim[requirements.in];
+            let row = [];
+
+            for (let x = 0, xz = packetImageObject.width; x < xz; x++) {
+                
+                row.push(counter);
+                counter++;
+            }
+            grid.push(row);
+        }
+        return grid;
+    }
+    return false;
+}
+
+const buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY) {
+
+    if (packetImageObject) {
+
+        let iWidth = packetImageObject.width,
+            iHeight = packetImageObject.height;
+
+        tileWidth = (tileWidth.toFixed && !isNaN(tileWidth)) ? tileWidth : 1;
+        tileHeight = (tileHeight.toFixed && !isNaN(tileHeight)) ? tileHeight : 1;
+        offsetX = (offsetX.toFixed && !isNaN(offsetX)) ? offsetX : 0;
+        offsetY = (offsetY.toFixed && !isNaN(offsetY)) ? offsetY : 0;
+
+        if (tileWidth < 1) tileWidth = 1;
+        if (tileWidth >= iWidth) tileWidth = iWidth - 1;
+        if (tileHeight < 1) tileHeight = 1;
+        if (tileHeight >= iHeight) tileHeight = iHeight - 1;
+        if (offsetX < 0) offsetX = 0;
+        if (offsetX >= tileWidth) offsetX = tileWidth - 1;
+        if (offsetY < 0) offsetY = 0;
+        if (offsetY >= tileHeight) offsetY = tileHeight - 1;
+
+        let tiles = [];
+
+            for (let j = offsetY - tileHeight, jz = iHeight; j < jz; j += tileHeight) {
+
+        for (let i = offsetX - tileWidth, iz = iWidth; i < iz; i += tileWidth) {
+
+                let hold = [];
+                
+                        for (y = j, yz = j + tileHeight; y < yz; y++) {
+
+                            if (y >= 0 && y < iHeight) {
+
+                for (let x = i, xz = i + tileWidth; x < xz; x++) {
+
+                    if (x >= 0 && x < iWidth) {
+
+                                hold.push((y * iWidth) + x);
+                            }
+                        }
+                    }
+                }
+                if (hold.length) tiles.push(hold);
+            }
+        }
+        return tiles;
+    }
+    return false;
+
+}
+
+const buildHorizontalBlur = function (grid, radius) {
+
+    if (grid) {
+
+        if (!radius || !radius.toFixed || isNaN(radius)) radius = 0;
+
+        let gridHeight = grid.length,
+            gridWidth = grid[0].length,
+            rowLen = gridWidth - 1;
+
+        let horizontalBlur = [];
+
+        for (let y = 0; y < gridHeight; y++) {
+
+            let startCell = grid[y][0],
+                endCell = grid[y][rowLen];
+
+            for (let x = 0; x < gridWidth; x++) {
+
+                let cellsToProcess = [];
+
+                for (let c = x - radius, cz = x + radius + 1; c < cz; c++) {
+
+                    if (c < 0) cellsToProcess.push(startCell);
+                    else if (c > rowLen) cellsToProcess.push(endCell);
+                    else cellsToProcess.push(grid[y][c]);
+                }
+                horizontalBlur[(y * gridHeight) + x] = cellsToProcess;
+            }
+        }
+        return horizontalBlur;
+    }
+    return false;
+};
+
+const buildVerticalBlur = function (grid, radius) {
+
+    if (grid) {
+
+        if (!radius || !radius.toFixed || isNaN(radius)) radius = 0;
+
+        let gridHeight = grid.length,
+            gridWidth = grid[0].length,
+            colLen = gridHeight - 1;
+
+        let verticalBlur = [];
+
+        for (let x = 0; x < gridWidth; x++) {
+
+            let startCell = grid[0][x],
+                endCell = grid[colLen][x];
+
+            for (let y = 0; y < gridHeight; y++) {
+
+                let cellsToProcess = [];
+
+                for (let c = y - radius, cz = y + radius + 1; c < cz; c++) {
+
+                    if (c < 0) cellsToProcess.push(startCell);
+                    else if (c > colLen) cellsToProcess.push(endCell);
+                    else cellsToProcess.push(grid[c][x]);
+                }
+                verticalBlur[(y * gridHeight) + x] = cellsToProcess;
+            }
+        }
+        return verticalBlur;
+    }
+    return false;
+};
+
+const buildMatrixGrid = function (mWidth, mHeight, mX, mY) {
+
+    if (mWidth == null || mWidth < 1) mWidth = 1;
+    if (mHeight == null || mHeight < 1) mHeight = 1;
+
+    if (mX == null || mX < 0) mX = 0;
+    else if (mX >= mWidth) mX = mWidth - 1;
+
+    if (mY == null || mY < 0) mY = 0;
+    else if (mY >= mHeight) mY = mHeight - 1;
+
+    let iWidth = packetImageObject.width,
+        iHeight = packetImageObject.height,
+        dataLength = imageData.length,
+        x, xz, y, yz, i, iz,
+        cellsTemplate = [],
+        grid = [];
+
+    for (y = -mY, yz = mHeight - mY; y < yz; y++) {
+
+        for (x = -mX, xz = mWidth - mX; x < xz; x++) {
+
+            cellsTemplate.push((y * iWidth) + x);
+        }
     }
 
-    // store the results in a temporary object - because we're now including opacity which means the end result will need to merge with the existing work object
-    let output = createResultObject(input.r.length);
+    for (y = 0; y < iHeight; y++) {
 
-// console.log('getInputAndOutputObjects', requirements.in, work.r[0], source.r[0], input.r[0]);
+        for (x = 0; x < iWidth; x++) {
+            
+            let pos = (y * iWidth) + x;
+            let cell = [];
 
-    return [input, output];
+            // process template
+            for (i = 0, iz = cellsTemplate.length; i < iz; i++) {
+
+                let val = pos + cellsTemplate[i];
+
+                if (val < 0) val += dataLength;
+                else if (val >= dataLength) val -= dataLength;
+
+                cell.push(val);
+            }
+            grid.push(cell);
+        }
+    }
+    return grid;
+};
+
+const checkChannelLevelsParameters = function (f) {
+
+    const doCheck = function (v, isHigh = false) {
+
+        if (v.toFixed) {
+            if (v < 0) return [[0, 255, 0]];
+            if (v > 255) return [[0, 255, 255]];
+            if (isNaN(v)) return (isHigh) ? [[0, 255, 255]] : [[0, 255, 0]];
+            return [[0, 255, v]];
+        }
+
+        if (v.substring) {
+            v = v.split(',');
+        }
+
+        if (Array.isArray(v)) {
+
+            if (!v.length) return v;
+            if (Array.isArray(v[0])) return v;
+
+            v = v.map(s => parseInt(s, 10));
+            v.sort((a, b) => a - b);
+
+            if (v.length == 1) return [[0, 255, v[0]]];
+
+            let res = [],
+                starts, ends;
+
+            for (let i = 0, iz = v.length; i < iz; i++) {
+
+                starts = 0;
+                ends = 255;
+                if (i != 0) starts = Math.ceil(v[i - 1] + ((v[i] - v[i - 1]) / 2));
+                if (i != iz - 1) ends = Math.floor(v[i] + ((v[i + 1] - v[i]) / 2));
+
+                res.push([starts, ends, v[i]]);
+            }
+            return res;
+        }
+        return (isHigh) ? [[0, 255, 255]] : [[0, 255, 0]];
+    }
+
+    f.red = doCheck(f.red);
+    f.green = doCheck(f.green);
+    f.blue = doCheck(f.blue);
+    f.alpha = doCheck(f.alpha, true);
 };
 
 const cacheOutput = function (name, obj, caller) {
+
     if (interim[name]) throw new Error('Duplicate name encountered when trying to cache output from', caller);
     interim[name] = obj;
 };
@@ -190,6 +410,20 @@ const copyOver = function (f, t) {
         toB[i] = fromB[i];
         toA[i] = fromA[i];
     }
+};
+
+const getInputAndOutputObjects = function (requirements) {
+
+    let input = work;
+
+    if (requirements.in) {
+
+        if (requirements.in == 'source') input = source;
+        else if (interim[requirements.in]) input = interim[requirements.in];
+    }
+    let output = createResultObject(input.r.length);
+
+    return [input, output];
 };
 
 const processResults = function (store, incoming, ratio) {
@@ -220,6 +454,29 @@ const processResults = function (store, incoming, ratio) {
 };
 
 const theBigActionsObject = {
+
+    'alpha-to-channels': function (requirements) {
+
+        let [input, output] = getInputAndOutputObjects(requirements);
+
+        let len = input.r.length;
+
+        const {opacity, includeRed, includeGreen, includeBlue, excludeRed, excludeGreen, excludeBlue, out} = requirements;
+
+        const {r:inR, g:inG, b:inB, a:inA} = input;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
+
+        for (let i = 0; i < len; i++) {
+
+            outR[i] = (includeRed) ? inA[i] : ((excludeRed) ? 0 : inR[i]);
+            outR[i] = (includeGreen) ? inA[i] : ((excludeGreen) ? 0 : inG[i]);
+            outR[i] = (includeBlue) ? inA[i] : ((excludeBlue) ? 0 : inB[i]);
+        }
+        outA.fill(255, 0, outA.length - 1);
+
+        if (out) processResults(output, work, 1 - opacity);
+        else processResults(work, output, opacity);
+    },
 
     'average-channels': function (requirements) {
 
@@ -276,6 +533,113 @@ const theBigActionsObject = {
         else processResults(work, output, opacity);
     },
 
+    'blur': function (requirements) {
+
+        let [input, output] = getInputAndOutputObjects(requirements);
+
+        let len = input.r.length;
+
+        let {opacity, radius, passes, processVertical, processHorizontal, includeRed, includeGreen, includeBlue, includeAlpha, grid, verticalBlurGrid, horizontalBlurGrid, out} = requirements;
+
+        // Any required precalculations
+        if (!grid) {
+
+            requirements.grid = buildImageGrid();
+            grid = requirements.grid;
+        }
+
+        if (processHorizontal && !horizontalBlurGrid) {
+            
+            requirements.horizontalBlurGrid = buildHorizontalBlur(grid, radius);
+            horizontalBlurGrid = requirements.horizontalBlurGrid;
+        }
+
+        if (processVertical && !verticalBlurGrid) {
+            
+            requirements.verticalBlurGrid = buildVerticalBlur(grid, radius);
+            verticalBlurGrid = requirements.verticalBlurGrid;
+        }
+
+        // Perform blur action
+        const {r:inR, g:inG, b:inB, a:inA} = input;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
+
+        const hold = createResultObject(len);
+        const {r:holdR, g:holdG, b:holdB, a:holdA} = hold;
+
+        const getValue = function (flag, gridStore, step, holdChannel) {
+
+            if (flag) {
+
+                let h = gridStore[step],
+                    l = h.length,
+                    total = 0;
+
+                for (let t = 0; t < l; t++) {
+                    total += holdChannel[h[t]];
+                }
+                return total / l;
+            }
+            return holdChannel[step];
+        }
+
+        if (!passes || (!processHorizontal && !processVertical)) copyOver(input, output);
+        else {
+
+            copyOver(input, hold);
+
+            for (let pass = 0; pass < passes; pass++) {
+
+                if (processHorizontal) {
+
+                    for (let k = 0; k < len; k++) {
+                        outR[k] = getValue(includeRed, horizontalBlurGrid, k, holdR);
+                        outG[k] = getValue(includeGreen, horizontalBlurGrid, k, holdG);
+                        outB[k] = getValue(includeBlue, horizontalBlurGrid, k, holdB);
+                        outA[k] = getValue(includeAlpha, horizontalBlurGrid, k, holdA);
+                    }
+                    copyOver(output, hold);
+                }
+
+                if (processVertical) {
+
+
+                    for (let k = 0; k < len; k++) {
+                        outR[k] = getValue(includeRed, verticalBlurGrid, k, holdR);
+                        outG[k] = getValue(includeGreen, verticalBlurGrid, k, holdG);
+                        outB[k] = getValue(includeBlue, verticalBlurGrid, k, holdB);
+                        outA[k] = getValue(includeAlpha, verticalBlurGrid, k, holdA);
+                    }
+                    copyOver(output, hold);
+                }
+            }
+        }
+        if (out) processResults(output, work, 1 - opacity);
+        else processResults(work, output, opacity);
+    },
+
+    'brightness': function (requirements) {
+
+        let [input, output] = getInputAndOutputObjects(requirements);
+
+        let len = input.r.length;
+
+        const {opacity, includeRed, includeGreen, includeBlue, level, out} = requirements;
+
+        const {r:inR, g:inG, b:inB, a:inA} = input;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
+
+        for (let i = 0; i < len; i++) {
+
+            outR[i] = (includeRed) ? inR[i] * level : inR[i];
+            outG[i] = (includeGreen) ? inG[i] * level : inG[i];
+            outB[i] = (includeBlue) ? inB[i] * level : inB[i];
+            outA[i] = inA[i];
+        }
+        if (out) processResults(output, work, 1 - opacity);
+        else processResults(work, output, opacity);
+    },
+
     'channels-to-alpha': function (requirements) {
 
         let [input, output] = getInputAndOutputObjects(requirements);
@@ -316,176 +680,41 @@ const theBigActionsObject = {
         else processResults(work, output, opacity);
     },
 
-    'alpha-to-channels': function (requirements) {
+    'chroma': function (requirements) {
 
         let [input, output] = getInputAndOutputObjects(requirements);
 
         let len = input.r.length;
 
-        const {opacity, includeRed, includeGreen, includeBlue, excludeRed, excludeGreen, excludeBlue, out} = requirements;
+        const {opacity, ranges, out} = requirements;
 
         const {r:inR, g:inG, b:inB, a:inA} = input;
         const {r:outR, g:outG, b:outB, a:outA} = output;
 
-        for (let i = 0; i < len; i++) {
+        for (let j = 0; j < len; j++) {
 
-            outR[i] = (includeRed) ? inA[i] : ((excludeRed) ? 0 : inR[i]);
-            outR[i] = (includeGreen) ? inA[i] : ((excludeGreen) ? 0 : inG[i]);
-            outR[i] = (includeBlue) ? inA[i] : ((excludeBlue) ? 0 : inB[i]);
-        }
-        outA.fill(255, 0, outA.length - 1);
+            let flag = false;
 
-        if (out) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
-    },
+            let r = inR[j],
+                g = inG[j],
+                b = inB[j];
 
-    'invert-channels': function (requirements) {
+            for (i = 0, iz = ranges.length; i < iz; i++) {
 
-        let [input, output] = getInputAndOutputObjects(requirements);
+                let range = ranges[i];
 
-        let len = input.r.length;
+                let [minR, minG, minB, maxR, maxG, maxB] = ranges[i];
 
-        const {opacity, includeRed, includeGreen, includeBlue, includeAlpha, out} = requirements;
+                if (r >= minR && r <= maxR && g >= minG && g <= maxG && b >= minB && b <= maxB) {
+                    flag = true;
+                    break;
+                }
 
-        const {r:inR, g:inG, b:inB, a:inA} = input;
-        const {r:outR, g:outG, b:outB, a:outA} = output;
-
-        for (let i = 0; i < len; i++) {
-
-            outR[i] = (includeRed) ? 255 - inR[i] : inR[i];
-            outG[i] = (includeGreen) ? 255 - inG[i] : inG[i];
-            outB[i] = (includeBlue) ? 255 - inB[i] : inB[i];
-            outA[i] = (includeAlpha) ? 255 - inA[i] : inA[i];
-        }
-        if (out) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
-    },
-
-    'brightness': function (requirements) {
-
-        let [input, output] = getInputAndOutputObjects(requirements);
-
-        let len = input.r.length;
-
-        const {opacity, includeRed, includeGreen, includeBlue, level, out} = requirements;
-
-        const {r:inR, g:inG, b:inB, a:inA} = input;
-        const {r:outR, g:outG, b:outB, a:outA} = output;
-
-        for (let i = 0; i < len; i++) {
-
-            outR[i] = (includeRed) ? inR[i] *= level : inR[i];
-            outG[i] = (includeGreen) ? inG[i] *= level : inG[i];
-            outB[i] = (includeBlue) ? inB[i] *= level : inB[i];
-            outA[i] = inA[i];
-        }
-
-        if (out) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
-    },
-
-    'saturation': function (requirements) {
-
-        let [input, output] = getInputAndOutputObjects(requirements);
-
-        let len = input.r.length;
-
-        const {opacity, includeRed, includeGreen, includeBlue, level, out} = requirements;
-
-        const {r:inR, g:inG, b:inB, a:inA} = input;
-        const {r:outR, g:outG, b:outB, a:outA} = output;
-
-        for (let i = 0; i < len; i++) {
-            outR[i] = (includeRed) ? 127 + ((inR[i] - 127) * level) : inR[i];
-            outG[i] = (includeGreen) ? 127 + ((inG[i] - 127) * level) : inG[i];
-            outB[i] = (includeBlue) ? 127 + ((inB[i] - 127) * level) : inB[i];
-            outA[i] = inA[i];
-        }
-
-        if (out) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
-    },
-
-    'modulate-channels': function (requirements) {
-
-        let [input, output] = getInputAndOutputObjects(requirements);
-
-        let len = input.r.length;
-
-        const {opacity, red, green, blue, alpha, level, out} = requirements;
-
-        if (red == null) red = 1;
-        if (green == null) green = 1;
-        if (blue == null) blue = 1;
-        if (alpha == null) alpha = 1;
-
-        const {r:inR, g:inG, b:inB, a:inA} = input;
-        const {r:outR, g:outG, b:outB, a:outA} = output;
-
-        for (let i = 0; i < len; i++) {
-            outR[i] = inR[i] * red;
-            outG[i] = inG[i] * green;
-            outB[i] = inB[i] * blue;
-            outA[i] = inA[i] * alpha;
-        }
-        if (out) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
-    },
-
-    'step-channels': function (requirements) {
-
-        let [input, output] = getInputAndOutputObjects(requirements);
-
-        let len = input.r.length,
-            floor = Math.floor;
-
-        const {opacity, red, green, blue, level, out} = requirements;
-
-        if (red == null) red = 1;
-        if (green == null) green = 1;
-        if (blue == null) blue = 1;
-
-        const {r:inR, g:inG, b:inB, a:inA} = input;
-        const {r:outR, g:outG, b:outB, a:outA} = output;
-
-        for (let i = 0; i < len; i++) {
-            outR[i] = floor(inR[i] / red) * red;
-            outG[i] = floor(inG[i] / green) * green;
-            outB[i] = floor(inB[i] / blue) * blue;
-            outA[i] = inA[i];
-        }
-
-        if (out) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
-    },
-
-    'lock-channels-to-levels': function (requirements) {
-
-        const getValue = function (val, levels) {
-
-            if (!levels.length) return val;
-
-            for (let i = 0, iz = levels.length; i < iz; i++) {
-
-                let [start, end, level] = levels[i];
-                if (val >= start && val <= end) return level;
             }
-        };
-
-        let [input, output] = getInputAndOutputObjects(requirements);
-
-        let len = input.r.length;
-
-        const {opacity, red, green, blue, alpha, out} = requirements;
-
-        const {r:inR, g:inG, b:inB, a:inA} = input;
-        const {r:outR, g:outG, b:outB, a:outA} = output;
-
-        for (let i = 0; i < len; i++) {
-            outR[i] = getValue(inR[i], red);
-            outG[i] = getValue(inG[i], green);
-            outB[i] = getValue(inB[i], blue);
-            outA[i] = getValue(inA[i], alpha);
+            outR[j] = inR[j];
+            outG[j] = inG[j];
+            outB[j] = inB[j];
+            outA[j] = (flag) ? 0 : inA[j];
         }
 
         if (out) processResults(output, work, 1 - opacity);
@@ -553,43 +782,6 @@ const theBigActionsObject = {
         else processResults(work, output, opacity);
     },
 
-    'tint-channels': function (requirements) {
-
-        let [input, output] = getInputAndOutputObjects(requirements);
-
-        let len = input.r.length;
-
-        const {opacity, redInRed, redInGreen, redInBlue, greenInRed, greenInGreen, greenInBlue, blueInRed, blueInGreen, blueInBlue, out} = requirements;
-
-        if (redInRed == null) redInRed = 1;
-        if (redInGreen == null) redInGreen = 0;
-        if (redInBlue == null) redInBlue = 0;
-        if (greenInRed == null) greenInRed = 0;
-        if (greenInGreen == null) greenInGreen = 1;
-        if (greenInBlue == null) greenInBlue = 0;
-        if (blueInRed == null) blueInRed = 0;
-        if (blueInGreen == null) blueInGreen = 0;
-        if (blueInBlue == null) blueInBlue = 1;
-
-        const {r:inR, g:inG, b:inB, a:inA} = input;
-        const {r:outR, g:outG, b:outB, a:outA} = output;
-
-        for (let i = 0; i < len; i++) {
-
-            let r = inR[i],
-                g = inG[i],
-                b = inB[i];
-
-            outR[i] = Math.floor((r * redInRed) + (g * greenInRed) + (b * blueInRed));
-            outG[i] = Math.floor((r * redInGreen) + (g * greenInGreen) + (b * blueInGreen));
-            outB[i] = Math.floor((r * redInBlue) + (g * greenInBlue) + (b * blueInBlue));
-            outA[i] = inA[i];
-        }
-
-        if (out) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
-    },
-
     'grayscale': function (requirements) {
 
         let [input, output] = getInputAndOutputObjects(requirements);
@@ -615,148 +807,225 @@ const theBigActionsObject = {
         else processResults(work, output, opacity);
     },
 
-    'chroma': function (requirements) {
+    'invert-channels': function (requirements) {
 
         let [input, output] = getInputAndOutputObjects(requirements);
 
         let len = input.r.length;
 
-        const {opacity, ranges, out} = requirements;
+        const {opacity, includeRed, includeGreen, includeBlue, includeAlpha, out} = requirements;
 
         const {r:inR, g:inG, b:inB, a:inA} = input;
         const {r:outR, g:outG, b:outB, a:outA} = output;
-
-        for (let j = 0; j < len; j++) {
-
-            let flag = false;
-
-            let r = inR[j],
-                g = inG[j],
-                b = inB[j];
-
-            for (i = 0, iz = ranges.length; i < iz; i++) {
-
-                let range = ranges[i];
-
-                let [minR, minG, minB, maxR, maxG, maxB] = ranges[i];
-
-                if (r >= minR && r <= maxR && g >= minG && g <= maxG && b >= minB && b <= maxB) {
-                    flag = true;
-                    break;
-                }
-
-            }
-            outR[j] = inR[j];
-            outG[j] = inG[j];
-            outB[j] = inB[j];
-            outA[j] = (flag) ? 0 : inA[j];
-        }
-
-        if (out) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
-    },
-
-    'blur': function (requirements) {
-
-        let [input, output] = getInputAndOutputObjects(requirements);
-
-        let len = input.r.length;
-
-        let {opacity, radius, passes, processVertical, processHorizontal, includeRed, includeGreen, includeBlue, includeAlpha, grid, verticalBlurGrid, horizontalBlurGrid, out} = requirements;
-
-        // Any required precalculations
-        if (!grid || !verticalBlurGrid || !horizontalBlurGrid) {
-
-        }
-
-        // Perform blur action
-        const {r:inR, g:inG, b:inB, a:inA} = input;
-        const {r:outR, g:outG, b:outB, a:outA} = output;
-
-        const hold = createResultObject(len);
-        const {r:holdR, g:holdG, b:holdB, a:holdA} = hold;
-
-        const getValue = function (flag, gridStore, step, holdChannel) {
-
-            if (flag) {
-
-                let h = gridStore[step],
-                    l = h.length,
-                    total = 0;
-
-                for (let t = 0; t < l; t++) {
-                    total += holdChannel[h[t]];
-                }
-                return total / l;
-            }
-            return holdChannel[step];
-        }
-
-        if (!passes || (!processHorizontal && !processVertical)) copyOver(input, output);
-        else {
-
-            copyOver(input, hold);
-
-            for (let pass = 0; pass < passes; pass++) {
-
-                if (processHorizontal) {
-
-                    for (let k = 0; k < len; k++) {
-                        outR[k] = getValue(includeRed, horizontalBlurGrid, k, holdR);
-                        outG[k] = getValue(includeGreen, horizontalBlurGrid, k, holdG);
-                        outB[k] = getValue(includeBlue, horizontalBlurGrid, k, holdB);
-                        outA[k] = getValue(includeAlpha, horizontalBlurGrid, k, holdA);
-                    }
-                    copyOver(output, hold);
-                }
-
-                if (processVertical) {
-
-
-                    for (let k = 0; k < len; k++) {
-                        outR[k] = getValue(includeRed, verticalBlurGrid, k, holdR);
-                        outG[k] = getValue(includeGreen, verticalBlurGrid, k, holdG);
-                        outB[k] = getValue(includeBlue, verticalBlurGrid, k, holdB);
-                        outA[k] = getValue(includeAlpha, verticalBlurGrid, k, holdA);
-                    }
-                    copyOver(output, hold);
-                }
-            }
-        }
-        if (out) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
-    },
-
-    'threshold': function (requirements) {
-
-        let [input, output] = getInputAndOutputObjects(requirements);
-
-        let len = input.r.length;
-
-        const {opacity, low, high, level, out} = requirements;
-
-        const {r:inR, g:inG, b:inB, a:inA} = input;
-        const {r:outR, g:outG, b:outB, a:outA} = output;
-
-        let [lowR, lowG, lowB] = low;
-        let [highR, highG, highB] = high;
 
         for (let i = 0; i < len; i++) {
 
-            let gray = Math.floor((0.2126 * inR[i]) + (0.7152 * inG[i]) + (0.0722 * inB[i]));
+            outR[i] = (includeRed) ? 255 - inR[i] : inR[i];
+            outG[i] = (includeGreen) ? 255 - inG[i] : inG[i];
+            outB[i] = (includeBlue) ? 255 - inB[i] : inB[i];
+            outA[i] = (includeAlpha) ? 255 - inA[i] : inA[i];
+        }
+        if (out) processResults(output, work, 1 - opacity);
+        else processResults(work, output, opacity);
+    },
 
-            if (gray < level) {
+    'lock-channels-to-levels': function (requirements) {
 
-                outR[i] = lowR;
-                outG[i] = lowG;
-                outB[i] = lowB;
+        checkChannelLevelsParameters(requirements)
+
+        const getValue = function (val, levels) {
+
+            if (!levels.length) return val;
+
+            for (let i = 0, iz = levels.length; i < iz; i++) {
+
+                let [start, end, level] = levels[i];
+                if (val >= start && val <= end) return level;
             }
-            else {
+        };
 
-                outR[i] = highR;
-                outG[i] = highG;
-                outB[i] = highB;
+        let [input, output] = getInputAndOutputObjects(requirements);
+
+        let len = input.r.length;
+
+        const {opacity, red, green, blue, alpha, out} = requirements;
+
+        const {r:inR, g:inG, b:inB, a:inA} = input;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
+
+        for (let i = 0; i < len; i++) {
+            outR[i] = getValue(inR[i], red);
+            outG[i] = getValue(inG[i], green);
+            outB[i] = getValue(inB[i], blue);
+            outA[i] = getValue(inA[i], alpha);
+        }
+
+        if (out) processResults(output, work, 1 - opacity);
+        else processResults(work, output, opacity);
+    },
+
+    'matrix': function (requirements) {
+
+        let [input, output] = getInputAndOutputObjects(requirements);
+
+        let len = input.r.length;
+
+        let {opacity, includeRed, includeGreen, includeBlue, includeAlpha, mWidth, mHeight, mX, mY, weights, grid, out} = requirements;
+
+        if (grid == null) {
+
+            if (mWidth == null) requirements.mWidth = 3;
+            if (mHeight == null) requirements.mHeight = 3;
+            if (mX == null) requirements.mX = 1;
+            if (mY == null) requirements.mY = 1;
+
+            mWidth = requirements.mWidth;
+            mHeight = requirements.mHeight;
+            mX = requirements.mX;
+            mY = requirements.mY;
+
+            requirements.grid = buildMatrixGrid(mWidth, mHeight, mX, mY);
+            grid = requirements.grid;
+        }
+
+        if (weights == null) {
+
+            requirements.weights = [].fill(0, 0, (mWidth * mHeight) - 1);
+            weights = requirements.weights;
+            weights[Math.floor(weights.length / 2) + 1] = 1;
+        }
+
+        const doCalculations = function (inChannel, matrix) {
+
+            let val = 0;
+
+            for (let m = 0, mz = matrix.length; m < mz; m++) {
+
+                if (weights[m]) val += (inChannel[matrix[m]] * weights[m]);
             }
+            return val;
+        }
+
+        const {r:inR, g:inG, b:inB, a:inA} = input;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
+
+        for (let i = 0; i < len; i++) {
+            if (includeRed) outR[i] = doCalculations(inR, grid[i]);
+            else outR[i] = inR[i];
+
+            if (includeGreen) outG[i] = doCalculations(inG, grid[i]);
+            else outG[i] = inG[i];
+
+            if (includeBlue) outB[i] = doCalculations(inB, grid[i]);
+            else outB[i] = inB[i];
+
+            if (includeAlpha) outA[i] = doCalculations(inA, grid[i]);
+            else outA[i] = inA[i];
+        }
+        if (out) processResults(output, work, 1 - opacity);
+        else processResults(work, output, opacity);
+    },
+
+    'modulate-channels': function (requirements) {
+
+        let [input, output] = getInputAndOutputObjects(requirements);
+
+        let len = input.r.length;
+
+        const {opacity, red, green, blue, alpha, level, out} = requirements;
+
+        if (red == null) red = 1;
+        if (green == null) green = 1;
+        if (blue == null) blue = 1;
+        if (alpha == null) alpha = 1;
+
+        const {r:inR, g:inG, b:inB, a:inA} = input;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
+
+        for (let i = 0; i < len; i++) {
+            outR[i] = inR[i] * red;
+            outG[i] = inG[i] * green;
+            outB[i] = inB[i] * blue;
+            outA[i] = inA[i] * alpha;
+        }
+        if (out) processResults(output, work, 1 - opacity);
+        else processResults(work, output, opacity);
+    },
+
+    'pixelate': function (requirements) {
+
+        const doCalculations = function (inChannel, outChannel, tile) {
+
+            let avg = tile.reduce((a, v) => a + inChannel[v], 0);
+
+            avg = Math.floor(avg / tile.length);
+
+            for (let i = 0, iz = tile.length; i < iz; i++) {
+
+                outChannel[tile[i]] = avg;
+            }
+        }
+
+        const setOutValueToInValue = function (inChannel, outChannel, tile) {
+
+            let cell;
+
+            for (let i = 0, iz = tile.length; i < iz; i++) {
+
+                cell = tile[i];
+                outChannel[cell] = inChannel[cell];
+            }
+        };
+
+        let [input, output] = getInputAndOutputObjects(requirements);
+
+        let len = input.r.length;
+
+        let {opacity, tileWidth, tileHeight, offsetX, offsetY, tiles, includeRed, includeGreen, includeBlue, includeAlpha, out} = requirements;
+
+        if (!tiles) {
+
+            requirements.tiles = buildImageTileSets(tileWidth, tileHeight, offsetX, offsetY);
+            tiles = requirements.tiles;
+        }
+
+        // Do filter work
+        const {r:inR, g:inG, b:inB, a:inA} = input;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
+
+        tiles.forEach(t => {
+            if (includeRed) doCalculations(inR, outR, t);
+            else setOutValueToInValue(inR, outR, t);
+
+            if (includeGreen) doCalculations(inG, outG, t);
+            else setOutValueToInValue(inG, outG, t);
+
+            if (includeBlue) doCalculations(inB, outB, t);
+            else setOutValueToInValue(inB, outB, t);
+
+            if (includeAlpha) doCalculations(inA, outA, t);
+            else setOutValueToInValue(inA, outA, t);
+        })
+
+        if (out) processResults(output, work, 1 - opacity);
+        else processResults(work, output, opacity);
+    },
+
+    'saturation': function (requirements) {
+
+        let [input, output] = getInputAndOutputObjects(requirements);
+
+        let len = input.r.length;
+
+        const {opacity, includeRed, includeGreen, includeBlue, level, out} = requirements;
+
+        const {r:inR, g:inG, b:inB, a:inA} = input;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
+
+        for (let i = 0; i < len; i++) {
+            outR[i] = (includeRed) ? 127 + ((inR[i] - 127) * level) : inR[i];
+            outG[i] = (includeGreen) ? 127 + ((inG[i] - 127) * level) : inG[i];
+            outB[i] = (includeBlue) ? 127 + ((inB[i] - 127) * level) : inB[i];
             outA[i] = inA[i];
         }
 
@@ -807,28 +1076,111 @@ const theBigActionsObject = {
         if (out) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
     },
+
+    'step-channels': function (requirements) {
+
+        let [input, output] = getInputAndOutputObjects(requirements);
+
+        let len = input.r.length,
+            floor = Math.floor;
+
+        const {opacity, red, green, blue, level, out} = requirements;
+
+        if (red == null) red = 1;
+        if (green == null) green = 1;
+        if (blue == null) blue = 1;
+
+        const {r:inR, g:inG, b:inB, a:inA} = input;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
+
+        for (let i = 0; i < len; i++) {
+            outR[i] = floor(inR[i] / red) * red;
+            outG[i] = floor(inG[i] / green) * green;
+            outB[i] = floor(inB[i] / blue) * blue;
+            outA[i] = inA[i];
+        }
+
+        if (out) processResults(output, work, 1 - opacity);
+        else processResults(work, output, opacity);
+    },
+
+    'threshold': function (requirements) {
+
+        let [input, output] = getInputAndOutputObjects(requirements);
+
+        let len = input.r.length;
+
+        const {opacity, low, high, level, out} = requirements;
+
+        const {r:inR, g:inG, b:inB, a:inA} = input;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
+
+        let [lowR, lowG, lowB] = low;
+        let [highR, highG, highB] = high;
+
+        for (let i = 0; i < len; i++) {
+
+            let gray = Math.floor((0.2126 * inR[i]) + (0.7152 * inG[i]) + (0.0722 * inB[i]));
+
+            if (gray < level) {
+
+                outR[i] = lowR;
+                outG[i] = lowG;
+                outB[i] = lowB;
+            }
+            else {
+
+                outR[i] = highR;
+                outG[i] = highG;
+                outB[i] = highB;
+            }
+            outA[i] = inA[i];
+        }
+
+        if (out) processResults(output, work, 1 - opacity);
+        else processResults(work, output, opacity);
+    },
+
+    'tint-channels': function (requirements) {
+
+        let [input, output] = getInputAndOutputObjects(requirements);
+
+        let len = input.r.length;
+
+        const {opacity, redInRed, redInGreen, redInBlue, greenInRed, greenInGreen, greenInBlue, blueInRed, blueInGreen, blueInBlue, out} = requirements;
+
+        if (redInRed == null) redInRed = 1;
+        if (redInGreen == null) redInGreen = 0;
+        if (redInBlue == null) redInBlue = 0;
+        if (greenInRed == null) greenInRed = 0;
+        if (greenInGreen == null) greenInGreen = 1;
+        if (greenInBlue == null) greenInBlue = 0;
+        if (blueInRed == null) blueInRed = 0;
+        if (blueInGreen == null) blueInGreen = 0;
+        if (blueInBlue == null) blueInBlue = 1;
+
+        const {r:inR, g:inG, b:inB, a:inA} = input;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
+
+        for (let i = 0; i < len; i++) {
+
+            let r = inR[i],
+                g = inG[i],
+                b = inB[i];
+
+            outR[i] = Math.floor((r * redInRed) + (g * greenInRed) + (b * blueInRed));
+            outG[i] = Math.floor((r * redInGreen) + (g * greenInGreen) + (b * blueInGreen));
+            outB[i] = Math.floor((r * redInBlue) + (g * greenInBlue) + (b * blueInBlue));
+            outA[i] = inA[i];
+        }
+
+        if (out) processResults(output, work, 1 - opacity);
+        else processResults(work, output, opacity);
+    },
 };
 
 
 const thePreprocessObject = {
-
-    red: function (f) {
-        f.actions = [{
-            action: 'average-channels',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            excludeGreen: true,
-            excludeBlue: true,
-        }];
-    },
-
-    green: function (f) {
-        f.actions = [{
-            action: 'average-channels',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            excludeRed: true,
-            excludeBlue: true,
-        }];
-    },
 
     blue: function (f) {
         f.actions = [{
@@ -839,70 +1191,40 @@ const thePreprocessObject = {
         }];
     },
 
-    notred: function (f) {
+    blur: function (f) {
         f.actions = [{
-            action: 'set-channel-to-value',
+            action: 'blur',
             opacity: (f.opacity != null) ? f.opacity : 1,
-            channel: 'red',
-            value: 0,
+            includeRed: (f.includeRed != null) ? f.includeRed : true,
+            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
+            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
+            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
+            processHorizontal: (f.processHorizontal != null) ? f.processHorizontal : true,
+            processVertical: (f.processVertical != null) ? f.processVertical : true,
+            radius: (f.radius != null) ? f.radius : 1,
+            passes: (f.passes != null) ? f.passes : 1,
         }];
     },
 
-    notgreen: function (f) {
+    brightness: function (f) {
         f.actions = [{
-            action: 'set-channel-to-value',
+            action: 'brightness',
             opacity: (f.opacity != null) ? f.opacity : 1,
-            channel: 'green',
-            value: 0,
+            level: (f.level != null) ? f.level : 1,
+            includeRed: (f.includeRed != null) ? f.includeRed : true,
+            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
+            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
         }];
     },
 
-    notblue: function (f) {
+    channelLevels: function (f) {
         f.actions = [{
-            action: 'set-channel-to-value',
+            action: 'lock-channels-to-levels',
             opacity: (f.opacity != null) ? f.opacity : 1,
-            channel: 'blue',
-            value: 0,
-        }];
-    },
-
-    cyan: function (f) {
-        f.actions = [{
-            action: 'average-channels',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            includeGreen: true,
-            includeBlue: true,
-            excludeRed: true,
-        }];
-    },
-
-    magenta: function (f) {
-        f.actions = [{
-            action: 'average-channels',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            includeRed: true,
-            includeBlue: true,
-            excludeGreen: true,
-        }];
-    },
-
-    yellow: function (f) {
-        f.actions = [{
-            action: 'average-channels',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            includeRed: true,
-            includeGreen: true,
-            excludeBlue: true,
-        }];
-    },
-
-    gray: function (f) {
-        f.actions = [{
-            action: 'average-channels',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            includeRed: true,
-            includeGreen: true,
-            includeBlue: true,
+            red: (f.red != null) ? f.red : [0],
+            green: (f.green != null) ? f.green : [0],
+            blue: (f.blue != null) ? f.blue : [0],
+            alpha: (f.alpha != null) ? f.alpha : [255],
         }];
     },
 
@@ -927,6 +1249,36 @@ const thePreprocessObject = {
         }];
     },
 
+    chroma: function (f) {
+        f.actions = [{
+            action: 'chroma',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            ranges: (f.ranges != null) ? f.ranges : [],
+        }];
+    },
+
+    chromakey: function (f) {
+        f.actions = [{
+            action: 'colors-to-alpha',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            red: (f.red != null) ? f.red : 0,
+            green: (f.green != null) ? f.green : 255,
+            blue: (f.blue != null) ? f.blue : 0,
+            transparentAt: (f.transparentAt != null) ? f.transparentAt : 0,
+            opaqueAt: (f.opaqueAt != null) ? f.opaqueAt : 1,
+        }];
+    },
+
+    cyan: function (f) {
+        f.actions = [{
+            action: 'average-channels',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            includeGreen: true,
+            includeBlue: true,
+            excludeRed: true,
+        }];
+    },
+
     flood: function (f) {
         f.actions = [{
             action: 'flood',
@@ -938,25 +1290,29 @@ const thePreprocessObject = {
         }];
     },
 
-    brightness: function (f) {
+    gray: function (f) {
         f.actions = [{
-            action: 'brightness',
+            action: 'average-channels',
             opacity: (f.opacity != null) ? f.opacity : 1,
-            level: (f.level != null) ? f.level : 1,
             includeRed: true,
             includeGreen: true,
             includeBlue: true,
         }];
     },
 
-    saturation: function (f) {
+    grayscale: function (f) {
         f.actions = [{
-            action: 'saturation',
+            action: 'grayscale',
             opacity: (f.opacity != null) ? f.opacity : 1,
-            level: (f.level != null) ? f.level : 1,
-            includeRed: true,
-            includeGreen: true,
-            includeBlue: true,
+        }];
+    },
+
+    green: function (f) {
+        f.actions = [{
+            action: 'average-channels',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            excludeRed: true,
+            excludeBlue: true,
         }];
     },
 
@@ -970,10 +1326,107 @@ const thePreprocessObject = {
         }];
     },
 
-    grayscale: function (f) {
+    magenta: function (f) {
         f.actions = [{
-            action: 'grayscale',
+            action: 'average-channels',
             opacity: (f.opacity != null) ? f.opacity : 1,
+            includeRed: true,
+            includeBlue: true,
+            excludeGreen: true,
+        }];
+    },
+
+    matrix: function (f) {
+        f.actions = [{
+            action: 'matrix',
+            mWidth: 3,
+            mHeight: 3,
+            mX: 1,
+            mY: 1,
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            includeRed: (f.includeRed != null) ? f.includeRed : true,
+            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
+            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
+            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
+            weights: (f.weights != null) ? f.weights : [0,0,0,0,1,0,0,0,0],
+        }];
+    },
+
+    matrix5: function (f) {
+        f.actions = [{
+            action: 'matrix',
+            mWidth: 5,
+            mHeight: 5,
+            mX: 2,
+            mY: 2,
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            includeRed: (f.includeRed != null) ? f.includeRed : true,
+            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
+            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
+            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
+            weights: (f.weights != null) ? f.weights : [0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
+        }];
+    },
+
+    notblue: function (f) {
+        f.actions = [{
+            action: 'set-channel-to-value',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            channel: 'blue',
+            value: 0,
+        }];
+    },
+
+    notgreen: function (f) {
+        f.actions = [{
+            action: 'set-channel-to-value',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            channel: 'green',
+            value: 0,
+        }];
+    },
+
+    notred: function (f) {
+        f.actions = [{
+            action: 'set-channel-to-value',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            channel: 'red',
+            value: 0,
+        }];
+    },
+
+    pixelate: function (f) {
+        f.actions = [{
+            action: 'pixelate',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            tileWidth: (f.tileWidth != null) ? f.tileWidth : 1,
+            tileHeight: (f.tileHeight != null) ? f.tileHeight : 1,
+            offsetX: (f.offsetX != null) ? f.offsetX : 0,
+            offsetY: (f.offsetY != null) ? f.offsetY : 0,
+            includeRed: (f.includeRed != null) ? f.includeRed : true,
+            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
+            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
+            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
+        }];
+    },
+
+    red: function (f) {
+        f.actions = [{
+            action: 'average-channels',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            excludeGreen: true,
+            excludeBlue: true,
+        }];
+    },
+
+    saturation: function (f) {
+        f.actions = [{
+            action: 'saturation',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            level: (f.level != null) ? f.level : 1,
+            includeRed: (f.includeRed != null) ? f.includeRed : true,
+            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
+            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
         }];
     },
 
@@ -990,140 +1443,6 @@ const thePreprocessObject = {
             blueInRed: 0.189,
             blueInGreen: 0.168,
             blueInBlue: 0.131,
-        }];
-    },
-
-    tint: function (f) {
-        f.actions = [{
-            action: 'tint-channels',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            redInRed: (f.redInRed != null) ? f.redInRed : 1,
-            redInGreen: (f.redInGreen != null) ? f.redInGreen : 0,
-            redInBlue: (f.redInBlue != null) ? f.redInBlue : 0,
-            greenInRed: (f.greenInRed != null) ? f.greenInRed : 0,
-            greenInGreen: (f.greenInGreen != null) ? f.greenInGreen : 1,
-            greenInBlue: (f.greenInBlue != null) ? f.greenInBlue : 0,
-            blueInRed: (f.blueInRed != null) ? f.blueInRed : 0,
-            blueInGreen: (f.blueInGreen != null) ? f.blueInGreen : 0,
-            blueInBlue: (f.blueInBlue != null) ? f.blueInBlue : 1,
-        }];
-    },
-
-    channelLevels: function (f) {
-
-        let redArray, greenArray, blueArray, alphaArray,
-            precalculationsRequired = false;
-
-        if (f.calculationCache) {
-
-            redArray = f.calculationCache.redArray || [];
-            greenArray = f.calculationCache.greenArray || [];
-            blueArray = f.calculationCache.blueArray || [];
-            alphaArray = f.calculationCache.alphaArray || [];
-        }
-        else {
-
-            precalculationsRequired = true;
-            f.calculationCache = {};
-            redArray = [];
-            greenArray = [];
-            blueArray = [];
-            alphaArray = [];
-        }
-
-        if (precalculationsRequired) {
-
-            let redValues = (f.red != null) ? f.red : [],
-                greenValues = (f.green != null) ? f.green : [],
-                blueValues = (f.blue != null) ? f.blue : [],
-                alphaValues = (f.alpha != null) ? f.alpha : [];
-
-            redValues = redValues.map(v => parseInt(v, 10));
-            greenValues = greenValues.map(v => parseInt(v, 10));
-            blueValues = blueValues.map(v => parseInt(v, 10));
-            alphaValues = alphaValues.map(v => parseInt(v, 10));
-
-            redValues.sort((a, b) => a - b);
-            greenValues.sort((a, b) => a - b);
-            blueValues.sort((a, b) => a - b);
-            alphaValues.sort((a, b) => a - b);
-
-            if (redValues.length) {
-
-                if (redValues.length === 1) redArray.push([0, 255, redValues[0]]);
-                else {
-
-                    for (let i = 0, iz = redValues.length; i < iz; i++) {
-
-                        let starts = (i == 0) ? 0 : Math.ceil(redValues[i - 1] + ((redValues[i] - redValues[i - 1]) / 2));
-
-                        let ends = (i == iz - 1) ? 255 : Math.floor(redValues[i] + ((redValues[i + 1] - redValues[i]) / 2));
-
-                        redArray.push([starts, ends, redValues[i]]);
-                    }
-                }
-                f.calculationCache.redArray = redArray;
-            }
-
-            if (greenValues.length) {
-
-                if (greenValues.length === 1) greenArray.push([0, 255, greenValues[0]]);
-                else {
-
-                    for (let i = 0, iz = greenValues.length; i < iz; i++) {
-
-                        let starts = (i == 0) ? 0 : Math.ceil(greenValues[i - 1] + ((greenValues[i] - greenValues[i - 1]) / 2));
-
-                        let ends = (i == iz - 1) ? 255 : Math.floor(greenValues[i] + ((greenValues[i + 1] - greenValues[i]) / 2));
-
-                        greenArray.push([starts, ends, greenValues[i]]);
-                    }
-                }
-                f.calculationCache.greenArray = greenArray;
-            }
-
-            if (blueValues.length) {
-
-                if (blueValues.length === 1) blueArray.push([0, 255, blueValues[0]]);
-                else {
-
-                    for (let i = 0, iz = blueValues.length; i < iz; i++) {
-
-                        let starts = (i == 0) ? 0 : Math.ceil(blueValues[i - 1] + ((blueValues[i] - blueValues[i - 1]) / 2));
-
-                        let ends = (i == iz - 1) ? 255 : Math.floor(blueValues[i] + ((blueValues[i + 1] - blueValues[i]) / 2));
-
-                        blueArray.push([starts, ends, blueValues[i]]);
-                    }
-                }
-                f.calculationCache.blueArray = blueArray;
-            }
-
-            if (alphaValues.length) {
-
-                if (alphaValues.length === 1) alphaArray.push([0, 255, alphaValues[0]]);
-                else {
-
-                    for (let i = 0, iz = alphaValues.length; i < iz; i++) {
-
-                        let starts = (i == 0) ? 0 : Math.ceil(alphaValues[i - 1] + ((alphaValues[i] - alphaValues[i - 1]) / 2));
-
-                        let ends = (i == iz - 1) ? 255 : Math.floor(alphaValues[i] + ((alphaValues[i + 1] - alphaValues[i]) / 2));
-
-                        alphaArray.push([starts, ends, alphaValues[i]]);
-                    }
-                }
-                f.calculationCache.alphaArray = alphaArray;
-            }
-        }
-
-        f.actions = [{
-            action: 'lock-channels-to-levels',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            red: redArray,
-            green: greenArray,
-            blue: blueArray,
-            alpha: alphaArray,
         }];
     },
 
@@ -1145,127 +1464,29 @@ const thePreprocessObject = {
         }];
     },
 
-    chromakey: function (f) {
-
+    tint: function (f) {
         f.actions = [{
-            action: 'colors-to-alpha',
+            action: 'tint-channels',
             opacity: (f.opacity != null) ? f.opacity : 1,
-            red: (f.red != null) ? f.red : 0,
-            green: (f.green != null) ? f.green : 255,
-            blue: (f.blue != null) ? f.blue : 0,
-            transparentAt: (f.transparentAt != null) ? f.transparentAt : 0,
-            opaqueAt: (f.opaqueAt != null) ? f.opaqueAt : 1,
+            redInRed: (f.redInRed != null) ? f.redInRed : 1,
+            redInGreen: (f.redInGreen != null) ? f.redInGreen : 0,
+            redInBlue: (f.redInBlue != null) ? f.redInBlue : 0,
+            greenInRed: (f.greenInRed != null) ? f.greenInRed : 0,
+            greenInGreen: (f.greenInGreen != null) ? f.greenInGreen : 1,
+            greenInBlue: (f.greenInBlue != null) ? f.greenInBlue : 0,
+            blueInRed: (f.blueInRed != null) ? f.blueInRed : 0,
+            blueInGreen: (f.blueInGreen != null) ? f.blueInGreen : 0,
+            blueInBlue: (f.blueInBlue != null) ? f.blueInBlue : 1,
         }];
     },
 
-    chroma: function (f) {
-
+    yellow: function (f) {
         f.actions = [{
-            action: 'chroma',
+            action: 'average-channels',
             opacity: (f.opacity != null) ? f.opacity : 1,
-            ranges: (f.ranges != null) ? f.ranges : [],
-        }];
-    },
-
-    blur: function (f) {
-
-        let grid, verticalBlurGrid, horizontalBlurGrid,
-            precalculationsRequired = false;
-
-        if (f.calculationCache) {
-
-            grid = f.calculationCache.grid || [];
-            verticalBlurGrid = f.calculationCache.verticalBlurGrid || [];
-            horizontalBlurGrid = f.calculationCache.horizontalBlurGrid || [];
-        }
-        else {
-
-            precalculationsRequired = true;
-            f.calculationCache = {};
-            grid = [];
-            verticalBlurGrid = [];
-            horizontalBlurGrid = [];
-        }
-
-        if (precalculationsRequired) {
-
-            let counter = 0;
-            let radius = (f.radius != null) ? f.radius : 1;
-            let x, y, c
-
-            // build the grid 2d array
-            for (y = 0, yz = packetImageObject.height; y < yz; y++) {
-
-                let row = [];
-
-                for (x = 0, xz = packetImageObject.width; x < xz; x++) {
-                    
-                    row.push(counter);
-                    counter++;
-                }
-                grid.push(row);
-            }
-
-            let gridHeight = grid.length,
-                gridWidth = grid[0].length,
-                rowLen = gridWidth - 1,
-                colLen = gridHeight - 1;
-
-            // build horizontalBlurGrid 2d array
-            for (y = 0; y < gridHeight; y++) {
-
-                let startCell = grid[y][0],
-                    endCell = grid[y][rowLen];
-
-                for (x = 0; x < gridWidth; x++) {
-
-                    let cellsToProcess = [];
-
-                    for (c = x - radius, cz = x + radius + 1; c < cz; c++) {
-
-                        if (c < 0) cellsToProcess.push(startCell);
-                        else if (c > rowLen) cellsToProcess.push(endCell);
-                        else cellsToProcess.push(grid[y][c]);
-                    }
-                    horizontalBlurGrid[(y * gridHeight) + x] = cellsToProcess;
-                }
-            }
-
-            // build verticalBlurGrid 2d array
-            for (x = 0; x < gridWidth; x++) {
-
-                let startCell = grid[0][x],
-                    endCell = grid[colLen][x];
-
-                for (y = 0; y < gridHeight; y++) {
-
-                    let cellsToProcess = [];
-
-                    for (c = y - radius, cz = y + radius + 1; c < cz; c++) {
-
-                        if (c < 0) cellsToProcess.push(startCell);
-                        else if (c > colLen) cellsToProcess.push(endCell);
-                        else cellsToProcess.push(grid[c][x]);
-                    }
-                    verticalBlurGrid[(y * gridHeight) + x] = cellsToProcess;
-                }
-            }
-        }
-
-        f.actions = [{
-            action: 'blur',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            includeRed: (f.includeRed != null) ? f.includeRed : true,
-            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
-            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
-            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
-            processHorizontal: (f.processHorizontal != null) ? f.processHorizontal : true,
-            processVertical: (f.processVertical != null) ? f.processVertical : true,
-            radius: (f.radius != null) ? f.radius : 1,
-            passes: (f.passes != null) ? f.passes : 1,
-            grid,
-            verticalBlurGrid,
-            horizontalBlurGrid,
+            includeRed: true,
+            includeGreen: true,
+            excludeBlue: true,
         }];
     },
 }

@@ -10,7 +10,7 @@ const canvas = scrawl.library.canvas.mycanvas;
 scrawl.importDomImage('.flowers');
 
 canvas.setBase({
-    backgroundColor: 'black',
+    backgroundColor: 'red',
 })
 
 
