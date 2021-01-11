@@ -48,7 +48,7 @@
 
 // #### Imports
 import { constructors, cell, group, entity } from '../core/library.js';
-import { mergeOver, removeItem } from '../core/utilities.js';
+import { mergeOver, removeItem, λnull } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 
@@ -61,6 +61,7 @@ const Filter = function (items = {}) {
     this.set(this.defs);
 
     this.actions = [];
+    this.subscribers = [];
 
     this.set(items);
     return this;
@@ -98,7 +99,10 @@ let defaultAttributes = {
 
     actions: null,
 
-
+    gutterWidth: 1,
+    gutterHeight: 1,
+    areaAlphaLevels: null,
+    
 // All filters need to set out their __method__. For preset methods, a method string (eg 'grayscale', 'sepia') is sufficient. Bespoke methods require a function
     method: '',
 
@@ -160,8 +164,6 @@ let defaultAttributes = {
 // + because the blur filter works on a 2-pass basis, we can restrict its operation to the vertical and horizontal directions by setting the `processVertical` and `processHorizontal` flags appropriately
     radius: 1,
     passes: 1,
-    shrinkingRadius: false,
-    includeAlpha: false,
     processVertical: true,
     processHorizontal: true,
 
@@ -210,19 +212,9 @@ let defaultAttributes = {
 // ```
     ranges: null,
 
-
-// The `user-defined` filter should be set as a String value of the function's contents (the bits between the { curly braces }) on the __userDefined__ attribute. The function can take no arguments, and can only use variables defined above (or the __udVariableN__ attributes below). The function can also use __self__ variables supplied by the web worker - see the worker/filter.js for more information
-    userDefined: '',
-    udVariable0: '',
-    udVariable1: '',
-    udVariable2: '',
-    udVariable3: '',
-    udVariable4: '',
-    udVariable5: '',
-    udVariable6: '',
-    udVariable7: '',
-    udVariable8: '',
-    udVariable9: '',
+// __subscribers__ - An Array containing the entity Objects, who wish to use the filter. 
+// + Entitys can subscribe to more than one filter at a time.
+// + ___Note that the contents of this Array cannot be directly or indirectly set.___ Entitys will subscribe and unsubscribe to a filter as part of their filter management functionality.
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -270,7 +262,78 @@ P.kill = function () {
 
 
 // #### Get, Set, deltaSet
-// No additional functionality required
+let S = P.setters, 
+    D = P.deltaSetters;
+
+// `set` - Overwrites mixin/base.js function
+P.set = function (items = {}) {
+
+    if (Object.keys(items).length) {
+
+        let setters = this.setters,
+            defs = this.defs,
+            predefined;
+
+        Object.entries(items).forEach(([key, value]) => {
+
+            if (key && key !== 'name' && value != null) {
+
+                predefined = setters[key];
+
+                if (predefined) predefined.call(this, value);
+                else if (typeof defs[key] !== 'undefined') this[key] = value;
+            }
+        }, this);
+
+        if (Array.isArray(this.subscribers)) {
+
+            this.subscribers.forEach(s => {
+    
+                s = entity[s];
+    
+                if (s) s.dirtyFilterImage = true
+            })
+        };
+    }
+    return this;
+};
+
+
+// `setDelta` - Overwrites mixin/base.js function
+P.setDelta = function (items = {}) {
+
+    if (Object.keys(items).length) {
+
+        let setters = this.deltaSetters,
+            defs = this.defs,
+            predefined;
+
+        Object.entries(items).forEach(([key, value]) => {
+
+            if (key && key !== 'name' && value != null) {
+
+                predefined = setters[key];
+
+                if (predefined) predefined.call(this, value);
+                else if (typeof defs[key] != 'undefined') this[key] = addStrings(this[key], value);
+            }
+        }, this);
+
+        if (Array.isArray(this.subscribers)) {
+
+            this.subscribers.forEach(s => {
+    
+                s = entity[s];
+    
+                if (s) s.dirtyFilterImage = true
+            })
+        };
+    }
+    return this;
+};
+
+// __subscribers__ - we disable the ability to set the subscribers Array directly. Picture entitys and Pattern styles will manage their subscription to the asset using their subscribe() and unsubscribe() functions.
+    S.subscribers = λnull;
 
 
 // #### Prototype functions

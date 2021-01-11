@@ -172,7 +172,100 @@ const buildImageGrid = function () {
         return grid;
     }
     return false;
-}
+};
+
+// let tiles = buildAlphaTileSets(tileWidth, tileHeight, gutterWidth, gutterHeight, offsetX, offsetY, areaAlphaLevels);
+
+
+const buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeight, offsetX, offsetY, areaAlphaLevels) {
+
+    if (packetImageObject) {
+
+        let iWidth = packetImageObject.width,
+            iHeight = packetImageObject.height;
+
+        tileWidth = (tileWidth.toFixed && !isNaN(tileWidth)) ? tileWidth : 1;
+        tileHeight = (tileHeight.toFixed && !isNaN(tileHeight)) ? tileHeight : 1;
+        gutterWidth = (gutterWidth.toFixed && !isNaN(gutterWidth)) ? gutterWidth : 1;
+        gutterHeight = (gutterHeight.toFixed && !isNaN(gutterHeight)) ? gutterHeight : 1;
+        offsetX = (offsetX.toFixed && !isNaN(offsetX)) ? offsetX : 0;
+        offsetY = (offsetY.toFixed && !isNaN(offsetY)) ? offsetY : 0;
+
+        if (tileWidth < 1) tileWidth = 1;
+        if (tileHeight < 1) tileHeight = 1;
+        if (tileWidth + gutterWidth >= iWidth) tileWidth = iWidth - gutterWidth - 1;
+        if (tileHeight + gutterHeight >= iHeight) tileHeight = iHeight - gutterHeight - 1;
+
+        if (tileWidth < 1) tileWidth = 1;
+        if (tileHeight < 1) tileHeight = 1;
+        if (tileWidth + gutterWidth >= iWidth) gutterWidth = iWidth - tileWidth - 1;
+        if (tileHeight + gutterHeight >= iHeight) gutterHeight = iHeight - tileHeight - 1;
+
+        let aWidth = tileWidth + gutterWidth,
+            aHeight = tileHeight + gutterHeight;
+
+        if (offsetX < 0) offsetX = 0;
+        if (offsetX >= aWidth) offsetX = aWidth - 1;
+        if (offsetY < 0) offsetY = 0;
+        if (offsetY >= aHeight) offsetY = aHeight - 1;
+
+        let tiles = [],
+            hold, i, iz, j, jz, x, xz, y, yz;
+
+        for (j = offsetY - aHeight, jz = iHeight; j < jz; j += aHeight) {
+
+            for (i = offsetX - aWidth, iz = iWidth; i < iz; i += aWidth) {
+
+                // from 0, 0: tileWidth x tileHeight
+                hold = [];
+                for (y = j, yz = j + tileHeight; y < yz; y++) {
+                    if (y >= 0 && y < iHeight) {
+                        for (let x = i, xz = i + tileWidth; x < xz; x++) {
+                            if (x >= 0 && x < iWidth) hold.push((y * iWidth) + x);
+                        }
+                    }
+                }
+                tiles.push([].concat(hold));
+
+                // from tileWidth, 0: gutterWidth x tileHeight
+                hold = [];
+                for (y =  j + tileHeight, yz = j + tileHeight + gutterHeight; y < yz; y++) {
+                    if (y >= 0 && y < iHeight) {
+                        for (let x = i, xz = i + tileWidth; x < xz; x++) {
+                            if (x >= 0 && x < iWidth) hold.push((y * iWidth) + x);
+                        }
+                    }
+                }
+                tiles.push([].concat(hold));
+
+                // from 0, tileheight: tileWidth x gutterHeight
+                hold = [];
+                for (y = j, yz = j + tileHeight; y < yz; y++) {
+                    if (y >= 0 && y < iHeight) {
+                        for (let x = i + tileWidth, xz = i + tileWidth + gutterWidth; x < xz; x++) {
+                            if (x >= 0 && x < iWidth) hold.push((y * iWidth) + x);
+                        }
+                    }
+                }
+                tiles.push([].concat(hold));
+
+                // from tileWidth, tileHeight: gutterWidth x gutterHeight
+                hold = [];
+                for (y =  j + tileHeight, yz = j + tileHeight + gutterHeight; y < yz; y++) {
+                    if (y >= 0 && y < iHeight) {
+                        for (let x = i + tileWidth, xz = i + tileWidth + gutterWidth; x < xz; x++) {
+                            if (x >= 0 && x < iWidth) hold.push((y * iWidth) + x);
+                        }
+                    }
+                }
+                tiles.push([].concat(hold));
+            }
+        }
+        return tiles;
+    }
+    return false;
+
+};
 
 const buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY) {
 
@@ -223,24 +316,21 @@ const buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY) {
     }
     return false;
 
-}
+};
 
-const buildHorizontalBlur = function (grid, radius) {
+const buildHorizontalBlur = function (grid, radius, alpha) {
 
-    if (grid) {
+    if (grid && alpha) {
 
         if (!radius || !radius.toFixed || isNaN(radius)) radius = 0;
 
         let gridHeight = grid.length,
-            gridWidth = grid[0].length,
-            rowLen = gridWidth - 1;
+            gridWidth = grid[0].length;
 
-        let horizontalBlur = [];
+        let horizontalBlur = [],
+            cell;
 
         for (let y = 0; y < gridHeight; y++) {
-
-            let startCell = grid[y][0],
-                endCell = grid[y][rowLen];
 
             for (let x = 0; x < gridWidth; x++) {
 
@@ -248,9 +338,11 @@ const buildHorizontalBlur = function (grid, radius) {
 
                 for (let c = x - radius, cz = x + radius + 1; c < cz; c++) {
 
-                    if (c < 0) cellsToProcess.push(startCell);
-                    else if (c > rowLen) cellsToProcess.push(endCell);
-                    else cellsToProcess.push(grid[y][c]);
+                    if (c >= 0 && c < gridWidth) {
+
+                        cell = grid[y][c];
+                        if (alpha[cell]) cellsToProcess.push(cell);
+                    }
                 }
                 horizontalBlur[(y * gridHeight) + x] = cellsToProcess;
             }
@@ -260,22 +352,19 @@ const buildHorizontalBlur = function (grid, radius) {
     return false;
 };
 
-const buildVerticalBlur = function (grid, radius) {
+const buildVerticalBlur = function (grid, radius, alpha) {
 
-    if (grid) {
+    if (grid && alpha) {
 
         if (!radius || !radius.toFixed || isNaN(radius)) radius = 0;
 
         let gridHeight = grid.length,
-            gridWidth = grid[0].length,
-            colLen = gridHeight - 1;
+            gridWidth = grid[0].length;
 
-        let verticalBlur = [];
+        let verticalBlur = [],
+            cell;
 
         for (let x = 0; x < gridWidth; x++) {
-
-            let startCell = grid[0][x],
-                endCell = grid[colLen][x];
 
             for (let y = 0; y < gridHeight; y++) {
 
@@ -283,9 +372,11 @@ const buildVerticalBlur = function (grid, radius) {
 
                 for (let c = y - radius, cz = y + radius + 1; c < cz; c++) {
 
-                    if (c < 0) cellsToProcess.push(startCell);
-                    else if (c > colLen) cellsToProcess.push(endCell);
-                    else cellsToProcess.push(grid[c][x]);
+                    if (c >= 0 && c < gridHeight) {
+
+                        cell = grid[c][x];
+                        if (alpha[cell]) cellsToProcess.push(cell);
+                    }
                 }
                 verticalBlur[(y * gridHeight) + x] = cellsToProcess;
             }
@@ -295,7 +386,7 @@ const buildVerticalBlur = function (grid, radius) {
     return false;
 };
 
-const buildMatrixGrid = function (mWidth, mHeight, mX, mY) {
+const buildMatrixGrid = function (mWidth, mHeight, mX, mY, alpha) {
 
     if (mWidth == null || mWidth < 1) mWidth = 1;
     if (mHeight == null || mHeight < 1) mHeight = 1;
@@ -328,16 +419,20 @@ const buildMatrixGrid = function (mWidth, mHeight, mX, mY) {
             let pos = (y * iWidth) + x;
             let cell = [];
 
-            // process template
-            for (i = 0, iz = cellsTemplate.length; i < iz; i++) {
+            if (alpha[pos]) {
 
-                let val = pos + cellsTemplate[i];
+                // process template
+                for (i = 0, iz = cellsTemplate.length; i < iz; i++) {
 
-                if (val < 0) val += dataLength;
-                else if (val >= dataLength) val -= dataLength;
+                    let val = pos + cellsTemplate[i];
 
-                cell.push(val);
+                    if (val < 0) val += dataLength;
+                    else if (val >= dataLength) val -= dataLength;
+
+                    cell.push(val);
+                }
             }
+
             grid.push(cell);
         }
     }
@@ -478,6 +573,39 @@ const theBigActionsObject = {
         else processResults(work, output, opacity);
     },
 
+    'area-alpha': function (requirements) {
+
+        let [input, output] = getInputAndOutputObjects(requirements);
+
+        let len = input.r.length;
+
+        let {opacity, tileWidth, tileHeight, offsetX, offsetY, gutterWidth, gutterHeight, areaAlphaLevels, out} = requirements;
+
+        let tiles = buildAlphaTileSets(tileWidth, tileHeight, gutterWidth, gutterHeight, offsetX, offsetY, areaAlphaLevels);
+
+        if (!Array.isArray(areaAlphaLevels)) areaAlphaLevels = [255,0,0,0];
+
+        // Do filter work
+        const {r:inR, g:inG, b:inB, a:inA} = input;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
+
+        for (let i = 0; i < len; i++) {
+            outR[i] = inR[i];
+            outG[i] = inG[i];
+            outB[i] = inB[i];
+        }
+        tiles.forEach((t, index) => {
+
+            for (let j = 0, jz = t.length; j < jz; j++) {
+
+                if (inA[t[j]]) outA[t[j]] = areaAlphaLevels[index % 4];
+            }
+        });
+
+        if (out) processResults(output, work, 1 - opacity);
+        else processResults(work, output, opacity);
+    },
+
     'average-channels': function (requirements) {
 
         let [input, output] = getInputAndOutputObjects(requirements);
@@ -539,25 +667,18 @@ const theBigActionsObject = {
 
         let len = input.r.length;
 
-        let {opacity, radius, passes, processVertical, processHorizontal, includeRed, includeGreen, includeBlue, includeAlpha, grid, verticalBlurGrid, horizontalBlurGrid, out} = requirements;
+        let {opacity, radius, passes, processVertical, processHorizontal, includeRed, includeGreen, includeBlue, includeAlpha, out} = requirements;
+
+        let horizontalBlurGrid, verticalBlurGrid;
 
         // Any required precalculations
-        if (!grid) {
+        if (processHorizontal || processVertical) {
 
-            requirements.grid = buildImageGrid();
-            grid = requirements.grid;
-        }
+            let grid = buildImageGrid();
 
-        if (processHorizontal && !horizontalBlurGrid) {
-            
-            requirements.horizontalBlurGrid = buildHorizontalBlur(grid, radius);
-            horizontalBlurGrid = requirements.horizontalBlurGrid;
-        }
+            if (processHorizontal)  horizontalBlurGrid = buildHorizontalBlur(grid, radius, input.a);
 
-        if (processVertical && !verticalBlurGrid) {
-            
-            requirements.verticalBlurGrid = buildVerticalBlur(grid, radius);
-            verticalBlurGrid = requirements.verticalBlurGrid;
+            if (processVertical) verticalBlurGrid = buildVerticalBlur(grid, radius, input.a);
         }
 
         // Perform blur action
@@ -593,22 +714,27 @@ const theBigActionsObject = {
                 if (processHorizontal) {
 
                     for (let k = 0; k < len; k++) {
-                        outR[k] = getValue(includeRed, horizontalBlurGrid, k, holdR);
-                        outG[k] = getValue(includeGreen, horizontalBlurGrid, k, holdG);
-                        outB[k] = getValue(includeBlue, horizontalBlurGrid, k, holdB);
                         outA[k] = getValue(includeAlpha, horizontalBlurGrid, k, holdA);
+
+                        if (outA[k]) {
+                            outR[k] = getValue(includeRed, horizontalBlurGrid, k, holdR);
+                            outG[k] = getValue(includeGreen, horizontalBlurGrid, k, holdG);
+                            outB[k] = getValue(includeBlue, horizontalBlurGrid, k, holdB);
+                        }
                     }
                     copyOver(output, hold);
                 }
 
                 if (processVertical) {
 
-
                     for (let k = 0; k < len; k++) {
-                        outR[k] = getValue(includeRed, verticalBlurGrid, k, holdR);
-                        outG[k] = getValue(includeGreen, verticalBlurGrid, k, holdG);
-                        outB[k] = getValue(includeBlue, verticalBlurGrid, k, holdB);
                         outA[k] = getValue(includeAlpha, verticalBlurGrid, k, holdA);
+
+                        if (outA[k]) {
+                            outR[k] = getValue(includeRed, verticalBlurGrid, k, holdR);
+                            outG[k] = getValue(includeGreen, verticalBlurGrid, k, holdG);
+                            outB[k] = getValue(includeBlue, verticalBlurGrid, k, holdB);
+                        }
                     }
                     copyOver(output, hold);
                 }
@@ -884,7 +1010,7 @@ const theBigActionsObject = {
             mX = requirements.mX;
             mY = requirements.mY;
 
-            requirements.grid = buildMatrixGrid(mWidth, mHeight, mX, mY);
+            requirements.grid = buildMatrixGrid(mWidth, mHeight, mX, mY, input.a);
             grid = requirements.grid;
         }
 
@@ -910,17 +1036,21 @@ const theBigActionsObject = {
         const {r:outR, g:outG, b:outB, a:outA} = output;
 
         for (let i = 0; i < len; i++) {
-            if (includeRed) outR[i] = doCalculations(inR, grid[i]);
-            else outR[i] = inR[i];
 
-            if (includeGreen) outG[i] = doCalculations(inG, grid[i]);
-            else outG[i] = inG[i];
+            if (inA[i]) {
 
-            if (includeBlue) outB[i] = doCalculations(inB, grid[i]);
-            else outB[i] = inB[i];
+                if (includeRed) outR[i] = doCalculations(inR, grid[i]);
+                else outR[i] = inR[i];
 
-            if (includeAlpha) outA[i] = doCalculations(inA, grid[i]);
-            else outA[i] = inA[i];
+                if (includeGreen) outG[i] = doCalculations(inG, grid[i]);
+                else outG[i] = inG[i];
+
+                if (includeBlue) outB[i] = doCalculations(inB, grid[i]);
+                else outB[i] = inB[i];
+
+                if (includeAlpha) outA[i] = doCalculations(inA, grid[i]);
+                else outA[i] = inA[i];
+            }
         }
         if (out) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
@@ -1177,10 +1307,36 @@ const theBigActionsObject = {
         if (out) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
     },
+
+    'user-defined-legacy': function (requirements) {
+
+        let [input, output] = getInputAndOutputObjects(requirements);
+
+        const {opacity, out} = requirements;
+
+        copyOver(input, output);
+
+        if (out) processResults(output, work, 1 - opacity);
+        else processResults(work, output, opacity);
+    },
 };
 
 
 const thePreprocessObject = {
+
+    areaAlpha: function (f) {
+        f.actions = [{
+            action: 'area-alpha',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            tileWidth: (f.tileWidth != null) ? f.tileWidth : 1,
+            tileHeight: (f.tileHeight != null) ? f.tileHeight : 1,
+            offsetX: (f.offsetX != null) ? f.offsetX : 0,
+            offsetY: (f.offsetY != null) ? f.offsetY : 0,
+            gutterWidth: (f.gutterWidth != null) ? f.gutterWidth : 1,
+            gutterHeight: (f.gutterHeight != null) ? f.gutterHeight : 1,
+            areaAlphaLevels: (f.areaAlphaLevels != null) ? f.areaAlphaLevels : [255,0,0,0],
+        }];
+    },
 
     blue: function (f) {
         f.actions = [{
@@ -1192,6 +1348,7 @@ const thePreprocessObject = {
     },
 
     blur: function (f) {
+
         f.actions = [{
             action: 'blur',
             opacity: (f.opacity != null) ? f.opacity : 1,
@@ -1477,6 +1634,13 @@ const thePreprocessObject = {
             blueInRed: (f.blueInRed != null) ? f.blueInRed : 0,
             blueInGreen: (f.blueInGreen != null) ? f.blueInGreen : 0,
             blueInBlue: (f.blueInBlue != null) ? f.blueInBlue : 1,
+        }];
+    },
+
+    userDefined: function (f) {
+        f.actions = [{
+            action: 'user-defined-legacy',
+            opacity: (f.opacity != null) ? f.opacity : 1,
         }];
     },
 

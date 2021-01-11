@@ -105,8 +105,13 @@ let wheel2 = wheel1.clone({
 
 // Define filters - need to test them all, plus some user-defined filters
 
-// __Grayscale__ filter
+// __Gray__ filter
 scrawl.makeFilter({
+    name: 'gray',
+    method: 'gray',
+
+// __Grayscale__ filter
+}).clone({
     name: 'grayscale',
     method: 'grayscale',
 
@@ -244,10 +249,21 @@ scrawl.makeFilter({
 scrawl.makeFilter({
     name: 'blur',
     method: 'blur',
-    radius: 20,
-    shrinkingRadius: true,
-    includeAlpha: true,
-    passes: 3,
+    radius: 6,
+    passes: 2,
+});
+
+// __AreaAlpha__ filter
+scrawl.makeFilter({
+    name: 'areaAlpha',
+    method: 'areaAlpha',
+    tileWidth: 20,
+    tileHeight: 20,
+    gutterWidth: 20,
+    gutterHeight: 20,
+    offsetX: 8,
+    offsetY: 8,
+    areaAlphaLevels: [255, 0, 0, 255],
 });
 
 // __Matrix__ filter
@@ -263,45 +279,6 @@ scrawl.makeFilter({
     weights: [-1, -1, -1, -1, 0, -1, -1, -1, 0, 1, -1, -1, 0, 1, 1, -1, 0, 1, 1, 1, 0, 1, 1, 1, 1],
 });
 
-// First user-defined filter
-let myUDF = scrawl.makeFilter({
-    name: 'totalRed',
-    method: 'userDefined',
-
-    userDefined: `
-        for (let i = 0, iz = cache.length; i < iz; i++) {
-
-            data[cache[i]] = 255;
-        }`,
-});
-
-// Second user-defined filter (cloned)
-myUDF.clone({
-    name: 'venetianBlinds',
-    level: 9,
-
-    userDefined: `
-        let i, iz, j, jz,
-            level = filter.level || 6,
-            halfLevel = level / 2,
-            yw, transparent, pos;
-
-        for (i = localY, iz = localY + localHeight; i < iz; i++) {
-
-            transparent = (i % level > halfLevel) ? true : false;
-
-            if (transparent) {
-
-                yw = (i * iWidth) + 3;
-                
-                for (j = localX, jz = localX + localWidth; j < jz; j ++) {
-
-                    pos = yw + (j * 4);
-                    data[pos] = 0;
-                }
-            }
-        }`,
-});
 
 
 // #### Scene animation
