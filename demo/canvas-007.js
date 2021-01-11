@@ -279,6 +279,25 @@ scrawl.makeFilter({
     weights: [-1, -1, -1, -1, 0, -1, -1, -1, 0, 1, -1, -1, 0, 1, 1, -1, 0, 1, 1, 1, 0, 1, 1, 1, 1],
 });
 
+// __ChannelLevels__ filter
+scrawl.makeFilter({
+    name: 'channelLevels',
+    method: 'channelLevels',
+    red: [50, 200],
+    green: [60, 220, 150],
+    blue: [40, 180],
+    alpha: [],
+});
+
+scrawl.makeFilter({
+    name: 'chromakey',
+    method: 'chromakey',
+    red: 0,
+    green: 127,
+    blue: 0,
+    opaqueAt: 0.7,
+    transparentAt: 0.5,
+});
 
 
 // #### Scene animation
