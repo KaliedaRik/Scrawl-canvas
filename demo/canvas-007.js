@@ -235,6 +235,15 @@ scrawl.makeFilter({
     blueInBlue: 0.4,
 });
 
+// __Offset__ filter
+scrawl.makeFilter({
+    name: 'offset',
+    method: 'offset',
+    offsetX: 12,
+    offsetY: 12,
+    opacity: 0.5,
+});
+
 // __Pixellate__ filter
 scrawl.makeFilter({
     name: 'pixelate',
@@ -250,6 +259,14 @@ scrawl.makeFilter({
     name: 'blur',
     method: 'blur',
     radius: 6,
+    passes: 2,
+});
+
+// __GaussianBlur__ filter
+scrawl.makeFilter({
+    name: 'gaussianBlur',
+    method: 'gaussianBlur',
+    includeAlpha: true,
     passes: 2,
 });
 

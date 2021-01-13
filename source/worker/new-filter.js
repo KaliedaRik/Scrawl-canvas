@@ -12,14 +12,9 @@
 // None used
 
 
-let packet, packetImageObject, imageData, packetFiltersArray;
+let packet, packetFiltersArray;
 
-let source,
-    work,
-    interim,
-    actions,
-    grid,
-    blurGrid;
+let source, work, cache, actions;
 
 const createResultObject = function (len) {
 
@@ -31,14 +26,15 @@ const createResultObject = function (len) {
     };
 };
 
-const unknit = function() {
+const unknit = function (iData) {
 
-    imageData = packetImageObject.data;
+    let imageData = iData.data;
 
     let len = Math.floor(imageData.length / 4);
 
 
     source = createResultObject(len);
+    iData.channels = source;
 
     let sourceRed = source.r,
         sourceGreen = source.g,
@@ -71,6 +67,8 @@ const unknit = function() {
 };
 
 const knit = function () {
+
+    let imageData = packet.image.data;
 
     let workRed = work.r,
         workGreen = work.g,
@@ -113,35 +111,26 @@ We need to respect existing filter requests, while converting them to use the ne
 */
 
     packet = msg.data;
-    packetImageObject = packet.image;
     packetFiltersArray = packet.filters;
 
     // console.log(packet.image.data[0], packet.image.data[1], packet.image.data[2], packet.image.data[3])
 
-    if (packetImageObject) {
+    // if (packetImageObject) {
 
-        interim = {};
+        cache = {};
         actions = [];
 
-        packetFiltersArray.forEach(f => {
+        cache.source = packet.image;
 
-            if (!f.actions.length && thePreprocessObject[f.method]) thePreprocessObject[f.method](f);
-            actions.push(...f.actions);
-        });
+        packetFiltersArray.forEach(f => actions.push(...f.actions));
 
         if (actions.length) {
 
-            unknit();
-
-            actions.forEach(a => {
-
-                if (theBigActionsObject[a.action]) theBigActionsObject[a.action](a);
-            });
-
+            unknit(cache.source);
+            actions.forEach(a => theBigActionsObject[a.action] && theBigActionsObject[a.action](a));
             knit();
         }
-    }
-
+    // }
     postMessage(packet);
 };
 
@@ -151,18 +140,20 @@ onerror = function (e) {
     postMessage(packet);
 };
 
-const buildImageGrid = function () {
+const buildImageGrid = function (data) {
 
-    if (packetImageObject) {
+    if (!data) data = cache.source;
+
+    if (data && data.width && data.height) {
 
         let grid = [],
             counter = 0;
 
-        for (let y = 0, yz = packetImageObject.height; y < yz; y++) {
+        for (let y = 0, yz = data.height; y < yz; y++) {
 
             let row = [];
 
-            for (let x = 0, xz = packetImageObject.width; x < xz; x++) {
+            for (let x = 0, xz = data.width; x < xz; x++) {
                 
                 row.push(counter);
                 counter++;
@@ -174,15 +165,14 @@ const buildImageGrid = function () {
     return false;
 };
 
-// let tiles = buildAlphaTileSets(tileWidth, tileHeight, gutterWidth, gutterHeight, offsetX, offsetY, areaAlphaLevels);
+const buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeight, offsetX, offsetY, areaAlphaLevels, data) {
 
+    if (!data) data = cache.source;
 
-const buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeight, offsetX, offsetY, areaAlphaLevels) {
+    if (data && data.width && data.height) {
 
-    if (packetImageObject) {
-
-        let iWidth = packetImageObject.width,
-            iHeight = packetImageObject.height;
+        let iWidth = data.width,
+            iHeight = data.height;
 
         tileWidth = (tileWidth.toFixed && !isNaN(tileWidth)) ? tileWidth : 1;
         tileHeight = (tileHeight.toFixed && !isNaN(tileHeight)) ? tileHeight : 1;
@@ -267,12 +257,14 @@ const buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterH
 
 };
 
-const buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY) {
+const buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY, data) {
 
-    if (packetImageObject) {
+    if (!data) data = cache.source;
 
-        let iWidth = packetImageObject.width,
-            iHeight = packetImageObject.height;
+    if (data && data.width && data.height) {
+
+        let iWidth = data.width,
+            iHeight = data.height;
 
         tileWidth = (tileWidth.toFixed && !isNaN(tileWidth)) ? tileWidth : 1;
         tileHeight = (tileHeight.toFixed && !isNaN(tileHeight)) ? tileHeight : 1;
@@ -290,22 +282,19 @@ const buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY) {
 
         let tiles = [];
 
-            for (let j = offsetY - tileHeight, jz = iHeight; j < jz; j += tileHeight) {
+        for (let j = offsetY - tileHeight, jz = iHeight; j < jz; j += tileHeight) {
 
-        for (let i = offsetX - tileWidth, iz = iWidth; i < iz; i += tileWidth) {
+            for (let i = offsetX - tileWidth, iz = iWidth; i < iz; i += tileWidth) {
 
                 let hold = [];
                 
-                        for (y = j, yz = j + tileHeight; y < yz; y++) {
+                for (y = j, yz = j + tileHeight; y < yz; y++) {
 
-                            if (y >= 0 && y < iHeight) {
+                    if (y >= 0 && y < iHeight) {
 
-                for (let x = i, xz = i + tileWidth; x < xz; x++) {
+                        for (let x = i, xz = i + tileWidth; x < xz; x++) {
 
-                    if (x >= 0 && x < iWidth) {
-
-                                hold.push((y * iWidth) + x);
-                            }
+                            if (x >= 0 && x < iWidth) hold.push((y * iWidth) + x);
                         }
                     }
                 }
@@ -315,7 +304,6 @@ const buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY) {
         return tiles;
     }
     return false;
-
 };
 
 const buildHorizontalBlur = function (grid, radius, alpha) {
@@ -386,7 +374,9 @@ const buildVerticalBlur = function (grid, radius, alpha) {
     return false;
 };
 
-const buildMatrixGrid = function (mWidth, mHeight, mX, mY, alpha) {
+const buildMatrixGrid = function (mWidth, mHeight, mX, mY, alpha, data) {
+
+    if (!data) data = cache.source;
 
     if (mWidth == null || mWidth < 1) mWidth = 1;
     if (mHeight == null || mHeight < 1) mHeight = 1;
@@ -397,9 +387,9 @@ const buildMatrixGrid = function (mWidth, mHeight, mX, mY, alpha) {
     if (mY == null || mY < 0) mY = 0;
     else if (mY >= mHeight) mY = mHeight - 1;
 
-    let iWidth = packetImageObject.width,
-        iHeight = packetImageObject.height,
-        dataLength = imageData.length,
+    let iWidth = data.width,
+        iHeight = data.height,
+        dataLength = data.data.length,
         x, xz, y, yz, i, iz,
         cellsTemplate = [],
         grid = [];
@@ -432,7 +422,6 @@ const buildMatrixGrid = function (mWidth, mHeight, mX, mY, alpha) {
                     cell.push(val);
                 }
             }
-
             grid.push(cell);
         }
     }
@@ -480,7 +469,6 @@ const checkChannelLevelsParameters = function (f) {
         }
         return (isHigh) ? [[0, 255, 255]] : [[0, 255, 0]];
     }
-
     f.red = doCheck(f.red);
     f.green = doCheck(f.green);
     f.blue = doCheck(f.blue);
@@ -489,8 +477,8 @@ const checkChannelLevelsParameters = function (f) {
 
 const cacheOutput = function (name, obj, caller) {
 
-    if (interim[name]) throw new Error('Duplicate name encountered when trying to cache output from', caller);
-    interim[name] = obj;
+    if (cache[name]) throw new Error('Duplicate name encountered when trying to cache output from', caller);
+    cache[name] = obj;
 };
 
 const copyOver = function (f, t) {
@@ -507,18 +495,107 @@ const copyOver = function (f, t) {
     }
 };
 
-const getInputAndOutputObjects = function (requirements) {
+const getInputAndOutputDimensions = function (requirements) {
 
-    let input = work;
+    let data = cache.source,
+        results = [];
 
-    if (requirements.in) {
+    if (requirements.lineIn && requirements.lineIn != 'source' && requirements.lineIn != 'source-alpha' && cache[requirements.lineIn]) {
 
-        if (requirements.in == 'source') input = source;
-        else if (interim[requirements.in]) input = interim[requirements.in];
+        data = cache[requirements.lineIn];
     }
-    let output = createResultObject(input.r.length);
+    results.push(data.width, data.height);
 
-    return [input, output];
+    if (requirements.lineOut && cache[requirements.lineOut]) {
+
+        data = cache[requirements.lineOut];
+    }
+    results.push(data.width, data.height);
+
+    data = cache.source;
+
+    if (requirements.lineMix && requirements.lineMix != 'source' && requirements.lineMix != 'source-alpha' && cache[requirements.lineMix]) {
+
+        data = cache[requirements.lineMix];
+    }
+    results.push(data.width, data.height);
+
+    return results;
+};
+
+const getInputAndOutputChannels = function (requirements) {
+
+    let lineIn = work;
+    let len = lineIn.r.length;
+    let data = cache.source;
+
+    if (requirements.lineIn) {
+
+        if (requirements.lineIn == 'source') {
+
+            // data = cache.source;
+            lineIn = data.channels;
+        }
+
+        else if (requirements.lineIn == 'source-alpha') {
+
+            // data = cache.source;
+            lineIn = createResultObject(len);
+
+            let destAlpha = lineIn.a,
+                sourceAlpha = data.channels.a;
+
+            for (let i = 0; i < len; i++) {
+
+                destAlpha[i] = sourceAlpha[i];
+            }
+        }
+        else if (cache[requirements.lineIn]) {
+
+            data = cache[requirements.lineIn];
+            lineIn = data.channels;
+        }
+    }
+
+    let lineMix = false;
+
+    if (requirements.lineMix) {
+
+        if (requirements.lineMix == 'source') lineMix = cache.source.channels;
+
+        else if (requirements.lineMix == 'source-alpha') {
+
+            lineMix = createResultObject(len);
+
+            let destAlpha = lineMix.a,
+                sourceAlpha = cache.source.channels.a;
+
+            for (let i = 0; i < len; i++) {
+
+                destAlpha[i] = sourceAlpha[i];
+            }
+        }
+        else if (cache[requirements.lineMix]) lineMix = cache[requirements.lineMix].channels;
+    }
+
+    let lineOut;
+
+    if (requirements.lineOut) {
+
+        if (cache[requirements.lineOut]) lineOut = cache[requirements.lineOut].channels;
+        else {
+
+            lineOut = createResultObject(len);
+            cache[requirements.lineOut] = {
+                width: data.width,
+                height: data.height,
+                channels: lineOut,
+            };
+        }
+    }
+    else lineOut = createResultObject(len);
+
+    return [lineIn, lineOut, lineMix];
 };
 
 const processResults = function (store, incoming, ratio) {
@@ -552,11 +629,11 @@ const theBigActionsObject = {
 
     'alpha-to-channels': function (requirements) {
 
-        let [input, output] = getInputAndOutputObjects(requirements);
+        let [input, output] = getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
-        const {opacity, includeRed, includeGreen, includeBlue, excludeRed, excludeGreen, excludeBlue, out} = requirements;
+        const {opacity, includeRed, includeGreen, includeBlue, excludeRed, excludeGreen, excludeBlue, lineOut} = requirements;
 
         const {r:inR, g:inG, b:inB, a:inA} = input;
         const {r:outR, g:outG, b:outB, a:outA} = output;
@@ -569,17 +646,17 @@ const theBigActionsObject = {
         }
         outA.fill(255, 0, outA.length - 1);
 
-        if (out) processResults(output, work, 1 - opacity);
+        if (lineOut) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
     },
 
     'area-alpha': function (requirements) {
 
-        let [input, output] = getInputAndOutputObjects(requirements);
+        let [input, output] = getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
-        let {opacity, tileWidth, tileHeight, offsetX, offsetY, gutterWidth, gutterHeight, areaAlphaLevels, out} = requirements;
+        let {opacity, tileWidth, tileHeight, offsetX, offsetY, gutterWidth, gutterHeight, areaAlphaLevels, lineOut} = requirements;
 
         let tiles = buildAlphaTileSets(tileWidth, tileHeight, gutterWidth, gutterHeight, offsetX, offsetY, areaAlphaLevels);
 
@@ -602,17 +679,17 @@ const theBigActionsObject = {
             }
         });
 
-        if (out) processResults(output, work, 1 - opacity);
+        if (lineOut) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
     },
 
     'average-channels': function (requirements) {
 
-        let [input, output] = getInputAndOutputObjects(requirements);
+        let [input, output] = getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
-        const {opacity, includeRed, includeGreen, includeBlue, excludeRed, excludeGreen, excludeBlue, out} = requirements;
+        const {opacity, includeRed, includeGreen, includeBlue, excludeRed, excludeGreen, excludeBlue, lineOut} = requirements;
 
         let divisor = 0;
         if (includeRed) divisor++;
@@ -657,17 +734,17 @@ const theBigActionsObject = {
                 outA[i] = inA[i];
             }
         }
-        if (out) processResults(output, work, 1 - opacity);
+        if (lineOut) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
     },
 
     'blur': function (requirements) {
 
-        let [input, output] = getInputAndOutputObjects(requirements);
+        let [input, output] = getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
-        let {opacity, radius, passes, processVertical, processHorizontal, includeRed, includeGreen, includeBlue, includeAlpha, out} = requirements;
+        let {opacity, radius, passes, processVertical, processHorizontal, includeRed, includeGreen, includeBlue, includeAlpha, lineOut} = requirements;
 
         let horizontalBlurGrid, verticalBlurGrid;
 
@@ -684,9 +761,6 @@ const theBigActionsObject = {
         // Perform blur action
         const {r:inR, g:inG, b:inB, a:inA} = input;
         const {r:outR, g:outG, b:outB, a:outA} = output;
-
-        const hold = createResultObject(len);
-        const {r:holdR, g:holdG, b:holdB, a:holdA} = hold;
 
         const getValue = function (flag, gridStore, step, holdChannel) {
 
@@ -707,6 +781,9 @@ const theBigActionsObject = {
         if (!passes || (!processHorizontal && !processVertical)) copyOver(input, output);
         else {
 
+            const hold = createResultObject(len);
+            const {r:holdR, g:holdG, b:holdB, a:holdA} = hold;
+
             copyOver(input, hold);
 
             for (let pass = 0; pass < passes; pass++) {
@@ -714,43 +791,45 @@ const theBigActionsObject = {
                 if (processHorizontal) {
 
                     for (let k = 0; k < len; k++) {
-                        outA[k] = getValue(includeAlpha, horizontalBlurGrid, k, holdA);
 
-                        if (outA[k]) {
+                        if (holdA[k]) {
+
                             outR[k] = getValue(includeRed, horizontalBlurGrid, k, holdR);
                             outG[k] = getValue(includeGreen, horizontalBlurGrid, k, holdG);
                             outB[k] = getValue(includeBlue, horizontalBlurGrid, k, holdB);
+                            outA[k] = getValue(includeAlpha, horizontalBlurGrid, k, holdA);
                         }
                     }
-                    copyOver(output, hold);
+                    if (processVertical || pass < passes - 1) copyOver(output, hold);
                 }
 
                 if (processVertical) {
 
                     for (let k = 0; k < len; k++) {
-                        outA[k] = getValue(includeAlpha, verticalBlurGrid, k, holdA);
 
-                        if (outA[k]) {
+                        if (holdA[k]) {
+
                             outR[k] = getValue(includeRed, verticalBlurGrid, k, holdR);
                             outG[k] = getValue(includeGreen, verticalBlurGrid, k, holdG);
                             outB[k] = getValue(includeBlue, verticalBlurGrid, k, holdB);
+                            outA[k] = getValue(includeAlpha, verticalBlurGrid, k, holdA);
                         }
                     }
-                    copyOver(output, hold);
+                    if (pass < passes - 1) copyOver(output, hold);
                 }
             }
         }
-        if (out) processResults(output, work, 1 - opacity);
+        if (lineOut) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
     },
 
     'brightness': function (requirements) {
 
-        let [input, output] = getInputAndOutputObjects(requirements);
+        let [input, output] = getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
-        const {opacity, includeRed, includeGreen, includeBlue, level, out} = requirements;
+        const {opacity, includeRed, includeGreen, includeBlue, level, lineOut} = requirements;
 
         const {r:inR, g:inG, b:inB, a:inA} = input;
         const {r:outR, g:outG, b:outB, a:outA} = output;
@@ -762,17 +841,17 @@ const theBigActionsObject = {
             outB[i] = (includeBlue) ? inB[i] * level : inB[i];
             outA[i] = inA[i];
         }
-        if (out) processResults(output, work, 1 - opacity);
+        if (lineOut) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
     },
 
     'channels-to-alpha': function (requirements) {
 
-        let [input, output] = getInputAndOutputObjects(requirements);
+        let [input, output] = getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
-        const {opacity, includeRed, includeGreen, includeBlue, out} = requirements;
+        const {opacity, includeRed, includeGreen, includeBlue, lineOut} = requirements;
 
         let divisor = 0;
         if (includeRed) divisor++;
@@ -802,17 +881,17 @@ const theBigActionsObject = {
             }
             else outA[i] = inA[i];
         }
-        if (out) processResults(output, work, 1 - opacity);
+        if (lineOut) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
     },
 
     'chroma': function (requirements) {
 
-        let [input, output] = getInputAndOutputObjects(requirements);
+        let [input, output] = getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
-        const {opacity, ranges, out} = requirements;
+        const {opacity, ranges, lineOut} = requirements;
 
         const {r:inR, g:inG, b:inB, a:inA} = input;
         const {r:outR, g:outG, b:outB, a:outA} = output;
@@ -843,17 +922,17 @@ const theBigActionsObject = {
             outA[j] = (flag) ? 0 : inA[j];
         }
 
-        if (out) processResults(output, work, 1 - opacity);
+        if (lineOut) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
     },
 
     'colors-to-alpha': function (requirements) {
 
-        let [input, output] = getInputAndOutputObjects(requirements);
+        let [input, output] = getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
-        const {opacity, red, green, blue, opaqueAt, transparentAt, out} = requirements;
+        const {opacity, red, green, blue, opaqueAt, transparentAt, lineOut} = requirements;
 
         const maxDiff = Math.max(((red + green + blue) / 3), (((255 - red) + (255 - green) + (255 - blue)) / 3)),
             transparent = transparentAt * maxDiff,
@@ -879,18 +958,94 @@ const theBigActionsObject = {
             outA[i] = getValue(inR[i], inG[i], inB[i]);
         }
 
-        if (out) processResults(output, work, 1 - opacity);
+        if (lineOut) processResults(output, work, 1 - opacity);
+        else processResults(work, output, opacity);
+    },
+
+    'compose': function (requirements) {
+
+        let [input, output, mix] = getInputAndOutputChannels(requirements);
+
+        let len = input.r.length,
+            i;
+
+        const {opacity, compose, offsetX, offsetY, lineOut} = requirements;
+
+        const {r:inR, g:inG, b:inB, a:inA} = input;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
+        const {r:mixR, g:mixG, b:mixB, a:mixA} = mix;
+
+        // let iWidth = inR.length,
+        //     iHeight = input.length,
+        //     mWidth = mixR.length,
+        //     mHeight = mix.length;
+        let [iWidth, iHeight, oWidth, oHeight, mWidth, mHeight] = getInputAndOutputDimensions(requirements);
+
+        const copyPixelToOutput = function (iX, iY, mX, mY, oX, oY) {};
+
+        switch (compose) {
+
+            case 'source-only' :
+                copyOver(input, output);
+                break;
+
+            case 'source-atop' :
+                break;
+
+            case 'source-in' :
+                break;
+
+            case 'source-out' :
+                break;
+
+            case 'destination-only' :
+                copyOver(mix, output);
+                break;
+
+            case 'destination-atop' :
+                break;
+
+            case 'destination-over' :
+                break;
+
+            case 'destination-in' :
+                break;
+
+            case 'destination-out' :
+                break;
+
+            case 'clear' :
+                break;
+
+            case 'xor' :
+                break;
+
+            case 'source-over' :
+                break;
+
+            case 'source-over' :
+                break;
+
+            case 'source-over' :
+                break;
+
+            case 'source-over' :
+            default:
+                break;
+        }
+
+        if (lineOut) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
     },
 
     'flood': function (requirements) {
 
-        let [input, output] = getInputAndOutputObjects(requirements);
+        let [input, output] = getInputAndOutputChannels(requirements);
 
         let len = input.r.length,
             floor = Math.floor;
 
-        const {opacity, red, green, blue, alpha, out} = requirements;
+        const {opacity, red, green, blue, alpha, lineOut} = requirements;
 
         if (red == null) red = 0;
         if (green == null) green = 0;
@@ -904,17 +1059,17 @@ const theBigActionsObject = {
         outB.fill(blue, 0, len - 1);
         outA.fill(alpha, 0, len - 1);
 
-        if (out) processResults(output, work, 1 - opacity);
+        if (lineOut) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
     },
 
     'grayscale': function (requirements) {
 
-        let [input, output] = getInputAndOutputObjects(requirements);
+        let [input, output] = getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
-        const {opacity, out} = requirements;
+        const {opacity, lineOut} = requirements;
 
         const {r:inR, g:inG, b:inB, a:inA} = input;
         const {r:outR, g:outG, b:outB, a:outA} = output;
@@ -929,17 +1084,17 @@ const theBigActionsObject = {
             outA[i] = inA[i];
         }
 
-        if (out) processResults(output, work, 1 - opacity);
+        if (lineOut) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
     },
 
     'invert-channels': function (requirements) {
 
-        let [input, output] = getInputAndOutputObjects(requirements);
+        let [input, output] = getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
-        const {opacity, includeRed, includeGreen, includeBlue, includeAlpha, out} = requirements;
+        const {opacity, includeRed, includeGreen, includeBlue, includeAlpha, lineOut} = requirements;
 
         const {r:inR, g:inG, b:inB, a:inA} = input;
         const {r:outR, g:outG, b:outB, a:outA} = output;
@@ -951,7 +1106,7 @@ const theBigActionsObject = {
             outB[i] = (includeBlue) ? 255 - inB[i] : inB[i];
             outA[i] = (includeAlpha) ? 255 - inA[i] : inA[i];
         }
-        if (out) processResults(output, work, 1 - opacity);
+        if (lineOut) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
     },
 
@@ -970,11 +1125,11 @@ const theBigActionsObject = {
             }
         };
 
-        let [input, output] = getInputAndOutputObjects(requirements);
+        let [input, output] = getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
-        const {opacity, red, green, blue, alpha, out} = requirements;
+        const {opacity, red, green, blue, alpha, lineOut} = requirements;
 
         const {r:inR, g:inG, b:inB, a:inA} = input;
         const {r:outR, g:outG, b:outB, a:outA} = output;
@@ -986,29 +1141,24 @@ const theBigActionsObject = {
             outA[i] = getValue(inA[i], alpha);
         }
 
-        if (out) processResults(output, work, 1 - opacity);
+        if (lineOut) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
     },
 
     'matrix': function (requirements) {
 
-        let [input, output] = getInputAndOutputObjects(requirements);
+        let [input, output] = getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
-        let {opacity, includeRed, includeGreen, includeBlue, includeAlpha, mWidth, mHeight, mX, mY, weights, grid, out} = requirements;
+        let {opacity, includeRed, includeGreen, includeBlue, includeAlpha, mWidth, mHeight, mX, mY, weights, grid, lineOut} = requirements;
 
         if (grid == null) {
 
-            if (mWidth == null) requirements.mWidth = 3;
-            if (mHeight == null) requirements.mHeight = 3;
-            if (mX == null) requirements.mX = 1;
-            if (mY == null) requirements.mY = 1;
-
-            mWidth = requirements.mWidth;
-            mHeight = requirements.mHeight;
-            mX = requirements.mX;
-            mY = requirements.mY;
+            if (mWidth == null || mWidth < 1) mWidth = 3;
+            if (mHeight == null || mHeight < 1) mHeight = 3;
+            if (mX == null || mX < 0) mX = 1;
+            if (mY == null || mY < 0) mY = 1;
 
             requirements.grid = buildMatrixGrid(mWidth, mHeight, mX, mY, input.a);
             grid = requirements.grid;
@@ -1052,17 +1202,17 @@ const theBigActionsObject = {
                 else outA[i] = inA[i];
             }
         }
-        if (out) processResults(output, work, 1 - opacity);
+        if (lineOut) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
     },
 
     'modulate-channels': function (requirements) {
 
-        let [input, output] = getInputAndOutputObjects(requirements);
+        let [input, output] = getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
-        const {opacity, red, green, blue, alpha, level, out} = requirements;
+        const {opacity, red, green, blue, alpha, level, lineOut} = requirements;
 
         if (red == null) red = 1;
         if (green == null) green = 1;
@@ -1078,7 +1228,47 @@ const theBigActionsObject = {
             outB[i] = inB[i] * blue;
             outA[i] = inA[i] * alpha;
         }
-        if (out) processResults(output, work, 1 - opacity);
+        if (lineOut) processResults(output, work, 1 - opacity);
+        else processResults(work, output, opacity);
+    },
+
+    'offset': function (requirements) {
+
+        let [input, output] = getInputAndOutputChannels(requirements);
+
+        const {opacity, offsetX, offsetY, lineOut} = requirements;
+
+        const {r:inR, g:inG, b:inB, a:inA} = input;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
+
+        let grid = buildImageGrid(),
+            gWidth = grid[0].length,
+            gHeight = grid.length,
+            dx, dy, inCell, outCell;
+
+        for (let y = 0; y < gHeight; y++) {
+            for (let x = 0; x < gWidth; x++) {
+
+                inCell = grid[y][x];
+
+                if (inA[inCell]) {
+
+                    dx = x + offsetX;
+                    dy = y + offsetY;
+
+                    if (dx >= 0 && dx < gWidth && dy >= 0 && dy < gHeight) {
+
+                        outCell = grid[dy][dx];
+
+                        outR[outCell] = inR[inCell];
+                        outG[outCell] = inG[inCell];
+                        outB[outCell] = inB[inCell];
+                        outA[outCell] = inA[inCell];
+                    }
+                }
+            }
+        }
+        if (lineOut) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
     },
 
@@ -1107,11 +1297,11 @@ const theBigActionsObject = {
             }
         };
 
-        let [input, output] = getInputAndOutputObjects(requirements);
+        let [input, output] = getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
-        let {opacity, tileWidth, tileHeight, offsetX, offsetY, tiles, includeRed, includeGreen, includeBlue, includeAlpha, out} = requirements;
+        let {opacity, tileWidth, tileHeight, offsetX, offsetY, tiles, includeRed, includeGreen, includeBlue, includeAlpha, lineOut} = requirements;
 
         if (!tiles) {
 
@@ -1137,17 +1327,17 @@ const theBigActionsObject = {
             else setOutValueToInValue(inA, outA, t);
         })
 
-        if (out) processResults(output, work, 1 - opacity);
+        if (lineOut) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
     },
 
     'saturation': function (requirements) {
 
-        let [input, output] = getInputAndOutputObjects(requirements);
+        let [input, output] = getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
-        const {opacity, includeRed, includeGreen, includeBlue, level, out} = requirements;
+        const {opacity, includeRed, includeGreen, includeBlue, level, lineOut} = requirements;
 
         const {r:inR, g:inG, b:inB, a:inA} = input;
         const {r:outR, g:outG, b:outB, a:outA} = output;
@@ -1159,13 +1349,13 @@ const theBigActionsObject = {
             outA[i] = inA[i];
         }
 
-        if (out) processResults(output, work, 1 - opacity);
+        if (lineOut) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
     },
 
     'set-channel-to-value': function (requirements) {
 
-        let [input, output] = getInputAndOutputObjects(requirements);
+        let [input, output] = getInputAndOutputChannels(requirements);
 
         let len = input.r.length,
             isRed = false,
@@ -1173,7 +1363,7 @@ const theBigActionsObject = {
             isBlue = false,
             isAlpha = false;
 
-        const {opacity, channel, value, out} = requirements;
+        const {opacity, channel, value, lineOut} = requirements;
 
         switch (channel) {
 
@@ -1203,18 +1393,18 @@ const theBigActionsObject = {
             outB[i] = (isBlue) ? value : inB[i];
             outA[i] = (isAlpha) ? value : inA[i];
         }
-        if (out) processResults(output, work, 1 - opacity);
+        if (lineOut) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
     },
 
     'step-channels': function (requirements) {
 
-        let [input, output] = getInputAndOutputObjects(requirements);
+        let [input, output] = getInputAndOutputChannels(requirements);
 
         let len = input.r.length,
             floor = Math.floor;
 
-        const {opacity, red, green, blue, level, out} = requirements;
+        const {opacity, red, green, blue, level, lineOut} = requirements;
 
         if (red == null) red = 1;
         if (green == null) green = 1;
@@ -1230,17 +1420,17 @@ const theBigActionsObject = {
             outA[i] = inA[i];
         }
 
-        if (out) processResults(output, work, 1 - opacity);
+        if (lineOut) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
     },
 
     'threshold': function (requirements) {
 
-        let [input, output] = getInputAndOutputObjects(requirements);
+        let [input, output] = getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
-        const {opacity, low, high, level, out} = requirements;
+        const {opacity, low, high, level, lineOut} = requirements;
 
         const {r:inR, g:inG, b:inB, a:inA} = input;
         const {r:outR, g:outG, b:outB, a:outA} = output;
@@ -1267,17 +1457,17 @@ const theBigActionsObject = {
             outA[i] = inA[i];
         }
 
-        if (out) processResults(output, work, 1 - opacity);
+        if (lineOut) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
     },
 
     'tint-channels': function (requirements) {
 
-        let [input, output] = getInputAndOutputObjects(requirements);
+        let [input, output] = getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
-        const {opacity, redInRed, redInGreen, redInBlue, greenInRed, greenInGreen, greenInBlue, blueInRed, blueInGreen, blueInBlue, out} = requirements;
+        const {opacity, redInRed, redInGreen, redInBlue, greenInRed, greenInGreen, greenInBlue, blueInRed, blueInGreen, blueInBlue, lineOut} = requirements;
 
         if (redInRed == null) redInRed = 1;
         if (redInGreen == null) redInGreen = 0;
@@ -1304,353 +1494,19 @@ const theBigActionsObject = {
             outA[i] = inA[i];
         }
 
-        if (out) processResults(output, work, 1 - opacity);
+        if (lineOut) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
     },
 
     'user-defined-legacy': function (requirements) {
 
-        let [input, output] = getInputAndOutputObjects(requirements);
+        let [input, output] = getInputAndOutputChannels(requirements);
 
-        const {opacity, out} = requirements;
+        const {opacity, lineOut} = requirements;
 
         copyOver(input, output);
 
-        if (out) processResults(output, work, 1 - opacity);
+        if (lineOut) processResults(output, work, 1 - opacity);
         else processResults(work, output, opacity);
     },
 };
-
-
-const thePreprocessObject = {
-
-    areaAlpha: function (f) {
-        f.actions = [{
-            action: 'area-alpha',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            tileWidth: (f.tileWidth != null) ? f.tileWidth : 1,
-            tileHeight: (f.tileHeight != null) ? f.tileHeight : 1,
-            offsetX: (f.offsetX != null) ? f.offsetX : 0,
-            offsetY: (f.offsetY != null) ? f.offsetY : 0,
-            gutterWidth: (f.gutterWidth != null) ? f.gutterWidth : 1,
-            gutterHeight: (f.gutterHeight != null) ? f.gutterHeight : 1,
-            areaAlphaLevels: (f.areaAlphaLevels != null) ? f.areaAlphaLevels : [255,0,0,0],
-        }];
-    },
-
-    blue: function (f) {
-        f.actions = [{
-            action: 'average-channels',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            excludeRed: true,
-            excludeGreen: true,
-        }];
-    },
-
-    blur: function (f) {
-
-        f.actions = [{
-            action: 'blur',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            includeRed: (f.includeRed != null) ? f.includeRed : true,
-            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
-            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
-            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
-            processHorizontal: (f.processHorizontal != null) ? f.processHorizontal : true,
-            processVertical: (f.processVertical != null) ? f.processVertical : true,
-            radius: (f.radius != null) ? f.radius : 1,
-            passes: (f.passes != null) ? f.passes : 1,
-        }];
-    },
-
-    brightness: function (f) {
-        f.actions = [{
-            action: 'brightness',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            level: (f.level != null) ? f.level : 1,
-            includeRed: (f.includeRed != null) ? f.includeRed : true,
-            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
-            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
-        }];
-    },
-
-    channelLevels: function (f) {
-        f.actions = [{
-            action: 'lock-channels-to-levels',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            red: (f.red != null) ? f.red : [0],
-            green: (f.green != null) ? f.green : [0],
-            blue: (f.blue != null) ? f.blue : [0],
-            alpha: (f.alpha != null) ? f.alpha : [255],
-        }];
-    },
-
-    channels: function (f) {
-        f.actions = [{
-            action: 'modulate-channels',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            red: (f.red != null) ? f.red : 1,
-            green: (f.green != null) ? f.green : 1,
-            blue: (f.blue != null) ? f.blue : 1,
-            alpha: (f.alpha != null) ? f.alpha : 1,
-        }];
-    },
-
-    channelstep: function (f) {
-        f.actions = [{
-            action: 'step-channels',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            red: (f.red != null) ? f.red : 1,
-            green: (f.green != null) ? f.green : 1,
-            blue: (f.blue != null) ? f.blue : 1,
-        }];
-    },
-
-    chroma: function (f) {
-        f.actions = [{
-            action: 'chroma',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            ranges: (f.ranges != null) ? f.ranges : [],
-        }];
-    },
-
-    chromakey: function (f) {
-        f.actions = [{
-            action: 'colors-to-alpha',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            red: (f.red != null) ? f.red : 0,
-            green: (f.green != null) ? f.green : 255,
-            blue: (f.blue != null) ? f.blue : 0,
-            transparentAt: (f.transparentAt != null) ? f.transparentAt : 0,
-            opaqueAt: (f.opaqueAt != null) ? f.opaqueAt : 1,
-        }];
-    },
-
-    cyan: function (f) {
-        f.actions = [{
-            action: 'average-channels',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            includeGreen: true,
-            includeBlue: true,
-            excludeRed: true,
-        }];
-    },
-
-    flood: function (f) {
-        f.actions = [{
-            action: 'flood',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            red: (f.red != null) ? f.red : 0,
-            green: (f.green != null) ? f.green : 0,
-            blue: (f.blue != null) ? f.blue : 0,
-            alpha: (f.alpha != null) ? f.alpha : 255,
-        }];
-    },
-
-    gray: function (f) {
-        f.actions = [{
-            action: 'average-channels',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            includeRed: true,
-            includeGreen: true,
-            includeBlue: true,
-        }];
-    },
-
-    grayscale: function (f) {
-        f.actions = [{
-            action: 'grayscale',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-        }];
-    },
-
-    green: function (f) {
-        f.actions = [{
-            action: 'average-channels',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            excludeRed: true,
-            excludeBlue: true,
-        }];
-    },
-
-    invert: function (f) {
-        f.actions = [{
-            action: 'invert-channels',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            includeRed: true,
-            includeGreen: true,
-            includeBlue: true,
-        }];
-    },
-
-    magenta: function (f) {
-        f.actions = [{
-            action: 'average-channels',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            includeRed: true,
-            includeBlue: true,
-            excludeGreen: true,
-        }];
-    },
-
-    matrix: function (f) {
-        f.actions = [{
-            action: 'matrix',
-            mWidth: 3,
-            mHeight: 3,
-            mX: 1,
-            mY: 1,
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            includeRed: (f.includeRed != null) ? f.includeRed : true,
-            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
-            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
-            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
-            weights: (f.weights != null) ? f.weights : [0,0,0,0,1,0,0,0,0],
-        }];
-    },
-
-    matrix5: function (f) {
-        f.actions = [{
-            action: 'matrix',
-            mWidth: 5,
-            mHeight: 5,
-            mX: 2,
-            mY: 2,
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            includeRed: (f.includeRed != null) ? f.includeRed : true,
-            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
-            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
-            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
-            weights: (f.weights != null) ? f.weights : [0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
-        }];
-    },
-
-    notblue: function (f) {
-        f.actions = [{
-            action: 'set-channel-to-value',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            channel: 'blue',
-            value: 0,
-        }];
-    },
-
-    notgreen: function (f) {
-        f.actions = [{
-            action: 'set-channel-to-value',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            channel: 'green',
-            value: 0,
-        }];
-    },
-
-    notred: function (f) {
-        f.actions = [{
-            action: 'set-channel-to-value',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            channel: 'red',
-            value: 0,
-        }];
-    },
-
-    pixelate: function (f) {
-        f.actions = [{
-            action: 'pixelate',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            tileWidth: (f.tileWidth != null) ? f.tileWidth : 1,
-            tileHeight: (f.tileHeight != null) ? f.tileHeight : 1,
-            offsetX: (f.offsetX != null) ? f.offsetX : 0,
-            offsetY: (f.offsetY != null) ? f.offsetY : 0,
-            includeRed: (f.includeRed != null) ? f.includeRed : true,
-            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
-            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
-            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
-        }];
-    },
-
-    red: function (f) {
-        f.actions = [{
-            action: 'average-channels',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            excludeGreen: true,
-            excludeBlue: true,
-        }];
-    },
-
-    saturation: function (f) {
-        f.actions = [{
-            action: 'saturation',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            level: (f.level != null) ? f.level : 1,
-            includeRed: (f.includeRed != null) ? f.includeRed : true,
-            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
-            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
-        }];
-    },
-
-    sepia: function (f) {
-        f.actions = [{
-            action: 'tint-channels',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            redInRed: 0.393,
-            redInGreen: 0.349,
-            redInBlue: 0.272,
-            greenInRed: 0.769,
-            greenInGreen: 0.686,
-            greenInBlue: 0.534,
-            blueInRed: 0.189,
-            blueInGreen: 0.168,
-            blueInBlue: 0.131,
-        }];
-    },
-
-    threshold: function (f) {
-
-        let lowRed = (f.lowRed != null) ? f.lowRed : 0,
-            lowGreen = (f.lowGreen != null) ? f.lowGreen : 0,
-            lowBlue = (f.lowBlue != null) ? f.lowBlue : 0,
-            highRed = (f.highRed != null) ? f.highRed : 255,
-            highGreen = (f.highGreen != null) ? f.highGreen : 255,
-            highBlue = (f.highBlue != null) ? f.highBlue : 255;
-
-        f.actions = [{
-            action: 'threshold',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            level: (f.level != null) ? f.level : 128,
-            low: [lowRed, lowGreen, lowBlue],
-            high: [highRed, highGreen, highBlue],
-        }];
-    },
-
-    tint: function (f) {
-        f.actions = [{
-            action: 'tint-channels',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            redInRed: (f.redInRed != null) ? f.redInRed : 1,
-            redInGreen: (f.redInGreen != null) ? f.redInGreen : 0,
-            redInBlue: (f.redInBlue != null) ? f.redInBlue : 0,
-            greenInRed: (f.greenInRed != null) ? f.greenInRed : 0,
-            greenInGreen: (f.greenInGreen != null) ? f.greenInGreen : 1,
-            greenInBlue: (f.greenInBlue != null) ? f.greenInBlue : 0,
-            blueInRed: (f.blueInRed != null) ? f.blueInRed : 0,
-            blueInGreen: (f.blueInGreen != null) ? f.blueInGreen : 0,
-            blueInBlue: (f.blueInBlue != null) ? f.blueInBlue : 1,
-        }];
-    },
-
-    userDefined: function (f) {
-        f.actions = [{
-            action: 'user-defined-legacy',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-        }];
-    },
-
-    yellow: function (f) {
-        f.actions = [{
-            action: 'average-channels',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            includeRed: true,
-            includeGreen: true,
-            excludeBlue: true,
-        }];
-    },
-}

@@ -58,10 +58,9 @@ const Filter = function (items = {}) {
 
     this.makeName(items.name);
     this.register();
-    this.set(this.defs);
+    // this.set(this.defs);
 
     this.actions = [];
-    this.subscribers = [];
 
     this.set(items);
     return this;
@@ -84,7 +83,6 @@ P = baseMix(P);
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 let defaultAttributes = {
 
-    opacity: 1,
     opaqueAt: 1,
     transparentAt: 0,
 
@@ -102,6 +100,13 @@ let defaultAttributes = {
     gutterWidth: 1,
     gutterHeight: 1,
     areaAlphaLevels: null,
+
+    compose: 'source-over',
+    lineIn: '',
+    lineOut: '',
+    lineMix: '',
+    opacity: 1,
+
     
 // All filters need to set out their __method__. For preset methods, a method string (eg 'grayscale', 'sepia') is sufficient. Bespoke methods require a function
     method: '',
@@ -211,10 +216,6 @@ let defaultAttributes = {
 // ranges: [[0, 0, 0, 80, 80, 80], [180, 180, 180, 255, 255, 255]]
 // ```
     ranges: null,
-
-// __subscribers__ - An Array containing the entity Objects, who wish to use the filter. 
-// + Entitys can subscribe to more than one filter at a time.
-// + ___Note that the contents of this Array cannot be directly or indirectly set.___ Entitys will subscribe and unsubscribe to a filter as part of their filter management functionality.
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -284,17 +285,9 @@ P.set = function (items = {}) {
                 else if (typeof defs[key] !== 'undefined') this[key] = value;
             }
         }, this);
-
-        if (Array.isArray(this.subscribers)) {
-
-            this.subscribers.forEach(s => {
-    
-                s = entity[s];
-    
-                if (s) s.dirtyFilterImage = true
-            })
-        };
     }
+    if (this.method && setActionsArray[this.method]) setActionsArray[this.method](this);
+
     return this;
 };
 
@@ -318,22 +311,454 @@ P.setDelta = function (items = {}) {
                 else if (typeof defs[key] != 'undefined') this[key] = addStrings(this[key], value);
             }
         }, this);
-
-        if (Array.isArray(this.subscribers)) {
-
-            this.subscribers.forEach(s => {
-    
-                s = entity[s];
-    
-                if (s) s.dirtyFilterImage = true
-            })
-        };
     }
+    if (this.method && setActionsArray[this.method]) setActionsArray[this.method](this);
+
     return this;
 };
 
-// __subscribers__ - we disable the ability to set the subscribers Array directly. Picture entitys and Pattern styles will manage their subscription to the asset using their subscribe() and unsubscribe() functions.
-    S.subscribers = λnull;
+const setActionsArray = {
+
+    areaAlpha: function (f) {
+        f.actions = [{
+            action: 'area-alpha',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            tileWidth: (f.tileWidth != null) ? f.tileWidth : 1,
+            tileHeight: (f.tileHeight != null) ? f.tileHeight : 1,
+            offsetX: (f.offsetX != null) ? f.offsetX : 0,
+            offsetY: (f.offsetY != null) ? f.offsetY : 0,
+            gutterWidth: (f.gutterWidth != null) ? f.gutterWidth : 1,
+            gutterHeight: (f.gutterHeight != null) ? f.gutterHeight : 1,
+            areaAlphaLevels: (f.areaAlphaLevels != null) ? f.areaAlphaLevels : [255,0,0,0],
+        }];
+    },
+
+    blue: function (f) {
+        f.actions = [{
+            action: 'average-channels',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            excludeRed: true,
+            excludeGreen: true,
+        }];
+    },
+
+    blur: function (f) {
+
+        f.actions = [{
+            action: 'blur',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            includeRed: (f.includeRed != null) ? f.includeRed : true,
+            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
+            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
+            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
+            processHorizontal: (f.processHorizontal != null) ? f.processHorizontal : true,
+            processVertical: (f.processVertical != null) ? f.processVertical : true,
+            radius: (f.radius != null) ? f.radius : 1,
+            passes: (f.passes != null) ? f.passes : 1,
+        }];
+    },
+
+    brightness: function (f) {
+        f.actions = [{
+            action: 'brightness',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            level: (f.level != null) ? f.level : 1,
+            includeRed: (f.includeRed != null) ? f.includeRed : true,
+            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
+            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
+        }];
+    },
+
+    channelLevels: function (f) {
+        f.actions = [{
+            action: 'lock-channels-to-levels',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            red: (f.red != null) ? f.red : [0],
+            green: (f.green != null) ? f.green : [0],
+            blue: (f.blue != null) ? f.blue : [0],
+            alpha: (f.alpha != null) ? f.alpha : [255],
+        }];
+    },
+
+    channels: function (f) {
+        f.actions = [{
+            action: 'modulate-channels',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            red: (f.red != null) ? f.red : 1,
+            green: (f.green != null) ? f.green : 1,
+            blue: (f.blue != null) ? f.blue : 1,
+            alpha: (f.alpha != null) ? f.alpha : 1,
+        }];
+    },
+
+    channelstep: function (f) {
+        f.actions = [{
+            action: 'step-channels',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            red: (f.red != null) ? f.red : 1,
+            green: (f.green != null) ? f.green : 1,
+            blue: (f.blue != null) ? f.blue : 1,
+        }];
+    },
+
+    chroma: function (f) {
+        f.actions = [{
+            action: 'chroma',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            ranges: (f.ranges != null) ? f.ranges : [],
+        }];
+    },
+
+    chromakey: function (f) {
+        f.actions = [{
+            action: 'colors-to-alpha',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            red: (f.red != null) ? f.red : 0,
+            green: (f.green != null) ? f.green : 255,
+            blue: (f.blue != null) ? f.blue : 0,
+            transparentAt: (f.transparentAt != null) ? f.transparentAt : 0,
+            opaqueAt: (f.opaqueAt != null) ? f.opaqueAt : 1,
+        }];
+    },
+
+    compose: function (f) {
+        f.actions = [{
+            action: 'compose',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            lineMix: (f.lineMix != null) ? f.lineMix : '',
+            compose: (f.compose != null) ? f.compose : 'source-over',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+        }];
+    },
+
+    cyan: function (f) {
+        f.actions = [{
+            action: 'average-channels',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            includeGreen: true,
+            includeBlue: true,
+            excludeRed: true,
+        }];
+    },
+
+    flood: function (f) {
+        f.actions = [{
+            action: 'flood',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            red: (f.red != null) ? f.red : 0,
+            green: (f.green != null) ? f.green : 0,
+            blue: (f.blue != null) ? f.blue : 0,
+            alpha: (f.alpha != null) ? f.alpha : 255,
+        }];
+    },
+
+    gaussianBlur: function (f) {
+
+        let action = {
+            action: 'matrix',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            mWidth: 7,
+            mHeight: 7,
+            mX: 3,
+            mY: 3,
+            includeRed: (f.includeRed != null) ? f.includeRed : true,
+            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
+            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
+            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
+            weights: [0.001, 0.004, 0.008, 0.010, 0.008, 0.004, 0.001, 0.004, 0.012, 0.024, 0.030, 0.024, 0.012, 0.004, 0.008, 0.024, 0.047, 0.059, 0.047, 0.024, 0.008, 0.010, 0.030, 0.059, 0.073, 0.059, 0.030, 0.010, 0.008, 0.024, 0.047, 0.059, 0.047, 0.024, 0.008, 0.004, 0.012, 0.024, 0.030, 0.024, 0.012, 0.004, 0.001, 0.004, 0.008, 0.010, 0.008, 0.004, 0.001],
+        };
+
+        let actions = [];
+
+        let passes = (f.passes != null && f.passes.toFixed && !isNaN(f.passes) && f.passes > 0) ? f.passes : 1;
+
+        for (let i = 0; i < passes; i++) {
+
+            actions.push(Object.assign({}, action));
+        }
+
+        f.actions = actions;
+    },
+
+    gray: function (f) {
+        f.actions = [{
+            action: 'average-channels',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            includeRed: true,
+            includeGreen: true,
+            includeBlue: true,
+        }];
+    },
+
+    grayscale: function (f) {
+        f.actions = [{
+            action: 'grayscale',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+        }];
+    },
+
+    green: function (f) {
+        f.actions = [{
+            action: 'average-channels',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            excludeRed: true,
+            excludeBlue: true,
+        }];
+    },
+
+    invert: function (f) {
+        f.actions = [{
+            action: 'invert-channels',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            includeRed: true,
+            includeGreen: true,
+            includeBlue: true,
+        }];
+    },
+
+    magenta: function (f) {
+        f.actions = [{
+            action: 'average-channels',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            includeRed: true,
+            includeBlue: true,
+            excludeGreen: true,
+        }];
+    },
+
+    matrix: function (f) {
+        f.actions = [{
+            action: 'matrix',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            mWidth: 3,
+            mHeight: 3,
+            mX: 1,
+            mY: 1,
+            includeRed: (f.includeRed != null) ? f.includeRed : true,
+            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
+            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
+            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
+            weights: (f.weights != null) ? f.weights : [0,0,0,0,1,0,0,0,0],
+        }];
+    },
+
+    matrix5: function (f) {
+        f.actions = [{
+            action: 'matrix',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            mWidth: 5,
+            mHeight: 5,
+            mX: 2,
+            mY: 2,
+            includeRed: (f.includeRed != null) ? f.includeRed : true,
+            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
+            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
+            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
+            weights: (f.weights != null) ? f.weights : [0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0],
+        }];
+    },
+
+    notblue: function (f) {
+        f.actions = [{
+            action: 'set-channel-to-value',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            channel: 'blue',
+            value: 0,
+        }];
+    },
+
+    notgreen: function (f) {
+        f.actions = [{
+            action: 'set-channel-to-value',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            channel: 'green',
+            value: 0,
+        }];
+    },
+
+    notred: function (f) {
+        f.actions = [{
+            action: 'set-channel-to-value',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            channel: 'red',
+            value: 0,
+        }];
+    },
+
+    offset: function (f) {
+        f.actions = [{
+            action: 'offset',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            offsetX: (f.offsetX != null) ? f.offsetX : 0,
+            offsetY: (f.offsetY != null) ? f.offsetY : 0,
+        }];
+    },
+
+    pixelate: function (f) {
+        f.actions = [{
+            action: 'pixelate',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            tileWidth: (f.tileWidth != null) ? f.tileWidth : 1,
+            tileHeight: (f.tileHeight != null) ? f.tileHeight : 1,
+            offsetX: (f.offsetX != null) ? f.offsetX : 0,
+            offsetY: (f.offsetY != null) ? f.offsetY : 0,
+            includeRed: (f.includeRed != null) ? f.includeRed : true,
+            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
+            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
+            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
+        }];
+    },
+
+    red: function (f) {
+        f.actions = [{
+            action: 'average-channels',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            excludeGreen: true,
+            excludeBlue: true,
+        }];
+    },
+
+    saturation: function (f) {
+        f.actions = [{
+            action: 'saturation',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            level: (f.level != null) ? f.level : 1,
+            includeRed: (f.includeRed != null) ? f.includeRed : true,
+            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
+            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
+        }];
+    },
+
+    sepia: function (f) {
+        f.actions = [{
+            action: 'tint-channels',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            redInRed: 0.393,
+            redInGreen: 0.349,
+            redInBlue: 0.272,
+            greenInRed: 0.769,
+            greenInGreen: 0.686,
+            greenInBlue: 0.534,
+            blueInRed: 0.189,
+            blueInGreen: 0.168,
+            blueInBlue: 0.131,
+        }];
+    },
+
+    threshold: function (f) {
+
+        let lowRed = (f.lowRed != null) ? f.lowRed : 0,
+            lowGreen = (f.lowGreen != null) ? f.lowGreen : 0,
+            lowBlue = (f.lowBlue != null) ? f.lowBlue : 0,
+            highRed = (f.highRed != null) ? f.highRed : 255,
+            highGreen = (f.highGreen != null) ? f.highGreen : 255,
+            highBlue = (f.highBlue != null) ? f.highBlue : 255;
+
+        f.actions = [{
+            action: 'threshold',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            level: (f.level != null) ? f.level : 128,
+            low: [lowRed, lowGreen, lowBlue],
+            high: [highRed, highGreen, highBlue],
+        }];
+    },
+
+    tint: function (f) {
+        f.actions = [{
+            action: 'tint-channels',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            redInRed: (f.redInRed != null) ? f.redInRed : 1,
+            redInGreen: (f.redInGreen != null) ? f.redInGreen : 0,
+            redInBlue: (f.redInBlue != null) ? f.redInBlue : 0,
+            greenInRed: (f.greenInRed != null) ? f.greenInRed : 0,
+            greenInGreen: (f.greenInGreen != null) ? f.greenInGreen : 1,
+            greenInBlue: (f.greenInBlue != null) ? f.greenInBlue : 0,
+            blueInRed: (f.blueInRed != null) ? f.blueInRed : 0,
+            blueInGreen: (f.blueInGreen != null) ? f.blueInGreen : 0,
+            blueInBlue: (f.blueInBlue != null) ? f.blueInBlue : 1,
+        }];
+    },
+
+    userDefined: function (f) {
+        f.actions = [{
+            action: 'user-defined-legacy',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+        }];
+    },
+
+    yellow: function (f) {
+        f.actions = [{
+            action: 'average-channels',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            includeRed: true,
+            includeGreen: true,
+            excludeBlue: true,
+        }];
+    },
+};
 
 
 // #### Prototype functions

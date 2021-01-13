@@ -46,11 +46,7 @@ export default function (P = {}) {
 
             if (Array.isArray(item)) {
 
-                this.filters.forEach(f => this.unsubscribeFromFilter(f));
-
                 this.filters = item;
-
-                this.filters.forEach(f => this.subscribeToFilter(f));
 
                 this.dirtyFilters = true;
                 this.dirtyImageSubscribers = true;
@@ -59,8 +55,6 @@ export default function (P = {}) {
             else if (item.substring) {
                 
                 pushUnique(this.filters, item); 
-
-                this.subscribeToFilter(item);
 
                 this.dirtyFilters = true;
                 this.dirtyImageSubscribers = true;
@@ -86,23 +80,6 @@ export default function (P = {}) {
 
 
 // #### Prototype functions
-
-// `subscribeToFilter` - Internal housekeeping
-    P.subscribeToFilter = function (f) {
-
-        if (f.substring) f = filter[f];
-
-        if (f && f.subscribers) pushUnique(f.subscribers, this.name);
-    };
-
-// `unsubscribeFromFilter` - Internal housekeeping
-    P.unsubscribeFromFilter = function (f) {
-
-        if (f.substring) f = filter[f];
-
-        if (f && f.subscribers) removeItem(f.subscribers, this.name);
-    };
-    
 // `cleanFilters` - Internal housekeeping
     P.cleanFilters = function () {
 
@@ -118,11 +95,15 @@ export default function (P = {}) {
         myfilters.forEach(name => {
 
             myobj = filter[name];
-            order = floor(myobj.order) || 0;
 
-            if (!buckets[order]) buckets[order] = [];
+            if (myobj) {
 
-            buckets[order].push(myobj);
+                order = floor(myobj.order) || 0;
+
+                if (!buckets[order]) buckets[order] = [];
+
+                buckets[order].push(myobj);
+            }
         });
 
         this.currentFilters = buckets.reduce((a, v) => a.concat(v), []);
@@ -136,15 +117,8 @@ export default function (P = {}) {
 
         args.forEach(item => {
 
-            // if (item) {
-
-            //     if (item.substring) pushUnique(this.filters, item);
-            //     else if (item.type === 'Filter') pushUnique(this.filters, item.name);
-            // }
-
             if (item && item.type === 'Filter') item = item.name;
             pushUnique(this.filters, item);
-            this.subscribeToFilter(item);
 
         }, this);
 
@@ -162,15 +136,8 @@ export default function (P = {}) {
 
         args.forEach(item => {
 
-            // if (item) {
-
-            //     if (item.substring) removeItem(this.filters, item);
-            //     else if (item.type === 'Filter') removeItem(this.filters, item.name);
-            // }
-
             if (item && item.type === 'Filter') item = item.name;
             removeItem(this.filters, item);
-            this.unsubscribeFromFilter(item);
 
         }, this);
 
@@ -185,8 +152,6 @@ export default function (P = {}) {
     P.clearFilters = function () {
 
         if (!Array.isArray(this.filters)) this.filters = [];
-
-        this.filters.forEach(f => this.unsubscribeFromFilter(f));
 
         this.filters.length = 0;
 
