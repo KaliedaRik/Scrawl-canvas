@@ -266,7 +266,7 @@ scrawl.makeFilter({
 scrawl.makeFilter({
     name: 'gaussianBlur',
     method: 'gaussianBlur',
-    includeAlpha: true,
+    radius: 6,
     passes: 2,
 });
 

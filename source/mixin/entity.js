@@ -13,6 +13,7 @@
 // #### Imports
 import { λnull, mergeOver, pushUnique, xt, addStrings, isa_obj } from '../core/utilities.js';
 import { currentGroup, scrawlCanvasHold } from '../core/document.js';
+import { asset } from '../core/library.js';
 
 import { makeState } from '../factory/state.js';
 import { requestCell, releaseCell } from '../factory/cell.js';
@@ -621,6 +622,9 @@ export default function (P = {}) {
 
                 myimage = filterEngine.getImageData(0, 0, w, h);
                 worker = requestFilterWorker();
+
+                // NEED TO POPULATE IMAGE FILTER ACTION OBJECTS WITH THEIR ASSET'S IMAGEDATA AT THIS POINT
+                self.preprocessFilters(self.currentFilters);
 
                 // Pass control over to the web worker
                 actionFilterWorker(worker, {

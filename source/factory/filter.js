@@ -47,7 +47,7 @@
 
 
 // #### Imports
-import { constructors, cell, group, entity } from '../core/library.js';
+import { constructors, cell, group, entity, asset } from '../core/library.js';
 import { mergeOver, removeItem, λnull } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
@@ -102,10 +102,19 @@ let defaultAttributes = {
     areaAlphaLevels: null,
 
     compose: 'source-over',
+    blend: 'normal',
     lineIn: '',
     lineOut: '',
     lineMix: '',
     opacity: 1,
+
+    asset: '',
+    width: 1,
+    height: 1,
+    copyWidth: 1,
+    copyHeight: 1,
+    copyX: 0,
+    copyY: 0,
 
     
 // All filters need to set out their __method__. For preset methods, a method string (eg 'grayscale', 'sepia') is sufficient. Bespoke methods require a function
@@ -266,6 +275,7 @@ P.kill = function () {
 let S = P.setters, 
     D = P.deltaSetters;
 
+
 // `set` - Overwrites mixin/base.js function
 P.set = function (items = {}) {
 
@@ -347,7 +357,6 @@ const setActionsArray = {
     },
 
     blur: function (f) {
-
         f.actions = [{
             action: 'blur',
             lineIn: (f.lineIn != null) ? f.lineIn : '',
@@ -361,19 +370,21 @@ const setActionsArray = {
             processVertical: (f.processVertical != null) ? f.processVertical : true,
             radius: (f.radius != null) ? f.radius : 1,
             passes: (f.passes != null) ? f.passes : 1,
+            isGaussian: false,
         }];
     },
 
     brightness: function (f) {
+        let level = (f.level != null) ? f.level : 1;
+
         f.actions = [{
-            action: 'brightness',
+            action: 'modulate-channels',
             lineIn: (f.lineIn != null) ? f.lineIn : '',
             lineOut: (f.lineOut != null) ? f.lineOut : '',
             opacity: (f.opacity != null) ? f.opacity : 1,
-            level: (f.level != null) ? f.level : 1,
-            includeRed: (f.includeRed != null) ? f.includeRed : true,
-            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
-            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
+            red: level,
+            green: level,
+            blue: level,
         }];
     },
 
@@ -462,6 +473,42 @@ const setActionsArray = {
         }];
     },
 
+    edgeDetect: function (f) {
+        f.actions = [{
+            action: 'matrix',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            mWidth: 3,
+            mHeight: 3,
+            mX: 1,
+            mY: 1,
+            includeRed: true,
+            includeGreen: true,
+            includeBlue: true,
+            includeAlpha: false,
+            weights: [0,1,0,1,-4,1,0,1,0],
+        }];
+    },
+
+    emboss: function (f) {
+        f.actions = [{
+            action: 'matrix',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            mWidth: 3,
+            mHeight: 3,
+            mX: 1,
+            mY: 1,
+            includeRed: true,
+            includeGreen: true,
+            includeBlue: true,
+            includeAlpha: false,
+            weights: [-2,-1,0,-1,1,1,0,1,2],
+        }];
+    },
+
     flood: function (f) {
         f.actions = [{
             action: 'flood',
@@ -476,33 +523,21 @@ const setActionsArray = {
     },
 
     gaussianBlur: function (f) {
-
-        let action = {
-            action: 'matrix',
+        f.actions = [{
+            action: 'blur',
             lineIn: (f.lineIn != null) ? f.lineIn : '',
             lineOut: (f.lineOut != null) ? f.lineOut : '',
             opacity: (f.opacity != null) ? f.opacity : 1,
-            mWidth: 7,
-            mHeight: 7,
-            mX: 3,
-            mY: 3,
             includeRed: (f.includeRed != null) ? f.includeRed : true,
             includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
             includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
             includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
-            weights: [0.001, 0.004, 0.008, 0.010, 0.008, 0.004, 0.001, 0.004, 0.012, 0.024, 0.030, 0.024, 0.012, 0.004, 0.008, 0.024, 0.047, 0.059, 0.047, 0.024, 0.008, 0.010, 0.030, 0.059, 0.073, 0.059, 0.030, 0.010, 0.008, 0.024, 0.047, 0.059, 0.047, 0.024, 0.008, 0.004, 0.012, 0.024, 0.030, 0.024, 0.012, 0.004, 0.001, 0.004, 0.008, 0.010, 0.008, 0.004, 0.001],
-        };
-
-        let actions = [];
-
-        let passes = (f.passes != null && f.passes.toFixed && !isNaN(f.passes) && f.passes > 0) ? f.passes : 1;
-
-        for (let i = 0; i < passes; i++) {
-
-            actions.push(Object.assign({}, action));
-        }
-
-        f.actions = actions;
+            processHorizontal: (f.processHorizontal != null) ? f.processHorizontal : true,
+            processVertical: (f.processVertical != null) ? f.processVertical : true,
+            radius: (f.radius != null) ? f.radius : 1,
+            passes: (f.passes != null) ? f.passes : 1,
+            isGaussian: true,
+        }];
     },
 
     gray: function (f) {
@@ -534,6 +569,21 @@ const setActionsArray = {
             opacity: (f.opacity != null) ? f.opacity : 1,
             excludeRed: true,
             excludeBlue: true,
+        }];
+    },
+
+    image: function (f) {
+
+        f.actions = [{
+            action: 'process-image',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            asset: (f.asset != null) ? f.asset : '',
+            width: (f.width != null) ? f.width : 1,
+            height: (f.height != null) ? f.height : 1,
+            copyWidth: (f.copyWidth != null) ? f.copyWidth : 1,
+            copyHeight: (f.copyHeight != null) ? f.copyHeight : 1,
+            copyX: (f.copyX != null) ? f.copyX : 0,
+            copyY: (f.copyY != null) ? f.copyY : 0,
         }];
     },
 
@@ -599,34 +649,34 @@ const setActionsArray = {
 
     notblue: function (f) {
         f.actions = [{
-            action: 'set-channel-to-value',
+            action: 'set-channel-to-level',
             lineIn: (f.lineIn != null) ? f.lineIn : '',
             lineOut: (f.lineOut != null) ? f.lineOut : '',
             opacity: (f.opacity != null) ? f.opacity : 1,
-            channel: 'blue',
-            value: 0,
+            includeBlue: true,
+            level: 0,
         }];
     },
 
     notgreen: function (f) {
         f.actions = [{
-            action: 'set-channel-to-value',
+            action: 'set-channel-to-level',
             lineIn: (f.lineIn != null) ? f.lineIn : '',
             lineOut: (f.lineOut != null) ? f.lineOut : '',
             opacity: (f.opacity != null) ? f.opacity : 1,
-            channel: 'green',
-            value: 0,
+            includeGreen: true,
+            level: 0,
         }];
     },
 
     notred: function (f) {
         f.actions = [{
-            action: 'set-channel-to-value',
+            action: 'set-channel-to-level',
             lineIn: (f.lineIn != null) ? f.lineIn : '',
             lineOut: (f.lineOut != null) ? f.lineOut : '',
             opacity: (f.opacity != null) ? f.opacity : 1,
-            channel: 'red',
-            value: 0,
+            includeRed: true,
+            level: 0,
         }];
     },
 
@@ -670,15 +720,17 @@ const setActionsArray = {
     },
 
     saturation: function (f) {
+        let level = (f.level != null) ? f.level : 1;
+
         f.actions = [{
-            action: 'saturation',
+            action: 'modulate-channels',
             lineIn: (f.lineIn != null) ? f.lineIn : '',
             lineOut: (f.lineOut != null) ? f.lineOut : '',
             opacity: (f.opacity != null) ? f.opacity : 1,
-            level: (f.level != null) ? f.level : 1,
-            includeRed: (f.includeRed != null) ? f.includeRed : true,
-            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
-            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
+            red: level,
+            green: level,
+            blue: level,
+            saturation: true,
         }];
     },
 
@@ -700,8 +752,25 @@ const setActionsArray = {
         }];
     },
 
-    threshold: function (f) {
+    sharpen: function (f) {
+        f.actions = [{
+            action: 'matrix',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            mWidth: 3,
+            mHeight: 3,
+            mX: 1,
+            mY: 1,
+            includeRed: true,
+            includeGreen: true,
+            includeBlue: true,
+            includeAlpha: false,
+            weights: [0,-1,0,-1,5,-1,0,-1,0],
+        }];
+    },
 
+    threshold: function (f) {
         let lowRed = (f.lowRed != null) ? f.lowRed : 0,
             lowGreen = (f.lowGreen != null) ? f.lowGreen : 0,
             lowBlue = (f.lowBlue != null) ? f.lowBlue : 0,
@@ -709,14 +778,17 @@ const setActionsArray = {
             highGreen = (f.highGreen != null) ? f.highGreen : 255,
             highBlue = (f.highBlue != null) ? f.highBlue : 255;
 
+        let low = (f.low != null) ? f.low : [lowRed, lowGreen, lowBlue],
+            high = (f.high != null) ? f.high : [highRed, highGreen, highBlue];
+
         f.actions = [{
             action: 'threshold',
             lineIn: (f.lineIn != null) ? f.lineIn : '',
             lineOut: (f.lineOut != null) ? f.lineOut : '',
             opacity: (f.opacity != null) ? f.opacity : 1,
             level: (f.level != null) ? f.level : 128,
-            low: [lowRed, lowGreen, lowBlue],
-            high: [highRed, highGreen, highBlue],
+            low: low,
+            high: high,
         }];
     },
 

@@ -1099,6 +1099,9 @@ P.applyFilters = function () {
         image = engine.getImageData(0, 0, self.currentDimensions[0], self.currentDimensions[1]);
         worker = requestFilterWorker();
 
+        // NEED TO POPULATE IMAGE FILTER ACTION OBJECTS WITH THEIR ASSET'S IMAGEDATA AT THIS POINT
+        self.preprocessFilters(self.currentFilters);
+
         actionFilterWorker(worker, {
             image: image,
             filters: self.currentFilters

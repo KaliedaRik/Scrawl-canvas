@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Filters 015</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    .controls {
+      grid-template-columns: 1fr 2fr 1fr 2fr;
+    }
+    img {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 015</h1>
+  <h2>Using assets in the filter stream; filter compositing</h2>
+
+  <div class="controls">
+
+    <div class="yellow label">Source</div>
+    <div class="yellow">
+      <select class="controlItem" id="source">
+        <option value="source">source</option>
+        <option value="source-alpha">source-alpha</option>
+        <option value="star">star</option>
+        <option value="wheel">wheel</option>
+        <option value="flower">flower</option>
+      </select>
+    </div>
+
+    <div class="yellow label">Destination</div>
+    <div class="yellow">
+      <select class="controlItem" id="destination">
+        <option value="source">source</option>
+        <option value="source-alpha">source-alpha</option>
+        <option value="star">star</option>
+        <option value="wheel">wheel</option>
+        <option value="flower">flower</option>
+      </select>
+    </div>
+
+    <div class="yellow label">Composite operation</div>
+    <div class="yellow">
+      <select class="controlItem" id="composite">
+        <option value="source-over">source-over</option>
+        <option value="source-in">source-in</option>
+        <option value="source-out">source-out</option>
+        <option value="source-atop">source-atop</option>
+        <option value="source-only">source-only</option>
+        <option value="destination-over">destination-over</option>
+        <option value="destination-in">destination-in</option>
+        <option value="destination-out">destination-out</option>
+        <option value="destination-atop">destination-atop</option>
+        <option value="destination-only">destination-only</option>
+        <option value="xor">xor</option>
+        <option value="clear">clear</option>
+        <option value="lighter">lighter</option>
+      </select>
+    </div>
+
+    <div class="lavender label">Opacity</div>
+    <div class="lavender"><input class="controlItem" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
+
+  </div>
+
+  <canvas id="mycanvas" width="400" height="400"></canvas>
+
+  <img id="iris" src="img/iris.png" class="flowers" />
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+
+    <ul>
+      <li>Create a test Picture entity</li>
+      <li>Create an areaAlpha filter and apply it to the test entity</li>
+      <li>Update filter attributes and observe the effect they have on the entity</li>
+    </ul>
+
+    <p><a href="../docs/demo/filters-015.html">Annotated code</a></p>
+  </div>
+
+  <script src="filters-015.js" type="module"></script>
+
+</body>
+
+</html>

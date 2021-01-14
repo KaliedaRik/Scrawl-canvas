@@ -8,8 +8,9 @@
 
 
 // #### Imports
-import { filter } from '../core/library.js';
+import { filter, asset } from '../core/library.js';
 import { mergeOver, pushUnique, removeItem } from '../core/utilities.js';
+import { requestCell, releaseCell } from '../factory/cell.js';
 
 
 // #### Export function
@@ -145,6 +146,107 @@ export default function (P = {}) {
         this.dirtyImageSubscribers = true;
         
         return this;
+    };
+
+    P.preprocessFilters = function (filters) {
+
+        filters.forEach(filter => {
+
+            filter.actions.forEach(obj => {
+
+                if (obj.action == 'process-image') {
+
+                    let flag = true;
+
+                    let img = asset[obj.asset];
+
+                    if (img) {
+
+                        let width = img.sourceNaturalWidth || img.sourceNaturalDimensions[0] || img.currentDimensions[0],
+                            height = img.sourceNaturalHeight || img.sourceNaturalDimensions[1] || img.currentDimensions[1];
+
+                        if (width && height) {
+
+                            flag = false;
+
+                            let copyX = obj.copyX || 0,
+                                copyY = obj.copyY || 0,
+                                copyWidth = obj.copyWidth || 1,
+                                copyHeight = obj.copyHeight || 1,
+                                destWidth = obj.width || 1,
+                                destHeight = obj.height || 1;
+
+                            if (copyX.substring) copyX = (parseFloat(copyX) / 100) * width;
+                            if (copyY.substring) copyY = (parseFloat(copyY) / 100) * height;
+                            if (copyWidth.substring) copyWidth = (parseFloat(copyWidth) / 100) * width;
+                            if (copyHeight.substring) copyHeight = (parseFloat(copyHeight) / 100) * height;
+
+                            copyX = Math.abs(copyX);
+                            copyY = Math.abs(copyY);
+                            copyWidth = Math.abs(copyWidth);
+                            copyHeight = Math.abs(copyHeight);
+
+                            if (copyX > width) {
+                                copyX = width - 2;
+                                copyWidth = 1;
+                            }
+
+                            if (copyY > height) {
+                                copyY = height - 2;
+                                copyHeight = 1;
+                            }
+
+                            if (copyWidth > width) {
+                                copyWidth = width - 1;
+                                copyX = 0;
+                            }
+
+                            if (copyHeight > height) {
+                                copyHeight = height - 1;
+                                copyY = 0;
+                            }
+
+
+                            if (copyX + copyWidth > width) {
+                                copyX = width - copyWidth - 1;
+                            }
+
+                            if (copyY + copyHeight > height) {
+                                copyY = height - copyHeight - 1;
+                            }
+
+                            let cell = requestCell(),
+                                engine = cell.engine,
+                                canvas = cell.element;
+
+                            canvas.width = width;
+                            canvas.height = height;
+
+                            engine.setTransform(1, 0, 0, 1, 0, 0);
+                            engine.globalCompositeOperation = 'source-over';
+                            engine.globalAlpha = 1;
+
+                            let src = img.source || img.element;
+
+                            engine.drawImage(src, copyX, copyY, copyWidth, copyHeight, 0, 0, width, height);
+
+                            obj.assetData = engine.getImageData(0, 0, width, height);
+
+                            releaseCell(cell);
+                        }
+                    }
+
+                    if (flag) {
+
+                        obj.assetData = {
+                            width: 1,
+                            height: 1,
+                            data: [0, 0, 0, 0],
+                        }
+                    }
+                }
+            });
+        });
     };
 
 
