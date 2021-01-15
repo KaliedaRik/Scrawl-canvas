@@ -219,8 +219,8 @@ export default function (P = {}) {
                                 engine = cell.engine,
                                 canvas = cell.element;
 
-                            canvas.width = width;
-                            canvas.height = height;
+                            canvas.width = destWidth;
+                            canvas.height = destHeight;
 
                             engine.setTransform(1, 0, 0, 1, 0, 0);
                             engine.globalCompositeOperation = 'source-over';
@@ -228,9 +228,9 @@ export default function (P = {}) {
 
                             let src = img.source || img.element;
 
-                            engine.drawImage(src, copyX, copyY, copyWidth, copyHeight, 0, 0, width, height);
+                            engine.drawImage(src, copyX, copyY, copyWidth, copyHeight, 0, 0, destWidth, destHeight);
 
-                            obj.assetData = engine.getImageData(0, 0, width, height);
+                            obj.assetData = engine.getImageData(0, 0, destWidth, destHeight);
 
                             releaseCell(cell);
                         }

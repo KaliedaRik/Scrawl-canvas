@@ -26,6 +26,7 @@ let blurFilter = scrawl.makeFilter({
     radius: 10,
     includeAlpha: false,
     passes: 1,
+    step: 1,
 });
 
 
@@ -62,6 +63,7 @@ let report = function () {
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
     radius: ${blurFilter.radius}
+    step: ${blurFilter.step}
     passes: ${blurFilter.passes}`;
     };
 }();
@@ -92,6 +94,7 @@ scrawl.observeAndUpdate({
 
         radius: ['radius', 'round'],
         passes: ['passes', 'round'],
+        step: ['step', 'round'],
 
         includeRed: ['includeRed', 'boolean'],
         includeGreen: ['includeGreen', 'boolean'],
@@ -108,6 +111,7 @@ scrawl.observeAndUpdate({
 // Setup form
 document.querySelector('#radius').value = 10;
 document.querySelector('#passes').value = 1;
+document.querySelector('#step').value = 1;
 document.querySelector('#includeRed').options.selectedIndex = 1;
 document.querySelector('#includeGreen').options.selectedIndex = 1;
 document.querySelector('#includeBlue').options.selectedIndex = 1;

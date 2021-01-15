@@ -180,6 +180,7 @@ let defaultAttributes = {
     passes: 1,
     processVertical: true,
     processHorizontal: true,
+    step: 1,
 
 
 // The `matrix` method requires a weights attribute - an array of 9 numbers (also known as a __kernel__) in the following format:
@@ -329,6 +330,21 @@ P.setDelta = function (items = {}) {
 
 const setActionsArray = {
 
+    alphaToChannels: function (f) {
+        f.actions = [{
+            action: 'alpha-to-channels',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            includeRed: (f.includeRed != null) ? f.includeRed : true,
+            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
+            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
+            excludeRed: (f.excludeRed != null) ? f.excludeRed : true,
+            excludeGreen: (f.excludeGreen != null) ? f.excludeGreen : true,
+            excludeBlue: (f.excludeBlue != null) ? f.excludeBlue : true,
+        }];
+    },
+
     areaAlpha: function (f) {
         f.actions = [{
             action: 'area-alpha',
@@ -342,6 +358,19 @@ const setActionsArray = {
             gutterWidth: (f.gutterWidth != null) ? f.gutterWidth : 1,
             gutterHeight: (f.gutterHeight != null) ? f.gutterHeight : 1,
             areaAlphaLevels: (f.areaAlphaLevels != null) ? f.areaAlphaLevels : [255,0,0,0],
+        }];
+    },
+
+    blend: function (f) {
+        f.actions = [{
+            action: 'blend',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            lineMix: (f.lineMix != null) ? f.lineMix : '',
+            blend: (f.blend != null) ? f.blend : 'normal',
+            offsetX: (f.offsetX != null) ? f.offsetX : 0,
+            offsetY: (f.offsetY != null) ? f.offsetY : 0,
+            opacity: (f.opacity != null) ? f.opacity : 1,
         }];
     },
 
@@ -370,7 +399,7 @@ const setActionsArray = {
             processVertical: (f.processVertical != null) ? f.processVertical : true,
             radius: (f.radius != null) ? f.radius : 1,
             passes: (f.passes != null) ? f.passes : 1,
-            isGaussian: false,
+            step: (f.step != null) ? f.step : 1,
         }];
     },
 
@@ -426,6 +455,18 @@ const setActionsArray = {
         }];
     },
 
+    channelsToAlpha: function (f) {
+        f.actions = [{
+            action: 'channels-to-alpha',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            includeRed: (f.includeRed != null) ? f.includeRed : true,
+            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
+            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
+        }];
+    },
+
     chroma: function (f) {
         f.actions = [{
             action: 'chroma',
@@ -457,6 +498,8 @@ const setActionsArray = {
             lineOut: (f.lineOut != null) ? f.lineOut : '',
             lineMix: (f.lineMix != null) ? f.lineMix : '',
             compose: (f.compose != null) ? f.compose : 'source-over',
+            offsetX: (f.offsetX != null) ? f.offsetX : 0,
+            offsetY: (f.offsetY != null) ? f.offsetY : 0,
             opacity: (f.opacity != null) ? f.opacity : 1,
         }];
     },
@@ -479,10 +522,10 @@ const setActionsArray = {
             lineIn: (f.lineIn != null) ? f.lineIn : '',
             lineOut: (f.lineOut != null) ? f.lineOut : '',
             opacity: (f.opacity != null) ? f.opacity : 1,
-            mWidth: 3,
-            mHeight: 3,
-            mX: 1,
-            mY: 1,
+            width: 3,
+            height: 3,
+            offsetX: 1,
+            offsetY: 1,
             includeRed: true,
             includeGreen: true,
             includeBlue: true,
@@ -497,10 +540,10 @@ const setActionsArray = {
             lineIn: (f.lineIn != null) ? f.lineIn : '',
             lineOut: (f.lineOut != null) ? f.lineOut : '',
             opacity: (f.opacity != null) ? f.opacity : 1,
-            mWidth: 3,
-            mHeight: 3,
-            mX: 1,
-            mY: 1,
+            width: 3,
+            height: 3,
+            offsetX: 1,
+            offsetY: 1,
             includeRed: true,
             includeGreen: true,
             includeBlue: true,
@@ -519,24 +562,6 @@ const setActionsArray = {
             green: (f.green != null) ? f.green : 0,
             blue: (f.blue != null) ? f.blue : 0,
             alpha: (f.alpha != null) ? f.alpha : 255,
-        }];
-    },
-
-    gaussianBlur: function (f) {
-        f.actions = [{
-            action: 'blur',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            includeRed: (f.includeRed != null) ? f.includeRed : true,
-            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
-            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
-            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
-            processHorizontal: (f.processHorizontal != null) ? f.processHorizontal : true,
-            processVertical: (f.processVertical != null) ? f.processVertical : true,
-            radius: (f.radius != null) ? f.radius : 1,
-            passes: (f.passes != null) ? f.passes : 1,
-            isGaussian: true,
         }];
     },
 
@@ -617,10 +642,10 @@ const setActionsArray = {
             lineIn: (f.lineIn != null) ? f.lineIn : '',
             lineOut: (f.lineOut != null) ? f.lineOut : '',
             opacity: (f.opacity != null) ? f.opacity : 1,
-            mWidth: 3,
-            mHeight: 3,
-            mX: 1,
-            mY: 1,
+            width: 3,
+            height: 3,
+            offsetX: 1,
+            offsetY: 1,
             includeRed: (f.includeRed != null) ? f.includeRed : true,
             includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
             includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
@@ -635,10 +660,10 @@ const setActionsArray = {
             lineIn: (f.lineIn != null) ? f.lineIn : '',
             lineOut: (f.lineOut != null) ? f.lineOut : '',
             opacity: (f.opacity != null) ? f.opacity : 1,
-            mWidth: 5,
-            mHeight: 5,
-            mX: 2,
-            mY: 2,
+            width: 5,
+            height: 5,
+            offsetX: 2,
+            offsetY: 2,
             includeRed: (f.includeRed != null) ? f.includeRed : true,
             includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
             includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
@@ -758,10 +783,10 @@ const setActionsArray = {
             lineIn: (f.lineIn != null) ? f.lineIn : '',
             lineOut: (f.lineOut != null) ? f.lineOut : '',
             opacity: (f.opacity != null) ? f.opacity : 1,
-            mWidth: 3,
-            mHeight: 3,
-            mX: 1,
-            mY: 1,
+            width: 3,
+            height: 3,
+            offsetX: 1,
+            offsetY: 1,
             includeRed: true,
             includeGreen: true,
             includeBlue: true,

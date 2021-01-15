@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Demo Filters 015</title>
+  <title>Demo Filters 016</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
@@ -19,12 +19,12 @@
 </head>
 
 <body>
-  <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 015</h1>
-  <h2>Filter blend operation</h2>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 016</h1>
+  <h2>Using assets in the filter stream; filter compositing</h2>
 
   <div class="controls">
 
-    <div class="yellow label">Source</div>
+    <div class="yellow label">Blend source</div>
     <div class="yellow">
       <select class="controlItem" id="source">
         <option value="source">source</option>
@@ -35,7 +35,7 @@
       </select>
     </div>
 
-    <div class="yellow label">Destination</div>
+    <div class="yellow label">Blend destination</div>
     <div class="yellow">
       <select class="controlItem" id="destination">
         <option value="source">source</option>
@@ -46,21 +46,26 @@
       </select>
     </div>
 
-    <div class="yellow label">Composite operation</div>
+    <div class="yellow label">Blend operation</div>
     <div class="yellow">
-      <select class="controlItem" id="composite">
-        <option value="source-over">source-over</option>
-        <option value="source-in">source-in</option>
-        <option value="source-out">source-out</option>
-        <option value="source-atop">source-atop</option>
-        <option value="source-only">source-only</option>
-        <option value="destination-over">destination-over</option>
-        <option value="destination-in">destination-in</option>
-        <option value="destination-out">destination-out</option>
-        <option value="destination-atop">destination-atop</option>
-        <option value="destination-only">destination-only</option>
-        <option value="xor">xor</option>
-        <option value="clear">clear</option>
+      <select class="controlItem" id="blend">
+        <option value="normal">normal</option>
+        <option value="color-burn">color-burn</option>
+        <option value="color-dodge">color-dodge</option>
+        <option value="darken">darken</option>
+        <option value="difference">difference</option>
+        <option value="exclusion">exclusion</option>
+        <option value="hard-light">hard-light</option>
+        <option value="lighten">lighten</option>
+        <option value="lighter">lighter</option>
+        <option value="multiply">multiply</option>
+        <option value="overlay">overlay</option>
+        <option value="screen">screen</option>
+        <option value="soft-light">soft-light</option>
+        <option value="color">color</option>
+        <option value="hue">hue</option>
+        <option value="luminosity">luminosity</option>
+        <option value="saturation">saturation</option>
       </select>
     </div>
 
@@ -90,10 +95,10 @@
       <li>Update filter attributes and observe the effect they have on the entity</li>
     </ul>
 
-    <p><a href="../docs/demo/filters-015.html">Annotated code</a></p>
+    <p><a href="../docs/demo/filters-016.html">Annotated code</a></p>
   </div>
 
-  <script src="filters-015.js" type="module"></script>
+  <script src="filters-016.js" type="module"></script>
 
 </body>
 

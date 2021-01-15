@@ -1,7 +1,7 @@
-// # Demo Filters 015 
-// Using assets in the filter stream; filter compositing
+// # Demo Filters 016 
+// Filter blend operation
 
-// [Run code](../../demo/filters-015.html)
+// [Run code](../../demo/filters-016.html)
 import scrawl from '../source/scrawl.js';
 
 // #### Scene setup
@@ -118,18 +118,19 @@ scrawl.makeFilter({
 let composeFilter = scrawl.makeFilter({
 
     name: 'block-filter',
-    method: 'compose',
+    method: 'blend',
 
-    lineIn: 'star',
-    lineMix: 'source',
+    lineIn: 'source',
+    lineMix: 'star',
 
     offsetX: 30,
     offsetY: 30,
 
-    compose: 'source-over',
+    compose: 'normal',
 });
 
 // Display the filter in a Block entity
+
 scrawl.makeGradient({
     name: 'linear',
     endX: '100%',
@@ -204,7 +205,7 @@ scrawl.observeAndUpdate({
 
         source: ['lineIn', 'raw'],
         destination: ['lineMix', 'raw'],
-        composite: ['compose', 'raw'],
+        blend: ['blend', 'raw'],
         opacity: ['opacity', 'float'],
         'offset-x': ['offsetX', 'round'],
         'offset-y': ['offsetY', 'round'],
@@ -212,9 +213,9 @@ scrawl.observeAndUpdate({
 });
 
 // Setup form
-document.querySelector('#source').options.selectedIndex = 2;
-document.querySelector('#destination').options.selectedIndex = 0;
-document.querySelector('#composite').options.selectedIndex = 0;
+document.querySelector('#source').options.selectedIndex = 0;
+document.querySelector('#destination').options.selectedIndex = 2;
+document.querySelector('#blend').options.selectedIndex = 0;
 document.querySelector('#opacity').value = 1;
 document.querySelector('#offset-x').value = 30;
 document.querySelector('#offset-y').value = 30;
