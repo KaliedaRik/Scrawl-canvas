@@ -262,14 +262,6 @@ scrawl.makeFilter({
     passes: 2,
 });
 
-// __GaussianBlur__ filter
-scrawl.makeFilter({
-    name: 'gaussianBlur',
-    method: 'gaussianBlur',
-    radius: 6,
-    passes: 2,
-});
-
 // __AreaAlpha__ filter
 scrawl.makeFilter({
     name: 'areaAlpha',
@@ -314,6 +306,63 @@ scrawl.makeFilter({
     blue: 0,
     opaqueAt: 0.7,
     transparentAt: 0.5,
+});
+
+scrawl.makeFilter({
+    name: 'dropShadow',
+    actions: [
+        {
+            action: 'blur',
+            lineIn: 'source-alpha',
+            lineOut: 'shadow',
+            radius: 4, 
+            includeAlpha: true, 
+        },
+        {
+            action: 'compose',
+            lineIn: 'source',
+            lineMix: 'shadow',
+            offsetX: 6,
+            offsetY: 6,
+        }
+    ],
+});
+
+scrawl.makeFilter({
+    name: 'redBorder',
+    actions: [
+        {
+            action: 'blur',
+            lineIn: 'source-alpha',
+            lineOut: 'shadow',
+            radius: 6, 
+            includeAlpha: true, 
+        },
+        {
+            action: 'binary',
+            lineIn: 'shadow',
+            lineOut: 'shadow',
+            alpha: 1, 
+        },
+        {
+            action: 'flood',
+            lineIn: 'shadow',
+            lineOut: 'red-flood',
+            red: 255,
+        },
+        {
+            action: 'compose',
+            lineIn: 'shadow',
+            lineMix: 'red-flood',
+            lineOut: 'colorized',
+            compose: 'destination-in',
+        },
+        {
+            action: 'compose',
+            lineIn: 'source',
+            lineMix: 'colorized',
+        }
+    ],
 });
 
 

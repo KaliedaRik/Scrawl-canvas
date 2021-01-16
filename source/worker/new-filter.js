@@ -94,24 +94,6 @@ const knit = function () {
 // #### Messaging and error handling
 onmessage = function (msg) {
 
-/*
-msg contains a data attribute, representing the message packet, with the following structure:
-
-{
-    image: {
-        width: Number
-        height: Number
-        data: []
-    },
-    filters: [] - Array
-}
-
-We need to amend the msg.img.data Array in line with the requirements set out in the filters Array and return the entire packet.
-
-We need to respect existing filter requests, while converting them to use the new ways
-
-*/
-
     packet = msg.data;
     packetFiltersArray = packet.filters;
 
@@ -476,7 +458,6 @@ const checkChannelLevelsParameters = function (f) {
 
 const cacheOutput = function (name, obj, caller) {
 
-    if (cache[name]) throw new Error('Duplicate name encountered when trying to cache output from', caller);
     cache[name] = obj;
 };
 
@@ -632,7 +613,15 @@ const theBigActionsObject = {
 
         let len = input.r.length;
 
-        const {opacity, includeRed, includeGreen, includeBlue, excludeRed, excludeGreen, excludeBlue, lineOut} = requirements;
+        let {opacity, includeRed, includeGreen, includeBlue, excludeRed, excludeGreen, excludeBlue, lineOut} = requirements;
+
+        if (null == opacity) opacity = 1;
+        if (null == includeRed) includeRed = true;
+        if (null == includeGreen) includeGreen = true;
+        if (null == includeBlue) includeBlue = true;
+        if (null == excludeRed) excludeRed = true;
+        if (null == excludeGreen) excludeGreen = true;
+        if (null == excludeBlue) excludeBlue = true;
 
         const {r:inR, g:inG, b:inB, a:inA} = input;
         const {r:outR, g:outG, b:outB, a:outA} = output;
@@ -656,6 +645,15 @@ const theBigActionsObject = {
         let len = input.r.length;
 
         let {opacity, tileWidth, tileHeight, offsetX, offsetY, gutterWidth, gutterHeight, areaAlphaLevels, lineOut} = requirements;
+
+        if (null == opacity) opacity = 1;
+        if (null == tileWidth) tileWidth = 1;
+        if (null == tileHeight) tileHeight = 1;
+        if (null == offsetX) offsetX = 0;
+        if (null == offsetY) offsetY = 0;
+        if (null == gutterWidth) gutterWidth = 1;
+        if (null == gutterHeight) gutterHeight = 1;
+        if (null == areaAlphaLevels) areaAlphaLevels = [255,0,0,0];
 
         let tiles = buildAlphaTileSets(tileWidth, tileHeight, gutterWidth, gutterHeight, offsetX, offsetY, areaAlphaLevels);
 
@@ -688,7 +686,15 @@ const theBigActionsObject = {
 
         let len = input.r.length;
 
-        const {opacity, includeRed, includeGreen, includeBlue, excludeRed, excludeGreen, excludeBlue, lineOut} = requirements;
+        let {opacity, includeRed, includeGreen, includeBlue, excludeRed, excludeGreen, excludeBlue, lineOut} = requirements;
+
+        if (null == opacity) opacity = 1;
+        if (null == includeRed) includeRed = true;
+        if (null == includeGreen) includeGreen = true;
+        if (null == includeBlue) includeBlue = true;
+        if (null == excludeRed) excludeRed = false;
+        if (null == excludeGreen) excludeGreen = false;
+        if (null == excludeBlue) excludeBlue = false;
 
         let divisor = 0;
         if (includeRed) divisor++;
@@ -737,13 +743,54 @@ const theBigActionsObject = {
         else processResults(work, output, opacity);
     },
 
+    'binary': function (requirements) {
+
+        let [input, output] = getInputAndOutputChannels(requirements);
+
+        let len = input.r.length;
+
+        let {opacity, red, green, blue, alpha, lineOut} = requirements;
+
+        if (null == opacity) opacity = 1;
+        if (null == red) red = 0;
+        if (null == green) green = 0;
+        if (null == blue) blue = 0;
+        if (null == alpha) alpha = 0;
+
+        const {r:inR, g:inG, b:inB, a:inA} = input;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
+
+        for (let i = 0; i < len; i++) {
+
+            if (red) outR[i] = (inR[i] > red) ? 255 : 0;
+            else outR[i] = inR[i];
+
+            if (green) outG[i] = (inG[i] > green) ? 255 : 0;
+            else outG[i] = inG[i];
+
+            if (blue) outB[i] = (inB[i] > blue) ? 255 : 0;
+            else outB[i] = inB[i];
+
+            if (alpha) outA[i] = (inA[i] > alpha) ? 255 : 0;
+            else outA[i] = inA[i];
+        }
+
+        if (lineOut) processResults(output, work, 1 - opacity);
+        else processResults(work, output, opacity);
+    },
+
     'blend': function (requirements) {
 
         let [input, output, mix] = getInputAndOutputChannels(requirements);
 
         let len = output.r.length;
 
-        const {opacity, blend, offsetX, offsetY, lineOut} = requirements;
+        let {opacity, blend, offsetX, offsetY, lineOut} = requirements;
+
+        if (null == opacity) opacity = 1;
+        if (null == blend) blend = '';
+        if (null == offsetX) offsetX = 0;
+        if (null == offsetY) offsetY = 0;
 
         const {r:inR, g:inG, b:inB, a:inA} = input;
         const {r:outR, g:outG, b:outB, a:outA} = output;
@@ -790,68 +837,7 @@ const theBigActionsObject = {
 
         const alphaCalc = (dinA, dmixA) => (dinA + (dmixA * (1 - dinA))) * 255;
 
-/*        // Lum(C) = 0.3 x Cred + 0.59 x Cgreen + 0.11 x Cblue
-        const getLuminosity = (r, g, b) => (0.3 * r) + (0.59 * g) + (0.11 * b);
-
-        // SetLum(C, l)
-        //     d = l - Lum(C)
-        //     Cred = Cred + d
-        //     Cgreen = Cgreen + d
-        //     Cblue = Cblue + d
-        //     return ClipColor(C)
-        const setLuminosity = (r, g, b, l) => {
-
-            let d = l - getLuminosity(r, g, b);
-
-            r += d;
-            g += d;
-            b += d;
-
-            return clipColor(r, g, b);
-        };
-
-        // ClipColor(C)
-        //     L = Lum(C)
-        //     n = min(Cred, Cgreen, Cblue)
-        //     x = max(Cred, Cgreen, Cblue)
-        //     if(n < 0)
-        //         C = L + (((C - L) * L) / (L - n))
-                          
-        //     if(x > 1)
-        //         C = L + (((C - L) * (1 - L)) / (x - L))
-            
-        //     return C
-        const clipColor = (r, g, b) => {
-
-            let l = getLuminosity(r, g, b);
-
-            let n = Math.min(r, g, b),
-                x = Math.max(r, g, b);
-
-            if (n < 0) {
-                r = l + (((r - l) * l) / (l - n));
-                g = l + (((g - l) * l) / (l - n));
-                b = l + (((b - l) * l) / (l - n));
-            }
-
-            if (x > 1) {
-                r = l + (((r - l) * (1 - l)) / (x - l));
-                g = l + (((g - l) * (1 - l)) / (x - l));
-                b = l + (((b - l) * (1 - l)) / (x - l));
-            }
-
-            return [r, g, b];
-        }
-
-        // Sat(C) = max(Cred, Cgreen, Cblue) - min(Cred, Cgreen, Cblue)
-        const getSaturation = (r, g, b) => Math.max(r, g, b) - Math.min(r, g, b);
-*/
-
         const getHSLfromRGB = function (dr, dg, db) {
-
-            // let dr = r / 255,
-            //     dg = g / 255,
-            //     db = b / 255;
 
             let minColor = Math.min(dr, dg, db),
                 maxColor = Math.max(dr, dg, db);
@@ -1355,6 +1341,17 @@ const theBigActionsObject = {
 
         let {opacity, radius, passes, processVertical, processHorizontal, includeRed, includeGreen, includeBlue, includeAlpha, step, lineOut} = requirements;
 
+        if (null == opacity) opacity = 1;
+        if (null == radius) radius = 0;
+        if (null == passes) passes = 1;
+        if (null == processVertical) processVertical = true;
+        if (null == processHorizontal) processHorizontal = true;
+        if (null == includeRed) includeRed = true;
+        if (null == includeGreen) includeGreen = true;
+        if (null == includeBlue) includeBlue = true;
+        if (null == includeAlpha) includeAlpha = false;
+        if (null == step) step = 1;
+
         let horizontalBlurGrid, verticalBlurGrid;
 
         // Any required precalculations
@@ -1414,7 +1411,7 @@ const theBigActionsObject = {
 
                     for (let k = 0; k < len; k++) {
 
-                        if (holdA[k]) {
+                        if (includeAlpha || holdA[k]) {
 
                             outR[k] = getValue(includeRed, horizontalBlurGrid, k, holdR, holdA);
                             outG[k] = getValue(includeGreen, horizontalBlurGrid, k, holdG, holdA);
@@ -1429,7 +1426,7 @@ const theBigActionsObject = {
 
                     for (let k = 0; k < len; k++) {
 
-                        if (holdA[k]) {
+                        if (includeAlpha || holdA[k]) {
 
                             outR[k] = getValue(includeRed, verticalBlurGrid, k, holdR, holdA);
                             outG[k] = getValue(includeGreen, verticalBlurGrid, k, holdG, holdA);
@@ -1451,7 +1448,12 @@ const theBigActionsObject = {
 
         let len = input.r.length;
 
-        const {opacity, includeRed, includeGreen, includeBlue, lineOut} = requirements;
+        let {opacity, includeRed, includeGreen, includeBlue, lineOut} = requirements;
+
+        if (null == opacity) opacity = 1;
+        if (null == includeRed) includeRed = true;
+        if (null == includeGreen) includeGreen = true;
+        if (null == includeBlue) includeBlue = true;
 
         let divisor = 0;
         if (includeRed) divisor++;
@@ -1491,7 +1493,10 @@ const theBigActionsObject = {
 
         let len = input.r.length;
 
-        const {opacity, ranges, lineOut} = requirements;
+        let {opacity, ranges, lineOut} = requirements;
+
+        if (null == opacity) opacity = 1;
+        if (null == ranges) ranges = [];
 
         const {r:inR, g:inG, b:inB, a:inA} = input;
         const {r:outR, g:outG, b:outB, a:outA} = output;
@@ -1532,7 +1537,14 @@ const theBigActionsObject = {
 
         let len = input.r.length;
 
-        const {opacity, red, green, blue, opaqueAt, transparentAt, lineOut} = requirements;
+        let {opacity, red, green, blue, opaqueAt, transparentAt, lineOut} = requirements;
+
+        if (null == opacity) opacity = 1;
+        if (null == red) red = 0;
+        if (null == green) green = 255;
+        if (null == blue) blue = 0;
+        if (null == opaqueAt) opaqueAt = 1;
+        if (null == transparentAt) transparentAt = 0;
 
         const maxDiff = Math.max(((red + green + blue) / 3), (((255 - red) + (255 - green) + (255 - blue)) / 3)),
             transparent = transparentAt * maxDiff,
@@ -1568,7 +1580,12 @@ const theBigActionsObject = {
 
         let len = output.r.length;
 
-        const {opacity, compose, offsetX, offsetY, lineOut} = requirements;
+        let {opacity, compose, offsetX, offsetY, lineOut} = requirements;
+
+        if (null == opacity) opacity = 1;
+        if (null == compose) compose = '';
+        if (null == offsetX) offsetX = 0;
+        if (null == offsetY) offsetY = 0;
 
         const {r:inR, g:inG, b:inB, a:inA} = input;
         const {r:outR, g:outG, b:outB, a:outA} = output;
@@ -1823,12 +1840,13 @@ const theBigActionsObject = {
         let len = input.r.length,
             floor = Math.floor;
 
-        const {opacity, red, green, blue, alpha, lineOut} = requirements;
+        let {opacity, red, green, blue, alpha, lineOut} = requirements;
 
-        if (red == null) red = 0;
-        if (green == null) green = 0;
-        if (blue == null) blue = 0;
-        if (alpha == null) alpha = 255;
+        if (null == opacity) opacity = 1;
+        if (null == red) red = 0;
+        if (null == green) green = 0;
+        if (null == blue) blue = 0;
+        if (null == alpha) alpha = 255;
 
         const {r:outR, g:outG, b:outB, a:outA} = output;
 
@@ -1847,7 +1865,9 @@ const theBigActionsObject = {
 
         let len = input.r.length;
 
-        const {opacity, lineOut} = requirements;
+        let {opacity, lineOut} = requirements;
+
+        if (null == opacity) opacity = 1;
 
         const {r:inR, g:inG, b:inB, a:inA} = input;
         const {r:outR, g:outG, b:outB, a:outA} = output;
@@ -1872,7 +1892,13 @@ const theBigActionsObject = {
 
         let len = input.r.length;
 
-        const {opacity, includeRed, includeGreen, includeBlue, includeAlpha, lineOut} = requirements;
+        let {opacity, includeRed, includeGreen, includeBlue, includeAlpha, lineOut} = requirements;
+
+        if (null == opacity) opacity = 1;
+        if (null == includeRed) includeRed = true;
+        if (null == includeGreen) includeGreen = true;
+        if (null == includeBlue) includeBlue = true;
+        if (null == includeAlpha) includeAlpha = false;
 
         const {r:inR, g:inG, b:inB, a:inA} = input;
         const {r:outR, g:outG, b:outB, a:outA} = output;
@@ -1907,7 +1933,13 @@ const theBigActionsObject = {
 
         let len = input.r.length;
 
-        const {opacity, red, green, blue, alpha, lineOut} = requirements;
+        let {opacity, red, green, blue, alpha, lineOut} = requirements;
+
+        if (null == opacity) opacity = 1;
+        if (null == red) red = [0];
+        if (null == green) green = [0];
+        if (null == blue) blue = [0];
+        if (null == alpha) alpha = [255];
 
         const {r:inR, g:inG, b:inB, a:inA} = input;
         const {r:outR, g:outG, b:outB, a:outA} = output;
@@ -1931,21 +1963,21 @@ const theBigActionsObject = {
 
         let {opacity, includeRed, includeGreen, includeBlue, includeAlpha, width, height, offsetX, offsetY, weights, lineOut} = requirements;
 
-        // if (grid == null) {
-
-            if (width == null || width < 1) width = 3;
-            if (height == null || height < 1) height = 3;
-            if (offsetX == null || offsetX < 0) offsetX = 1;
-            if (offsetY == null || offsetY < 0) offsetY = 1;
-
-            grid = buildMatrixGrid(width, height, offsetX, offsetY, input.a);
-        // }
-
-        if (weights == null) {
-
+        if (null == opacity) opacity = 1;
+        if (null == includeRed) includeRed = true;
+        if (null == includeGreen) includeGreen = true;
+        if (null == includeBlue) includeBlue = true;
+        if (null == includeAlpha) includeAlpha = false;
+        if (null == width || width < 1) width = 3;
+        if (null == height || height < 1) height = 3;
+        if (null == offsetX) offsetX = 1;
+        if (null == offsetY) offsetY = 1;
+        if (null == weights) {
             weights = [].fill(0, 0, (width * height) - 1);
             weights[Math.floor(weights.length / 2) + 1] = 1;
         }
+
+        grid = buildMatrixGrid(width, height, offsetX, offsetY, input.a);
 
         const doCalculations = function (inChannel, matrix) {
 
@@ -1990,10 +2022,12 @@ const theBigActionsObject = {
 
         let {opacity, red, green, blue, alpha, saturation, lineOut} = requirements;
 
-        if (red == null) red = 1;
-        if (green == null) green = 1;
-        if (blue == null) blue = 1;
-        if (alpha == null) alpha = 1;
+        if (null == opacity) opacity = 1;
+        if (null == red) red = 1;
+        if (null == green) green = 1;
+        if (null == blue) blue = 1;
+        if (null == alpha) alpha = 1;
+        if (null == saturation) saturation = false;
 
         const {r:inR, g:inG, b:inB, a:inA} = input;
         const {r:outR, g:outG, b:outB, a:outA} = output;
@@ -2024,7 +2058,11 @@ const theBigActionsObject = {
 
         let [input, output] = getInputAndOutputChannels(requirements);
 
-        const {opacity, offsetX, offsetY, lineOut} = requirements;
+        let {opacity, offsetX, offsetY, lineOut} = requirements;
+
+        if (null == opacity) opacity = 1;
+        if (null == offsetX) offsetX = 0;
+        if (null == offsetY) offsetY = 0;
 
         const {r:inR, g:inG, b:inB, a:inA} = input;
         const {r:outR, g:outG, b:outB, a:outA} = output;
@@ -2091,6 +2129,16 @@ const theBigActionsObject = {
 
         let {opacity, tileWidth, tileHeight, offsetX, offsetY, includeRed, includeGreen, includeBlue, includeAlpha, lineOut} = requirements;
 
+        if (null == opacity) opacity = 1;
+        if (null == includeRed) includeRed = true;
+        if (null == includeGreen) includeGreen = true;
+        if (null == includeBlue) includeBlue = true;
+        if (null == includeAlpha) includeAlpha = false;
+        if (null == tileWidth) tileWidth = 1;
+        if (null == tileHeight) tileHeight = 1;
+        if (null == offsetX) offsetX = 0;
+        if (null == offsetY) offsetY = 0;
+
         const tiles = buildImageTileSets(tileWidth, tileHeight, offsetX, offsetY);
 
         // Do filter work
@@ -2154,7 +2202,14 @@ const theBigActionsObject = {
 
         let len = input.r.length;
 
-        const {opacity, includeRed, includeGreen, includeBlue, includeAlpha, level, lineOut} = requirements;
+        let {opacity, includeRed, includeGreen, includeBlue, includeAlpha, level, lineOut} = requirements;
+
+        if (null == opacity) opacity = 1;
+        if (null == includeRed) includeRed = false;
+        if (null == includeGreen) includeGreen = false;
+        if (null == includeBlue) includeBlue = false;
+        if (null == includeAlpha) includeAlpha = false;
+        if (null == level) level = 0;
 
         const {r:inR, g:inG, b:inB, a:inA} = input;
         const {r:outR, g:outG, b:outB, a:outA} = output;
@@ -2177,7 +2232,12 @@ const theBigActionsObject = {
         let len = input.r.length,
             floor = Math.floor;
 
-        const {opacity, red, green, blue, lineOut} = requirements;
+        let {opacity, red, green, blue, lineOut} = requirements;
+
+        if (null == opacity) opacity = 1;
+        if (null == red) red = 1;
+        if (null == green) green = 1;
+        if (null == blue) blue = 1;
 
         if (red == null) red = 1;
         if (green == null) green = 1;
@@ -2203,7 +2263,12 @@ const theBigActionsObject = {
 
         let len = input.r.length;
 
-        const {opacity, low, high, level, lineOut} = requirements;
+        let {opacity, low, high, level, lineOut} = requirements;
+
+        if (null == opacity) opacity = 1;
+        if (null == low) low = [0,0,0];
+        if (null == high) high = [255,255,255];
+        if (null == level) level = 128;
 
         const {r:inR, g:inG, b:inB, a:inA} = input;
         const {r:outR, g:outG, b:outB, a:outA} = output;
@@ -2240,17 +2305,18 @@ const theBigActionsObject = {
 
         let len = input.r.length;
 
-        const {opacity, redInRed, redInGreen, redInBlue, greenInRed, greenInGreen, greenInBlue, blueInRed, blueInGreen, blueInBlue, lineOut} = requirements;
+        let {opacity, redInRed, redInGreen, redInBlue, greenInRed, greenInGreen, greenInBlue, blueInRed, blueInGreen, blueInBlue, lineOut} = requirements;
 
-        if (redInRed == null) redInRed = 1;
-        if (redInGreen == null) redInGreen = 0;
-        if (redInBlue == null) redInBlue = 0;
-        if (greenInRed == null) greenInRed = 0;
-        if (greenInGreen == null) greenInGreen = 1;
-        if (greenInBlue == null) greenInBlue = 0;
-        if (blueInRed == null) blueInRed = 0;
-        if (blueInGreen == null) blueInGreen = 0;
-        if (blueInBlue == null) blueInBlue = 1;
+        if (null == opacity) opacity = 1;
+        if (null == redInRed) redInRed = 1;
+        if (null == redInGreen) redInGreen = 0;
+        if (null == redInBlue) redInBlue = 0;
+        if (null == greenInRed) greenInRed = 0;
+        if (null == greenInGreen) greenInGreen = 1;
+        if (null == greenInBlue) greenInBlue = 0;
+        if (null == blueInRed) blueInRed = 0;
+        if (null == blueInGreen) blueInGreen = 0;
+        if (null == blueInBlue) blueInBlue = 1;
 
         const {r:inR, g:inG, b:inB, a:inA} = input;
         const {r:outR, g:outG, b:outB, a:outA} = output;
@@ -2275,7 +2341,9 @@ const theBigActionsObject = {
 
         let [input, output] = getInputAndOutputChannels(requirements);
 
-        const {opacity, lineOut} = requirements;
+        let {opacity, lineOut} = requirements;
+
+        if (null == opacity) opacity = 1;
 
         copyOver(input, output);
 

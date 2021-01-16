@@ -361,6 +361,19 @@ const setActionsArray = {
         }];
     },
 
+    binary: function (f) {
+        f.actions = [{
+            action: 'binary',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            red: (f.red != null) ? f.red : 0,
+            green: (f.green != null) ? f.green : 0,
+            blue: (f.blue != null) ? f.blue : 0,
+            alpha: (f.alpha != null) ? f.alpha : 0,
+        }];
+    },
+
     blend: function (f) {
         f.actions = [{
             action: 'blend',
