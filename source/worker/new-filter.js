@@ -790,6 +790,134 @@ const theBigActionsObject = {
 
         const alphaCalc = (dinA, dmixA) => (dinA + (dmixA * (1 - dinA))) * 255;
 
+/*        // Lum(C) = 0.3 x Cred + 0.59 x Cgreen + 0.11 x Cblue
+        const getLuminosity = (r, g, b) => (0.3 * r) + (0.59 * g) + (0.11 * b);
+
+        // SetLum(C, l)
+        //     d = l - Lum(C)
+        //     Cred = Cred + d
+        //     Cgreen = Cgreen + d
+        //     Cblue = Cblue + d
+        //     return ClipColor(C)
+        const setLuminosity = (r, g, b, l) => {
+
+            let d = l - getLuminosity(r, g, b);
+
+            r += d;
+            g += d;
+            b += d;
+
+            return clipColor(r, g, b);
+        };
+
+        // ClipColor(C)
+        //     L = Lum(C)
+        //     n = min(Cred, Cgreen, Cblue)
+        //     x = max(Cred, Cgreen, Cblue)
+        //     if(n < 0)
+        //         C = L + (((C - L) * L) / (L - n))
+                          
+        //     if(x > 1)
+        //         C = L + (((C - L) * (1 - L)) / (x - L))
+            
+        //     return C
+        const clipColor = (r, g, b) => {
+
+            let l = getLuminosity(r, g, b);
+
+            let n = Math.min(r, g, b),
+                x = Math.max(r, g, b);
+
+            if (n < 0) {
+                r = l + (((r - l) * l) / (l - n));
+                g = l + (((g - l) * l) / (l - n));
+                b = l + (((b - l) * l) / (l - n));
+            }
+
+            if (x > 1) {
+                r = l + (((r - l) * (1 - l)) / (x - l));
+                g = l + (((g - l) * (1 - l)) / (x - l));
+                b = l + (((b - l) * (1 - l)) / (x - l));
+            }
+
+            return [r, g, b];
+        }
+
+        // Sat(C) = max(Cred, Cgreen, Cblue) - min(Cred, Cgreen, Cblue)
+        const getSaturation = (r, g, b) => Math.max(r, g, b) - Math.min(r, g, b);
+*/
+
+        const getHSLfromRGB = function (dr, dg, db) {
+
+            // let dr = r / 255,
+            //     dg = g / 255,
+            //     db = b / 255;
+
+            let minColor = Math.min(dr, dg, db),
+                maxColor = Math.max(dr, dg, db);
+
+            let lum = (minColor + maxColor) / 2;
+
+            let sat = 0;
+
+            if (minColor !== maxColor) {
+
+                if (lum <= 0.5) sat = (maxColor - minColor) / (maxColor + minColor);
+                else sat = (maxColor - minColor) / (2 - maxColor - minColor);
+            }
+
+            let hue = 0;
+
+            if (maxColor === dr) hue = (dg - db) / (maxColor - minColor);
+            else if (maxColor === dg) hue = 2 + ((db - dr) / (maxColor - minColor));
+            else hue = 4 + ((dr - dg) / (maxColor - minColor));
+
+            hue *= 60;
+
+            if (hue < 0) hue += 360;
+
+            return [hue, sat, lum];
+        };
+
+        const getRGBfromHSL = function (h, s, l) {
+
+            if (!s) {
+
+                let gray = Math.floor(l * 255);
+                return [gray, gray, gray];
+            }
+
+            let tempLum1 = (l < 0.5) ? l * (s + 1) : l + s - (l * s),
+                tempLum2 = (2 * l) - tempLum1;
+
+            const calculator = function (t, l1, l2) {
+
+                if (t * 6 < 1) return l2 + ((l1 - l2) * 6 * t);
+                if (t * 2 < 1) return l1;
+                if (t * 2 < 2) return l2 + ((l1 - l2) * 6 * (t * 0.666));
+                return l2;
+            };
+
+            h /= 360;
+
+            let tr = h + 0.333,
+                tg = h,
+                tb = h - 0.333;
+
+            if (tr < 0) tr += 1;
+            if (tr > 1) tr -= 1;
+            if (tg < 0) tg += 1;
+            if (tg > 1) tg -= 1;
+            if (tb < 0) tb += 1;
+            if (tb > 1) tb -= 1;
+
+            let r = calculator(tr, tempLum1, tempLum2) * 255,
+                g = calculator(tg, tempLum1, tempLum2) * 255,
+                b = calculator(tb, tempLum1, tempLum2) * 255;
+
+            return [r, g, b];
+        };
+        
         switch (blend) {
 
             case 'color-burn' :
@@ -805,6 +933,7 @@ const theBigActionsObject = {
 
                         if (mPos < 0) copyPixel(iPos, iPos, input);
                         else if (!inA[iPos]) copyPixel(mPos, iPos, mix);
+                        else if (!mixA[mPos]) copyPixel(iPos, iPos, input);
                         else {
 
                             let [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(iPos, mPos);
@@ -831,6 +960,7 @@ const theBigActionsObject = {
 
                         if (mPos < 0) copyPixel(iPos, iPos, input);
                         else if (!inA[iPos]) copyPixel(mPos, iPos, mix);
+                        else if (!mixA[mPos]) copyPixel(iPos, iPos, input);
                         else {
 
                             let [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(iPos, mPos);
@@ -853,6 +983,7 @@ const theBigActionsObject = {
 
                         if (mPos < 0) copyPixel(iPos, iPos, input);
                         else if (!inA[iPos]) copyPixel(mPos, iPos, mix);
+                        else if (!mixA[mPos]) copyPixel(iPos, iPos, input);
                         else {
 
                             outR[iPos] = darkenCalc(inR[iPos], mixR[mPos]);
@@ -981,6 +1112,7 @@ const theBigActionsObject = {
 
                         if (mPos < 0) copyPixel(iPos, iPos, input);
                         else if (!inA[iPos]) copyPixel(mPos, iPos, mix);
+                        else if (!mixA[mPos]) copyPixel(iPos, iPos, input);
                         else {
 
                             let [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(iPos, mPos);
@@ -1055,6 +1187,7 @@ const theBigActionsObject = {
 
                         if (mPos < 0) copyPixel(iPos, iPos, input);
                         else if (!inA[iPos]) copyPixel(mPos, iPos, mix);
+                        else if (!mixA[mPos]) copyPixel(iPos, iPos, input);
                         else {
 
                             let [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(iPos, mPos);
@@ -1069,19 +1202,123 @@ const theBigActionsObject = {
                 break;
 
             case 'color' :
-                copyOver(input, output);
+                const colorCalc = (iR, iG, iB, mR, mG, mB) => {
+
+                    let [iH, iS, iL] = getHSLfromRGB(iR, iG, iB);
+                    let [mH, mS, mL] = getHSLfromRGB(mR, mG, mB);
+
+                    return getRGBfromHSL(iH, iS, mL);
+                }
+                for (let y = 0; y < iHeight; y++) {
+                    for (let x = 0; x < iWidth; x++) {
+
+                        let [iPos, mPos] = getLinePositions(x, y);
+
+                        if (mPos < 0) copyPixel(iPos, iPos, input);
+                        else if (!inA[iPos]) copyPixel(mPos, iPos, mix);
+                        else if (!mixA[mPos]) copyPixel(iPos, iPos, input);
+                        else {
+
+                            let [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(iPos, mPos);
+
+                            let [cr, cg, cb] = colorCalc(dinR, dinG, dinB, dmixR, dmixG, dmixB);
+                            outR[iPos] = cr;
+                            outG[iPos] = cg;
+                            outB[iPos] = cb;
+                            outA[iPos] = alphaCalc(dinA, dmixA);
+                        }
+                    }
+                }
                 break;
 
             case 'hue' :
-                copyOver(input, output);
+                const hueCalc = (iR, iG, iB, mR, mG, mB) => {
+
+                    let [iH, iS, iL] = getHSLfromRGB(iR, iG, iB);
+                    let [mH, mS, mL] = getHSLfromRGB(mR, mG, mB);
+
+                    return getRGBfromHSL(iH, mS, mL);
+                }
+                for (let y = 0; y < iHeight; y++) {
+                    for (let x = 0; x < iWidth; x++) {
+
+                        let [iPos, mPos] = getLinePositions(x, y);
+
+                        if (mPos < 0) copyPixel(iPos, iPos, input);
+                        else if (!inA[iPos]) copyPixel(mPos, iPos, mix);
+                        else if (!mixA[mPos]) copyPixel(iPos, iPos, input);
+                        else {
+
+                            let [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(iPos, mPos);
+
+                            let [cr, cg, cb] = hueCalc(dinR, dinG, dinB, dmixR, dmixG, dmixB);
+                            outR[iPos] = cr;
+                            outG[iPos] = cg;
+                            outB[iPos] = cb;
+                            outA[iPos] = alphaCalc(dinA, dmixA);
+                        }
+                    }
+                }
                 break;
 
             case 'luminosity' :
-                copyOver(input, output);
+                const luminosityCalc = (iR, iG, iB, mR, mG, mB) => {
+
+                    let [iH, iS, iL] = getHSLfromRGB(iR, iG, iB);
+                    let [mH, mS, mL] = getHSLfromRGB(mR, mG, mB);
+
+                    return getRGBfromHSL(mH, mS, iL);
+                }
+                for (let y = 0; y < iHeight; y++) {
+                    for (let x = 0; x < iWidth; x++) {
+
+                        let [iPos, mPos] = getLinePositions(x, y);
+
+                        if (mPos < 0) copyPixel(iPos, iPos, input);
+                        else if (!inA[iPos]) copyPixel(mPos, iPos, mix);
+                        else if (!mixA[mPos]) copyPixel(iPos, iPos, input);
+                        else {
+
+                            let [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(iPos, mPos);
+
+                            let [cr, cg, cb] = luminosityCalc(dinR, dinG, dinB, dmixR, dmixG, dmixB);
+                            outR[iPos] = cr;
+                            outG[iPos] = cg;
+                            outB[iPos] = cb;
+                            outA[iPos] = alphaCalc(dinA, dmixA);
+                        }
+                    }
+                }
                 break;
 
             case 'saturation' :
-                copyOver(input, output);
+                const saturationCalc = (iR, iG, iB, mR, mG, mB) => {
+
+                    let [iH, iS, iL] = getHSLfromRGB(iR, iG, iB);
+                    let [mH, mS, mL] = getHSLfromRGB(mR, mG, mB);
+
+                    return getRGBfromHSL(mH, iS, mL);
+                }
+                for (let y = 0; y < iHeight; y++) {
+                    for (let x = 0; x < iWidth; x++) {
+
+                        let [iPos, mPos] = getLinePositions(x, y);
+
+                        if (mPos < 0) copyPixel(iPos, iPos, input);
+                        else if (!inA[iPos]) copyPixel(mPos, iPos, mix);
+                        else if (!mixA[mPos]) copyPixel(iPos, iPos, input);
+                        else {
+
+                            let [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(iPos, mPos);
+
+                            let [cr, cg, cb] = saturationCalc(dinR, dinG, dinB, dmixR, dmixG, dmixB);
+                            outR[iPos] = cr;
+                            outG[iPos] = cg;
+                            outB[iPos] = cb;
+                            outA[iPos] = alphaCalc(dinA, dmixA);
+                        }
+                    }
+                }
                 break;
 
             default:
@@ -1339,6 +1576,29 @@ const theBigActionsObject = {
 
         let [iWidth, iHeight, oWidth, oHeight, mWidth, mHeight] = getInputAndOutputDimensions(requirements);
 
+        const copyPixel = function (fromPos, toPos, channel) {
+
+            outR[toPos] = channel.r[fromPos];
+            outG[toPos] = channel.g[fromPos];
+            outB[toPos] = channel.b[fromPos];
+            outA[toPos] = channel.a[fromPos];
+        };
+
+        const getLinePositions = function (x, y) {
+
+            let ix = x,
+                iy = y,
+                mx = x - offsetX,
+                my = y - offsetY;
+
+            let mPos = -1,
+                iPos = (iy * iWidth) + ix;
+
+            if (mx >= 0 && mx < mWidth && my >= 0 && my < mHeight) mPos = (my * mWidth) + mx;
+
+            return [iPos, mPos];
+        };
+
         switch (compose) {
 
             case 'source-only' :
@@ -1346,97 +1606,163 @@ const theBigActionsObject = {
                 break;
 
             case 'source-atop' :
-                const sAtopCalc = (Cs, As, Cb, Ab) => (As * Cs * Ab) + (Ab * Cb * (1 - As));
-                for (let i = 0; i < len; i++) {
-                    let dinA = inA[i] / 255,
-                        dmixA = mixA[i] / 255;
+                const sAtopCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor * mAlpha) + (mAlpha * mColor * (1 - iAlpha));
+                for (let y = 0; y < iHeight; y++) {
+                    for (let x = 0; x < iWidth; x++) {
 
-                    outR[i] = sAtopCalc(inR[i], dinA, mixR[i], dmixA);
-                    outG[i] = sAtopCalc(inG[i], dinA, mixG[i], dmixA);
-                    outB[i] = sAtopCalc(inB[i], dinA, mixB[i], dmixA);
-                    outA[i] = ((dinA * dmixA) + (dmixA * (1 - dinA))) * 255;
+                        let [iPos, mPos] = getLinePositions(x, y);
+
+                        if (mPos >= 0) {
+
+                            let dinA = inA[iPos] / 255,
+                                dmixA = mixA[mPos] / 255;
+
+                            outR[iPos] = sAtopCalc(inR[iPos], dinA, mixR[mPos], dmixA);
+                            outG[iPos] = sAtopCalc(inG[iPos], dinA, mixG[mPos], dmixA);
+                            outB[iPos] = sAtopCalc(inB[iPos], dinA, mixB[mPos], dmixA);
+                            outA[iPos] = ((dinA * dmixA) + (dmixA * (1 - dinA))) * 255;
+                        }
+                    }
                 }
                 break;
 
             case 'source-in' :
-                const sInCalc = (Cs, As, Ab) => As * Cs * Ab;
-                for (let i = 0; i < len; i++) {
-                    let dinA = inA[i] / 255,
-                        dmixA = mixA[i] / 255;
+                const sInCalc = (iColor, iAlpha, mAlpha) => iAlpha * iColor * mAlpha;
+                for (let y = 0; y < iHeight; y++) {
+                    for (let x = 0; x < iWidth; x++) {
 
-                    outR[i] = sInCalc(inR[i], dinA, dmixA);
-                    outG[i] = sInCalc(inG[i], dinA, dmixA);
-                    outB[i] = sInCalc(inB[i], dinA, dmixA);
-                    outA[i] = dinA * dmixA * 255;
+                        let [iPos, mPos] = getLinePositions(x, y);
+
+                        if (mPos >= 0) {
+
+                            let dinA = inA[iPos] / 255,
+                                dmixA = mixA[mPos] / 255;
+
+                            outR[iPos] = sInCalc(inR[iPos], dinA, dmixA);
+                            outG[iPos] = sInCalc(inG[iPos], dinA, dmixA);
+                            outB[iPos] = sInCalc(inB[iPos], dinA, dmixA);
+                            outA[iPos] = dinA * dmixA * 255;
+                        }
+                    }
                 }
                 break;
 
             case 'source-out' :
-                const sOutCalc = (Cs, As, Ab) => As * Cs * (1 - Ab);
-                for (let i = 0; i < len; i++) {
-                    let dinA = inA[i] / 255,
-                        dmixA = mixA[i] / 255;
+                const sOutCalc = (iColor, iAlpha, mAlpha) => iAlpha * iColor * (1 - mAlpha);
+                for (let y = 0; y < iHeight; y++) {
+                    for (let x = 0; x < iWidth; x++) {
 
-                    outR[i] = sOutCalc(inR[i], dinA, dmixA);
-                    outG[i] = sOutCalc(inG[i], dinA, dmixA);
-                    outB[i] = sOutCalc(inB[i], dinA, dmixA);
-                    outA[i] = dinA * (1 - dmixA) * 255;
+                        let [iPos, mPos] = getLinePositions(x, y);
+
+                        if (mPos < 0) copyPixel(iPos, iPos, input);
+                        else {
+
+                            let dinA = inA[iPos] / 255,
+                                dmixA = mixA[mPos] / 255;
+
+                            outR[iPos] = sOutCalc(inR[iPos], dinA, dmixA);
+                            outG[iPos] = sOutCalc(inG[iPos], dinA, dmixA);
+                            outB[iPos] = sOutCalc(inB[iPos], dinA, dmixA);
+                            outA[iPos] = dinA * (1 - dmixA) * 255;
+                        }
+                    }
                 }
                 break;
 
             case 'destination-only' :
-                copyOver(mix, output);
+                for (let y = 0; y < iHeight; y++) {
+                    for (let x = 0; x < iWidth; x++) {
+
+                        let [iPos, mPos] = getLinePositions(x, y);
+
+                        if (mPos >= 0) copyPixel(mPos, iPos, mix);
+                    }
+                }
                 break;
 
             case 'destination-atop' :
-                const dAtopCalc = (Cs, As, Cb, Ab) => (As * Cs * (1 - Ab)) + (Ab * Cb * As);
-                for (let i = 0; i < len; i++) {
-                    let dinA = inA[i] / 255,
-                        dmixA = mixA[i] / 255;
+                const dAtopCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor * (1 - mAlpha)) + (mAlpha * mColor * iAlpha);
+                for (let y = 0; y < iHeight; y++) {
+                    for (let x = 0; x < iWidth; x++) {
 
-                    outR[i] = dAtopCalc(inR[i], dinA, mixR[i], dmixA);
-                    outG[i] = dAtopCalc(inG[i], dinA, mixG[i], dmixA);
-                    outB[i] = dAtopCalc(inB[i], dinA, mixB[i], dmixA);
-                    outA[i] = ((dinA * (1 - dmixA)) + (dmixA * dinA)) * 255;
+                        let [iPos, mPos] = getLinePositions(x, y);
+
+                        if (mPos < 0) copyPixel(iPos, iPos, input);
+                        else {
+
+                            let dinA = inA[iPos] / 255,
+                                dmixA = mixA[mPos] / 255;
+
+                            outR[iPos] = dAtopCalc(inR[iPos], dinA, mixR[mPos], dmixA);
+                            outG[iPos] = dAtopCalc(inG[iPos], dinA, mixG[mPos], dmixA);
+                            outB[iPos] = dAtopCalc(inB[iPos], dinA, mixB[mPos], dmixA);
+                            outA[iPos] = ((dinA * (1 - dmixA)) + (dmixA * dinA)) * 255;
+                        }
+                    }
                 }
                 break;
 
             case 'destination-over' :
-                const dOverCalc = (Cs, As, Cb, Ab) => (As * Cs) + (Ab * Cb * (1 - As));
-                for (let i = 0; i < len; i++) {
-                    let dinA = inA[i] / 255,
-                        dmixA = mixA[i] / 255;
+                const dOverCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor * (1 - mAlpha)) + (mAlpha * mColor);
+                for (let y = 0; y < iHeight; y++) {
+                    for (let x = 0; x < iWidth; x++) {
 
-                    outR[i] = dOverCalc(mixR[i], dmixA, inR[i], dinA);
-                    outG[i] = dOverCalc(mixG[i], dmixA, inG[i], dinA);
-                    outB[i] = dOverCalc(mixB[i], dmixA, inB[i], dinA);
-                    outA[i] = (dmixA + (dinA * (1 - dmixA))) * 255;
+                        let [iPos, mPos] = getLinePositions(x, y);
+
+                        if (mPos < 0) copyPixel(iPos, iPos, input);
+                        else {
+
+                            let dinA = inA[iPos] / 255,
+                                dmixA = mixA[mPos] / 255;
+
+                            outR[iPos] = dOverCalc(inR[iPos], dinA, mixR[mPos], dmixA);
+                            outG[iPos] = dOverCalc(inG[iPos], dinA, mixG[mPos], dmixA);
+                            outB[iPos] = dOverCalc(inB[iPos], dinA, mixB[mPos], dmixA);
+                            outA[iPos] = ((dinA * (1 - dmixA)) + dmixA) * 255;
+                        }
+                    }
                 }
                 break;
 
             case 'destination-in' :
-                const dInCalc = (Cs, As, Ab) => As * Cs * Ab;
-                for (let i = 0; i < len; i++) {
-                    let dinA = inA[i] / 255,
-                        dmixA = mixA[i] / 255;
+                const dInCalc = (iColor, iAlpha, mAlpha) => iAlpha * iColor * mAlpha;
+                for (let y = 0; y < iHeight; y++) {
+                    for (let x = 0; x < iWidth; x++) {
 
-                    outR[i] = dInCalc(mixR[i], dmixA, dinA);
-                    outG[i] = dInCalc(mixG[i], dmixA, dinA);
-                    outB[i] = dInCalc(mixB[i], dmixA, dinA);
-                    outA[i] = dinA * dmixA * 255;
+                        let [iPos, mPos] = getLinePositions(x, y);
+
+                        if (mPos >= 0) {
+
+                            let dinA = inA[iPos] / 255,
+                                dmixA = mixA[mPos] / 255;
+
+                            outR[iPos] = dInCalc(mixR[mPos], dmixA, dinA);
+                            outG[iPos] = dInCalc(mixG[mPos], dmixA, dinA);
+                            outB[iPos] = dInCalc(mixB[mPos], dmixA, dinA);
+                            outA[iPos] = dinA * dmixA * 255;
+                        }
+                    }
                 }
                 break;
 
             case 'destination-out' :
-                const dOutCalc = (Cb, As, Ab) => Ab * Cb * (1 - As);
-                for (let i = 0; i < len; i++) {
-                    let dinA = inA[i] / 255,
-                        dmixA = mixA[i] / 255;
+                const dOutCalc = (mColor, iAlpha, mAlpha) => mAlpha * mColor * (1 - iAlpha);
+                for (let y = 0; y < iHeight; y++) {
+                    for (let x = 0; x < iWidth; x++) {
 
-                    outR[i] = dOutCalc(mixR[i], dinA, dmixA);
-                    outG[i] = dOutCalc(mixG[i], dinA, dmixA);
-                    outB[i] = dOutCalc(mixB[i], dinA, dmixA);
-                    outA[i] = dmixA * (1 - dinA) * 255;
+                        let [iPos, mPos] = getLinePositions(x, y);
+
+                        if (mPos >= 0) {
+        
+                            let dinA = inA[iPos] / 255,
+                                dmixA = mixA[mPos] / 255;
+
+                            outR[iPos] = dOutCalc(mixR[mPos], dinA, dmixA);
+                            outG[iPos] = dOutCalc(mixG[mPos], dinA, dmixA);
+                            outB[iPos] = dOutCalc(mixB[mPos], dinA, dmixA);
+                            outA[iPos] = dmixA * (1 - dinA) * 255;
+                        }
+                    }
                 }
                 break;
 
@@ -1444,28 +1770,46 @@ const theBigActionsObject = {
                 break;
 
             case 'xor' :
-                const xorCalc = (Cs, As, Cb, Ab) => (As * Cs * (1 - Ab)) + (Ab * Cb * (1 - As));
-                for (let i = 0; i < len; i++) {
-                    let dinA = inA[i] / 255,
-                        dmixA = mixA[i] / 255;
+                const xorCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor * (1 - mAlpha)) + (mAlpha * mColor * (1 - iAlpha));
+                for (let y = 0; y < iHeight; y++) {
+                    for (let x = 0; x < iWidth; x++) {
 
-                    outR[i] = xorCalc(inR[i], dinA, mixR[i], dmixA);
-                    outG[i] = xorCalc(inG[i], dinA, mixG[i], dmixA);
-                    outB[i] = xorCalc(inB[i], dinA, mixB[i], dmixA);
-                    outA[i] = ((dinA * (1 - dmixA)) + (dmixA * (1 - dinA))) * 255;
+                        let [iPos, mPos] = getLinePositions(x, y);
+
+                        if (mPos < 0) copyPixel(iPos, iPos, input);
+                        else {
+
+                            let dinA = inA[iPos] / 255,
+                                dmixA = mixA[mPos] / 255;
+
+                            outR[iPos] = xorCalc(inR[iPos], dinA, mixR[mPos], dmixA);
+                            outG[iPos] = xorCalc(inG[iPos], dinA, mixG[mPos], dmixA);
+                            outB[iPos] = xorCalc(inB[iPos], dinA, mixB[mPos], dmixA);
+                            outA[iPos] = ((dinA * (1 - dmixA)) + (dmixA * (1 - dinA))) * 255;
+                        }
+                    }
                 }
                 break;
 
             default:
-                const sOverCalc = (Cs, As, Cb, Ab) => (As * Cs) + (Ab * Cb * (1 - As));
-                for (let i = 0; i < len; i++) {
-                    let dinA = inA[i] / 255,
-                        dmixA = mixA[i] / 255;
+                const sOverCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor) + (mAlpha * mColor * (1 - iAlpha));
+                for (let y = 0; y < iHeight; y++) {
+                    for (let x = 0; x < iWidth; x++) {
 
-                    outR[i] = sOverCalc(inR[i], dinA, mixR[i], dmixA);
-                    outG[i] = sOverCalc(inG[i], dinA, mixG[i], dmixA);
-                    outB[i] = sOverCalc(inB[i], dinA, mixB[i], dmixA);
-                    outA[i] = (dinA + (dmixA * (1 - dinA))) * 255;
+                        let [iPos, mPos] = getLinePositions(x, y);
+
+                        if (mPos < 0) copyPixel(iPos, iPos, input);
+                        else {
+
+                            let dinA = inA[iPos] / 255,
+                                dmixA = mixA[mPos] / 255;
+
+                            outR[iPos] = sOverCalc(inR[iPos], dinA, mixR[mPos], dmixA);
+                            outG[iPos] = sOverCalc(inG[iPos], dinA, mixG[mPos], dmixA);
+                            outB[iPos] = sOverCalc(inB[iPos], dinA, mixB[mPos], dmixA);
+                            outA[iPos] = (dinA + (dmixA * (1 - dinA))) * 255;
+                        }
+                    }
                 }
         }
         if (lineOut) processResults(output, work, 1 - opacity);
