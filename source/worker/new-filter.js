@@ -16,7 +16,8 @@ let packet, packetFiltersArray;
 
 let source, work, cache, actions;
 
-let workstore = {};
+let workstore = {},
+    workstoreLastAccessed = {};
 
 const createResultObject = function (len) {
 
@@ -97,7 +98,18 @@ onmessage = function (msg) {
     packet = msg.data;
     packetFiltersArray = packet.filters;
 
-    if (Object.keys(workstore).length > 100) workstore = {};
+    // If something in the workstore hasn't been accessed for more than 3 seconds, we probably don't need it anymore
+    let workstoreKeys = Object.keys(workstore), 
+        workstoreChoke = Date.now() - 3000;
+
+    workstoreKeys.forEach(k => {
+
+        if (workstoreLastAccessed[k] < workstoreChoke) {
+
+            delete workstore[k];
+            delete workstoreLastAccessed[k];
+        }
+    });
 
     cache = {};
     actions = [];
@@ -112,6 +124,7 @@ onmessage = function (msg) {
         actions.forEach(a => theBigActionsObject[a.action] && theBigActionsObject[a.action](a));
         knit();
     }
+
     postMessage(packet);
 };
 
@@ -127,7 +140,11 @@ const buildImageGrid = function (data) {
 
     if (data && data.width && data.height) {
 
-        if (workstore[`grid-${data.width}-${data.height}`]) return workstore[`grid-${data.width}-${data.height}`];
+        let name = `grid-${data.width}-${data.height}`;
+        if (workstore[name]) {
+            workstoreLastAccessed[name] = Date.now();
+            return workstore[name];
+        }
 
         let grid = [],
             counter = 0;
@@ -143,7 +160,8 @@ const buildImageGrid = function (data) {
             }
             grid.push(row);
         }
-        workstore[`grid-${data.width}-${data.height}`] = grid;
+        workstore[name] = grid;
+        workstoreLastAccessed[name] = Date.now();
         return grid;
     }
     return false;
@@ -183,7 +201,11 @@ const buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterH
         if (offsetY < 0) offsetY = 0;
         if (offsetY >= aHeight) offsetY = aHeight - 1;
 
-        if (workstore[`alphatileset-${iWidth}-${iHeight}-${tileWidth}-${tileHeight}-${gutterWidth}-${gutterHeight}-${offsetX}-${offsetY}`]) return workstore[`alphatileset-${iWidth}-${iHeight}-${tileWidth}-${tileHeight}-${gutterWidth}-${gutterHeight}-${offsetX}-${offsetY}`];
+        let name = `alphatileset-${iWidth}-${iHeight}-${tileWidth}-${tileHeight}-${gutterWidth}-${gutterHeight}-${offsetX}-${offsetY}`;
+        if (workstore[name]) {
+            workstoreLastAccessed[name] = Date.now();
+            return workstore[name];
+        }
 
         let tiles = [],
             hold, i, iz, j, jz, x, xz, y, yz;
@@ -237,7 +259,8 @@ const buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterH
                 tiles.push([].concat(hold));
             }
         }
-        workstore[`alphatileset-${iWidth}-${iHeight}-${tileWidth}-${tileHeight}-${gutterWidth}-${gutterHeight}-${offsetX}-${offsetY}`] = tiles;
+        workstore[name] = tiles;
+        workstoreLastAccessed[name] = Date.now();
         return tiles;
     }
     return false;
@@ -267,7 +290,11 @@ const buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY, da
         if (offsetY < 0) offsetY = 0;
         if (offsetY >= tileHeight) offsetY = tileHeight - 1;
 
-        if (workstore[`imagetileset-${iWidth}-${iHeight}-${tileWidth}-${tileHeight}-${offsetX}-${offsetY}`]) return workstore[`imagetileset-${iWidth}-${iHeight}-${tileWidth}-${tileHeight}-${offsetX}-${offsetY}`];
+        let name = `imagetileset-${iWidth}-${iHeight}-${tileWidth}-${tileHeight}-${offsetX}-${offsetY}`;
+        if (workstore[name]) {
+            workstoreLastAccessed[name] = Date.now();
+            return workstore[name];
+        }
 
         let tiles = [];
 
@@ -290,7 +317,8 @@ const buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY, da
                 if (hold.length) tiles.push(hold);
             }
         }
-        workstore[`imagetileset-${iWidth}-${iHeight}-${tileWidth}-${tileHeight}-${offsetX}-${offsetY}`] = tiles;
+        workstore[name] = tiles;
+        workstoreLastAccessed[name] = Date.now();
         return tiles;
     }
     return false;
@@ -303,7 +331,11 @@ const buildHorizontalBlur = function (grid, radius, alpha) {
     let gridHeight = grid.length,
         gridWidth = grid[0].length;
 
-    if (workstore[`blur-h-${gridWidth}-${gridHeight}-${radius}`]) return workstore[`blur-h-${gridWidth}-${gridHeight}-${radius}`];
+    let name = `blur-h-${gridWidth}-${gridHeight}-${radius}`;
+    if (workstore[name]) {
+        workstoreLastAccessed[name] = Date.now();
+        return workstore[name];
+    }
 
     let horizontalBlur = [],
         cell;
@@ -321,7 +353,8 @@ const buildHorizontalBlur = function (grid, radius, alpha) {
             horizontalBlur[(y * gridHeight) + x] = cellsToProcess;
         }
     }
-    workstore[`blur-h-${gridWidth}-${gridHeight}-${radius}`] = horizontalBlur;
+    workstore[name] = horizontalBlur;
+    workstoreLastAccessed[name] = Date.now();
     return horizontalBlur;
 };
 
@@ -332,7 +365,11 @@ const buildVerticalBlur = function (grid, radius, alpha) {
     let gridHeight = grid.length,
         gridWidth = grid[0].length;
 
-    if (workstore[`blur-v-${gridWidth}-${gridHeight}-${radius}`]) return workstore[`blur-v-${gridWidth}-${gridHeight}-${radius}`];
+    let name = `blur-v-${gridWidth}-${gridHeight}-${radius}`;
+    if (workstore[name]) {
+        workstoreLastAccessed[name] = Date.now();
+        return workstore[name];
+    }
 
     let verticalBlur = [],
         cell;
@@ -350,7 +387,8 @@ const buildVerticalBlur = function (grid, radius, alpha) {
             verticalBlur[(y * gridHeight) + x] = cellsToProcess;
         }
     }
-    workstore[`blur-v-${gridWidth}-${gridHeight}-${radius}`] = verticalBlur;
+    workstore[name] = verticalBlur;
+    workstoreLastAccessed[name] = Date.now();
     return verticalBlur;
 };
 
@@ -370,7 +408,11 @@ const buildMatrixGrid = function (mWidth, mHeight, mX, mY, alpha, data) {
     let iWidth = data.width,
         iHeight = data.height;
 
-    if (workstore[`matrix-${iWidth}-${iHeight}-${mWidth}-${mHeight}-${mX}-${mY}`]) return workstore[`matrix-${iWidth}-${iHeight}-${mWidth}-${mHeight}-${mX}-${mY}`];
+    let name = `matrix-${iWidth}-${iHeight}-${mWidth}-${mHeight}-${mX}-${mY}`;
+    if (workstore[name]) {
+        workstoreLastAccessed[name] = Date.now();
+        return workstore[name];
+    }
 
     let dataLength = data.data.length,
         x, xz, y, yz, i, iz,
@@ -405,7 +447,8 @@ const buildMatrixGrid = function (mWidth, mHeight, mX, mY, alpha, data) {
             grid.push(cell);
         }
     }
-    workstore[`matrix-${iWidth}-${iHeight}-${mWidth}-${mHeight}-${mX}-${mY}`] = grid;
+    workstore[name] = grid;
+    workstoreLastAccessed[name] = Date.now();
     return grid;
 };
 
@@ -603,6 +646,73 @@ const processResults = function (store, incoming, ratio) {
             sA[i] = Math.floor((sA[i] * antiRatio) + (iA[i] * ratio));
         }
     }
+};
+
+const getHSLfromRGB = function (dr, dg, db) {
+
+    let minColor = Math.min(dr, dg, db),
+        maxColor = Math.max(dr, dg, db);
+
+    let lum = (minColor + maxColor) / 2;
+
+    let sat = 0;
+
+    if (minColor !== maxColor) {
+
+        if (lum <= 0.5) sat = (maxColor - minColor) / (maxColor + minColor);
+        else sat = (maxColor - minColor) / (2 - maxColor - minColor);
+    }
+
+    let hue = 0;
+
+    if (maxColor === dr) hue = (dg - db) / (maxColor - minColor);
+    else if (maxColor === dg) hue = 2 + ((db - dr) / (maxColor - minColor));
+    else hue = 4 + ((dr - dg) / (maxColor - minColor));
+
+    hue *= 60;
+
+    if (hue < 0) hue += 360;
+
+    return [hue, sat, lum];
+};
+
+const getRGBfromHSL = function (h, s, l) {
+
+    if (!s) {
+
+        let gray = Math.floor(l * 255);
+        return [gray, gray, gray];
+    }
+
+    let tempLum1 = (l < 0.5) ? l * (s + 1) : l + s - (l * s),
+        tempLum2 = (2 * l) - tempLum1;
+
+    const calculator = function (t, l1, l2) {
+
+        if (t * 6 < 1) return l2 + ((l1 - l2) * 6 * t);
+        if (t * 2 < 1) return l1;
+        if (t * 2 < 2) return l2 + ((l1 - l2) * 6 * (t * 0.666));
+        return l2;
+    };
+
+    h /= 360;
+
+    let tr = h + 0.333,
+        tg = h,
+        tb = h - 0.333;
+
+    if (tr < 0) tr += 1;
+    if (tr > 1) tr -= 1;
+    if (tg < 0) tg += 1;
+    if (tg > 1) tg -= 1;
+    if (tb < 0) tb += 1;
+    if (tb > 1) tb -= 1;
+
+    let r = calculator(tr, tempLum1, tempLum2) * 255,
+        g = calculator(tg, tempLum1, tempLum2) * 255,
+        b = calculator(tb, tempLum1, tempLum2) * 255;
+
+    return [r, g, b];
 };
 
 const theBigActionsObject = {
@@ -837,73 +947,6 @@ const theBigActionsObject = {
 
         const alphaCalc = (dinA, dmixA) => (dinA + (dmixA * (1 - dinA))) * 255;
 
-        const getHSLfromRGB = function (dr, dg, db) {
-
-            let minColor = Math.min(dr, dg, db),
-                maxColor = Math.max(dr, dg, db);
-
-            let lum = (minColor + maxColor) / 2;
-
-            let sat = 0;
-
-            if (minColor !== maxColor) {
-
-                if (lum <= 0.5) sat = (maxColor - minColor) / (maxColor + minColor);
-                else sat = (maxColor - minColor) / (2 - maxColor - minColor);
-            }
-
-            let hue = 0;
-
-            if (maxColor === dr) hue = (dg - db) / (maxColor - minColor);
-            else if (maxColor === dg) hue = 2 + ((db - dr) / (maxColor - minColor));
-            else hue = 4 + ((dr - dg) / (maxColor - minColor));
-
-            hue *= 60;
-
-            if (hue < 0) hue += 360;
-
-            return [hue, sat, lum];
-        };
-
-        const getRGBfromHSL = function (h, s, l) {
-
-            if (!s) {
-
-                let gray = Math.floor(l * 255);
-                return [gray, gray, gray];
-            }
-
-            let tempLum1 = (l < 0.5) ? l * (s + 1) : l + s - (l * s),
-                tempLum2 = (2 * l) - tempLum1;
-
-            const calculator = function (t, l1, l2) {
-
-                if (t * 6 < 1) return l2 + ((l1 - l2) * 6 * t);
-                if (t * 2 < 1) return l1;
-                if (t * 2 < 2) return l2 + ((l1 - l2) * 6 * (t * 0.666));
-                return l2;
-            };
-
-            h /= 360;
-
-            let tr = h + 0.333,
-                tg = h,
-                tb = h - 0.333;
-
-            if (tr < 0) tr += 1;
-            if (tr > 1) tr -= 1;
-            if (tg < 0) tg += 1;
-            if (tg > 1) tg -= 1;
-            if (tb < 0) tb += 1;
-            if (tb > 1) tb -= 1;
-
-            let r = calculator(tr, tempLum1, tempLum2) * 255,
-                g = calculator(tg, tempLum1, tempLum2) * 255,
-                b = calculator(tb, tempLum1, tempLum2) * 255;
-
-            return [r, g, b];
-        };
-        
         switch (blend) {
 
             case 'color-burn' :
@@ -1833,6 +1876,231 @@ const theBigActionsObject = {
         else processResults(work, output, opacity);
     },
 
+    'displace': function (requirements) {
+
+        let [input, output, mix] = getInputAndOutputChannels(requirements);
+
+        let len = input.r.length;
+
+        let {opacity, channelX, channelY, scaleX, scaleY, offsetX, offsetY, transparentEdges, lineOut} = requirements;
+
+        if (null == opacity) opacity = 1;
+        if (null == channelX) channelX = 'red';
+        if (null == channelY) channelY = 'green';
+        if (null == scaleX) scaleX = 1;
+        if (null == scaleY) scaleY = 1;
+        if (null == offsetX) offsetX = 0;
+        if (null == offsetY) offsetY = 0;
+        if (null == transparentEdges) transparentEdges = false;
+
+        const {r:inR, g:inG, b:inB, a:inA} = input;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
+        const {r:mixR, g:mixG, b:mixB, a:mixA} = mix;
+
+        if (channelX == 'red') channelX = mixR;
+        else if (channelX == 'green') channelX = mixG;
+        else if (channelX == 'blue') channelX = mixB;
+        else channelX = mixA;
+
+        if (channelY == 'red') channelY = mixR;
+        else if (channelY == 'green') channelY = mixG;
+        else if (channelY == 'blue') channelY = mixB;
+        else channelY = mixA;
+
+        let [iWidth, iHeight, oWidth, oHeight, mWidth, mHeight] = getInputAndOutputDimensions(requirements);
+
+        const copyPixel = function (fromPos, toPos, channel) {
+
+            if (fromPos < 0) outA[toPos] = 0;
+            else {
+
+                outR[toPos] = channel.r[fromPos];
+                outG[toPos] = channel.g[fromPos];
+                outB[toPos] = channel.b[fromPos];
+                outA[toPos] = channel.a[fromPos];
+            }
+        };
+
+        const getLinePositions = function (x, y) {
+
+            let ix = x,
+                iy = y,
+                mx = x + offsetX,
+                my = y + offsetY;
+
+            let mPos = -1,
+                iPos = (iy * iWidth) + ix;
+
+            if (mx >= 0 && mx < mWidth && my >= 0 && my < mHeight) mPos = (my * mWidth) + mx;
+
+            return [iPos, mPos];
+        };
+
+        for (let y = 0; y < iHeight; y++) {
+            for (let x = 0; x < iWidth; x++) {
+
+                let [iPos, mPos] = getLinePositions(x, y);
+
+                if (mPos >= 0) {
+
+                    let dx = Math.floor(x + ((127 - channelX[mPos]) / 127) * scaleX);
+                    let dy = Math.floor(y + ((127 - channelY[mPos]) / 127) * scaleY);
+                    let dPos;
+
+                    if (!transparentEdges) {
+
+                        if (dx < 0) dx = 0;
+                        if (dx >= iWidth) dx = iWidth - 1;
+                        if (dy < 0) dy = 0;
+                        if (dy >= iHeight) dy = iHeight - 1;
+
+                        dPos = (dy * iWidth) + dx;
+                    }
+                    else {
+
+                        if (dx < 0 || dx >= iWidth || dy < 0 || dy >= iHeight) dPos = -1;
+                        else dPos = (dy * iWidth) + dx;
+                    }
+
+                    copyPixel(dPos, iPos, input);
+                }
+                else copyPixel(iPos, iPos, input);
+            }
+        }
+        if (lineOut) processResults(output, work, 1 - opacity);
+        else processResults(work, output, opacity);
+    },
+
+    'emboss': function (requirements) {
+
+        let [input, output] = getInputAndOutputChannels(requirements);
+
+        let len = input.r.length;
+
+        let {opacity, strength, angle, lineOut} = requirements;
+
+        if (null == opacity) opacity = 1;
+        if (null == strength) strength = 1;
+        if (null == angle) angle = true;
+
+        strength = Math.abs(strength);
+
+        while (angle < 0) {
+            angle += 360;
+        }
+
+        angle = angle % 360;
+
+        // build weights Array ... `angle == 0` is pointing directly to the east (right of origin)
+        let slices = Math.floor(angle / 45),
+            remains = ((angle % 45) / 45) * strength,
+            weights = new Array(9);
+
+        weights = weights.fill(0, 0, 9); 
+        weights[4] = 1;
+
+        if (slices == 0) {
+            weights[5] = strength - remains;
+            weights[8] = remains;
+            weights[3] = -weights[5];
+            weights[0] = -weights[8];
+        }
+        else if (slices == 1) {
+            weights[8] = strength - remains;
+            weights[7] = remains;
+            weights[0] = -weights[8];
+            weights[1] = -weights[7];
+        }
+        else if (slices == 2) {
+            weights[7] = strength - remains;
+            weights[6] = remains;
+            weights[1] = -weights[7];
+            weights[2] = -weights[6];
+        }
+        else if (slices == 3) {
+            weights[6] = strength - remains;
+            weights[3] = remains;
+            weights[2] = -weights[6];
+            weights[5] = -weights[3];
+        }
+        else if (slices == 4) {
+            weights[3] = strength - remains;
+            weights[0] = remains;
+            weights[5] = -weights[3];
+            weights[8] = -weights[0];
+        }
+        else if (slices == 5) {
+            weights[0] = strength - remains;
+            weights[1] = remains;
+            weights[8] = -weights[0];
+            weights[7] = -weights[1];
+        }
+        else if (slices == 6) {
+            weights[1] = strength - remains;
+            weights[2] = remains;
+            weights[7] = -weights[1];
+            weights[6] = -weights[2];
+        }
+        else {
+            weights[2] = strength - remains;
+            weights[5] = remains;
+            weights[6] = -weights[2];
+            weights[3] = -weights[5];
+        }
+
+        const hold = createResultObject(len);
+        const {r:inR, g:inG, b:inB, a:inA} = input;
+        const {r:outR, g:outG, b:outB, a:outA} = output;
+        const {r:holdR, g:holdG, b:holdB, a:holdA} = hold;
+
+        // Need to grayscale the input before processing it
+        for (let i = 0; i < len; i++) {
+
+            let gray = Math.floor((0.2126 * inR[i]) + (0.7152 * inG[i]) + (0.0722 * inB[i]));
+
+            outR[i] = gray;
+            outG[i] = gray;
+            outB[i] = gray;
+            outA[i] = inA[i];
+        }
+
+        grid = buildMatrixGrid(3, 3, 1, 1, hold.a);
+
+        const doCalculations = function (inChannel, matrix) {
+
+            let val = 0;
+
+            for (let m = 0, mz = matrix.length; m < mz; m++) {
+
+                if (weights[m]) val += (inChannel[matrix[m]] * weights[m]);
+            }
+            return val;
+        }
+
+        for (let i = 0; i < len; i++) {
+
+            let gray = Math.floor((0.2126 * inR[i]) + (0.7152 * inG[i]) + (0.0722 * inB[i]));
+
+            holdR[i] = gray;
+            holdG[i] = gray;
+            holdB[i] = gray;
+            holdA[i] = inA[i];
+        }
+
+        for (let i = 0; i < len; i++) {
+
+            if (holdA[i]) {
+
+                outR[i] = doCalculations(holdR, grid[i]);
+                outG[i] = doCalculations(holdG, grid[i]);
+                outB[i] = doCalculations(holdB, grid[i]);
+                outA[i] = holdA[i];
+            }
+        }
+        if (lineOut) processResults(output, work, 1 - opacity);
+        else processResults(work, output, opacity);
+    },
+
     'flood': function (requirements) {
 
         let [input, output] = getInputAndOutputChannels(requirements);
@@ -2058,11 +2326,21 @@ const theBigActionsObject = {
 
         let [input, output] = getInputAndOutputChannels(requirements);
 
-        let {opacity, offsetX, offsetY, lineOut} = requirements;
+        let {opacity, offsetRedX, offsetRedY, offsetGreenX, offsetGreenY, offsetBlueX, offsetBlueY, offsetAlphaX, offsetAlphaY, lineOut} = requirements;
 
         if (null == opacity) opacity = 1;
-        if (null == offsetX) offsetX = 0;
-        if (null == offsetY) offsetY = 0;
+        if (null == offsetRedX) offsetRedX = 0;
+        if (null == offsetRedY) offsetRedY = 0;
+        if (null == offsetGreenX) offsetGreenX = 0;
+        if (null == offsetGreenY) offsetGreenY = 0;
+        if (null == offsetBlueX) offsetBlueX = 0;
+        if (null == offsetBlueY) offsetBlueY = 0;
+        if (null == offsetAlphaX) offsetAlphaX = 0;
+        if (null == offsetAlphaY) offsetAlphaY = 0;
+
+        let simpleoffset = false;
+
+        if (offsetRedX == offsetGreenX && offsetRedX == offsetBlueX && offsetRedX == offsetAlphaX && offsetRedY == offsetGreenY && offsetRedY == offsetBlueY && offsetRedY == offsetAlphaY) simpleoffset = true;
 
         const {r:inR, g:inG, b:inB, a:inA} = input;
         const {r:outR, g:outG, b:outB, a:outA} = output;
@@ -2070,7 +2348,7 @@ const theBigActionsObject = {
         let grid = buildImageGrid(),
             gWidth = grid[0].length,
             gHeight = grid.length,
-            dx, dy, inCell, outCell;
+            drx, dry, dgx, dgy, dbx, dby, dax, day, inCell, outCell;
 
         for (let y = 0; y < gHeight; y++) {
             for (let x = 0; x < gWidth; x++) {
@@ -2079,17 +2357,54 @@ const theBigActionsObject = {
 
                 if (inA[inCell]) {
 
-                    dx = x + offsetX;
-                    dy = y + offsetY;
+                    if (simpleoffset) {
 
-                    if (dx >= 0 && dx < gWidth && dy >= 0 && dy < gHeight) {
+                        drx = x + offsetRedX;
+                        dry = y + offsetRedY;
 
-                        outCell = grid[dy][dx];
+                        if (drx >= 0 && drx < gWidth && dry >= 0 && dry < gHeight) {
 
-                        outR[outCell] = inR[inCell];
-                        outG[outCell] = inG[inCell];
-                        outB[outCell] = inB[inCell];
-                        outA[outCell] = inA[inCell];
+                            outCell = grid[dry][drx];
+                            outR[outCell] = inR[inCell];
+                            outG[outCell] = inG[inCell];
+                            outB[outCell] = inB[inCell];
+                            outA[outCell] = inA[inCell];
+                        }
+                    }
+                    else {
+
+                        drx = x + offsetRedX;
+                        dry = y + offsetRedY;
+                        dgx = x + offsetGreenX;
+                        dgy = y + offsetGreenY;
+                        dbx = x + offsetBlueX;
+                        dby = y + offsetBlueY;
+                        dax = x + offsetAlphaX;
+                        day = y + offsetAlphaY;
+
+                        if (drx >= 0 && drx < gWidth && dry >= 0 && dry < gHeight) {
+
+                            outCell = grid[dry][drx];
+                            outR[outCell] = inR[inCell];
+                        }
+
+                        if (dgx >= 0 && dgx < gWidth && dgy >= 0 && dgy < gHeight) {
+
+                            outCell = grid[dgy][dgx];
+                            outG[outCell] = inG[inCell];
+                        }
+
+                        if (dbx >= 0 && dbx < gWidth && dby >= 0 && dby < gHeight) {
+
+                            outCell = grid[dby][dbx];
+                            outB[outCell] = inB[inCell];
+                        }
+
+                        if (dax >= 0 && dax < gWidth && day >= 0 && day < gHeight) {
+
+                            outCell = grid[day][dax];
+                            outA[outCell] = inA[inCell];
+                        }
                     }
                 }
             }

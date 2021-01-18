@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Filters 017</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    .controls {
+      grid-template-columns: 1fr 2fr 1fr 2fr;
+    }
+    img {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 017</h1>
+  <h2>Parameters for: displace filter</h2>
+
+  <div class="controls">
+
+    <div class="yellow label">Scale X</div>
+    <div class="yellow"><input class="controlItem" id="scale_x" type="range" value="1" min="0" max="100" step="0.1" /></div>
+
+    <div class="yellow label">Scale Y</div>
+    <div class="yellow"><input class="controlItem" id="scale_y" type="range" value="1" min="0" max="100" step="0.1" /></div>
+
+    <div class="yellow label">Offset X</div>
+    <div class="yellow"><input class="controlItem" id="offset_x" type="range" value="0" min="0" max="100" step="1" /></div>
+
+    <div class="yellow label">Offset Y</div>
+    <div class="yellow"><input class="controlItem" id="offset_y" type="range" value="0" min="0" max="100" step="1" /></div>
+
+    <div class="yellow label">Transparent edges</div>
+    <div class="yellow">
+      <select class="controlItem" id="transparent_edges">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="lavender label">Opacity</div>
+    <div class="lavender"><input class="controlItem" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
+
+  </div>
+
+  <canvas id="mycanvas" width="400" height="400"></canvas>
+
+  <img id="iris" src="img/iris.png" class="flowers" />
+  <img id="perlin" src="img/perlin-noise-texture.png" class="flowers" />
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+
+    <ul>
+      <li>Create a test Picture entity</li>
+      <li>Create an areaAlpha filter and apply it to the test entity</li>
+      <li>Update filter attributes and observe the effect they have on the entity</li>
+    </ul>
+
+    <p><a href="../docs/demo/filters-017.html">Annotated code</a></p>
+  </div>
+
+  <script src="filters-017.js" type="module"></script>
+
+</body>
+
+</html>

@@ -167,6 +167,11 @@ import {
 
 
 import { 
+    makeNoise,
+} from './factory/noise.js';
+
+
+import { 
     makeOval,
 } from './factory/oval.js';
 
@@ -418,6 +423,10 @@ export default {
 
     // factory/net.js
     makeNet,
+
+
+    // factory/noise.js
+    makeNoise,
 
 
     // factory/oval.js

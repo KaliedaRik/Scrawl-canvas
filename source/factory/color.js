@@ -491,15 +491,15 @@ P.convert = function (items) {
 
             if (/%/.test(items)) {
             
-                r = round((temp[0] / 100) * 255);
-                g = round((temp[1] / 100) * 255);
-                b = round((temp[2] / 100) * 255);
+                r = round((parseFloat(temp[0]) / 100) * 255);
+                g = round((parseFloat(temp[1]) / 100) * 255);
+                b = round((parseFloat(temp[2]) / 100) * 255);
             }
             else {
             
-                r = round(temp[0]);
-                g = round(temp[1]);
-                b = round(temp[2]);
+                r = round(parseFloat(temp[0]));
+                g = round(parseFloat(temp[1]));
+                b = round(parseFloat(temp[2]));
             }
         }
         else if (/rgba\(/.test(items)) {
@@ -508,31 +508,24 @@ P.convert = function (items) {
 
             if (/%/.test(items)) {
             
-                r = round((temp[0] / 100) * 255);
-                g = round((temp[1] / 100) * 255);
-                b = round((temp[2] / 100) * 255);
-                a = temp[3] / 100;
+                r = round((parseFloat(temp[0]) / 100) * 255);
+                g = round((parseFloat(temp[1]) / 100) * 255);
+                b = round((parseFloat(temp[2]) / 100) * 255);
+                a = parseFloat(temp[3]) / 100;
             }
             else {
             
-                r = round(temp[0]);
-                g = round(temp[1]);
-                b = round(temp[2]);
+                r = round(parseFloat(temp[0]));
+                g = round(parseFloat(temp[1]));
+                b = round(parseFloat(temp[2]));
                 a = temp[3];
             }
         }
         else if (/hsl\(/.test(items) || /hsla\(/.test(items)) {
 
-            // the spec explanation can be found here https://developer.mozilla.org/en-US/docs/Web/CSS/color_value
-            //
-            // see http://www.niwa.nu/2013/05/math-behind-colorspace-conversions-rgb-hsl/ for one way we can approach converting hsl values to rgb
-            //
-            // currently, knock down to transparent black
-            r = 0;
-            g = 0;
-            b = 0;
-            a = 0;
+            temp = items.match(/([0-9.]+\b)/g);
 
+            this.setFromHSL(parseFloat(temp[0]), parseFloat(temp[1]), parseFloat(temp[2]), parseFloat(temp[3]));
         }
         else if (items === 'transparent') {
 
@@ -563,6 +556,148 @@ P.convert = function (items) {
     }
 
     return this;
+};
+
+
+P.getHSLfromRGB = function (dr, dg, db) {
+
+    let minColor = Math.min(dr, dg, db),
+        maxColor = Math.max(dr, dg, db);
+
+    let lum = (minColor + maxColor) / 2;
+
+    let sat = 0;
+
+    if (minColor !== maxColor) {
+
+        if (lum <= 0.5) sat = (maxColor - minColor) / (maxColor + minColor);
+        else sat = (maxColor - minColor) / (2 - maxColor - minColor);
+    }
+
+    let hue = 0;
+
+    if (maxColor === dr) hue = (dg - db) / (maxColor - minColor);
+    else if (maxColor === dg) hue = 2 + ((db - dr) / (maxColor - minColor));
+    else hue = 4 + ((dr - dg) / (maxColor - minColor));
+
+    hue *= 60;
+
+    if (hue < 0) hue += 360;
+
+    return [hue, sat, lum];
+};
+
+P.getHSL = function () {
+
+    let {r, g, b} = this;
+
+    let minColor = Math.min(r, g, b),
+        maxColor = Math.max(r, g, b);
+
+    let lum = (minColor + maxColor) / 2;
+
+    let sat = 0;
+
+    if (minColor !== maxColor) {
+
+        if (lum <= 0.5) sat = (maxColor - minColor) / (maxColor + minColor);
+        else sat = (maxColor - minColor) / (2 - maxColor - minColor);
+    }
+
+    let hue = 0;
+
+    if (maxColor === r) hue = (g - b) / (maxColor - minColor);
+    else if (maxColor === g) hue = 2 + ((b - r) / (maxColor - minColor));
+    else hue = 4 + ((r - g) / (maxColor - minColor));
+
+    hue *= 60;
+
+    if (hue < 0) hue += 360;
+
+    return [hue, sat, lum];
+};
+
+P.getRGBfromHSL = function (h, s, l, a) {
+
+    if (!s) {
+
+        let gray = Math.floor(l * 255);
+        return [gray, gray, gray];
+    }
+
+    let tempLum1 = (l < 0.5) ? l * (s + 1) : l + s - (l * s),
+        tempLum2 = (2 * l) - tempLum1;
+
+    const calculator = function (t, l1, l2) {
+
+        if (t * 6 < 1) return l2 + ((l1 - l2) * 6 * t);
+        if (t * 2 < 1) return l1;
+        if (t * 2 < 2) return l2 + ((l1 - l2) * 6 * (t * 0.666));
+        return l2;
+    };
+
+    h /= 360;
+
+    let tr = h + 0.333,
+        tg = h,
+        tb = h - 0.333;
+
+    if (tr < 0) tr += 1;
+    if (tr > 1) tr -= 1;
+    if (tg < 0) tg += 1;
+    if (tg > 1) tg -= 1;
+    if (tb < 0) tb += 1;
+    if (tb > 1) tb -= 1;
+
+    let r = calculator(tr, tempLum1, tempLum2) * 255,
+        g = calculator(tg, tempLum1, tempLum2) * 255,
+        b = calculator(tb, tempLum1, tempLum2) * 255;
+
+    if (null == a) return [r, g, b];
+
+    return [r, g, b, a * 255];
+};
+
+P.setFromHSL = function (h, s, l, a) {
+
+    if (!s) {
+
+        let gray = Math.floor(l * 255);
+        return [gray, gray, gray];
+    }
+
+    let tempLum1 = (l < 0.5) ? l * (s + 1) : l + s - (l * s),
+        tempLum2 = (2 * l) - tempLum1;
+
+    const calculator = function (t, l1, l2) {
+
+        if (t * 6 < 1) return l2 + ((l1 - l2) * 6 * t);
+        if (t * 2 < 1) return l1;
+        if (t * 2 < 2) return l2 + ((l1 - l2) * 6 * (t * 0.666));
+        return l2;
+    };
+
+    h /= 360;
+
+    let tr = h + 0.333,
+        tg = h,
+        tb = h - 0.333;
+
+    if (tr < 0) tr += 1;
+    if (tr > 1) tr -= 1;
+    if (tg < 0) tg += 1;
+    if (tg > 1) tg -= 1;
+    if (tb < 0) tb += 1;
+    if (tb > 1) tb -= 1;
+
+    this.r = calculator(tr, tempLum1, tempLum2) * 255,
+    this.g = calculator(tg, tempLum1, tempLum2) * 255,
+    this.b = calculator(tb, tempLum1, tempLum2) * 255;
+
+    if (null != a) {
+
+        this.a = a * 255;
+    }
 };
 
 

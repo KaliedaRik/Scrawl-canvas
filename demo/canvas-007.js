@@ -8,6 +8,8 @@ import scrawl from '../source/scrawl.js'
 // #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
+scrawl.importDomImage('.map');
+
 canvas.set({
     fit: 'fill',
     backgroundColor: 'lightgray',
@@ -169,6 +171,24 @@ scrawl.makeFilter({
 }).clone({
     name: 'yellow',
     method: 'yellow',
+
+// __Edge detect__ filter
+}).clone({
+    name: 'edgeDetect',
+    method: 'edgeDetect',
+
+// __Sharpen__ filter
+}).clone({
+    name: 'sharpen',
+    method: 'sharpen',
+});
+
+// __Emboss__ filter
+scrawl.makeFilter({
+    name: 'emboss',
+    method: 'emboss',
+    angle: 225,
+    strength: 4,
 });
 
 // __Chroma__ (green screen) filter
@@ -244,6 +264,16 @@ scrawl.makeFilter({
     opacity: 0.5,
 });
 
+// __Offset Channels__ filter
+scrawl.makeFilter({
+    name: 'offsetChannels',
+    method: 'offsetChannels',
+    offsetRedX: -12,
+    offsetGreenY: 12,
+    offsetBlueX: 3,
+    offsetBlueY: -3,
+});
+
 // __Pixellate__ filter
 scrawl.makeFilter({
     name: 'pixelate',
@@ -315,7 +345,11 @@ scrawl.makeFilter({
             action: 'blur',
             lineIn: 'source-alpha',
             lineOut: 'shadow',
-            radius: 4, 
+            radius: 2, 
+            passes: 2, 
+            includeRed: false, 
+            includeGreen: false, 
+            includeBlue: false, 
             includeAlpha: true, 
         },
         {
@@ -335,7 +369,11 @@ scrawl.makeFilter({
             action: 'blur',
             lineIn: 'source-alpha',
             lineOut: 'shadow',
-            radius: 6, 
+            radius: 3,
+            passes: 2, 
+            includeRed: false, 
+            includeGreen: false, 
+            includeBlue: false, 
             includeAlpha: true, 
         },
         {
@@ -361,6 +399,27 @@ scrawl.makeFilter({
             action: 'compose',
             lineIn: 'source',
             lineMix: 'colorized',
+        }
+    ],
+});
+
+scrawl.makeFilter({
+    name: 'noise',
+    actions: [
+        {
+            action: 'process-image',
+            asset: 'perlin',
+            width: 500,
+            height: 500,
+            copyWidth: 500,
+            copyHeight: 500,
+            lineOut: 'map',
+        },
+        {
+            action: 'displace',
+            lineMix: 'map',
+            scaleX: 20,
+            scaleY: 30,
         }
     ],
 });

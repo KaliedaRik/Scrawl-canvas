@@ -95,6 +95,18 @@ let defaultAttributes = {
     excludeBlue: false,
     excludeAlpha: true, 
 
+    strength: 1,
+    angle: 0,
+
+    offsetRedX: 0,
+    offsetRedY: 0,
+    offsetGreenX: 0,
+    offsetGreenY: 0,
+    offsetBlueX: 0,
+    offsetBlueY: 0,
+    offsetAlphaX: 0,
+    offsetAlphaY: 0,
+
     actions: null,
 
     gutterWidth: 1,
@@ -116,7 +128,12 @@ let defaultAttributes = {
     copyX: 0,
     copyY: 0,
 
-    
+    channelX: 'red',
+    channelY: 'green',
+    scaleX: 1,
+    scaleY: 1,
+    transparentEdges: false,
+   
 // All filters need to set out their __method__. For preset methods, a method string (eg 'grayscale', 'sepia') is sufficient. Bespoke methods require a function
     method: '',
 
@@ -529,6 +546,23 @@ const setActionsArray = {
         }];
     },
 
+    displace: function (f) {
+        f.actions = [{
+            action: 'displace',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            lineMix: (f.lineMix != null) ? f.lineMix : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            channelX: (f.channelX != null) ? f.channelX : 'red',
+            channelY: (f.channelY != null) ? f.channelY : 'green',
+            offsetX: (f.offsetX != null) ? f.offsetX : 0,
+            offsetY: (f.offsetY != null) ? f.offsetY : 0,
+            scaleX: (f.scaleX != null) ? f.scaleX : 1,
+            scaleY: (f.scaleY != null) ? f.scaleY : 1,
+            transparentEdges: (f.transparentEdges != null) ? f.transparentEdges : false,
+        }];
+    },
+
     edgeDetect: function (f) {
         f.actions = [{
             action: 'matrix',
@@ -549,19 +583,12 @@ const setActionsArray = {
 
     emboss: function (f) {
         f.actions = [{
-            action: 'matrix',
+            action: 'emboss',
             lineIn: (f.lineIn != null) ? f.lineIn : '',
             lineOut: (f.lineOut != null) ? f.lineOut : '',
             opacity: (f.opacity != null) ? f.opacity : 1,
-            width: 3,
-            height: 3,
-            offsetX: 1,
-            offsetY: 1,
-            includeRed: true,
-            includeGreen: true,
-            includeBlue: true,
-            includeAlpha: false,
-            weights: [-2,-1,0,-1,1,1,0,1,2],
+            angle: (f.angle != null) ? f.angle : 0,
+            strength: (f.strength != null) ? f.strength : 1,
         }];
     },
 
@@ -724,8 +751,31 @@ const setActionsArray = {
             lineIn: (f.lineIn != null) ? f.lineIn : '',
             lineOut: (f.lineOut != null) ? f.lineOut : '',
             opacity: (f.opacity != null) ? f.opacity : 1,
-            offsetX: (f.offsetX != null) ? f.offsetX : 0,
-            offsetY: (f.offsetY != null) ? f.offsetY : 0,
+            offsetRedX: (f.offsetX != null) ? f.offsetX : 0,
+            offsetRedY: (f.offsetY != null) ? f.offsetY : 0,
+            offsetGreenX: (f.offsetX != null) ? f.offsetX : 0,
+            offsetGreenY: (f.offsetY != null) ? f.offsetY : 0,
+            offsetBlueX: (f.offsetX != null) ? f.offsetX : 0,
+            offsetBlueY: (f.offsetY != null) ? f.offsetY : 0,
+            offsetAlphaX: (f.offsetX != null) ? f.offsetX : 0,
+            offsetAlphaY: (f.offsetY != null) ? f.offsetY : 0,
+        }];
+    },
+
+    offsetChannels: function (f) {
+        f.actions = [{
+            action: 'offset',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            offsetRedX: (f.offsetRedX != null) ? f.offsetRedX : 0,
+            offsetRedY: (f.offsetRedY != null) ? f.offsetRedY : 0,
+            offsetGreenX: (f.offsetGreenX != null) ? f.offsetGreenX : 0,
+            offsetGreenY: (f.offsetGreenY != null) ? f.offsetGreenY : 0,
+            offsetBlueX: (f.offsetBlueX != null) ? f.offsetBlueX : 0,
+            offsetBlueY: (f.offsetBlueY != null) ? f.offsetBlueY : 0,
+            offsetAlphaX: (f.offsetAlphaX != null) ? f.offsetAlphaX : 0,
+            offsetAlphaY: (f.offsetAlphaY != null) ? f.offsetAlphaY : 0,
         }];
     },
 
