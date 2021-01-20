@@ -12,7 +12,7 @@ scrawl.importDomImage('.map');
 
 canvas.set({
     fit: 'fill',
-    backgroundColor: 'lightgray',
+    backgroundColor: 'beige',
     css: {
         border: '1px solid black'
     }
@@ -420,6 +420,7 @@ scrawl.makeFilter({
             lineMix: 'map',
             scaleX: 20,
             scaleY: 30,
+            transparentEdges: true,
         }
     ],
 });

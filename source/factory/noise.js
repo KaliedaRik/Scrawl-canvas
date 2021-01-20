@@ -8,11 +8,13 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver } from '../core/utilities.js';
+import { mergeOver, λnull, λthis, λfirstArg, removeItem, seededRandomNumberGenerator } from '../core/utilities.js';
+
+import { makeColor } from './color.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
-// import patternMix from '../mixin/pattern.js';
+import patternMix from '../mixin/pattern.js';
 
 
 // #### Noise constructor
@@ -24,13 +26,27 @@ const Noise = function (items = {}) {
     let mycanvas = document.createElement('canvas');
     mycanvas.id = this.name;
 
-    mycanvas.width = 300;
-    mycanvas.height = 150;
-
     this.installElement(mycanvas);
+
+    this.perm = [];
+    this.permMod8 = [];
+    this.values = [];
+    this.grad = [];
+
+    this.subscribers = [];
+
+    this.colorFactory = makeColor({
+        name: `${this.name}-color-factory`,
+        minimumColor: items.gradientStart || 'red',
+        maximumColor: items.gradientEnd || 'green',
+    });
 
     this.set(this.defs);
     this.set(items);
+
+    if (items.subscribe) this.subscribers.push(items.subscribe);
+
+    this.dirtyOutput = true;
 
     return this;
 };
@@ -49,21 +65,60 @@ P.isAsset = true;
 // + [entity](../mixin/entity.html)
 P = baseMix(P);
 P = assetMix(P);
+P = patternMix(P);
 
 
 // #### Noise attributes
 let defaultAttributes = {
 
+    width: 300,
+    height: 150,
+
+    seed: 'noize',
+    noiseFunction: 'perlin_improved',
+    smoothing: 'quintic',
+    scale: 50,
+    size: 256,
+    octaves: 1,
+    persistence: 0.5,
+    lacunarity: 2,
+    independent: false,
+    octaveFunction: 'none',
+    sumFunction: 'none',
+    sineFrequencyCoeff: 1,
+    modularAmplitude: 5,
+
+    color: 'monochrome',
+
+    monochromeStart: 0,
+    monochromeRange: 255,
+
+    hueStart: 0,
+    hueRange: 120,
+    saturation: 100,
+    luminosity: 50,
+
+    gradientStart: '#ff0000',
+    gradientEnd: '#00ff00',
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
+delete P.defs.source;
+delete P.defs.sourceLoaded;
 
 // #### Packet management
-// No additional packet functionality required
+// This functionality is disabled for Cell objects
+P.stringifyFunction = λnull;
+P.processPacketOut = λnull;
+P.finalizePacketOut = λnull;
+P.saveAsPacket = function () {
+
+    return `[${this.name}, ${this.type}, ${this.lib}, {}]`
+};
 
 
 // #### Clone management
-// No additional clone functionality required
+P.clone = λthis;
 
 
 // #### Kill management
@@ -75,9 +130,279 @@ let G = P.getters,
     S = P.setters,
     D = P.deltaSetters;
 
+// __source__
+S.source = λnull;
+
+// __subscribers__ - we disable the ability to set the subscribers Array directly. Picture entitys and Pattern styles will manage their subscription to the asset using their subscribe() and unsubscribe() functions. Filters will check for updates every time they run
+S.subscribers = λnull;
+
+S.octaveFunction = function (item) {
+
+    this.octaveFunction = this.octaveFunctions[item] || λfirstArg;
+    this.dirtyNoise = true;
+    this.dirtyOutput = true;
+};
+
+S.sumFunction = function (item) {
+
+    this.sumFunction = this.sumFunctions[item] || λfirstArg;
+    this.dirtyNoise = true;
+    this.dirtyOutput = true;
+};
+
+S.smoothing = function (item) {
+
+    this.smoothing = this.smoothingFunctions[item] || λfirstArg;
+    this.dirtyNoise = true;
+    this.dirtyOutput = true;
+};
+
+S.noiseFunction = function (item) {
+
+    this.noiseFunction = this.noiseFunctions[item] || this.noiseFunctions['simplex'];
+    this.dirtyNoise = true;
+    this.dirtyOutput = true;
+};
+
+S.octaves = function (item) {
+
+    if (item.toFixed) {
+
+        this.octaves = item;
+        this.dirtyNoise = true;
+        this.dirtyOutput = true;
+    }
+};
+
+S.seed = function (item) {
+
+    if (item.substring) {
+
+        this.seed = item;
+        this.dirtyNoise = true;
+        this.dirtyOutput = true;
+    }
+};
+
+P.supportedColorSchemes = ['monochrome', 'gradient', 'hue'];
+S.color = function (item) {
+
+    if (this.supportedColorSchemes.indexOf(item) >= 0) {
+
+        this.color = item;
+        this.dirtyOutput = true;
+    }
+};
+
+S.scale = function (item) {
+
+    if (item.toFixed) {
+
+        this.scale = item;
+        this.dirtyNoise = true;
+        this.dirtyOutput = true;
+    }
+};
+
+S.size = function (item) {
+
+    if (item.toFixed) {
+
+        this.size = item;
+        this.dirtyNoise = true;
+        this.dirtyOutput = true;
+    }
+};
+
+S.persistence = function (item) {
+
+    if (item.toFixed) {
+
+        this.persistence = item;
+        this.dirtyNoise = true;
+        this.dirtyOutput = true;
+    }
+};
+
+S.lacunarity = function (item) {
+
+    if (item.toFixed) {
+
+        this.lacunarity = item;
+        this.dirtyNoise = true;
+        this.dirtyOutput = true;
+    }
+};
+
+S.independent = function (item) {
+
+    this.independent = !!item;
+    this.dirtyNoise = true;
+    this.dirtyOutput = true;
+};
+
+S.gradientStart = function (item) {
+
+    if (item.substring) {
+
+        this.colorFactory.setMinimumColor(item);
+        this.dirtyOutput = true;
+    }
+};
+
+S.gradientEnd = function (item) {
+
+    if (item.substring) {
+
+        this.colorFactory.setMaximumColor(item);
+        this.dirtyOutput = true;
+    }
+};
+
+S.monochromeStart = function (item) {
+
+    if (item.toFixed && item >= 0 && item < 256) {
+
+        this.monochromeStart = Math.floor(item);
+        this.dirtyOutput = true;
+    }
+};
+
+S.monochromeRange = function (item) {
+
+    if (item.toFixed && item >= 0 && item < 256) {
+
+        this.monochromeRange = Math.floor(item);
+        this.dirtyOutput = true;
+    }
+};
+
+S.hueStart = function (item) {
+
+    if (item.toFixed) {
+
+        this.hueStart = Math.floor(item);
+        this.dirtyOutput = true;
+    }
+};
+
+S.hueRange = function (item) {
+
+    if (item.toFixed) {
+
+        this.hueRange = Math.floor(item);
+        this.dirtyOutput = true;
+    }
+};
+
+S.saturation = function (item) {
+
+    if (item.toFixed && item >= 0 && item <= 100) {
+
+        this.saturation = Math.floor(item);
+        this.dirtyOutput = true;
+    }
+};
+
+S.luminosity = function (item) {
+
+    if (item.toFixed && item >= 0 && item <= 100) {
+
+        this.luminosity = Math.floor(item);
+        this.dirtyOutput = true;
+    }
+};
+
+S.sineFrequencyCoeff = function (item) {
+
+    if (item.toFixed) {
+
+        this.sineFrequencyCoeff = item;
+        this.dirtyNoise = true;
+        this.dirtyOutput = true;
+    }
+};
+
+S.modularAmplitude = function (item) {
+
+    if (item.toFixed) {
+
+        this.modularAmplitude = item;
+        this.dirtyNoise = true;
+        this.dirtyOutput = true;
+    }
+};
+
+S.width = function (item) {
+
+    if (item.toFixed) {
+
+        this.width = item;
+        this.sourceNaturalWidth = item;
+        this.dirtyNoise = true;
+        this.dirtyOutput = true;
+    }
+};
+
+S.height = function (item) {
+
+    if (item.toFixed) {
+
+        this.height = item;
+        this.sourceNaturalHeight = item;
+        this.dirtyNoise = true;
+        this.dirtyOutput = true;
+    }
+};
 
 
 // #### Prototype functions
+P.presetTo = function (preset) {
+
+    if (preset.substring) {
+
+        this.dirtyNoise = true;
+        this.dirtyOutput = true;
+
+        switch (preset) {
+
+            case 'plain' :
+                this.octaves = 1;
+                this.octaveFunction = λfirstArg;
+                this.sumFunction = λfirstArg;
+                break;
+
+            case 'clouds' :
+                this.octaves = 5;
+                this.octaveFunction = λfirstArg;
+                this.sumFunction = λfirstArg;
+                break;
+
+            case 'turbulence' :
+                this.octaves = 5;
+                this.octaveFunction = this.octaveFunctions['absolute'];
+                this.sumFunction = λfirstArg;
+                break;
+
+            case 'marble' :
+                this.octaves = 5;
+                this.octaveFunction = this.octaveFunctions['absolute'];
+                this.sumFunction = this.sumFunctions['sine'];
+                break;
+
+            case 'wood' :
+                this.octaves = 1;
+                this.octaveFunction = λfirstArg;
+                this.sumFunction = this.sumFunctions['modular'];
+                break;
+
+            default :
+                this.octaves = 1;
+                this.octaveFunction = λfirstArg;
+                this.sumFunction = λfirstArg;
+        }
+    }
+}
 
 // `installElement` - internal function, used by the constructor
 P.installElement = function (element) {
@@ -88,89 +413,601 @@ P.installElement = function (element) {
     return this;
 };
 
-// https://github.com/garycourt/murmurhash-js/blob/master/murmurhash3_gc.js
-/**
- * JS Implementation of MurmurHash3 (r136) (as of May 20, 2011)
- * 
- * @author <a href="mailto:gary.court@gmail.com">Gary Court</a>
- * @see http://github.com/garycourt/murmurhash-js
- * @author <a href="mailto:aappleby@gmail.com">Austin Appleby</a>
- * @see http://sites.google.com/site/murmurhash/
- * 
- * @param {string} key ASCII only
- * @param {number} seed Positive integer only
- * @return {number} 32-bit positive integer hash 
- */
-P.murmurhash3_32_gc = function (key, seed = 12345) {
+P.checkSource = function (width, height) {
 
-    var remainder, bytes, h1, h1b, c1, c1b, c2, c2b, k1, i;
-    
-    remainder = key.length & 3; // key.length % 4
-    bytes = key.length - remainder;
-    h1 = seed;
-    c1 = 0xcc9e2d51;
-    c2 = 0x1b873593;
-    i = 0;
-    
-    while (i < bytes) {
-        k1 = 
-          ((key.charCodeAt(i) & 0xff)) |
-          ((key.charCodeAt(++i) & 0xff) << 8) |
-          ((key.charCodeAt(++i) & 0xff) << 16) |
-          ((key.charCodeAt(++i) & 0xff) << 24);
-        ++i;
-        
-        k1 = ((((k1 & 0xffff) * c1) + ((((k1 >>> 16) * c1) & 0xffff) << 16))) & 0xffffffff;
-        k1 = (k1 << 15) | (k1 >>> 17);
-        k1 = ((((k1 & 0xffff) * c2) + ((((k1 >>> 16) * c2) & 0xffff) << 16))) & 0xffffffff;
-
-        h1 ^= k1;
-        h1 = (h1 << 13) | (h1 >>> 19);
-        h1b = ((((h1 & 0xffff) * 5) + ((((h1 >>> 16) * 5) & 0xffff) << 16))) & 0xffffffff;
-        h1 = (((h1b & 0xffff) + 0x6b64) + ((((h1b >>> 16) + 0xe654) & 0xffff) << 16));
-    }
-    
-    k1 = 0;
-    
-    switch (remainder) {
-        case 3: k1 ^= (key.charCodeAt(i + 2) & 0xff) << 16;
-        case 2: k1 ^= (key.charCodeAt(i + 1) & 0xff) << 8;
-        case 1: k1 ^= (key.charCodeAt(i) & 0xff);
-        
-        k1 = (((k1 & 0xffff) * c1) + ((((k1 >>> 16) * c1) & 0xffff) << 16)) & 0xffffffff;
-        k1 = (k1 << 15) | (k1 >>> 17);
-        k1 = (((k1 & 0xffff) * c2) + ((((k1 >>> 16) * c2) & 0xffff) << 16)) & 0xffffffff;
-        h1 ^= k1;
-    }
-    
-    h1 ^= key.length;
-
-    h1 ^= h1 >>> 16;
-    h1 = (((h1 & 0xffff) * 0x85ebca6b) + ((((h1 >>> 16) * 0x85ebca6b) & 0xffff) << 16)) & 0xffffffff;
-    h1 ^= h1 >>> 13;
-    h1 = ((((h1 & 0xffff) * 0xc2b2ae35) + ((((h1 >>> 16) * 0xc2b2ae35) & 0xffff) << 16))) & 0xffffffff;
-    h1 ^= h1 >>> 16;
-
-    return h1 >>> 0;
+    this.notifySubscribers();
 };
 
-// PSEUDO-RANDOM NUMBER GENERATOR
-// + https://stackoverflow.com/questions/521295/seeding-the-random-number-generator-in-javascript/47593316
-P.mulberry32 = function (a) {
+// `getData`
+P.getData = function (entity, cell) {
 
-    return function() {
+    this.checkSource(this.width, this.height);
 
-        a |= 0; a = a + 0x6D2B79F5 | 0;
-        var t = Math.imul(a ^ a >>> 15, 1 | a);
-        t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return this.buildStyle(cell);
+};
 
-        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+// `notifySubscribers` - Subscriber notification in the asset factories will happen when something changes with the image. Changes vary across the different types of asset:
+// + __imageAsset__ - needs to update its subscribers when an image completes loading - or, for &lt;img> sources with srcset (and sizes) attributes, when the image completes a reload of its source data.
+// + __spriteAsset__ - will also update its subscribers each time it moves to a new sprite image frame, if the sprite is being animated
+// + __videoAsset__ - will update its subscribers for every RAF tick while the video is playing, or if the video is halted and seeks to a different time in the video play stream.
+//
+// All notifications are push; the notification is achieved by setting various attributes and flags in each subscriber.
+P.notifySubscribers = function () {
+
+    if (this.dirtyOutput || this.dirtyNoise) this.cleanOutput();
+
+    this.subscribers.forEach(sub => this.notifySubscriber(sub), this);
+};
+
+P.notifySubscriber = function (sub) {
+
+    sub.sourceNaturalWidth = this.width;
+    sub.sourceNaturalHeight = this.height;
+    sub.sourceLoaded = true;
+    sub.source = this.element;
+    sub.dirtyImage = true;
+    sub.dirtyCopyStart = true;
+    sub.dirtyCopyDimensions = true;
+    sub.dirtyImageSubscribers = true;
+};
+
+
+// Much of the following code comes from the "canvas-noise" GitHub repository
+// - https://github.com/lencinhaus/canvas-noise
+// - Written by https://github.com/lencinhaus (who has been inactive on GitHub since 2015)
+
+P.cleanOutput = function () {
+
+    if (this.dirtyNoise) this.cleanNoise();
+    if (this.dirtyOutput) this.paintCanvas();
+};
+
+P.cleanNoise = function () {
+
+    if (this.dirtyNoise) {
+
+        this.dirtyNoise = false;
+
+        let {noiseFunction, seed, width, height, element, engine, octaves, lacunarity, persistence, scale, octaveFunction, sumFunction} = this;
+
+        if (noiseFunction && noiseFunction.init) {
+
+            // Seed our pseudo-random number generator
+            this.rndEngine = seededRandomNumberGenerator(seed);
+
+            // Generate the permutations table(s)
+            this.generatePermutationTable();
+
+            // Initialize the appropriate noise function
+            noiseFunction.init.call(this);
+
+            let x, y, o, i, iz,
+                noiseValues = [],
+                scaledX, scaledY,
+                noise, amplitude, frequency, octave;
+
+            // Prepare the noiseValues 2d array
+            for (y = 0; y < height; y++) {
+
+                noiseValues[y] = [];
+
+                for (x = 0; x < width; x++) {
+
+                    noiseValues[y][x] = [];
+                }
+            }
+
+            // Calculate a relative scale, and setup min/max variables
+            let relativeScale = Math.pow(width, -scale / 100);
+
+            let max = -1000, 
+                min = 1000;
+
+            // This is the core of the calculation, performed for each cell in the noiseValues 2d array
+            for (y = 0; y < height; y++) {
+                for (x = 0; x < width; x++) {
+
+                    scaledX = x * relativeScale;
+                    scaledY = y * relativeScale;
+
+                    // Amplitude and frequency will update once per octave calculation; noise is the sum of all octave results
+                    noise = 0;
+                    amplitude = 1; 
+                    frequency = 1;
+
+
+                    for (o = 0; o < octaves; o++) {
+
+                        // call the appropriate noise function
+                        let octave = noiseFunction.noise.call(this, scaledX * frequency, scaledY * frequency);
+
+                        // update octave with a post-calculation octaveFunction, if required
+                        octave = octaveFunction(octave, scaledX, scaledY, o + 1);
+
+                        octave *= amplitude;
+
+                        noise += octave;
+
+                        frequency *= lacunarity;
+
+                        amplitude *= persistence;
+                    }
+                    noiseValues[y][x] = noise;
+
+                    min = Math.min(min, noise);
+                    max = Math.max(max, noise);
+                }
+            }
+
+            // Calculate the span of numbers generated - we need to get all the results in the range 0 to 1
+            let noiseSpan = max - min;
+
+            for (y = 0; y < height; y++) {
+                for (x = 0; x < width; x++) {
+
+                    scaledX = x * relativeScale;
+                    scaledY = y * relativeScale;
+
+                    // Clamp the cell's noise value to between 0 and 1, then update it with the post-calculation sumFunction, if required
+                    let v0 = noiseValues[y][x],
+                        v1 = (v0 - min) / noiseSpan,
+                        v2 = sumFunction.call(this, v1, scaledX, scaledY);
+
+                    noiseValues[y][x] = v2;
+                }
+            }
+            this.noiseValues = noiseValues;
+        }
+        else this.dirtyNoise = true;
     }
+};
+
+P.paintCanvas = function () {
+
+    if (this.dirtyOutput) {
+
+        this.dirtyOutput = false;
+
+        let {noiseValues, element, engine, width, height, color, colorFactory, monochromeStart, monochromeRange, hueStart, hueRange, saturation, luminosity} = this;
+
+        // Noise values will be calculated in the cleanNoise function, but just in case this function gets invoked directly before the 2d array has been created ...
+        if (null != noiseValues) {
+
+            // Update the Canvas element's dimensions - this will also clear the canvas display
+            element.width = width;
+            element.height = height;
+
+            // Rebuild the display, pixel-by-pixel
+            switch (color) {
+
+                case 'hue' :
+
+                    for (let y = 0; y < height; y++) {
+                        for (let x = 0; x < width; x++) {
+
+                            engine.fillStyle = `hsl(${(hueStart + (noiseValues[y][x] * hueRange)) % 360}, ${saturation}%, ${luminosity}%)`;
+                            engine.fillRect(x, y, 1, 1);
+                        }
+                    }
+                    break;
+
+                case 'gradient' :
+
+                    for (let y = 0; y < height; y++) {
+                        for (let x = 0; x < width; x++) {
+
+                            engine.fillStyle = colorFactory.getRangeColor(noiseValues[y][x]);
+                            engine.fillRect(x, y, 1, 1);
+                        }
+                    }
+                    break;
+
+                // The default color preference is monochrome
+                default :
+
+                    if (monochromeStart + monochromeRange > 255) monochromeRange = 255 - monochromeStart;
+
+                    for (let y = 0; y < height; y++) {
+                        for (let x = 0; x < width; x++) {
+
+                            let gray = Math.floor(monochromeStart + (noiseValues[y][x] * monochromeRange));
+
+                            engine.fillStyle = `rgb(${gray}, ${gray}, ${gray})`;
+
+                            engine.fillRect(x, y, 1, 1);
+                        }
+                    }
+            }
+        }
+        else this.dirtyOutput = true;
+    }
+};
+
+
+P.F = 0.5 * (Math.sqrt(3) - 1);
+P.G = (3 - Math.sqrt(3)) / 6;
+P.perlinGrad = [[1, 1], [-1, 1], [1, -1], [-1, -1], [1, 0], [-1, 0], [0, 1], [0, -1]];
+
+P.noiseFunctions = {
+
+    'perlin_classic': {
+
+        init: function () {
+
+            const {grad, size, rndEngine} = this;
+
+            let dist;
+            
+            grad.length = 0;
+
+            for(let i = 0; i < size; i++) {
+
+                grad[i] = [(rndEngine.random() * 2) - 1, (rndEngine.random() * 2) - 1];
+                dist = Math.sqrt(grad[i][0] *  grad[i][0] + grad[i][1] * grad[i][1]);
+                grad[i][0] /= dist;
+                grad[i][1] /= dist;
+            }
+        },
+
+        noise: function (x, y) {
+
+            const {size, perm, grad, smoothing, interpolate} = this;
+
+            let a, b, u, v;
+
+            let bx0 = Math.floor(x) % size,
+                bx1 = (bx0 + 1) % size,
+
+                rx0 = x - Math.floor(x),
+                rx1 = rx0 - 1,
+
+                by0 = Math.floor(y) % size,
+                by1 = (by0 + 1) % size,
+
+                ry0 = y - Math.floor(y),
+                ry1 = ry0 - 1,
+
+                i = perm[bx0],
+                j = perm[bx1],
+
+                b00 = perm[i + by0],
+                b10 = perm[j + by0],
+                b01 = perm[i + by1],
+                b11 = perm[j + by1],
+
+                sx = smoothing(rx0),
+                sy = smoothing(ry0);
+            
+            u = rx0 * grad[b00][0] + ry0 * grad[b00][1];
+            v = rx1 * grad[b10][0] + ry0 * grad[b10][1];
+            a = interpolate(sx, u, v);
+            
+            u = rx0 * grad[b01][0] + ry1 * grad[b01][1];
+            v = rx1 * grad[b11][0] + ry1 * grad[b11][1];
+            b = interpolate(sx, u, v);
+            
+            return 0.5 * (1 + interpolate(sy, a, b));
+        },
+    },
+
+    'perlin_improved': {
+
+        init: λnull,
+
+        noise: function (x, y) {
+
+            const {size, perm, permMod8, perlinGrad, smoothing, interpolate} = this;
+
+            let a, b, u, v;
+
+            let bx0 = Math.floor(x) % size, 
+                bx1 = (bx0 + 1) % size;
+
+            let rx0 = x - Math.floor(x), 
+                rx1 = rx0 - 1;
+
+            let by0 = Math.floor(y) % size, 
+                by1 = (by0 + 1) % size;
+
+            let ry0 = y - Math.floor(y), 
+                ry1 = ry0 - 1;
+
+            let i = perm[bx0], 
+                j = perm[bx1]; 
+
+            let b00 = permMod8[i + by0], 
+                b10 = permMod8[j + by0], 
+                b01 = permMod8[i + by1], 
+                b11 = permMod8[j + by1];
+            
+            let sx = smoothing(rx0),
+                sy = smoothing(ry0);
+            
+            u = rx0 * perlinGrad[b00][0] + ry0 * perlinGrad[b00][1];
+            v = rx1 * perlinGrad[b10][0] + ry0 * perlinGrad[b10][1];
+            a = interpolate(sx, u, v);
+            
+            u = rx0 * perlinGrad[b01][0] + ry1 * perlinGrad[b01][1];
+            v = rx1 * perlinGrad[b11][0] + ry1 * perlinGrad[b11][1];
+            b = interpolate(sx, u, v);
+
+            return 0.5 * (1 + interpolate(sy, a, b));
+        }
+    },
+
+    'simplex': {
+
+        init: λnull,
+
+        noise: function (x, y) {
+
+            let n0, n1, n2, s, i, j, t, X0, Y0, x0, y0, i1, j1, x1, x2, y1, y2, ii, jj, gi0, gi1, gi2, t0, t1, t2;
+
+            const {F, G, size, perlinGrad, perm, permMod8} = this;
+            
+            s = (x + y) * F;
+            i = Math.floor(x + s);
+            j = Math.floor(y + s);
+            t = (i + j) * G;
+
+            X0 = i - t;
+            Y0 = j - t;
+            x0 = x - X0;
+            y0 = y - Y0;
+            
+            if (x0 > y0) {
+                i1 = 1;
+                j1 = 0;
+            }
+            else {
+                i1 = 0;
+                j1 = 1;
+            }
+            
+            x1 = x0 - i1 + G;
+            y1 = y0 - j1 + G;
+            x2 = x0 - 1 + 2 * G;
+            y2 = y0 - 1 + 2 * G;
+            
+            ii = i % size;
+            jj = j % size;
+
+            gi0 = permMod8[ii + perm[jj]];
+            gi1 = permMod8[ii + i1 + perm[jj + j1]];
+            gi2 = permMod8[ii + 1 + perm[jj + 1]];
+            
+            t0 = 0.5 - x0 * x0 - y0 * y0;
+            if (t0 < 0) n0 = 0;
+            else {
+                t0 *= t0;
+                n0 = t0 * t0 * (perlinGrad[gi0][0] * x0 + perlinGrad[gi0][1] * y0);
+            }
+            
+            t1 = 0.5 - x1 * x1 - y1 * y1;
+            if (t1 < 0) n1 = 0;
+            else {
+                t1 *= t1;
+                n1 = t1 * t1 * (perlinGrad[gi1][0] * x1 + perlinGrad[gi1][1] * y1);
+            }
+            
+            t2 = 0.5 - x2 * x2 - y2 * y2;
+            if (t2 < 0) n2 = 0;
+            else {
+                t2 *= t2;
+                n2 = t2 * t2 * (perlinGrad[gi2][0] * x2 + perlinGrad[gi2][1] * y2);
+            }
+            
+            return 0.5 + 35 * (n0 + n1 + n2);
+        },
+    },
+
+    'value': {
+
+        init: function () {
+
+            const {values, size, rndEngine} = this;
+
+            values.length = 0;
+
+            for(let i = 0; i < size; i++) {
+
+                values[i] = values[i + size] = rndEngine.random();
+            }
+        },
+
+        noise: function (x, y) {
+
+            const {values, size, perm, smoothing, interpolate} = this;
+
+            let x0 = Math.floor(x) % size,
+                y0 = Math.floor(y) % size,
+                x1 = (x0 + 1) % size,
+                y1 = (y0 + 1) % size,
+                vx = x - Math.floor(x),
+                vy = y - Math.floor(y),
+                sx = smoothing(vx),
+                sy = smoothing(vy),
+                i = perm[x0],
+                j = perm[x1],
+                p00 = perm[i + y0],
+                p10 = perm[j + y0],
+                p01 = perm[i + y1],
+                p11 = perm[j + y1],
+                i1 = interpolate(sx, values[p00], values[p10]),
+                i2 = interpolate(sx, values[p01], values[p11]);
+
+            return interpolate(sy, i1, i2);
+        },
+    },
+};
+
+P.update = function (data) {
+
+};
+
+P.generatePermutationTable = function () {
+
+    const {perm, permMod8, rndEngine, size} = this;
+
+    perm.length = 0;
+    permMod8.length = 0;
+
+    let i, j, k;
+
+    for(i = 0; i < size; i++) {
+
+        perm[i] = i;
+    }
+    
+    while (--i) {
+
+        j = Math.floor(rndEngine.random() * size);
+        k = perm[i];
+        perm[i] = perm[j];
+        perm[j] = k;
+    }
+    
+    for(i = 0; i < size; i++) {
+
+        perm[i + size] = perm[i];
+        permMod8[i] = permMod8[i + size] = perm[i] % 8;
+    }
+};
+
+// color conversion
+P.hslToRgb = function (values) {
+
+    const [h, s, l] = values;
+
+    let r, g, b, p, q;
+
+    const hue2rgb = function (u, v, t) {
+
+        if (t < 0) t += 1;
+        if (t > 1) t -= 1;
+
+        if (t < 1/6) return u + (v - u) * 6 * t;
+        if (t < 1/2) return v;
+        if (t < 2/3) return u + (v - u) * (2/3 - t) * 6;
+        return u;
+    }
+
+    if (s == 0) {
+        r = l;
+        g = l;
+        b = l;
+    }
+    else {
+
+        q = (l < 0.5) ? l * (1 + s) : l + s - l * s;
+        p = 2 * l - q;
+
+        r = hue2rgb(p, q, h + 1/3);
+        g = hue2rgb(p, q, h);
+        b = hue2rgb(p, q, h - 1/3);
+    }
+
+    return [r, g, b];
 }
 
-P.grad3 = [[1, 1, 0], [-1, 1, 0], [1, -1, 0], [-1, -1, 0], [1, 0, 1], [-1, 0, 1], [1, 0, -1], [-1, 0, -1], [0, 1, 1], [0, -1, 1], [0, 1, -1], [0, -1, -1]];
+P.hsvToRgb = function (values) {
 
+    const [h, s, v] = values;
 
+    let r, g, b;
+
+    let i = Math.floor(h * 6),
+        f = h * 6 - i,
+        p = v * (1 - s),
+        q = v * (1 - f * s),
+        t = v * (1 - (1 - f) * s);
+
+    switch(i % 6){
+
+        case 0: 
+            r = v, g = t, b = p; 
+            break;
+
+        case 1: 
+            r = q, g = v, b = p; 
+            break;
+
+        case 2: 
+            r = p, g = v, b = t; 
+            break;
+
+        case 3: 
+            r = p, g = q, b = v; 
+            break;
+
+        case 4: 
+            r = t, g = p, b = v; 
+            break;
+
+        case 5: 
+            r = v, g = p, b = q; 
+            break;
+
+    }
+
+    return [r, g, b];
+};
+
+P.rgbHexToComponents = function (rgb) {
+
+    let r = parseInt(rgb.substr(0, 2), 16),
+        g = parseInt(rgb.substr(2, 2), 16),
+        b = parseInt(rgb.substr(4, 2), 16);
+
+    return [r, g, b];
+};
+
+P.octaveFunctions = {
+
+    absolute: function (octave) {
+
+        return Math.abs((octave * 2) - 1)
+    },
+};
+
+P.sumFunctions = {
+
+    sine: function (sum, scaledX) {
+
+        return .5 + (Math.sin(scaledX * this.sineFrequencyCoeff + sum) / 2);
+    },
+
+    modular: function(sum) {
+
+        let g = sum * this.modularAmplitude;
+        return g - Math.floor(g);
+    },
+};
+
+P.smoothingFunctions = {
+
+    none: λfirstArg,
+
+    cosine: function(t) {
+
+        return .5 * (1 + Math.cos((1 - t) * Math.PI));
+    },
+
+    hermite: function(t) {
+
+        return t * t * (-t * 2 + 3);
+    },
+
+    quintic: function(t) {
+
+        return t * t * t * (t * (t * 6 - 15) + 10);
+    },
+};
+
+P.interpolate = function (t, a, b) {
+
+    return a + t * (b - a);
+};
 
 
 // #### Factory
@@ -188,335 +1025,3 @@ constructors.Noise = Noise;
 export {
     makeNoise,
 };
-
-
-
-
-
-
-
-// SIMPLEX NOISE
-// From http://staffwww.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf
-// - The code in that paper is written in Java and, the author says, not tweaked for speed
-
-// const SimplexNoise = function (p) {
-
-//     this.perm = p;
-
-//     this.seedstring = 'HELLO WORLD',
-    
-//     let i;
-
-//     if (!Array.isArray(p) || !p.substring) p = [];
-//     if (p.substring) {
-
-//         seedstring = p;
-//         p = [];
-//     };
-
-//     if (p.length != 512) {
-
-//         p.length = 0;
-
-//         let randomizerseed = this.murmurhash3_32_gc(seedstring),
-//             randomizer = new mulberry32(randomizerseed);
-
-//         for (i = 0; i < 256; i++) {
-
-//             p.push(randomizer());
-//         }
-//         let perm = [];
-
-//         for (i = 0; i < 512; i++) {
-
-//             perm[i] = p[i & 255];
-//         }
-
-//         this.perm = perm;
-//     }
-// };
-
-// let P = SimplexNoise.prototype = Object.create(Object.prototype);
-
-// P.getPerm = function () {
-
-//     return this.perm;
-// };
-
-// P.getSeedstring = function () {
-
-//     return this.seedstring;
-// };
-
-// P.dot = function (g, x = 0, y = 0, z = 0, w = 0) {
-
-//     let [gx, gy, gz, gw] = g;
-
-//     if (null == gz) return (gx * x) + (gy * y); 
-//     if (null == gw) return (gx * x) + (gy * y) + (gz * z); 
-//     return (gx * x) + (gy * y) + (gz * z) + (gw * w); 
-// };
-
-// P.noise = function (xin, yin) {
-
-//     let n0, n1, n2;
-
-//     const F2 = 0.5 * (Math.sqrt(3) - 1);
-
-//     const s = (xin + yin) * F2;
-
-//     let i = Math.floor(xin + s),
-//         j = Math.floor(yin + s);
-
-//     const G2 = (3.0 - Math.sqrt(3)) / 6;
-
-//     let t = (i + j) * G2,
-//         X0 = i - t,
-//         Y0 = j - t,
-//         x0 = xin - X0,
-//         y0 = yin - Y0;
-
-//     let i1, j1;
-
-//     if(x0 > y0) {
-//         i1 = 1; 
-//         j1 = 0;
-//     }
-//     else {
-//         i1 = 0; 
-//         j1 = 1;
-//     }
-
-//     let x1 = x0 - i1 + G2,
-//         y1 = y0 - j1 + G2,
-//         x2 = x0 - 1 + (2.0 * G2),
-//         y2 = y0 - 1 + (2.0 * G2);
-
-//     let ii = i & 255,
-//         jj = j & 255,
-//         perm = this.perm,
-//         gi0 = perm[ii + perm[jj]] % 12,
-//         gi1 = perm[ii + i1 + perm[jj + j1]] % 12,
-//         gi2 = perm[ii + 1 + perm[jj + 1]] % 12;
-
-//     // Calculate the contribution from the three corners
-//     double t0 = 0.5 - x0*x0-y0*y0;
-//     if(t0<0) n0 = 0.0;
-//     else {
-//     t0 *= t0;
-//     n0 = t0 * t0 * dot(grad3[gi0], x0, y0); // (x,y) of grad3 used for 2D gradient
-//     }
-
-//     double t1 = 0.5 - x1*x1-y1*y1;
-//     if(t1<0) n1 = 0.0;
-//     else {
-//     t1 *= t1;
-//     n1 = t1 * t1 * dot(grad3[gi1], x1, y1);
-//     }
-
-//     double t2 = 0.5 - x2*x2-y2*y2;
-//     if(t2<0) n2 = 0.0;
-//     else {
-//     t2 *= t2;
-//     n2 = t2 * t2 * dot(grad3[gi2], x2, y2);
-//     }
-
-//     // Add contributions from each corner to get the final noise value.
-//     // The result is scaled to return values in the interval [-1,1].
-//     return 70.0 * (n0 + n1 + n2);
-// }
-
-// public static double noise(double xin, double yin) {
-
-//     double n0, n1, n2; // Noise contributions from the three corners
-
-//     // Skew the input space to determine which simplex cell we're in
-//     final double F2 = 0.5*(Math.sqrt(3.0)-1.0);
-//     double s = (xin+yin)*F2; // Hairy factor for 2D
-//     int i = fastfloor(xin+s);
-//     int j = fastfloor(yin+s);
-
-//     final double G2 = (3.0-Math.sqrt(3.0))/6.0;
-//     double t = (i+j)*G2;
-//     double X0 = i-t; // Unskew the cell origin back to (x,y) space
-//     double Y0 = j-t;
-//     double x0 = xin-X0; // The x,y distances from the cell origin
-//     double y0 = yin-Y0;
-
-//     // For the 2D case, the simplex shape is an equilateral triangle.
-//     // Determine which simplex we are in.
-//     int i1, j1; // Offsets for second (middle) corner of simplex in (i,j) coords
-//     if(x0>y0) {i1=1; j1=0;} // lower triangle, XY order: (0,0)->(1,0)->(1,1)
-//     else {i1=0; j1=1;} // upper triangle, YX order: (0,0)->(0,1)->(1,1)
-
-//     // A step of (1,0) in (i,j) means a step of (1-c,-c) in (x,y), and
-//     // a step of (0,1) in (i,j) means a step of (-c,1-c) in (x,y), where
-//     // c = (3-sqrt(3))/6
-
-//     double x1 = x0 - i1 + G2; // Offsets for middle corner in (x,y) unskewed coords
-//     double y1 = y0 - j1 + G2;
-//     double x2 = x0 - 1.0 + 2.0 * G2; // Offsets for last corner in (x,y) unskewed coords
-//     double y2 = y0 - 1.0 + 2.0 * G2;
-
-//     // Work out the hashed gradient indices of the three simplex corners
-//     int ii = i & 255;
-//     int jj = j & 255;
-//     int gi0 = perm[ii+perm[jj]] % 12;
-//     int gi1 = perm[ii+i1+perm[jj+j1]] % 12;
-//     int gi2 = perm[ii+1+perm[jj+1]] % 12;
-
-//     // Calculate the contribution from the three corners
-//     double t0 = 0.5 - x0*x0-y0*y0;
-//     if(t0<0) n0 = 0.0;
-//     else {
-//     t0 *= t0;
-//     n0 = t0 * t0 * dot(grad3[gi0], x0, y0); // (x,y) of grad3 used for 2D gradient
-//     }
-
-//     double t1 = 0.5 - x1*x1-y1*y1;
-//     if(t1<0) n1 = 0.0;
-//     else {
-//     t1 *= t1;
-//     n1 = t1 * t1 * dot(grad3[gi1], x1, y1);
-//     }
-
-//     double t2 = 0.5 - x2*x2-y2*y2;
-//     if(t2<0) n2 = 0.0;
-//     else {
-//     t2 *= t2;
-//     n2 = t2 * t2 * dot(grad3[gi2], x2, y2);
-//     }
-
-//     // Add contributions from each corner to get the final noise value.
-//     // The result is scaled to return values in the interval [-1,1].
-//     return 70.0 * (n0 + n1 + n2);
-
-
-/*
-public class SimplexNoise { // Simplex noise in 2D, 3D and 4D
-
- private static int grad3[][] = {{1,1,0},{-1,1,0},{1,-1,0},{-1,-1,0},
- {1,0,1},{-1,0,1},{1,0,-1},{-1,0,-1},
- {0,1,1},{0,-1,1},{0,1,-1},{0,-1,-1}};
-
- // private static int grad4[][]= {{0,1,1,1}, {0,1,1,-1}, {0,1,-1,1}, {0,1,-1,-1},
- // {0,-1,1,1}, {0,-1,1,-1}, {0,-1,-1,1}, {0,-1,-1,-1},
- // {1,0,1,1}, {1,0,1,-1}, {1,0,-1,1}, {1,0,-1,-1},
- // {-1,0,1,1}, {-1,0,1,-1}, {-1,0,-1,1}, {-1,0,-1,-1},
- // {1,1,0,1}, {1,1,0,-1}, {1,-1,0,1}, {1,-1,0,-1},
- // {-1,1,0,1}, {-1,1,0,-1}, {-1,-1,0,1}, {-1,-1,0,-1},
- // {1,1,1,0}, {1,1,-1,0}, {1,-1,1,0}, {1,-1,-1,0},
- // {-1,1,1,0}, {-1,1,-1,0}, {-1,-1,1,0}, {-1,-1,-1,0}};
-
- private static int p[] = {151,160,137,91,90,15,
- 131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,
- 190, 6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,
- 88,237,149,56,87,174,20,125,136,171,168, 68,175,74,165,71,134,139,48,27,166,
- 77,146,158,231,83,111,229,122,60,211,133,230,220,105,92,41,55,46,245,40,244,
- 102,143,54, 65,25,63,161, 1,216,80,73,209,76,132,187,208, 89,18,169,200,196,
- 135,130,116,188,159,86,164,100,109,198,173,186, 3,64,52,217,226,250,124,123,
- 5,202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,189,28,42,
- 223,183,170,213,119,248,152, 2,44,154,163, 70,221,153,101,155,167, 43,172,9,
- 129,22,39,253, 19,98,108,110,79,113,224,232,178,185, 112,104,218,246,97,228,
- 251,34,242,193,238,210,144,12,191,179,162,241, 81,51,145,235,249,14,239,107,
- 49,192,214, 31,181,199,106,157,184, 84,204,176,115,121,50,45,127, 4,150,254,
- 138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180};
-
- // To remove the need for index wrapping, double the permutation table length
- private static int perm[] = new int[512];
- static { for(int i=0; i<512; i++) perm[i]=p[i & 255]; }
-
- // A lookup table to traverse the simplex around a given point in 4D.
- // Details can be found where this table is used, in the 4D noise method.
- // private static int simplex[][] = {
- // {0,1,2,3},{0,1,3,2},{0,0,0,0},{0,2,3,1},{0,0,0,0},{0,0,0,0},{0,0,0,0},{1,2,3,0},
- // {0,2,1,3},{0,0,0,0},{0,3,1,2},{0,3,2,1},{0,0,0,0},{0,0,0,0},{0,0,0,0},{1,3,2,0},
- // {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},
- // {1,2,0,3},{0,0,0,0},{1,3,0,2},{0,0,0,0},{0,0,0,0},{0,0,0,0},{2,3,0,1},{2,3,1,0},
- // {1,0,2,3},{1,0,3,2},{0,0,0,0},{0,0,0,0},{0,0,0,0},{2,0,3,1},{0,0,0,0},{2,1,3,0},
- // {0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},
- // {2,0,1,3},{0,0,0,0},{0,0,0,0},{0,0,0,0},{3,0,1,2},{3,0,2,1},{0,0,0,0},{3,1,2,0},
- // {2,1,0,3},{0,0,0,0},{0,0,0,0},{0,0,0,0},{3,1,0,2},{0,0,0,0},{3,2,0,1},{3,2,1,0}};
-
- // This method is a *lot* faster than using (int)Math.floor(x)
- private static int fastfloor(double x) {
- return x>0 ? (int)x : (int)x-1;
- }
-
- private static double dot(int g[], double x, double y) {
- return g[0]*x + g[1]*y; }
- 
- private static double dot(int g[], double x, double y, double z) {
- return g[0]*x + g[1]*y + g[2]*z; }
- 
- private static double dot(int g[], double x, double y, double z, double w) {
- return g[0]*x + g[1]*y + g[2]*z + g[3]*w; }
- 
-// 2D simplex noise
-public static double noise(double xin, double yin) {
-
-    double n0, n1, n2; // Noise contributions from the three corners
-
-    // Skew the input space to determine which simplex cell we're in
-    final double F2 = 0.5*(Math.sqrt(3.0)-1.0);
-    double s = (xin+yin)*F2; // Hairy factor for 2D
-    int i = fastfloor(xin+s);
-    int j = fastfloor(yin+s);
-
-    final double G2 = (3.0-Math.sqrt(3.0))/6.0;
-    double t = (i+j)*G2;
-    double X0 = i-t; // Unskew the cell origin back to (x,y) space
-    double Y0 = j-t;
-    double x0 = xin-X0; // The x,y distances from the cell origin
-    double y0 = yin-Y0;
-
-    // For the 2D case, the simplex shape is an equilateral triangle.
-    // Determine which simplex we are in.
-    int i1, j1; // Offsets for second (middle) corner of simplex in (i,j) coords
-    if(x0>y0) {i1=1; j1=0;} // lower triangle, XY order: (0,0)->(1,0)->(1,1)
-    else {i1=0; j1=1;} // upper triangle, YX order: (0,0)->(0,1)->(1,1)
-
-    // A step of (1,0) in (i,j) means a step of (1-c,-c) in (x,y), and
-    // a step of (0,1) in (i,j) means a step of (-c,1-c) in (x,y), where
-    // c = (3-sqrt(3))/6
-
-    double x1 = x0 - i1 + G2; // Offsets for middle corner in (x,y) unskewed coords
-    double y1 = y0 - j1 + G2;
-    double x2 = x0 - 1.0 + 2.0 * G2; // Offsets for last corner in (x,y) unskewed coords
-    double y2 = y0 - 1.0 + 2.0 * G2;
-
-    // Work out the hashed gradient indices of the three simplex corners
-    int ii = i & 255;
-    int jj = j & 255;
-    int gi0 = perm[ii+perm[jj]] % 12;
-    int gi1 = perm[ii+i1+perm[jj+j1]] % 12;
-    int gi2 = perm[ii+1+perm[jj+1]] % 12;
-
-    // Calculate the contribution from the three corners
-    double t0 = 0.5 - x0*x0-y0*y0;
-    if(t0<0) n0 = 0.0;
-    else {
-    t0 *= t0;
-    n0 = t0 * t0 * dot(grad3[gi0], x0, y0); // (x,y) of grad3 used for 2D gradient
-    }
-
-    double t1 = 0.5 - x1*x1-y1*y1;
-    if(t1<0) n1 = 0.0;
-    else {
-    t1 *= t1;
-    n1 = t1 * t1 * dot(grad3[gi1], x1, y1);
-    }
-
-    double t2 = 0.5 - x2*x2-y2*y2;
-    if(t2<0) n2 = 0.0;
-    else {
-    t2 *= t2;
-    n2 = t2 * t2 * dot(grad3[gi2], x2, y2);
-    }
-
-    // Add contributions from each corner to get the final noise value.
-    // The result is scaled to return values in the interval [-1,1].
-    return 70.0 * (n0 + n1 + n2);
-}
- */
-

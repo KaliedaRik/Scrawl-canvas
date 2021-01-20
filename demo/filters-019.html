@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Filters 019</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    .controls {
+      grid-template-columns: 1fr 2fr 1fr 2fr;
+    }
+    img {
+      display: none;
+    }
+    .my-grid {
+      display: grid;
+
+      grid-template-columns: 1fr 1fr;      
+      grid-column-gap: 2px;
+
+      grid-template-rows: auto;
+      grid-row-gap: 2px;
+
+      justify-items: center;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 019</h1>
+  <h2>Using a Noise asset with a displace filter</h2>
+
+  <div class="controls">
+
+    <div class="yellow label">Canvas width</div>
+    <div class="yellow"><input class="controlItem" id="width" type="range" value="400" min="1" max="600" step="1" /></div>
+
+    <div class="yellow label">Canvas height</div>
+    <div class="yellow"><input class="controlItem" id="height" type="range" value="400" min="1" max="600" step="1" /></div>
+
+    <div class="pink label">Noise function</div>
+    <div class="pink">
+      <select class="controlItem" id="noiseFunction">
+        <option value="perlin_classic">Perlin (classic)</option>
+        <option value="perlin_improved">Perlin (improved)</option>
+        <option value="simplex">Simplex</option>
+        <option value="value">Value</option>
+      </select>
+    </div>
+
+    <div class="green label">Color output</div>
+    <div class="green">
+      <select class="controlItem" id="color">
+        <option value="monochrome">Monochrome</option>
+        <option value="gradient">Gradient</option>
+        <option value="hue">Hue</option>
+      </select>
+    </div>
+
+    <div class="green label">Monochrome start</div>
+    <div class="green"><input class="controlItem" id="monochromeStart" type="range" value="0" min="0" max="255" step="1" /></div>
+
+    <div class="green label">Monochrome range</div>
+    <div class="green"><input class="controlItem" id="monochromeRange" type="range" value="255" min="0" max="255" step="1" /></div>
+
+    <div class="green label">Gradient start</div>
+    <div class="green"><input class="controlItem" id="gradientStart" type="color" value="#ff0000" /></div>
+
+    <div class="green label">Gradient end</div>
+    <div class="green"><input class="controlItem" id="gradientEnd" type="color" value="#00ff00" /></div>
+
+    <div class="green label">Hue start</div>
+    <div class="green"><input class="controlItem" id="hueStart" type="range" value="0" min="0" max="360" step="1" /></div>
+
+    <div class="green label">Hue range</div>
+    <div class="green"><input class="controlItem" id="hueRange" type="range" value="120" min="0" max="360" step="1" /></div>
+
+    <div class="green label">Saturation</div>
+    <div class="green"><input class="controlItem" id="saturation" type="range" value="100" min="0" max="100" step="0.1" /></div>
+
+    <div class="green label">Luminosity</div>
+    <div class="green"><input class="controlItem" id="luminosity" type="range" value="50" min="0" max="100" step="0.1" /></div>
+
+    <div class="blue label">Octave function</div>
+    <div class="blue">
+      <select class="controlItem" id="octaveFunction">
+        <option value="none">none</option>
+        <option value="absolute">absolute</option>
+      </select>
+    </div>
+
+    <div class="blue label">Octaves</div>
+    <div class="blue"><input class="controlItem" id="octaves" type="range" value="1" min="1" max="10" step="1" /></div>
+
+    <div class="blue label">Sum function</div>
+    <div class="blue">
+      <select class="controlItem" id="sumFunction">
+        <option value="none">none</option>
+        <option value="sine">sine</option>
+        <option value="modular">modular</option>
+      </select>
+    </div>
+
+    <div class="blue label">Sine Frequency Coefficient</div>
+    <div class="blue"><input class="controlItem" id="sineFrequencyCoeff" type="range" value="1" min="0.5" max="5" step="0.1" /></div>
+
+    <div class="blue label">Smoothing</div>
+    <div class="blue">
+      <select class="controlItem" id="smoothing">
+        <option value="none">none</option>
+        <option value="cosine">cosine</option>
+        <option value="hermite">hermite</option>
+        <option value="quintic">quintic</option>
+      </select>
+    </div>
+
+    <div class="pink label">Presets</div>
+    <div class="pink">
+      <select class="controlItem" id="presets">
+        <option value="plain">plain</option>
+        <option value="clouds">clouds</option>
+        <option value="turbulence">turbulence</option>
+        <option value="marble">marble</option>
+        <option value="wood">wood</option>
+      </select>
+    </div>
+
+    <div class="lavender label">Scale</div>
+    <div class="lavender"><input class="controlItem" id="scale" type="range" value="50" min="0" max="100" step="1" /></div>
+
+    <div class="lavender label">Size</div>
+    <div class="lavender"><input class="controlItem" id="size" type="range" value="256" min="4" max="2048" step="4" /></div>
+
+    <div class="lavender label">Random seed</div>
+    <div class="lavender"><input class="controlItem" id="seed" type="text" value="noize" /></div>
+
+    <div class="lavender label">Persistence</div>
+    <div class="lavender"><input class="controlItem" id="persistence" type="range" value="0.5" min="0" max="1" step="0.05" /></div>
+
+    <div class="lavender label">Lacunarity</div>
+    <div class="lavender"><input class="controlItem" id="lacunarity" type="range" value="2" min="1" max="10" step="1" /></div>
+
+    <div class="lavender label">Modular Amplitude</div>
+    <div class="lavender"><input class="controlItem" id="modularAmplitude" type="range" value="5" min="0.1" max="10" step="0.1" /></div>
+
+  </div>
+
+  <div class="my-grid">
+    <canvas id="mycanvas" width="400" height="400"></canvas>
+    <canvas id="noise-canvas" width="400" height="400"></canvas>
+  </div>
+
+  <img id="iris" src="img/iris.png" class="flowers" />
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+
+    <ul>
+      <li>Create a test Picture entity</li>
+      <li>Create an areaAlpha filter and apply it to the test entity</li>
+      <li>Update filter attributes and observe the effect they have on the entity</li>
+    </ul>
+
+    <p><a href="../docs/demo/filters-019.html">Annotated code</a></p>
+  </div>
+
+  <script src="filters-019.js" type="module"></script>
+
+</body>
+
+</html>

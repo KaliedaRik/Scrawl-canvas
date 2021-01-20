@@ -162,6 +162,11 @@ export default function (P = {}) {
 
                     if (img) {
 
+                        if (img.type === 'Noise') {
+
+                            img.checkSource();
+                        }
+
                         let width = img.sourceNaturalWidth || img.sourceNaturalDimensions[0] || img.currentDimensions[0],
                             height = img.sourceNaturalHeight || img.sourceNaturalDimensions[1] || img.currentDimensions[1];
 
