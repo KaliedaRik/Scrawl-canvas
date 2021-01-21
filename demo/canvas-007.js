@@ -188,7 +188,8 @@ scrawl.makeFilter({
     name: 'emboss',
     method: 'emboss',
     angle: 225,
-    strength: 4,
+    strength: 10,
+    tolerance: 50,
 });
 
 // __Chroma__ (green screen) filter

@@ -97,6 +97,12 @@ let defaultAttributes = {
 
     strength: 1,
     angle: 0,
+    useNaturalGrayscale: false,
+    keepOnlyChangedAreas: false,
+    postProcessResults: true,
+    smoothing: 0,
+    tolerance: 0,
+    clamp: 0,
 
     offsetRedX: 0,
     offsetRedY: 0,
@@ -521,6 +527,21 @@ const setActionsArray = {
         }];
     },
 
+    clampChannels: function (f) {
+        f.actions = [{
+            action: 'clamp-channels',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            lowRed: (f.lowRed != null) ? f.lowRed : 0,
+            lowGreen: (f.lowGreen != null) ? f.lowGreen : 0,
+            lowBlue: (f.lowBlue != null) ? f.lowBlue : 0,
+            highRed: (f.highRed != null) ? f.highRed : 255,
+            highGreen: (f.highGreen != null) ? f.highGreen : 255,
+            highBlue: (f.highBlue != null) ? f.highBlue : 255,
+        }];
+    },
+
     compose: function (f) {
         f.actions = [{
             action: 'compose',
@@ -582,14 +603,58 @@ const setActionsArray = {
     },
 
     emboss: function (f) {
-        f.actions = [{
+        const actions = [];
+        if (f.useNaturalGrayscale) {
+            actions.push({
+                action: 'grayscale',
+                lineIn: (f.lineIn != null) ? f.lineIn : '',
+                lineOut: 'emboss-work',
+            });
+        }
+        else {
+            actions.push({
+                action: 'average-channels',
+                lineIn: (f.lineIn != null) ? f.lineIn : '',
+                lineOut: 'emboss-work',
+                includeRed: true,
+                includeGreen: true,
+                includeBlue: true,
+            });
+        }
+        if (f.clamp) {
+            actions.push({
+                action: 'clamp-channels',
+                lineIn: 'emboss-work',
+                lineOut: 'emboss-work',
+                lowRed: 0 + f.clamp, 
+                lowGreen: 0 + f.clamp, 
+                lowBlue: 0 + f.clamp, 
+                highRed: 255 - f.clamp, 
+                highGreen: 255 - f.clamp, 
+                highBlue: 255 - f.clamp,
+            });
+        }
+        if (f.smoothing) {
+            actions.push({
+                action: 'blur',
+                lineIn: 'emboss-work',
+                lineOut: 'emboss-work',
+                radius: f.smoothing,
+                passes: 2,
+            });
+        }
+        actions.push({
             action: 'emboss',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineIn: 'emboss-work',
             lineOut: (f.lineOut != null) ? f.lineOut : '',
             opacity: (f.opacity != null) ? f.opacity : 1,
             angle: (f.angle != null) ? f.angle : 0,
             strength: (f.strength != null) ? f.strength : 1,
-        }];
+            tolerance: (f.tolerance != null) ? f.tolerance : 0,
+            keepOnlyChangedAreas: (f.keepOnlyChangedAreas != null) ? f.keepOnlyChangedAreas : false,
+            postProcessResults: (f.postProcessResults != null) ? f.postProcessResults : true,
+        });
+        f.actions = actions;
     },
 
     flood: function (f) {
@@ -930,9 +995,10 @@ const setActionsArray = {
 const filterPool = [];
 
 // `Exported function` __requestFilterWorker__
+import { filterUrl } from '../worker/filter-string.js';
 const requestFilterWorker = function () {
 
-    if (!filterPool.length) filterPool.push(buildFilterWorker());
+    if (!filterPool.length) filterPool.push(new Worker(filterUrl));
 
     return filterPool.shift();
 };
@@ -942,43 +1008,6 @@ const releaseFilterWorker = function (f) {
 
     filterPool.push(f);
 };
-
-// #### IMPORTANT!
-// + Almost all modern browsers support import.meta.url
-// + Toolchain bundlers generally DO NOT SUPPORT import.meta.url
-// + The workaround is to gather all web worker code into a single file, string it, and build an url from that string. Yes, it is ugly. No, there is no viable production-ready alternative to the following.
-//
-// For use in a website that does not use webpack, rollup, parcel, etc in their toolchain
-// + Comment out all the lines marked 'BUNDLED SITE'
-// + Uncomment the lines marked 'MODERN SITE'
-// 
-// By default, Scrawl-canvas is distributed in a bundler-safe form
-
-// BUNDLED SITE
-// import { filterUrl } from '../worker/filter-stringed.js';                       
-
-// __buildFilterWorker__ - create a new filter web worker
-const buildFilterWorker = function () {
-
-    // MODERN SITE
-    let path = import.meta.url.slice(0, -('factory/filter.js'.length)); 
-
-    // MODERN SITE    
-    let filterUrl = (window.scrawlEnvironmentOffscreenCanvasSupported) ?    
-
-    // MODERN SITE 
-        // `${path}worker/filter_canvas.js` :    
-        // `${path}worker/filter.js` :    
-        `${path}worker/new-filter.js` :    
-
-    // MODERN SITE                              
-        // `${path}worker/filter.js`;                                           
-        `${path}worker/new-filter.js`;  
-
-    // MODERN and BUNDLED SITE
-    return new Worker(filterUrl);
-};
-
 
 // `Exported function` __actionFilterWorker__ - send a task to the filter web worker, and retrieve the resulting image. This function returns a Promise.
 const actionFilterWorker = function (worker, items) {
@@ -1004,53 +1033,6 @@ const actionFilterWorker = function (worker, items) {
 
 // #### Factory
 // ```
-// scrawl.makeFilter({
-//
-//     name: 'my-grayscale-filter',
-//     method: 'grayscale',
-//
-// }).clone({
-//
-//     name: 'my-sepia-filter',
-//     method: 'sepia',
-// });
-//
-// scrawl.makeFilter({
-//
-//     name: 'my-chroma-filter',
-//     method: 'chroma',
-//     ranges: [[0, 0, 0, 80, 80, 80], [180, 180, 180, 255, 255, 255]],
-// });
-//
-// scrawl.makeFilter({
-//
-//     name: 'venetian-blinds-filter',
-//     method: 'userDefined',
-//
-//     level: 9,
-//
-//     userDefined: `
-//         let i, iz, j, jz,
-//             level = filter.level || 6,
-//             halfLevel = level / 2,
-//             yw, transparent, pos;
-//
-//         for (i = localY, iz = localY + localHeight; i < iz; i++) {
-//
-//             transparent = (i % level > halfLevel) ? true : false;
-//
-//             if (transparent) {
-//
-//                 yw = (i * iWidth) + 3;
-//              
-//                 for (j = localX, jz = localX + localWidth; j < jz; j ++) {
-//
-//                     pos = yw + (j * 4);
-//                     data[pos] = 0;
-//                 }
-//             }
-//         }`,
-// });
 // ```
 const makeFilter = function (items) {
 

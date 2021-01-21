@@ -1,7 +1,7 @@
-// # Demo Filters 018 
-// Filter parameters: emboss
+// # Demo Filters 020 
+// Parameters for: clampChannels filter
 
-// [Run code](../../demo/filters-018.html)
+// [Run code](../../demo/filters-020.html)
 import scrawl from '../source/scrawl.js';
 
 // #### Scene setup
@@ -9,24 +9,19 @@ const canvas = scrawl.library.canvas.mycanvas;
 
 scrawl.importDomImage('.flowers');
 
-canvas.setBase({
-    backgroundColor: 'red',
-});
 
-
-// Create the filter
 const myFilter = scrawl.makeFilter({
 
-    name: 'emboss',
-    method: 'emboss',
-    angle: 225,
-    strength: 3,
-    smoothing: 0,
-    tolerance: 0,
-    clamp: 0,
-    postProcessResults: true,
-    useNaturalGrayscale: false,
-    keepOnlyChangedAreas: false,
+    name: 'clamp',
+    method: 'clampChannels',
+
+    lowRed: 0,
+    lowGreen: 0,
+    lowBlue: 0,
+    highRed: 255,
+    highGreen: 255,
+    highBlue: 255,
+    opacity: 1,
 });
 
 
@@ -45,9 +40,8 @@ scrawl.makePicture({
 
     method: 'fill',
 
-    filters: ['emboss'],
+    filters: ['clamp'],
 });
-
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
@@ -57,8 +51,13 @@ let report = function () {
         testTime, testNow,
         testMessage = document.querySelector('#reportmessage');
 
-    let strength = document.querySelector('#strength'),
-        angle = document.querySelector('#angle');
+    let lowRed = document.querySelector('#low-red'),
+        lowGreen = document.querySelector('#low-green'),
+        lowBlue = document.querySelector('#low-blue'),
+        highRed = document.querySelector('#high-red'),
+        highGreen = document.querySelector('#high-green'),
+        highBlue = document.querySelector('#high-blue'),
+        opacity = document.querySelector('#opacity');
 
     return function () {
 
@@ -67,8 +66,9 @@ let report = function () {
         testTicker = testNow;
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Angle - ${angle.value}°
-    Strength - ${strength.value}
+    Red: ${lowRed.value} - ${highRed.value} 
+    Green: ${lowGreen.value} - ${highGreen.value} 
+    Blue: ${lowBlue.value} - ${highBlue.value} 
     Opacity - ${opacity.value}`;
     };
 }();
@@ -97,27 +97,23 @@ scrawl.observeAndUpdate({
 
     updates: {
 
-        strength: ['strength', 'float'],
-        angle: ['angle', 'float'],
-        smoothing: ['smoothing', 'round'],
-        tolerance: ['tolerance', 'round'],
-        clamp: ['clamp', 'round'],
-        postProcessResults: ['postProcessResults', 'boolean'],
-        useNaturalGrayscale: ['useNaturalGrayscale', 'boolean'],
-        keepOnlyChangedAreas: ['keepOnlyChangedAreas', 'boolean'],
-        opacity: ['opacity', 'float'],
+        'low-red': ['lowRed', 'round'],
+        'low-green': ['lowGreen', 'round'],
+        'low-blue': ['lowBlue', 'round'],
+        'high-red': ['highRed', 'round'],
+        'high-green': ['highGreen', 'round'],
+        'high-blue': ['highBlue', 'round'],
+        'opacity': ['opacity', 'float'],
     },
 });
 
 // Setup form
-document.querySelector('#strength').value = 3;
-document.querySelector('#angle').value = 225;
-document.querySelector('#smoothing').value = 0;
-document.querySelector('#tolerance').value = 0;
-document.querySelector('#clamp').value = 0;
-document.querySelector('#postProcessResults').options.selectedIndex = 1;
-document.querySelector('#useNaturalGrayscale').options.selectedIndex = 0;
-document.querySelector('#keepOnlyChangedAreas').options.selectedIndex = 0;
+document.querySelector('#low-red').value = 0;
+document.querySelector('#low-green').value = 0;
+document.querySelector('#low-blue').value = 0;
+document.querySelector('#high-red').value = 255;
+document.querySelector('#high-green').value = 255;
+document.querySelector('#high-blue').value = 255;
 document.querySelector('#opacity').value = 1;
 
 

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Filters 020</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    .controls {
+      grid-template-columns: 1fr 2fr 1fr 2fr;
+    }
+    img {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 020</h1>
+  <h2>Parameters for: clampChannels filter</h2>
+
+  <div class="controls">
+
+    <div class="pink label">Low red</div>
+    <div class="pink"><input class="controlItem" id="low-red" type="range" value="0" min="0" max="255" step="1" /></div>
+
+    <div class="pink label">High red</div>
+    <div class="pink"><input class="controlItem" id="high-red" type="range" value="255" min="0" max="255" step="1" /></div>
+
+    <div class="green label">Low green</div>
+    <div class="green"><input class="controlItem" id="low-green" type="range" value="0" min="0" max="255" step="1" /></div>
+
+    <div class="green label">High green</div>
+    <div class="green"><input class="controlItem" id="high-green" type="range" value="255" min="0" max="255" step="1" /></div>
+
+    <div class="blue label">Low blue</div>
+    <div class="blue"><input class="controlItem" id="low-blue" type="range" value="0" min="0" max="255" step="1" /></div>
+
+    <div class="blue label">High blue</div>
+    <div class="blue"><input class="controlItem" id="high-blue" type="range" value="255" min="0" max="255" step="1" /></div>
+
+    <div class="lavender label">Opacity</div>
+    <div class="lavender"><input class="controlItem" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
+
+  </div>
+
+  <canvas id="mycanvas" width="400" height="400"></canvas>
+
+  <img id="iris" src="img/iris.png" class="flowers" />
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+
+    <ul>
+      <li>Create a test Picture entity</li>
+      <li>Create an areaAlpha filter and apply it to the test entity</li>
+      <li>Update filter attributes and observe the effect they have on the entity</li>
+    </ul>
+
+    <p><a href="../docs/demo/filters-020.html">Annotated code</a></p>
+  </div>
+
+  <script src="filters-020.js" type="module"></script>
+
+</body>
+
+</html>

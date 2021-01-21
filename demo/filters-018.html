@@ -30,8 +30,41 @@
     <div class="yellow label">Strength</div>
     <div class="yellow"><input class="controlItem" id="strength" type="range" value="3" min="0" max="10" step="0.1" /></div>
 
+    <div class="yellow label">Use natural grayscale</div>
+    <div class="yellow">
+      <select class="controlItem" id="useNaturalGrayscale">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="yellow label">Smoothing</div>
+    <div class="yellow"><input class="controlItem" id="smoothing" type="range" value="0" min="0" max="12" step="1" /></div>
+
+    <div class="yellow label">Clamp</div>
+    <div class="yellow"><input class="controlItem" id="clamp" type="range" value="0" min="0" max="100" step="1" /></div>
+
     <div class="lavender label">Opacity</div>
     <div class="lavender"><input class="controlItem" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
+
+    <div class="blue label">Post-process results</div>
+    <div class="blue">
+      <select class="controlItem" id="postProcessResults">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="blue label">Tolerance</div>
+    <div class="blue"><input class="controlItem" id="tolerance" type="range" value="0" min="0" max="50" step="1" /></div>
+
+    <div class="blue label">Keep changed areas</div>
+    <div class="blue">
+      <select class="controlItem" id="keepOnlyChangedAreas">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
 
   </div>
 
