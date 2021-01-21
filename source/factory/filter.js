@@ -992,43 +992,68 @@ const setActionsArray = {
 
 // #### Filter webworker pool
 // Because starting a web worker is an expensive operation, and a number of different filters may be required to render displays across a number of different &lt;canvas> elements in a web page, Scrawl-canvas operates a pool of web workers to perform work as-and-when required.
+
+// START PRODUCTION CODE
 const filterPool = [];
-
-// `Exported function` __requestFilterWorker__
 import { filterUrl } from '../worker/filter-string.js';
+
 const requestFilterWorker = function () {
-
     if (!filterPool.length) filterPool.push(new Worker(filterUrl));
-
     return filterPool.shift();
 };
 
-// `Exported function` __releaseFilterWorker__ - to avoid memory leaks, ___all requested filter workers MUST be released back to the filter pool as soon as their work has completed___.
 const releaseFilterWorker = function (f) {
-
     filterPool.push(f);
 };
 
-// `Exported function` __actionFilterWorker__ - send a task to the filter web worker, and retrieve the resulting image. This function returns a Promise.
 const actionFilterWorker = function (worker, items) {
-
     return new Promise((resolve, reject) => {
-
         worker.onmessage = (e) => {
-
             if (e && e.data && e.data.image) resolve(e.data.image);
             else resolve(false);
         };
-
         worker.onerror = (e) => {
-
             console.log('error', e.lineno, e.message);
             resolve(false);
         };
-
         worker.postMessage(items);
     });
 };
+// END PRODUCTION CODE
+
+
+// START DEV CODE
+// const filterPool = [];
+
+// const requestFilterWorker = function () {
+//     if (!filterPool.length) filterPool.push(buildFilterWorker());
+//     return filterPool.shift();
+// };
+
+// const buildFilterWorker = function () {
+//     let path = import.meta.url.slice(0, -('factory/filter.js'.length)); 
+//     let filterUrl = `${path}worker/filter.js`;
+//     return new Worker(filterUrl);
+// };
+
+// const releaseFilterWorker = function (f) {
+//     filterPool.push(f);
+// };
+
+// const actionFilterWorker = function (worker, items) {
+//     return new Promise((resolve, reject) => {
+//         worker.onmessage = (e) => {
+//             if (e && e.data && e.data.image) resolve(e.data.image);
+//             else resolve(false);
+//         };
+//         worker.onerror = (e) => {
+//             console.log('error', e.lineno, e.message);
+//             resolve(false);
+//         };
+//         worker.postMessage(items);
+//     });
+// };
+// END DEV CODE
 
 
 // #### Factory
