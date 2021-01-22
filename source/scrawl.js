@@ -162,6 +162,11 @@ import {
 
 
 import { 
+    makeMesh,
+} from './factory/mesh.js';
+
+
+import { 
     makeNet,
 } from './factory/net.js';
 
@@ -419,6 +424,10 @@ export default {
 
     // factory/loom.js
     makeLoom,
+
+
+    // factory/mesh.js
+    makeMesh,
 
 
     // factory/net.js

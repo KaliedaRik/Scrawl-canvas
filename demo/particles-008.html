@@ -15,6 +15,9 @@
     canvas {
       margin: 0 auto;
     }
+    img {
+      display: none;
+    }
   </style>
 </head>
 
@@ -40,7 +43,7 @@
     <div class="green"><input class="controlItem" id="springConstant" type="range" value="50" min="5" max="300" step="5" /></div>
 
     <div class="green label">Damper constant</div>
-    <div class="green"><input class="controlItem" id="damperConstant" type="range" value="10" min="5" max="50" step="1" /></div>
+    <div class="green"><input class="controlItem" id="damperConstant" type="range" value="5" min="5" max="50" step="1" /></div>
 
 
     <div class="pink label">Particle mass</div>
@@ -58,8 +61,13 @@
     <div class="lavender label">Tick multiplier</div>
     <div class="lavender"><input class="controlItem" id="tickMultiplier" type="range" value="2" min="0.5" max="3" step="0.05" /></div>
 
-    <div class="lavender label">&nbsp;</div>
-    <div class="lavender">&nbsp;</div>
+    <div class="yellow label">Show image</div>
+    <div class="yellow">
+      <select class="controlItem" id="mesh">
+        <option value="0">No</option>
+        <option value="1">Yes</option>
+      </select>
+    </div>
 
   </div>
 
@@ -85,6 +93,8 @@
   </div>
 
   <script src="particles-008.js" type="module"></script>
+
+  <img id="iris" src="img/iris.png" class="flowers" />
 </body>
 
 </html>
