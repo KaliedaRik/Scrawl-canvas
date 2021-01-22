@@ -111,7 +111,7 @@ let myMesh = scrawl.makeMesh({
     source: 'my-flower',
 
     lineWidth: 2,
-    lineCap: 'round',
+    lineJoin: 'round',
     strokeStyle: 'orange',
 
     method: 'fillThenDraw',

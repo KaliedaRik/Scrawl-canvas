@@ -860,6 +860,8 @@ P.cleanOutput = function () {
 
     return new Promise((resolve, reject) => {
 
+        const halfPi = Math.PI / 2;
+
         self.dirtyOutput = false;
 
         let {sourceDimension, sourceImageData, columns, rows, struts, boundingBox} = self;
@@ -935,7 +937,7 @@ P.cleanOutput = function () {
                         xLen = tx - bx;
                         yLen = ty - by;
                         stripLength = Math.sqrt((xLen * xLen) + (yLen * yLen));
-                        stripAngle = Math.asin(xLen / stripLength);
+                        stripAngle = Math.atan2(yLen, xLen) + halfPi;
 
                         outputEngine.setTransform(1, 0, 0, 1, tx, ty);
                         outputEngine.rotate(stripAngle);
