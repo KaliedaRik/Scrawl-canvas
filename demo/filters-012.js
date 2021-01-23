@@ -55,8 +55,7 @@ let report = function () {
         testTime, testNow,
         testMessage = document.querySelector('#reportmessage');
 
-    let lowCol = document.querySelector('#lowColor'),
-        highCol = document.querySelector('#highColor');
+    let opacity = document.querySelector('#opacity');
 
     return function () {
 
@@ -65,8 +64,9 @@ let report = function () {
         testTicker = testNow;
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    matrix3: ${matrix3.weights}
-    matrix5: ${matrix5.weights}`;
+    matrix3 weights array: ${matrix3.weights}
+    matrix5 weights array: ${matrix5.weights}
+    Opacity: ${opacity.value}`;
     };
 }();
 

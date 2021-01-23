@@ -1,4 +1,3 @@
-
 // # Scrawl-canvas
 //
 // #### Version 8.3.4 - 6 Jan 2021

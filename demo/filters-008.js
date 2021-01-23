@@ -63,7 +63,8 @@ let report = function () {
         blueInGreen = document.querySelector('#blueInGreen'),
         redInBlue = document.querySelector('#redInBlue'),
         greenInBlue = document.querySelector('#greenInBlue'),
-        blueInBlue = document.querySelector('#blueInBlue');
+        blueInBlue = document.querySelector('#blueInBlue'),
+        opacity = document.querySelector('#opacity');
 
     return function () {
 
@@ -74,7 +75,8 @@ let report = function () {
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
     In Red -   red: ${redInRed.value} green: ${greenInRed.value} blue: ${blueInRed.value}
     In Green - red: ${redInGreen.value} green: ${greenInGreen.value} blue: ${blueInGreen.value}
-    In Blue -  red: ${redInBlue.value} green: ${greenInBlue.value} blue: ${blueInBlue.value}`;
+    In Blue -  red: ${redInBlue.value} green: ${greenInBlue.value} blue: ${blueInBlue.value}
+    Opacity: ${opacity.value}`;
     };
 }();
 

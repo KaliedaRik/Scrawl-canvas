@@ -50,7 +50,8 @@ let report = function () {
         testTime, testNow,
         testMessage = document.querySelector('#reportmessage');
 
-    let flood = document.querySelector('#flood');
+    let flood = document.querySelector('#flood'),
+        opacity = document.querySelector('#opacity');
 
     return function () {
 
@@ -59,7 +60,8 @@ let report = function () {
         testTicker = testNow;
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    flood color: ${flood.value}`;
+    Flood color: ${flood.value}
+    Opacity: ${opacity.value}`;
     };
 }();
 

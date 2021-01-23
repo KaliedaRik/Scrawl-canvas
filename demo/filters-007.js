@@ -51,7 +51,9 @@ let report = function () {
 
     let red = document.querySelector('#red'),
         green = document.querySelector('#green'),
-        blue = document.querySelector('#blue');
+        blue = document.querySelector('#blue'),
+        alpha = document.querySelector('#alpha'),
+        opacity = document.querySelector('#opacity');
 
     return function () {
 
@@ -60,9 +62,8 @@ let report = function () {
         testTicker = testNow;
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    red: ${red.value}
-    green: ${green.value}
-    blue: ${blue.value}`;
+    Red: ${red.value}, Green: ${green.value}, Blue: ${blue.value}, Alpha: ${alpha.value}
+    Opacity: ${opacity.value}`;
     };
 }();
 
@@ -93,6 +94,7 @@ scrawl.observeAndUpdate({
         red: ['red', 'float'],
         green: ['green', 'float'],
         blue: ['blue', 'float'],
+        alpha: ['alpha', 'float'],
         opacity: ['opacity', 'float'],
     },
 });
@@ -101,6 +103,7 @@ scrawl.observeAndUpdate({
 document.querySelector('#red').value = 1;
 document.querySelector('#green').value = 1;
 document.querySelector('#blue').value = 1;
+document.querySelector('#alpha').value = 1;
 document.querySelector('#opacity').value = 1;
 
 

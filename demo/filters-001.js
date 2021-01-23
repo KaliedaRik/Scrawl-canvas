@@ -55,6 +55,11 @@ let report = function () {
         testTime, testNow,
         testMessage = document.querySelector('#reportmessage');
 
+    let radius = document.querySelector('#radius'),
+        passes = document.querySelector('#passes'),
+        step = document.querySelector('#step'),
+        opacity = document.querySelector('#opacity');
+
     return function () {
 
         testNow = Date.now();
@@ -62,9 +67,8 @@ let report = function () {
         testTicker = testNow;
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    radius: ${blurFilter.radius}
-    step: ${blurFilter.step}
-    passes: ${blurFilter.passes}`;
+    Radius: ${radius.value}, Step: ${step.value}, Passes: ${passes.value}
+    Opacity: ${opacity.value}`;
     };
 }();
 

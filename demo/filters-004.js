@@ -57,7 +57,8 @@ let report = function () {
 
     let lowCol = document.querySelector('#lowColor'),
         highCol = document.querySelector('#highColor'),
-        level = document.querySelector('#level');
+        level = document.querySelector('#level'),
+        opacity = document.querySelector('#opacity');
 
     return function () {
 
@@ -66,9 +67,9 @@ let report = function () {
         testTicker = testNow;
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    low color: ${lowCol.value}
-    high color: ${highCol.value}
-    level: ${level.value}`;
+    Low color: ${lowCol.value}, High color: ${highCol.value}
+    Level: ${level.value}
+    Opacity: ${opacity.value}`;
     };
 }();
 

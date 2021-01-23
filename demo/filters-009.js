@@ -53,7 +53,8 @@ let report = function () {
     let tile_width = document.querySelector('#tile_width'),
         tile_height = document.querySelector('#tile_height'),
         offset_x = document.querySelector('#offset_x'),
-        offset_y = document.querySelector('#offset_y');
+        offset_y = document.querySelector('#offset_y'),
+        opacity = document.querySelector('#opacity');
 
     return function () {
 
@@ -63,7 +64,8 @@ let report = function () {
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
     Tile dimensions - width: ${tile_width.value} height: ${tile_height.value}
-    Offset - x: ${offset_x.value} y: ${offset_y.value}`;
+    Offset - x: ${offset_x.value} y: ${offset_y.value}
+    Opacity: ${opacity.value}`;
     };
 }();
 

@@ -58,7 +58,10 @@ let report = function () {
         testMessage = document.querySelector('#reportmessage');
 
     let strength = document.querySelector('#strength'),
-        angle = document.querySelector('#angle');
+        angle = document.querySelector('#angle'),
+        smoothing = document.querySelector('#smoothing'),
+        clamp = document.querySelector('#clamp'),
+        tolerance = document.querySelector('#tolerance');
 
     return function () {
 
@@ -67,8 +70,8 @@ let report = function () {
         testTicker = testNow;
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Angle - ${angle.value}°
-    Strength - ${strength.value}
+    Angle - ${angle.value}°, Strength - ${strength.value}, Smoothing - ${smoothing.value}, Clamp - ${clamp.value}
+    Tolerance - ${tolerance.value}
     Opacity - ${opacity.value}`;
     };
 }();

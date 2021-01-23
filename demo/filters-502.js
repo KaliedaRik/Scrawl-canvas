@@ -1,7 +1,7 @@
-// # Demo Filters 052 
+// # Demo Filters 502 
 // SVG-based filter example: gaussian blur
 
-// [Run code](../../demo/filters-052.html)
+// [Run code](../../demo/filters-502.html)
 import scrawl from '../source/scrawl.js';
 
 // #### Scene setup

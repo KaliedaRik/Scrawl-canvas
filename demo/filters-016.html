@@ -24,7 +24,7 @@
 
   <div class="controls">
 
-    <div class="yellow label">Blend source</div>
+    <div class="yellow label">Line IN</div>
     <div class="yellow">
       <select class="controlItem" id="source">
         <option value="source">source</option>
@@ -35,7 +35,7 @@
       </select>
     </div>
 
-    <div class="yellow label">Blend destination</div>
+    <div class="yellow label">Line MIX</div>
     <div class="yellow">
       <select class="controlItem" id="destination">
         <option value="source">source</option>
@@ -90,9 +90,14 @@
     <h4>Test purpose</h4>
 
     <ul>
-      <li>Create a test Picture entity</li>
-      <li>Create an areaAlpha filter and apply it to the test entity</li>
-      <li>Update filter attributes and observe the effect they have on the entity</li>
+      <li>Create two Cells which we can use to generate images for the filter</li>
+      <li>Load an additional image from the DOM</li>
+      <li>For each of our assets, create an image filter to load the assets into the filter pipeline</li>
+      <li>Create a blend filter</li>
+      <li>Create a Block entity, using a gradient for its fill, and apply the blend filter to it</li>
+      <li>Update the filter's lineIn and lineMix attributes and note the effect</li>
+      <li>Update the blend operation, check that the choice changes the display appropriately</li>
+      <li>In particular make sure the lineMix asset moves when the filter offset values are updated</li>
     </ul>
 
     <p><a href="../docs/demo/filters-016.html">Annotated code</a></p>

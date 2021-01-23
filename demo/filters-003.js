@@ -79,6 +79,9 @@ let report = function () {
         testTime, testNow,
         testMessage = document.querySelector('#reportmessage');
 
+    let level = document.querySelector('#level'),
+        opacity = document.querySelector('#opacity');
+
     return function () {
 
         testNow = Date.now();
@@ -86,7 +89,8 @@ let report = function () {
         testTicker = testNow;
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    level: ${filter.brightness.level}`;
+    Level: ${level.value}
+    Opacity: ${opacity.value}`;
     };
 }();
 
@@ -101,18 +105,6 @@ const demoAnimation = scrawl.makeRender({
 
 
 // #### User interaction
-// scrawl.addNativeListener(['input', 'change'], (e) => {
-
-//     levelFilters.forEach(f => f.set({ opacity: parseFloat(e.target.value) }));
-
-// }, '#opacity');
-
-// scrawl.addNativeListener(['input', 'change'], (e) => {
-
-//     levelFilters.forEach(f => f.set({ level: parseFloat(e.target.value) }));
-
-// }, '#level');
-
 scrawl.observeAndUpdate({
 
     event: ['input', 'change'],
@@ -124,10 +116,6 @@ scrawl.observeAndUpdate({
     preventDefault: true,
 
     updates: {
-
-        includeRed: ['includeRed', 'boolean'],
-        includeGreen: ['includeGreen', 'boolean'],
-        includeBlue: ['includeBlue', 'boolean'],
         opacity: ['opacity', 'float'],
         level: ['level', 'float'],
     },
@@ -144,19 +132,12 @@ scrawl.observeAndUpdate({
     preventDefault: true,
 
     updates: {
-
-        includeRed: ['includeRed', 'boolean'],
-        includeGreen: ['includeGreen', 'boolean'],
-        includeBlue: ['includeBlue', 'boolean'],
         opacity: ['opacity', 'float'],
         level: ['level', 'float'],
     },
 });
 
 // Setup form
-document.querySelector('#includeRed').options.selectedIndex = 1;
-document.querySelector('#includeGreen').options.selectedIndex = 1;
-document.querySelector('#includeBlue').options.selectedIndex = 1;
 document.querySelector('#opacity').value = 1;
 document.querySelector('#level').value = 1;
 

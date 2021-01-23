@@ -62,7 +62,8 @@ let report = function () {
         alpha_2 = document.querySelector('#alpha_2'),
         alpha_3 = document.querySelector('#alpha_3'),
         offset_x = document.querySelector('#offset_x'),
-        offset_y = document.querySelector('#offset_y');
+        offset_y = document.querySelector('#offset_y'),
+        opacity = document.querySelector('#opacity');
 
     return function () {
 
@@ -74,7 +75,8 @@ let report = function () {
     Tile dimensions - width: ${tile_width.value} height: ${tile_height.value}
     Gutter dimensions - width: ${gutter_width.value} height: ${gutter_height.value}
     Offset - x: ${offset_x.value} y: ${offset_y.value}
-    areaAlphaLevels: [${alpha_0.value}, ${alpha_1.value}, ${alpha_2.value}, ${alpha_3.value}]`;
+    areaAlphaLevels array: [${alpha_0.value}, ${alpha_1.value}, ${alpha_2.value}, ${alpha_3.value}]
+    Opacity: ${opacity.value}`;
     };
 }();
 

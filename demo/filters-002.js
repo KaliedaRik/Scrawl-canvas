@@ -228,6 +228,8 @@ let report = function () {
         testTime, testNow,
         testMessage = document.querySelector('#reportmessage');
 
+    let opacity = document.querySelector('#opacity');
+
     return function () {
 
         testNow = Date.now();
@@ -235,7 +237,7 @@ let report = function () {
         testTicker = testNow;
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    opacity: ${filter.red.opacity}`;
+    Opacity: ${opacity.value}`;
     };
 }();
 

@@ -47,31 +47,17 @@ let mycolor = scrawl.makeColor({
 
 // Setup Filter
 let myfilter = scrawl.makeFilter({
-    name: 'venetianBlinds',
-    method: 'userDefined',
-    level: 9,
 
-    userDefined: `
-        let i, iz, j, jz,
-            level = filter.level || 6,
-            halfLevel = level / 2,
-            yw, transparent, pos;
-
-        for (i = localY, iz = localY + localHeight; i < iz; i++) {
-
-            transparent = (i % level > halfLevel) ? true : false;
-
-            if (transparent) {
-
-                yw = (i * iWidth) + 3;
-                
-                for (j = localX, jz = localX + localWidth; j < jz; j ++) {
-
-                    pos = yw + (j * 4);
-                    data[pos] = 0;
-                }
-            }
-        }`,
+    name: 'emboss',
+    method: 'emboss',
+    angle: 225,
+    strength: 3,
+    smoothing: 0,
+    tolerance: 0,
+    clamp: 0,
+    postProcessResults: true,
+    useNaturalGrayscale: false,
+    keepOnlyChangedAreas: false,
 });
 
 // Test Block entity
@@ -249,7 +235,7 @@ let myshape = scrawl.makeShape({
 
     method: 'fillAndDraw',
 
-    filters: ['venetianBlinds'],
+    filters: ['emboss'],
 
     // svg outline of Japan from this source:
     // https://silhouettegarden.com/download/japan-silhouette/
@@ -707,7 +693,7 @@ let fixEntitys = () => {
     });
 
     myshape.set({
-        filters: 'venetianBlinds',
+        filters: 'emboss',
     })
 };
 

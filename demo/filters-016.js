@@ -169,13 +169,19 @@ let report = function () {
         testTime, testNow,
         testMessage = document.querySelector('#reportmessage');
 
+    let ox = document.querySelector('#offset-x'),
+        oy = document.querySelector('#offset-y'),
+        opacity = document.querySelector('#opacity');
+
     return function () {
 
         testNow = Date.now();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
+    Offset - x: ${ox.value}, y: ${oy.value}
+    Opacity: ${opacity.value}`;
     };
 }();
 

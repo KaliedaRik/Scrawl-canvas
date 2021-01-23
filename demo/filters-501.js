@@ -1,7 +1,7 @@
-// # Demo Filters 051 
+// # Demo Filters 501 
 // Canvas engine filter strings (based on CSS filters)
 
-// [Run code](../../demo/filters-051.html)
+// [Run code](../../demo/filters-501.html)
 import scrawl from '../source/scrawl.js';
 
 // #### Scene setup

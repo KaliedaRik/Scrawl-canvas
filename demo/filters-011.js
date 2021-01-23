@@ -59,7 +59,8 @@ let report = function () {
 
     let col = document.querySelector('#color'),
         trans = document.querySelector('#transparentAt'),
-        opaq = document.querySelector('#opaqueAt');
+        opaq = document.querySelector('#opaqueAt'),
+        opacity = document.querySelector('#opacity');
 
     return function () {
 
@@ -69,8 +70,8 @@ let report = function () {
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
     Key color: ${col.value}
-    Transparent at: ${trans.value}
-    Opaque at: ${opaq.value}`;
+    Transparent at: ${trans.value}, Opaque at: ${opaq.value}
+    Opacity: ${opacity.value}`;
     };
 }();
 

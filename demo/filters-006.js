@@ -53,7 +53,8 @@ let report = function () {
     let red = document.querySelector('#red'),
         green = document.querySelector('#green'),
         alpha = document.querySelector('#alpha'),
-        blue = document.querySelector('#blue');
+        blue = document.querySelector('#blue'),
+        opacity = document.querySelector('#opacity');
 
     return function () {
 
@@ -62,10 +63,11 @@ let report = function () {
         testTicker = testNow;
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    red: [${red.value}]
-    green: [${green.value}]
-    blue: [${blue.value}]
-    alpha: [${alpha.value}]`;
+    Red: [${red.value}]
+    Green: [${green.value}]
+    Blue: [${blue.value}]
+    Alpha: [${alpha.value}]
+    Opacity: ${opacity.value}`;
     };
 }();
 

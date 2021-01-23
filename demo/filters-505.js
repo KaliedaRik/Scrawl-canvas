@@ -1,7 +1,7 @@
-// # Demo Filters 055 
+// # Demo Filters 505 
 // SVG-based filter example: noise
 
-// [Run code](../../demo/filters-055.html)
+// [Run code](../../demo/filters-505.html)
 import scrawl from '../source/scrawl.js';
 
 // #### Scene setup

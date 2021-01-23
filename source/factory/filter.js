@@ -1,49 +1,117 @@
 // # Filter factory
-// Filters take in an image representation of an [entity](../mixin/entity.html), [Group](./group.html) of entitys or a [Cell](./cell.html) display and, by manipulating the image's data, return an updated image which replaces those entitys or cell in the final output display.
+// Filters take in an image representation of an [entity](../mixin/entity.html), [Group](./group.html) of entitys or a [Cell](./cell.html) display and, by manipulating the image's data, return an updated image which replaces those entitys or Cell in the final output display.
 //
 // Scrawl-canvas defines its filters in __Filter objects__, detailed in this module. The functionality to make use of these objects is coded up in the [filter mixin](../mixin/filter.html), which is used by the Cell, Group and all entity factories.
 //
-// Scrawl-canvas uses a [web worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API) to generate filter outputs - defined in the [filter web worker](../worker/filter.html). It supports a number of common filter algorithms:
-// + `grayscale` - desaturates the image
-// + `sepia` - desaturates the image, then 'antiques' it by adding back some yellow tone
-// + `invert` - turns white into black, and similar across the spectrum
-// + `red` - suppresses the image's green and blue channels
-// + `green` - suppresses the image's red and blue channels
-// + `blue` - suppresses the image's red and green channels
-// + `notred` - suppresses the image's red channel
-// + `notgreen` - suppresses the image's green channel
-// + `notblue` - suppresses the image's blue channel
-// + `cyan` - averages the image's blue and green channels, and suppresses the red channel
-// + `magenta` - averages the image's red and blue channels, and suppresses the green channel
-// + `yellow` - averages the image's red and green channels, and suppresses the blue channel
-// + `brightness` - multiplies the red, green and blue channel values by a value supplied in the `filter.level` attribute
-// + `saturation` - multiplies the red, green and blue channel values by a value supplied in the `filter.level` attribute, then normalizes the result
-// + `threshold` - desaturates each pixel then tests it against `filter.level` value; those pixels below the level are set to the `filter.lowRGB` values while the rest are set to the `filter.highRGB` values
-// + `channels` - multiply each pixel's channel values by the values set in the `filter.RGB` attributes
-// + `channelstep` - divide, floor, and then multiply each pixel's channel values by the values set in the `filter.RGB` attributes
-// + `tint` - a more fine-grained form of the channels filter
-// + `chroma` - (the green-screen effect) - will evaluate each pixel against a range array; pixels that fall within the range are set to transparent
-// + `pixelate` - create tiles - whose dimensions and positions are determined by values set in the filter `tileWidth`, `tileHeight`, `offsetX` and `offsetY` attributes - across the image and then average the pixels in each tile to a single color
-// + `blur` - creates a blurred image. Note: can be slow across larger images! The degree of the blur - which does not follow conventional algorithms such as gaussian - is determined by the filter attribute values for `radius` (number), `passes` (number) and `shrink` (boolean)
-// + `matrix` - apply a 3x3 matrix transform to each of the image's pixels
-// + `matrix5` - apply a 5x5 matrix transform to each of the image's pixels
+// Scrawl-canvas uses a [web worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API) to generate filter outputs - defined in the [filter web worker](../worker/filter.html). The web worker implements a number of common filter algorithms. These algorithms - __called filter actions__ - can be combined in a wide variety of ways, including the use of multiple pathways, to create complex filter results.
 // 
-// Scrawl-canvas can also use __user-defined filters__.
+// #### Web worker filter actions
+// `alpha-to-channels` - Copies the alpha channel value over to the selected value or, alternatively, sets that channels value to zero, or leaves the channel's value unchanged. Setting the appropriate "includeChannel" flags will copy the alpha channel value to that channel; when that flag is false, setting the appropriate "excludeChannel" flag will set that channel's value to zero. Object attributes: action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue, excludeRed, excludeGreen, excludeBlue
+// 
+// `area-alpha` - Places a tile schema across the input, quarters each tile and then sets the alpha channels of the pixels in selected quarters of each tile to zero. Can be used to create horizontal or vertical bars, or chequerboard effects. Object attributes: action, lineIn, lineOut, opacity, tileWidth, tileHeight, offsetX, offsetY, gutterWidth, gutterHeight, areaAlphaLevels
+// 
+// `average-channels` - Calculates an average value from each pixel's included channels and applies that value to all channels that have not been specifically excluded; excluded channels have their values set to 0. Object attributes: action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue, excludeRed, excludeGreen, excludeBlue
+// 
+// `binary` - Set the channel to either 0 or 255, depending on whether the channel value is below or above a given level. Level values are set using the "red", "green", "blue" and "alpha" arguments. Setting these values to 0 disables the action for that channel. Object attributes: action, lineIn, lineOut, opacity, red, green, blue, alpha
+// 
+// `blend` - Using two source images (from the "lineIn" and "lineMix" arguments), combine their color information using various separable and non-separable blend modes (as defined by the W3C Compositing and Blending Level 1 recommendations. The blending method is determined by the String value supplied in the "blend" argument; permitted values are: 'color-burn', 'color-dodge', 'darken', 'difference', 'exclusion', 'hard-light', 'lighten', 'lighter', 'multiply', 'overlay', 'screen', 'soft-light', 'color', 'hue', 'luminosity', and 'saturation'. Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the "offsetX" and "offsetY" arguments. Object attributes: action, lineIn, lineOut, lineMix, opacity, blend, offsetX, offsetY
+// 
+// `blur` - Performs a multi-loop, two-step 'horizontal-then-vertical averaging sweep' calculation across all pixels to create a blur effect. Note that this filter is expensive, thus much slower to complete compared to other filter effects. Object attributes: action, lineIn, lineOut, opacity, radius, passes, processVertical, processHorizontal, includeRed, includeGreen, includeBlue, includeAlpha, step
+// 
+// `channels-to-alpha` - Calculates an average value from each pixel's included channels and applies that value to the alpha channel. Object attributes: action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue
+// 
+// `chroma` - Using an array of 'range' arrays, determine whether a pixel's values lie entirely within a range's values and, if true, sets that pixel's alpha channel value to zero. Each 'range' array comprises six Numbers representing [minimum-red, minimum-green, minimum-blue, maximum-red, maximum-green, maximum-blue] values. Object attributes: action, lineIn, lineOut, opacity, ranges
+// 
+// `clamp-channels` - Clamp each color channel to a range set by lowColor and highColor values. Object attributes: action, lineIn, lineOut, opacity, lowRed, lowGreen, lowBlue, highRed, highGreen, highBlue
+// 
+// `colors-to-alpha` - Determine the alpha channel value for each pixel depending on the closeness to that pixel's color channel values to a reference color supplied in the "red", "green" and "blue" arguments. The sensitivity of the effect can be manipulated using the "transparentAt" and "opaqueAt" values, both of which lie in the range 0-1. Object attributes: action, lineIn, lineOut, opacity, red, green, blue, opaqueAt, transparentAt
+// 
+// `compose` - Using two source images (from the "lineIn" and "lineMix" arguments), combine their color information using alpha compositing rules (as defined by Porter/Duff). The compositing method is determined by the String value supplied in the "compose" argument; permitted values are: 'destination-only', 'destination-over', 'destination-in', 'destination-out', 'destination-atop', 'source-only', 'source-over' (default), 'source-in', 'source-out', 'source-atop', 'clear', 'xor', or 'lighter'. Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the "offsetX" and "offsetY" arguments. Object attributes: action, lineIn, lineOut, lineMix, opacity, compose, offsetX, offsetY
+// 
+// `displace` - Shift pixels around the image, based on the values supplied in a displacement process-image. Object attributes: action, lineIn, lineOut, lineMix, opacity, channelX, channelY, scaleX, scaleY, transparentEdges, offsetX, offsetY
+// 
+// `emboss` - A 3x3 matrix transform; the matrix weights are calculated internally from the values of two arguments: "strength", and "angle" - which is a value measured in degrees, with 0 degrees pointing to the right of the origin (along the positive x axis). Post-processing options include removing unchanged pixels, or setting then to mid-gray. The convenience method includes additional arguments which will add a choice of grayscale, then channel clamping, then blurring actions before passing the results to this emboss action. Object attributes: action, lineIn, lineOut, opacity, strength, angle, tolerance, keepOnlyChangedAreas, postProcessResults; pseudo-arguments for the convenience method include useNaturalGrayscale, clamp, smoothing
+// 
+// `flood` - Set all pixels to the channel values supplied in the "red", "green", "blue" and "alpha" arguments. Object attributes: action, lineIn, lineOut, opacity, red, green, blue, alpha
+// 
+// `grayscale` - For each pixel, averages the weighted color channels and applies the result across all the color channels. This gives a more realistic monochrome effect. Object attributes: action, lineIn, lineOut, opacity
+// 
+// `invert-channels` - For each pixel, subtracts its current channel values - when included - from 255. Object attributes: action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue, includeAlpha
+// 
+// `lock-channels-to-levels` - Produces a posterize effect. Takes in four arguments - "red", "green", "blue" and "alpha" - each of which is an Array of zero or more integer Numbers (between 0 and 255). The filter works by looking at each pixel's channel value and determines which of the corresponding Array's Number values it is closest to; it then sets the channel value to that Number value. Object attributes: action, lineIn, lineOut, opacity, red, green, blue, alpha
+// 
+// `matrix` - Performs a matrix operation on each pixel's channels, calculating the new value using neighbouring pixel weighted values. Also known as a convolution matrix, kernel or mask operation. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the "width" and "height" arguments, while setting the home pixel's position within the matrix can be set using the "offsetX" and "offsetY" arguments. The weights to be applied need to be supplied in the "weights" argument - an Array listing the weights row-by-row starting from the top-left corner of the matrix. By default all color channels are included in the calculations while the alpha channel is excluded. The 'edgeDetect', 'emboss' and 'sharpen' convenience filter methods all use the matrix action, pre-setting the required weights. Object attributes: action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue, includeAlpha, width, height, offsetX, offsetY, weights
+// 
+// `modulate-channels` - Multiplies each channel's value by the supplied argument value. A channel-argument's value of '0' will set that channel's value to zero; a value of '1' will leave the channel value unchanged. If the "saturation" flag is set to 'true' the calculation changes to start at the color range mid point. The 'brightness' and 'saturation' filters are special forms of the 'channels' filter which use a single "levels" argument to set all three color channel arguments to the same value. Object attributes: action, lineIn, lineOut, opacity, red, green, blue, alpha, saturation; pseudo-argument: level
+// 
+// `offset` - Offset the input image in the output image. Object attributes: action, lineIn, lineOut, opacity, offsetRedX, offsetRedY, offsetGreenX, offsetGreenY, offsetBlueX, offsetBlueY, offsetAlphaX, offsetAlphaY; pseudo-argument: offsetX, offsetY
+// 
+// `pixelate` - Pixelizes the input image by creating a grid of tiles across it and then averaging the color values of each pixel in a tile and setting its value to the average. Tile width and height, and their offset from the top left corner of the image, are set via the "tileWidth", "tileHeight", "offsetX" and "offsetY" arguments. Object attributes: action, lineIn, lineOut, opacity, tileWidth, tileHeight, offsetX, offsetY, includeRed, includeGreen, includeBlue, includeAlpha
+// 
+// `process-image` - Add an asset image to the filter process chain. The asset - the String name of the asset object - must be pre-loaded before it can be included in the filter. The "width" and "height" arguments are measured in integer Number pixels; the "copy" arguments can be either percentage Strings (relative to the asset's natural dimensions) or absolute Number values (in pixels). The "lineOut" argument is required - be aware that the filter action does not check for any pre-existing assets cached under this name and, if they exist, will overwrite them with this asset's data. Object attributes: action, lineOut, asset, width, height, copyWidth, copyHeight, copyX, copyY
+// 
+// `set-channel-to-level` - Sets the value of each pixel's included channel to the value supplied in the "level" argument. Object attributes: action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue, includeAlpha, level
+// 
+// `step-channels` - Takes three divisor values - "red", "green", "blue". For each pixel, its color channel values are divided by the corresponding color divisor, floored to the integer value and then multiplied by the divisor. For example a divisor value of '50' applied to a channel value of '120' will give a result of '100'. The output is a form of posterization. Object attributes: action, lineIn, lineOut, opacity, red, green, blue
+// 
+// `threshold` - Grayscales the input then, for each pixel, checks the color channel values against a "level" argument: pixels with channel values above the level value are assigned to the 'high' color; otherwise they are updated to the 'low' color. The "high" and "low" arguments are [red, green, blue] integer Number Arrays. The convenience function will accept the pseudo-attributes "highRed", "lowRed" etc in place of the "high" and "low" Arrays. Object attributes: action, lineIn, lineOut, opacity, low, high; pseudo-arguments: lowRed, lowGreen, lowBlue, highRed, highGreen, highBlue
+// 
+// `tint-channels` - Has similarities to the SVG <feColorMatrix> filter element, but excludes the alpha channel from calculations. Rather than set a matrix, we set nine arguments to determine how the value of each color channel in a pixel will affect both itself and its fellow color channels. The 'sepia' convenience filter presets these values to create a sepia effect. Object attributes: action, lineIn, lineOut, opacity, redInRed, redInGreen, redInBlue, greenInRed, greenInGreen, greenInBlue, blueInRed, blueInGreen, blueInBlue
+// 
+// `user-defined-legacy` - Previous to Scrawl-canvas version 8.4.0, filters could be defined with an argument which passed a function string to the filter worker, which the worker would then run against the source input image as-and-when required. This functionality has been removed from the new filter system. All such filters will now return the input image unchanged. Object attributes: action, lineIn, lineOut, opacity
 //
-// Filters use the __base__ mixin, thus they come equipped with packet functionality, alongside clone and kill functions.
-//
-// Note that [CSS-mediated filters](https://developer.mozilla.org/en-US/docs/Web/CSS/filter) - `url()`, `blur()`, `brightness()`, `contrast()`, `drop-shadow()`, `grayscale()`, `hue-rotate()`, `invert()`, `opacity()`, `saturate()`, `sepia()` - can also be applied to DOM elements wrapped into Scrawl-canvas objects (Stack, Element, Canvas) in the normal way. Browsers will apply CSS filters as the final operation in their paint routines.
-//
-// TODO: we've had to move all the code from the [filter web worker](../worker/filter.html) into a new, [comment-free module](../worker/filter-stringed.html) file because tools like [CreateReactApp](https://reactjs.org/docs/create-a-new-react-app.html#create-react-app) - which uses [Webpack](https://webpack.js.org/) as its bundler of choice - breaks when we `yarn add scrawl-canvas` to a project.
-// + The root of the issue is that [Babel](https://babeljs.io/) currently breaks when it encounters the `import.meta` attribute.
-// + Babel do supply a plugin which is supposed to address this issue: [babel-plugin-syntax-import-meta](https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-import-meta). But trying to add this to a Webpack configuration - particularly as implemented by create-react-app - is, at best, a nightmare.
-
+// ```
+// // Example: the following code creates a filter that applies a thick red border around the entitys 
+// // it is applied to; if used on a group then it will outline the outside of the group's entitys, 
+// // ignoring overlaps between entitys:
+// scrawl.makeFilter({
+//     name: 'redBorder',
+//     actions: [
+//         {
+//             action: 'blur',
+//             lineIn: 'source-alpha',
+//             lineOut: 'shadow',
+//             radius: 3,
+//             passes: 2, 
+//             includeRed: false, 
+//             includeGreen: false, 
+//             includeBlue: false, 
+//             includeAlpha: true, 
+//         },
+//         {
+//             action: 'binary',
+//             lineIn: 'shadow',
+//             lineOut: 'shadow',
+//             alpha: 1, 
+//         },
+//         {
+//             action: 'flood',
+//             lineIn: 'shadow',
+//             lineOut: 'red-flood',
+//             red: 255,
+//         },
+//         {
+//             action: 'compose',
+//             lineIn: 'shadow',
+//             lineMix: 'red-flood',
+//             lineOut: 'colorized',
+//             compose: 'destination-in',
+//         },
+//         {
+//             action: 'compose',
+//             lineIn: 'source',
+//             lineMix: 'colorized',
+//         }
+//     ],
+// });
+// ```
 
 // #### Demos:
 // + [Canvas-007](../../demo/canvas-007.html) - Apply filters at the entity, group and cell level
 // + [Canvas-020](../../demo/canvas-020.html) - Testing createImageFromXXX functionality
 // + [Canvas-027](../../demo/canvas-027.html) - Video control and manipulation; chroma-based hit zone
 // + [Component-004](../../demo/component-004.html) - Scrawl-canvas packets; save and load a range of different entitys
+// + [Filters-019](../../demo/filters-019.html) - Using a Noise asset with a displace filter
 
 
 // #### Imports
@@ -58,7 +126,6 @@ const Filter = function (items = {}) {
 
     this.makeName(items.name);
     this.register();
-    // this.set(this.defs);
 
     this.actions = [];
 
@@ -81,174 +148,136 @@ P = baseMix(P);
 
 // #### Filter attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
+// + ___Note:__ unlike other Scrawl-canvas factory functions, the Filter factory does not set all its default attributes as part of its constructors. The reason for this is that these attributes are often specific to just one or a few filter actions or methods; not setting these defaults help save some object memory.
 let defaultAttributes = {
 
-    opaqueAt: 1,
-    transparentAt: 0,
-
-    includeRed: true,
-    includeGreen: true,
-    includeBlue: true,
-    includeAlpha: false, 
-    excludeRed: false,
-    excludeGreen: false,
-    excludeBlue: false,
-    excludeAlpha: true, 
-
-    strength: 1,
-    angle: 0,
-    useNaturalGrayscale: false,
-    keepOnlyChangedAreas: false,
-    postProcessResults: true,
-    smoothing: 0,
-    tolerance: 0,
-    clamp: 0,
-
-    offsetRedX: 0,
-    offsetRedY: 0,
-    offsetGreenX: 0,
-    offsetGreenY: 0,
-    offsetBlueX: 0,
-    offsetBlueY: 0,
-    offsetAlphaX: 0,
-    offsetAlphaY: 0,
-
+    // ##### How the filter factory builds filters
+    // Filter actions are defined in action objects - which are vanilla Javascript Objects which are collected together in the __actions__ array. Each action object is processed sequentially by the web worker to produce the final output for that filter.
     actions: null,
 
-    gutterWidth: 1,
-    gutterHeight: 1,
-    areaAlphaLevels: null,
-
-    compose: 'source-over',
-    blend: 'normal',
-    lineIn: '',
-    lineOut: '',
-    lineMix: '',
-    opacity: 1,
-
-    asset: '',
-    width: 1,
-    height: 1,
-    copyWidth: 1,
-    copyHeight: 1,
-    copyX: 0,
-    copyY: 0,
-
-    channelX: 'red',
-    channelY: 'green',
-    scaleX: 1,
-    scaleY: 1,
-    transparentEdges: false,
-   
-// All filters need to set out their __method__. For preset methods, a method string (eg 'grayscale', 'sepia') is sufficient. Bespoke methods require a function
+    // The __method__ attribute is a String which, in legacy filters, determines the actions which that filter will take on the image. An entity, Group or Cell can include more than one filter object in its `filters` Array. 
+    // + Filter factory invocations which include the method attribute in their argument object do not need to include an actions attribute; the factory will build the action objects for us.
+    // + When using the method attribute, other attributes can be included alongside it. The filter factory will automatically transpose these attributes to the action object.
+    // + The following Strings are valid methods: 'areaAlpha', 'binary', 'blend', 'blue', 'blur', 'brightness', 'channelLevels', 'channels', 'channelstep', 'channelsToAlpha', 'chroma', 'chromakey', 'clampChannels', 'compose', 'cyan', 'displace', 'edgeDetect',  'emboss', 'flood', 'gray', 'grayscale', 'green', 'image', 'invert', 'magenta', 'matrix', 'matrix5', 'notblue', 'notgreen', 'notred', 'offset', 'offsetChannels', 'pixelate', 'red', 'saturation', 'sepia', 'sharpen', 'threshold', 'tint', 'userDefined', 'yellow',
     method: '',
 
+    // ##### How filters process data
+    // The Scrawl-canvas filters web worker can use ___multiple pathways___ to process a filter's Array of action objects. In essence, a filter action can store the results of its work in a named cache, which can then be used by other filter actions further down the line.
+    // + When Scrawl-canvas applies filters to an entity, Group or Cell it will go through the entity's `filters` Array looking for any `process-image` actions; when it finds one it will add a snapshot of the associated asset's current image state to the filter object (thus Cell and Noise assets are naturally dynamic).
+    // + Then the system sends all of the filter's action objects over to the filters web worker, alongside a snapshot of the entity, Group or Cell to be processed.
+    // + If the entity, Group or Cell is acting as a stencil (its `isStencil` flag has been set to true) then a snapshot of the background behind the entity/Group/Cell is sent instead of the entitys themselves.
+    // + When the web worker recieves the data packet, it stores the snapshot in its `source` cache, and replicates it into the `work` object.
+    // + All filter actions require a __lineIn__ string which references a cached image or snapshot. If this is not supplied, then the action will process the data stored in the `work` object.
+    // + Additional sources for the lineIn (or lineMix) data are `source`, which copies the original source image data and delivers it to the action; and `source-alpha` which copies the original source's alpha channel data to each of the color channels and delivers it to the action.
+    // + Similarly all filter actions require a __lineOut__ which identifies the name of a cache in which the processed data can be stored. If this is not supplied, then the action will copy the processed data back into the `work` object
+    // + Some filter actions - specifically `blend`, `compose` and `displace` - use two inputs, combining the data referenced by the __lineIn__ and __lineMix__ attribute into __lineOut__ cache or work object.
+    // + When processing completes, the updated data held in the work object is returned by the web worker, which Scrawl-canvas then uses to stamp the entity/Group/Cell into the display canvas.
+    lineIn: '',
+    lineMix: '',
+    lineOut: '',
 
-// The following methods require no further attributes: 
-// + `grayscale`, `sepia`, `invert`
-// + `red`, `green`, `blue`
-// + `notred`, `notgreen`, `notblue`
-// + `cyan`, `magenta`, `yellow`
-
-
-// The following methods require the __level__ attribute:
-//
-// + `brightness`, `saturation`, `threshold`
-    level: 0,
-
-
-
-// The `threshhold` filter will default to setting (desaturated) pixels below a given level (0 - 255) to black, and those above the level to white. These colours can be changed by using the __low__ and __high__ channel attributes
-    lowRed: 0,
-    lowGreen: 0,
-    lowBlue: 0,
-    highRed: 255,
-    highGreen: 255,
-    highBlue: 255,
+    // Every action includes an __opacity__ attribute which defines how much of the incoming image data (`lineIn`) and how much of the processed results gets included in the output data (`lineOut`)
+    // + When set to `0`, the output consists entirely of input data
+    // + When set to `1` (the default), the output consists entirely of processed data
+    // + Values between these limits instruct the action to combine input and processed data proportionately in a linear fashion: a value of `0.7` leads to a result consisting of 30% input data and 70% processed data
+    opacity: 1,
 
 
-// The `channels` and `channelstep` methods make use of the __red__, __green__ and __blue__ attributes
-    red: 0,
-    green: 0,
-    blue: 0,
+// ##### Other attributes used by various filters
+// The attributes below are used by specific filter actions and/or methods, and the values they take may change according to the filter's requirements. Check out the following demos to see these attributes in action with each filter method:
+// + [Filters-001](../../demo/filters-001.html) - Parameters for: blur filter
+// + [Filters-002](../../demo/filters-002.html) - Parameters for: red, green, blue, cyan, magenta, yellow, notred, notgreen, notblue, grayscale, sepia, invert filters
+// + [Filters-003](../../demo/filters-003.html) - Parameters for: brightness, saturation filters
+// + [Filters-004](../../demo/filters-004.html) - Parameters for: threshold filter
+// + [Filters-005](../../demo/filters-005.html) - Parameters for: channelstep filter
+// + [Filters-006](../../demo/filters-006.html) - Parameters for: channelLevels filter
+// + [Filters-007](../../demo/filters-007.html) - Parameters for: channels filter
+// + [Filters-008](../../demo/filters-008.html) - Parameters for: tint filter
+// + [Filters-009](../../demo/filters-009.html) - Parameters for: pixelate filter
+// + [Filters-010](../../demo/filters-010.html) - Parameters for: chroma filter
+// + [Filters-011](../../demo/filters-011.html) - Parameters for: chromakey filter
+// + [Filters-012](../../demo/filters-012.html) - Parameters for: matrix, matrix5 filters
+// + [Filters-013](../../demo/filters-013.html) - Parameters for: flood filter
+// + [Filters-014](../../demo/filters-014.html) - Parameters for: areaAlpha filter
+// + [Filters-015](../../demo/filters-015.html) - Using assets in the filter stream; filter compositing
+// + [Filters-016](../../demo/filters-016.html) - Filter blend operation
+// + [Filters-017](../../demo/filters-017.html) - Parameters for: displace filter
+// + [Filters-018](../../demo/filters-018.html) - Parameters for: emboss filter
+// + [Filters-020](../../demo/filters-020.html) - Parameters for: clampChannels filter
     alpha: 255,
-
-
-// The `tint` method uses nine attributes
-    redInRed: 0,
-    redInGreen: 0,
-    redInBlue: 0,
-    greenInRed: 0,
-    greenInGreen: 0,
-    greenInBlue: 0,
-    blueInRed: 0,
-    blueInGreen: 0,
+    angle: 0,
+    areaAlphaLevels: null,
+    asset: '',
+    blend: 'normal',
+    blue: 0,
     blueInBlue: 0,
-
-
-// The `pixelate` method requires tile dimensions and, optionally, offset coordinates which should not exceed the tile dimensions
+    blueInGreen: 0,
+    blueInRed: 0,
+    channelX: 'red',
+    channelY: 'green',
+    clamp: 0,
+    compose: 'source-over',
+    copyHeight: 1,
+    copyWidth: 1,
+    copyX: 0,
+    copyY: 0,
+    excludeAlpha: true, 
+    excludeBlue: false,
+    excludeGreen: false,
+    excludeRed: false,
+    green: 0,
+    greenInBlue: 0,
+    greenInGreen: 0,
+    greenInRed: 0,
+    gutterHeight: 1,
+    gutterWidth: 1,
+    height: 1,
+    highBlue: 255,
+    highGreen: 255,
+    highRed: 255,
+    includeAlpha: false, 
+    includeBlue: true,
+    includeGreen: true,
+    includeRed: true,
+    keepOnlyChangedAreas: false,
+    level: 0,
+    lowBlue: 0,
+    lowGreen: 0,
+    lowRed: 0,
+    offsetAlphaX: 0,
+    offsetAlphaY: 0,
+    offsetBlueX: 0,
+    offsetBlueY: 0,
+    offsetGreenX: 0,
+    offsetGreenY: 0,
+    offsetRedX: 0,
+    offsetRedY: 0,
     offsetX: 0,
     offsetY: 0,
-    tileWidth: 1,
-    tileHeight: 1,
-
-
-// The `blur` method uses the following attributes:
-// + the __radius__ of the blur effect, in pixels
-// + the __passes__ attribute (1+) determines how many times the blur filter will iterate
-// + the __shrinkingRadius__ flag reduces the radius by approx 70% on each successive pass
-// + when __includeAlpha__ flag is true, filter will include the alpha channel - note this may make the edges of the entity translucent
-// + because the blur filter works on a 2-pass basis, we can restrict its operation to the vertical and horizontal directions by setting the `processVertical` and `processHorizontal` flags appropriately
-    radius: 1,
+    opaqueAt: 1,
     passes: 1,
-    processVertical: true,
+    postProcessResults: true,
     processHorizontal: true,
-    step: 1,
-
-
-// The `matrix` method requires a weights attribute - an array of 9 numbers (also known as a __kernel__) in the following format:
-// ```
-// weights: [
-//   topLeftWeight,
-//   topCenterWeight,
-//   topRightWeight,
-//   middleLeftWeight,
-//   homePixelWeight,
-//   middleRightWeight,
-//   bottomLeftWeight,
-//   bottomCenterWeight,
-//   bottomRightWeight,
-// ]
-// ```
-// ... where the top row is the row above the home pixel, etc
-//
-// The method also makes use of the __includeAlpha__ attribute.
-
-// The `matrix5` method is the same as the matrix method except that its weights array should contain 25 elements, to cover all the positions (from top-left corner) in a 5x5 grid
-// 
-// Some common kernels include:
-// + Identity - matrix3: [0,0,0,0,1,0,0,0,0]; matrix5: [0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0]
-// + Simple blur - matrix3: [0.1,0.1,0.1,0.1,0.2,0.1,0.1,0.1,0.1]
-// + Gaussian blur - matrix3: [0,0.14,0,0.14,0.44,0.14,0,0.13,0]
-// + Edge detect (example) - matrix3: [1,0,-1,0,0,0,-1,0,1]
-// + Edge emboss - matrix3: [-2,-1,0,-1,1,1,0,1,2]
-// + Edge enhance - matrix3: [0,0,0,-1,1,0,0,0,0]
-// + Laplacian edge - matrix3: [0,-1,0,-1,4,-1,0,-1,0]
-// + Laplacian edge + diagonals - matrix3: [-1,-1,-1,-1,8,-1,-1,-1,-1]
-// + Laplacian of Gaussian - matrix5: [0,0,-1,0,0,0,-1,-2,-1,0,-1,-2,16,-2,-1,0,-1,-2,-1,0,0,0,-1,0,0]
-// + Sharpen - matrix3: [0,-1,0,-1,5,-1,0,-1,0]
-// + Unsharp mask - matrix5: [1,4,6,4,1,4,16,24,16,4,6,24,-476,24,6,4,16,24,16,4,1,4,6,4,1]
-    weights: null,
-
-// The __ranges__ attribute - used by the `chroma` method - needs to be an array of arrays with the following format:
-// ```
-// [[minRed, minGreen, minBlue, maxRed, maxGreen, maxBlue], etc]
-// ```
-// ... multiple ranges can be defined - for instance to key out the lightest and darkest hues:
-// ```
-// ranges: [[0, 0, 0, 80, 80, 80], [180, 180, 180, 255, 255, 255]]
-// ```
+    processVertical: true,
+    radius: 1,
     ranges: null,
+    red: 0,
+    redInBlue: 0,
+    redInGreen: 0,
+    redInRed: 0,
+    scaleX: 1,
+    scaleY: 1,
+    smoothing: 0,
+    step: 1,
+    strength: 1,
+    tileHeight: 1,
+    tileWidth: 1,
+    tolerance: 0,
+    transparentAt: 0,
+    transparentEdges: false,
+    useNaturalGrayscale: false,
+    weights: null,
+    width: 1,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -351,8 +380,37 @@ P.setDelta = function (items = {}) {
     return this;
 };
 
+// #### Compatibility with Scrawl-canvas legacy filters functionality
+// The Scrawl-canvas filters code was rewritten from scratch for version 8.4.0. The new functionality introduced the concept of "line processing" - ___lineIn, lineMix, lineOut___ (analagous to SVG in, in2 and result attributes) - alongside the addition of more sophisticated image processing tools such as blend modes, compositing, more adaptable matrices, image loading, displacement mapping, etc.
+//
+// The legacy system - defining filters using __method__ String attributes - has been adapted to use the new system behind the scenes. As a result all legacy filters will continue to work as expected - with one exception: user-defined filters, which allowed the user to coder a function string to pass on to the web worker, will no longer function in Scrawl-canvas v8.4.0.
+// 
+// Note that there are no plans to deprecate the legacy method of defining/creating Filters. The following code will continue to work:
+// ```
+// // __Brightness__ filter
+// scrawl.makeFilter({
+//     name: 'my-bright-filter',
+//     method: 'brightness',
+//     level: 0.5,
+
+// // __Threshhold__ filter
+// }).clone({
+//     name: 'my-duotone-filter',
+//     method: 'threshold',
+//     level: 127,
+//     lowRed: 100,
+//     lowGreen: 0,
+//     lowBlue: 0,
+//     highRed: 220,
+//     highGreen: 60,
+//     highBlue: 60,
+// });
+// ```
+
+// `setActionsArray` - an object containing a large number of functions which will convert legacy factory function invocations (using __method__ strings) into modern Filter objects (using __actions__ arrays):
 const setActionsArray = {
 
+// __alphaToChannels__ (new in v8.4.0) - copies the alpha channel value over to the selected value or, alternatively, sets that channels value to zero, or leaves the channel's value unchanged. Setting the appropriate "includeChannel" flags will copy the alpha channel value to that channel; when that flag is false, setting the appropriate "excludeChannel" flag will set that channel's value to zero.
     alphaToChannels: function (f) {
         f.actions = [{
             action: 'alpha-to-channels',
@@ -368,6 +426,7 @@ const setActionsArray = {
         }];
     },
 
+// __areaAlpha__ (new in v8.4.0) - places a tile schema across the input, quarters each tile and then sets the alpha channels of the pixels in selected quarters of each tile to zero. Can be used to create horizontal or vertical bars, or chequerboard effects.
     areaAlpha: function (f) {
         f.actions = [{
             action: 'area-alpha',
@@ -384,6 +443,7 @@ const setActionsArray = {
         }];
     },
 
+// __binary__ (new in v8.4.0) - set the channel to either 0 or 255, depending on whether the channel value is below or above a given level. Level values are set using the "red", "green", "blue" and "alpha" arguments. Setting these values to 0 disables the action for that channel
     binary: function (f) {
         f.actions = [{
             action: 'binary',
@@ -397,6 +457,7 @@ const setActionsArray = {
         }];
     },
 
+// __blend__ (new in v8.4.0) - perform a blend operation on two images; available blend options include: 'color-burn', 'color-dodge', 'darken', 'difference', 'exclusion', 'hard-light', 'lighten', 'lighter', 'multiply', 'overlay', 'screen', 'soft-light', 'color', 'hue', 'luminosity', and 'saturation' - see [W3C Compositing and Blending recommendations](https://www.w3.org/TR/compositing-1/#blending)
     blend: function (f) {
         f.actions = [{
             action: 'blend',
@@ -410,6 +471,7 @@ const setActionsArray = {
         }];
     },
 
+// __blue__ - removes red and green channel color from the image
     blue: function (f) {
         f.actions = [{
             action: 'average-channels',
@@ -421,6 +483,7 @@ const setActionsArray = {
         }];
     },
 
+// __blur__ - blurs the image
     blur: function (f) {
         f.actions = [{
             action: 'blur',
@@ -439,6 +502,7 @@ const setActionsArray = {
         }];
     },
 
+// __brightness__ - adjusts the brightness of the image
     brightness: function (f) {
         let level = (f.level != null) ? f.level : 1;
 
@@ -453,6 +517,7 @@ const setActionsArray = {
         }];
     },
 
+// __channelLevels__ (new in v8.4.0) - produces a posterize effect. Takes in four arguments - "red", "green", "blue" and "alpha" - each of which is an Array of zero or more integer Numbers (between 0 and 255). The filter works by looking at each pixel's channel value and determines which of the corresponding Array's Number values it is closest to; it then sets the channel value to that Number value
     channelLevels: function (f) {
         f.actions = [{
             action: 'lock-channels-to-levels',
@@ -466,6 +531,7 @@ const setActionsArray = {
         }];
     },
 
+// __thiskey__ - 
     channels: function (f) {
         f.actions = [{
             action: 'modulate-channels',
@@ -479,6 +545,7 @@ const setActionsArray = {
         }];
     },
 
+// __thiskey__ - 
     channelstep: function (f) {
         f.actions = [{
             action: 'step-channels',
@@ -491,6 +558,7 @@ const setActionsArray = {
         }];
     },
 
+// __thiskey__ (new in v8.4.0) - 
     channelsToAlpha: function (f) {
         f.actions = [{
             action: 'channels-to-alpha',
@@ -503,6 +571,7 @@ const setActionsArray = {
         }];
     },
 
+// __thiskey__ - 
     chroma: function (f) {
         f.actions = [{
             action: 'chroma',
@@ -513,6 +582,7 @@ const setActionsArray = {
         }];
     },
 
+// __thiskey__ (new in v8.4.0) - 
     chromakey: function (f) {
         f.actions = [{
             action: 'colors-to-alpha',
@@ -527,6 +597,7 @@ const setActionsArray = {
         }];
     },
 
+// __thiskey__ (new in v8.4.0) - 
     clampChannels: function (f) {
         f.actions = [{
             action: 'clamp-channels',
@@ -542,6 +613,7 @@ const setActionsArray = {
         }];
     },
 
+// __compose__ (new in v8.4.0) - perform a composite operation on two images; available compose options include: 'destination-only', 'destination-over', 'destination-in', 'destination-out', 'destination-atop', 'source-only', 'source-over' (default), 'source-in', 'source-out', 'source-atop', 'clear', and 'xor' - see [W3C Compositing and Blending recommendations](https://www.w3.org/TR/compositing-1/#porterduffcompositingoperators)
     compose: function (f) {
         f.actions = [{
             action: 'compose',
@@ -555,6 +627,7 @@ const setActionsArray = {
         }];
     },
 
+// __cyan__ - removes red channel color from the image, and averages the remaining channel colors
     cyan: function (f) {
         f.actions = [{
             action: 'average-channels',
@@ -567,6 +640,7 @@ const setActionsArray = {
         }];
     },
 
+// __displace__ (new in v8.4.0) - moves pixels around the image, based on the color channel values supplied by a displacement map image
     displace: function (f) {
         f.actions = [{
             action: 'displace',
@@ -584,6 +658,7 @@ const setActionsArray = {
         }];
     },
 
+// __edgeDetect__ (new in v8.4.0) - applies a preset 3x3 edge-detect matrix to the image
     edgeDetect: function (f) {
         f.actions = [{
             action: 'matrix',
@@ -602,6 +677,7 @@ const setActionsArray = {
         }];
     },
 
+// __emboss__ (new in v8.4.0) - outputs a black-gray-red emboss effect
     emboss: function (f) {
         const actions = [];
         if (f.useNaturalGrayscale) {
@@ -657,6 +733,7 @@ const setActionsArray = {
         f.actions = actions;
     },
 
+// __flood__ (new in v8.4.0) - creates a uniform sheet of the required color, which can then be used by other filter actions
     flood: function (f) {
         f.actions = [{
             action: 'flood',
@@ -670,6 +747,7 @@ const setActionsArray = {
         }];
     },
 
+// __gray__ (new in v8.4.0) - averages the three color channel colors
     gray: function (f) {
         f.actions = [{
             action: 'average-channels',
@@ -682,6 +760,7 @@ const setActionsArray = {
         }];
     },
 
+// __grayscale__ - produces a more realistic black-and-white photograph effect
     grayscale: function (f) {
         f.actions = [{
             action: 'grayscale',
@@ -691,6 +770,7 @@ const setActionsArray = {
         }];
     },
 
+// __green__ - removes red and blue channel color from the image
     green: function (f) {
         f.actions = [{
             action: 'average-channels',
@@ -702,6 +782,7 @@ const setActionsArray = {
         }];
     },
 
+// __image__ (new in v8.4.0) - load an image into the web worker, where it can then be used by other filter actions - useful for effects such as watermarking an image
     image: function (f) {
 
         f.actions = [{
@@ -717,6 +798,7 @@ const setActionsArray = {
         }];
     },
 
+// __invert__ - inverts the colors in the image, producing an effect similar to a photograph negative
     invert: function (f) {
         f.actions = [{
             action: 'invert-channels',
@@ -729,6 +811,7 @@ const setActionsArray = {
         }];
     },
 
+// __magenta__ - removes green channel color from the image, and averages the remaining channel colors
     magenta: function (f) {
         f.actions = [{
             action: 'average-channels',
@@ -741,6 +824,7 @@ const setActionsArray = {
         }];
     },
 
+// __matrix__ - applies a 3x3 convolution matrix, kernel or mask operation to the image
     matrix: function (f) {
         f.actions = [{
             action: 'matrix',
@@ -759,6 +843,7 @@ const setActionsArray = {
         }];
     },
 
+// __matrix5__ - applies a 5x5 convolution matrix, kernel or mask operation to the image
     matrix5: function (f) {
         f.actions = [{
             action: 'matrix',
@@ -777,6 +862,7 @@ const setActionsArray = {
         }];
     },
 
+// __notblue__ - zeroes the blue channel values (not the same effect as the yellow filter)
     notblue: function (f) {
         f.actions = [{
             action: 'set-channel-to-level',
@@ -788,6 +874,7 @@ const setActionsArray = {
         }];
     },
 
+// __notgreen__ - zeroes the green channel values (not the same effect as the magenta filter)
     notgreen: function (f) {
         f.actions = [{
             action: 'set-channel-to-level',
@@ -799,6 +886,7 @@ const setActionsArray = {
         }];
     },
 
+// __notred__ - zeroes the red channel values (not the same effect as the cyan filter)
     notred: function (f) {
         f.actions = [{
             action: 'set-channel-to-level',
@@ -810,6 +898,7 @@ const setActionsArray = {
         }];
     },
 
+// __offset__ (new in v8.4.0) - moves the image in its entirety by the given offset
     offset: function (f) {
         f.actions = [{
             action: 'offset',
@@ -827,6 +916,7 @@ const setActionsArray = {
         }];
     },
 
+// __offsetChannels__ (new in v8.4.0) - moves each channel  by an offset set for that channel. Can create a crude stereoscopic output
     offsetChannels: function (f) {
         f.actions = [{
             action: 'offset',
@@ -844,6 +934,7 @@ const setActionsArray = {
         }];
     },
 
+// __pixelate__ - averages the colors in a block to produce a series of obscuring tiles
     pixelate: function (f) {
         f.actions = [{
             action: 'pixelate',
@@ -861,6 +952,7 @@ const setActionsArray = {
         }];
     },
 
+// __red__ - removes blue and green channel color from the image
     red: function (f) {
         f.actions = [{
             action: 'average-channels',
@@ -872,6 +964,7 @@ const setActionsArray = {
         }];
     },
 
+// __saturation__ - alters the saturation level of the image
     saturation: function (f) {
         let level = (f.level != null) ? f.level : 1;
 
@@ -887,6 +980,7 @@ const setActionsArray = {
         }];
     },
 
+// __sepia__ - recalculates the values of each color channel (a tint action) to create a more 'antique' version of the image
     sepia: function (f) {
         f.actions = [{
             action: 'tint-channels',
@@ -905,6 +999,7 @@ const setActionsArray = {
         }];
     },
 
+// __sharpen__ (new in v8.4.0) - applies a preset 3x3 sharpen matrix to the image
     sharpen: function (f) {
         f.actions = [{
             action: 'matrix',
@@ -923,6 +1018,7 @@ const setActionsArray = {
         }];
     },
 
+// __threshold__ - creates a duotone effect - grayscales the input then, for each pixel, checks the color channel values against a "level" argument: pixels with channel values above the level value are assigned to the 'high' color; otherwise they are updated to the 'low' color.
     threshold: function (f) {
         let lowRed = (f.lowRed != null) ? f.lowRed : 0,
             lowGreen = (f.lowGreen != null) ? f.lowGreen : 0,
@@ -945,6 +1041,7 @@ const setActionsArray = {
         }];
     },
 
+// __tint__ - has similarities to the SVG &lt;feColorMatrix> filter element, but excludes the alpha channel from calculations. Rather than set a matrix, we set nine arguments to determine how the value of each color channel in a pixel will affect both itself and its fellow color channels.
     tint: function (f) {
         f.actions = [{
             action: 'tint-channels',
@@ -963,6 +1060,7 @@ const setActionsArray = {
         }];
     },
 
+// __userDefined__ - DEPRECATED - this filter method no longer has any effect, returning an unchanged image
     userDefined: function (f) {
         f.actions = [{
             action: 'user-defined-legacy',
@@ -972,6 +1070,7 @@ const setActionsArray = {
         }];
     },
 
+// __yellow__ - removes blue channel color from the image, and averages the remaining channel colors
     yellow: function (f) {
         f.actions = [{
             action: 'average-channels',
@@ -992,8 +1091,10 @@ const setActionsArray = {
 
 // #### Filter webworker pool
 // Because starting a web worker is an expensive operation, and a number of different filters may be required to render displays across a number of different &lt;canvas> elements in a web page, Scrawl-canvas operates a pool of web workers to perform work as-and-when required.
+// + These workers (generally there's only one) are not exposed to developers using the scrawl object, thus only get called internally
 
 // START PRODUCTION CODE
+/*
 const filterPool = [];
 import { filterUrl } from '../worker/filter-string.js';
 
@@ -1019,46 +1120,45 @@ const actionFilterWorker = function (worker, items) {
         worker.postMessage(items);
     });
 };
+*/
 // END PRODUCTION CODE
 
 
 // START DEV CODE
-// const filterPool = [];
+const filterPool = [];
 
-// const requestFilterWorker = function () {
-//     if (!filterPool.length) filterPool.push(buildFilterWorker());
-//     return filterPool.shift();
-// };
+const requestFilterWorker = function () {
+    if (!filterPool.length) filterPool.push(buildFilterWorker());
+    return filterPool.shift();
+};
 
-// const buildFilterWorker = function () {
-//     let path = import.meta.url.slice(0, -('factory/filter.js'.length)); 
-//     let filterUrl = `${path}worker/filter.js`;
-//     return new Worker(filterUrl);
-// };
+const buildFilterWorker = function () {
+    let path = import.meta.url.slice(0, -('factory/filter.js'.length)); 
+    let filterUrl = `${path}worker/filter.js`;
+    return new Worker(filterUrl);
+};
 
-// const releaseFilterWorker = function (f) {
-//     filterPool.push(f);
-// };
+const releaseFilterWorker = function (f) {
+    filterPool.push(f);
+};
 
-// const actionFilterWorker = function (worker, items) {
-//     return new Promise((resolve, reject) => {
-//         worker.onmessage = (e) => {
-//             if (e && e.data && e.data.image) resolve(e.data.image);
-//             else resolve(false);
-//         };
-//         worker.onerror = (e) => {
-//             console.log('error', e.lineno, e.message);
-//             resolve(false);
-//         };
-//         worker.postMessage(items);
-//     });
-// };
+const actionFilterWorker = function (worker, items) {
+    return new Promise((resolve, reject) => {
+        worker.onmessage = (e) => {
+            if (e && e.data && e.data.image) resolve(e.data.image);
+            else resolve(false);
+        };
+        worker.onerror = (e) => {
+            console.log('error', e.lineno, e.message);
+            resolve(false);
+        };
+        worker.postMessage(items);
+    });
+};
 // END DEV CODE
 
 
 // #### Factory
-// ```
-// ```
 const makeFilter = function (items) {
 
     return new Filter(items);
