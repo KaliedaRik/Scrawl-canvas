@@ -53,7 +53,7 @@ P = assetConsumerMix(P);
 
 // #### Pattern attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
-// + Attributes defined in the [pattern mixin](../mixin/pattern.html): __repeat__.
+// + Attributes defined in the [pattern mixin](../mixin/pattern.html): __repeat, patternMatrix, matrixA, matrixB, matrixC, matrixD, matrixE, matrixF__.
 // + Attributes defined in the [assetConsumer mixin](../mixin/assetConsumer.html): __asset, spriteTrack, imageSource, spriteSource, videoSource, source__.
 let defaultAttributes = {};
 P.defs = mergeOver(P.defs, defaultAttributes);

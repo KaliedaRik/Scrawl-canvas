@@ -531,6 +531,9 @@ export default function (P = {}) {
                 if (worker) releaseFilterWorker(worker);
 
                 currentEngine.save();
+
+                currentEngine.globalAlpha = self.state.globalAlpha;
+                currentEngine.globalCompositeOperation = self.state.globalCompositeOperation;
                 
                 currentEngine.setTransform(1, 0, 0, 1, 0, 0);
 

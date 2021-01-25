@@ -1,14 +1,41 @@
 // # Noise factory
-// TODO: documentatiomn
+// The purpose of the Noise asset is to give us a resource for generating noisy (semi-regular) maps. These can then be used directly as Picture or Pattern images, or uploaded to the filter worker object as part of a filter that uses displacement map functionality.
+
+
+// #### Current functionality
+// At the moment the Noise asset can generate Perlin-type noise, with engines supplied for:
+// + Perlin (classic)
+// + Perlin (improved)
+// + Simplex - the default engine
+// + Value
+//
+// These engines are supported by a number of settable (and thus animatable) attributes, including special functions for smoothing the engine output. Demo [Filters-019](../../demo/filters-019.html) has been set up to allow for experimenting with these attributes
+//
+// The noise generated will be output to a dedicated offscreen &lt;canvas> element, which is the asset used by Picture entitys, Pattern styles and filters. The output image can be set to three color schemas:
+// + __Monochrome__ (black - gray - white)
+// + __Gradient__ - mediated by a Scrawl-canvas Color object
+// + __Hue__ - where the engine output for each pixel is interpreted as the hue component of an HSL color
+//
+// (___NOTE:___ Perlin, Simplex and Value noise generator code based on code found in the [canvas-noise GitHub repository](https://github.com/lencinhaus/canvas-noise) written by [lencinhaus](https://github.com/lencinhaus).
+
+
+// #### Possible future functionality
+// There's no reason why the Noise asset cannot be extended to output other types of (semi-regular) noise data. For instance:
+// + [Nearest neighbour interpolation](https://en.wikipedia.org/wiki/Nearest-neighbor_interpolation) - for tesselations, particularly with [unstructured grids](https://en.wikipedia.org/wiki/Unstructured_grid)
+// + [Linear interpolation](https://en.wikipedia.org/wiki/Linear_interpolation) 
+// + [Bilinear interpolation](https://en.wikipedia.org/wiki/Bilinear_interpolation)
+// + [Bicubic interpolation](https://en.wikipedia.org/wiki/Bicubic_interpolation) - and see also (this blog post)[https://jobtalle.com/cubic_noise.html]
+// + Using non-rectangular [grids or meshes](https://en.wikipedia.org/wiki/Types_of_mesh) as a starting point for generating noise. For instance: [sunflower pattern](https://www.sciencemag.org/news/2016/05/sunflowers-show-complex-fibonacci-sequences)
 
 
 // #### Demos:
-// + TODO: demos
+// + [Canvas-044](../../demo/canvas-044.html) - Building more complex patterns
+// + [Filters-019](../../demo/filters-019.html) - Using a Noise asset with a displace filter
 
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, λnull, λthis, λfirstArg, removeItem, seededRandomNumberGenerator } from '../core/utilities.js';
+import { mergeOver, λnull, λthis, λfirstArg, removeItem, seededRandomNumberGenerator, interpolate, easeOutSine, easeInSine, easeOutInSine, easeOutQuad, easeInQuad, easeOutInQuad, easeOutCubic, easeInCubic, easeOutInCubic, easeOutQuart, easeInQuart, easeOutInQuart, easeOutQuint, easeInQuint, easeOutInQuint, easeOutExpo, easeInExpo, easeOutInExpo, easeOutCirc, easeInCirc, easeOutInCirc, easeOutBack, easeInBack, easeOutInBack, easeOutElastic, easeInElastic, easeOutInElastic, easeOutBounce, easeInBounce, easeOutInBounce } from '../core/utilities.js';
 
 import { makeColor } from './color.js';
 
@@ -25,7 +52,6 @@ const Noise = function (items = {}) {
 
     let mycanvas = document.createElement('canvas');
     mycanvas.id = this.name;
-
     this.installElement(mycanvas);
 
     this.perm = [];
@@ -62,44 +88,78 @@ P.isAsset = true;
 
 // #### Mixins
 // + [base](../mixin/base.html)
-// + [entity](../mixin/entity.html)
+// + [asset](../mixin/asset.html)
+// + [pattern](../mixin/pattern.html)
 P = baseMix(P);
 P = assetMix(P);
 P = patternMix(P);
 
 
 // #### Noise attributes
+// + Attributes defined in the [base mixin](../mixin/base.html): __name__.
+// + Attributes defined in the [asset mixin](../mixin/asset.html): __source, subscribers__.
+// + Attributes defined in the [pattern mixin](../mixin/pattern.html): __repeat, patternMatrix, matrixA, matrixB, matrixC, matrixD, matrixE, matrixF__.
 let defaultAttributes = {
 
+    // The offscreen canvas dimensions, within which the noise will be generated, is set using the __width__ and __height__ attributes. These take Number values.
     width: 300,
     height: 150,
 
-    seed: 'noize',
-    noiseFunction: 'perlin_improved',
-    smoothing: 'quintic',
-    scale: 50,
-    size: 256,
-    octaves: 1,
-    persistence: 0.5,
-    lacunarity: 2,
-    independent: false,
-    octaveFunction: 'none',
-    sumFunction: 'none',
-    sineFrequencyCoeff: 1,
-    modularAmplitude: 5,
-
+    // __color__ - String value determining how the generated noise will be output on the canvas. Currently recognised values are: `monochrome` (default), `gradient` and `hue`
     color: 'monochrome',
 
+    // When the `color` choice has been set to `monochrome` we can clamp the pixel values using the __monochromeStart__ and __monochromeRange__ attributes, both of which take integer Numbers. 
+    // + Accepted monochromeStart values are 0 to 255
+    // + Accepted monochromeRange values are -255 to 255
+    // + Be aware that the monochromeRange value will be recalculated to make sure calculated pixel values remain in the 0-255 color channel range
     monochromeStart: 0,
     monochromeRange: 255,
 
+    // When the `color` choice has been set to `gradient` we can control the start and end colors of the gradient using the __gradientStart__ and __gradientEnd__ attributes
+    gradientStart: '#ff0000',
+    gradientEnd: '#00ff00',
+
+    // When the `color` choice has been set to `hue` we can control the pixel colors (in terms of their HSL components) using the __hueStart__, __hueRange__, __saturation__ and __luminosity__ attributes:
+    // + `hueStart` - float Number value in degrees, will be clamped to between 0 and 360
+    // + `hueRange` - float Number value in degrees, can be negative as well as positive
+    // + `saturation` - float Number value, between 0 and 100
+    // + `luminosity` - float Number value, between 0 and 100
     hueStart: 0,
     hueRange: 120,
     saturation: 100,
     luminosity: 50,
 
-    gradientStart: '#ff0000',
-    gradientEnd: '#00ff00',
+    // __noiseEngine__ - String - the currently supported noise engines String values are: `perlin`, `improved-perlin`, `simplex`, `value`
+    noiseEngine: 'simplex',
+
+    // When a noise engine initializes it will create several Arrays of pseudo-random values. The __seed__ attribute is a String used to initialize the pseudo-random number generator, while the __size__ attribute is a Number (often a power of 2 value) which determines the lengths of the Arrays
+    seed: 'any_random_string_will_do',
+    size: 256,
+
+    // The __scale__ attribute determines the relative scale of the noise calculation, which affects the noise output. Think of it as a rather idiosyncratic zoom factor 
+    scale: 50,
+
+    // Attributes used when calculating the noise map include:
+    // + __octaves__ - a positive integer Number - the more octives, the more naturalistic the output - values over 6 are rarely productive
+    // + __octaveFunction - a String identifying the function to be run at the end of each octave loop. Currently only `none` and `absolute` functions are supported
+    // + __persistance__ and __lacunarity__ values change at the conclusion of each octave loop; these attributes set their initial values
+    octaves: 1,
+    octaveFunction: 'none',
+    persistence: 0.5,
+    lacunarity: 2,
+
+    // The __smoothing__ attribute - a String value - identifies the smoothing function that will be applied pixel noise values as they are calculated. There are a wide number of functions available, including: easeOutSine, easeInSine, easeOutInSine, easeOutQuad, easeInQuad, easeOutInQuad, easeOutCubic, easeInCubic, easeOutInCubic, easeOutQuart, easeInQuart, easeOutInQuart, easeOutQuint, easeInQuint, easeOutInQuint, easeOutExpo, easeInExpo, easeOutInExpo, easeOutCirc, easeInCirc, easeOutInCirc, easeOutBack, easeInBack, easeOutInBack, easeOutElastic, easeInElastic, easeOutInElastic, easeOutBounce, easeInBounce, easeOutInBounce, cosine, hermite, quintic (default)
+    smoothing: 'quintic',
+
+    // Post-processing the noise map: The __sumFunction__ attribute - a String value - identifies the smoothing function that will be applied to the noise map once the noise calculations complete. 
+    // + Permitted values include: `none`, `sine-x`, `sine-y`, `sine`, `modular`
+    // + __sineFrequencyCoeff__ - a Number - is used by sine-based sum functions
+    // + __modularAmplitude__ - a Number - is used by the modular sum function
+    sumFunction: 'none',
+    sineFrequencyCoeff: 1,
+    modularAmplitude: 5,
+
+
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -157,9 +217,9 @@ S.smoothing = function (item) {
     this.dirtyOutput = true;
 };
 
-S.noiseFunction = function (item) {
+S.noiseEngine = function (item) {
 
-    this.noiseFunction = this.noiseFunctions[item] || this.noiseFunctions['simplex'];
+    this.noiseEngine = this.noiseEngines[item] || this.noiseEngines['simplex'];
     this.dirtyNoise = true;
     this.dirtyOutput = true;
 };
@@ -234,13 +294,6 @@ S.lacunarity = function (item) {
     }
 };
 
-S.independent = function (item) {
-
-    this.independent = !!item;
-    this.dirtyNoise = true;
-    this.dirtyOutput = true;
-};
-
 S.gradientStart = function (item) {
 
     if (item.substring) {
@@ -261,16 +314,16 @@ S.gradientEnd = function (item) {
 
 S.monochromeStart = function (item) {
 
-    if (item.toFixed && item >= 0 && item < 256) {
+    if (item.toFixed && item >= 0) {
 
-        this.monochromeStart = Math.floor(item);
+        this.monochromeStart = item % 360;
         this.dirtyOutput = true;
     }
 };
 
 S.monochromeRange = function (item) {
 
-    if (item.toFixed && item >= 0 && item < 256) {
+    if (item.toFixed && item >= -255 && item < 256) {
 
         this.monochromeRange = Math.floor(item);
         this.dirtyOutput = true;
@@ -281,7 +334,7 @@ S.hueStart = function (item) {
 
     if (item.toFixed) {
 
-        this.hueStart = Math.floor(item);
+        this.hueStart = item;
         this.dirtyOutput = true;
     }
 };
@@ -290,7 +343,7 @@ S.hueRange = function (item) {
 
     if (item.toFixed) {
 
-        this.hueRange = Math.floor(item);
+        this.hueRange = item;
         this.dirtyOutput = true;
     }
 };
@@ -357,53 +410,6 @@ S.height = function (item) {
 
 
 // #### Prototype functions
-P.presetTo = function (preset) {
-
-    if (preset.substring) {
-
-        this.dirtyNoise = true;
-        this.dirtyOutput = true;
-
-        switch (preset) {
-
-            case 'plain' :
-                this.octaves = 1;
-                this.octaveFunction = λfirstArg;
-                this.sumFunction = λfirstArg;
-                break;
-
-            case 'clouds' :
-                this.octaves = 5;
-                this.octaveFunction = λfirstArg;
-                this.sumFunction = λfirstArg;
-                break;
-
-            case 'turbulence' :
-                this.octaves = 5;
-                this.octaveFunction = this.octaveFunctions['absolute'];
-                this.sumFunction = λfirstArg;
-                break;
-
-            case 'marble' :
-                this.octaves = 5;
-                this.octaveFunction = this.octaveFunctions['absolute'];
-                this.sumFunction = this.sumFunctions['sine'];
-                break;
-
-            case 'wood' :
-                this.octaves = 1;
-                this.octaveFunction = λfirstArg;
-                this.sumFunction = this.sumFunctions['modular'];
-                break;
-
-            default :
-                this.octaves = 1;
-                this.octaveFunction = λfirstArg;
-                this.sumFunction = λfirstArg;
-        }
-    }
-}
-
 // `installElement` - internal function, used by the constructor
 P.installElement = function (element) {
 
@@ -413,25 +419,25 @@ P.installElement = function (element) {
     return this;
 };
 
+// `checkSource`
+// + Gets invoked by subscribers (who have a handle to the asset instance object) as part of the display cycle.
+// + Noise assets will automatically pass this call onto `notifySubscribers`, where dirty flags get checked and rectified
 P.checkSource = function (width, height) {
 
     this.notifySubscribers();
 };
 
-// `getData`
+// `getData` function called by Cell objects when calculating required updates to its CanvasRenderingContext2D engine, specifically for an entity's __fillStyle__, __strokeStyle__ and __shadowColor__ attributes.
+// + This is the point when we clean Scrawl-canvas assets which have told their subscribers that asset data/attributes have updated
 P.getData = function (entity, cell) {
 
-    this.checkSource(this.width, this.height);
+    // this.checkSource(this.width, this.height);
+    this.notifySubscribers();
 
     return this.buildStyle(cell);
 };
 
-// `notifySubscribers` - Subscriber notification in the asset factories will happen when something changes with the image. Changes vary across the different types of asset:
-// + __imageAsset__ - needs to update its subscribers when an image completes loading - or, for &lt;img> sources with srcset (and sizes) attributes, when the image completes a reload of its source data.
-// + __spriteAsset__ - will also update its subscribers each time it moves to a new sprite image frame, if the sprite is being animated
-// + __videoAsset__ - will update its subscribers for every RAF tick while the video is playing, or if the video is halted and seeks to a different time in the video play stream.
-//
-// All notifications are push; the notification is achieved by setting various attributes and flags in each subscriber.
+// `notifySubscribers`, `notifySubscriber` - overwrites the functions defined in mixin/asset.js
 P.notifySubscribers = function () {
 
     if (this.dirtyOutput || this.dirtyNoise) this.cleanOutput();
@@ -451,26 +457,23 @@ P.notifySubscriber = function (sub) {
     sub.dirtyImageSubscribers = true;
 };
 
-
-// Much of the following code comes from the "canvas-noise" GitHub repository
-// - https://github.com/lencinhaus/canvas-noise
-// - Written by https://github.com/lencinhaus (who has been inactive on GitHub since 2015)
-
+// `cleanOutput` - internal function called by the `notifySubscribers` function
 P.cleanOutput = function () {
 
     if (this.dirtyNoise) this.cleanNoise();
     if (this.dirtyOutput) this.paintCanvas();
 };
 
+// `cleanNoise` - internal function called by the `cleanOutput` function
 P.cleanNoise = function () {
 
     if (this.dirtyNoise) {
 
         this.dirtyNoise = false;
 
-        let {noiseFunction, seed, width, height, element, engine, octaves, lacunarity, persistence, scale, octaveFunction, sumFunction} = this;
+        let {noiseEngine, seed, width, height, element, engine, octaves, lacunarity, persistence, scale, octaveFunction, sumFunction} = this;
 
-        if (noiseFunction && noiseFunction.init) {
+        if (noiseEngine && noiseEngine.init) {
 
             // Seed our pseudo-random number generator
             this.rndEngine = seededRandomNumberGenerator(seed);
@@ -479,12 +482,12 @@ P.cleanNoise = function () {
             this.generatePermutationTable();
 
             // Initialize the appropriate noise function
-            noiseFunction.init.call(this);
+            noiseEngine.init.call(this);
 
             let x, y, o, i, iz,
                 noiseValues = [],
                 scaledX, scaledY,
-                noise, amplitude, frequency, octave;
+                totalNoise, amplitude, frequency;
 
             // Prepare the noiseValues 2d array
             for (y = 0; y < height; y++) {
@@ -492,7 +495,6 @@ P.cleanNoise = function () {
                 noiseValues[y] = [];
 
                 for (x = 0; x < width; x++) {
-
                     noiseValues[y][x] = [];
                 }
             }
@@ -507,35 +509,41 @@ P.cleanNoise = function () {
             for (y = 0; y < height; y++) {
                 for (x = 0; x < width; x++) {
 
+                    // We can modify the output by scaling it
+                    // + Note that modifying the canvas dimensions (width, height) can also have a scaling effect
                     scaledX = x * relativeScale;
                     scaledY = y * relativeScale;
 
-                    // Amplitude and frequency will update once per octave calculation; noise is the sum of all octave results
-                    noise = 0;
+                    // Amplitude and frequency will update once per octave calculation; totalNoise is the sum of all octave results
+                    totalNoise = 0;
                     amplitude = 1; 
                     frequency = 1;
 
-
+                    // The calculation will be performed at least once
+                    // - For some reason the literature insists on calling these loops "octaves"
                     for (o = 0; o < octaves; o++) {
 
-                        // call the appropriate noise function
-                        let octave = noiseFunction.noise.call(this, scaledX * frequency, scaledY * frequency);
+                        // Call the appropriate getNoiseValue function
+                        // + The result needs to be stored in a variable scoped locally to this loop iteration
+                        let octaveNoise = noiseEngine.getNoiseValue.call(this, scaledX * frequency, scaledY * frequency);
 
-                        // update octave with a post-calculation octaveFunction, if required
-                        octave = octaveFunction(octave, scaledX, scaledY, o + 1);
+                        // Update octave with a post-calculation octaveFunction, if required
+                        octaveNoise = octaveFunction(octaveNoise, scaledX, scaledY, o + 1);
 
-                        octave *= amplitude;
+                        // Modify result by the current amplitude, and add to the running total
+                        octaveNoise *= amplitude;
+                        totalNoise += octaveNoise;
 
-                        noise += octave;
-
+                        // Update the variables that change over multiple octave loops
                         frequency *= lacunarity;
-
                         amplitude *= persistence;
                     }
-                    noiseValues[y][x] = noise;
+                    // Update the noise value in its array
+                    noiseValues[y][x] = totalNoise;
 
-                    min = Math.min(min, noise);
-                    max = Math.max(max, noise);
+                    // ... and check for max/min spread of the generated values
+                    min = Math.min(min, totalNoise);
+                    max = Math.max(max, totalNoise);
                 }
             }
 
@@ -549,19 +557,18 @@ P.cleanNoise = function () {
                     scaledY = y * relativeScale;
 
                     // Clamp the cell's noise value to between 0 and 1, then update it with the post-calculation sumFunction, if required
-                    let v0 = noiseValues[y][x],
-                        v1 = (v0 - min) / noiseSpan,
-                        v2 = sumFunction.call(this, v1, scaledX, scaledY);
-
-                    noiseValues[y][x] = v2;
+                    let clampedVal = (noiseValues[y][x] - min) / noiseSpan;
+                    noiseValues[y][x] = sumFunction.call(this, clampedVal, x * relativeScale, y * relativeScale);
                 }
             }
+            // Update the cached noise values arrays
             this.noiseValues = noiseValues;
         }
         else this.dirtyNoise = true;
     }
 };
 
+// `paintCanvas` - internal function called by the `cleanOutput` function
 P.paintCanvas = function () {
 
     if (this.dirtyOutput) {
@@ -605,7 +612,14 @@ P.paintCanvas = function () {
                 // The default color preference is monochrome
                 default :
 
-                    if (monochromeStart + monochromeRange > 255) monochromeRange = 255 - monochromeStart;
+                    if (monochromeRange > 0) {
+
+                        if (monochromeStart + monochromeRange > 255) monochromeRange = 255 - monochromeStart;
+                    }
+                    else if (monochromeRange < 0) {
+
+                        if (monochromeStart - monochromeRange < 0) monochromeRange = monochromeStart;
+                    }
 
                     for (let y = 0; y < height; y++) {
                         for (let x = 0; x < width; x++) {
@@ -623,14 +637,22 @@ P.paintCanvas = function () {
     }
 };
 
+// #### Noise generator functionality
 
-P.F = 0.5 * (Math.sqrt(3) - 1);
-P.G = (3 - Math.sqrt(3)) / 6;
+// Convenience constants
+// P.F = 0.5 * (Math.sqrt(3) - 1);
+// P.G = (3 - Math.sqrt(3)) / 6;
+P.simplexConstantF = 0.5 * (Math.sqrt(3) - 1);
+P.simplexConstantG = (3 - Math.sqrt(3)) / 6;
+P.simplexConstantDoubleG = ((3 - Math.sqrt(3)) / 6) * 2;
 P.perlinGrad = [[1, 1], [-1, 1], [1, -1], [-1, -1], [1, 0], [-1, 0], [0, 1], [0, -1]];
 
-P.noiseFunctions = {
+// `noiseEngines` - a {key:object} object. Each named object contains two functions:
+// + __init__ - invoked to prepare the engine for a bout of calculations - called by the `cleanNoise` function
+// + __getNoiseValue__ - a function called on a per-pixel basis, which calculates the noise value for that pixel
+P.noiseEngines = {
 
-    'perlin_classic': {
+    'perlin': {
 
         init: function () {
 
@@ -649,33 +671,33 @@ P.noiseFunctions = {
             }
         },
 
-        noise: function (x, y) {
+        getNoiseValue: function (x, y) {
 
-            const {size, perm, grad, smoothing, interpolate} = this;
+            const {size, perm, grad, smoothing} = this;
 
             let a, b, u, v;
 
             let bx0 = Math.floor(x) % size,
-                bx1 = (bx0 + 1) % size,
+                bx1 = (bx0 + 1) % size;
 
-                rx0 = x - Math.floor(x),
-                rx1 = rx0 - 1,
+            let rx0 = x - Math.floor(x),
+                rx1 = rx0 - 1;
 
-                by0 = Math.floor(y) % size,
-                by1 = (by0 + 1) % size,
+            let by0 = Math.floor(y) % size,
+                by1 = (by0 + 1) % size;
 
-                ry0 = y - Math.floor(y),
-                ry1 = ry0 - 1,
+            let ry0 = y - Math.floor(y),
+                ry1 = ry0 - 1;
 
-                i = perm[bx0],
-                j = perm[bx1],
+            let i = perm[bx0],
+                j = perm[bx1];
 
-                b00 = perm[i + by0],
+            let b00 = perm[i + by0],
                 b10 = perm[j + by0],
                 b01 = perm[i + by1],
-                b11 = perm[j + by1],
+                b11 = perm[j + by1];
 
-                sx = smoothing(rx0),
+            let sx = smoothing(rx0),
                 sy = smoothing(ry0);
             
             u = rx0 * grad[b00][0] + ry0 * grad[b00][1];
@@ -690,13 +712,13 @@ P.noiseFunctions = {
         },
     },
 
-    'perlin_improved': {
+    'improved-perlin': {
 
         init: λnull,
 
-        noise: function (x, y) {
+        getNoiseValue: function (x, y) {
 
-            const {size, perm, permMod8, perlinGrad, smoothing, interpolate} = this;
+            const {size, perm, permMod8, perlinGrad, smoothing} = this;
 
             let a, b, u, v;
 
@@ -739,65 +761,48 @@ P.noiseFunctions = {
 
         init: λnull,
 
-        noise: function (x, y) {
+        getNoiseValue: function (x, y) {
 
-            let n0, n1, n2, s, i, j, t, X0, Y0, x0, y0, i1, j1, x1, x2, y1, y2, ii, jj, gi0, gi1, gi2, t0, t1, t2;
+            const getCornerNoise = function (cx, cy, gridPos) {
 
-            const {F, G, size, perlinGrad, perm, permMod8} = this;
-            
-            s = (x + y) * F;
-            i = Math.floor(x + s);
-            j = Math.floor(y + s);
-            t = (i + j) * G;
+                let calc = 0.5 - (cx * cx) - (cy * cy);
+                if (calc < 0) return 0;
 
-            X0 = i - t;
-            Y0 = j - t;
-            x0 = x - X0;
-            y0 = y - Y0;
+                let [gx, gy] = perlinGrad[gridPos];
+                return calc * calc * ((gx * cx) + (gy * cy));
+            };
             
-            if (x0 > y0) {
-                i1 = 1;
-                j1 = 0;
-            }
-            else {
-                i1 = 0;
-                j1 = 1;
-            }
+            const {simplexConstantF, simplexConstantG, simplexConstantDoubleG, size, perlinGrad, perm, permMod8} = this;
             
-            x1 = x0 - i1 + G;
-            y1 = y0 - j1 + G;
-            x2 = x0 - 1 + 2 * G;
-            y2 = y0 - 1 + 2 * G;
-            
-            ii = i % size;
-            jj = j % size;
+            let summedCoordinates = (x + y) * simplexConstantF,
+                summedX = Math.floor(x + summedCoordinates),
+                summedY = Math.floor(y + summedCoordinates),
+                modifiedSummedCoordinates = (summedX + summedY) * simplexConstantG;
 
-            gi0 = permMod8[ii + perm[jj]];
-            gi1 = permMod8[ii + i1 + perm[jj + j1]];
-            gi2 = permMod8[ii + 1 + perm[jj + 1]];
+            let cornerX = x - (summedX - modifiedSummedCoordinates),
+                cornerY = y - (summedY - modifiedSummedCoordinates);
             
-            t0 = 0.5 - x0 * x0 - y0 * y0;
-            if (t0 < 0) n0 = 0;
-            else {
-                t0 *= t0;
-                n0 = t0 * t0 * (perlinGrad[gi0][0] * x0 + perlinGrad[gi0][1] * y0);
+            let remainderX = summedX % size,
+                remainderY = summedY % size;
+
+            let pos = permMod8[remainderX + perm[remainderY]],
+                noise = getCornerNoise(cornerX, cornerY, pos);
+
+            pos = permMod8[remainderX + 1 + perm[remainderY + 1]]
+            noise += getCornerNoise((cornerX - 1 + simplexConstantDoubleG), (cornerY - 1 + simplexConstantDoubleG), pos);
+
+            let unitA = 0,
+                unitB = 1;
+
+            if (cornerX > cornerY) {
+                unitA = 1;
+                unitB = 0;
             }
-            
-            t1 = 0.5 - x1 * x1 - y1 * y1;
-            if (t1 < 0) n1 = 0;
-            else {
-                t1 *= t1;
-                n1 = t1 * t1 * (perlinGrad[gi1][0] * x1 + perlinGrad[gi1][1] * y1);
-            }
-            
-            t2 = 0.5 - x2 * x2 - y2 * y2;
-            if (t2 < 0) n2 = 0;
-            else {
-                t2 *= t2;
-                n2 = t2 * t2 * (perlinGrad[gi2][0] * x2 + perlinGrad[gi2][1] * y2);
-            }
-            
-            return 0.5 + 35 * (n0 + n1 + n2);
+
+            pos = permMod8[remainderX + unitA + perm[remainderY + unitB]];
+            noise += getCornerNoise((cornerX - unitA + simplexConstantG), (cornerY - unitB + simplexConstantG), pos);
+
+            return 0.5 + (35 * noise);
         },
     },
 
@@ -815,9 +820,9 @@ P.noiseFunctions = {
             }
         },
 
-        noise: function (x, y) {
+        getNoiseValue: function (x, y) {
 
-            const {values, size, perm, smoothing, interpolate} = this;
+            const {values, size, perm, smoothing} = this;
 
             let x0 = Math.floor(x) % size,
                 y0 = Math.floor(y) % size,
@@ -841,10 +846,9 @@ P.noiseFunctions = {
     },
 };
 
-P.update = function (data) {
-
-};
-
+// `generatePermutationTable` - internal function called by the `cleanNoise` function
+// + The permutation tables get recalculated each time the noise data gets cleaned
+// + `rndEngine` is a seedable pseudo-random number generator
 P.generatePermutationTable = function () {
 
     const {perm, permMod8, rndEngine, size} = this;
@@ -874,145 +878,90 @@ P.generatePermutationTable = function () {
     }
 };
 
-// color conversion
-P.hslToRgb = function (values) {
-
-    const [h, s, l] = values;
-
-    let r, g, b, p, q;
-
-    const hue2rgb = function (u, v, t) {
-
-        if (t < 0) t += 1;
-        if (t > 1) t -= 1;
-
-        if (t < 1/6) return u + (v - u) * 6 * t;
-        if (t < 1/2) return v;
-        if (t < 2/3) return u + (v - u) * (2/3 - t) * 6;
-        return u;
-    }
-
-    if (s == 0) {
-        r = l;
-        g = l;
-        b = l;
-    }
-    else {
-
-        q = (l < 0.5) ? l * (1 + s) : l + s - l * s;
-        p = 2 * l - q;
-
-        r = hue2rgb(p, q, h + 1/3);
-        g = hue2rgb(p, q, h);
-        b = hue2rgb(p, q, h - 1/3);
-    }
-
-    return [r, g, b];
-}
-
-P.hsvToRgb = function (values) {
-
-    const [h, s, v] = values;
-
-    let r, g, b;
-
-    let i = Math.floor(h * 6),
-        f = h * 6 - i,
-        p = v * (1 - s),
-        q = v * (1 - f * s),
-        t = v * (1 - (1 - f) * s);
-
-    switch(i % 6){
-
-        case 0: 
-            r = v, g = t, b = p; 
-            break;
-
-        case 1: 
-            r = q, g = v, b = p; 
-            break;
-
-        case 2: 
-            r = p, g = v, b = t; 
-            break;
-
-        case 3: 
-            r = p, g = q, b = v; 
-            break;
-
-        case 4: 
-            r = t, g = p, b = v; 
-            break;
-
-        case 5: 
-            r = v, g = p, b = q; 
-            break;
-
-    }
-
-    return [r, g, b];
-};
-
-P.rgbHexToComponents = function (rgb) {
-
-    let r = parseInt(rgb.substr(0, 2), 16),
-        g = parseInt(rgb.substr(2, 2), 16),
-        b = parseInt(rgb.substr(4, 2), 16);
-
-    return [r, g, b];
-};
-
+// `octaveFunctions` - a {key:functions} object holding functions used to modify octave loop results
+// + calling signature: `octaveFunction(octave, scaledX, scaledY, o + 1)`
 P.octaveFunctions = {
 
-    absolute: function (octave) {
-
-        return Math.abs((octave * 2) - 1)
-    },
+    none: λfirstArg,
+    absolute: function (octave) { return Math.abs((octave * 2) - 1) },
 };
 
+// `sumFunctions` - a {key:functions} object holding functions used to modify noise values after their calculation has completed (post-processing)
+// + calling signature: `sumFunction.call(this, clampedVal, x * relativeScale, y * relativeScale)`
 P.sumFunctions = {
 
-    sine: function (sum, scaledX) {
+    none: λfirstArg,
 
-        return .5 + (Math.sin(scaledX * this.sineFrequencyCoeff + sum) / 2);
-    },
+    'sine-x': function (v, sx, sy) { return 0.5 + (Math.sin((sx * this.sineFrequencyCoeff) + v) / 2) },
+    'sine-y': function (v, sx, sy) { return 0.5 + (Math.sin((sy * this.sineFrequencyCoeff) + v) / 2) },
+    sine: function (v, sx, sy) { return 0.5 + (Math.sin((sx * this.sineFrequencyCoeff) + v) / 4) + (Math.sin((sy * this.sineFrequencyCoeff) + v) / 4) },
 
-    modular: function(sum) {
-
-        let g = sum * this.modularAmplitude;
+    modular: function(v) {
+        let g = v * this.modularAmplitude;
         return g - Math.floor(g);
     },
 };
 
+// `smoothingFunctions` - a {key:function} object containing various ___fade functions___ which can be used to smooth calculated coordinate values so that they will ease towards integral values.
+// + Used by the "perlin_classic", "perlin_improved" and "value" getNoiseValue functions; the "simplex" getNoiseValue function does away with the need for a smoothing operation.
+// + calling signature: `smoothing(value)`
 P.smoothingFunctions = {
 
+    // __none__ - effectively linear - no smoothing gets performed
     none: λfirstArg,
 
-    cosine: function(t) {
+    easeOutSine,
+    easeInSine,
+    easeOutInSine,
+    easeOutQuad,
+    easeInQuad,
+    easeOutInQuad,
+    easeOutCubic,
+    easeInCubic,
+    easeOutInCubic,
+    easeOutQuart,
+    easeInQuart,
+    easeOutInQuart,
+    easeOutQuint,
+    easeInQuint,
+    easeOutInQuint,
+    easeOutExpo,
+    easeInExpo,
+    easeOutInExpo,
+    easeOutCirc,
+    easeInCirc,
+    easeOutInCirc,
+    easeOutBack,
+    easeInBack,
+    easeOutInBack,
+    easeOutElastic,
+    easeInElastic,
+    easeOutInElastic,
+    easeOutBounce,
+    easeInBounce,
+    easeOutInBounce,
 
-        return .5 * (1 + Math.cos((1 - t) * Math.PI));
-    },
+    // __cosine__ - a cosine-based interpolator
+    cosine: function(t) { return .5 * (1 + Math.cos((1 - t) * Math.PI)) },
 
-    hermite: function(t) {
+    // __hermite__ - a cubic Hermite interpolator
+    hermite: function(t) { return t * t * (-t * 2 + 3) },
 
-        return t * t * (-t * 2 + 3);
-    },
-
-    quintic: function(t) {
-
-        return t * t * t * (t * (t * 6 - 15) + 10);
-    },
-};
-
-P.interpolate = function (t, a, b) {
-
-    return a + t * (b - a);
+    // __quintic__ - the original ease function used by Perlin
+    quintic: function(t) { return t * t * t * (t * (t * 6 - 15) + 10) },
 };
 
 
 // #### Factory
 // ```
-// TODO
+// scrawl.makeNoise({
+//     name: 'my-noise-generator',
+//     width: 50,
+//     height: 50,
+//     octaves: 5,
+//     scale: 2,
+//     noiseFunction: 'simplex',
+// });
 // ```
 const makeNoise = function (items) {
     return new Noise(items);

@@ -17,7 +17,7 @@ let noiseAsset = scrawl.makeNoise({
     width: 400,
     height: 400,
 
-    noiseFunction: 'simplex',
+    noiseEngine: 'improved-perlin',
 });
 
 // Create the filter
@@ -140,7 +140,7 @@ scrawl.observeAndUpdate({
 
         width: ['width', 'round'],
         height: ['height', 'round'],
-        noiseFunction: ['noiseFunction', 'raw'],
+        noiseEngine: ['noiseEngine', 'raw'],
         color: ['color', 'raw'],
         gradientStart: ['gradientStart', 'raw'],
         gradientEnd: ['gradientEnd', 'raw'],
@@ -148,7 +148,7 @@ scrawl.observeAndUpdate({
         octaves: ['octaves', 'round'],
         sumFunction: ['sumFunction', 'raw'],
         sineFrequencyCoeff: ['sineFrequencyCoeff', 'float'],
-        smoothing: ['smoothing', 'float'],
+        smoothing: ['smoothing', 'raw'],
         scale: ['scale', 'round'],
         size: ['size', 'round'],
         seed: ['seed', 'raw'],
@@ -166,58 +166,102 @@ scrawl.observeAndUpdate({
 
 scrawl.addNativeListener(['input', 'change'], function (e) {
 
-    let val = e.target.value;
+    let val = e.target.value,
+        sfc = document.querySelector('#sineFrequencyCoeff'),
+        ma = document.querySelector('#modularAmplitude');
 
-    if (null != val) {
+    if (val === 'sine' || val === 'sine-x' || val === 'sine-y') {
 
-        let oFunc = document.querySelector('#octaveFunction'),
-            oct = document.querySelector('#octaves'),
-            sFunc = document.querySelector('#sumFunction');
-
-        switch (val) {
-
-            case 'plain' :
-                noiseAsset.presetTo(val);
-                oct.value = 1;
-                oFunc.options.selectedIndex = 0;
-                sFunc.options.selectedIndex = 0;
-                break;
-
-            case 'clouds' :
-                noiseAsset.presetTo(val);
-                oct.value = 5;
-                oFunc.options.selectedIndex = 0;
-                sFunc.options.selectedIndex = 0;
-                break;
-
-            case 'turbulence' :
-                noiseAsset.presetTo(val);
-                oct.value = 5;
-                oFunc.options.selectedIndex = 1;
-                sFunc.options.selectedIndex = 0;
-                break;
-
-            case 'marble' :
-                noiseAsset.presetTo(val);
-                oct.value = 5;
-                oFunc.options.selectedIndex = 1;
-                sFunc.options.selectedIndex = 1;
-                break;
-
-            case 'wood' :
-                noiseAsset.presetTo(val);
-                oct.value = 1;
-                oFunc.options.selectedIndex = 0;
-                sFunc.options.selectedIndex = 2;
-                break;
-        }
+        sfc.removeAttribute('disabled');
+        ma.setAttribute('disabled', 'true');
     }
-}, '#presets');
+    else if (val === 'modular') {
+
+        sfc.setAttribute('disabled', 'true');
+        ma.removeAttribute('disabled');
+    }
+    else {
+
+        sfc.setAttribute('disabled', 'true');
+        ma.setAttribute('disabled', 'true');
+    }
+
+}, '#sumFunction');
+
+scrawl.addNativeListener(['input', 'change'], function (e) {
+
+    let val = e.target.value,
+        s = document.querySelector('#smoothing');
+
+    if (val === 'simplex') s.setAttribute('disabled', 'true');
+    else s.removeAttribute('disabled');
+
+}, '#noiseEngine');
+
+scrawl.addNativeListener(['input', 'change'], function (e) {
+
+    let val = parseFloat(e.target.value),
+        p = document.querySelector('#persistence'),
+        l = document.querySelector('#lacunarity');
+
+    if (val > 1) {
+        p.removeAttribute('disabled');
+        l.removeAttribute('disabled');
+    }
+    else {
+        p.setAttribute('disabled', 'true');
+        l.setAttribute('disabled', 'true');
+    }
+}, '#octaves');
+
+scrawl.addNativeListener(['input', 'change'], function (e) {
+
+    let val = e.target.value,
+        ms = document.querySelector('#monochromeStart'),
+        mr = document.querySelector('#monochromeRange'),
+        gs = document.querySelector('#gradientStart'),
+        ge = document.querySelector('#gradientEnd'),
+        hs = document.querySelector('#hueStart'),
+        hr = document.querySelector('#hueRange'),
+        s = document.querySelector('#saturation'),
+        l = document.querySelector('#luminosity');
+
+    if (val === 'monochrome') {
+        ms.removeAttribute('disabled');
+        mr.removeAttribute('disabled');
+        gs.setAttribute('disabled', 'true');
+        ge.setAttribute('disabled', 'true');
+        hs.setAttribute('disabled', 'true');
+        hr.setAttribute('disabled', 'true');
+        s.setAttribute('disabled', 'true');
+        l.setAttribute('disabled', 'true');
+    }
+    else if (val === 'hue') {
+        hs.removeAttribute('disabled');
+        hr.removeAttribute('disabled');
+        s.removeAttribute('disabled');
+        l.removeAttribute('disabled');
+        ms.setAttribute('disabled', 'true');
+        mr.setAttribute('disabled', 'true');
+        gs.setAttribute('disabled', 'true');
+        ge.setAttribute('disabled', 'true');
+    }
+    else {
+        gs.removeAttribute('disabled');
+        ge.removeAttribute('disabled');
+        ms.setAttribute('disabled', 'true');
+        mr.setAttribute('disabled', 'true');
+        hs.setAttribute('disabled', 'true');
+        hr.setAttribute('disabled', 'true');
+        s.setAttribute('disabled', 'true');
+        l.setAttribute('disabled', 'true');
+    }
+}, '#color');
 
 // Setup form
 document.querySelector('#width').value = 400;
 document.querySelector('#height').value = 400;
-document.querySelector('#noiseFunction').options.selectedIndex = 1;
+document.querySelector('#noiseEngine').options.selectedIndex = 1;
 document.querySelector('#color').options.selectedIndex = 0;
 document.querySelector('#gradientStart').value = '#ff0000';
 document.querySelector('#gradientEnd').value = '#00ff00';
@@ -232,7 +276,6 @@ document.querySelector('#seed').value = 'noize';
 document.querySelector('#persistence').value = 0.5;
 document.querySelector('#lacunarity').value = 2;
 document.querySelector('#modularAmplitude').value = 5;
-document.querySelector('#presets').options.selectedIndex = 0;
 document.querySelector('#monochromeStart').value = 0;
 document.querySelector('#monochromeRange').value = 255;
 document.querySelector('#hueStart').value = 0;

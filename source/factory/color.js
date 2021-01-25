@@ -21,7 +21,7 @@
 
 // #### Imports
 import { constructors, entity } from '../core/library.js';
-import { mergeOver, xt, xtGet, isa_obj } from '../core/utilities.js';
+import { mergeOver, xt, xtGet, isa_obj, easeOutSine, easeInSine, easeOutInSine, easeOutQuad, easeInQuad, easeOutInQuad, easeOutCubic, easeInCubic, easeOutInCubic, easeOutQuart, easeInQuart, easeOutInQuart, easeOutQuint, easeInQuint, easeOutInQuint, easeOutExpo, easeInExpo, easeOutInExpo, easeOutCirc, easeInCirc, easeOutInCirc, easeOutBack, easeInBack, easeOutInBack, easeOutElastic, easeInElastic, easeOutInElastic, easeOutBounce, easeInBounce, easeOutInBounce } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 
@@ -97,6 +97,9 @@ let defaultAttributes = {
 
 // The __autoUpdate__ Boolean flag switches on color animation
     autoUpdate: false,
+
+// The __easing__ attribute affects the `getRangeColor` function, applying an easing function to those requests.
+    easing: 'linear',
 
 // ##### Non-retained argument attributes (for factory, clone, set functions)
 
@@ -338,7 +341,7 @@ P.generateRandomColor = function (items = {}) {
     return this;
 };
 
-// `getRangeColor` - function which generates a color in the rtange between the minimum and maximum colors. 
+// `getRangeColor` - function which generates a color in the range between the minimum and maximum colors. 
 // + when the argument is `0` the minimum color is returned; values below 0 are rounded up to 0
 // + when the argument is `1` the maximum color is returned; values above 1 are rounded down to 1
 // + values between `0` and `1` will return a blended color between the minimum and maximum colors
@@ -349,7 +352,103 @@ P.getRangeColor = function (item) {
 
         let floor = Math.floor;
 
-        let {rMin, gMin, bMin, aMin, rMax, gMax, bMax, aMax} = this;
+        let {rMin, gMin, bMin, aMin, rMax, gMax, bMax, aMax, easing} = this;
+
+        if (easing !== 'linear') {
+
+            switch (easing) {
+                case 'easeOutSine' :
+                    item = easeOutSine(item);
+                    break;
+                case 'easeInSine' :
+                    item = easeInSine(item);
+                    break;
+                case 'easeOutInSine' :
+                    item = easeOutInSine(item);
+                    break;
+                case 'easeOutQuad' :
+                    item = easeOutQuad(item);
+                    break;
+                case 'easeInQuad' :
+                    item = easeInQuad(item);
+                    break;
+                case 'easeOutInQuad' :
+                    item = easeOutInQuad(item);
+                    break;
+                case 'easeOutCubic' :
+                    item = easeOutCubic(item);
+                    break;
+                case 'easeInCubic' :
+                    item = easeInCubic(item);
+                    break;
+                case 'easeOutInCubic' :
+                    item = easeOutInCubic(item);
+                    break;
+                case 'easeOutQuart' :
+                    item = easeOutQuart(item);
+                    break;
+                case 'easeInQuart' :
+                    item = easeInQuart(item);
+                    break;
+                case 'easeOutInQuart' :
+                    item = easeOutInQuart(item);
+                    break;
+                case 'easeOutQuint' :
+                    item = easeOutQuint(item);
+                    break;
+                case 'easeInQuint' :
+                    item = easeInQuint(item);
+                    break;
+                case 'easeOutInQuint' :
+                    item = easeOutInQuint(item);
+                    break;
+                case 'easeOutExpo' :
+                    item = easeOutExpo(item);
+                    break;
+                case 'easeInExpo' :
+                    item = easeInExpo(item);
+                    break;
+                case 'easeOutInExpo' :
+                    item = easeOutInExpo(item);
+                    break;
+                case 'easeOutCirc' :
+                    item = easeOutCirc(item);
+                    break;
+                case 'easeInCirc' :
+                    item = easeInCirc(item);
+                    break;
+                case 'easeOutInCirc' :
+                    item = easeOutInCirc(item);
+                    break;
+                case 'easeOutBack' :
+                    item = easeOutBack(item);
+                    break;
+                case 'easeInBack' :
+                    item = easeInBack(item);
+                    break;
+                case 'easeOutInBack' :
+                    item = easeOutInBack(item);
+                    break;
+                case 'easeOutElastic' :
+                    item = easeOutElastic(item);
+                    break;
+                case 'easeInElastic' :
+                    item = easeInElastic(item);
+                    break;
+                case 'easeOutInElastic' :
+                    item = easeOutInElastic(item);
+                    break;
+                case 'easeOutBounce' :
+                    item = easeOutBounce(item);
+                    break;
+                case 'easeInBounce' :
+                    item = easeInBounce(item);
+                    break;
+                case 'easeOutInBounce' :
+                    item = easeOutInBounce(item);
+                    break;
+            }
+        }
 
         if (item > 1) item = 1;
         else if (item < 0) item = 0;

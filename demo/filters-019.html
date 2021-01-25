@@ -35,17 +35,11 @@
 
   <div class="controls">
 
-    <div class="yellow label">Canvas width</div>
-    <div class="yellow"><input class="controlItem" id="width" type="range" value="400" min="1" max="600" step="1" /></div>
-
-    <div class="yellow label">Canvas height</div>
-    <div class="yellow"><input class="controlItem" id="height" type="range" value="400" min="1" max="600" step="1" /></div>
-
-    <div class="pink label">Noise function</div>
+    <div class="pink label">Noise engine</div>
     <div class="pink">
-      <select class="controlItem" id="noiseFunction">
-        <option value="perlin_classic">Perlin (classic)</option>
-        <option value="perlin_improved">Perlin (improved)</option>
+      <select class="controlItem" id="noiseEngine">
+        <option value="perlin">Perlin (classic)</option>
+        <option value="improved-perlin">Perlin (improved)</option>
         <option value="simplex">Simplex</option>
         <option value="value">Value</option>
       </select>
@@ -64,48 +58,56 @@
     <div class="green"><input class="controlItem" id="monochromeStart" type="range" value="0" min="0" max="255" step="1" /></div>
 
     <div class="green label">Monochrome range</div>
-    <div class="green"><input class="controlItem" id="monochromeRange" type="range" value="255" min="0" max="255" step="1" /></div>
+    <div class="green"><input class="controlItem" id="monochromeRange" type="range" value="255" min="-255" max="255" step="1" /></div>
 
     <div class="green label">Gradient start</div>
-    <div class="green"><input class="controlItem" id="gradientStart" type="color" value="#ff0000" /></div>
+    <div class="green"><input class="controlItem" id="gradientStart" type="color" value="#ff0000" disabled /></div>
 
     <div class="green label">Gradient end</div>
-    <div class="green"><input class="controlItem" id="gradientEnd" type="color" value="#00ff00" /></div>
+    <div class="green"><input class="controlItem" id="gradientEnd" type="color" value="#00ff00" disabled /></div>
 
     <div class="green label">Hue start</div>
-    <div class="green"><input class="controlItem" id="hueStart" type="range" value="0" min="0" max="360" step="1" /></div>
+    <div class="green"><input class="controlItem" id="hueStart" type="range" value="0" min="0" max="360" step="0.5" disabled /></div>
 
     <div class="green label">Hue range</div>
-    <div class="green"><input class="controlItem" id="hueRange" type="range" value="120" min="0" max="360" step="1" /></div>
+    <div class="green"><input class="controlItem" id="hueRange" type="range" value="120" min="-400" max="400" step="5" disabled /></div>
 
     <div class="green label">Saturation</div>
-    <div class="green"><input class="controlItem" id="saturation" type="range" value="100" min="0" max="100" step="0.1" /></div>
+    <div class="green"><input class="controlItem" id="saturation" type="range" value="100" min="0" max="100" step="0.1" disabled /></div>
 
     <div class="green label">Luminosity</div>
-    <div class="green"><input class="controlItem" id="luminosity" type="range" value="50" min="0" max="100" step="0.1" /></div>
+    <div class="green"><input class="controlItem" id="luminosity" type="range" value="50" min="0" max="100" step="0.1" disabled /></div>
 
-    <div class="blue label">Octave function</div>
-    <div class="blue">
+    <div class="lavender label">Octaves</div>
+    <div class="lavender"><input class="controlItem" id="octaves" type="range" value="1" min="1" max="10" step="1" /></div>
+
+    <div class="lavender label">Octave function</div>
+    <div class="lavender">
       <select class="controlItem" id="octaveFunction">
         <option value="none">none</option>
         <option value="absolute">absolute</option>
       </select>
     </div>
 
-    <div class="blue label">Octaves</div>
-    <div class="blue"><input class="controlItem" id="octaves" type="range" value="1" min="1" max="10" step="1" /></div>
+    <div class="lavender label">Persistence</div>
+    <div class="lavender"><input class="controlItem" id="persistence" type="range" value="0.5" min="0" max="1" step="0.05" disabled /></div>
+
+    <div class="lavender label">Lacunarity</div>
+    <div class="lavender"><input class="controlItem" id="lacunarity" type="range" value="2" min="1" max="10" step="1" disabled /></div>
 
     <div class="blue label">Sum function</div>
     <div class="blue">
       <select class="controlItem" id="sumFunction">
         <option value="none">none</option>
         <option value="sine">sine</option>
+        <option value="sine-x">sine-x</option>
+        <option value="sine-y">sine-y</option>
         <option value="modular">modular</option>
       </select>
     </div>
 
     <div class="blue label">Sine Frequency Coefficient</div>
-    <div class="blue"><input class="controlItem" id="sineFrequencyCoeff" type="range" value="1" min="0.5" max="5" step="0.1" /></div>
+    <div class="blue"><input class="controlItem" id="sineFrequencyCoeff" type="range" value="1" min="0.5" max="5" step="0.1" disabled /></div>
 
     <div class="blue label">Smoothing</div>
     <div class="blue">
@@ -114,37 +116,57 @@
         <option value="cosine">cosine</option>
         <option value="hermite">hermite</option>
         <option value="quintic">quintic</option>
+        <option value="" disabled>---</option>
+        <option value="easeOutSine">easeOutSine</option>
+        <option value="easeInSine">easeInSine</option>
+        <option value="easeOutInSine">easeOutInSine</option>
+        <option value="easeOutQuad">easeOutQuad</option>
+        <option value="easeInQuad">easeInQuad</option>
+        <option value="easeOutInQuad">easeOutInQuad</option>
+        <option value="easeOutCubic">easeOutCubic</option>
+        <option value="easeInCubic">easeInCubic</option>
+        <option value="easeOutInCubic">easeOutInCubic</option>
+        <option value="easeOutQuart">easeOutQuart</option>
+        <option value="easeInQuart">easeInQuart</option>
+        <option value="easeOutInQuart">easeOutInQuart</option>
+        <option value="easeOutQuint">easeOutQuint</option>
+        <option value="easeInQuint">easeInQuint</option>
+        <option value="easeOutInQuint">easeOutInQuint</option>
+        <option value="easeOutExpo">easeOutExpo</option>
+        <option value="easeInExpo">easeInExpo</option>
+        <option value="easeOutInExpo">easeOutInExpo</option>
+        <option value="easeOutCirc">easeOutCirc</option>
+        <option value="easeInCirc">easeInCirc</option>
+        <option value="easeOutInCirc">easeOutInCirc</option>
+        <option value="easeOutBack">easeOutBack</option>
+        <option value="easeInBack">easeInBack</option>
+        <option value="easeOutInBack">easeOutInBack</option>
+        <option value="easeOutElastic">easeOutElastic</option>
+        <option value="easeInElastic">easeInElastic</option>
+        <option value="easeOutInElastic">easeOutInElastic</option>
+        <option value="easeOutBounce">easeOutBounce</option>
+        <option value="easeInBounce">easeInBounce</option>
+        <option value="easeOutInBounce">easeOutInBounce</option>
       </select>
     </div>
 
-    <div class="pink label">Presets</div>
-    <div class="pink">
-      <select class="controlItem" id="presets">
-        <option value="plain">plain</option>
-        <option value="clouds">clouds</option>
-        <option value="turbulence">turbulence</option>
-        <option value="marble">marble</option>
-        <option value="wood">wood</option>
-      </select>
-    </div>
+    <div class="blue label">Modular Amplitude</div>
+    <div class="blue"><input class="controlItem" id="modularAmplitude" type="range" value="5" min="0.1" max="10" step="0.1" disabled /></div>
 
-    <div class="lavender label">Scale</div>
-    <div class="lavender"><input class="controlItem" id="scale" type="range" value="50" min="0" max="100" step="1" /></div>
+    <div class="yellow label">Canvas width</div>
+    <div class="yellow"><input class="controlItem" id="width" type="range" value="400" min="1" max="600" step="1" /></div>
 
-    <div class="lavender label">Size</div>
-    <div class="lavender"><input class="controlItem" id="size" type="range" value="256" min="4" max="2048" step="4" /></div>
+    <div class="yellow label">Canvas height</div>
+    <div class="yellow"><input class="controlItem" id="height" type="range" value="400" min="1" max="600" step="1" /></div>
 
-    <div class="lavender label">Random seed</div>
-    <div class="lavender"><input class="controlItem" id="seed" type="text" value="noize" /></div>
+    <div class="yellow label">Scale</div>
+    <div class="yellow"><input class="controlItem" id="scale" type="range" value="50" min="0" max="100" step="1" /></div>
 
-    <div class="lavender label">Persistence</div>
-    <div class="lavender"><input class="controlItem" id="persistence" type="range" value="0.5" min="0" max="1" step="0.05" /></div>
+    <div class="yellow label">Size</div>
+    <div class="yellow"><input class="controlItem" id="size" type="range" value="256" min="4" max="2048" step="4" /></div>
 
-    <div class="lavender label">Lacunarity</div>
-    <div class="lavender"><input class="controlItem" id="lacunarity" type="range" value="2" min="1" max="10" step="1" /></div>
-
-    <div class="lavender label">Modular Amplitude</div>
-    <div class="lavender"><input class="controlItem" id="modularAmplitude" type="range" value="5" min="0.1" max="10" step="0.1" /></div>
+    <div class="yellow label">Random seed</div>
+    <div class="yellow"><input class="controlItem" id="seed" type="text" value="noize" /></div>
 
   </div>
 

@@ -157,7 +157,7 @@ P = filterMix(P);
 // + Attributes defined in the [anchor mixin](../mixin/anchor.html): __anchor__.
 // + Attributes defined in the [filter mixin](../mixin/filter.html): __filters, isStencil__.
 // + Attributes defined in the [cascade mixin](../mixin/cascade.html): __groups__.
-// + Attributes defined in the [pattern mixin](../mixin/pattern.html): __repeat__.
+// + Attributes defined in the [pattern mixin](../mixin/pattern.html): __repeat, patternMatrix, matrixA, matrixB, matrixC, matrixD, matrixE, matrixF__.
 // + Attributes defined in the [asset mixin](../mixin/asset.html): __source, subscribers__.
 let defaultAttributes = {
 
