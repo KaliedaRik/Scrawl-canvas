@@ -1,13 +1,24 @@
 // # Mesh factory
-// TODO: documentation
+// The Scrawl-canvas Mesh entity applies a Net particle system to an image, allowing the image to be deformed by dragging particles around the canvas. This is a similar concept to [Photoshop warp meshes](https://helpx.adobe.com/uk/photoshop/using/warp-images-shapes-paths.html) and (more distantly) [the Gimp's cage tool](https://docs.gimp.org/2.10/en/gimp-tool-cage.html).
+//
+// Mesh entitys are ___composite entitys___ - an entity that relies on other entitys for its basic functionality.
+// + Every Mesh object requires a [Net](./net.html) entity create the grid that it uses for transforming its image.
+// + A Mesh entity also requires a [Picture](./picture.html) entity to act as its image source.
+// + Meshes can (in theory) use CSS color Strings for their strokeStyle values, alongside __Gradient__, __RadialGradient__, __Color__ and __Pattern__ objects. 
+// + They can (in theory) use __Anchor__ objects for user navigation. 
+// + They can (in theory) be rendered to the canvas by including them in a __Cell__ object's __Group__. 
+// + They can (in theory) be __animated__ directly, or using delta animation, or act as the target for __Tween__ animations.
+// + Meshes can (in theory) be cloned, and killed.
 //
 // ___Note that this is experimental technology!___
+// + The Mesh entity code base shares many similarities to that of the Loom entity; some of the code has been copied over from that file directly.
 // + Current code does not use [position](./mixin/position.html) or [entity](./mixin/entity.html) mixins, meaning much of the code here has been copied over from those mixins (DRY issue).
-// + TODO: clone functionality not yet tested. A possible use case is to clome a Mesh so they share the same Shape struts, but have different Picture sources and `from/toPathStart/End` cursor values - multiple images tracked and animated.
+// + TODO: packet management, clone and kill functionality not yet tested. Much of the other functionality also lacks tests.
 
 
 // #### Demos:
-// + TODO: documentation
+// + [Particles-008](../../demo/particles-008.html) - Net entity: generation and basic functionality, including Spring objects
+// + [Particles-016](../../demo/particles-016.html) - Mesh entitys
 
 
 // #### Imports
@@ -80,7 +91,7 @@ let defaultAttributes = {
 // + To change this to columns (which sets the struts to the top and bottom edges of the image) set the attribute to `false` 
     isHorizontalCopy: true,
 
-// __source__ - The Picture entity source for this loom. For initialization and/or `set`, we can supply either the Picture entity itself, or its name-String value.
+// __source__ - The Picture entity source for this Mesh. For initialization and/or `set`, we can supply either the Picture entity itself, or its name-String value.
 // + The content image displayed by the Mesh entity are set in the Picture entity, not the Mesh, and can be any artefact supported by the Picture (image, video, sprite, or a Cell artefact).
 // + Note that any ___filters should be applied to the Picture entity___; Mesh entitys do not support filter functionality but will apply a Picture's filters to the source image as-and-where appropriate.
     source: null,
@@ -177,7 +188,7 @@ let defaultAttributes = {
 // The Mesh entity's strokeStyle can be any style supported by Scrawl-canvas - color strings, gradient objects, and pattern objects
 // + __strokeStyle__
 //
-// The shadow attributes will only be applied to the stroke (border), not to the Loom's fill (image)
+// The shadow attributes will only be applied to the stroke (border), not to the Mesh's fill (image)
 // + __shadowOffsetX__
 // + __shadowOffsetY__
 // + __shadowBlur__
@@ -531,7 +542,7 @@ P.getSensors = function () {
 // #### Display cycle functionality
 
 // `prepareStamp` - function called as part of the Display cycle `compile` step.
-// + This function is called before we get into the entity stamp promise cascade (thus it's a synchronous function). This is where we need to check whether we need to recalculate the path data which we'll use later to build the Loom entity's output image.
+// + This function is called before we get into the entity stamp promise cascade (thus it's a synchronous function). This is where we need to check whether we need to recalculate the path data which we'll use later to build the Mesh entity's output image.
 // + We only need to recalculate the path data on the initial render, and afterwards when the __dirtyPathData__ flag has been set.
 // + If we perform the recalculation, then we need to make sure to set the __dirtyOutput__ flag, which will trigger the output image build.
 P.prepareStamp = function() {
@@ -714,7 +725,7 @@ P.setSourceDimension = function () {
 };
 
 // `simpleStamp` - Simple stamping is entirely synchronous
-// + TODO: we may have to disable this functionality for the Loom entity, if we use a web worker for either the prepareStamp calculations, or to build the output image itself
+// + TODO: we may have to disable this functionality for the Mesh entity, if we use a web worker for either the prepareStamp calculations, or to build the output image itself
 P.simpleStamp = function (host, changes = {}) {
 
     if (host && host.type === 'Cell') {
@@ -732,11 +743,10 @@ P.simpleStamp = function (host, changes = {}) {
 };
 
 // `stamp` - All entity stamping, except for simple stamps, goes through this function, which needs to return a Promise which will resolve in due course.
-// + While other entitys have to worry about applying filters as part of the stamping process, this is not an issue for Loom entitys because filters are defined on, and applied to, the source Picture entity, not the Loom itself
+// + While other entitys have to worry about applying filters as part of the stamping process, this is not an issue for Mesh entitys because filters are defined on, and applied to, the source Picture entity, not the Mesh itself
 //
 // Here we check which dirty flags need actioning, and call a range of different functions to process the work. These flags are:
 // + `dirtyInput` - the Picture entity has reported a change in its source, or copy attributes)
-// + `dirtyOutput` - to render the cleaned input, or take account that the Loom paths' cursors have changed)
 P.stamp = function (force = false, host, changes) {
 
     if (force) {
@@ -900,13 +910,11 @@ P.cleanOutput = function () {
                 c, cz, r, rz, i, iz;
 
             for (r = 0, rz = rows - 1; r < rz; r++) {
-            // for (r = 1; r < 2; r++) {
 
                 topStruts = struts[r];
                 baseStruts = struts[r + 1];
 
                 for (c = 0, cz = columns - 1; c < cz; c++) {
-                // for (c = 1; c < 2; c++) {
                     
                     let [ltx, lty, rtx, rty, tLen] = topStruts[c];
                     let [lbx, lby, rbx, rby, bLen] = baseStruts[c];
@@ -1009,18 +1017,9 @@ P.regularStampSynchronousActions = function () {
     }
 };
 
-// `getBoundingBox` - internal function called by `prepareStamp` and `cleanOutput` functions, as well as the various ___method___ functions.
-// + Loom calculates its bounding box from the Shape path entitys associated with it
-// + This function recalculates when presented with a `dirtyStart` flag - we rely on the Shape entitys to tell us when their paths have changed/updated
-// + Results get stashed in the __boundingBox__ attribute for easier access, but all the method functions call this function just in case the box needs recalculating.
-P.getBoundingBox = function () {
-
-    return this.boundingBox;
-};
-
 
 // ##### Stamp methods
-// These 'method' functions stamp the Loom entity onto the canvas context supplied to them in the `engine` argument.
+// These 'method' functions stamp the Mesh entity onto the canvas context supplied to them in the `engine` argument.
 
 // `fill`
 P.fill = function (engine) {
@@ -1097,7 +1096,7 @@ P.clear = function (engine) {
 P.none = λnull;
 
 
-// These __stroke__ and __fill__ functions handle most of the stuff that the method functions require to stamp the Loom entity onto a canvas cell.
+// These __stroke__ and __fill__ functions handle most of the stuff that the method functions require to stamp the Mesh entity onto a canvas cell.
 
 // `doStroke`
 P.doStroke = function (engine) {
@@ -1196,7 +1195,22 @@ P.checkHit = function (items = [], mycell) {
 
 // #### Factory
 // ```
-// TODO: documentation
+// let myMesh = scrawl.makeMesh({
+
+//     name: 'display-mesh',
+
+//     net: 'test-net',
+//     source: 'my-flower',
+
+//     lineWidth: 2,
+//     lineJoin: 'round',
+//     strokeStyle: 'orange',
+
+//     method: 'fillThenDraw',
+
+//     onEnter: function () { this.set({ lineWidth: 6 }) },
+//     onLeave: function () { this.set({ lineWidth: 2 }) },
+// });
 // ```
 const makeMesh = function (items) {
     return new Mesh(items);

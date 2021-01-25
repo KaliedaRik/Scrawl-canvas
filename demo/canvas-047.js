@@ -1,5 +1,5 @@
 // # Demo Canvas 047 
-// Easing functions for colors and tweens
+// Easing functions for Color and Tween factories
 
 // [Run code](../../demo/canvas-047.html)
 import scrawl from '../source/scrawl.js';
