@@ -1094,7 +1094,6 @@ const setActionsArray = {
 // + These workers (generally there's only one) are not exposed to developers using the scrawl object, thus only get called internally
 
 // START PRODUCTION CODE
-/*
 const filterPool = [];
 import { filterUrl } from '../worker/filter-string.js';
 
@@ -1120,11 +1119,11 @@ const actionFilterWorker = function (worker, items) {
         worker.postMessage(items);
     });
 };
-*/
 // END PRODUCTION CODE
 
 
 // START DEV CODE
+/*
 const filterPool = [];
 
 const requestFilterWorker = function () {
@@ -1155,6 +1154,7 @@ const actionFilterWorker = function (worker, items) {
         worker.postMessage(items);
     });
 };
+*/
 // END DEV CODE
 
 

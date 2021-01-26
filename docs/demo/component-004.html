@@ -250,6 +250,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-047.html">
+                  ./demo/canvas-047.js
+                </a>
+              
+                
                 <a class="source" href="component-001.html">
                   ./demo/component-001.js
                 </a>
@@ -455,6 +460,56 @@
                 </a>
               
                 
+                <a class="source" href="filters-016.html">
+                  ./demo/filters-016.js
+                </a>
+              
+                
+                <a class="source" href="filters-017.html">
+                  ./demo/filters-017.js
+                </a>
+              
+                
+                <a class="source" href="filters-018.html">
+                  ./demo/filters-018.js
+                </a>
+              
+                
+                <a class="source" href="filters-019.html">
+                  ./demo/filters-019.js
+                </a>
+              
+                
+                <a class="source" href="filters-020.html">
+                  ./demo/filters-020.js
+                </a>
+              
+                
+                <a class="source" href="filters-501.html">
+                  ./demo/filters-501.js
+                </a>
+              
+                
+                <a class="source" href="filters-502.html">
+                  ./demo/filters-502.js
+                </a>
+              
+                
+                <a class="source" href="filters-503.html">
+                  ./demo/filters-503.js
+                </a>
+              
+                
+                <a class="source" href="filters-504.html">
+                  ./demo/filters-504.js
+                </a>
+              
+                
+                <a class="source" href="filters-505.html">
+                  ./demo/filters-505.js
+                </a>
+              
+                
                 <a class="source" href="particles-001.html">
                   ./demo/particles-001.js
                 </a>
@@ -527,6 +582,11 @@
                 
                 <a class="source" href="particles-015.html">
                   ./demo/particles-015.js
+                </a>
+              
+                
+                <a class="source" href="particles-016.html">
+                  ./demo/particles-016.js
                 </a>
               
                 
@@ -664,31 +724,17 @@ canvas.set({
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myfilter = scrawl.makeFilter({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;venetianBlinds&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;userDefined&#x27;</span>,
-    <span class="hljs-attr">level</span>: <span class="hljs-number">9</span>,
 
-    <span class="hljs-attr">userDefined</span>: <span class="hljs-string">`
-        let i, iz, j, jz,
-            level = filter.level || 6,
-            halfLevel = level / 2,
-            yw, transparent, pos;
-
-        for (i = localY, iz = localY + localHeight; i &lt; iz; i++) {
-
-            transparent = (i % level &gt; halfLevel) ? true : false;
-
-            if (transparent) {
-
-                yw = (i * iWidth) + 3;
-                
-                for (j = localX, jz = localX + localWidth; j &lt; jz; j ++) {
-
-                    pos = yw + (j * 4);
-                    data[pos] = 0;
-                }
-            }
-        }`</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;emboss&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;emboss&#x27;</span>,
+    <span class="hljs-attr">angle</span>: <span class="hljs-number">225</span>,
+    <span class="hljs-attr">strength</span>: <span class="hljs-number">3</span>,
+    <span class="hljs-attr">smoothing</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">tolerance</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">clamp</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">postProcessResults</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">useNaturalGrayscale</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">keepOnlyChangedAreas</span>: <span class="hljs-literal">false</span>,
 });</pre></div></div>
             
         </li>
@@ -962,7 +1008,7 @@ canvas.set({
 
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillAndDraw&#x27;</span>,
 
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;venetianBlinds&#x27;</span>],</pre></div></div>
+    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;emboss&#x27;</span>],</pre></div></div>
             
         </li>
         
@@ -1468,7 +1514,7 @@ performOtherTests();</pre></div></div>
     });
 
     myshape.set({
-        <span class="hljs-attr">filters</span>: <span class="hljs-string">&#x27;venetianBlinds&#x27;</span>,
+        <span class="hljs-attr">filters</span>: <span class="hljs-string">&#x27;emboss&#x27;</span>,
     })
 };
 

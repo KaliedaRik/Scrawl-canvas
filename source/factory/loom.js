@@ -1,7 +1,7 @@
 // # Loom factory
 // A Loom offers functionality to render an image onto a &lt;canvas> element, where the image is not a rectangle - it can have curved borders. It can also offer the illusion of flat 3D images in the canvas, giving them perspective.
 //
-// Loom entitys are ___composite entitys___ - an wentity that relies on other entitys for its basic functionality.
+// Loom entitys are ___composite entitys___ - an entity that relies on other entitys for its basic functionality.
 // + Every Loom object requires two (or one) path-enabled [Shape](./shape.html) entitys to act as its left and right tracks.
 // + A Loom entity also requires a [Picture](./picture.html) entity to act as its image source.
 // + Looms can use CSS color Strings for their strokeStyle values, alongside __Gradient__, __RadialGradient__, __Color__ and __Pattern__ objects. 

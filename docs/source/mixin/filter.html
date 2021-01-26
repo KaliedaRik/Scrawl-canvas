@@ -160,8 +160,18 @@
                 </a>
               
                 
+                <a class="source" href="../factory/mesh.html">
+                  ./source/factory/mesh.js
+                </a>
+              
+                
                 <a class="source" href="../factory/net.html">
                   ./source/factory/net.js
+                </a>
+              
+                
+                <a class="source" href="../factory/noise.html">
+                  ./source/factory/noise.js
                 </a>
               
                 
@@ -420,18 +430,13 @@
                 </a>
               
                 
-                <a class="source" href="../worker/filter-stringed.html">
-                  ./source/worker/filter-stringed.js
+                <a class="source" href="../worker/filter-string.html">
+                  ./source/worker/filter-string.js
                 </a>
               
                 
                 <a class="source" href="../worker/filter.html">
                   ./source/worker/filter.js
-                </a>
-              
-                
-                <a class="source" href="../worker/filter_canvas.html">
-                  ./source/worker/filter_canvas.js
                 </a>
               
             </div>
@@ -484,8 +489,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { filter } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { mergeOver, pushUnique, removeItem } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { filter, asset } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { mergeOver, pushUnique, removeItem } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { requestCell, releaseCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/cell.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -530,7 +536,8 @@
               <p><strong>filters</strong> - An array of filter object String names. If only one filter is to be applied, then it is enough to use the String name of that filter object - Scrawl-canvas will make sure it gets added to the Array.</p>
 <ul>
 <li>To add/remove new filters to the filters array, use the <code>addFilters</code> and <code>removeFilters</code> functions. Note that the <code>set</code> function will replace all the existing filters in the array with the new filters. To remove all existing filters from the array, use the <code>clearFilters</code> function</li>
-<li>Multiple filters can be batch-applied to an entity, group of entitys, or an entire cell in one operation. Filters are applied in the order that they appear in in the filters array.</li>
+<li>Multiple filters will be batch-applied to an entity, group of entitys, or an entire cell in one operation. Filters are applied in the order that they appear in in the filters array.</li>
+<li><strong><em>Be aware that the “filters” (plural) attribute is different to the CSS/SVG “filter” (singular) attribute</em></strong> - details about how Scrawl-canvas uses CSS/SVG filter Strings to produce filtering effects (at the entity and Cell levels only) are investigated in the Filter Demos 051 to 055. CSS/SVG filter Strings can be applied in addition to Scrawl-canvas filters Array objects, and will be applied after them.</li>
 </ul>
 
             </div>
@@ -546,7 +553,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p><strong>isStencil</strong> - Use the entity as a stencil.</p>
+              <p><strong>isStencil</strong> - Use the entity as a stencil. When this flag is set filter effects will be applied to the background imagery covered by the entity (or Group of entitys, or Cell), the results of which will replace the entity/Group/Cell in the final display.</p>
 
             </div>
             
@@ -578,7 +585,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p><code>filters</code> - Replaces the existing filters array with a new filters array. If a string name is supplied, will add that name to the existing filters array</p>
+              <p><code>filters</code> - ___Dangerous action!__ - replaces the existing filters Array with a new filters Array. If a string name is supplied, will add that name to the existing filters array</p>
 
             </div>
             
@@ -591,13 +598,15 @@
             <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(item)) {
 
                 <span class="hljs-built_in">this</span>.filters = item;
+
                 <span class="hljs-built_in">this</span>.dirtyFilters = <span class="hljs-literal">true</span>;
                 <span class="hljs-built_in">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
         
             }
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.substring) {
                 
-                pushUnique(<span class="hljs-built_in">this</span>.filters, item);    
+                pushUnique(<span class="hljs-built_in">this</span>.filters, item); 
+
                 <span class="hljs-built_in">this</span>.dirtyFilters = <span class="hljs-literal">true</span>;
                 <span class="hljs-built_in">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
             }
@@ -670,19 +679,7 @@
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
-              </div>
-              <p><code>cleanFilters</code> - Internal housekeeping</p>
+<p><code>cleanFilters</code> - Internal housekeeping</p>
 
             </div>
             
@@ -700,14 +697,65 @@
         myfilters.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
             myobj = filter[name];
-            order = floor(myobj.order) || <span class="hljs-number">0</span>;
 
-            <span class="hljs-keyword">if</span> (!buckets[order]) buckets[order] = [];
+            <span class="hljs-keyword">if</span> (myobj) {
 
-            buckets[order].push(myobj);
+                order = floor(myobj.order) || <span class="hljs-number">0</span>;
+
+                <span class="hljs-keyword">if</span> (!buckets[order]) buckets[order] = [];
+
+                buckets[order].push(myobj);
+            }
         });
 
         <span class="hljs-built_in">this</span>.currentFilters = buckets.reduce(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a.concat(v), []);
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p><code>addFilters</code>, <code>removeFilters</code> - Add or remove one or more filter name strings to/from the filters array. Filter name strings can be supplied as comma-separated arguments to the function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.addFilters = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) </span>{
+
+        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Array</span>.isArray(<span class="hljs-built_in">this</span>.filters)) <span class="hljs-built_in">this</span>.filters = [];
+
+        args.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
+
+            <span class="hljs-keyword">if</span> (item &amp;&amp; item.type === <span class="hljs-string">&#x27;Filter&#x27;</span>) item = item.name;
+            pushUnique(<span class="hljs-built_in">this</span>.filters, item);
+
+        }, <span class="hljs-built_in">this</span>);
+
+        <span class="hljs-built_in">this</span>.dirtyFilters = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
+
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    };
+
+    P.removeFilters = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) </span>{
+
+        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Array</span>.isArray(<span class="hljs-built_in">this</span>.filters)) <span class="hljs-built_in">this</span>.filters = [];
+
+        args.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
+
+            <span class="hljs-keyword">if</span> (item &amp;&amp; item.type === <span class="hljs-string">&#x27;Filter&#x27;</span>) item = item.name;
+            removeItem(<span class="hljs-built_in">this</span>.filters, item);
+
+        }, <span class="hljs-built_in">this</span>);
+
+        <span class="hljs-built_in">this</span>.dirtyFilters = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
+        
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
     };</pre></div></div>
             
         </li>
@@ -718,70 +766,6 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
-              </div>
-              <p><code>addFilters</code> - Add one or more filter name strings to the filters array. Filter name strings can be supplied as comma-separated arguments to the function</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    P.addFilters = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) </span>{
-
-        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Array</span>.isArray(<span class="hljs-built_in">this</span>.filters)) <span class="hljs-built_in">this</span>.filters = [];
-
-        args.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
-
-            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.name, <span class="hljs-string">&#x27;addFilters&#x27;</span>, item) {
-
-                <span class="hljs-keyword">if</span> (item.substring) pushUnique(<span class="hljs-built_in">this</span>.filters, item);
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.type === <span class="hljs-string">&#x27;Filter&#x27;</span>) pushUnique(<span class="hljs-built_in">this</span>.filters, item.name);
-            }
-        }, <span class="hljs-built_in">this</span>);
-
-        <span class="hljs-built_in">this</span>.dirtyFilters = <span class="hljs-literal">true</span>;
-        <span class="hljs-built_in">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
-
-        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
-    };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
-              </div>
-              <p><code>removeFilters</code> - Remove one or more filter name strings from the filters array. Filter name strings can be supplied as comma-separated arguments to the function</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    P.removeFilters = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) </span>{
-
-        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Array</span>.isArray(<span class="hljs-built_in">this</span>.filters)) <span class="hljs-built_in">this</span>.filters = [];
-
-        args.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
-
-            <span class="hljs-keyword">if</span> (item) {
-
-                <span class="hljs-keyword">if</span> (item.substring) removeItem(<span class="hljs-built_in">this</span>.filters, item);
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.type === <span class="hljs-string">&#x27;Filter&#x27;</span>) removeItem(<span class="hljs-built_in">this</span>.filters, item.name);
-            }
-        }, <span class="hljs-built_in">this</span>);
-
-        <span class="hljs-built_in">this</span>.dirtyFilters = <span class="hljs-literal">true</span>;
-        <span class="hljs-built_in">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
-        
-        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
-    };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p><code>clearFilters</code> - Clears the filters array</p>
 
@@ -802,11 +786,130 @@
         </li>
         
         
-        <li id="section-19">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p><code>preprocessFilters</code> - internal function called as part of the Display cycle. The <strong>process-image</strong> filter action loads a Scrawl-canvas asset into the filters web worker, where it can be used as a lineIn or lineMix argument for other filter actions.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.preprocessFilters = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">filters</span>) </span>{
+
+        filters.forEach(<span class="hljs-function"><span class="hljs-params">filter</span> =&gt;</span> {
+
+            filter.actions.forEach(<span class="hljs-function"><span class="hljs-params">obj</span> =&gt;</span> {
+
+                <span class="hljs-keyword">if</span> (obj.action == <span class="hljs-string">&#x27;process-image&#x27;</span>) {
+
+                    <span class="hljs-keyword">let</span> flag = <span class="hljs-literal">true</span>;
+
+                    <span class="hljs-keyword">let</span> img = asset[obj.asset];
+
+                    <span class="hljs-keyword">if</span> (img) {
+
+                        <span class="hljs-keyword">if</span> (img.type === <span class="hljs-string">&#x27;Noise&#x27;</span>) {
+
+                            img.checkSource();
+                        }
+
+                        <span class="hljs-keyword">let</span> width = img.sourceNaturalWidth || img.sourceNaturalDimensions[<span class="hljs-number">0</span>] || img.currentDimensions[<span class="hljs-number">0</span>],
+                            height = img.sourceNaturalHeight || img.sourceNaturalDimensions[<span class="hljs-number">1</span>] || img.currentDimensions[<span class="hljs-number">1</span>];
+
+                        <span class="hljs-keyword">if</span> (width &amp;&amp; height) {
+
+                            flag = <span class="hljs-literal">false</span>;
+
+                            <span class="hljs-keyword">let</span> copyX = obj.copyX || <span class="hljs-number">0</span>,
+                                copyY = obj.copyY || <span class="hljs-number">0</span>,
+                                copyWidth = obj.copyWidth || <span class="hljs-number">1</span>,
+                                copyHeight = obj.copyHeight || <span class="hljs-number">1</span>,
+                                destWidth = obj.width || <span class="hljs-number">1</span>,
+                                destHeight = obj.height || <span class="hljs-number">1</span>;
+
+                            <span class="hljs-keyword">if</span> (copyX.substring) copyX = (<span class="hljs-built_in">parseFloat</span>(copyX) / <span class="hljs-number">100</span>) * width;
+                            <span class="hljs-keyword">if</span> (copyY.substring) copyY = (<span class="hljs-built_in">parseFloat</span>(copyY) / <span class="hljs-number">100</span>) * height;
+                            <span class="hljs-keyword">if</span> (copyWidth.substring) copyWidth = (<span class="hljs-built_in">parseFloat</span>(copyWidth) / <span class="hljs-number">100</span>) * width;
+                            <span class="hljs-keyword">if</span> (copyHeight.substring) copyHeight = (<span class="hljs-built_in">parseFloat</span>(copyHeight) / <span class="hljs-number">100</span>) * height;
+
+                            copyX = <span class="hljs-built_in">Math</span>.abs(copyX);
+                            copyY = <span class="hljs-built_in">Math</span>.abs(copyY);
+                            copyWidth = <span class="hljs-built_in">Math</span>.abs(copyWidth);
+                            copyHeight = <span class="hljs-built_in">Math</span>.abs(copyHeight);
+
+                            <span class="hljs-keyword">if</span> (copyX &gt; width) {
+                                copyX = width - <span class="hljs-number">2</span>;
+                                copyWidth = <span class="hljs-number">1</span>;
+                            }
+
+                            <span class="hljs-keyword">if</span> (copyY &gt; height) {
+                                copyY = height - <span class="hljs-number">2</span>;
+                                copyHeight = <span class="hljs-number">1</span>;
+                            }
+
+                            <span class="hljs-keyword">if</span> (copyWidth &gt; width) {
+                                copyWidth = width - <span class="hljs-number">1</span>;
+                                copyX = <span class="hljs-number">0</span>;
+                            }
+
+                            <span class="hljs-keyword">if</span> (copyHeight &gt; height) {
+                                copyHeight = height - <span class="hljs-number">1</span>;
+                                copyY = <span class="hljs-number">0</span>;
+                            }
+
+
+                            <span class="hljs-keyword">if</span> (copyX + copyWidth &gt; width) {
+                                copyX = width - copyWidth - <span class="hljs-number">1</span>;
+                            }
+
+                            <span class="hljs-keyword">if</span> (copyY + copyHeight &gt; height) {
+                                copyY = height - copyHeight - <span class="hljs-number">1</span>;
+                            }
+
+                            <span class="hljs-keyword">let</span> cell = requestCell(),
+                                engine = cell.engine,
+                                canvas = cell.element;
+
+                            canvas.width = destWidth;
+                            canvas.height = destHeight;
+
+                            engine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+                            engine.globalCompositeOperation = <span class="hljs-string">&#x27;source-over&#x27;</span>;
+                            engine.globalAlpha = <span class="hljs-number">1</span>;
+
+                            <span class="hljs-keyword">let</span> src = img.source || img.element;
+
+                            engine.drawImage(src, copyX, copyY, copyWidth, copyHeight, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, destWidth, destHeight);
+
+                            obj.assetData = engine.getImageData(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, destWidth, destHeight);
+
+                            releaseCell(cell);
+                        }
+                    }
+
+                    <span class="hljs-keyword">if</span> (flag) {
+
+                        obj.assetData = {
+                            <span class="hljs-attr">width</span>: <span class="hljs-number">1</span>,
+                            <span class="hljs-attr">height</span>: <span class="hljs-number">1</span>,
+                            <span class="hljs-attr">data</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>],
+                        }
+                    }
+                }
+            });
+        });
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>Return the prototype</p>
 

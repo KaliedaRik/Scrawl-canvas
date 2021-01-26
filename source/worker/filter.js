@@ -5,8 +5,12 @@
 
 // ##### Road map
 // At some point we shall attempt to convert this code into something that can be run as WebAssembly code, possibly using Rust or AssemblyScript.
-
-
+//
+// ##### Development
+// Compress this file using https://javascript-minifier.com/
+//
+// Copy the results of the compression into the string in worker/filter-string.js
+//
 // ### Common variables
 // __packet__ and `packetFiltersArray` will hold data contained in the message sent to the web worker; the packet object will be returned to the main program when processing completes (or errors) in the worker
 let packet, packetFiltersArray;
