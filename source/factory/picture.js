@@ -599,7 +599,8 @@ P.draw = function (engine) {
 // `fill`
 P.fill = function (engine) {
 
-    if (this.source) engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
+    let [x, y, w, h] = this.copyArray;
+    if (this.source && w && h) engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
 };
 
 // `drawAndFill`
@@ -607,7 +608,8 @@ P.drawAndFill = function (engine) {
 
     engine.stroke(this.pathObject);
 
-    if (this.source) {
+    let [x, y, w, h] = this.copyArray;
+    if (this.source && w && h) {
 
         this.currentHost.clearShadow();
         engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
@@ -619,11 +621,13 @@ P.fillAndDraw = function (engine) {
 
     engine.stroke(this.pathObject);
 
-    if (this.source) {
+    let [x, y, w, h] = this.copyArray;
+    if (this.source && w && h) {
 
         this.currentHost.clearShadow();
         engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
     }
+
     engine.stroke(this.pathObject);
 };
 
@@ -631,13 +635,17 @@ P.fillAndDraw = function (engine) {
 P.drawThenFill = function (engine) {
 
     engine.stroke(this.pathObject);
-    if (this.source) engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
+
+    let [x, y, w, h] = this.copyArray;
+    if (this.source && w && h) engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
 };
 
 // `fillThenDraw`
 P.fillThenDraw = function (engine) {
 
-    if (this.source) engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
+    let [x, y, w, h] = this.copyArray;
+    if (this.source && w && h) engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
+
     engine.stroke(this.pathObject);
 };
 
