@@ -532,8 +532,8 @@ export default function (P = {}) {
 
                 currentEngine.save();
 
-                currentEngine.globalAlpha = self.state.globalAlpha;
-                currentEngine.globalCompositeOperation = self.state.globalCompositeOperation;
+                currentEngine.globalAlpha = (self.state && self.state.globalAlpha) ? self.state.globalAlpha : 1;
+                currentEngine.globalCompositeOperation = (self.state && self.state.globalCompositeOperation) ? self.state.globalCompositeOperation : 'source-over';
                 
                 currentEngine.setTransform(1, 0, 0, 1, 0, 0);
 

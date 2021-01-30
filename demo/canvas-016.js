@@ -185,4 +185,4 @@ document.querySelector('#style').options.selectedIndex = 0;
 document.querySelector('#variant').options.selectedIndex = 0;
 document.querySelector('#family').options.selectedIndex = 0;
 document.querySelector('#size_px').value = 16;
-document.querySelector('#size_string').options.selectedIndex = 4;
+document.querySelector('#size_string').options.selectedIndex = 0;

@@ -766,6 +766,9 @@ P.setEngineActions = {
 };
 
 // The following functions are used as part of entity object `stamp` functionality - specifically for those with a __method__ whose appearance is affected by shadows, and for the `clear` method
+// + Scrawl-canvas, for the most part, avoids using engine.save() and engine.restore() functionality, instead preferring to keep track of engine state in State objects. 
+// + When clearing and restoring shadows - a frequent operation given Scrawl-canvas functionality around stamping methods - both the Cell's state object and the Canvas context engine need to be updated with the necessary data 
+// + The same reasoning holds when setting up the context engine to 'clear' an entity from the canvas display instead of stamping it onto the canvas
 
 // `clearShadow`
 P.clearShadow = function () {
@@ -820,6 +823,21 @@ P.restoreEngine = function () {
     this.engine.restore();
     return this;
 };
+
+// `getComputedFontSizes` - internal function - the Cell wrapper gets passed by Phrase entitys to its fontAttributes object, which then invokes it when calculating font sizes
+P.getComputedFontSizes = function () {
+
+    let host = this.getHost();
+
+    if (host) {
+
+        let em = window.getComputedStyle(host.domElement),
+            rem = window.getComputedStyle(document.documentElement);
+
+        return [parseFloat(em.fontSize), parseFloat(rem.fontSize), window.innerWidth, window.innerHeight];
+    }
+    return false;
+}
 
 
 // #### Display cycle functionality
