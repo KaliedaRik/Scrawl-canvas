@@ -422,7 +422,21 @@ P.calculateSize = function () {
 
         let {scale, lineHeight, host, sizeValue, sizeMetric} = this;
 
-        let [parentSize, rootSize, viewportWidth, viewportHeight] = host.getComputedFontSizes();
+        let gcfs = host.getComputedFontSizes(),
+            parentSize, rootSize, viewportWidth, viewportHeight;
+
+        if (!gcfs) {
+
+            if (['in', 'cm', 'mm', 'Q', 'pc', 'pt', 'px'].indexOf(sizeMetric) < 0) {
+
+                this.dirtyFont = true;
+                return '12px';
+            }
+        }
+        else {
+
+            [parentSize, rootSize, viewportWidth, viewportHeight] = host.getComputedFontSizes();
+        }
 
         if (isNaN(sizeValue)) sizeValue = 12;
 

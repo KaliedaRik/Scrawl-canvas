@@ -698,7 +698,7 @@ P.cleanDimensionsAdditionalActions = function () {
         this.fontAttributes.updateMetadata(this.scale, this.lineHeight, this.getHost());
         engine.font = this.fontAttributes.getFontString();
 
-        this.currentDimensions[0] = Math.ceil(engine.measureText(this.currentText).width);
+        this.currentDimensions[0] = Math.ceil(engine.measureText(this.currentText).width / this.scale);
 
         releaseCell(myCell);
     }
@@ -808,7 +808,7 @@ P.cleanPathObject = function () {
             scale = this.currentScale,
             x = -handle[0] * scale,
             y = -handle[1] * scale,
-            w = dims[0],
+            w = dims[0] * scale,
             h = dims[1] * scale;
 
         this.boxStartValues = [x, y];
@@ -933,7 +933,7 @@ P.calculateTextPositions = function (mytext) {
 
     let scale = this.currentScale,
         dims = this.currentDimensions,
-        width = dims[0],
+        width = dims[0] * scale,
         treatWordAsGlyph = this.treatWordAsGlyph,
         lineHeight = this.lineHeight,
         justify = this.justify,
@@ -1369,7 +1369,7 @@ P.regularStampSynchronousActions = function () {
 
             if (!this.noCanvasEngineUpdates) dest.setEngine(this);
 
-            pos = this.textPositions;
+            pos = this.textPositions || [];
 
             for (i = 0, iz = pos.length; i < iz; i++) {
 

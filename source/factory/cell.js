@@ -829,7 +829,7 @@ P.getComputedFontSizes = function () {
 
     let host = this.getHost();
 
-    if (host) {
+    if (host && host.domElement) {
 
         let em = window.getComputedStyle(host.domElement),
             rem = window.getComputedStyle(document.documentElement);

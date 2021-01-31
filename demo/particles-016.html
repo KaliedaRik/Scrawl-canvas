@@ -30,7 +30,12 @@
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>TODO</li>
+      <li>Create a Net entity with 4 rows and 6 columns; remove all springs from the net particles; apply no forces to the particles; make the particles draggable.</li>
+      <li>Import the image asset and use it to create a Picture entity; set the Picture's visibility attribute to false.</li>
+      <li>Combine the Net and Picture entitys into a Mesh entity.</li>
+      <li>Check that when the user drags a particle, the image deforms appropriately.</li>
+      <li>Check that dragging any of the pins does not lead to the last row not displaying (bug is specific to Safari browsers - see <a href="https://stackoverflow.com/questions/35500999/cropping-with-drawimage-not-working-in-safari">this question on Stack Overflow</a></li>
+      <li>Check that the orange stroke only draws around the outside vertices of the Mesh, and that mose hovers within the stroke are correctly recognised (by the stroke width expanding).</li>
     </ul>
     <p><a href="../docs/demo/particles-016.html">Annotated code</a></p>
   </div>

@@ -343,7 +343,7 @@ const buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY, da
 };
 
 // `buildHorizontalBlur` - creates an Array of Arrays detailing which pixels contribute to the horizontal part of each pixel's blur calculation. Resulting object will be cached in the store
-const buildHorizontalBlur = function (grid, radius, alpha) {
+const buildHorizontalBlur = function (grid, radius) {
 
     if (!radius || !radius.toFixed || isNaN(radius)) radius = 0;
 
@@ -378,7 +378,7 @@ const buildHorizontalBlur = function (grid, radius, alpha) {
 };
 
 // `buildVerticalBlur` - creates an Array of Arrays detailing which pixels contribute to the vertical part of each pixel's blur calculation. Resulting object will be cached in the store
-const buildVerticalBlur = function (grid, radius, alpha) {
+const buildVerticalBlur = function (grid, radius) {
 
     if (!radius || !radius.toFixed || isNaN(radius)) radius = 0;
 
@@ -1430,9 +1430,9 @@ const theBigActionsObject = {
 
             let grid = buildImageGrid();
 
-            if (processHorizontal)  horizontalBlurGrid = buildHorizontalBlur(grid, radius, input.a);
+            if (processHorizontal)  horizontalBlurGrid = buildHorizontalBlur(grid, radius);
 
-            if (processVertical) verticalBlurGrid = buildVerticalBlur(grid, radius, input.a);
+            if (processVertical) verticalBlurGrid = buildVerticalBlur(grid, radius);
         }
 
         const {r:inR, g:inG, b:inB, a:inA} = input;
@@ -1442,27 +1442,32 @@ const theBigActionsObject = {
 
             if (flag) {
 
-                let h = gridStore[pos],
-                    l = h.length,
-                    counter = 0,
-                    total = 0;
+                // TODO: for some reason Demo Particles-007 fails on this call, supplying pos values that are out of scope (too large for the grid that has been built for this filter effect) - but the other filters all seem to work fine.
+                let h = gridStore[pos];
 
-                if (alpha) {
+                if (h != null) {
 
-                    for (let t = 0; t < l; t += step) {
+                    let l = h.length,
+                        counter = 0,
+                        total = 0;
 
-                        if (alpha[h[t]]) {
+                    if (alpha) {
 
-                            total += holdChannel[h[t]];
-                            counter++;
+                        for (let t = 0; t < l; t += step) {
+
+                            if (alpha[h[t]]) {
+
+                                total += holdChannel[h[t]];
+                                counter++;
+                            }
                         }
+                        return total / counter;
                     }
-                    return total / counter;
+                    for (let t = 0; t < l; t++) {
+                        total += holdChannel[h[t]];
+                    }
+                    return total / l;
                 }
-                for (let t = 0; t < l; t++) {
-                    total += holdChannel[h[t]];
-                }
-                return total / l;
             }
             return holdChannel[pos];
         }

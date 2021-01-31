@@ -670,6 +670,14 @@ P.setSourceDimension = function () {
         }
         this.sourceDimension = Math.max(...results);
 
+        // Sanity check - the particle system, when it breaks down, can create some massive dimension values!
+        let host = this.currentHost || this.getHost();
+        if (host) {
+
+            let max = Math.max(...host.currentDimensions);
+            if (this.sourceDimension > max) this.sourceDimension = max;
+        }
+
         for (i = 0, iz = lengths.length; i < iz; i++) {
 
             l = results[i];
@@ -876,6 +884,8 @@ P.cleanOutput = function () {
 
         let {sourceDimension, sourceImageData, columns, rows, struts, boundingBox} = self;
 
+        sourceDimension = Math.ceil(sourceDimension);
+
         if (sourceImageData && rows - 1 > 0) {
 
             let [startX, startY, outputWidth, outputHeight] = boundingBox;
@@ -901,8 +911,8 @@ P.cleanOutput = function () {
             outputEngine.globalAlpha = self.state.globalAlpha;
             outputEngine.setTransform(1, 0, 0, 1, 0, 0);
 
-            const inputStrutHeight = sourceDimension / (rows - 1),
-                inputStrutWidth = sourceDimension / (columns - 1);
+            const inputStrutHeight = parseFloat((sourceDimension / (rows - 1)).toFixed(4)),
+                inputStrutWidth = parseFloat((sourceDimension / (columns - 1)).toFixed(4));
 
             let topStruts, baseStruts,
                 maxLen, tStep, bStep, iStep, xtStep, ytStep, xbStep, ybStep, tx, ty, bx, by, sx, sy,
@@ -915,7 +925,7 @@ P.cleanOutput = function () {
                 baseStruts = struts[r + 1];
 
                 for (c = 0, cz = columns - 1; c < cz; c++) {
-                    
+
                     let [ltx, lty, rtx, rty, tLen] = topStruts[c];
                     let [lbx, lby, rbx, rby, bLen] = baseStruts[c];
 
@@ -950,7 +960,11 @@ P.cleanOutput = function () {
                         outputEngine.setTransform(1, 0, 0, 1, tx, ty);
                         outputEngine.rotate(stripAngle);
 
-                        outputEngine.drawImage(inputCanvas, sx, sy, 1, inputStrutHeight, 0, 0, 1, stripLength);
+                        // Safari bugfix because we fall foul of of the Safari source-out-of-bounds bug
+                        // + [Stack Overflow question identifying the issue](https://stackoverflow.com/questions/35500999/cropping-with-drawimage-not-working-in-safari)
+                        let testHeight = (sy + inputStrutHeight > sourceDimension) ? sourceDimension - sy : inputStrutHeight;
+
+                        outputEngine.drawImage(inputCanvas, sx, sy, 1, testHeight, 0, 0, 1, stripLength);
                     }
                 }
             }
