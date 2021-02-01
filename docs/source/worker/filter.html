@@ -455,7 +455,7 @@
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
               <h1 id="scrawl-canvas-filters-web-worker">Scrawl-canvas filters web worker</h1>
-<p>This eb worker code is called in a just-in-time manner; the code will not be requested from the server until a Scrawl-canvas entity, Group or Cell with a non-zero <code>filters</code> attribute is processed during the Display cycle. </p>
+<p>This web worker code is called in a just-in-time manner; the code will not be requested from the server until a Scrawl-canvas entity, Group or Cell with a non-zero <code>filters</code> attribute is processed during the Display cycle. </p>
 <p>All Scrawl-canvas filters-related image manipulation work happens in this worker code. Note that this functionality is entirely separate from the &lt;canvas&gt; element’s context engine’s native <code>filter</code> functionality, which allows us to add CSS/SVG-based filters to the canvas context</p>
 
             </div>
@@ -760,6 +760,7 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
             <span class="hljs-keyword">return</span> workstore[name];
         }
 
+
         <span class="hljs-keyword">let</span> grid = [],
             counter = <span class="hljs-number">0</span>;
 
@@ -973,7 +974,7 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> buildHorizontalBlur = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">grid, radius, alpha</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> buildHorizontalBlur = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">grid, radius</span>) </span>{
 
     <span class="hljs-keyword">if</span> (!radius || !radius.toFixed || <span class="hljs-built_in">isNaN</span>(radius)) radius = <span class="hljs-number">0</span>;
 
@@ -999,7 +1000,7 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
 
                 <span class="hljs-keyword">if</span> (c &gt;= <span class="hljs-number">0</span> &amp;&amp; c &lt; gridWidth) cellsToProcess.push(grid[y][c]);
             }
-            horizontalBlur[(y * gridHeight) + x] = cellsToProcess;
+            horizontalBlur[(y * gridWidth) + x] = cellsToProcess;
         }
     }
     workstore[name] = horizontalBlur;
@@ -1020,7 +1021,7 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> buildVerticalBlur = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">grid, radius, alpha</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> buildVerticalBlur = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">grid, radius</span>) </span>{
 
     <span class="hljs-keyword">if</span> (!radius || !radius.toFixed || <span class="hljs-built_in">isNaN</span>(radius)) radius = <span class="hljs-number">0</span>;
 
@@ -1046,7 +1047,7 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
 
                 <span class="hljs-keyword">if</span> (c &gt;= <span class="hljs-number">0</span> &amp;&amp; c &lt; gridHeight) cellsToProcess.push(grid[c][x]);
             }
-            verticalBlur[(y * gridHeight) + x] = cellsToProcess;
+            verticalBlur[(y * gridWidth) + x] = cellsToProcess;
         }
     }
     workstore[name] = verticalBlur;
@@ -2263,9 +2264,9 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
 
             <span class="hljs-keyword">let</span> grid = buildImageGrid();
 
-            <span class="hljs-keyword">if</span> (processHorizontal)  horizontalBlurGrid = buildHorizontalBlur(grid, radius, input.a);
+            <span class="hljs-keyword">if</span> (processHorizontal)  horizontalBlurGrid = buildHorizontalBlur(grid, radius);
 
-            <span class="hljs-keyword">if</span> (processVertical) verticalBlurGrid = buildVerticalBlur(grid, radius, input.a);
+            <span class="hljs-keyword">if</span> (processVertical) verticalBlurGrid = buildVerticalBlur(grid, radius);
         }
 
         <span class="hljs-keyword">const</span> {<span class="hljs-attr">r</span>:inR, <span class="hljs-attr">g</span>:inG, <span class="hljs-attr">b</span>:inB, <span class="hljs-attr">a</span>:inA} = input;
@@ -2275,27 +2276,31 @@ onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>
 
             <span class="hljs-keyword">if</span> (flag) {
 
-                <span class="hljs-keyword">let</span> h = gridStore[pos],
-                    l = h.length,
-                    counter = <span class="hljs-number">0</span>,
-                    total = <span class="hljs-number">0</span>;
+                <span class="hljs-keyword">let</span> h = gridStore[pos];
 
-                <span class="hljs-keyword">if</span> (alpha) {
+                <span class="hljs-keyword">if</span> (h != <span class="hljs-literal">null</span>) {
 
-                    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> t = <span class="hljs-number">0</span>; t &lt; l; t += step) {
+                    <span class="hljs-keyword">let</span> l = h.length,
+                        counter = <span class="hljs-number">0</span>,
+                        total = <span class="hljs-number">0</span>;
 
-                        <span class="hljs-keyword">if</span> (alpha[h[t]]) {
+                    <span class="hljs-keyword">if</span> (alpha) {
 
-                            total += holdChannel[h[t]];
-                            counter++;
+                        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> t = <span class="hljs-number">0</span>; t &lt; l; t += step) {
+
+                            <span class="hljs-keyword">if</span> (alpha[h[t]]) {
+
+                                total += holdChannel[h[t]];
+                                counter++;
+                            }
                         }
+                        <span class="hljs-keyword">return</span> total / counter;
                     }
-                    <span class="hljs-keyword">return</span> total / counter;
+                    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> t = <span class="hljs-number">0</span>; t &lt; l; t++) {
+                        total += holdChannel[h[t]];
+                    }
+                    <span class="hljs-keyword">return</span> total / l;
                 }
-                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> t = <span class="hljs-number">0</span>; t &lt; l; t++) {
-                    total += holdChannel[h[t]];
-                }
-                <span class="hljs-keyword">return</span> total / l;
             }
             <span class="hljs-keyword">return</span> holdChannel[pos];
         }

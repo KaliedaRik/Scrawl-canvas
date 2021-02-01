@@ -584,16 +584,12 @@ P.lib = <span class="hljs-string">&#x27;fontattribute&#x27;</span>;</pre></div><
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p><strong>font-style</strong></p>
-<p><em>values:</em> </p>
+              <p><strong>font</strong> - pseudo-attribute String which gets broken down into its component parts.</p>
 <ul>
-<li><code>normal</code>, <code>italic</code>, <code>oblique</code></li>
+<li>Once the breakdown completes the font string gets reassembled and then passed through a &lt;canvas&gt; element’s context engine to determine the actual font String that will be used by the engine. This value gets stored in the <strong>temperedFontString</strong> attribute.</li>
 </ul>
-<p>CANVAS CONTEXT ENGINE - does not handle <code>oblique</code> slope values</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    style: <span class="hljs-string">&#x27;normal&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -604,19 +600,14 @@ P.lib = <span class="hljs-string">&#x27;fontattribute&#x27;</span>;</pre></div><
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p><strong>font-variant</strong> - the standard indicates that canvas context engine should only recognise <code>normal</code> and <code>small-caps</code> values</p>
-<p>CANVAS CONTEXT ENGINE - complies with the standard, thus Scrawl-canvas ignores all other possible values. Do not use them in font strings:</p>
+              <p><em>font-style</em> - saved in the <strong>style</strong> String attribute - acceptable values are: <code>normal</code>, <code>italic</code> and <code>oblique</code>. Note that browser handling of oblique (sloped rather than explicitly italic) fonts by their respective canvas context engines is, at best, idiosyncratic.</p>
 <ul>
-<li><code>font-variant-caps</code></li>
-<li><code>font-variant-numeric</code></li>
-<li><code>font-variant-ligatures</code></li>
-<li><code>font-variant-east-asian</code></li>
-<li><code>font-variant-alternates</code></li>
+<li>To explicitly use an oblique font design (often called ‘slanted’ or ‘sloped’), reference the font face directly in the <code>family</code> or font strings.</li>
 </ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    variant: <span class="hljs-string">&#x27;normal&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    style: <span class="hljs-string">&#x27;normal&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -627,18 +618,11 @@ P.lib = <span class="hljs-string">&#x27;fontattribute&#x27;</span>;</pre></div><
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p><strong>font-weight</strong></p>
-<p><em>Values:</em> </p>
-<ul>
-<li><code>normal</code>, <code>bold</code>, <code>lighter</code>, <code>bolder</code>; or</li>
-<li>a number (between 1 and 1000, usually in 100 steps between 100 and 900)</li>
-</ul>
-<p>(<code>normal</code> translates to 400; <code>bold</code> translates to 700)</p>
-<p>CANVAS CONTEXT ENGINE - does seem to recognise both keyword and (x00) number values, but the interpretation of these values can be somewhat erratic. <code>normal</code> and <code>bold</code> keywords are generally respected and actioned as expected.</p>
+              <p><em>font-variant</em> - saved in the <strong>variant</strong> String attribute - the standard indicates that canvas context engine should only recognise <code>normal</code> and <code>small-caps</code> values. Do not use other possibilities (<em>font-variant-caps, font-variant-numeric, font-variant-ligatures, font-variant-east-asian, font-variant-alternates</em>) in font strings; scrawl-canvas will remove and/or ignore them when it parses the font string.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    weight: <span class="hljs-string">&#x27;normal&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    variant: <span class="hljs-string">&#x27;normal&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -649,19 +633,14 @@ P.lib = <span class="hljs-string">&#x27;fontattribute&#x27;</span>;</pre></div><
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p><strong>font-stretch</strong></p>
-<p><em>Values:</em> </p>
+              <p><em>font-weight</em> - saved in the <strong>weight</strong> String attribute - acceptable values are: <code>normal</code>, <code>bold</code>, <code>lighter</code>, <code>bolder</code>; or a number (100. 200, 300, … 900). Bold is generally the equivalent of 700, and normal is 400; lighter/bolder are values relative to the &lt;canvas&gt; element’s computed font weight. Note that browser handling of font weight requirements by their respective canvas context engines is not entirely standards compliant - for instance Safari browsers will generally ignore weight assertions in font strings.</p>
 <ul>
-<li><code>normal</code> (default)</li>
-<li><code>semi-condensed</code>, <code>condensed</code>, <code>extra-condensed</code>, <code>ultra-condensed</code></li>
-<li><code>semi-expanded</code>, <code>expanded</code>, <code>extra-expanded</code>, <code>ultra-expanded</code></li>
+<li>To explicitly use a light, bold or heavy font design, reference the font face directly in the <code>family</code> or font strings.</li>
 </ul>
-<p>We ignore number% values (permitted values are 50% - 200%) because the context engine only accepts a single font string and the syntax requirements for that font string are that “font-stretch may only be a single keyword value”</p>
-<p>CANVAS CONTEXT ENGINE - doesn’t seem to recognise font-stretch values (for Garamond), but doesn’t choke on their presence either</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    stretch: <span class="hljs-string">&#x27;normal&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    weight: <span class="hljs-string">&#x27;normal&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -672,39 +651,14 @@ P.lib = <span class="hljs-string">&#x27;fontattribute&#x27;</span>;</pre></div><
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p><strong>font-size</strong></p>
-<p>Standard says: <em>“with the ‘font-size’ component converted to CSS pixels”</em> </p>
+              <p><strong>font-stretch</strong> - saved in the <strong>stretch</strong> String attribute acceptable values are: <code>normal</code>, <code>semi-condensed</code>, <code>condensed</code>, <code>extra-condensed</code>, <code>ultra-condensed</code>, <code>semi-expanded</code>, <code>expanded</code>, <code>extra-expanded</code>, <code>ultra-expanded</code>. Browser support for these values by the &lt;canvas&gt; element’s context engine is, for the most part, non-existant.</p>
 <ul>
-<li>TODO: hoping this means that canvas font will do this for us, rather than having to convert in code - if not, extract it by sticking an interim css style against the internal &lt;div&gt; to get computed value?</li>
+<li>To explicitly use a condensed or stretched font design, reference the font face directly in the <code>family</code> or font strings.</li>
 </ul>
-<p>Values can be: </p>
-<p><em>Absolute or relative string values:</em></p>
-<ul>
-<li><code>xx-small</code>, <code>x-small</code>, <code>small</code>, <code>medium</code>, <code>large</code>, <code>x-large</code>, <code>xx-large</code> </li>
-<li><code>smaller</code>, <code>larger</code></li>
-</ul>
-<p><em>Length values:</em> </p>
-<ul>
-<li><code>1.2em</code>, <code>1.2ch</code>, <code>1.2ex</code>, <code>1.2rem</code></li>
-<li>(experimental!) <code>1.2cap</code>, <code>1.2ic</code>, <code>1.2lh</code>, <code>1.2rlh</code></li>
-<li><code>1.2vh</code>, <code>1.2vw</code>, <code>1.2vmin</code>, <code>1.2vmax</code></li>
-<li>(experimental!) <code>1.2vi</code>, <code>1.2vb</code></li>
-<li><code>1.2px</code>, <code>1.2cm</code>, <code>1.2mm</code>, <code>1.2in</code>, <code>1.2pc</code>, <code>1.2pt</code></li>
-<li>(experimental!) <code>1.2Q</code></li>
-</ul>
-<p>Note that only the following have wide support; these are the only metrics this code tests for: <code>em</code>, <code>ch</code>, <code>ex</code>, <code>rem</code>, <code>vh</code>, <code>vw</code>, <code>vmin</code>, <code>vmax</code>, <code>px</code>, <code>cm</code>, <code>mm</code>, <code>in</code>, <code>pc</code>, <code>pt</code></p>
-<p><em>Percent values:</em> </p>
-<ul>
-<li><code>1.2%</code></li>
-</ul>
-<p>(Percent values clash with font-stretch % values - assume any number followed by a % is a font-size value)</p>
-<p>GOTCHA NOTE 1: font-size is never a number; it must always have a metric. Tweens should be able to handle this requirement with no issues.</p>
-<p>GOTCHA NOTE 2: the canvas context engine refuses to handle line heights appended to the font size value (eg: <code>12px/1.2</code>) and expects all line height values to = <code>normal</code>. Scrawl-canvas handles line height for multiline phrases using an alternative mechanism. Thus including a <code>/lineheight</code> value in a font string may cause <code>Phrase.set</code> functionality to fail in unexpected ways.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    sizeValue: <span class="hljs-number">12</span>,
-    <span class="hljs-attr">sizeMetric</span>: <span class="hljs-string">&#x27;px&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    stretch: <span class="hljs-string">&#x27;normal&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -715,20 +669,74 @@ P.lib = <span class="hljs-string">&#x27;fontattribute&#x27;</span>;</pre></div><
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p><strong>font-family</strong> </p>
+              <p><em>font-size</em> - broken into two parts and saved in the <strong>sizeValue</strong> Number and <strong>sizeMetric</strong> String, each of which can be set separately. The W3C HTML Canvas 2D Context Recommendation states: <em>“with the ‘font-size’ component converted to CSS pixels”</em>. However, Scrawl-canvas makes every effort to respect and interpret non-px-based font-size requests.</p>
 <ul>
-<li>Always comes at the end of the string. </li>
-<li>More than one can be included, with each separated by commas</li>
-<li>Be aware that string may often include quotes around font families with spaces in their names.</li>
+<li>Note that these pixel values are representative of the &lt;canvas&gt; element’s intrinsic drawing area dimensions, not of any such measure modified by CSS dimension rules (width, height, scale, skew, etc) applied to the canvas.</li>
 </ul>
-<p>Generic font names have been extended - values include: </p>
+<p>Length values relative to some intrinsic propertly of the font - Scrawl-canvas will not attempt to interpret the following, instead treating them as some fixed proportion of the &lt;canvas&gt; element’s computed font size:</p>
 <ul>
-<li><code>serif</code>, <code>sans-serif</code>, <code>monospace</code>, <code>cursive</code>, <code>fantasy</code>, <code>system-ui</code>, <code>math</code>, <code>emoji</code>, <code>fangsong</code></li>
+<li><code>1em</code> is the &lt;canvas&gt; element’s computed font size</li>
+<li><code>1rem</code> is the document root (&lt;html&gt;) element’s computed font size</li>
+<li><code>1lh</code> is the &lt;canvas&gt; element’s computed font size multiplied by the entity’s line height value</li>
+<li><code>1rlh</code> is the document root (&lt;html&gt;) element’s computed font size multiplied by the entity’s line height value</li>
+<li><code>1ex</code> is ≈ ‘0.5em’</li>
+<li><code>1cap</code>, <code>1ch</code>, <code>1ic</code> are all ≈ ‘1em’</li>
 </ul>
-<p>GOTCHA NOTE: current functionality tests the supplied string with the expectation that the font families will be preceded by a font size metric value. To set the fontFamily value direct, put a font size metric at the start of the string - % will do - followed by a space and then the font family string:</p>
-<pre><code>phraseInstance.set({
-    <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;% &quot;Gill Sans&quot;, sans-serif&#x27;</span>
-})</code></pre>
+<p>Length percentage values, with calculation based on the &lt;canvas&gt; element’s computed font size: </p>
+<ul>
+<li><code>120%</code> = ‘1.2em’</li>
+</ul>
+<p>Non-numerical values (in the Fonts standards, ‘absolute-size’ and ‘relative-size’ keywords) will calculate a size based on the &lt;canvas&gt; element’s computed font size: </p>
+<ul>
+<li><code>xx-small</code> = 60% of the computed font size</li>
+<li><code>x-small</code> = 75% of the computed font size</li>
+<li><code>small</code> = 89% of the computed font size</li>
+<li><code>medium</code> = 100% of the computed font size</li>
+<li><code>large</code> = 120% of the computed font size</li>
+<li><code>x-large</code> = 150% of the computed font size</li>
+<li><code>xx-large</code> = 200% of the computed font size</li>
+<li><code>xxx-large</code> = 300% of the computed font size</li>
+<li><code>smaller</code> = 80% of the computed font size</li>
+<li><code>larger</code> = 130% of the computed font size</li>
+</ul>
+<p>Length values relative to the browser’s viewport (window) dimensions:</p>
+<ul>
+<li><code>1vw</code> and <code>1vh</code> represent 1% of the viewport’s width and height, respectively</li>
+<li><code>1vmax</code> - is 1% of the larger viewport dimension</li>
+<li><code>1vmin</code> - is 1% of the smaller viewport dimension</li>
+<li>Scrawl-canvas treats <code>1vi</code> as ≈ 1vw, and <code>1vb</code> as ≈ 1vh</li>
+</ul>
+<p>Absolute length values convert as follow:</p>
+<ul>
+<li><code>1in</code> (inch) = 96px</li>
+<li><code>1cm</code> (centimeter) = 37.80px</li>
+<li><code>1mm</code> (millimeter) = 3.78px</li>
+<li><code>1Q</code> (quarter mm) = 0.95px </li>
+<li><code>1pc</code> (pica) = 16px</li>
+<li><code>1pt</code> (point) = 1.33px</li>
+<li><code>1px</code> (pixel) = 1px</li>
+</ul>
+<p>Note: we break down the <code>size</code> attribute into two components: <strong>sizeValue</strong> and <strong>sizeMetric</strong>. Line height values are ignored and, when present in a font string, may break the code!</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    sizeValue: <span class="hljs-number">12</span>,
+    <span class="hljs-attr">sizeMetric</span>: <span class="hljs-string">&#x27;px&#x27;</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p><strong>font-family</strong> - any part of the font string that comes after the above declarations.</p>
+<ul>
+<li>It is generally a good idea to include one of the preset defaults - <code>serif</code>, <code>sans-serif</code>, <code>monospace</code>, <code>cursive</code>, <code>fantasy</code>, <code>system-ui</code>, <code>math</code>, <code>emoji</code>, <code>fangsong</code> - at the end of the font or family string, to act as a fallback default as other fonts load.</li>
+<li>Scrawl-canvas will attempt to redraw the display when fonts complete their (asynchronous) upload, but this may fail and need to be triggered manually.</li>
+</ul>
 
             </div>
             
@@ -740,28 +748,14 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
-              </div>
-              <h4 id="packet-management">Packet management</h4>
-<p>No additional packet functionality required</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <h4 id="clone-management">Clone management</h4>
-<p>No additional clone functionality required</p>
+              <h4 id="packet-management">Packet management</h4>
+<p>No additional packet functionality required</p>
 
             </div>
             
@@ -774,8 +768,8 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <h4 id="kill-management">Kill management</h4>
-<p>No additional kill functionality required</p>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality required</p>
 
             </div>
             
@@ -788,6 +782,20 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
+              <h4 id="kill-management">Kill management</h4>
+<p>No additional kill functionality required</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
             </div>
@@ -799,11 +807,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p><strong>size</strong> - pseudo-attribute </p>
 <ul>
@@ -820,11 +828,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <ul>
 <li>setter breaks the fontSize String into <strong>sizeValue</strong> and <strong>sizeMetric</strong> values</li>
@@ -838,22 +846,83 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
         <span class="hljs-keyword">let</span> res, 
             size = <span class="hljs-number">0</span>, 
-            metric = <span class="hljs-string">&#x27;medium&#x27;</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
-              </div>
-              <p>Canvas context engine (Chrome on MacBook Pro) interprets this as 9px Garamond</p>
+            metric = <span class="hljs-string">&#x27;medium&#x27;</span>;
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;xx-small&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;xx-small&#x27;</span>;</pre></div></div>
+        <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;xx-small&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;xx-small&#x27;</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;x-small&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;x-small&#x27;</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;smaller&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;smaller&#x27;</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;small&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;small&#x27;</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;medium&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;medium&#x27;</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;xxx-large&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;xxx-large&#x27;</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;xx-large&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;xx-large&#x27;</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;x-large&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;x-large&#x27;</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;larger&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;larger&#x27;</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;large&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;large&#x27;</span>;
+
+        <span class="hljs-keyword">else</span> {
+            size = <span class="hljs-number">12</span>;
+            metric = <span class="hljs-string">&#x27;px&#x27;</span>
+        }
+
+        <span class="hljs-keyword">let</span> full, val, suffix;
+
+        <span class="hljs-keyword">let</span> r = item.match(<span class="hljs-regexp">/(\d+\.\d+|\d+|\.\d+)(rem|em|rlh|lh|ex|cap|ch|ic|%|vw|vh|vmax|vmin|vi|vb|in|cm|mm|Q|pc|pt|px)?/i</span>);
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(r)) {
+
+            [full, val, suffix] = r;
+
+            <span class="hljs-keyword">if</span> (val &amp;&amp; suffix &amp;&amp; val != <span class="hljs-string">&#x27;.&#x27;</span>) {
+
+                size = val;
+                metric = suffix;
+            }
+        }
+        <span class="hljs-keyword">else</span> {
+
+            r = item.match(<span class="hljs-regexp">/\/(\d+\.\d+|\d+|\.\d+)(rem|em|rlh|lh|ex|cap|ch|ic|%|vw|vh|vmax|vmin|vi|vb|in|cm|mm|Q|pc|pt|px)?/i</span>);
+
+            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(r)) {
+
+                [full, val, suffix] = r;
+
+                <span class="hljs-keyword">if</span> (val &amp;&amp; suffix &amp;&amp; val != <span class="hljs-string">&#x27;.&#x27;</span>) {
+
+                    size = val;
+                    metric = suffix;
+                }
+            }
+        }
+        <span class="hljs-keyword">if</span> (size !== <span class="hljs-built_in">this</span>.sizeValue) {
+
+            <span class="hljs-built_in">this</span>.sizeValue = size;
+            <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+        }
+        <span class="hljs-keyword">if</span> (metric !== <span class="hljs-built_in">this</span>.sizeMetric) {
+
+            <span class="hljs-built_in">this</span>.sizeMetric = metric;
+            <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+        }
+    }
+};
+
+S.sizeValue = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (xt(item) &amp;&amp; item !== <span class="hljs-built_in">this</span>.sizeValue) {
+
+        <span class="hljs-built_in">this</span>.sizeValue = item;
+        <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+    }
+}
+
+S.sizeMetric = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (xt(item) &amp;&amp; item !== <span class="hljs-built_in">this</span>.sizeMetric) {
+
+        <span class="hljs-built_in">this</span>.sizeMetric = item;
+        <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+    }
+}</pre></div></div>
             
         </li>
         
@@ -863,175 +932,6 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-21">&#182;</a>
-              </div>
-              <p>Canvas context engine (Chrome on MacBook Pro) interprets this as 10px Garamond</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;x-small&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;x-small&#x27;</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
-              </div>
-              <p>Canvas context engine (Chrome on MacBook Pro) interprets this as 8.33px Garamond</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;smaller&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;smaller&#x27;</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
-              </div>
-              <p>Canvas context engine (Chrome on MacBook Pro) interprets this as 13px Garamond</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;small&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;small&#x27;</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
-              </div>
-              <p>Canvas context engine (Chrome on MacBook Pro) interprets this as 32px Garamond</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;xx-large&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;xx-large&#x27;</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-25">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
-              </div>
-              <p>Canvas context engine (Chrome on MacBook Pro) interprets this as 24px Garamond</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;x-large&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;x-large&#x27;</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-26">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
-              </div>
-              <p>Canvas context engine (Chrome on MacBook Pro) interprets this as 12px Garamond</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;larger&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;larger&#x27;</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-27">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
-              </div>
-              <p>Canvas context engine (Chrome on MacBook Pro) interprets this as 18px Garamond</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;large&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;large&#x27;</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-28">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
-              </div>
-              <p>Canvas context engine (Chrome on MacBook Pro) interprets this as 16px Garamond</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;medium&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;medium&#x27;</span>;
-        <span class="hljs-keyword">else</span> {
-            size = <span class="hljs-number">12</span>;
-            metric = <span class="hljs-string">&#x27;px&#x27;</span>
-        }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
-              </div>
-              <p>For when the size has stuff before it in the string (which can, sadly, include numbers)</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/.* (\d+\.\d+|\d+|\.\d+)(%|em|ch|ex|rem|vh|vw|vmin|vmax|px|cm|mm|in|pc|pt)?/i</span>.test(item)) {
-            
-            res = item.match(<span class="hljs-regexp">/.* (\d+\.\d+|\d+|\.\d+)(%|em|ch|ex|rem|vh|vw|vmin|vmax|px|cm|mm|in|pc|pt)?/i</span>);
-            size = (res[<span class="hljs-number">1</span>] !== <span class="hljs-string">&#x27;.&#x27;</span>) ? <span class="hljs-built_in">parseFloat</span>(res[<span class="hljs-number">1</span>]) : <span class="hljs-number">12</span>;
-            metric = res[<span class="hljs-number">2</span>];
-        }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-30">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
-              </div>
-              <p>For when the size starts the string</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/^(\d+\.\d+|\d+|\.\d+)(%|em|ch|ex|rem|vh|vw|vmin|vmax|px|cm|mm|in|pc|pt)?/i</span>.test(item)) {
-            
-            res = item.match(<span class="hljs-regexp">/^(\d+\.\d+|\d+|\.\d+)(%|em|ch|ex|rem|vh|vw|vmin|vmax|px|cm|mm|in|pc|pt)?/i</span>);
-            size = (res[<span class="hljs-number">1</span>] !== <span class="hljs-string">&#x27;.&#x27;</span>) ? <span class="hljs-built_in">parseFloat</span>(res[<span class="hljs-number">1</span>]) : <span class="hljs-number">12</span>;
-            metric = res[<span class="hljs-number">2</span>];
-        }
-
-        <span class="hljs-built_in">this</span>.sizeValue = size;
-        <span class="hljs-built_in">this</span>.sizeMetric = metric;
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-31">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p><strong>font</strong> - pseudo-attribute which calls various functions to break down the font String into its constituent parts</p>
 
@@ -1053,11 +953,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p><strong>style</strong></p>
 
@@ -1065,25 +965,29 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>S.style = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">let</span> v = <span class="hljs-string">&#x27;normal&#x27;</span>;
-
     <span class="hljs-keyword">if</span> (xt(item)) {
+
+        <span class="hljs-keyword">let</span> v = <span class="hljs-string">&#x27;normal&#x27;</span>;
 
         v = (item.indexOf(<span class="hljs-string">&#x27;italic&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;italic&#x27;</span> : v;
         v = (item.indexOf(<span class="hljs-string">&#x27;oblique&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;oblique&#x27;</span> : v;
-    }
 
-    <span class="hljs-built_in">this</span>.style = v;
+        <span class="hljs-keyword">if</span> (v !== <span class="hljs-built_in">this</span>.style) {
+
+            <span class="hljs-built_in">this</span>.style = v;
+            <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+        }
+    }
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-33">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p><strong>variant</strong></p>
 
@@ -1091,21 +995,28 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>S.variant = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">let</span> v = <span class="hljs-string">&#x27;normal&#x27;</span>;
+    <span class="hljs-keyword">if</span> (xt(item)) {
 
-    v = (item.indexOf(<span class="hljs-string">&#x27;small-caps&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;small-caps&#x27;</span> : v;
+        <span class="hljs-keyword">let</span> v = <span class="hljs-string">&#x27;normal&#x27;</span>;
 
-    <span class="hljs-built_in">this</span>.variant = v;
+        v = (item.indexOf(<span class="hljs-string">&#x27;small-caps&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;small-caps&#x27;</span> : v;
+
+        <span class="hljs-keyword">if</span> (v !== <span class="hljs-built_in">this</span>.variant) {
+
+            <span class="hljs-built_in">this</span>.variant = v;
+            <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+        }
+    }
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-34">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p><strong>weight</strong></p>
 
@@ -1113,18 +1024,18 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>S.weight = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">let</span> v = <span class="hljs-string">&#x27;normal&#x27;</span>;
+    <span class="hljs-keyword">if</span> (xt(item)) {
 
-    <span class="hljs-keyword">if</span> (xt(item)) {</pre></div></div>
+        <span class="hljs-keyword">let</span> v = <span class="hljs-string">&#x27;normal&#x27;</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-35">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>Handling direct entry of numbers</p>
 
@@ -1140,11 +1051,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-36">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>Putting spaces around the number should help identify it as a Weight value within the font string the string</p>
 
@@ -1163,11 +1074,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-37">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>Also need to capture instances where a number value has been directly set with no other font attributes around it</p>
 
@@ -1175,19 +1086,23 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>            v = (<span class="hljs-regexp">/^\d00$/</span>.test(item)) ? item : v;
         }
-    }
 
-    <span class="hljs-built_in">this</span>.weight = v;
+        <span class="hljs-keyword">if</span> (v !== <span class="hljs-built_in">this</span>.weight) {
+
+            <span class="hljs-built_in">this</span>.weight = v;
+            <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+        }
+    }
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-38">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p><strong>stretch</strong></p>
 
@@ -1195,67 +1110,285 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>S.stretch = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">let</span> v = <span class="hljs-string">&#x27;normal&#x27;</span>;
-
     <span class="hljs-keyword">if</span> (xt(item)) {
 
-        v = (item.indexOf(<span class="hljs-string">&#x27;semi-condensed&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;semi-condensed&#x27;</span> : v;
-        v = (item.indexOf(<span class="hljs-string">&#x27;condensed&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;condensed&#x27;</span> : v;
-        v = (item.indexOf(<span class="hljs-string">&#x27;extra-condensed&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;extra-condensed&#x27;</span> : v;
-        v = (item.indexOf(<span class="hljs-string">&#x27;ultra-condensed&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;ultra-condensed&#x27;</span> : v;
-        v = (item.indexOf(<span class="hljs-string">&#x27;semi-condensed&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;semi-condensed&#x27;</span> : v;
-        v = (item.indexOf(<span class="hljs-string">&#x27;condensed&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;condensed&#x27;</span> : v;
-        v = (item.indexOf(<span class="hljs-string">&#x27;extra-condensed&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;extra-condensed&#x27;</span> : v;
-        v = (item.indexOf(<span class="hljs-string">&#x27;ultra-condensed&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;ultra-condensed&#x27;</span> : v;
-    }
+        <span class="hljs-keyword">let</span> v = <span class="hljs-string">&#x27;normal&#x27;</span>;
 
-    <span class="hljs-built_in">this</span>.stretch = v;
+        v = (item.indexOf(<span class="hljs-string">&#x27;semi-condensed&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;semi-condensed&#x27;</span> : v;
+        v = (item.indexOf(<span class="hljs-string">&#x27;condensed&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;condensed&#x27;</span> : v;
+        v = (item.indexOf(<span class="hljs-string">&#x27;extra-condensed&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;extra-condensed&#x27;</span> : v;
+        v = (item.indexOf(<span class="hljs-string">&#x27;ultra-condensed&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;ultra-condensed&#x27;</span> : v;
+        v = (item.indexOf(<span class="hljs-string">&#x27;semi-expanded&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;semi-expanded&#x27;</span> : v;
+        v = (item.indexOf(<span class="hljs-string">&#x27;expanded&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;expanded&#x27;</span> : v;
+        v = (item.indexOf(<span class="hljs-string">&#x27;extra-expanded&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;extra-expanded&#x27;</span> : v;
+        v = (item.indexOf(<span class="hljs-string">&#x27;ultra-expanded&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;ultra-expanded&#x27;</span> : v;
+
+        <span class="hljs-keyword">if</span> (v !== <span class="hljs-built_in">this</span>.stretch) {
+
+            <span class="hljs-built_in">this</span>.stretch = v;
+            <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+        }
+    }
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-39">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p><strong>family</strong></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.family = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.rfsTestArray1 = [<span class="hljs-string">&#x27;italic&#x27;</span>,<span class="hljs-string">&#x27;oblique&#x27;</span>,<span class="hljs-string">&#x27;small-caps&#x27;</span>,<span class="hljs-string">&#x27;normal&#x27;</span>,<span class="hljs-string">&#x27;bold&#x27;</span>,<span class="hljs-string">&#x27;lighter&#x27;</span>,<span class="hljs-string">&#x27;bolder&#x27;</span>,<span class="hljs-string">&#x27;ultra-condensed&#x27;</span>,<span class="hljs-string">&#x27;extra-condensed&#x27;</span>,<span class="hljs-string">&#x27;semi-condensed&#x27;</span>,<span class="hljs-string">&#x27;condensed&#x27;</span>,<span class="hljs-string">&#x27;ultra-expanded&#x27;</span>,<span class="hljs-string">&#x27;extra-expanded&#x27;</span>,<span class="hljs-string">&#x27;semi-expanded&#x27;</span>,<span class="hljs-string">&#x27;expanded&#x27;</span>,<span class="hljs-string">&#x27;xx-small&#x27;</span>,<span class="hljs-string">&#x27;x-small&#x27;</span>,<span class="hljs-string">&#x27;small&#x27;</span>,<span class="hljs-string">&#x27;medium&#x27;</span>,<span class="hljs-string">&#x27;xxx-large&#x27;</span>,<span class="hljs-string">&#x27;xx-large&#x27;</span>,<span class="hljs-string">&#x27;x-large&#x27;</span>,<span class="hljs-string">&#x27;large&#x27;</span>];
+P.rfsTestArray2 = [<span class="hljs-string">&#x27;0&#x27;</span>,<span class="hljs-string">&#x27;1&#x27;</span>,<span class="hljs-string">&#x27;2&#x27;</span>,<span class="hljs-string">&#x27;3&#x27;</span>,<span class="hljs-string">&#x27;4&#x27;</span>,<span class="hljs-string">&#x27;5&#x27;</span>,<span class="hljs-string">&#x27;6&#x27;</span>,<span class="hljs-string">&#x27;7&#x27;</span>,<span class="hljs-string">&#x27;8&#x27;</span>,<span class="hljs-string">&#x27;9&#x27;</span>];
+S.family = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
     <span class="hljs-keyword">if</span> (xt(item)) {
 
-        <span class="hljs-keyword">let</span> guess = item.match(<span class="hljs-regexp">/( xx-small| x-small| small| medium| large| x-large| xx-large| smaller| larger|\d%|\dem|\dch|\dex|\drem|\dvh|\dvw|\dvmin|\dvmax|\dpx|\dcm|\dmm|\din|\dpc|\dpt) (.*)$/i</span>);
+        <span class="hljs-keyword">let</span> v = <span class="hljs-string">&#x27;sans-serif&#x27;</span>;
 
-        <span class="hljs-built_in">this</span>.family = (guess &amp;&amp; guess[<span class="hljs-number">2</span>]) ? guess[<span class="hljs-number">2</span>] : item;
+        <span class="hljs-keyword">let</span> itemArray = item.split(<span class="hljs-string">&#x27; &#x27;</span>),
+            len = itemArray.length;
+
+        <span class="hljs-keyword">if</span> (len === <span class="hljs-number">1</span>) v = item;
+
+        <span class="hljs-keyword">let</span> counter = <span class="hljs-number">0</span>,
+            flag = <span class="hljs-literal">true</span>;
+
+        <span class="hljs-keyword">while</span> (flag) {
+
+            <span class="hljs-keyword">if</span> (counter === len) flag = <span class="hljs-literal">false</span>;
+            <span class="hljs-keyword">else</span> {
+
+                <span class="hljs-keyword">let</span> el = itemArray[counter];
+
+                <span class="hljs-keyword">if</span> (!el.length) counter++;
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.rfsTestArray1.indexOf(el) &gt;= <span class="hljs-number">0</span>) counter++;
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.rfsTestArray2.indexOf(el[<span class="hljs-number">0</span>]) &gt;= <span class="hljs-number">0</span>) counter++;
+                <span class="hljs-keyword">else</span> flag = <span class="hljs-literal">false</span>;
+            }
+        }
+        <span class="hljs-keyword">if</span> (counter &lt; len) v = itemArray.slice(counter).join(<span class="hljs-string">&#x27; &#x27;</span>);
+
+        <span class="hljs-keyword">if</span> (v !== <span class="hljs-built_in">this</span>.family) {
+
+            <span class="hljs-built_in">this</span>.family = v;
+            <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+        }
     }
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-40">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
             </div>
             
+            <div class="content"><div class='highlight'><pre>P.getFontString = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.dirtyFont &amp;&amp; <span class="hljs-built_in">this</span>.temperedFontString) <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.temperedFontString;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.buildFont();
+}
+
+P.updateMetadata = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">scale, lineHeight, host</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (scale &amp;&amp; scale.toFixed &amp;&amp; scale &gt; <span class="hljs-number">0</span> &amp;&amp; scale !== <span class="hljs-built_in">this</span>.scale) {
+
+        <span class="hljs-built_in">this</span>.scale = scale;
+        <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+    }
+
+    <span class="hljs-keyword">if</span> (lineHeight &amp;&amp; lineHeight.toFixed &amp;&amp; lineHeight &gt; <span class="hljs-number">0</span> &amp;&amp; lineHeight !== <span class="hljs-built_in">this</span>.lineHeight) {
+
+        <span class="hljs-built_in">this</span>.lineHeight = lineHeight;
+        <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+    }
+    
+    <span class="hljs-keyword">let</span> currentHost = (<span class="hljs-built_in">this</span>.host &amp;&amp; <span class="hljs-built_in">this</span>.host.type &amp;&amp; <span class="hljs-built_in">this</span>.host.type === <span class="hljs-string">&#x27;Cell&#x27;</span>) ? <span class="hljs-built_in">this</span>.host.name : <span class="hljs-string">&#x27;&#x27;</span>;
+    <span class="hljs-keyword">if</span> (host &amp;&amp; host.type &amp;&amp; host.type === <span class="hljs-string">&#x27;Cell&#x27;</span> &amp;&amp; host.name !== currentHost) {
+
+        <span class="hljs-built_in">this</span>.host = host;
+        <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+    }
+};
+
+P.calculateSize = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.host) {
+
+        <span class="hljs-keyword">let</span> {scale, lineHeight, host, sizeValue, sizeMetric} = <span class="hljs-built_in">this</span>;
+
+        <span class="hljs-keyword">let</span> gcfs = host.getComputedFontSizes(),
+            parentSize, rootSize, viewportWidth, viewportHeight;
+
+        <span class="hljs-keyword">if</span> (!gcfs) {
+
+            <span class="hljs-keyword">if</span> ([<span class="hljs-string">&#x27;in&#x27;</span>, <span class="hljs-string">&#x27;cm&#x27;</span>, <span class="hljs-string">&#x27;mm&#x27;</span>, <span class="hljs-string">&#x27;Q&#x27;</span>, <span class="hljs-string">&#x27;pc&#x27;</span>, <span class="hljs-string">&#x27;pt&#x27;</span>, <span class="hljs-string">&#x27;px&#x27;</span>].indexOf(sizeMetric) &lt; <span class="hljs-number">0</span>) {
+
+                <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;12px&#x27;</span>;
+            }
+        }
+        <span class="hljs-keyword">else</span> {
+
+            [parentSize, rootSize, viewportWidth, viewportHeight] = host.getComputedFontSizes();
+        }
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(sizeValue)) sizeValue = <span class="hljs-number">12</span>;
+
+        <span class="hljs-keyword">let</span> res = parentSize;
+
+        <span class="hljs-keyword">switch</span> (sizeMetric) {
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;rem&#x27;</span> :
+                res = rootSize * sizeValue;
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;em&#x27;</span> :
+                res = parentSize * sizeValue;
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;rlh&#x27;</span> :
+                res = (rootSize * lineHeight) * sizeValue;
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;lh&#x27;</span> :
+                res = (parentSize * lineHeight) * sizeValue;
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;ex&#x27;</span> :
+                res = (parentSize / <span class="hljs-number">2</span>) * sizeValue;
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;cap&#x27;</span> :
+                res = parentSize * sizeValue;
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;ch&#x27;</span> :
+                res = parentSize * sizeValue;
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;ic&#x27;</span> :
+                res = parentSize * sizeValue;
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;%&#x27;</span> :
+                res = (parentSize / <span class="hljs-number">100</span>) * sizeValue;
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;vw&#x27;</span> :
+                res = (viewportWidth / <span class="hljs-number">100</span>) * sizeValue;
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;vh&#x27;</span> :
+                res = (viewportHeight / <span class="hljs-number">100</span>) * sizeValue;
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;vmax&#x27;</span> :
+                res = (<span class="hljs-built_in">Math</span>.max(viewportWidth, viewportHeight) / <span class="hljs-number">100</span>) * sizeValue;
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;vmin&#x27;</span> :
+                res = (<span class="hljs-built_in">Math</span>.min(viewportWidth, viewportHeight) / <span class="hljs-number">100</span>) * sizeValue;
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;vi&#x27;</span> :
+                res = (viewportWidth / <span class="hljs-number">100</span>) * sizeValue;
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;vb&#x27;</span> :
+                res = (viewportHeight / <span class="hljs-number">100</span>) * sizeValue;
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;in&#x27;</span> :
+                res = <span class="hljs-number">96</span> * sizeValue;
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;cm&#x27;</span> :
+                res = <span class="hljs-number">37.8</span> * sizeValue;
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;mm&#x27;</span> :
+                res = <span class="hljs-number">3.78</span> * sizeValue;
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;Q&#x27;</span> :
+                res = <span class="hljs-number">0.95</span> * sizeValue;
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;pc&#x27;</span> :
+                res = <span class="hljs-number">16</span> * sizeValue;
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;pt&#x27;</span> :
+                res = <span class="hljs-number">1.33</span> * sizeValue;
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;px&#x27;</span> :
+                res = sizeValue;
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;xx-small&#x27;</span> :
+                res = <span class="hljs-number">0.6</span> * parentSize;
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;x-small&#x27;</span> :
+                res = <span class="hljs-number">0.75</span> * parentSize;
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;smaller&#x27;</span> :
+                res = <span class="hljs-number">0.8</span> * parentSize;
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;small&#x27;</span> :
+                res = <span class="hljs-number">0.89</span> * parentSize;
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;xxx-large&#x27;</span> :
+                res = <span class="hljs-number">3</span> * parentSize;
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;xx-large&#x27;</span> :
+                res = <span class="hljs-number">2</span> * parentSize;
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;x-large&#x27;</span> :
+                res = <span class="hljs-number">1.5</span> * parentSize;
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;larger&#x27;</span> :
+                res = <span class="hljs-number">1.3</span> * parentSize;
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;large&#x27;</span> :
+                res = <span class="hljs-number">1.2</span> * parentSize;
+                <span class="hljs-keyword">break</span>;
+        }
+        <span class="hljs-keyword">return</span> <span class="hljs-string">`<span class="hljs-subst">${res * scale}</span>px`</span>;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;12px&#x27;</span>;
+}</pre></div></div>
+            
         </li>
         
         
-        <li id="section-41">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <p><code>buildFont</code> - internal function</p>
 <ul>
@@ -1264,7 +1397,9 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.buildFont = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">scale = <span class="hljs-number">1</span></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.buildFont = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">false</span>;
 
     <span class="hljs-keyword">let</span> font = <span class="hljs-string">&#x27;&#x27;</span>
 
@@ -1272,61 +1407,61 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
     <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.variant !== <span class="hljs-string">&#x27;normal&#x27;</span>) font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.variant}</span> `</span>;
     <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.weight !== <span class="hljs-string">&#x27;normal&#x27;</span>) font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.weight}</span> `</span>;
     <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.stretch !== <span class="hljs-string">&#x27;normal&#x27;</span>) font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.stretch}</span> `</span>;
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.sizeValue) font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.sizeValue * scale}</span><span class="hljs-subst">${<span class="hljs-built_in">this</span>.sizeMetric}</span> `</span>;
-    <span class="hljs-keyword">else</span> font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.sizeMetric}</span> `</span>;
+
+    font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.calculateSize()}</span> `</span>;
 
     font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.family}</span>`</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-42">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>Temper the font string. Submit it to a canvas context engine to see what it makes of it</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> myCell = requestCell();
-
     myCell.engine.font = font;
     font = myCell.engine.font;
-
     releaseCell(myCell);
+
+    <span class="hljs-built_in">this</span>.temperedFontString = font;
+
     <span class="hljs-keyword">return</span> font;
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-43">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
               <p><code>update</code> - <code>sets</code> items, then calls <code>buildFont</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.update = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">scale = <span class="hljs-number">1</span>, items</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.update = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
 
     <span class="hljs-keyword">if</span> (items) <span class="hljs-built_in">this</span>.set(items);
-
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.buildFont(scale);
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.getFontString();
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-44">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
@@ -1341,11 +1476,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-45">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

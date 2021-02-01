@@ -1658,7 +1658,27 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
             }
             results.push(res);
         }
-        <span class="hljs-built_in">this</span>.sourceDimension = <span class="hljs-built_in">Math</span>.max(...results);
+        <span class="hljs-built_in">this</span>.sourceDimension = <span class="hljs-built_in">Math</span>.max(...results);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-46">&#182;</a>
+              </div>
+              <p>Sanity check - the particle system, when it breaks down, can create some massive dimension values!</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> host = <span class="hljs-built_in">this</span>.currentHost || <span class="hljs-built_in">this</span>.getHost();
+        <span class="hljs-keyword">if</span> (host) {
+
+            <span class="hljs-keyword">let</span> max = <span class="hljs-built_in">Math</span>.max(...host.currentDimensions);
+            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.sourceDimension &gt; max) <span class="hljs-built_in">this</span>.sourceDimension = max;
+        }
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = lengths.length; i &lt; iz; i++) {
 
@@ -1717,11 +1737,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-46">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
               <p><code>simpleStamp</code> - Simple stamping is entirely synchronous</p>
 <ul>
@@ -1749,11 +1769,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
               <p><code>stamp</code> - All entity stamping, except for simple stamps, goes through this function, which needs to return a Promise which will resolve in due course.</p>
 <ul>
@@ -1795,11 +1815,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+                <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
               <p>We don’t need to completely reject if output is not clean</p>
 <ul>
@@ -1839,11 +1859,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
+                <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
               <h4 id="clean-functions">Clean functions</h4>
 
@@ -1852,11 +1872,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
+                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
               <p><code>cleanInput</code> - internal function called by <code>stamp</code></p>
 
@@ -1921,11 +1941,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-51">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+                <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
               <p><code>cleanOutput</code> - internal function called by <code>stamp</code></p>
 <ul>
@@ -1945,6 +1965,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         self.dirtyOutput = <span class="hljs-literal">false</span>;
 
         <span class="hljs-keyword">let</span> {sourceDimension, sourceImageData, columns, rows, struts, boundingBox} = self;
+
+        sourceDimension = <span class="hljs-built_in">Math</span>.ceil(sourceDimension);
 
         <span class="hljs-keyword">if</span> (sourceImageData &amp;&amp; rows - <span class="hljs-number">1</span> &gt; <span class="hljs-number">0</span>) {
 
@@ -1971,8 +1993,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
             outputEngine.globalAlpha = self.state.globalAlpha;
             outputEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
 
-            <span class="hljs-keyword">const</span> inputStrutHeight = sourceDimension / (rows - <span class="hljs-number">1</span>),
-                inputStrutWidth = sourceDimension / (columns - <span class="hljs-number">1</span>);
+            <span class="hljs-keyword">const</span> inputStrutHeight = <span class="hljs-built_in">parseFloat</span>((sourceDimension / (rows - <span class="hljs-number">1</span>)).toFixed(<span class="hljs-number">4</span>)),
+                inputStrutWidth = <span class="hljs-built_in">parseFloat</span>((sourceDimension / (columns - <span class="hljs-number">1</span>)).toFixed(<span class="hljs-number">4</span>));
 
             <span class="hljs-keyword">let</span> topStruts, baseStruts,
                 maxLen, tStep, bStep, iStep, xtStep, ytStep, xbStep, ybStep, tx, ty, bx, by, sx, sy,
@@ -1985,7 +2007,7 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
                 baseStruts = struts[r + <span class="hljs-number">1</span>];
 
                 <span class="hljs-keyword">for</span> (c = <span class="hljs-number">0</span>, cz = columns - <span class="hljs-number">1</span>; c &lt; cz; c++) {
-                    
+
                     <span class="hljs-keyword">let</span> [ltx, lty, rtx, rty, tLen] = topStruts[c];
                     <span class="hljs-keyword">let</span> [lbx, lby, rbx, rby, bLen] = baseStruts[c];
 
@@ -2018,9 +2040,27 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
                         stripAngle = <span class="hljs-built_in">Math</span>.atan2(yLen, xLen) + halfPi;
 
                         outputEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, tx, ty);
-                        outputEngine.rotate(stripAngle);
+                        outputEngine.rotate(stripAngle);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-53">&#182;</a>
+              </div>
+              <p>Safari bugfix because we fall foul of of the Safari source-out-of-bounds bug</p>
+<ul>
+<li><a href="https://stackoverflow.com/questions/35500999/cropping-with-drawimage-not-working-in-safari">Stack Overflow question identifying the issue</a></li>
+</ul>
 
-                        outputEngine.drawImage(inputCanvas, sx, sy, <span class="hljs-number">1</span>, inputStrutHeight, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, stripLength);
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                        <span class="hljs-keyword">let</span> testHeight = (sy + inputStrutHeight &gt; sourceDimension) ? sourceDimension - sy : inputStrutHeight;
+
+                        outputEngine.drawImage(inputCanvas, sx, sy, <span class="hljs-number">1</span>, testHeight, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, stripLength);
                     }
                 }
             }
@@ -2059,11 +2099,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-52">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+                <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
               <p><code>regularStamp</code> - internal function called by <code>stamp</code></p>
 
@@ -2087,11 +2127,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-53">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
               <p><code>regularStampSynchronousActions</code> - internal function called by <code>regularStamp</code></p>
 
@@ -2114,11 +2154,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-54">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
               <h5 id="stamp-methods">Stamp methods</h5>
 <p>These ‘method’ functions stamp the Mesh entity onto the canvas context supplied to them in the <code>engine</code> argument.</p>
@@ -2128,11 +2168,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-55">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
               <p><code>fill</code></p>
 
@@ -2146,11 +2186,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-56">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+                <a class="pilcrow" href="#section-58">&#182;</a>
               </div>
               <p><code>draw</code></p>
 
@@ -2164,11 +2204,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-57">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
+                <a class="pilcrow" href="#section-59">&#182;</a>
               </div>
               <p><code>drawAndFill</code></p>
 
@@ -2184,11 +2224,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-58">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
+                <a class="pilcrow" href="#section-60">&#182;</a>
               </div>
               <p><code>fillAndDraw</code></p>
 
@@ -2204,11 +2244,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-59">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
+                <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
               <p><code>drawThenFill</code></p>
 
@@ -2223,11 +2263,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-60">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+                <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
               <p><code>fillThenDraw</code></p>
 
@@ -2242,11 +2282,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-61">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+                <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
               <p><code>clear</code></p>
 
@@ -2283,11 +2323,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-62">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
+                <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
               <p><code>none</code></p>
 
@@ -2298,11 +2338,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-63">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
+                <a class="pilcrow" href="#section-65">&#182;</a>
               </div>
               <p>These <strong>stroke</strong> and <strong>fill</strong> functions handle most of the stuff that the method functions require to stamp the Mesh entity onto a canvas cell.</p>
 
@@ -2311,11 +2351,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-64">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
+                <a class="pilcrow" href="#section-66">&#182;</a>
               </div>
               <p><code>doStroke</code></p>
 
@@ -2330,11 +2370,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-65">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+                <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
               <p><code>doFill</code></p>
 <ul>
@@ -2372,11 +2412,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-66">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
+                <a class="pilcrow" href="#section-68">&#182;</a>
               </div>
               <h4 id="collision-functionality">Collision functionality</h4>
 
@@ -2385,11 +2425,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-67">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
+                <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
               <p><code>checkHit</code></p>
 <ul>
@@ -2455,41 +2495,14 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-68">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
-              </div>
-              <h4 id="factory">Factory</h4>
-<pre><code><span class="hljs-keyword">let</span> myMesh = scrawl.makeMesh({</code></pre>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-69">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
-              </div>
-              <pre><code>name: <span class="hljs-string">&#x27;display-mesh&#x27;</span>,</code></pre>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-70">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-70">&#182;</a>
               </div>
-              <pre><code>net: <span class="hljs-string">&#x27;test-net&#x27;</span>,
-<span class="hljs-attr">source</span>: <span class="hljs-string">&#x27;my-flower&#x27;</span>,</code></pre>
+              <h4 id="factory">Factory</h4>
+<pre><code><span class="hljs-keyword">let</span> myMesh = scrawl.makeMesh({</code></pre>
 
             </div>
             
@@ -2502,9 +2515,7 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
-              <pre><code>lineWidth: <span class="hljs-number">2</span>,
-<span class="hljs-attr">lineJoin</span>: <span class="hljs-string">&#x27;round&#x27;</span>,
-<span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;orange&#x27;</span>,</code></pre>
+              <pre><code>name: <span class="hljs-string">&#x27;display-mesh&#x27;</span>,</code></pre>
 
             </div>
             
@@ -2517,7 +2528,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-72">&#182;</a>
               </div>
-              <pre><code>method: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,</code></pre>
+              <pre><code>net: <span class="hljs-string">&#x27;test-net&#x27;</span>,
+<span class="hljs-attr">source</span>: <span class="hljs-string">&#x27;my-flower&#x27;</span>,</code></pre>
 
             </div>
             
@@ -2529,6 +2541,34 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-73">&#182;</a>
+              </div>
+              <pre><code>lineWidth: <span class="hljs-number">2</span>,
+<span class="hljs-attr">lineJoin</span>: <span class="hljs-string">&#x27;round&#x27;</span>,
+<span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;orange&#x27;</span>,</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-74">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-74">&#182;</a>
+              </div>
+              <pre><code>method: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-75">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-75">&#182;</a>
               </div>
               <pre><code>onEnter: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-built_in">this</span>.set({ <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">6</span> }) },
 <span class="hljs-attr">onLeave</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-built_in">this</span>.set({ <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span> }) },</code></pre>
@@ -2546,11 +2586,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-74">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-74">&#182;</a>
+                <a class="pilcrow" href="#section-76">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

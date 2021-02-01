@@ -1,5 +1,5 @@
 // # Scrawl-canvas filters web worker
-// This eb worker code is called in a just-in-time manner; the code will not be requested from the server until a Scrawl-canvas entity, Group or Cell with a non-zero `filters` attribute is processed during the Display cycle. 
+// This web worker code is called in a just-in-time manner; the code will not be requested from the server until a Scrawl-canvas entity, Group or Cell with a non-zero `filters` attribute is processed during the Display cycle. 
 // 
 // All Scrawl-canvas filters-related image manipulation work happens in this worker code. Note that this functionality is entirely separate from the &lt;canvas> element's context engine's native `filter` functionality, which allows us to add CSS/SVG-based filters to the canvas context
 

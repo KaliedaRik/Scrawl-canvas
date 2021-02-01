@@ -919,13 +919,21 @@ canvas.set({
             
             <div class="content"><div class='highlight'><pre>scrawl.makeFilter({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
-}).clone({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;swan-mask&#x27;</span>,
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;chroma&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;chroma&#x27;</span>,
-    <span class="hljs-attr">ranges</span>: [[<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">190</span>, <span class="hljs-number">190</span>, <span class="hljs-number">190</span>]],
+    <span class="hljs-attr">actions</span>: [
+        {
+            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;threshold&#x27;</span>,
+            <span class="hljs-attr">level</span>: <span class="hljs-number">200</span>,
+            <span class="hljs-attr">low</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>],
+            <span class="hljs-attr">high</span>: [<span class="hljs-number">255</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>],
+        },
+        {
+            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;channels-to-alpha&#x27;</span>,
+            <span class="hljs-attr">includeGreen</span>: <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">includeBlue</span>: <span class="hljs-literal">false</span>,
+        },
+    ],
 });
 
 scrawl.makePicture({
@@ -944,7 +952,7 @@ scrawl.makePicture({
 
     <span class="hljs-attr">copyStartY</span>: <span class="hljs-string">&#x27;25%&#x27;</span>,
 
-    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;chroma&#x27;</span>, <span class="hljs-string">&#x27;red&#x27;</span>],
+    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;swan-mask&#x27;</span>],
 
     <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0.01</span>,
 
@@ -1229,7 +1237,7 @@ scrawl.addNativeListener(<span class="hljs-string">&#x27;click&#x27;</span>, <sp
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;test-video-time-phrase&#x27;</span>,
 
     <span class="hljs-attr">family</span>: <span class="hljs-string">&#x27;monospace&#x27;</span>,
-    <span class="hljs-attr">size</span>: <span class="hljs-string">&#x27;2em&#x27;</span>,
+    <span class="hljs-attr">size</span>: <span class="hljs-string">&#x27;1em&#x27;</span>,
     <span class="hljs-attr">weight</span>: <span class="hljs-string">&#x27;700&#x27;</span>,
 
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;1%&#x27;</span>,

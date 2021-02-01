@@ -1592,8 +1592,8 @@
 
                 currentEngine.save();
 
-                currentEngine.globalAlpha = self.state.globalAlpha;
-                currentEngine.globalCompositeOperation = self.state.globalCompositeOperation;
+                currentEngine.globalAlpha = (self.state &amp;&amp; self.state.globalAlpha) ? self.state.globalAlpha : <span class="hljs-number">1</span>;
+                currentEngine.globalCompositeOperation = (self.state &amp;&amp; self.state.globalCompositeOperation) ? self.state.globalCompositeOperation : <span class="hljs-string">&#x27;source-over&#x27;</span>;
                 
                 currentEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
 
