@@ -166,6 +166,7 @@ const buildImageGrid = function (data) {
             return workstore[name];
         }
 
+
         let grid = [],
             counter = 0;
 
@@ -369,7 +370,7 @@ const buildHorizontalBlur = function (grid, radius) {
 
                 if (c >= 0 && c < gridWidth) cellsToProcess.push(grid[y][c]);
             }
-            horizontalBlur[(y * gridHeight) + x] = cellsToProcess;
+            horizontalBlur[(y * gridWidth) + x] = cellsToProcess;
         }
     }
     workstore[name] = horizontalBlur;
@@ -404,7 +405,7 @@ const buildVerticalBlur = function (grid, radius) {
 
                 if (c >= 0 && c < gridHeight) cellsToProcess.push(grid[c][x]);
             }
-            verticalBlur[(y * gridHeight) + x] = cellsToProcess;
+            verticalBlur[(y * gridWidth) + x] = cellsToProcess;
         }
     }
     workstore[name] = verticalBlur;
@@ -1442,7 +1443,6 @@ const theBigActionsObject = {
 
             if (flag) {
 
-                // TODO: for some reason Demo Particles-007 fails on this call, supplying pos values that are out of scope (too large for the grid that has been built for this filter effect) - but the other filters all seem to work fine.
                 let h = gridStore[pos];
 
                 if (h != null) {
