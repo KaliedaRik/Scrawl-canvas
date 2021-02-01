@@ -688,6 +688,9 @@ S.family = function (item) {
 // `cleanDimensionsAdditionalActions` - local overwrite
 P.cleanDimensionsAdditionalActions = function () {
 
+    this.fontAttributes.dirtyFont = true;
+    this.fontAttributes.updateMetadata(this.scale, this.lineHeight, this.getHost());
+
     if (this.dimensions[0] === 'auto') {
 
         this.buildText();
@@ -695,7 +698,6 @@ P.cleanDimensionsAdditionalActions = function () {
         let myCell = requestCell(),
             engine = myCell.engine;
 
-        this.fontAttributes.updateMetadata(this.scale, this.lineHeight, this.getHost());
         engine.font = this.fontAttributes.getFontString();
 
         this.currentDimensions[0] = Math.ceil(engine.measureText(this.currentText).width / this.scale);

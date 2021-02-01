@@ -1140,7 +1140,6 @@ const buildFilterWorker = function () {
 
 const releaseFilterWorker = function (f) {
     filterPool.push(f);
-    // console.log(filterPool.length)
 };
 
 const actionFilterWorker = function (worker, items) {
