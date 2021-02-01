@@ -82,10 +82,6 @@
       <li>Drag and drop the element across the stack canvas, to check that element's sensors are correctly positioned and the artefact collision detection works as expected</li>
       <li>Vary the element's attributes (handle, offset, 3d-rotation, scale) to make sure its sensors correctly account for these changes</li>
     </ul>
-
-    <p><b>Note:</b> there is currently a very annoying, intermittent error which will often occur on first load. While the DOM element positions itself correctly (thanks to a temporary fix for a different bug), it fails get the message across to all the canvas entitys using it as a pivot that its position has corrected. This issue seems to be a consequence of the margin padding set on the Stack element (which has CSS styling <i>"margin: 0 auto;"</i>) - when that is removed from the stack, the element and its pivoting entitys all align correctly on first display. Needs to be fixed.</p>
-
-    <p>For details of the other persistent bug affecting this demo, see demo DOM-013.</p>
     <p><a href="../docs/demo/dom-015.html">Annotated code</a></p>
   </div>
 
