@@ -1,5 +1,5 @@
 // # Demo Filters 011 
-// Canvas engine filter strings (based on CSS filters)
+// Filter parameters: chromakey
 
 // [Run code](../../demo/filters-011.html)
 import scrawl from '../source/scrawl.js';
@@ -9,9 +9,29 @@ const canvas = scrawl.library.canvas.mycanvas;
 
 scrawl.importDomImage('.flowers');
 
+canvas.setBase({
+    backgroundColor: 'red',
+})
 
-// Create the target entitys
-const piccy = scrawl.makePicture({
+
+// Create the filter
+// + Chroma filters can have more than one range; each range array should be added to the `ranges` attribute
+const myFilter = scrawl.makeFilter({
+
+    name: 'chromakey',
+    method: 'chromakey',
+
+    red: 0,
+    green: 127,
+    blue: 0,
+
+    opaqueAt: 1,
+    transparentAt: 0,
+});
+
+
+// Create the target entity
+scrawl.makePicture({
 
     name: 'base-piccy',
 
@@ -24,20 +44,8 @@ const piccy = scrawl.makePicture({
     copyHeight: '100%',
 
     method: 'fill',
-});
 
-const text = scrawl.makePhrase({
-
-    name: 'demo-text',
-    text: 'Hello world',
-    font: 'bold 70px sans-serif',
-    start: ['center', 'center'],
-    handle: ['center', 'center'],
-    lineHeight: 0.5,
-    fillStyle: 'aliceblue',
-    strokeStyle: 'red',
-    lineWidth: 3,
-    method: 'fillThenDraw',
+    filters: ['chromakey'],
 });
 
 
@@ -49,13 +57,21 @@ let report = function () {
         testTime, testNow,
         testMessage = document.querySelector('#reportmessage');
 
+    let col = document.querySelector('#color'),
+        trans = document.querySelector('#transparentAt'),
+        opaq = document.querySelector('#opaqueAt'),
+        opacity = document.querySelector('#opacity');
+
     return function () {
 
         testNow = Date.now();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
+    Key color: ${col.value}
+    Transparent at: ${trans.value}, Opaque at: ${opaq.value}
+    Opacity: ${opacity.value}`;
     };
 }();
 
@@ -70,65 +86,48 @@ const demoAnimation = scrawl.makeRender({
 
 
 // #### User interaction
-// No additional work required in the Javascript file to create the CSS filters; these are defined as Strings in the HTML select &lt;option> elements, and will be set on the target entitys as part of the form control user interaction below.
-// 
-// ```
-// <select class="controlItem" id="filter">
-//     <option value="none">none</option>
-//     <option value="blur(6px)">blur(6px)</option>
-//     <option value="brightness(0.4)">brightness(0.4)</option>
-//     <option value="contrast(200%)">contrast(200%)</option>
-//     <option value="drop-shadow(4px 4px 4px blue)">drop-shadow(4px 4px 4px blue)</option>
-//     <option value="grayscale(100%)">grayscale(100%)</option>
-//     <option value="hue-rotate(90deg)">hue-rotate(90deg)</option>
-//     <option value="invert(75%)">invert(75%)</option>
-//     <option value="opacity(25%)">opacity(25%)</option>
-//     <option value="saturate(30%)">saturate(30%)</option>
-//     <option value="sepia(100%)">sepia(100%)</option>
-// </select>
-// ```
+// Setup form observer functionality
+const interpretColors = function () {
 
-let filterTarget = piccy,
-    filterString = 'none';
+    const converter = scrawl.makeColor({
+        name: 'converter',
+    });
 
-// Setup form functionality
-let updateTarget = (e) => {
+    const color = document.querySelector('#color');
 
-    e.preventDefault();
-    e.returnValue = false;
+    return function () {
 
-    let val = e.target.value;
+        converter.convert(color.value);
 
-    if (val) {
-
-        piccy.set({ filter: 'none'});
-        text.set({ filter: 'none'});
-        canvas.setBase({ filter: 'none'});
-
-        if (val === 'picture') filterTarget = piccy;
-        else if (val === 'phrase') filterTarget = text;
-        else if (val === 'cell') filterTarget = canvas.base;
-
-        filterTarget.set({ filter: filterString });
+        myFilter.set({
+            red: converter.r,
+            green: converter.g,
+            blue: converter.b,
+        });
     }
-};
-scrawl.addNativeListener(['input', 'change'], updateTarget, '#target');
+}();
+scrawl.addNativeListener(['input', 'change'], interpretColors, '.controlItem');
 
-let updateFilter = (e) => {
+scrawl.observeAndUpdate({
 
-    e.preventDefault();
-    e.returnValue = false;
+    event: ['input', 'change'],
+    origin: '.controlItem',
 
-    if (e.target && e.target.value) {
+    target: myFilter,
 
-        filterString = e.target.value;
-        filterTarget.set({ filter: filterString });
-    }
-};
-scrawl.addNativeListener(['input', 'change'], updateFilter, '#filter');
+    useNativeListener: true,
+    preventDefault: true,
 
-document.querySelector('#filter').options.selectedIndex = 0;
-document.querySelector('#target').options.selectedIndex = 0;
+    updates: {
+        transparentAt: ['transparentAt', 'float'],
+        opaqueAt: ['opaqueAt', 'float'],
+        opacity: ['opacity', 'float'],
+    },
+});
+
+
+// Setup form
+document.querySelector('#color').value = '#007700';
 
 
 // #### Development and testing

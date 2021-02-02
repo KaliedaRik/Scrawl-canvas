@@ -1,7 +1,6 @@
-
 // # Scrawl-canvas
 //
-// #### Version 8.3.4 - 6 Jan 2021
+// #### Version 8.4.0 - 2 Feb 2021
 //
 // ---------------------------------------------------------------------------------
 // The MIT License (MIT)
@@ -162,8 +161,18 @@ import {
 
 
 import { 
+    makeMesh,
+} from './factory/mesh.js';
+
+
+import { 
     makeNet,
 } from './factory/net.js';
+
+
+import { 
+    makeNoise,
+} from './factory/noise.js';
 
 
 import { 
@@ -416,8 +425,16 @@ export default {
     makeLoom,
 
 
+    // factory/mesh.js
+    makeMesh,
+
+
     // factory/net.js
     makeNet,
+
+
+    // factory/noise.js
+    makeNoise,
 
 
     // factory/oval.js

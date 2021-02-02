@@ -38,7 +38,7 @@
 
 // #### Imports
 import { constructors, animationtickers, radian } from '../core/library.js';
-import { mergeOver, pushUnique, xt, xtGet, xto, convertTime, λnull } from '../core/utilities.js';
+import { mergeOver, pushUnique, xt, xtGet, xto, convertTime, λnull, easeOutSine, easeInSine, easeOutInSine, easeOutQuad, easeInQuad, easeOutInQuad, easeOutCubic, easeInCubic, easeOutInCubic, easeOutQuart, easeInQuart, easeOutInQuart, easeOutQuint, easeInQuint, easeOutInQuint, easeOutExpo, easeInExpo, easeOutInExpo, easeOutCirc, easeInCirc, easeOutInCirc, easeOutBack, easeInBack, easeOutInBack, easeOutElastic, easeInElastic, easeOutInElastic, easeOutBounce, easeInBounce, easeOutInBounce } from '../core/utilities.js';
 
 import { makeTicker } from './ticker.js';
 
@@ -591,7 +591,159 @@ P.engineActions = {
     linear: function (start, change, position) {
 
         return start + (position * change);
-    }
+    },
+
+// The following easing functions have been taken from the [easings.net](https://easings.net/) web page: __easeOutSine, easeInSine, easeOutInSine, easeOutQuad, easeInQuad, easeOutInQuad, easeOutCubic, easeInCubic, easeOutInCubic, easeOutQuart, easeInQuart, easeOutInQuart, easeOutQuint, easeInQuint, easeOutInQuint, easeOutExpo, easeInExpo, easeOutInExpo, easeOutCirc, easeInCirc, easeOutInCirc, easeOutBack, easeInBack, easeOutInBack, easeOutElastic, easeInElastic, easeOutInElastic, easeOutBounce, easeInBounce, easeOutInBounce__
+
+    easeOutSine: function (start, change, position) {
+
+        return start + (change * easeOutSine(position));
+    }, 
+
+    easeInSine: function (start, change, position) {
+
+        return start + (change * easeInSine(position));
+    }, 
+
+    easeOutInSine: function (start, change, position) {
+
+        return start + (change * easeOutInSine(position));
+    }, 
+
+    easeOutQuad: function (start, change, position) {
+
+        return start + (change * easeOutQuad(position));
+    }, 
+
+    easeInQuad: function (start, change, position) {
+
+        return start + (change * easeInQuad(position));
+    }, 
+
+    easeOutInQuad: function (start, change, position) {
+
+        return start + (change * easeOutInQuad(position));
+    }, 
+
+    easeOutCubic: function (start, change, position) {
+
+        return start + (change * easeOutCubic(position));
+    }, 
+
+    easeInCubic: function (start, change, position) {
+
+        return start + (change * easeInCubic(position));
+    }, 
+
+    easeOutInCubic: function (start, change, position) {
+
+        return start + (change * easeOutInCubic(position));
+    }, 
+
+    easeOutQuart: function (start, change, position) {
+
+        return start + (change * easeOutQuart(position));
+    }, 
+
+    easeInQuart: function (start, change, position) {
+
+        return start + (change * easeInQuart(position));
+    }, 
+
+    easeOutInQuart: function (start, change, position) {
+
+        return start + (change * easeOutInQuart(position));
+    }, 
+
+    easeOutQuint: function (start, change, position) {
+
+        return start + (change * easeOutQuint(position));
+    }, 
+
+    easeInQuint: function (start, change, position) {
+
+        return start + (change * easeInQuint(position));
+    }, 
+
+    easeOutInQuint: function (start, change, position) {
+
+        return start + (change * easeOutInQuint(position));
+    }, 
+
+    easeOutExpo: function (start, change, position) {
+
+        return start + (change * easeOutExpo(position));
+    }, 
+
+    easeInExpo: function (start, change, position) {
+
+        return start + (change * easeInExpo(position));
+    }, 
+
+    easeOutInExpo: function (start, change, position) {
+
+        return start + (change * easeOutInExpo(position));
+    }, 
+
+    easeOutCirc: function (start, change, position) {
+
+        return start + (change * easeOutCirc(position));
+    }, 
+
+    easeInCirc: function (start, change, position) {
+
+        return start + (change * easeInCirc(position));
+    }, 
+
+    easeOutInCirc: function (start, change, position) {
+
+        return start + (change * easeOutInCirc(position));
+    }, 
+
+    easeOutBack: function (start, change, position) {
+
+        return start + (change * easeOutBack(position));
+    }, 
+
+    easeInBack: function (start, change, position) {
+
+        return start + (change * easeInBack(position));
+    }, 
+
+    easeOutInBack: function (start, change, position) {
+
+        return start + (change * easeOutInBack(position));
+    }, 
+
+    easeOutElastic: function (start, change, position) {
+
+        return start + (change * easeOutElastic(position));
+    }, 
+
+    easeInElastic: function (start, change, position) {
+
+        return start + (change * easeInElastic(position));
+    }, 
+
+    easeOutInElastic: function (start, change, position) {
+
+        return start + (change * easeOutInElastic(position));
+    }, 
+
+    easeOutBounce: function (start, change, position) {
+
+        return start + (change * easeOutBounce(position));
+    }, 
+
+    easeInBounce: function (start, change, position) {
+
+        return start + (change * easeInBounce(position));
+    }, 
+
+    easeOutInBounce: function (start, change, position) {
+
+        return start + (change * easeOutInBounce(position));
+    }, 
 };
 
 // `setDefinitionsValues` - convert `start` and `end` values into float Numbers.

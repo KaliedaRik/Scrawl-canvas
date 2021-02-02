@@ -79,6 +79,9 @@ let report = function () {
         testTime, testNow,
         testMessage = document.querySelector('#reportmessage');
 
+    let level = document.querySelector('#level'),
+        opacity = document.querySelector('#opacity');
+
     return function () {
 
         testNow = Date.now();
@@ -86,7 +89,8 @@ let report = function () {
         testTicker = testNow;
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    level: ${filter.brightness.level}`;
+    Level: ${level.value}
+    Opacity: ${opacity.value}`;
     };
 }();
 
@@ -101,13 +105,40 @@ const demoAnimation = scrawl.makeRender({
 
 
 // #### User interaction
-scrawl.addNativeListener(['input', 'change'], (e) => {
+scrawl.observeAndUpdate({
 
-    levelFilters.forEach(f => f.set({ level: parseFloat(e.target.value) }));
+    event: ['input', 'change'],
+    origin: '.controlItem',
 
-}, '#level')
+    target: filter.brightness,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+        opacity: ['opacity', 'float'],
+        level: ['level', 'float'],
+    },
+});
+
+scrawl.observeAndUpdate({
+
+    event: ['input', 'change'],
+    origin: '.controlItem',
+
+    target: filter.saturation,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+        opacity: ['opacity', 'float'],
+        level: ['level', 'float'],
+    },
+});
 
 // Setup form
+document.querySelector('#opacity').value = 1;
 document.querySelector('#level').value = 1;
 
 

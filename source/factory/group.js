@@ -22,7 +22,7 @@
 
 
 // #### Imports
-import { constructors, cell, artefact, group, entity } from '../core/library.js';
+import { constructors, cell, artefact, group, entity, asset } from '../core/library.js';
 import { mergeOver, pushUnique, removeItem } from '../core/utilities.js';
 import { scrawlCanvasHold } from '../core/document.js';
 
@@ -518,6 +518,9 @@ P.applyFilters = function (myCell) {
 
         let myimage = filterEngine.getImageData(0, 0, filterElement.width, filterElement.height),
             worker = requestFilterWorker();
+
+        // NEED TO POPULATE IMAGE FILTER ACTION OBJECTS WITH THEIR ASSET'S IMAGEDATA AT THIS POINT
+        self.preprocessFilters(self.currentFilters);
 
         actionFilterWorker(worker, {
             image: myimage,

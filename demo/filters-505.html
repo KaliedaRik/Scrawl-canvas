@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Filters 505</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    .controls {
+      grid-template-columns: 1fr 2fr 1fr 2fr 1fr 2fr;
+    }
+    img {
+      display: none;
+    }
+    canvas {
+      margin: 0 auto;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 505</h1>
+  <h2>SVG-based filter example: noise</h2>
+
+  <div class="controls">
+
+    <div class="pink label">Base freq X</div>
+    <div class="pink"><input class="controlItem baseFreq" id="bfx" type="range" min="0" max="0.5" step="0.0001" value="0.01" /></div>
+    <div class="pink label">Base freq Y</div>
+    <div class="pink"><input class="controlItem baseFreq" id="bfy" type="range" min="0" max="0.5" step="0.0001" value="0.04" /></div>
+    <div class="pink label">Octaves</div>
+    <div class="pink"><input class="controlItem" id="octaves" type="range" min="1" max="5" step="1" value="2" /></div>
+
+    <div class="blue label">Scale</div>
+    <div class="blue"><input class="controlItem" id="scale" type="range" value="20" min="0" max="200" step="1" /></div>
+
+    <div class="blue label">X channel</div>
+    <div class="blue">
+      <select class="controlItem" id="xChannelSelector">
+        <option value="R">R</option>
+        <option value="G">G</option>
+        <option value="B">B</option>
+        <option value="A">A</option>
+      </select>
+    </div>
+
+    <div class="blue label">Y channel</div>
+    <div class="blue">
+      <select class="controlItem" id="yChannelSelector">
+        <option value="R">R</option>
+        <option value="G">G</option>
+        <option value="B">B</option>
+        <option value="A">A</option>
+      </select>
+    </div>
+
+  </div>
+
+  <canvas id="mycanvas" width="400" height="400"></canvas>
+
+  <img id="iris" src="img/iris.png" class="flowers" />
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+
+    <ul>
+      <li>Create a test Picture entity</li>
+      <li>Create an SVG fractal noise filter</li>
+      <li>Apply the filter to the entity</li>
+      <li>Update the SVG filter's settings; check that they display on the entity as expected</li>
+    </ul>
+    <p><b>Known issue:</b> Webkit-based browsers (for instance, Safari) have not yet implemented the Canvas context 'filter' attribute functionality.</p>
+    <p><a href="../docs/demo/filters-505.html">Annotated code</a></p>
+  </div>
+
+  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <filter id="svg-noise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.01 0.04" result="NOISE" numOctaves="2" />
+      <feDisplacementMap in="SourceGraphic" in2="NOISE" scale="20" xChannelSelector="R" yChannelSelector="R"></feDisplacementMap>
+    </filter>
+  </svg>
+
+  <script src="filters-505.js" type="module"></script>
+
+</body>
+
+</html>

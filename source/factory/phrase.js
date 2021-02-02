@@ -571,7 +571,7 @@ S.font = function (item) {
     this.dirtyPathObject = true;
 };
 
-// __style__ - CSS `font-style` String - `normal`, `italic`
+// __style__ - CSS `font-style` String
 G.style = function () {
 
     return this.fontAttributes.get('style');
@@ -584,7 +584,7 @@ S.style = function (item) {
     this.dirtyPathObject = true;
 };
 
-// __variant__ - CSS `font-variant` String - `normal`, `small-caps`
+// __variant__ - CSS `font-variant` String
 G.variant = function () {
 
     return this.fontAttributes.get('variant');
@@ -597,7 +597,7 @@ S.variant = function (item) {
     this.dirtyPathObject = true;
 };
 
-// __weight__ - CSS `font-weight` String - `normal`, `bold`, `lighter`, `bolder`, or an integer Number (between `1` and `1000`)
+// __weight__ - CSS `font-weight` String
 G.weight = function () {
 
     return this.fontAttributes.get('weight');
@@ -610,7 +610,7 @@ S.weight = function (item) {
     this.dirtyPathObject = true;
 };
 
-// __stretch__ - CSS `font-stretch` String - `normal`
+// __stretch__ - CSS `font-stretch` String
 G.stretch = function () {
 
     return this.fontAttributes.get('stretch');
@@ -623,11 +623,7 @@ S.stretch = function (item) {
     this.dirtyPathObject = true;
 };
 
-// __size__ - CSS `font-size` String:
-// + `xx-small`, `x-small`, `small`, `medium`, `large`, `x-large`, `xx-large` 
-// + `smaller`, `larger`
-// + `120%`
-// + `1.2rem`, `12px`, etc - Scrawl-canvas will work with the following metrics: `em`, `ch`, `ex`, `rem`, `vh`, `vw`, `vmin`, `vmax`, `px`, `cm`, `mm`, `in`, `pc`, `pt`
+// __size__ - CSS `font-size` String
 G.size = function () {
 
     return this.fontAttributes.get('size');
@@ -689,7 +685,11 @@ S.family = function (item) {
 
 // #### Prototype functions
 
+// `cleanDimensionsAdditionalActions` - local overwrite
 P.cleanDimensionsAdditionalActions = function () {
+
+    this.fontAttributes.dirtyFont = true;
+    this.fontAttributes.updateMetadata(this.scale, this.lineHeight, this.getHost());
 
     if (this.dimensions[0] === 'auto') {
 
@@ -698,9 +698,9 @@ P.cleanDimensionsAdditionalActions = function () {
         let myCell = requestCell(),
             engine = myCell.engine;
 
-        engine.font = this.fontAttributes.buildFont();
+        engine.font = this.fontAttributes.getFontString();
 
-        this.currentDimensions[0] = Math.ceil(engine.measureText(this.currentText).width);
+        this.currentDimensions[0] = Math.ceil(engine.measureText(this.currentText).width / this.scale);
 
         releaseCell(myCell);
     }
@@ -794,7 +794,6 @@ P.cleanPathObject = function () {
         if (this.dirtyFont && this.fontAttributes) {
 
             this.dirtyFont = false;
-            this.fontAttributes.buildFont(this.scale);
             this.dirtyText = true;
             this.dirtyMimicDimensions = true;
             this.dirtyPositionSubscribers = true;
@@ -942,7 +941,10 @@ P.calculateTextPositions = function (mytext) {
         justify = this.justify,
         handle, handleX, handleY;
 
-    let defaultFont = fontAttributes.update(scale), 
+    fontAttributes.updateMetadata(scale, lineHeight, host);
+    glyphAttributes.updateMetadata(scale, lineHeight, host);
+
+    let defaultFont = fontAttributes.getFontString(), 
         defaultFillStyle = makeStyle(state.fillStyle), 
         defaultStrokeStyle = makeStyle(state.strokeStyle), 
         defaultSpace = this.letterSpacing * scale, 
@@ -1010,7 +1012,7 @@ P.calculateTextPositions = function (mytext) {
                 }
 
                 if (gStyle.defaults) {
-                    currentFont = glyphAttributes.update(scale, fontAttributes);
+                    currentFont = glyphAttributes.update(fontAttributes);
                     currentStrokeStyle = defaultStrokeStyle;
                     currentFillStyle = defaultFillStyle;
                     currentSpace = defaultSpace;
@@ -1062,7 +1064,7 @@ P.calculateTextPositions = function (mytext) {
 
                 if (i !== 0 && (gStyle.variant || gStyle.weight || gStyle.style || gStyle.stretch || gStyle.size || gStyle.sizeValue || gStyle.sizeMetric || gStyle.family || gStyle.font)) {
 
-                    item = glyphAttributes.update(scale, gStyle);
+                    item = glyphAttributes.update(gStyle);
                     if (item !== currentFont) {
 
                         currentFont = item;
@@ -1369,7 +1371,7 @@ P.regularStampSynchronousActions = function () {
 
             if (!this.noCanvasEngineUpdates) dest.setEngine(this);
 
-            pos = this.textPositions;
+            pos = this.textPositions || [];
 
             for (i = 0, iz = pos.length; i < iz; i++) {
 

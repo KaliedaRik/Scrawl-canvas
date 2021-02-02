@@ -250,6 +250,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-047.html">
+                  ./demo/canvas-047.js
+                </a>
+              
+                
                 <a class="source" href="component-001.html">
                   ./demo/component-001.js
                 </a>
@@ -455,6 +460,56 @@
                 </a>
               
                 
+                <a class="source" href="filters-016.html">
+                  ./demo/filters-016.js
+                </a>
+              
+                
+                <a class="source" href="filters-017.html">
+                  ./demo/filters-017.js
+                </a>
+              
+                
+                <a class="source" href="filters-018.html">
+                  ./demo/filters-018.js
+                </a>
+              
+                
+                <a class="source" href="filters-019.html">
+                  ./demo/filters-019.js
+                </a>
+              
+                
+                <a class="source" href="filters-020.html">
+                  ./demo/filters-020.js
+                </a>
+              
+                
+                <a class="source" href="filters-501.html">
+                  ./demo/filters-501.js
+                </a>
+              
+                
+                <a class="source" href="filters-502.html">
+                  ./demo/filters-502.js
+                </a>
+              
+                
+                <a class="source" href="filters-503.html">
+                  ./demo/filters-503.js
+                </a>
+              
+                
+                <a class="source" href="filters-504.html">
+                  ./demo/filters-504.js
+                </a>
+              
+                
+                <a class="source" href="filters-505.html">
+                  ./demo/filters-505.js
+                </a>
+              
+                
                 <a class="source" href="particles-001.html">
                   ./demo/particles-001.js
                 </a>
@@ -527,6 +582,11 @@
                 
                 <a class="source" href="particles-015.html">
                   ./demo/particles-015.js
+                </a>
+              
+                
+                <a class="source" href="particles-016.html">
+                  ./demo/particles-016.js
                 </a>
               
                 
@@ -672,7 +732,8 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</p
 
     <span class="hljs-keyword">let</span> lowCol = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#lowColor&#x27;</span>),
         highCol = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#highColor&#x27;</span>),
-        level = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#level&#x27;</span>);
+        level = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#level&#x27;</span>),
+        opacity = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#opacity&#x27;</span>);
 
     <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
@@ -681,9 +742,9 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</p
         testTicker = testNow;
 
         testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
-    low color: <span class="hljs-subst">${lowCol.value}</span>
-    high color: <span class="hljs-subst">${highCol.value}</span>
-    level: <span class="hljs-subst">${level.value}</span>`</span>;
+    Low color: <span class="hljs-subst">${lowCol.value}</span>, High color: <span class="hljs-subst">${highCol.value}</span>
+    Level: <span class="hljs-subst">${level.value}</span>
+    Opacity: <span class="hljs-subst">${opacity.value}</span>`</span>;
     };
 }();</pre></div></div>
             
@@ -732,6 +793,11 @@ scrawl.addNativeListener(
 
 scrawl.addNativeListener(
     [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], 
+    <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> myFilter.set({ <span class="hljs-attr">opacity</span>: <span class="hljs-built_in">parseFloat</span>(e.target.value) }), 
+    <span class="hljs-string">&#x27;#opacity&#x27;</span>);
+
+scrawl.addNativeListener(
+    [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], 
     <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
 
         converter.convert(e.target.value);
@@ -773,7 +839,8 @@ scrawl.addNativeListener(
             
             <div class="content"><div class='highlight'><pre><span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#lowColor&#x27;</span>).value = <span class="hljs-string">&#x27;#000000&#x27;</span>;
 <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#highColor&#x27;</span>).value = <span class="hljs-string">&#x27;#ffffff&#x27;</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#level&#x27;</span>).value = <span class="hljs-number">127</span>;</pre></div></div>
+<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#level&#x27;</span>).value = <span class="hljs-number">127</span>;
+<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#opacity&#x27;</span>).value = <span class="hljs-number">1</span>;</pre></div></div>
             
         </li>
         

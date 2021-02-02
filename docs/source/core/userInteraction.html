@@ -160,8 +160,18 @@
                 </a>
               
                 
+                <a class="source" href="../factory/mesh.html">
+                  ./source/factory/mesh.js
+                </a>
+              
+                
                 <a class="source" href="../factory/net.html">
                   ./source/factory/net.js
+                </a>
+              
+                
+                <a class="source" href="../factory/noise.html">
+                  ./source/factory/noise.js
                 </a>
               
                 
@@ -420,18 +430,13 @@
                 </a>
               
                 
-                <a class="source" href="../worker/filter-stringed.html">
-                  ./source/worker/filter-stringed.js
+                <a class="source" href="../worker/filter-string.html">
+                  ./source/worker/filter-string.js
                 </a>
               
                 
                 <a class="source" href="../worker/filter.html">
                   ./source/worker/filter.js
-                </a>
-              
-                
-                <a class="source" href="../worker/filter_canvas.html">
-                  ./source/worker/filter_canvas.js
                 </a>
               
             </div>
@@ -504,7 +509,8 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> trackMouse = <span class="hljs-literal">false</span>,
-    mouseChanged = <span class="hljs-literal">false</span>;</pre></div></div>
+    mouseChanged = <span class="hljs-literal">false</span>,
+    viewportChanged = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -551,6 +557,7 @@
         currentCorePosition.w = w;
         currentCorePosition.h = h;
         mouseChanged = <span class="hljs-literal">true</span>;
+        viewportChanged = <span class="hljs-literal">true</span>;
     }
 };</pre></div></div>
             
@@ -845,6 +852,18 @@
             }
         }
     }
+};
+
+<span class="hljs-keyword">const</span> updatePhraseEntitys = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> [name, ent] <span class="hljs-keyword">of</span> <span class="hljs-built_in">Object</span>.entries(library.entity)) {
+
+        <span class="hljs-keyword">if</span> (ent.type === <span class="hljs-string">&#x27;Phrase&#x27;</span>) {
+
+            ent.dirtyDimensions = <span class="hljs-literal">true</span>;
+            ent.dirtyFont = <span class="hljs-literal">true</span>;
+        }
+    }
 };</pre></div></div>
             
         </li>
@@ -920,6 +939,12 @@
 
                 mouseChanged = <span class="hljs-literal">false</span>;
                 updateUiSubscribedElements();
+            }
+
+            <span class="hljs-keyword">if</span> (viewportChanged) {
+
+                viewportChanged = <span class="hljs-literal">false</span>;
+                updatePhraseEntitys();
             }
 
             resolve(<span class="hljs-literal">true</span>);

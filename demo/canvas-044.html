@@ -21,6 +21,7 @@
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 044</h1>
   <h2>Building more complex patterns</h2>
+  <h3>The entitys are draggable</h3>
 
   <canvas id="mycanvas" width="600" height="400"></canvas>
 
@@ -30,20 +31,17 @@
     <h4>Test purpose</h4>
 
     <ul>
-      <li></li>
+      <li>STEP 1. We define a gradient, then apply it to some Blocks we create in a new canvas Cell. This gives us a more interesting gradient pattern than the default 'linear' and 'radial' gradients supplied by the Canvas API</li>
+      <li>STEP 2. Apply a Noise-based displacement filter to our pattern Cell. We can then animate this filter to make it more interesting</li>
+      <li>STEP 3. We are now in a position where we can use our Cells as pattern fills for some SC entitys.</li>
+      <li>STEP 4. If we want, we can add some color-based filters to our entitys, to give our pattern a different look.</li>
+      <li>STEP 5. There's one additional thing we can do with our Cell-based pattern - pass it into a Pattern object where we can warp and resize it. Then we can apply it to entitys via the Pattern object.</li>
     </ul>
 
     <p><a href="../docs/demo/canvas-044.html">Annotated code</a></p>
   </div>
 
   <script src="canvas-044.js" type="module"></script>
-
-  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <filter id="svg-noise">
-      <feTurbulence type="turbulence" baseFrequency="0.01 0.03" result="NOISE" numOctaves="2" />
-      <feDisplacementMap in="SourceGraphic" in2="NOISE" scale="15" xChannelSelector="R" yChannelSelector="R"></feDisplacementMap>
-    </filter>
-  </svg>
 
 </body>
 

@@ -15,43 +15,27 @@
     img {
       display: none;
     }
-    canvas {
-      margin: 0 auto;
-    }
   </style>
 </head>
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 011</h1>
-  <h2>Canvas engine filter strings (based on CSS filters)</h2>
+  <h2>Parameters for: chromakey filter</h2>
+  <h3>Where red represents the background color -<br />only shows through where pixels have been removed by the filter</h3>
 
   <div class="controls">
 
-    <div class="blue label">Filter string</div>
-    <div class="blue">
-      <select class="controlItem" id="filter">
-        <option value="none">none</option>
-        <option value="blur(6px)">blur(6px)</option>
-        <option value="brightness(0.4)">brightness(0.4)</option>
-        <option value="contrast(200%)">contrast(200%)</option>
-        <option value="drop-shadow(4px 4px 4px blue)">drop-shadow(4px 4px 4px blue)</option>
-        <option value="grayscale(100%)">grayscale(100%)</option>
-        <option value="hue-rotate(90deg)">hue-rotate(90deg)</option>
-        <option value="invert(75%)">invert(75%)</option>
-        <option value="opacity(25%)">opacity(25%)</option>
-        <option value="saturate(30%)">saturate(30%)</option>
-        <option value="sepia(100%)">sepia(100%)</option>
-      </select>
-    </div>
+    <div class="blue label">Transparent at</div>
+    <div class="blue"><input class="controlItem" id="transparentAt" type="range" value="0" min="0" max="1" step="0.01" /></div>
 
-    <div class="blue label">Apply to</div>
-    <div class="blue">
-      <select class="controlItem" id="target">
-        <option value="picture">Picture entity</option>
-        <option value="phrase">Phrase entity</option>
-        <option value="cell">Cell wrapper</option>
-      </select>
-    </div>
+    <div class="blue label">Opaque at</div>
+    <div class="blue"><input class="controlItem" id="opaqueAt" type="range" value="1" min="0" max="1" step="0.01" /></div>
+
+    <div class="green label">Key color</div>
+    <div class="green"><input class="controlItem" id="color" type="color" value="#007700" /></div>
+
+    <div class="lavender label">Opacity</div>
+    <div class="lavender"><input class="controlItem" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
 
   </div>
 
@@ -65,9 +49,9 @@
     <h4>Test purpose</h4>
 
     <ul>
-      <li>Create a test Picture entity, and a Phrase entity</li>
-      <li>Apply a set of CSS-based filter Strings to the entitys, and to the Cell</li>
-      <li>Check that the selected entity/Cell updates its display in line with the current filter String</li>
+      <li>Create a test Picture entity</li>
+      <li>Create a chromakey filter and apply it to the test entity</li>
+      <li>Update filter attributes and observe the effect they have on the entity</li>
     </ul>
 
     <p><a href="../docs/demo/filters-011.html">Annotated code</a></p>

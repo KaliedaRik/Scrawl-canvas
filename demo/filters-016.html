@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Filters 016</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    .controls {
+      grid-template-columns: 1fr 2fr 1fr 2fr;
+    }
+    img {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 016</h1>
+  <h2>Filter blend operation</h2>
+
+  <div class="controls">
+
+    <div class="yellow label">Line IN</div>
+    <div class="yellow">
+      <select class="controlItem" id="source">
+        <option value="source">source</option>
+        <option value="source-alpha">source-alpha</option>
+        <option value="star">star</option>
+        <option value="wheel">wheel</option>
+        <option value="flower">flower</option>
+      </select>
+    </div>
+
+    <div class="yellow label">Line MIX</div>
+    <div class="yellow">
+      <select class="controlItem" id="destination">
+        <option value="source">source</option>
+        <option value="source-alpha">source-alpha</option>
+        <option value="star">star</option>
+        <option value="wheel">wheel</option>
+        <option value="flower">flower</option>
+      </select>
+    </div>
+
+    <div class="yellow label">Blend operation</div>
+    <div class="yellow">
+      <select class="controlItem" id="blend">
+        <option value="normal">normal</option>
+        <option value="color-burn">color-burn</option>
+        <option value="color-dodge">color-dodge</option>
+        <option value="darken">darken</option>
+        <option value="difference">difference</option>
+        <option value="exclusion">exclusion</option>
+        <option value="hard-light">hard-light</option>
+        <option value="lighten">lighten</option>
+        <option value="lighter">lighter</option>
+        <option value="multiply">multiply</option>
+        <option value="overlay">overlay</option>
+        <option value="screen">screen</option>
+        <option value="soft-light">soft-light</option>
+        <option value="color">color</option>
+        <option value="hue">hue</option>
+        <option value="luminosity">luminosity</option>
+        <option value="saturation">saturation</option>
+      </select>
+    </div>
+
+    <div class="lavender label">Opacity</div>
+    <div class="lavender"><input class="controlItem" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
+
+    <div class="pink label">Offset - X</div>
+    <div class="pink"><input class="controlItem" id="offset-x" type="range" value="30" min="-50" max="50" step="1" /></div>
+
+    <div class="pink label">Offset - Y</div>
+    <div class="pink"><input class="controlItem" id="offset-y" type="range" value="30" min="-50" max="50" step="1" /></div>
+
+  </div>
+
+  <canvas id="mycanvas" width="400" height="400"></canvas>
+
+  <img id="iris" src="img/iris.png" class="flowers" />
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+
+    <ul>
+      <li>Create two Cells which we can use to generate images for the filter</li>
+      <li>Load an additional image from the DOM</li>
+      <li>For each of our assets, create an image filter to load the assets into the filter pipeline</li>
+      <li>Create a blend filter</li>
+      <li>Create a Block entity, using a gradient for its fill, and apply the blend filter to it</li>
+      <li>Update the filter's lineIn and lineMix attributes and note the effect</li>
+      <li>Update the blend operation, check that the choice changes the display appropriately</li>
+      <li>In particular make sure the lineMix asset moves when the filter offset values are updated</li>
+    </ul>
+
+    <p><a href="../docs/demo/filters-016.html">Annotated code</a></p>
+  </div>
+
+  <script src="filters-016.js" type="module"></script>
+
+</body>
+
+</html>

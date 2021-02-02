@@ -160,8 +160,18 @@
                 </a>
               
                 
+                <a class="source" href="../factory/mesh.html">
+                  ./source/factory/mesh.js
+                </a>
+              
+                
                 <a class="source" href="../factory/net.html">
                   ./source/factory/net.js
+                </a>
+              
+                
+                <a class="source" href="../factory/noise.html">
+                  ./source/factory/noise.js
                 </a>
               
                 
@@ -420,18 +430,13 @@
                 </a>
               
                 
-                <a class="source" href="../worker/filter-stringed.html">
-                  ./source/worker/filter-stringed.js
+                <a class="source" href="../worker/filter-string.html">
+                  ./source/worker/filter-string.js
                 </a>
               
                 
                 <a class="source" href="../worker/filter.html">
                   ./source/worker/filter.js
-                </a>
-              
-                
-                <a class="source" href="../worker/filter_canvas.html">
-                  ./source/worker/filter_canvas.js
                 </a>
               
             </div>
@@ -476,6 +481,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { λ<span class="hljs-literal">null</span>, mergeOver, pushUnique, xt, addStrings, isa_obj } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { currentGroup, scrawlCanvasHold } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/document.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { asset } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeState } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/state.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { requestCell, releaseCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/cell.js&#x27;</span>;
@@ -1585,6 +1591,9 @@
                 <span class="hljs-keyword">if</span> (worker) releaseFilterWorker(worker);
 
                 currentEngine.save();
+
+                currentEngine.globalAlpha = (self.state &amp;&amp; self.state.globalAlpha) ? self.state.globalAlpha : <span class="hljs-number">1</span>;
+                currentEngine.globalCompositeOperation = (self.state &amp;&amp; self.state.globalCompositeOperation) ? self.state.globalCompositeOperation : <span class="hljs-string">&#x27;source-over&#x27;</span>;
                 
                 currentEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
 
@@ -1770,6 +1779,21 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-59">&#182;</a>
               </div>
+              <p>NEED TO POPULATE IMAGE FILTER ACTION OBJECTS WITH THEIR ASSET’S IMAGEDATA AT THIS POINT</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                self.preprocessFilters(self.currentFilters);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-60">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-60">&#182;</a>
+              </div>
               <p>Pass control over to the web worker</p>
 
             </div>
@@ -1783,11 +1807,11 @@
         </li>
         
         
-        <li id="section-60">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+                <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
               <p>Handle the web worker response</p>
 
@@ -1815,11 +1839,11 @@
         </li>
         
         
-        <li id="section-61">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+                <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
               <p>Where no filter is required, but we still want to stash the results</p>
 
@@ -1836,11 +1860,11 @@
         </li>
         
         
-        <li id="section-62">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
+                <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
               <p><code>getCellCoverage</code> - internal helper function - calculates the box start and dimensions values for the entity on its current Cell host, to help minimize work required when applying filters to the entity output. Also used when building an image when the <code>scrawl.createImageFromEntity</code> function is invoked.</p>
 
@@ -1880,11 +1904,11 @@
         </li>
         
         
-        <li id="section-63">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
+                <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
               <p><code>simpleStamp</code> - an alternative to the <code>stamp</code> function, to get an entity to stamp its output onto a Cell.</p>
 <ul>
@@ -1910,11 +1934,11 @@
         </li>
         
         
-        <li id="section-64">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
+                <a class="pilcrow" href="#section-65">&#182;</a>
               </div>
               <h5 id="stamping-the-entity-onto-a-cell-wrapper-canvas-element">Stamping the entity onto a Cell wrapper &lt;canvas&gt; element</h5>
 <p><code>regularStampSynchronousActions</code> - this function <strong><em>coordinates the actions required</em></strong> for an entity to display its output on a Cell wrapper’s &lt;canvas&gt; element.</p>
@@ -1934,11 +1958,11 @@
         </li>
         
         
-        <li id="section-65">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+                <a class="pilcrow" href="#section-66">&#182;</a>
               </div>
               <p>Get a handle to the Cell wrapper - which needs to be assigned and checked prior to calling this function</p>
 
@@ -1956,11 +1980,11 @@
         </li>
         
         
-        <li id="section-66">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
+                <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
               <p>Get the Cell wrapper to perform required transformations on its &lt;canvas&gt; element’s 2D engine</p>
 
@@ -1971,11 +1995,11 @@
         </li>
         
         
-        <li id="section-67">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
+                <a class="pilcrow" href="#section-68">&#182;</a>
               </div>
               <p>Get the Cell wrapper to update its 2D engine’s attributes to match the entity’s requirements</p>
 
@@ -1986,11 +2010,11 @@
         </li>
         
         
-        <li id="section-68">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
+                <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
               <p>Invoke the appropriate <strong>stamping method</strong> (below)</p>
 
@@ -2003,11 +2027,11 @@
         </li>
         
         
-        <li id="section-69">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
+                <a class="pilcrow" href="#section-70">&#182;</a>
               </div>
               <h5 id="stamp-methods">Stamp methods</h5>
 <p>All actual drawing is achieved using the entity’s pre-calculated <a href="https://developer.mozilla.org/en-US/docs/Web/API/Path2D">Path2D object</a>.</p>
@@ -2017,11 +2041,11 @@
         </li>
         
         
-        <li id="section-70">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-70">&#182;</a>
+                <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
               <p><code>draw</code> - stroke the entity outline with the entity’s <code>strokeStyle</code> color, gradient or pattern - including shadow</p>
 
@@ -2035,11 +2059,11 @@
         </li>
         
         
-        <li id="section-71">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-71">&#182;</a>
+                <a class="pilcrow" href="#section-72">&#182;</a>
               </div>
               <p><code>fill</code> - fill the entity with the entity’s <code>fillStyle</code> color, gradient or pattern - including shadow</p>
 
@@ -2053,11 +2077,11 @@
         </li>
         
         
-        <li id="section-72">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-72">&#182;</a>
+                <a class="pilcrow" href="#section-73">&#182;</a>
               </div>
               <p><code>drawAndFill</code> - stroke the entity’s outline, remove shadow, then fill it</p>
 
@@ -2075,11 +2099,11 @@
         </li>
         
         
-        <li id="section-73">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-73">&#182;</a>
+                <a class="pilcrow" href="#section-74">&#182;</a>
               </div>
               <p><code>fillAndDraw</code> - fill the entity’s outline, remove shadow, then stroke it</p>
 
@@ -2098,11 +2122,11 @@
         </li>
         
         
-        <li id="section-74">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-74">&#182;</a>
+                <a class="pilcrow" href="#section-75">&#182;</a>
               </div>
               <p><code>drawThenFill</code> - stroke the entity’s outline, then fill it (shadow applied twice)</p>
 
@@ -2119,11 +2143,11 @@
         </li>
         
         
-        <li id="section-75">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-75">&#182;</a>
+                <a class="pilcrow" href="#section-76">&#182;</a>
               </div>
               <p><code>fillThenDraw</code> - fill the entity’s outline, then stroke it (shadow applied twice)</p>
 
@@ -2140,11 +2164,11 @@
         </li>
         
         
-        <li id="section-76">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-76">&#182;</a>
+                <a class="pilcrow" href="#section-77">&#182;</a>
               </div>
               <p><code>clip</code> - restrict drawing activities to the entity’s enclosed area</p>
 
@@ -2158,11 +2182,11 @@
         </li>
         
         
-        <li id="section-77">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-77">&#182;</a>
+                <a class="pilcrow" href="#section-78">&#182;</a>
               </div>
               <p><code>clear</code> - remove everything that would have been covered if the entity had performed fill (including shadow)</p>
 
@@ -2181,11 +2205,11 @@
         </li>
         
         
-        <li id="section-78">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-78">&#182;</a>
+                <a class="pilcrow" href="#section-79">&#182;</a>
               </div>
               <p><code>none</code> - perform all the calculations required, but don’t perform the final stamping</p>
 
@@ -2196,11 +2220,11 @@
         </li>
         
         
-        <li id="section-79">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-79">&#182;</a>
+                <a class="pilcrow" href="#section-80">&#182;</a>
               </div>
               <p>Return the prototype</p>
 

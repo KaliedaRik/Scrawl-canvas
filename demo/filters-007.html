@@ -10,7 +10,7 @@
   <link href="css/tests.css" rel="stylesheet" />
   <style>
     .controls {
-      grid-template-columns: 1fr 2fr 1fr 2fr 1fr 2fr;
+      grid-template-columns: 1fr 2fr 1fr 2fr;
     }
     img {
       display: none;
@@ -20,36 +20,24 @@
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 007</h1>
-  <h2>Parameters for: tint filter</h2>
+  <h2>Parameters for: channels filter</h2>
 
   <div class="controls">
 
-    <div class="pink label">Red-in-Red</div>
-    <div class="pink"><input class="controlItem" id="redInRed" type="range" value="1" min="0" max="1" step="0.01" /></div>
+    <div class="pink label">Red</div>
+    <div class="pink"><input class="controlItem" id="red" type="range" value="1" min="0" max="3" step="0.01" /></div>
 
-    <div class="green label">Red-in-Green</div>
-    <div class="green"><input class="controlItem" id="redInGreen" type="range" value="0" min="0" max="1" step="0.01" /></div>
+    <div class="green label">Green</div>
+    <div class="green"><input class="controlItem" id="green" type="range" value="1" min="0" max="3" step="0.01" /></div>
 
-    <div class="blue label">Red-in-Blue</div>
-    <div class="blue"><input class="controlItem" id="redInBlue" type="range" value="0" min="0" max="1" step="0.01" /></div>
+    <div class="blue label">Blue</div>
+    <div class="blue"><input class="controlItem" id="blue" type="range" value="1" min="0" max="3" step="0.01" /></div>
 
-    <div class="pink label">Green-in-Red</div>
-    <div class="pink"><input class="controlItem" id="greenInRed" type="range" value="0" min="0" max="1" step="0.01" /></div>
+    <div class="lavender label">Alpha</div>
+    <div class="lavender"><input class="controlItem" id="alpha" type="range" value="1" min="0" max="3" step="0.01" /></div>
 
-    <div class="green label">Green-in-Green</div>
-    <div class="green"><input class="controlItem" id="greenInGreen" type="range" value="1" min="0" max="1" step="0.01" /></div>
-
-    <div class="blue label">Green-in-Blue</div>
-    <div class="blue"><input class="controlItem" id="greenInBlue" type="range" value="0" min="0" max="1" step="0.01" /></div>
-
-    <div class="pink label">Blue-in-Red</div>
-    <div class="pink"><input class="controlItem" id="blueInRed" type="range" value="0" min="0" max="1" step="0.01" /></div>
-
-    <div class="green label">Blue-in-Green</div>
-    <div class="green"><input class="controlItem" id="blueInGreen" type="range" value="0" min="0" max="1" step="0.01" /></div>
-
-    <div class="blue label">Blue-in-Blue</div>
-    <div class="blue"><input class="controlItem" id="blueInBlue" type="range" value="1" min="0" max="1" step="0.01" /></div>
+    <div class="yellow label">Opacity</div>
+    <div class="yellow"><input class="controlItem" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
 
   </div>
 
@@ -64,7 +52,7 @@
 
     <ul>
       <li>Create a test Picture entity</li>
-      <li>Create a tint filter and apply it to the test entity</li>
+      <li>Create a channels filter and apply it to the test entity</li>
       <li>Update filter attributes and observe the effect they have on the entity</li>
     </ul>
 

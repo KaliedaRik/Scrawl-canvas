@@ -160,8 +160,18 @@
                 </a>
               
                 
+                <a class="source" href="mesh.html">
+                  ./source/factory/mesh.js
+                </a>
+              
+                
                 <a class="source" href="net.html">
                   ./source/factory/net.js
+                </a>
+              
+                
+                <a class="source" href="noise.html">
+                  ./source/factory/noise.js
                 </a>
               
                 
@@ -420,18 +430,13 @@
                 </a>
               
                 
-                <a class="source" href="../worker/filter-stringed.html">
-                  ./source/worker/filter-stringed.js
+                <a class="source" href="../worker/filter-string.html">
+                  ./source/worker/filter-string.js
                 </a>
               
                 
                 <a class="source" href="../worker/filter.html">
                   ./source/worker/filter.js
-                </a>
-              
-                
-                <a class="source" href="../worker/filter_canvas.html">
-                  ./source/worker/filter_canvas.js
                 </a>
               
             </div>
@@ -1526,7 +1531,8 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
             
             <div class="content"><div class='highlight'><pre>P.fill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.source) engine.drawImage(<span class="hljs-built_in">this</span>.source, ...this.copyArray, ...this.pasteArray);
+    <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-built_in">this</span>.copyArray;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.source &amp;&amp; w &amp;&amp; h) engine.drawImage(<span class="hljs-built_in">this</span>.source, ...this.copyArray, ...this.pasteArray);
 };</pre></div></div>
             
         </li>
@@ -1546,7 +1552,8 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
 
     engine.stroke(<span class="hljs-built_in">this</span>.pathObject);
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.source) {
+    <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-built_in">this</span>.copyArray;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.source &amp;&amp; w &amp;&amp; h) {
 
         <span class="hljs-built_in">this</span>.currentHost.clearShadow();
         engine.drawImage(<span class="hljs-built_in">this</span>.source, ...this.copyArray, ...this.pasteArray);
@@ -1570,11 +1577,13 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
 
     engine.stroke(<span class="hljs-built_in">this</span>.pathObject);
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.source) {
+    <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-built_in">this</span>.copyArray;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.source &amp;&amp; w &amp;&amp; h) {
 
         <span class="hljs-built_in">this</span>.currentHost.clearShadow();
         engine.drawImage(<span class="hljs-built_in">this</span>.source, ...this.copyArray, ...this.pasteArray);
     }
+
     engine.stroke(<span class="hljs-built_in">this</span>.pathObject);
 };</pre></div></div>
             
@@ -1594,7 +1603,9 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
             <div class="content"><div class='highlight'><pre>P.drawThenFill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
 
     engine.stroke(<span class="hljs-built_in">this</span>.pathObject);
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.source) engine.drawImage(<span class="hljs-built_in">this</span>.source, ...this.copyArray, ...this.pasteArray);
+
+    <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-built_in">this</span>.copyArray;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.source &amp;&amp; w &amp;&amp; h) engine.drawImage(<span class="hljs-built_in">this</span>.source, ...this.copyArray, ...this.pasteArray);
 };</pre></div></div>
             
         </li>
@@ -1612,7 +1623,9 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
             
             <div class="content"><div class='highlight'><pre>P.fillThenDraw = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.source) engine.drawImage(<span class="hljs-built_in">this</span>.source, ...this.copyArray, ...this.pasteArray);
+    <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-built_in">this</span>.copyArray;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.source &amp;&amp; w &amp;&amp; h) engine.drawImage(<span class="hljs-built_in">this</span>.source, ...this.copyArray, ...this.pasteArray);
+
     engine.stroke(<span class="hljs-built_in">this</span>.pathObject);
 };</pre></div></div>
             

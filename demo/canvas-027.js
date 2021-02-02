@@ -170,13 +170,21 @@ scrawl.makePhrase({
 // Turn the swans pink
 scrawl.makeFilter({
 
-    name: 'red',
-    method: 'red',
-}).clone({
+    name: 'swan-mask',
 
-    name: 'chroma',
-    method: 'chroma',
-    ranges: [[0, 0, 0, 190, 190, 190]],
+    actions: [
+        {
+            action: 'threshold',
+            level: 200,
+            low: [0, 0, 0],
+            high: [255, 0, 0],
+        },
+        {
+            action: 'channels-to-alpha',
+            includeGreen: false,
+            includeBlue: false,
+        },
+    ],
 });
 
 scrawl.makePicture({
@@ -195,7 +203,7 @@ scrawl.makePicture({
 
     copyStartY: '25%',
 
-    filters: ['chroma', 'red'],
+    filters: ['swan-mask'],
 
     globalAlpha: 0.01,
 
@@ -434,7 +442,7 @@ let vtPhrase = scrawl.makePhrase({
     name: 'test-video-time-phrase',
 
     family: 'monospace',
-    size: '2em',
+    size: '1em',
     weight: '700',
 
     startX: '1%',

@@ -108,26 +108,26 @@ scrawl.makeLine({
 
 }).clone({
     name: 'secondLine',
-    startY: '22%',
-    endY: '19.2%',
+    startY: '16.5%',
+    endY: '13.7%',
 
 }).clone({
     name: 'thirdLine',
     startX: '20%',
-    startY: '18.5%',
+    startY: '14%',
     endX: '85%',
-    endY: '18.5%',
+    endY: '14%',
 });
 
 // ##### makeQuadratic factory function 
 scrawl.makeQuadratic({
     name: 'firstQuad',
     startX: '5%',
-    startY: '30.5%',
+    startY: '20%',
     controlX: '50%',
-    controlY: '22%',
+    controlY: '15%',
     endX: '95%',
-    endY: '30.5%',
+    endY: '20%',
     lineWidth: 3,
     lineCap: 'round',
     strokeStyle: 'darkseagreen',
@@ -138,28 +138,30 @@ scrawl.makeQuadratic({
 
 }).clone({
     name: 'secondQuad',
-    startX: '7%',
-    controlY: '18.5%',
-    endX: '93%',
+    startX: '12%',
+    endX: '88%',
+    startY: '21.5%',
+    endY: '21.5%',
 
 }).clone({
     name: 'thirdQuad',
-    startX: '9%',
-    controlY: '15%',
-    endX: '91%',
+    startX: '19%',
+    endX: '81%',
+    startY: '23%',
+    endY: '23%',
 });
 
 // ##### makeBezier factory function 
 scrawl.makeBezier({
     name: 'firstBezier',
     startX: '5%',
-    startY: '36%',
+    startY: '27%',
     startControlX: '40%',
-    startControlY: '31%',
+    startControlY: '22%',
     endControlX: '60%',
-    endControlY: '41%',
+    endControlY: '32%',
     endX: '95%',
-    endY: '36%',
+    endY: '27%',
     lineWidth: 3,
     lineCap: 'round',
     strokeStyle: 'linen',
@@ -171,15 +173,15 @@ scrawl.makeBezier({
 }).clone({
     name: 'secondBezier',
     startX: '7%',
-    startControlY: '25%',
-    endControlY: '47%',
+    startControlY: '18%',
+    endControlY: '36%',
     endX: '93%',
 
 }).clone({
     name: 'thirdBezier',
     startX: '9%',
-    startControlY: '19%',
-    endControlY: '53%',
+    startControlY: '14%',
+    endControlY: '40%',
     endX: '91%',
 });
 

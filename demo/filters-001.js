@@ -11,6 +11,8 @@ canvas.set({
     css: {
       display: 'inline-block',
     },
+}).setBase({
+    compileOrder: 1,
 });
 
 scrawl.importDomImage('.flowers');
@@ -21,10 +23,10 @@ let blurFilter = scrawl.makeFilter({
 
     name: 'blur',
     method: 'blur',
-    radius: 1,
-    shrinkingRadius: false,
+    radius: 10,
     includeAlpha: false,
     passes: 1,
+    step: 1,
 });
 
 
@@ -53,6 +55,11 @@ let report = function () {
         testTime, testNow,
         testMessage = document.querySelector('#reportmessage');
 
+    let radius = document.querySelector('#radius'),
+        passes = document.querySelector('#passes'),
+        step = document.querySelector('#step'),
+        opacity = document.querySelector('#opacity');
+
     return function () {
 
         testNow = Date.now();
@@ -60,8 +67,8 @@ let report = function () {
         testTicker = testNow;
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    radius: ${blurFilter.radius}
-    passes: ${blurFilter.passes}`;
+    Radius: ${radius.value}, Step: ${step.value}, Passes: ${passes.value}
+    Opacity: ${opacity.value}`;
     };
 }();
 
@@ -91,22 +98,31 @@ scrawl.observeAndUpdate({
 
         radius: ['radius', 'round'],
         passes: ['passes', 'round'],
+        step: ['step', 'round'],
 
-        shrinkingRadius: ['shrinkingRadius', 'boolean'],
+        includeRed: ['includeRed', 'boolean'],
+        includeGreen: ['includeGreen', 'boolean'],
+        includeBlue: ['includeBlue', 'boolean'],
         includeAlpha: ['includeAlpha', 'boolean'],
 
         processHorizontal: ['processHorizontal', 'boolean'],
         processVertical: ['processVertical', 'boolean'],
+
+        opacity: ['opacity', 'float'],
     },
 });
 
 // Setup form
-document.querySelector('#radius').value = 1;
+document.querySelector('#radius').value = 10;
 document.querySelector('#passes').value = 1;
-document.querySelector('#shrinkingRadius').options.selectedIndex = 0;
+document.querySelector('#step').value = 1;
+document.querySelector('#includeRed').options.selectedIndex = 1;
+document.querySelector('#includeGreen').options.selectedIndex = 1;
+document.querySelector('#includeBlue').options.selectedIndex = 1;
 document.querySelector('#includeAlpha').options.selectedIndex = 0;
 document.querySelector('#processHorizontal').options.selectedIndex = 1;
 document.querySelector('#processVertical').options.selectedIndex = 1;
+document.querySelector('#opacity').value = 1;
 
 
 // #### Development and testing

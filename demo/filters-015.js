@@ -1,59 +1,163 @@
 // # Demo Filters 015 
-// SVG-based filter example: noise
+// Using assets in the filter stream; filter compositing
 
-// [Run code](../../demo/filters-0115.html)
+// [Run code](../../demo/filters-015.html)
 import scrawl from '../source/scrawl.js';
 
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
 
+canvas.setBase({
+    compileOrder: 1,
+});
+
+// Create the assets
 scrawl.importDomImage('.flowers');
 
+canvas.buildCell({
 
-// Create the target entity
-const piccy = scrawl.makePicture({
+    name: 'star-cell',
+    dimensions: [400, 400],
+    shown: false,
+});
 
-    name: 'base-piccy',
+scrawl.makeStar({
 
-    asset: 'iris',
+    name: 'my-star',
+    group: 'star-cell',
 
-    width: '100%',
-    height: '100%',
+    radius1: 200,
+    radius2: 100,
 
-    copyWidth: '100%',
-    copyHeight: '100%',
+    roll: 60,
 
-    method: 'fill',
+    points: 4,
 
-    filter: 'url(#svg-noise)',
+    start: ['center', 'center'],
+    handle: ['center', 'center'],
+
+    fillStyle: 'blue',
+    strokeStyle: 'red',
+    lineWidth: 10,
+    method: 'fillThenDraw',
+});
+
+canvas.buildCell({
+
+    name: 'wheel-cell',
+    dimensions: [400, 400],
+    shown: false,
+});
+
+scrawl.makeWheel({
+
+    name: 'my-wheel',
+    group: 'wheel-cell',
+
+    radius: 150,
+
+    startAngle: 30,
+    endAngle: -30,
+    includeCenter: true,
+
+    start: ['center', 'center'],
+    handle: ['center', 'center'],
+
+    fillStyle: 'green',
+    strokeStyle: 'yellow',
+    lineWidth: 10,
+    method: 'fillThenDraw',
+
+    delta: {
+        roll: -0.3,
+    },
 });
 
 
-// #### SVG filter
-// We create the filter in the HTML script, not here:
-// ```
-// <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-//   <filter id="svg-noise">
-//     <feTurbulence type="fractalNoise" baseFrequency="0.01 0.04" result="NOISE" numOctaves="2" />
-//     <feDisplacementMap in="SourceGraphic" in2="NOISE" scale="20" xChannelSelector="R" yChannelSelector="R"></feDisplacementMap>
-//   </filter>
-// </svg>
-// ```
-let bfx = document.querySelector('#bfx'),
-    bfy = document.querySelector('#bfy'),
-    octaves = document.querySelector('#octaves'),
-    scale = document.querySelector('#scale'),
-    xChannelSelector = document.querySelector('#xChannelSelector'),
-    yChannelSelector = document.querySelector('#yChannelSelector'),
-    feTurbulence = document.querySelector('feTurbulence'),
-    feDisplacementMap = document.querySelector('feDisplacementMap');
+// Create the filters
+scrawl.makeFilter({
 
-bfx.value = 0.01;
-bfy.value = 0.04;
-octaves.value = 2;
-scale.value = 20;
-xChannelSelector.options.selectedIndex = 0;
-yChannelSelector.options.selectedIndex = 0;
+    name: 'star-filter',
+    method: 'image',
+
+    asset: 'star-cell',
+
+    width: 400,
+    height: 400,
+
+    copyWidth: 400,
+    copyHeight: 400,
+
+    lineOut: 'star',
+
+}).clone({
+
+    name: 'wheel-filter',
+    asset: 'wheel-cell',
+    lineOut: 'wheel',
+});
+
+scrawl.makeFilter({
+
+    name: 'flower-filter',
+    method: 'image',
+
+    asset: 'iris',
+
+    width: 200,
+    height: 200,
+    
+    copyX: '25%',
+    copyY: 100,
+    copyWidth: '50%',
+    copyHeight: 200,
+
+    lineOut: 'flower',
+});
+
+let composeFilter = scrawl.makeFilter({
+
+    name: 'block-filter',
+    method: 'compose',
+
+    lineIn: 'star',
+    lineMix: 'source',
+
+    offsetX: 30,
+    offsetY: 30,
+
+    compose: 'source-over',
+});
+
+// Display the filter in a Block entity
+scrawl.makeGradient({
+    name: 'linear',
+    endX: '100%',
+})
+.updateColor(0, 'blue')
+.updateColor(495, 'red')
+.updateColor(500, 'yellow')
+.updateColor(505, 'red')
+.updateColor(999, 'green');
+
+scrawl.makeBlock({
+
+    name: 'display-block',
+    start: ['center', 'center'],
+    handle: ['center', 'center'],
+    dimensions: ['90%', '90%'],
+    roll: -20,
+
+    lineWidth: 10,
+    fillStyle: 'linear',
+    lockFillStyleToEntity: true,
+    strokeStyle: 'coral',
+    method: 'fillThenDraw',
+
+    // Load in the three image filters, then the compose filter to combine two of them
+    // + the results display in a Block entity!
+    filters: ['star-filter', 'wheel-filter', 'flower-filter', 'block-filter'],
+});
 
 
 // #### Scene animation
@@ -64,6 +168,10 @@ let report = function () {
         testTime, testNow,
         testMessage = document.querySelector('#reportmessage');
 
+    let ox = document.querySelector('#offset-x'),
+        oy = document.querySelector('#offset-y'),
+        opacity = document.querySelector('#opacity');
+
     return function () {
 
         testNow = Date.now();
@@ -71,11 +179,8 @@ let report = function () {
         testTicker = testNow;
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-
-<filter id="svg-noise">
-  <feTurbulence type="fractalNoise" baseFrequency="${bfx.value} ${bfy.value}" result="NOISE" numOctaves="${octaves.value}" />
-  <feDisplacementMap in="SourceGraphic" in2="NOISE" scale="${scale.value}" xChannelSelector="${xChannelSelector.value}" yChannelSelector="${yChannelSelector.value}"></feDisplacementMap>
-</filter>`;
+    Offset - x: ${ox.value}, y: ${oy.value}
+    Opacity: ${opacity.value}`;
     };
 }();
 
@@ -90,21 +195,35 @@ const demoAnimation = scrawl.makeRender({
 
 
 // #### User interaction
-// Setup form functionality
-let baseFrequency = () => feTurbulence.setAttribute('baseFrequency', `${bfx.value} ${bfy.value}`);
-scrawl.addNativeListener(['input', 'change'], baseFrequency, '.baseFreq');
+// Setup form observer functionality
+scrawl.observeAndUpdate({
 
-let numOctaves = () => feTurbulence.setAttribute('numOctaves', octaves.value);
-scrawl.addNativeListener(['input', 'change'], numOctaves, '#octaves');
+    event: ['input', 'change'],
+    origin: '.controlItem',
 
-let dmScale = () => feDisplacementMap.setAttribute('scale', scale.value);
-scrawl.addNativeListener(['input', 'change'], dmScale, '#scale');
+    target: composeFilter,
 
-let dmX = () => feDisplacementMap.setAttribute('xChannelSelector', xChannelSelector.value);
-scrawl.addNativeListener(['input', 'change'], dmX, '#xChannelSelector');
+    useNativeListener: true,
+    preventDefault: true,
 
-let dmY = () => feDisplacementMap.setAttribute('yChannelSelector', yChannelSelector.value);
-scrawl.addNativeListener(['input', 'change'], dmY, '#yChannelSelector');
+    updates: {
+
+        source: ['lineIn', 'raw'],
+        destination: ['lineMix', 'raw'],
+        composite: ['compose', 'raw'],
+        opacity: ['opacity', 'float'],
+        'offset-x': ['offsetX', 'round'],
+        'offset-y': ['offsetY', 'round'],
+    },
+});
+
+// Setup form
+document.querySelector('#source').options.selectedIndex = 2;
+document.querySelector('#destination').options.selectedIndex = 0;
+document.querySelector('#composite').options.selectedIndex = 0;
+document.querySelector('#opacity').value = 1;
+document.querySelector('#offset-x').value = 30;
+document.querySelector('#offset-y').value = 30;
 
 
 // #### Development and testing

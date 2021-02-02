@@ -18,7 +18,8 @@ const uiSubscribedElements = [];
 
 // Local boolean flags. 
 let trackMouse = false,
-    mouseChanged = false;
+    mouseChanged = false,
+    viewportChanged = false;
 
 
 // `Exported object` (to modules and the scrawl object). The __currentCorePosition__ object holds the __global__ mouse cursor position, alongside browser view dimensions and scroll position
@@ -43,6 +44,7 @@ const resizeAction = function (e) {
         currentCorePosition.w = w;
         currentCorePosition.h = h;
         mouseChanged = true;
+        viewportChanged = true;
     }
 };
 
@@ -209,6 +211,18 @@ const updateUiSubscribedElement = function (art) {
     }
 };
 
+const updatePhraseEntitys = function () {
+
+    for (const [name, ent] of Object.entries(library.entity)) {
+
+        if (ent.type === 'Phrase') {
+
+            ent.dirtyDimensions = true;
+            ent.dirtyFont = true;
+        }
+    }
+};
+
 // Internal functions that get triggered when setting a DOM-based artefact's `trackHere` attribute. They add/remove an event listener to the artefact's domElement.
 const addLocalMouseMoveListener = function (wrapper) {
 
@@ -259,6 +273,12 @@ const coreListenersTracker = makeAnimation({
 
                 mouseChanged = false;
                 updateUiSubscribedElements();
+            }
+
+            if (viewportChanged) {
+
+                viewportChanged = false;
+                updatePhraseEntitys();
             }
 
             resolve(true);

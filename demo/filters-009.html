@@ -20,15 +20,56 @@
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 009</h1>
-  <h2>Parameters for: chroma filter</h2>
+  <h2>Parameters for: pixelate filter</h2>
 
   <div class="controls">
 
-    <div class="green label">Low color</div>
-    <div class="green"><input class="controlItem" id="lowColor" type="color" value="#000000" /></div>
+    <div class="yellow label">Tile Width</div>
+    <div class="yellow"><input class="controlItem" id="tile_width" type="range" value="10" min="1" max="100" step="1" /></div>
 
-    <div class="green label">High color</div>
-    <div class="green"><input class="controlItem" id="highColor" type="color" value="#003200" /></div>
+    <div class="yellow label">Tile Height</div>
+    <div class="yellow"><input class="controlItem" id="tile_height" type="range" value="10" min="1" max="100" step="1" /></div>
+
+    <div class="yellow label">Offset X</div>
+    <div class="yellow"><input class="controlItem" id="offset_x" type="range" value="0" min="0" max="100" step="1" /></div>
+
+    <div class="yellow label">Offset Y</div>
+    <div class="yellow"><input class="controlItem" id="offset_y" type="range" value="0" min="0" max="100" step="1" /></div>
+
+    <div class="pink label">Include red</div>
+    <div class="pink">
+      <select class="controlItem" id="includeRed">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="green label">Include green</div>
+    <div class="green">
+      <select class="controlItem" id="includeGreen">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="blue label">Include blue</div>
+    <div class="blue">
+      <select class="controlItem" id="includeBlue">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="lavender label">Include alpha</div>
+    <div class="lavender">
+      <select class="controlItem" id="includeAlpha">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="yellow label">Opacity</div>
+    <div class="yellow"><input class="controlItem" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
 
   </div>
 
@@ -43,7 +84,7 @@
 
     <ul>
       <li>Create a test Picture entity</li>
-      <li>Create a chroma filter and apply it to the test entity</li>
+      <li>Create a pixelate filter and apply it to the test entity</li>
       <li>Update filter attributes and observe the effect they have on the entity</li>
     </ul>
 

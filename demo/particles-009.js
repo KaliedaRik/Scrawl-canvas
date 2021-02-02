@@ -36,34 +36,6 @@ scrawl.makeFilter({
     weights: [-1, -1, 0, -1, 1, 1, 0, 1, 1],
 });
 
-scrawl.makeFilter({
-    name: 'venetianBlinds',
-    method: 'userDefined',
-    level: 9,
-
-    userDefined: `
-        let i, iz, j, jz,
-            level = filter.level || 6,
-            halfLevel = level / 2,
-            yw, transparent, pos;
-
-        for (i = localY, iz = localY + localHeight; i < iz; i++) {
-
-            transparent = (i % level > halfLevel) ? true : false;
-
-            if (transparent) {
-
-                yw = (i * iWidth) + 3;
-                
-                for (j = localX, jz = localX + localWidth; j < jz; j ++) {
-
-                    pos = yw + (j * 4);
-                    data[pos] = 0;
-                }
-            }
-        }`,
-});
-
 
 // For this Demo, we are creating a sheet and pinning its top row to a rail. This is the rail.
 scrawl.makeLine({

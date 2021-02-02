@@ -8,9 +8,11 @@ import scrawl from '../source/scrawl.js'
 // #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
+scrawl.importDomImage('.map');
+
 canvas.set({
     fit: 'fill',
-    backgroundColor: 'lightgray',
+    backgroundColor: 'beige',
     css: {
         border: '1px solid black'
     }
@@ -105,8 +107,13 @@ let wheel2 = wheel1.clone({
 
 // Define filters - need to test them all, plus some user-defined filters
 
-// __Grayscale__ filter
+// __Gray__ filter
 scrawl.makeFilter({
+    name: 'gray',
+    method: 'gray',
+
+// __Grayscale__ filter
+}).clone({
     name: 'grayscale',
     method: 'grayscale',
 
@@ -164,6 +171,25 @@ scrawl.makeFilter({
 }).clone({
     name: 'yellow',
     method: 'yellow',
+
+// __Edge detect__ filter
+}).clone({
+    name: 'edgeDetect',
+    method: 'edgeDetect',
+
+// __Sharpen__ filter
+}).clone({
+    name: 'sharpen',
+    method: 'sharpen',
+});
+
+// __Emboss__ filter
+scrawl.makeFilter({
+    name: 'emboss',
+    method: 'emboss',
+    angle: 225,
+    strength: 10,
+    tolerance: 50,
 });
 
 // __Chroma__ (green screen) filter
@@ -230,6 +256,25 @@ scrawl.makeFilter({
     blueInBlue: 0.4,
 });
 
+// __Offset__ filter
+scrawl.makeFilter({
+    name: 'offset',
+    method: 'offset',
+    offsetX: 12,
+    offsetY: 12,
+    opacity: 0.5,
+});
+
+// __Offset Channels__ filter
+scrawl.makeFilter({
+    name: 'offsetChannels',
+    method: 'offsetChannels',
+    offsetRedX: -12,
+    offsetGreenY: 12,
+    offsetBlueX: 3,
+    offsetBlueY: -3,
+});
+
 // __Pixellate__ filter
 scrawl.makeFilter({
     name: 'pixelate',
@@ -244,10 +289,21 @@ scrawl.makeFilter({
 scrawl.makeFilter({
     name: 'blur',
     method: 'blur',
-    radius: 20,
-    shrinkingRadius: true,
-    includeAlpha: true,
-    passes: 3,
+    radius: 6,
+    passes: 2,
+});
+
+// __AreaAlpha__ filter
+scrawl.makeFilter({
+    name: 'areaAlpha',
+    method: 'areaAlpha',
+    tileWidth: 20,
+    tileHeight: 20,
+    gutterWidth: 20,
+    gutterHeight: 20,
+    offsetX: 8,
+    offsetY: 8,
+    areaAlphaLevels: [255, 0, 0, 255],
 });
 
 // __Matrix__ filter
@@ -263,44 +319,111 @@ scrawl.makeFilter({
     weights: [-1, -1, -1, -1, 0, -1, -1, -1, 0, 1, -1, -1, 0, 1, 1, -1, 0, 1, 1, 1, 0, 1, 1, 1, 1],
 });
 
-// First user-defined filter
-let myUDF = scrawl.makeFilter({
-    name: 'totalRed',
-    method: 'userDefined',
-
-    userDefined: `
-        for (let i = 0, iz = cache.length; i < iz; i++) {
-
-            data[cache[i]] = 255;
-        }`,
+// __ChannelLevels__ filter
+scrawl.makeFilter({
+    name: 'channelLevels',
+    method: 'channelLevels',
+    red: [50, 200],
+    green: [60, 220, 150],
+    blue: [40, 180],
+    alpha: [],
 });
 
-// Second user-defined filter (cloned)
-myUDF.clone({
-    name: 'venetianBlinds',
-    level: 9,
+scrawl.makeFilter({
+    name: 'chromakey',
+    method: 'chromakey',
+    red: 0,
+    green: 127,
+    blue: 0,
+    opaqueAt: 0.7,
+    transparentAt: 0.5,
+});
 
-    userDefined: `
-        let i, iz, j, jz,
-            level = filter.level || 6,
-            halfLevel = level / 2,
-            yw, transparent, pos;
+scrawl.makeFilter({
+    name: 'dropShadow',
+    actions: [
+        {
+            action: 'blur',
+            lineIn: 'source-alpha',
+            lineOut: 'shadow',
+            radius: 2, 
+            passes: 2, 
+            includeRed: false, 
+            includeGreen: false, 
+            includeBlue: false, 
+            includeAlpha: true, 
+        },
+        {
+            action: 'compose',
+            lineIn: 'source',
+            lineMix: 'shadow',
+            offsetX: 6,
+            offsetY: 6,
+        }
+    ],
+});
 
-        for (i = localY, iz = localY + localHeight; i < iz; i++) {
+scrawl.makeFilter({
+    name: 'redBorder',
+    actions: [
+        {
+            action: 'blur',
+            lineIn: 'source-alpha',
+            lineOut: 'shadow',
+            radius: 3,
+            passes: 2, 
+            includeRed: false, 
+            includeGreen: false, 
+            includeBlue: false, 
+            includeAlpha: true, 
+        },
+        {
+            action: 'binary',
+            lineIn: 'shadow',
+            lineOut: 'shadow',
+            alpha: 1, 
+        },
+        {
+            action: 'flood',
+            lineIn: 'shadow',
+            lineOut: 'red-flood',
+            red: 255,
+        },
+        {
+            action: 'compose',
+            lineIn: 'shadow',
+            lineMix: 'red-flood',
+            lineOut: 'colorized',
+            compose: 'destination-in',
+        },
+        {
+            action: 'compose',
+            lineIn: 'source',
+            lineMix: 'colorized',
+        }
+    ],
+});
 
-            transparent = (i % level > halfLevel) ? true : false;
-
-            if (transparent) {
-
-                yw = (i * iWidth) + 3;
-                
-                for (j = localX, jz = localX + localWidth; j < jz; j ++) {
-
-                    pos = yw + (j * 4);
-                    data[pos] = 0;
-                }
-            }
-        }`,
+scrawl.makeFilter({
+    name: 'noise',
+    actions: [
+        {
+            action: 'process-image',
+            asset: 'perlin',
+            width: 500,
+            height: 500,
+            copyWidth: 500,
+            copyHeight: 500,
+            lineOut: 'map',
+        },
+        {
+            action: 'displace',
+            lineMix: 'map',
+            scaleX: 20,
+            scaleY: 30,
+            transparentEdges: true,
+        }
+    ],
 });
 
 

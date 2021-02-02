@@ -340,7 +340,7 @@ scrawl.makePhrase({
 
     text: 'HELLO!',
     font: 'bold 120px serif',
-    lineHeight: 0.7,
+    lineHeight: 1,
 });
 
 const canvasThreePostInitialization = function () {

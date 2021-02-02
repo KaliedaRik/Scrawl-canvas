@@ -1,5 +1,5 @@
 // # Demo Filters 014 
-// SVG-based filter example: duotone
+// Filter parameters: areaAlpha
 
 // [Run code](../../demo/filters-014.html)
 import scrawl from '../source/scrawl.js';
@@ -10,8 +10,24 @@ const canvas = scrawl.library.canvas.mycanvas;
 scrawl.importDomImage('.flowers');
 
 
+// Create the filter
+const myFilter = scrawl.makeFilter({
+
+    name: 'areaAlpha',
+    method: 'areaAlpha',
+
+    tileWidth: 10,
+    tileHeight: 10,
+    gutterWidth: 10,
+    gutterHeight: 10,
+    offsetX: 0,
+    offsetY: 0,
+    areaAlphaLevels: [255, 255, 0, 0],
+});
+
+
 // Create the target entity
-const piccy = scrawl.makePicture({
+scrawl.makePicture({
 
     name: 'base-piccy',
 
@@ -25,32 +41,8 @@ const piccy = scrawl.makePicture({
 
     method: 'fill',
 
-    filter: 'url(#svg-duotone)',
+    filters: ['areaAlpha'],
 });
-
-
-// #### SVG filter
-// We create the filter in the HTML script, not here:
-// ```
-// <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-//   <filter id="svg-duotone">
-//     <feColorMatrix type="matrix" values=".33 .33 .33 0 0
-//       .33 .33 .33 0 0
-//       .33 .33 .33 0 0
-//        0   0   0  1 0">
-//     </feColorMatrix>
-
-//     <feComponentTransfer color-interpolation-filters="sRGB">
-//       <feFuncR type="table" tableValues=".996 0.984"></feFuncR>
-//       <feFuncG type="table" tableValues=".125 0.941"></feFuncG>
-//       <feFuncB type="table" tableValues=".552 0.478"></feFuncB>
-//     </feComponentTransfer>
-//   </filter>
-// </svg>
-// ```
-let feFuncR = document.querySelector('feFuncR'),
-    feFuncG = document.querySelector('feFuncG'),
-    feFuncB = document.querySelector('feFuncB');
 
 
 // #### Scene animation
@@ -61,6 +53,18 @@ let report = function () {
         testTime, testNow,
         testMessage = document.querySelector('#reportmessage');
 
+    let tile_width = document.querySelector('#tile_width'),
+        tile_height = document.querySelector('#tile_height'),
+        gutter_width = document.querySelector('#gutter_width'),
+        gutter_height = document.querySelector('#gutter_height'),
+        alpha_0 = document.querySelector('#alpha_0'),
+        alpha_1 = document.querySelector('#alpha_1'),
+        alpha_2 = document.querySelector('#alpha_2'),
+        alpha_3 = document.querySelector('#alpha_3'),
+        offset_x = document.querySelector('#offset_x'),
+        offset_y = document.querySelector('#offset_y'),
+        opacity = document.querySelector('#opacity');
+
     return function () {
 
         testNow = Date.now();
@@ -68,16 +72,11 @@ let report = function () {
         testTicker = testNow;
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-
-<filter id="svg-duotone">
-  <feColorMatrix type="matrix" values=".33 .33 .33 0 0 .33 .33 .33 0 0 .33 .33 .33 0 0 0 0 0 1 0"></feColorMatrix>
-
-  <feComponentTransfer color-interpolation-filters="sRGB">
-    <feFuncR type="discrete" tableValues="${feFuncR.getAttribute('tableValues')}" />
-    <feFuncG type="discrete" tableValues="${feFuncG.getAttribute('tableValues')}" />
-    <feFuncB type="discrete" tableValues="${feFuncB.getAttribute('tableValues')}" />
-  </feComponentTransfer>
-</filter>`;
+    Tile dimensions - width: ${tile_width.value} height: ${tile_height.value}
+    Gutter dimensions - width: ${gutter_width.value} height: ${gutter_height.value}
+    Offset - x: ${offset_x.value} y: ${offset_y.value}
+    areaAlphaLevels array: [${alpha_0.value}, ${alpha_1.value}, ${alpha_2.value}, ${alpha_3.value}]
+    Opacity: ${opacity.value}`;
     };
 }();
 
@@ -92,31 +91,54 @@ const demoAnimation = scrawl.makeRender({
 
 
 // #### User interaction
-let r1 = document.querySelector('#r1'),
-    r2 = document.querySelector('#r2');
+// Setup form observer functionality
+scrawl.observeAndUpdate({
 
-let g1 = document.querySelector('#g1'),
-    g2 = document.querySelector('#g2');
+    event: ['input', 'change'],
+    origin: '.controlItem',
 
-let b1 = document.querySelector('#b1'),
-    b2 = document.querySelector('#b2');
+    target: myFilter,
 
-r1.value = 0.996;
-r2.value = 0.984;
-g1.value = 0.125;
-g2.value = 0.941;
-b1.value = 0.552;
-b2.value = 0.478;
+    useNativeListener: true,
+    preventDefault: true,
 
-// Setup form functionality
-let updateR = () => feFuncR.setAttribute('tableValues', `${r1.value} ${r2.value}`);
-scrawl.addNativeListener(['input', 'change'], updateR, '.feFuncR');
+    updates: {
 
-let updateG = () => feFuncG.setAttribute('tableValues', `${g1.value} ${g2.value}`);
-scrawl.addNativeListener(['input', 'change'], updateG, '.feFuncG');
+        tile_width: ['tileWidth', 'round'],
+        tile_height: ['tileHeight', 'round'],
+        gutter_width: ['gutterWidth', 'round'],
+        gutter_height: ['gutterHeight', 'round'],
+        offset_x: ['offsetX', 'round'],
+        offset_y: ['offsetY', 'round'],
+        opacity: ['opacity', 'float'],
+    },
+});
 
-let updateB = () => feFuncB.setAttribute('tableValues', `${b1.value} ${b2.value}`);
-scrawl.addNativeListener(['input', 'change'], updateB, '.feFuncB');
+scrawl.addNativeListener(['input', 'change'], function (e) {
+
+    let a0 = parseInt(document.querySelector('#alpha_0').value, 10),
+        a1 = parseInt(document.querySelector('#alpha_1').value, 10),
+        a2 = parseInt(document.querySelector('#alpha_2').value, 10),
+        a3 = parseInt(document.querySelector('#alpha_3').value, 10);
+
+        myFilter.set({
+            areaAlphaLevels: [a0, a2, a1, a3],
+        });
+
+}, '.alphas');
+
+// Setup form
+document.querySelector('#tile_width').value = 10;
+document.querySelector('#tile_height').value = 10;
+document.querySelector('#gutter_width').value = 10;
+document.querySelector('#gutter_height').value = 10;
+document.querySelector('#offset_x').value = 0;
+document.querySelector('#offset_y').value = 0;
+document.querySelector('#opacity').value = 1;
+document.querySelector('#alpha_0').value = 255;
+document.querySelector('#alpha_1').value = 0;
+document.querySelector('#alpha_2').value = 255;
+document.querySelector('#alpha_3').value = 0;
 
 
 // #### Development and testing

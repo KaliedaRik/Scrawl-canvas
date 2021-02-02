@@ -160,8 +160,18 @@
                 </a>
               
                 
+                <a class="source" href="../factory/mesh.html">
+                  ./source/factory/mesh.js
+                </a>
+              
+                
                 <a class="source" href="../factory/net.html">
                   ./source/factory/net.js
+                </a>
+              
+                
+                <a class="source" href="../factory/noise.html">
+                  ./source/factory/noise.js
                 </a>
               
                 
@@ -420,18 +430,13 @@
                 </a>
               
                 
-                <a class="source" href="../worker/filter-stringed.html">
-                  ./source/worker/filter-stringed.js
+                <a class="source" href="../worker/filter-string.html">
+                  ./source/worker/filter-string.js
                 </a>
               
                 
                 <a class="source" href="../worker/filter.html">
                   ./source/worker/filter.js
-                </a>
-              
-                
-                <a class="source" href="../worker/filter_canvas.html">
-                  ./source/worker/filter_canvas.js
                 </a>
               
             </div>
@@ -619,6 +624,7 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> λ<span class="hljs-literal">null</span> = <span class="hljs-function">() =&gt;</span> {};
+<span class="hljs-keyword">const</span> λfirstArg = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">a</span>) </span>{ <span class="hljs-keyword">return</span> a; };
 <span class="hljs-keyword">const</span> λ<span class="hljs-built_in">this</span> = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>; };
 <span class="hljs-keyword">const</span> λpromise = <span class="hljs-function">() =&gt;</span> <span class="hljs-built_in">Promise</span>.resolve(<span class="hljs-literal">true</span>);</pre></div></div>
             
@@ -676,11 +682,13 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>__isa_boolean__ checks to make sure the argument is a boolean</p>
+              <p><strong>interpolate</strong> clamp a value between a maximum and minimum value</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> isa_boolean = <span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> (<span class="hljs-keyword">typeof</span> item === <span class="hljs-string">&#x27;boolean&#x27;</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> interpolate = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val, min, max</span>) </span>{
+    <span class="hljs-keyword">return</span> min + val * (max - min);
+};</pre></div></div>
             
         </li>
         
@@ -691,11 +699,11 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>__isa_canvas__ checks to make sure the argument is a DOM &lt;canvas&gt; element</p>
+              <p>__isa_boolean__ checks to make sure the argument is a boolean</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> isa_canvas = <span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> (<span class="hljs-built_in">Object</span>.prototype.toString.call(item) === <span class="hljs-string">&#x27;[object HTMLCanvasElement]&#x27;</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> isa_boolean = <span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> (<span class="hljs-keyword">typeof</span> item === <span class="hljs-string">&#x27;boolean&#x27;</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -706,11 +714,11 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>__isa_dom__ checks to make sure the argument is a DOM element of some sort</p>
+              <p>__isa_canvas__ checks to make sure the argument is a DOM &lt;canvas&gt; element</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> isa_dom = <span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> (item &amp;&amp; item.querySelector &amp;&amp; item.dispatchEvent) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> isa_canvas = <span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> (<span class="hljs-built_in">Object</span>.prototype.toString.call(item) === <span class="hljs-string">&#x27;[object HTMLCanvasElement]&#x27;</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -721,11 +729,11 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>__isa_fn__ checks to make sure the argument is a JavaScript function object</p>
+              <p>__isa_dom__ checks to make sure the argument is a DOM element of some sort</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> isa_fn = <span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> (<span class="hljs-keyword">typeof</span> item === <span class="hljs-string">&#x27;function&#x27;</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> isa_dom = <span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> (item &amp;&amp; item.querySelector &amp;&amp; item.dispatchEvent) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -736,11 +744,11 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>__isa_number__ checks to make sure the argument is true number (excluding NaN)</p>
+              <p>__isa_fn__ checks to make sure the argument is a JavaScript function object</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> isa_number = <span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> (<span class="hljs-keyword">typeof</span> item != <span class="hljs-string">&#x27;undefined&#x27;</span> &amp;&amp; item.toFixed &amp;&amp; !<span class="hljs-built_in">Number</span>.isNaN(item)) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> isa_fn = <span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> (<span class="hljs-keyword">typeof</span> item === <span class="hljs-string">&#x27;function&#x27;</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -751,11 +759,11 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>__isa_obj__ checks to make sure the argument is a JavaScript Object</p>
+              <p>__isa_number__ checks to make sure the argument is true number (excluding NaN)</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> isa_obj = <span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> (<span class="hljs-built_in">Object</span>.prototype.toString.call(item) === <span class="hljs-string">&#x27;[object Object]&#x27;</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> isa_number = <span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> (<span class="hljs-keyword">typeof</span> item != <span class="hljs-string">&#x27;undefined&#x27;</span> &amp;&amp; item.toFixed &amp;&amp; !<span class="hljs-built_in">Number</span>.isNaN(item)) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -766,11 +774,11 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>__isa_quaternion__ checks to make sure the argument is a Scrawl-canvas Quaternion object</p>
+              <p>__isa_obj__ checks to make sure the argument is a JavaScript Object</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> isa_quaternion = <span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> (item &amp;&amp; item.type &amp;&amp; item.type === <span class="hljs-string">&#x27;Quaternion&#x27;</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> isa_obj = <span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> (<span class="hljs-built_in">Object</span>.prototype.toString.call(item) === <span class="hljs-string">&#x27;[object Object]&#x27;</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -780,6 +788,21 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>__isa_quaternion__ checks to make sure the argument is a Scrawl-canvas Quaternion object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> isa_quaternion = <span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> (item &amp;&amp; item.type &amp;&amp; item.type === <span class="hljs-string">&#x27;Quaternion&#x27;</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p><strong>mergeInto</strong> takes two objects and merges the attributes of one into the other. This function mutates the ‘original’ object rather than generating a third, new onject</p>
 <p>Example:</p>
@@ -805,11 +828,11 @@ scrawl.utils.mergeInto(original, additional);
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p><strong>mergeOver</strong> takes two objects and writes the attributes of one over the other. This function mutates the ‘original’ object rather than generating a third, new onject</p>
 <p>Example:</p>
@@ -835,11 +858,11 @@ scrawl.utils.mergeOver(original, additional);
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p><strong>mergeDiscard</strong> iterates over the additional object to perform a mergeOver operation, and also removing attributes from the original object where they have been set to null in the additional object</p>
 <p>Example:</p>
@@ -866,11 +889,11 @@ scrawl.utils.mergeOver(original, additional);
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p><strong>pushUnique</strong> adds a value to the end of an array, if that value is not already present in the array. This function mutates the array</p>
 <p>Example:</p>
@@ -904,11 +927,11 @@ scrawl.utils.pushUnique(myarray, <span class="hljs-string">&#x27;banana&#x27;</s
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p><strong>removeItem</strong> removes a value from an array. This function mutates the array</p>
 <p>Example:</p>
@@ -937,11 +960,11 @@ scrawl.utils.removeItem(myarray, <span class="hljs-string">&#x27;apple&#x27;</sp
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p><strong>xt</strong> checks to see if argument exists (is not ‘undefined’)</p>
 
@@ -952,11 +975,11 @@ scrawl.utils.removeItem(myarray, <span class="hljs-string">&#x27;apple&#x27;</sp
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p><strong>xta</strong> checks to make sure that all the arguments supplied to the function exist (none are ‘undefined’)</p>
 
@@ -967,11 +990,11 @@ scrawl.utils.removeItem(myarray, <span class="hljs-string">&#x27;apple&#x27;</sp
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p><strong>xtGet</strong> returns the first existing (not ‘undefined’) argument supplied to the function</p>
 
@@ -982,11 +1005,11 @@ scrawl.utils.removeItem(myarray, <span class="hljs-string">&#x27;apple&#x27;</sp
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p><strong>xto</strong> checks to make sure that at least one of the arguments supplied to the function exists (is not ‘undefined’)</p>
 
@@ -997,11 +1020,660 @@ scrawl.utils.removeItem(myarray, <span class="hljs-string">&#x27;apple&#x27;</sp
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>Seedable random numbers
+The following code has been lifted in its entirety from <a href="https://github.com/skratchdot/random-seed">https://github.com/skratchdot/random-seed</a></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-comment">/*
+ * random-seed
+ * https://github.com/skratchdot/random-seed
+ *
+ * This code was originally written by Steve Gibson and can be found here:
+ *
+ * https://www.grc.com/otg/uheprng.htm
+ *
+ * It was slightly modified for use in node, to pass jshint, and a few additional
+ * helper functions were added.
+ *
+ * Copyright (c) 2013 skratchdot
+ * Dual Licensed under the MIT license and the original GRC copyright/license
+ * included below.
+ */</span>
+<span class="hljs-comment">/*  ============================================================================
+                                    Gibson Research Corporation
+                UHEPRNG - Ultra High Entropy Pseudo-Random Number Generator
+    ============================================================================
+    LICENSE AND COPYRIGHT:  THIS CODE IS HEREBY RELEASED INTO THE PUBLIC DOMAIN
+    Gibson Research Corporation releases and disclaims ALL RIGHTS AND TITLE IN
+    THIS CODE OR ANY DERIVATIVES. Anyone may be freely use it for any purpose.
+    ============================================================================
+    This is GRC&#x27;s cryptographically strong PRNG (pseudo-random number generator)
+    for JavaScript. It is driven by 1536 bits of entropy, stored in an array of
+    48, 32-bit JavaScript variables.  Since many applications of this generator,
+    including ours with the &quot;Off The Grid&quot; Latin Square generator, may require
+    the deteriministic re-generation of a sequence of PRNs, this PRNG&#x27;s initial
+    entropic state can be read and written as a static whole, and incrementally
+    evolved by pouring new source entropy into the generator&#x27;s internal state.
+    ----------------------------------------------------------------------------
+    ENDLESS THANKS are due Johannes Baagoe for his careful development of highly
+    robust JavaScript implementations of JS PRNGs.  This work was based upon his
+    JavaScript &quot;Alea&quot; PRNG which is based upon the extremely robust Multiply-
+    With-Carry (MWC) PRNG invented by George Marsaglia. MWC Algorithm References:
+    http://www.GRC.com/otg/Marsaglia_PRNGs.pdf
+    http://www.GRC.com/otg/Marsaglia_MWC_Generators.pdf
+    ----------------------------------------------------------------------------
+    The quality of this algorithm&#x27;s pseudo-random numbers have been verified by
+    multiple independent researchers. It handily passes the fermilab.ch tests as
+    well as the &quot;diehard&quot; and &quot;dieharder&quot; test suites.  For individuals wishing
+    to further verify the quality of this algorithm&#x27;s pseudo-random numbers, a
+    256-megabyte file of this algorithm&#x27;s output may be downloaded from GRC.com,
+    and a Microsoft Windows scripting host (WSH) version of this algorithm may be
+    downloaded and run from the Windows command prompt to generate unique files
+    of any size:
+    The Fermilab &quot;ENT&quot; tests: http://fourmilab.ch/random/
+    The 256-megabyte sample PRN file at GRC: https://www.GRC.com/otg/uheprng.bin
+    The Windows scripting host version: https://www.GRC.com/otg/wsh-uheprng.js
+    ----------------------------------------------------------------------------
+    Qualifying MWC multipliers are: 187884, 686118, 898134, 1104375, 1250205,
+    1460910 and 1768863. (We use the largest one that&#x27;s &lt; 2^21)
+    ============================================================================ */</span>
+
+
+<span class="hljs-comment">/*  ============================================================================
+This is based upon Johannes Baagoe&#x27;s carefully designed and efficient hash
+function for use with JavaScript.  It has a proven &quot;avalanche&quot; effect such
+that every bit of the input affects every bit of the output 50% of the time,
+which is good.  See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
+============================================================================
+*/</span>
+<span class="hljs-keyword">var</span> Mash = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">var</span> n = <span class="hljs-number">0xefc8249d</span>;
+    <span class="hljs-keyword">var</span> mash = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">data</span>) </span>{
+        <span class="hljs-keyword">if</span> (data) {
+            data = data.toString();
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; data.length; i++) {
+                n += data.charCodeAt(i);
+                <span class="hljs-keyword">var</span> h = <span class="hljs-number">0.02519603282416938</span> * n;
+                n = h &gt;&gt;&gt; <span class="hljs-number">0</span>;
+                h -= n;
+                h *= n;
+                n = h &gt;&gt;&gt; <span class="hljs-number">0</span>;
+                h -= n;
+                n += h * <span class="hljs-number">0x100000000</span>; <span class="hljs-comment">// 2^32</span>
+            }
+            <span class="hljs-keyword">return</span> (n &gt;&gt;&gt; <span class="hljs-number">0</span>) * <span class="hljs-number">2.3283064365386963e-10</span>; <span class="hljs-comment">// 2^-32</span>
+        } <span class="hljs-keyword">else</span> {
+            n = <span class="hljs-number">0xefc8249d</span>;
+        }
+    };
+    <span class="hljs-keyword">return</span> mash;
+};
+
+<span class="hljs-keyword">var</span> uheprng = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">seed</span>) </span>{
+    <span class="hljs-keyword">return</span> (<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">var</span> o = <span class="hljs-number">48</span>; <span class="hljs-comment">// set the &#x27;order&#x27; number of ENTROPY-holding 32-bit values</span>
+        <span class="hljs-keyword">var</span> c = <span class="hljs-number">1</span>; <span class="hljs-comment">// init the &#x27;carry&#x27; used by the multiply-with-carry (MWC) algorithm</span>
+        <span class="hljs-keyword">var</span> p = o; <span class="hljs-comment">// init the &#x27;phase&#x27; (max-1) of the intermediate variable pointer</span>
+        <span class="hljs-keyword">var</span> s = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Array</span>(o); <span class="hljs-comment">// declare our intermediate variables array</span>
+        <span class="hljs-keyword">var</span> i; <span class="hljs-comment">// general purpose local</span>
+        <span class="hljs-keyword">var</span> j; <span class="hljs-comment">// general purpose local</span>
+        <span class="hljs-keyword">var</span> k = <span class="hljs-number">0</span>; <span class="hljs-comment">// general purpose local</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>when our “uheprng” is initially invoked our PRNG state is initialized from the
+browser’s own local PRNG. This is okay since although its generator might not
+be wonderful, it’s useful for establishing large startup entropy for our usage.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> mash = <span class="hljs-keyword">new</span> Mash(); <span class="hljs-comment">// get a pointer to our high-performance &quot;Mash&quot; hash</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>fill the array with initial mash hash values</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; o; i++) {
+            s[i] = mash(<span class="hljs-built_in">Math</span>.random());
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>this PRIVATE (internal access only) function is the heart of the multiply-with-carry
+(MWC) PRNG algorithm. When called it returns a pseudo-random number in the form of a
+32-bit JavaScript fraction (0.0 to &lt;1.0) it is a PRIVATE function used by the default
+[0-1] return function, and by the random ‘string(n)’ function which returns ‘n’
+characters from 33 to 126.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> rawprng = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <span class="hljs-keyword">if</span> (++p &gt;= o) {
+                p = <span class="hljs-number">0</span>;
+            }
+            <span class="hljs-keyword">var</span> t = <span class="hljs-number">1768863</span> * s[p] + c * <span class="hljs-number">2.3283064365386963e-10</span>; <span class="hljs-comment">// 2^-32</span>
+            <span class="hljs-keyword">return</span> s[p] = t - (c = t | <span class="hljs-number">0</span>);
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>this EXPORTED function is the default function returned by this library.
+The values returned are integers in the range from 0 to range-1. We first
+obtain two 32-bit fractions (from rawprng) to synthesize a single high
+resolution 53-bit prng (0 to &lt;1), then we multiply this by the caller’s
+“range” param and take the “floor” to return a equally probable integer.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> random = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">range</span>) </span>{
+            <span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.floor(range * (rawprng() + (rawprng() * <span class="hljs-number">0x200000</span> | <span class="hljs-number">0</span>) * <span class="hljs-number">1.1102230246251565e-16</span>)); <span class="hljs-comment">// 2^-53</span>
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p>this EXPORTED function ‘string(n)’ returns a pseudo-random string of
+‘n’ printable characters ranging from chr(33) to chr(126) inclusive.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        random.string = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">count</span>) </span>{
+            <span class="hljs-keyword">var</span> i;
+            <span class="hljs-keyword">var</span> s = <span class="hljs-string">&#x27;&#x27;</span>;
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; count; i++) {
+                s += <span class="hljs-built_in">String</span>.fromCharCode(<span class="hljs-number">33</span> + random(<span class="hljs-number">94</span>));
+            }
+            <span class="hljs-keyword">return</span> s;
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>this PRIVATE “hash” function is used to evolve the generator’s internal
+entropy state. It is also called by the EXPORTED addEntropy() function
+which is used to pour entropy into the PRNG.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> hash = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <span class="hljs-keyword">var</span> args = <span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-built_in">arguments</span>);
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; args.length; i++) {
+                <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; o; j++) {
+                    s[j] -= mash(args[i]);
+                    <span class="hljs-keyword">if</span> (s[j] &lt; <span class="hljs-number">0</span>) {
+                        s[j] += <span class="hljs-number">1</span>;
+                    }
+                }
+            }
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>this EXPORTED “clean string” function removes leading and trailing spaces and non-printing
+control characters, including any embedded carriage-return (CR) and line-feed (LF) characters,
+from any string it is handed. this is also used by the ‘hashstring’ function (below) to help
+users always obtain the same EFFECTIVE uheprng seeding key.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        random.cleanString = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">inStr</span>) </span>{
+            inStr = inStr.replace(<span class="hljs-regexp">/(^\s*)|(\s*$)/gi</span>, <span class="hljs-string">&#x27;&#x27;</span>); <span class="hljs-comment">// remove any/all leading spaces</span>
+            inStr = inStr.replace(<span class="hljs-regexp">/[\x00-\x1F]/gi</span>, <span class="hljs-string">&#x27;&#x27;</span>); <span class="hljs-comment">// remove any/all control characters</span>
+            inStr = inStr.replace(<span class="hljs-regexp">/\n /</span>, <span class="hljs-string">&#x27;\n&#x27;</span>); <span class="hljs-comment">// remove any/all trailing spaces</span>
+            <span class="hljs-keyword">return</span> inStr; <span class="hljs-comment">// return the cleaned up result</span>
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>this EXPORTED “hash string” function hashes the provided character string after first removing
+any leading or trailing spaces and ignoring any embedded carriage returns (CR) or Line Feeds (LF)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        random.hashString = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">inStr</span>) </span>{
+            inStr = random.cleanString(inStr);
+            mash(inStr); <span class="hljs-comment">// use the string to evolve the &#x27;mash&#x27; state</span>
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; inStr.length; i++) { <span class="hljs-comment">// scan through the characters in our string</span>
+                k = inStr.charCodeAt(i); <span class="hljs-comment">// get the character code at the location</span>
+                <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; o; j++) { <span class="hljs-comment">//    &quot;mash&quot; it into the UHEPRNG state</span>
+                    s[j] -= mash(k);
+                    <span class="hljs-keyword">if</span> (s[j] &lt; <span class="hljs-number">0</span>) {
+                        s[j] += <span class="hljs-number">1</span>;
+                    }
+                }
+            }
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>this EXPORTED function allows you to seed the random generator.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        random.seed = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">seed</span>) </span>{
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> seed === <span class="hljs-string">&#x27;undefined&#x27;</span> || seed === <span class="hljs-literal">null</span>) {
+                seed = <span class="hljs-built_in">Math</span>.random();
+            }
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> seed !== <span class="hljs-string">&#x27;string&#x27;</span>) {
+                seed = stringify(seed, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">key, value</span>) </span>{
+                    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> value === <span class="hljs-string">&#x27;function&#x27;</span>) {
+                        <span class="hljs-keyword">return</span> (value).toString();
+                    }
+                    <span class="hljs-keyword">return</span> value;
+                });
+            }
+            random.initState();
+            random.hashString(seed);
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <p>this handy exported function is used to add entropy to our uheprng at any time</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        random.addEntropy = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"> <span class="hljs-comment">/* accept zero or more arguments */</span> </span>) </span>{
+            <span class="hljs-keyword">var</span> args = [];
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-built_in">arguments</span>.length; i++) {
+                args.push(<span class="hljs-built_in">arguments</span>[i]);
+            }
+            hash((k++) + (<span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>().getTime()) + args.join(<span class="hljs-string">&#x27;&#x27;</span>) + <span class="hljs-built_in">Math</span>.random());
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <p>if we want to provide a deterministic startup context for our PRNG,
+but without directly setting the internal state variables, this allows
+us to initialize the mash hash and PRNG’s internal state before providing
+some hashing input</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        random.initState = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            mash(); <span class="hljs-comment">// pass a null arg to force mash hash to init</span>
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; o; i++) {
+                s[i] = mash(<span class="hljs-string">&#x27; &#x27;</span>); <span class="hljs-comment">// fill the array with initial mash hash values</span>
+            }
+            c = <span class="hljs-number">1</span>; <span class="hljs-comment">// init our multiply-with-carry carry</span>
+            p = o; <span class="hljs-comment">// init our phase</span>
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <p>we use this (optional) exported function to signal the JavaScript interpreter
+that we’re finished using the “Mash” hash function so that it can free up the
+local “instance variables” is will have been maintaining.  It’s not strictly
+necessary, of course, but it’s good JavaScript citizenship.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        random.done = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            mash = <span class="hljs-literal">null</span>;
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p>if we called “uheprng” with a seed value, then execute random.seed() before returning</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> seed !== <span class="hljs-string">&#x27;undefined&#x27;</span>) {
+            random.seed(seed);
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <p>Returns a random integer between 0 (inclusive) and range (exclusive)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        random.range = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">range</span>) </span>{
+            <span class="hljs-keyword">return</span> random(range);
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <p>Returns a random float between 0 (inclusive) and 1 (exclusive)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        random.random = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <span class="hljs-keyword">return</span> random(<span class="hljs-built_in">Number</span>.MAX_VALUE - <span class="hljs-number">1</span>) / <span class="hljs-built_in">Number</span>.MAX_VALUE;
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <p>Returns a random float between min (inclusive) and max (exclusive)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        random.floatBetween = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">min, max</span>) </span>{
+            <span class="hljs-keyword">return</span> random.random() * (max - min) + min;
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              <p>Returns a random integer between min (inclusive) and max (inclusive)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        random.intBetween = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">min, max</span>) </span>{
+            <span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.floor(random.random() * (max - min + <span class="hljs-number">1</span>)) + min;
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
+              <p>when our main outer “uheprng” function is called, after setting up our
+initial variables and entropic state, we return an “instance pointer”
+to the internal anonymous function which can then be used to access
+the uheprng’s various exported functions.  As with the “.done” function
+above, we should set the returned value to ‘null’ once we’re finished
+using any of these functions.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">return</span> random;
+    }());
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-46">&#182;</a>
+              </div>
+              <p>… And this code comes from <a href="https://github.com/moll/json-stringify-safe">https://github.com/moll/json-stringify-safe</a></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">stringify</span>(<span class="hljs-params">obj, replacer, spaces, cycleReplacer</span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">JSON</span>.stringify(obj, serializer(replacer, cycleReplacer), spaces)
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">serializer</span>(<span class="hljs-params">replacer, cycleReplacer</span>) </span>{
+    <span class="hljs-keyword">var</span> stack = [], keys = []
+
+    <span class="hljs-keyword">if</span> (cycleReplacer == <span class="hljs-literal">null</span>) cycleReplacer = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">key, value</span>) </span>{
+        <span class="hljs-keyword">if</span> (stack[<span class="hljs-number">0</span>] === value) <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;[Circular ~]&quot;</span>
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;[Circular ~.&quot;</span> + keys.slice(<span class="hljs-number">0</span>, stack.indexOf(value)).join(<span class="hljs-string">&quot;.&quot;</span>) + <span class="hljs-string">&quot;]&quot;</span>
+    }
+
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">key, value</span>) </span>{
+        <span class="hljs-keyword">if</span> (stack.length &gt; <span class="hljs-number">0</span>) {
+            <span class="hljs-keyword">var</span> thisPos = stack.indexOf(<span class="hljs-built_in">this</span>)
+            ~thisPos ? stack.splice(thisPos + <span class="hljs-number">1</span>) : stack.push(<span class="hljs-built_in">this</span>)
+            ~thisPos ? keys.splice(thisPos, <span class="hljs-literal">Infinity</span>, key) : keys.push(key)
+            <span class="hljs-keyword">if</span> (~stack.indexOf(value)) value = cycleReplacer.call(<span class="hljs-built_in">this</span>, key, value)
+        }
+        <span class="hljs-keyword">else</span> stack.push(value)
+
+        <span class="hljs-keyword">return</span> replacer == <span class="hljs-literal">null</span> ? value : replacer.call(<span class="hljs-built_in">this</span>, key, value)
+    }
+}
+
+<span class="hljs-keyword">const</span> seededRandomNumberGenerator = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">seed</span>) </span>{
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> uheprng(seed);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-47">&#182;</a>
+              </div>
+              <h5 id="easing-functions">Easing functions</h5>
+<p>The following easing variations come from the <a href="https://easings.net/">easings.net</a> web page</p>
+<ul>
+<li>Note: the naming convention for easing is different in Scrawl-canvas. Easing out implies a speeding up, while easing in implies a slowing down. Think of a train easing into a station, and then easing out of it again as it continues its journey. </li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> easeOutSine = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - <span class="hljs-built_in">Math</span>.cos((t * <span class="hljs-built_in">Math</span>.PI) / <span class="hljs-number">2</span>) };
+<span class="hljs-keyword">const</span> easeInSine = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.sin((t * <span class="hljs-built_in">Math</span>.PI) / <span class="hljs-number">2</span>) };
+<span class="hljs-keyword">const</span> easeOutInSine = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> -(<span class="hljs-built_in">Math</span>.cos(<span class="hljs-built_in">Math</span>.PI * t) - <span class="hljs-number">1</span>) / <span class="hljs-number">2</span> };
+
+<span class="hljs-keyword">const</span> easeOutQuad = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> t * t };
+<span class="hljs-keyword">const</span> easeInQuad = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - ((<span class="hljs-number">1</span> - t) * (<span class="hljs-number">1</span> - t)) };
+<span class="hljs-keyword">const</span> easeOutInQuad = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> t &lt; <span class="hljs-number">0.5</span> ? <span class="hljs-number">2</span> * t * t : <span class="hljs-number">1</span> - <span class="hljs-built_in">Math</span>.pow(-<span class="hljs-number">2</span> * t + <span class="hljs-number">2</span>, <span class="hljs-number">2</span>) / <span class="hljs-number">2</span> };
+
+<span class="hljs-keyword">const</span> easeOutCubic = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> t * t * t };
+<span class="hljs-keyword">const</span> easeInCubic = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - <span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">1</span> - t, <span class="hljs-number">3</span>) };
+<span class="hljs-keyword">const</span> easeOutInCubic = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> t &lt; <span class="hljs-number">0.5</span> ? <span class="hljs-number">4</span> * t * t * t : <span class="hljs-number">1</span> - <span class="hljs-built_in">Math</span>.pow(-<span class="hljs-number">2</span> * t + <span class="hljs-number">2</span>, <span class="hljs-number">3</span>) / <span class="hljs-number">2</span> };
+
+<span class="hljs-keyword">const</span> easeOutQuart = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> t * t * t * t };
+<span class="hljs-keyword">const</span> easeInQuart = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - <span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">1</span> - t, <span class="hljs-number">4</span>) };
+<span class="hljs-keyword">const</span> easeOutInQuart = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> t &lt; <span class="hljs-number">0.5</span> ? <span class="hljs-number">8</span> * t * t * t * t : <span class="hljs-number">1</span> - <span class="hljs-built_in">Math</span>.pow(-<span class="hljs-number">2</span> * t + <span class="hljs-number">2</span>, <span class="hljs-number">4</span>) / <span class="hljs-number">2</span> };
+
+<span class="hljs-keyword">const</span> easeOutQuint = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> t * t * t * t * t };
+<span class="hljs-keyword">const</span> easeInQuint = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - <span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">1</span> - t, <span class="hljs-number">5</span>) };
+<span class="hljs-keyword">const</span> easeOutInQuint = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> t &lt; <span class="hljs-number">0.5</span> ? <span class="hljs-number">16</span> * t * t * t * t * t : <span class="hljs-number">1</span> - <span class="hljs-built_in">Math</span>.pow(-<span class="hljs-number">2</span> * t + <span class="hljs-number">2</span>, <span class="hljs-number">5</span>) / <span class="hljs-number">2</span> };
+
+<span class="hljs-keyword">const</span> easeOutExpo = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> t === <span class="hljs-number">0</span> ? <span class="hljs-number">0</span> : <span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">2</span>, <span class="hljs-number">10</span> * t - <span class="hljs-number">10</span>) };
+<span class="hljs-keyword">const</span> easeInExpo = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> t === <span class="hljs-number">1</span> ? <span class="hljs-number">1</span> : <span class="hljs-number">1</span> - <span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">2</span>, -<span class="hljs-number">10</span> * t) };
+<span class="hljs-keyword">const</span> easeOutInExpo = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{
+    <span class="hljs-keyword">if</span> (t === <span class="hljs-number">0</span> || t === <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> t;
+    <span class="hljs-keyword">return</span> t &lt; <span class="hljs-number">0.5</span> ? <span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">2</span>, <span class="hljs-number">20</span> * t - <span class="hljs-number">10</span>) / <span class="hljs-number">2</span> : (<span class="hljs-number">2</span> - <span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">2</span>, -<span class="hljs-number">20</span> * t + <span class="hljs-number">10</span>)) / <span class="hljs-number">2</span>;        
+};
+
+<span class="hljs-keyword">const</span> easeOutCirc = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - <span class="hljs-built_in">Math</span>.sqrt(<span class="hljs-number">1</span> - <span class="hljs-built_in">Math</span>.pow(t, <span class="hljs-number">2</span>)) };
+<span class="hljs-keyword">const</span> easeInCirc = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.sqrt(<span class="hljs-number">1</span> - <span class="hljs-built_in">Math</span>.pow(t - <span class="hljs-number">1</span>, <span class="hljs-number">2</span>)) };
+<span class="hljs-keyword">const</span> easeOutInCirc = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> t &lt; <span class="hljs-number">0.5</span> ? (<span class="hljs-number">1</span> - <span class="hljs-built_in">Math</span>.sqrt(<span class="hljs-number">1</span> - <span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">2</span> * t, <span class="hljs-number">2</span>))) / <span class="hljs-number">2</span> : (<span class="hljs-built_in">Math</span>.sqrt(<span class="hljs-number">1</span> - <span class="hljs-built_in">Math</span>.pow(-<span class="hljs-number">2</span> * t + <span class="hljs-number">2</span>, <span class="hljs-number">2</span>)) + <span class="hljs-number">1</span>) / <span class="hljs-number">2</span> };
+
+<span class="hljs-keyword">const</span> easeOutBack = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> (<span class="hljs-number">2.70158</span> * t * t * t) - (<span class="hljs-number">1.70158</span> * t * t) };
+<span class="hljs-keyword">const</span> easeInBack = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> + (<span class="hljs-number">2.70158</span> * <span class="hljs-built_in">Math</span>.pow(t - <span class="hljs-number">1</span>, <span class="hljs-number">3</span>)) + (<span class="hljs-number">1.70158</span> * <span class="hljs-built_in">Math</span>.pow(t - <span class="hljs-number">1</span>, <span class="hljs-number">2</span>)) };
+<span class="hljs-keyword">const</span> easeOutInBack = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{
+    <span class="hljs-keyword">let</span> c1 = <span class="hljs-number">1.70158</span>, c2 = c1 * <span class="hljs-number">1.525</span>;
+    <span class="hljs-keyword">return</span> t &lt; <span class="hljs-number">0.5</span> ? (<span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">2</span> * t, <span class="hljs-number">2</span>) * ((c2 + <span class="hljs-number">1</span>) * <span class="hljs-number">2</span> * t - c2)) / <span class="hljs-number">2</span> : (<span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">2</span> * t - <span class="hljs-number">2</span>, <span class="hljs-number">2</span>) * ((c2 + <span class="hljs-number">1</span>) * (t * <span class="hljs-number">2</span> - <span class="hljs-number">2</span>) + c2) + <span class="hljs-number">2</span>) / <span class="hljs-number">2</span>;
+};
+
+<span class="hljs-keyword">const</span> easeOutElastic = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{
+    <span class="hljs-keyword">const</span> c4 = (<span class="hljs-number">2</span> * <span class="hljs-built_in">Math</span>.PI) / <span class="hljs-number">3</span>;
+    <span class="hljs-keyword">if</span> (t === <span class="hljs-number">0</span> || t === <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> t;
+    <span class="hljs-keyword">return</span> -<span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">2</span>, <span class="hljs-number">10</span> * t - <span class="hljs-number">10</span>) * <span class="hljs-built_in">Math</span>.sin((t * <span class="hljs-number">10</span> - <span class="hljs-number">10.75</span>) * c4);
+};
+
+<span class="hljs-keyword">const</span> easeInElastic = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{
+    <span class="hljs-keyword">const</span> c4 = (<span class="hljs-number">2</span> * <span class="hljs-built_in">Math</span>.PI) / <span class="hljs-number">3</span>;
+    <span class="hljs-keyword">if</span> (t === <span class="hljs-number">0</span> || t === <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> t;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">2</span>, -<span class="hljs-number">10</span> * t) * <span class="hljs-built_in">Math</span>.sin((t * <span class="hljs-number">10</span> - <span class="hljs-number">0.75</span>) * c4) + <span class="hljs-number">1</span>;
+};
+
+<span class="hljs-keyword">const</span> easeOutInElastic = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{
+    <span class="hljs-keyword">const</span> c5 = (<span class="hljs-number">2</span> * <span class="hljs-built_in">Math</span>.PI) / <span class="hljs-number">4.5</span>;
+    <span class="hljs-keyword">if</span> (t === <span class="hljs-number">0</span> || t === <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> t;
+    <span class="hljs-keyword">return</span> t &lt; <span class="hljs-number">0.5</span> ? 
+        -(<span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">2</span>, <span class="hljs-number">20</span> * t - <span class="hljs-number">10</span>) * <span class="hljs-built_in">Math</span>.sin((<span class="hljs-number">20</span> * t - <span class="hljs-number">11.125</span>) * c5)) / <span class="hljs-number">2</span> : 
+        (<span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">2</span>, -<span class="hljs-number">20</span> * t + <span class="hljs-number">10</span>) * <span class="hljs-built_in">Math</span>.sin((<span class="hljs-number">20</span> * t - <span class="hljs-number">11.125</span>) * c5)) / <span class="hljs-number">2</span> + <span class="hljs-number">1</span>;
+};
+
+<span class="hljs-keyword">const</span> easeOutBounce = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{
+    t = <span class="hljs-number">1</span> - t;
+    <span class="hljs-keyword">const</span> n1 = <span class="hljs-number">7.5625</span>, d1 = <span class="hljs-number">2.75</span>;
+    <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">1</span> / d1) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - (n1 * t * t);
+    <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">2</span> / d1) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - (n1 * (t -= <span class="hljs-number">1.5</span> / d1) * t + <span class="hljs-number">0.75</span>);
+    <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">2.5</span> / d1) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - (n1 * (t -= <span class="hljs-number">2.25</span> / d1) * t + <span class="hljs-number">0.9375</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - (n1 * (t -= <span class="hljs-number">2.625</span> / d1) * t + <span class="hljs-number">0.984375</span>);
+};
+
+<span class="hljs-keyword">const</span> easeInBounce = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{
+    <span class="hljs-keyword">const</span> n1 = <span class="hljs-number">7.5625</span>, d1 = <span class="hljs-number">2.75</span>;
+    <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">1</span> / d1) <span class="hljs-keyword">return</span> n1 * t * t;
+    <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">2</span> / d1) <span class="hljs-keyword">return</span> n1 * (t -= <span class="hljs-number">1.5</span> / d1) * t + <span class="hljs-number">0.75</span>;
+    <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">2.5</span> / d1) <span class="hljs-keyword">return</span> n1 * (t -= <span class="hljs-number">2.25</span> / d1) * t + <span class="hljs-number">0.9375</span>;
+    <span class="hljs-keyword">return</span> n1 * (t -= <span class="hljs-number">2.625</span> / d1) * t + <span class="hljs-number">0.984375</span>;
+};
+
+<span class="hljs-keyword">const</span> easeOutInBounce = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{
+    <span class="hljs-keyword">const</span> n1 = <span class="hljs-number">7.5625</span>, d1 = <span class="hljs-number">2.75</span>;
+    <span class="hljs-keyword">let</span> res;
+    <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">0.5</span>) {
+        t = <span class="hljs-number">1</span> - <span class="hljs-number">2</span> * t;
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">1</span> / d1) res = n1 * t * t;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">2</span> / d1) res = n1 * (t -= <span class="hljs-number">1.5</span> / d1) * t + <span class="hljs-number">0.75</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">2.5</span> / d1) res = n1 * (t -= <span class="hljs-number">2.25</span> / d1) * t + <span class="hljs-number">0.9375</span>;
+        <span class="hljs-keyword">else</span> res = n1 * (t -= <span class="hljs-number">2.625</span> / d1) * t + <span class="hljs-number">0.984375</span>;
+        <span class="hljs-keyword">return</span> (<span class="hljs-number">1</span> - res) / <span class="hljs-number">2</span>;
+    }
+    <span class="hljs-keyword">else</span> {
+        t = <span class="hljs-number">2</span> * t - <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">1</span> / d1) res = n1 * t * t;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">2</span> / d1) res = n1 * (t -= <span class="hljs-number">1.5</span> / d1) * t + <span class="hljs-number">0.75</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">2.5</span> / d1) res = n1 * (t -= <span class="hljs-number">2.25</span> / d1) * t + <span class="hljs-number">0.9375</span>;
+        <span class="hljs-keyword">else</span> res = n1 * (t -= <span class="hljs-number">2.625</span> / d1) * t + <span class="hljs-number">0.984375</span>;
+        <span class="hljs-keyword">return</span> (<span class="hljs-number">1</span> + res) / <span class="hljs-number">2</span>;
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 
@@ -1012,10 +1684,12 @@ scrawl.utils.removeItem(myarray, <span class="hljs-string">&#x27;apple&#x27;</sp
     convertTime,
     correctForZero,
     λ<span class="hljs-literal">null</span>,
+    λfirstArg,
     λ<span class="hljs-built_in">this</span>,
     λpromise,
     generateUuid,
     generateUniqueString,
+    interpolate,
     isa_boolean,
     isa_canvas,
     isa_dom,
@@ -1028,10 +1702,42 @@ scrawl.utils.removeItem(myarray, <span class="hljs-string">&#x27;apple&#x27;</sp
     mergeOver,
     pushUnique,
     removeItem,
+    seededRandomNumberGenerator,
     xt,
     xta,
     xtGet,
     xto, 
+
+    easeOutSine,
+    easeInSine,
+    easeOutInSine,
+    easeOutQuad,
+    easeInQuad,
+    easeOutInQuad,
+    easeOutCubic,
+    easeInCubic,
+    easeOutInCubic,
+    easeOutQuart,
+    easeInQuart,
+    easeOutInQuart,
+    easeOutQuint,
+    easeInQuint,
+    easeOutInQuint,
+    easeOutExpo,
+    easeInExpo,
+    easeOutInExpo,
+    easeOutCirc,
+    easeInCirc,
+    easeOutInCirc,
+    easeOutBack,
+    easeInBack,
+    easeOutInBack,
+    easeOutElastic,
+    easeInElastic,
+    easeOutInElastic,
+    easeOutBounce,
+    easeInBounce,
+    easeOutInBounce,
 };</pre></div></div>
             
         </li>

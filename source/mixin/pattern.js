@@ -110,7 +110,7 @@ export default function (P = {}) {
                 repeat = this.repeat,
                 engine = mycell.engine;
 
-            if (this.type === 'Cell') {
+            if (this.type === 'Cell' || this.type === 'Noise') {
 
                 source = this.element;
                 loaded = true;

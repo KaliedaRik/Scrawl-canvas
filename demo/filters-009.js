@@ -1,5 +1,5 @@
 // # Demo Filters 009 
-// Filter parameters: chroma
+// Filter parameters: pixelate
 
 // [Run code](../../demo/filters-009.html)
 import scrawl from '../source/scrawl.js';
@@ -11,13 +11,15 @@ scrawl.importDomImage('.flowers');
 
 
 // Create the filter
-// + Chroma filters can have more than one range; each range array should be added to the `ranges` attribute
 const myFilter = scrawl.makeFilter({
 
-    name: 'chroma',
-    method: 'chroma',
+    name: 'pixelate',
+    method: 'pixelate',
 
-    ranges: [[0, 0, 0, 92, 127, 92]],
+    tileWidth: 10,
+    tileHeight: 10,
+    offsetX: 0,
+    offsetY: 0,
 });
 
 
@@ -36,7 +38,7 @@ scrawl.makePicture({
 
     method: 'fill',
 
-    filters: ['chroma'],
+    filters: ['pixelate'],
 });
 
 
@@ -48,8 +50,11 @@ let report = function () {
         testTime, testNow,
         testMessage = document.querySelector('#reportmessage');
 
-    let lowCol = document.querySelector('#lowColor'),
-        highCol = document.querySelector('#highColor');
+    let tile_width = document.querySelector('#tile_width'),
+        tile_height = document.querySelector('#tile_height'),
+        offset_x = document.querySelector('#offset_x'),
+        offset_y = document.querySelector('#offset_y'),
+        opacity = document.querySelector('#opacity');
 
     return function () {
 
@@ -58,9 +63,9 @@ let report = function () {
         testTicker = testNow;
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    low color: ${lowCol.value}
-    high color: ${highCol.value}
-    range: [${myFilter.ranges}]`;
+    Tile dimensions - width: ${tile_width.value} height: ${tile_height.value}
+    Offset - x: ${offset_x.value} y: ${offset_y.value}
+    Opacity: ${opacity.value}`;
     };
 }();
 
@@ -76,49 +81,42 @@ const demoAnimation = scrawl.makeRender({
 
 // #### User interaction
 // Setup form observer functionality
-const interpretColors = function () {
+scrawl.observeAndUpdate({
 
-    const converter = scrawl.makeColor({
-        name: 'converter',
-    });
+    event: ['input', 'change'],
+    origin: '.controlItem',
 
-    const lowColor = document.querySelector('#lowColor');
-    const highColor = document.querySelector('#highColor');
+    target: myFilter,
 
-    let lowRed = 0,
-        lowGreen = 0,
-        lowBlue = 0,
-        highRed = 92,
-        highGreen = 127,
-        highBlue = 92;
+    useNativeListener: true,
+    preventDefault: true,
 
-    return function () {
+    updates: {
 
-        converter.convert(lowColor.value);
+        tile_width: ['tileWidth', 'round'],
+        tile_height: ['tileHeight', 'round'],
+        offset_x: ['offsetX', 'round'],
+        offset_y: ['offsetY', 'round'],
 
-        lowRed = converter.r;
-        lowGreen = converter.g;
-        lowBlue = converter.b;
+        includeRed: ['includeRed', 'boolean'],
+        includeGreen: ['includeGreen', 'boolean'],
+        includeBlue: ['includeBlue', 'boolean'],
+        includeAlpha: ['includeAlpha', 'boolean'],
 
-        converter.convert(highColor.value);
-
-        highRed = converter.r;
-        highGreen = converter.g;
-        highBlue = converter.b;
-
-        myFilter.set({
-
-            ranges: [[lowRed, lowGreen, lowBlue, highRed, highGreen, highBlue]],
-        })
-    }
-}();
-
-scrawl.addNativeListener(['input', 'change'], interpretColors, '.controlItem');
-
+        opacity: ['opacity', 'float'],
+    },
+});
 
 // Setup form
-document.querySelector('#lowColor').value = '#000000';
-document.querySelector('#highColor').value = '#5c7f5c';
+document.querySelector('#tile_width').value = 10;
+document.querySelector('#tile_height').value = 10;
+document.querySelector('#offset_x').value = 0;
+document.querySelector('#offset_y').value = 0;
+document.querySelector('#includeRed').options.selectedIndex = 1;
+document.querySelector('#includeGreen').options.selectedIndex = 1;
+document.querySelector('#includeBlue').options.selectedIndex = 1;
+document.querySelector('#includeAlpha').options.selectedIndex = 0;
+document.querySelector('#opacity').value = 1;
 
 
 // #### Development and testing

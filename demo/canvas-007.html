@@ -13,6 +13,9 @@
     .controls {
       grid-template-columns: 1fr 2fr 1fr 2fr;
     }
+    img {
+      display: none;
+    }
   </style>
 
 </head>
@@ -27,13 +30,20 @@
     <div class="green">
       <select class="controlItem" id="filter">
         <option value="">none</option>
+        <option value="" disabled>---</option>
+        <option value="areaAlpha">areaAlpha</option>
         <option value="blue">blue</option>
         <option value="blur">blur</option>
         <option value="brightness">brightness</option>
         <option value="channels">channels</option>
+        <option value="channelLevels">channelLevels</option>
         <option value="channelstep">channelstep</option>
         <option value="cyan">cyan</option>
         <option value="chroma">chroma</option>
+        <option value="chromakey">chromakey</option>
+        <option value="edgeDetect">edge detect</option>
+        <option value="emboss">emboss</option>
+        <option value="gray">gray</option>
         <option value="grayscale">grayscale</option>
         <option value="green">green</option>
         <option value="invert">invert</option>
@@ -43,16 +53,20 @@
         <option value="notblue">notblue</option>
         <option value="notgreen">notgreen</option>
         <option value="notred">notred</option>
+        <option value="offset">offset</option>
+        <option value="offsetChannels">offsetChannels</option>
         <option value="pixelate">pixelate</option>
         <option value="red">red</option>
         <option value="saturation">saturation</option>
         <option value="sepia">sepia</option>
+        <option value="sharpen">sharpen</option>
         <option value="tint">tint</option>
         <option value="threshold">threshold</option>
         <option value="yellow">yellow</option>
-        <option value="totalRed">User-Defined totalRed</option>
-        <option value="totalRed,pixelate">UD totalRed + pixelate</option>
-        <option value="sepia,venetianBlinds">sepia + UD venetianBlinds</option>
+        <option value="" disabled>---</option>
+        <option value="dropShadow">Drop Shadow</option>
+        <option value="noise">Noise</option>
+        <option value="redBorder">Red Borders</option>
       </select>
     </div>
 
@@ -71,7 +85,7 @@
 
   </div>
 
-  <canvas id="mycanvas" width="400" height="400"></canvas>
+  <canvas id="mycanvas" width="410" height="400"></canvas>
 
   <p id="reportmessage"></p>
 
@@ -94,6 +108,8 @@
     </ul>
     <p><a href="../docs/demo/canvas-007.html">Annotated code</a></p>
   </div>
+
+  <img id="perlin" src="img/perlin-noise-texture.png" class="map" />
 
   <script src="canvas-007.js" type="module"></script>
 

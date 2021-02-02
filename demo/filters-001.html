@@ -22,37 +22,59 @@
   <div class="controls">
     
     <div class="yellow label">Radius</div>
-    <div class="yellow"><input class="controlItem" id="radius" type="range" value="1" min="0" max="60" step="1" /></div>
+    <div class="yellow"><input class="controlItem" id="radius" type="range" value="10" min="0" max="60" step="1" /></div>
 
     <div class="yellow label">Passes</div>
     <div class="yellow"><input class="controlItem" id="passes" type="range" value="1" min="0" max="10" step="1" /></div>
 
-    <div class="blue label">Shrinking radius</div>
-    <div class="blue">
-      <select class="controlItem" id="shrinkingRadius">
+    <div class="yellow label">Step</div>
+    <div class="yellow"><input class="controlItem" id="step" type="range" value="1" min="1" max="20" step="1" /></div>
+
+    <div class="yellow label">Opacity</div>
+    <div class="yellow"><input class="controlItem" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
+
+    <div class="pink label">Include red</div>
+    <div class="pink">
+      <select class="controlItem" id="includeRed">
         <option value="0">false</option>
         <option value="1">true</option>
       </select>
     </div>
 
-    <div class="blue label">Include alpha</div>
+    <div class="green label">Include green</div>
+    <div class="green">
+      <select class="controlItem" id="includeGreen">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="blue label">Include blue</div>
     <div class="blue">
+      <select class="controlItem" id="includeBlue">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="lavender label">Include alpha</div>
+    <div class="lavender">
       <select class="controlItem" id="includeAlpha">
         <option value="0">false</option>
         <option value="1">true</option>
       </select>
     </div>
 
-    <div class="blue label">Process horizontal</div>
-    <div class="blue">
+    <div class="lavender label">Process horizontal</div>
+    <div class="lavender">
       <select class="controlItem" id="processHorizontal">
         <option value="0">false</option>
         <option value="1">true</option>
       </select>
     </div>
 
-    <div class="blue label">Process vertical</div>
-    <div class="blue">
+    <div class="lavender label">Process vertical</div>
+    <div class="lavender">
       <select class="controlItem" id="processVertical">
         <option value="0">false</option>
         <option value="1">true</option>

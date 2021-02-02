@@ -19,7 +19,6 @@ let mygradient = scrawl.makeGradient({
     name: 'gradient-1',
 
     endX: '100%',
-    // endY: '100%',
 
     paletteStart: 10,
     paletteEnd: 990,
@@ -172,10 +171,7 @@ scrawl.makePhrase({
     name: 'test-phrase-9',
 
     startX: '58%',
-    startY: '40%',
-
-    width: '65%',
-    scale: 0.65,
+    scale: 0.8,
     letterSpacing: 3,
 
     lockFillStyleToEntity: true,

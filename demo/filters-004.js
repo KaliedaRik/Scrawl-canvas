@@ -57,7 +57,8 @@ let report = function () {
 
     let lowCol = document.querySelector('#lowColor'),
         highCol = document.querySelector('#highColor'),
-        level = document.querySelector('#level');
+        level = document.querySelector('#level'),
+        opacity = document.querySelector('#opacity');
 
     return function () {
 
@@ -66,9 +67,9 @@ let report = function () {
         testTicker = testNow;
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    low color: ${lowCol.value}
-    high color: ${highCol.value}
-    level: ${level.value}`;
+    Low color: ${lowCol.value}, High color: ${highCol.value}
+    Level: ${level.value}
+    Opacity: ${opacity.value}`;
     };
 }();
 
@@ -92,6 +93,11 @@ scrawl.addNativeListener(
     ['input', 'change'], 
     (e) => myFilter.set({ level: parseFloat(e.target.value) }), 
     '#level');
+
+scrawl.addNativeListener(
+    ['input', 'change'], 
+    (e) => myFilter.set({ opacity: parseFloat(e.target.value) }), 
+    '#opacity');
 
 scrawl.addNativeListener(
     ['input', 'change'], 
@@ -125,6 +131,7 @@ scrawl.addNativeListener(
 document.querySelector('#lowColor').value = '#000000';
 document.querySelector('#highColor').value = '#ffffff';
 document.querySelector('#level').value = 127;
+document.querySelector('#opacity').value = 1;
 
 
 // #### Development and testing

@@ -48,101 +48,78 @@ P = baseMix(P);
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 let defaultAttributes = {
 
-// __font-style__
-//
-// _values:_ 
-// + `normal`, `italic`, `oblique`
-//
-// CANVAS CONTEXT ENGINE - does not handle `oblique` slope values
+// __font__ - pseudo-attribute String which gets broken down into its component parts.
+// + Once the breakdown completes the font string gets reassembled and then passed through a &lt;canvas> element's context engine to determine the actual font String that will be used by the engine. This value gets stored in the __temperedFontString__ attribute.
+
+// _font-style_ - saved in the __style__ String attribute - acceptable values are: `normal`, `italic` and `oblique`. Note that browser handling of oblique (sloped rather than explicitly italic) fonts by their respective canvas context engines is, at best, idiosyncratic.
+// + To explicitly use an oblique font design (often called 'slanted' or 'sloped'), reference the font face directly in the `family` or font strings.
     style: 'normal',
 
 
-// __font-variant__ - the standard indicates that canvas context engine should only recognise `normal` and `small-caps` values
-//
-// CANVAS CONTEXT ENGINE - complies with the standard, thus Scrawl-canvas ignores all other possible values. Do not use them in font strings:
-// + `font-variant-caps`
-// + `font-variant-numeric`
-// + `font-variant-ligatures`
-// + `font-variant-east-asian`
-// + `font-variant-alternates`
-//
-// 
+// _font-variant_ - saved in the __variant__ String attribute - the standard indicates that canvas context engine should only recognise `normal` and `small-caps` values. Do not use other possibilities (_font-variant-caps, font-variant-numeric, font-variant-ligatures, font-variant-east-asian, font-variant-alternates_) in font strings; scrawl-canvas will remove and/or ignore them when it parses the font string.
     variant: 'normal',
 
 
-// __font-weight__
-//
-// _Values:_ 
-// + `normal`, `bold`, `lighter`, `bolder`; or
-// + a number (between 1 and 1000, usually in 100 steps between 100 and 900)
-//
-// (`normal` translates to 400; `bold` translates to 700)
-//
-// CANVAS CONTEXT ENGINE - does seem to recognise both keyword and (x00) number values, but the interpretation of these values can be somewhat erratic. `normal` and `bold` keywords are generally respected and actioned as expected.
+// _font-weight_ - saved in the __weight__ String attribute - acceptable values are: `normal`, `bold`, `lighter`, `bolder`; or a number (100. 200, 300, ... 900). Bold is generally the equivalent of 700, and normal is 400; lighter/bolder are values relative to the &lt;canvas> element's computed font weight. Note that browser handling of font weight requirements by their respective canvas context engines is not entirely standards compliant - for instance Safari browsers will generally ignore weight assertions in font strings.
+// + To explicitly use a light, bold or heavy font design, reference the font face directly in the `family` or font strings.
     weight: 'normal',
 
 
 
-// __font-stretch__
-//
-// _Values:_ 
-// + `normal` (default)
-// + `semi-condensed`, `condensed`, `extra-condensed`, `ultra-condensed`
-// + `semi-expanded`, `expanded`, `extra-expanded`, `ultra-expanded`
-//
-// We ignore number% values (permitted values are 50% - 200%) because the context engine only accepts a single font string and the syntax requirements for that font string are that "font-stretch may only be a single keyword value"
-//
-// CANVAS CONTEXT ENGINE - doesn't seem to recognise font-stretch values (for Garamond), but doesn't choke on their presence either
+// __font-stretch__ - saved in the __stretch__ String attribute acceptable values are: `normal`, `semi-condensed`, `condensed`, `extra-condensed`, `ultra-condensed`, `semi-expanded`, `expanded`, `extra-expanded`, `ultra-expanded`. Browser support for these values by the &lt;canvas> element's context engine is, for the most part, non-existant.
+// + To explicitly use a condensed or stretched font design, reference the font face directly in the `family` or font strings.
     stretch: 'normal',
 
 
-// __font-size__
+// _font-size_ - broken into two parts and saved in the __sizeValue__ Number and __sizeMetric__ String, each of which can be set separately. The W3C HTML Canvas 2D Context Recommendation states: _"with the 'font-size' component converted to CSS pixels"_. However, Scrawl-canvas makes every effort to respect and interpret non-px-based font-size requests.
+// + Note that these pixel values are representative of the &lt;canvas> element's intrinsic drawing area dimensions, not of any such measure modified by CSS dimension rules (width, height, scale, skew, etc) applied to the canvas.
 //
-// Standard says: _"with the 'font-size' component converted to CSS pixels"_ 
-// + TODO: hoping this means that canvas font will do this for us, rather than having to convert in code - if not, extract it by sticking an interim css style against the internal &lt;div> to get computed value?
+// Length values relative to some intrinsic propertly of the font - Scrawl-canvas will not attempt to interpret the following, instead treating them as some fixed proportion of the &lt;canvas> element's computed font size:
+// + `1em` is the &lt;canvas> element's computed font size
+// + `1rem` is the document root (&lt;html>) element's computed font size
+// + `1lh` is the &lt;canvas> element's computed font size multiplied by the entity's line height value
+// + `1rlh` is the document root (&lt;html>) element's computed font size multiplied by the entity's line height value
+// + `1ex` is ≈ '0.5em'
+// + `1cap`, `1ch`, `1ic` are all ≈ '1em'
 //
-// Values can be: 
+// Length percentage values, with calculation based on the &lt;canvas> element's computed font size: 
+// + `120%` = '1.2em'
 //
-// _Absolute or relative string values:_
-// + `xx-small`, `x-small`, `small`, `medium`, `large`, `x-large`, `xx-large` 
-// + `smaller`, `larger`
+// Non-numerical values (in the Fonts standards, 'absolute-size' and 'relative-size' keywords) will calculate a size based on the &lt;canvas> element's computed font size: 
+// + `xx-small` = 60% of the computed font size
+// + `x-small` = 75% of the computed font size
+// + `small` = 89% of the computed font size
+// + `medium` = 100% of the computed font size
+// + `large` = 120% of the computed font size
+// + `x-large` = 150% of the computed font size
+// + `xx-large` = 200% of the computed font size
+// + `xxx-large` = 300% of the computed font size
+// + `smaller` = 80% of the computed font size
+// + `larger` = 130% of the computed font size
 //
-// _Length values:_ 
-// + `1.2em`, `1.2ch`, `1.2ex`, `1.2rem`
-// + (experimental!) `1.2cap`, `1.2ic`, `1.2lh`, `1.2rlh`
-// + `1.2vh`, `1.2vw`, `1.2vmin`, `1.2vmax`
-// + (experimental!) `1.2vi`, `1.2vb`
-// + `1.2px`, `1.2cm`, `1.2mm`, `1.2in`, `1.2pc`, `1.2pt`
-// + (experimental!) `1.2Q`
-//
-// Note that only the following have wide support; these are the only metrics this code tests for: `em`, `ch`, `ex`, `rem`, `vh`, `vw`, `vmin`, `vmax`, `px`, `cm`, `mm`, `in`, `pc`, `pt`
-//
-// _Percent values:_ 
-// + `1.2%`
-//
-// (Percent values clash with font-stretch % values - assume any number followed by a % is a font-size value)
-//
-// GOTCHA NOTE 1: font-size is never a number; it must always have a metric. Tweens should be able to handle this requirement with no issues.
-//
-// GOTCHA NOTE 2: the canvas context engine refuses to handle line heights appended to the font size value (eg: `12px/1.2`) and expects all line height values to = `normal`. Scrawl-canvas handles line height for multiline phrases using an alternative mechanism. Thus including a `/lineheight` value in a font string may cause `Phrase.set` functionality to fail in unexpected ways.
+// Length values relative to the browser's viewport (window) dimensions:
+// + `1vw` and `1vh` represent 1% of the viewport's width and height, respectively
+// + `1vmax` - is 1% of the larger viewport dimension
+// + `1vmin` - is 1% of the smaller viewport dimension
+// + Scrawl-canvas treats `1vi` as ≈ 1vw, and `1vb` as ≈ 1vh
+// 
+// Absolute length values convert as follow:
+// + `1in` (inch) = 96px
+// + `1cm` (centimeter) = 37.80px
+// + `1mm` (millimeter) = 3.78px
+// + `1Q` (quarter mm) = 0.95px 
+// + `1pc` (pica) = 16px
+// + `1pt` (point) = 1.33px
+// + `1px` (pixel) = 1px
+// 
+// Note: we break down the `size` attribute into two components: __sizeValue__ and __sizeMetric__. Line height values are ignored and, when present in a font string, may break the code!
     sizeValue: 12,
     sizeMetric: 'px',
 
 
-// __font-family__ 
-// + Always comes at the end of the string. 
-// + More than one can be included, with each separated by commas
-// + Be aware that string may often include quotes around font families with spaces in their names.
-//
-// Generic font names have been extended - values include: 
-// + `serif`, `sans-serif`, `monospace`, `cursive`, `fantasy`, `system-ui`, `math`, `emoji`, `fangsong`
-//
-// GOTCHA NOTE: current functionality tests the supplied string with the expectation that the font families will be preceded by a font size metric value. To set the fontFamily value direct, put a font size metric at the start of the string - % will do - followed by a space and then the font family string:
-// ```
-// phraseInstance.set({
-//     font: '% "Gill Sans", sans-serif'
-// })
-// ```
+// __font-family__ - any part of the font string that comes after the above declarations.
+// + It is generally a good idea to include one of the preset defaults - `serif`, `sans-serif`, `monospace`, `cursive`, `fantasy`, `system-ui`, `math`, `emoji`, `fangsong` - at the end of the font or family string, to act as a fallback default as other fonts load.
+// + Scrawl-canvas will attempt to redraw the display when fonts complete their (asynchronous) upload, but this may fail and need to be triggered manually.
     family: 'sans-serif',
 
 };
@@ -182,56 +159,81 @@ S.size = function (item) {
             size = 0, 
             metric = 'medium';
 
-        // Canvas context engine (Chrome on MacBook Pro) interprets this as 9px Garamond
         if (item.indexOf('xx-small') >= 0) metric = 'xx-small';
-
-        // Canvas context engine (Chrome on MacBook Pro) interprets this as 10px Garamond
         else if (item.indexOf('x-small') >= 0) metric = 'x-small';
-
-        // Canvas context engine (Chrome on MacBook Pro) interprets this as 8.33px Garamond
         else if (item.indexOf('smaller') >= 0) metric = 'smaller';
-
-        // Canvas context engine (Chrome on MacBook Pro) interprets this as 13px Garamond
         else if (item.indexOf('small') >= 0) metric = 'small';
-
-        // Canvas context engine (Chrome on MacBook Pro) interprets this as 32px Garamond
+        else if (item.indexOf('medium') >= 0) metric = 'medium';
+        else if (item.indexOf('xxx-large') >= 0) metric = 'xxx-large';
         else if (item.indexOf('xx-large') >= 0) metric = 'xx-large';
-
-        // Canvas context engine (Chrome on MacBook Pro) interprets this as 24px Garamond
         else if (item.indexOf('x-large') >= 0) metric = 'x-large';
-
-        // Canvas context engine (Chrome on MacBook Pro) interprets this as 12px Garamond
         else if (item.indexOf('larger') >= 0) metric = 'larger';
-
-        // Canvas context engine (Chrome on MacBook Pro) interprets this as 18px Garamond
         else if (item.indexOf('large') >= 0) metric = 'large';
 
-        // Canvas context engine (Chrome on MacBook Pro) interprets this as 16px Garamond
-        else if (item.indexOf('medium') >= 0) metric = 'medium';
         else {
             size = 12;
             metric = 'px'
         }
 
-        // For when the size has stuff before it in the string (which can, sadly, include numbers)
-        if (/.* (\d+\.\d+|\d+|\.\d+)(%|em|ch|ex|rem|vh|vw|vmin|vmax|px|cm|mm|in|pc|pt)?/i.test(item)) {
-            
-            res = item.match(/.* (\d+\.\d+|\d+|\.\d+)(%|em|ch|ex|rem|vh|vw|vmin|vmax|px|cm|mm|in|pc|pt)?/i);
-            size = (res[1] !== '.') ? parseFloat(res[1]) : 12;
-            metric = res[2];
-        }
-        // For when the size starts the string
-        else if (/^(\d+\.\d+|\d+|\.\d+)(%|em|ch|ex|rem|vh|vw|vmin|vmax|px|cm|mm|in|pc|pt)?/i.test(item)) {
-            
-            res = item.match(/^(\d+\.\d+|\d+|\.\d+)(%|em|ch|ex|rem|vh|vw|vmin|vmax|px|cm|mm|in|pc|pt)?/i);
-            size = (res[1] !== '.') ? parseFloat(res[1]) : 12;
-            metric = res[2];
-        }
+        let full, val, suffix;
 
-        this.sizeValue = size;
-        this.sizeMetric = metric;
+        let r = item.match(/(\d+\.\d+|\d+|\.\d+)(rem|em|rlh|lh|ex|cap|ch|ic|%|vw|vh|vmax|vmin|vi|vb|in|cm|mm|Q|pc|pt|px)?/i);
+
+        if (Array.isArray(r)) {
+
+            [full, val, suffix] = r;
+
+            if (val && suffix && val != '.') {
+
+                size = val;
+                metric = suffix;
+            }
+        }
+        else {
+
+            r = item.match(/\/(\d+\.\d+|\d+|\.\d+)(rem|em|rlh|lh|ex|cap|ch|ic|%|vw|vh|vmax|vmin|vi|vb|in|cm|mm|Q|pc|pt|px)?/i);
+
+            if (Array.isArray(r)) {
+
+                [full, val, suffix] = r;
+
+                if (val && suffix && val != '.') {
+
+                    size = val;
+                    metric = suffix;
+                }
+            }
+        }
+        if (size !== this.sizeValue) {
+
+            this.sizeValue = size;
+            this.dirtyFont = true;
+        }
+        if (metric !== this.sizeMetric) {
+
+            this.sizeMetric = metric;
+            this.dirtyFont = true;
+        }
     }
 };
+
+S.sizeValue = function (item) {
+
+    if (xt(item) && item !== this.sizeValue) {
+
+        this.sizeValue = item;
+        this.dirtyFont = true;
+    }
+}
+
+S.sizeMetric = function (item) {
+
+    if (xt(item) && item !== this.sizeMetric) {
+
+        this.sizeMetric = item;
+        this.dirtyFont = true;
+    }
+}
 
 // __font__ - pseudo-attribute which calls various functions to break down the font String into its constituent parts
 S.font = function (item) {
@@ -250,33 +252,44 @@ S.font = function (item) {
 // __style__
 S.style = function (item) {
 
-    let v = 'normal';
-
     if (xt(item)) {
+
+        let v = 'normal';
 
         v = (item.indexOf('italic') >= 0) ? 'italic' : v;
         v = (item.indexOf('oblique') >= 0) ? 'oblique' : v;
-    }
 
-    this.style = v;
+        if (v !== this.style) {
+
+            this.style = v;
+            this.dirtyFont = true;
+        }
+    }
 };
 
 // __variant__
 S.variant = function (item) {
 
-    let v = 'normal';
+    if (xt(item)) {
 
-    v = (item.indexOf('small-caps') >= 0) ? 'small-caps' : v;
+        let v = 'normal';
 
-    this.variant = v;
+        v = (item.indexOf('small-caps') >= 0) ? 'small-caps' : v;
+
+        if (v !== this.variant) {
+
+            this.variant = v;
+            this.dirtyFont = true;
+        }
+    }
 };
 
 // __weight__
 S.weight = function (item) {
 
-    let v = 'normal';
-
     if (xt(item)) {
+
+        let v = 'normal';
 
         // Handling direct entry of numbers
         if (item.toFixed) v = item;
@@ -300,48 +313,271 @@ S.weight = function (item) {
             // Also need to capture instances where a number value has been directly set with no other font attributes around it
             v = (/^\d00$/.test(item)) ? item : v;
         }
-    }
 
-    this.weight = v;
+        if (v !== this.weight) {
+
+            this.weight = v;
+            this.dirtyFont = true;
+        }
+    }
 };
 
 // __stretch__
 S.stretch = function (item) {
 
-    let v = 'normal';
-
     if (xt(item)) {
 
-        v = (item.indexOf('semi-condensed') >= 0) ? 'semi-condensed' : v;
-        v = (item.indexOf('condensed') >= 0) ? 'condensed' : v;
-        v = (item.indexOf('extra-condensed') >= 0) ? 'extra-condensed' : v;
-        v = (item.indexOf('ultra-condensed') >= 0) ? 'ultra-condensed' : v;
-        v = (item.indexOf('semi-condensed') >= 0) ? 'semi-condensed' : v;
-        v = (item.indexOf('condensed') >= 0) ? 'condensed' : v;
-        v = (item.indexOf('extra-condensed') >= 0) ? 'extra-condensed' : v;
-        v = (item.indexOf('ultra-condensed') >= 0) ? 'ultra-condensed' : v;
-    }
+        let v = 'normal';
 
-    this.stretch = v;
+        v = (item.indexOf('semi-condensed') >= 0) ? 'semi-condensed' : v;
+        v = (item.indexOf('condensed') >= 0) ? 'condensed' : v;
+        v = (item.indexOf('extra-condensed') >= 0) ? 'extra-condensed' : v;
+        v = (item.indexOf('ultra-condensed') >= 0) ? 'ultra-condensed' : v;
+        v = (item.indexOf('semi-expanded') >= 0) ? 'semi-expanded' : v;
+        v = (item.indexOf('expanded') >= 0) ? 'expanded' : v;
+        v = (item.indexOf('extra-expanded') >= 0) ? 'extra-expanded' : v;
+        v = (item.indexOf('ultra-expanded') >= 0) ? 'ultra-expanded' : v;
+
+        if (v !== this.stretch) {
+
+            this.stretch = v;
+            this.dirtyFont = true;
+        }
+    }
 };
 
 // __family__
+P.rfsTestArray1 = ['italic','oblique','small-caps','normal','bold','lighter','bolder','ultra-condensed','extra-condensed','semi-condensed','condensed','ultra-expanded','extra-expanded','semi-expanded','expanded','xx-small','x-small','small','medium','xxx-large','xx-large','x-large','large'];
+P.rfsTestArray2 = ['0','1','2','3','4','5','6','7','8','9'];
 S.family = function (item) {
 
     if (xt(item)) {
 
-        let guess = item.match(/( xx-small| x-small| small| medium| large| x-large| xx-large| smaller| larger|\d%|\dem|\dch|\dex|\drem|\dvh|\dvw|\dvmin|\dvmax|\dpx|\dcm|\dmm|\din|\dpc|\dpt) (.*)$/i);
+        let v = 'sans-serif';
 
-        this.family = (guess && guess[2]) ? guess[2] : item;
+        let itemArray = item.split(' '),
+            len = itemArray.length;
+
+        if (len === 1) v = item;
+
+        let counter = 0,
+            flag = true;
+
+        while (flag) {
+
+            if (counter === len) flag = false;
+            else {
+
+                let el = itemArray[counter];
+
+                if (!el.length) counter++;
+                else if (this.rfsTestArray1.indexOf(el) >= 0) counter++;
+                else if (this.rfsTestArray2.indexOf(el[0]) >= 0) counter++;
+                else flag = false;
+            }
+        }
+        if (counter < len) v = itemArray.slice(counter).join(' ');
+
+        if (v !== this.family) {
+
+            this.family = v;
+            this.dirtyFont = true;
+        }
     }
 };
 
 
 // #### Prototype functions
+P.getFontString = function() {
+
+    if (!this.dirtyFont && this.temperedFontString) return this.temperedFontString;
+    else return this.buildFont();
+}
+
+P.updateMetadata = function (scale, lineHeight, host) {
+
+    if (scale && scale.toFixed && scale > 0 && scale !== this.scale) {
+
+        this.scale = scale;
+        this.dirtyFont = true;
+    }
+
+    if (lineHeight && lineHeight.toFixed && lineHeight > 0 && lineHeight !== this.lineHeight) {
+
+        this.lineHeight = lineHeight;
+        this.dirtyFont = true;
+    }
+    
+    let currentHost = (this.host && this.host.type && this.host.type === 'Cell') ? this.host.name : '';
+    if (host && host.type && host.type === 'Cell' && host.name !== currentHost) {
+
+        this.host = host;
+        this.dirtyFont = true;
+    }
+};
+
+P.calculateSize = function () {
+
+    if (this.host) {
+
+        let {scale, lineHeight, host, sizeValue, sizeMetric} = this;
+
+        let gcfs = host.getComputedFontSizes(),
+            parentSize, rootSize, viewportWidth, viewportHeight;
+
+        if (!gcfs) {
+
+            if (['in', 'cm', 'mm', 'Q', 'pc', 'pt', 'px'].indexOf(sizeMetric) < 0) {
+
+                this.dirtyFont = true;
+                return '12px';
+            }
+        }
+        else {
+
+            [parentSize, rootSize, viewportWidth, viewportHeight] = host.getComputedFontSizes();
+        }
+
+        if (isNaN(sizeValue)) sizeValue = 12;
+
+        let res = parentSize;
+
+        switch (sizeMetric) {
+
+            case 'rem' :
+                res = rootSize * sizeValue;
+                break;
+
+            case 'em' :
+                res = parentSize * sizeValue;
+                break;
+
+            case 'rlh' :
+                res = (rootSize * lineHeight) * sizeValue;
+                break;
+
+            case 'lh' :
+                res = (parentSize * lineHeight) * sizeValue;
+                break;
+
+            case 'ex' :
+                res = (parentSize / 2) * sizeValue;
+                break;
+
+            case 'cap' :
+                res = parentSize * sizeValue;
+                break;
+
+            case 'ch' :
+                res = parentSize * sizeValue;
+                break;
+
+            case 'ic' :
+                res = parentSize * sizeValue;
+                break;
+
+            case '%' :
+                res = (parentSize / 100) * sizeValue;
+                break;
+
+            case 'vw' :
+                res = (viewportWidth / 100) * sizeValue;
+                break;
+
+            case 'vh' :
+                res = (viewportHeight / 100) * sizeValue;
+                break;
+
+            case 'vmax' :
+                res = (Math.max(viewportWidth, viewportHeight) / 100) * sizeValue;
+                break;
+
+            case 'vmin' :
+                res = (Math.min(viewportWidth, viewportHeight) / 100) * sizeValue;
+                break;
+
+            case 'vi' :
+                res = (viewportWidth / 100) * sizeValue;
+                break;
+
+            case 'vb' :
+                res = (viewportHeight / 100) * sizeValue;
+                break;
+
+            case 'in' :
+                res = 96 * sizeValue;
+                break;
+
+            case 'cm' :
+                res = 37.8 * sizeValue;
+                break;
+
+            case 'mm' :
+                res = 3.78 * sizeValue;
+                break;
+
+            case 'Q' :
+                res = 0.95 * sizeValue;
+                break;
+
+            case 'pc' :
+                res = 16 * sizeValue;
+                break;
+
+            case 'pt' :
+                res = 1.33 * sizeValue;
+                break;
+
+            case 'px' :
+                res = sizeValue;
+                break;
+
+            case 'xx-small' :
+                res = 0.6 * parentSize;
+                break;
+
+            case 'x-small' :
+                res = 0.75 * parentSize;
+                break;
+
+            case 'smaller' :
+                res = 0.8 * parentSize;
+                break;
+
+            case 'small' :
+                res = 0.89 * parentSize;
+                break;
+
+            case 'xxx-large' :
+                res = 3 * parentSize;
+                break;
+
+            case 'xx-large' :
+                res = 2 * parentSize;
+                break;
+
+            case 'x-large' :
+                res = 1.5 * parentSize;
+                break;
+
+            case 'larger' :
+                res = 1.3 * parentSize;
+                break;
+
+            case 'large' :
+                res = 1.2 * parentSize;
+                break;
+        }
+        return `${res * scale}px`;
+    }
+    return '12px';
+}
 
 // `buildFont` - internal function
 // + Takes into account a scaling factor
-P.buildFont = function (scale = 1) {
+P.buildFont = function () {
+
+    this.dirtyFont = false;
 
     let font = ''
 
@@ -349,27 +585,27 @@ P.buildFont = function (scale = 1) {
     if (this.variant !== 'normal') font += `${this.variant} `;
     if (this.weight !== 'normal') font += `${this.weight} `;
     if (this.stretch !== 'normal') font += `${this.stretch} `;
-    if (this.sizeValue) font += `${this.sizeValue * scale}${this.sizeMetric} `;
-    else font += `${this.sizeMetric} `;
+
+    font += `${this.calculateSize()} `;
 
     font += `${this.family}`;
 
     // Temper the font string. Submit it to a canvas context engine to see what it makes of it
     let myCell = requestCell();
-
     myCell.engine.font = font;
     font = myCell.engine.font;
-
     releaseCell(myCell);
+
+    this.temperedFontString = font;
+
     return font;
 };
 
 // `update` - `sets` items, then calls `buildFont`
-P.update = function (scale = 1, items) {
+P.update = function (items) {
 
     if (items) this.set(items);
-
-    return this.buildFont(scale);
+    return this.getFontString();
 };
 
 

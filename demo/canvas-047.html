@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 047</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 047</h1>
+  <h2>Easing functions for Color and Tween factories</h2>
+
+  <canvas id="mycanvas" width="800" height="1000"></canvas>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+
+    <p>Set up a range of entitys using a bespoke 'component' factory. Each 'component' should include a Wheel entity with an associated Color asset, a Phrase and Line entity, and two Tween animations to move the Wheel across the canvas and change its color. These components will differ only in their vertical positions on the canvas, and the easing function assigned to the movement Tween and the Color asset.</p>
+
+    <ul>
+      <li>If the easing functions are working correctly, then each Wheel entity will move along its line in accordance with the requirements of the easing function (for example: -OutIn easings will be the same when reversed as they are when not reversed; -Sine easings will move at a more constant speed than the others; -Back, -Elastic and -Bounce easings are more complex than the others, etc.)</li>
+      <li>If the Color asset easing settings are working correctly, then each Wheel's color will appear to be a function of its horizontal position (red on the left, green on the right), not a function of time passed</li>
+    </ul>
+
+    <p><a href="../docs/demo/canvas-047.html">Annotated code</a></p>
+  </div>
+
+  <script src="canvas-047.js" type="module"></script>
+
+</body>
+
+</html>

@@ -5,6 +5,10 @@
 import scrawl from '../source/scrawl.js'
 
 
+// Import image from DOM
+scrawl.importDomImage('.flowers');
+
+
 // #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
@@ -20,7 +24,7 @@ scrawl.makeLine({
     endX: 'center',
     endY: 'bottom',
 
-    lineWidth: 16,
+    lineWidth: 8,
     lineCap: 'round',
     strokeStyle: 'brown',
 
@@ -137,6 +141,7 @@ const myNet = scrawl.makeNet({
     mass: 1,
     forces: ['gravity', 'wind'],
     engine: 'runge-kutta',
+    damperConstant: 5,
 
     // We can assign an artefact that we will be using for the particle animation, or we can define it here as part of the Net factory
     artefact: scrawl.makeWheel({
@@ -151,6 +156,8 @@ const myNet = scrawl.makeNet({
         strokeStyle: 'blue',
 
         visibility: false, 
+
+        globalAlpha: 1,
 
         noUserInteraction: true,
         noPositionDependencies: true,
@@ -170,6 +177,35 @@ const myNet = scrawl.makeNet({
         });
     },
 });
+
+scrawl.makePicture({
+
+    name: 'my-flower',
+    asset: 'iris',
+
+    copyStartX: 0,
+    copyStartY: 0,
+
+    copyWidth: '100%',
+    copyHeight: '100%',
+
+    visibility: false,
+});
+
+
+// ___The Loom entity definition___
+let myMesh = scrawl.makeMesh({
+
+    name: 'display-mesh',
+
+    net: 'test-net',
+    source: 'my-flower',
+
+    method: 'fillThenDraw',
+
+    visibility: false,
+});
+
 
 
 // #### Scene animation
@@ -225,6 +261,30 @@ const updateSprings = function (e) {
         if (e.target.id === 'engine') myNet.set({ engine: e.target.value});
         if (e.target.id === 'mass') myNet.set({ mass: parseFloat(e.target.value)});
         if (e.target.id === 'tickMultiplier') myWorld.set({ tickMultiplier: parseFloat(e.target.value)});
+        if (e.target.id === 'mesh') {
+            if (parseInt(e.target.value, 10)) {
+                myNet.set({
+                    showSprings: false,
+                });
+                myNet.artefact.set({
+                    globalAlpha: 0,
+                });
+                myMesh.set({
+                    visibility: true,
+                });
+            }
+            else {
+                myNet.set({
+                    showSprings: true,
+                });
+                myNet.artefact.set({
+                    globalAlpha: 1,
+                });
+                myMesh.set({
+                    visibility: false,
+                });
+            }
+        }
 
         myNet.restart();
     }
@@ -233,11 +293,12 @@ scrawl.addNativeListener(['input', 'change'], updateSprings, '.controlItem');
 
 document.querySelector('#generate').value = 'weak-net';
 document.querySelector('#springConstant').value = 50;
-document.querySelector('#damperConstant').value = 10;
+document.querySelector('#damperConstant').value = 5;
 document.querySelector('#restLength').value = 1;
 document.querySelector('#mass').value = 1;
 document.querySelector('#engine').value = 'runge-kutta';
 document.querySelector('#tickMultiplier').value = 2;
+document.querySelector('#mesh').value = '0';
 
 
 // #### Development and testing

@@ -1,5 +1,5 @@
 // # Demo Filters 012 
-// SVG-based filter example: gaussian blur
+// Filter parameters: matrix, matrix5
 
 // [Run code](../../demo/filters-012.html)
 import scrawl from '../source/scrawl.js';
@@ -10,8 +10,26 @@ const canvas = scrawl.library.canvas.mycanvas;
 scrawl.importDomImage('.flowers');
 
 
+// Create the filters
+const matrix3 = scrawl.makeFilter({
+
+    name: 'matrix3',
+    method: 'matrix',
+
+    weights: [0, 0, 0, 0, 1, 0, 0, 0, 0],
+});
+
+const matrix5 = scrawl.makeFilter({
+
+    name: 'matrix5',
+    method: 'matrix5',
+
+    weights: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+});
+
+
 // Create the target entity
-const piccy = scrawl.makePicture({
+const target = scrawl.makePicture({
 
     name: 'base-piccy',
 
@@ -25,20 +43,8 @@ const piccy = scrawl.makePicture({
 
     method: 'fill',
 
-    filter: 'url(#svg-blur)',
+    filters: ['matrix3'],
 });
-
-
-// #### SVG filter
-// We create the filter in the HTML script, not here:
-// ```
-// <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-//   <filter id="svg-blur">
-//     <feGaussianBlur in="SourceGraphic" stdDeviation="5" edgeMode="duplicate" />
-//   </filter>
-// </svg>
-// ```
-let feGaussianBlur = document.querySelector('feGaussianBlur');
 
 
 // #### Scene animation
@@ -49,6 +55,8 @@ let report = function () {
         testTime, testNow,
         testMessage = document.querySelector('#reportmessage');
 
+    let opacity = document.querySelector('#opacity');
+
     return function () {
 
         testNow = Date.now();
@@ -56,10 +64,9 @@ let report = function () {
         testTicker = testNow;
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-
-<filter id="svg-blur">
-  <feGaussianBlur in="SourceGraphic" stdDeviation="${feGaussianBlur.getAttribute('stdDeviation')}" edgeMode="${feGaussianBlur.getAttribute('edgeMode')}" />
-</filter>`;
+    matrix3 weights array: ${matrix3.weights}
+    matrix5 weights array: ${matrix5.weights}
+    Opacity: ${opacity.value}`;
     };
 }();
 
@@ -74,27 +81,147 @@ const demoAnimation = scrawl.makeRender({
 
 
 // #### User interaction
-// Setup form functionality
-let updateStdDeviation = (e) => {
+// Setup form observer functionality
+const changeMatrix = function () {
 
-    e.preventDefault();
-    e.returnValue = false;
+    const selector = document.querySelector('#selectMatrix');
 
-    feGaussianBlur.setAttribute('stdDeviation', parseFloat(e.target.value));
-};
-scrawl.addNativeListener(['input', 'change'], updateStdDeviation, '#stdDeviation');
+    return function () {
 
-let updateEdgeMode = (e) => {
+        target.set({
+            filters: [selector.value],
+        });
+    }
+}();
+scrawl.addNativeListener(['input', 'change'], changeMatrix, '#selectMatrix');
 
-    e.preventDefault();
-    e.returnValue = false;
+const updateWeights = function () {
 
-    feGaussianBlur.setAttribute(`edgeMode`, e.target.value);
-};
-scrawl.addNativeListener(['input', 'change'], updateEdgeMode, '#edgeMode');
+    const m11 = document.querySelector('#m11');
+    const m12 = document.querySelector('#m12');
+    const m13 = document.querySelector('#m13');
+    const m14 = document.querySelector('#m14');
+    const m15 = document.querySelector('#m15');
+    const m21 = document.querySelector('#m21');
+    const m22 = document.querySelector('#m22');
+    const m23 = document.querySelector('#m23');
+    const m24 = document.querySelector('#m24');
+    const m25 = document.querySelector('#m25');
+    const m31 = document.querySelector('#m31');
+    const m32 = document.querySelector('#m32');
+    const m33 = document.querySelector('#m33');
+    const m34 = document.querySelector('#m34');
+    const m35 = document.querySelector('#m35');
+    const m41 = document.querySelector('#m41');
+    const m42 = document.querySelector('#m42');
+    const m43 = document.querySelector('#m43');
+    const m44 = document.querySelector('#m44');
+    const m45 = document.querySelector('#m45');
+    const m51 = document.querySelector('#m51');
+    const m52 = document.querySelector('#m52');
+    const m53 = document.querySelector('#m53');
+    const m54 = document.querySelector('#m54');
+    const m55 = document.querySelector('#m55');
 
-document.querySelector('#stdDeviation').value = 5;
-document.querySelector('#edgeMode').options.selectedIndex = 0;
+    let weights3, weights5;
+
+    return function () {
+
+        weights3 = [parseFloat(m22.value), parseFloat(m23.value), parseFloat(m24.value), 
+                    parseFloat(m32.value), parseFloat(m33.value), parseFloat(m34.value), 
+                    parseFloat(m42.value), parseFloat(m43.value), parseFloat(m44.value)];
+
+        weights5 = [parseFloat(m11.value), parseFloat(m12.value), parseFloat(m13.value), parseFloat(m14.value), parseFloat(m15.value), 
+                    parseFloat(m21.value), parseFloat(m22.value), parseFloat(m23.value), parseFloat(m24.value), parseFloat(m25.value), 
+                    parseFloat(m31.value), parseFloat(m32.value), parseFloat(m33.value), parseFloat(m34.value), parseFloat(m35.value), 
+                    parseFloat(m41.value), parseFloat(m42.value), parseFloat(m43.value), parseFloat(m44.value), parseFloat(m45.value), 
+                    parseFloat(m51.value), parseFloat(m52.value), parseFloat(m53.value), parseFloat(m54.value), parseFloat(m55.value)];
+
+        matrix3.set({
+            weights: weights3,
+        });
+
+        matrix5.set({
+            weights: weights5,
+        });
+    }
+}();
+scrawl.addNativeListener(['input', 'change'], updateWeights, '.weight');
+
+scrawl.observeAndUpdate({
+
+    event: ['input', 'change'],
+    origin: '.controlItem',
+
+    target: matrix3,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+
+        includeRed: ['includeRed', 'boolean'],
+        includeGreen: ['includeGreen', 'boolean'],
+        includeBlue: ['includeBlue', 'boolean'],
+        includeAlpha: ['includeAlpha', 'boolean'],
+
+        opacity: ['opacity', 'float'],
+    },
+});
+
+scrawl.observeAndUpdate({
+
+    event: ['input', 'change'],
+    origin: '.controlItem',
+
+    target: matrix5,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+
+        includeRed: ['includeRed', 'boolean'],
+        includeGreen: ['includeGreen', 'boolean'],
+        includeBlue: ['includeBlue', 'boolean'],
+        includeAlpha: ['includeAlpha', 'boolean'],
+
+        opacity: ['opacity', 'float'],
+    },
+});
+
+// Setup form
+document.querySelector('#selectMatrix').value = 'matrix3';
+document.querySelector('#m11').value = 0;
+document.querySelector('#m12').value = 0;
+document.querySelector('#m13').value = 0;
+document.querySelector('#m14').value = 0;
+document.querySelector('#m15').value = 0;
+document.querySelector('#m21').value = 0;
+document.querySelector('#m22').value = 0;
+document.querySelector('#m23').value = 0;
+document.querySelector('#m24').value = 0;
+document.querySelector('#m25').value = 0;
+document.querySelector('#m31').value = 0;
+document.querySelector('#m32').value = 0;
+document.querySelector('#m33').value = 1;
+document.querySelector('#m34').value = 0;
+document.querySelector('#m35').value = 0;
+document.querySelector('#m41').value = 0;
+document.querySelector('#m42').value = 0;
+document.querySelector('#m43').value = 0;
+document.querySelector('#m44').value = 0;
+document.querySelector('#m45').value = 0;
+document.querySelector('#m51').value = 0;
+document.querySelector('#m52').value = 0;
+document.querySelector('#m53').value = 0;
+document.querySelector('#m54').value = 0;
+document.querySelector('#m55').value = 0;
+document.querySelector('#includeRed').options.selectedIndex = 1;
+document.querySelector('#includeGreen').options.selectedIndex = 1;
+document.querySelector('#includeBlue').options.selectedIndex = 1;
+document.querySelector('#includeAlpha').options.selectedIndex = 0;
+document.querySelector('#opacity').value = 1;
 
 
 // #### Development and testing

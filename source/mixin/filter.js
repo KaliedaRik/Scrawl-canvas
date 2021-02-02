@@ -8,8 +8,9 @@
 
 
 // #### Imports
-import { filter } from '../core/library.js';
+import { filter, asset } from '../core/library.js';
 import { mergeOver, pushUnique, removeItem } from '../core/utilities.js';
+import { requestCell, releaseCell } from '../factory/cell.js';
 
 
 // #### Export function
@@ -20,14 +21,13 @@ export default function (P = {}) {
 // All factories using the filter mixin will add these attributes to their objects
     let defaultAttributes = {
 
-
 // __filters__ - An array of filter object String names. If only one filter is to be applied, then it is enough to use the String name of that filter object - Scrawl-canvas will make sure it gets added to the Array.
 // + To add/remove new filters to the filters array, use the `addFilters` and `removeFilters` functions. Note that the `set` function will replace all the existing filters in the array with the new filters. To remove all existing filters from the array, use the `clearFilters` function
-// + Multiple filters can be batch-applied to an entity, group of entitys, or an entire cell in one operation. Filters are applied in the order that they appear in in the filters array.
+// + Multiple filters will be batch-applied to an entity, group of entitys, or an entire cell in one operation. Filters are applied in the order that they appear in in the filters array.
+// + ___Be aware that the "filters" (plural) attribute is different to the CSS/SVG "filter" (singular) attribute___ - details about how Scrawl-canvas uses CSS/SVG filter Strings to produce filtering effects (at the entity and Cell levels only) are investigated in the Filter Demos 051 to 055. CSS/SVG filter Strings can be applied in addition to Scrawl-canvas filters Array objects, and will be applied after them.
         filters: null,
 
-
-// __isStencil__ - Use the entity as a stencil.
+// __isStencil__ - Use the entity as a stencil. When this flag is set filter effects will be applied to the background imagery covered by the entity (or Group of entitys, or Cell), the results of which will replace the entity/Group/Cell in the final display.
         isStencil: false,
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
@@ -37,7 +37,7 @@ export default function (P = {}) {
     let S = P.setters;
 
 
-// `filters` - Replaces the existing filters array with a new filters array. If a string name is supplied, will add that name to the existing filters array
+// `filters` - ___Dangerous action!__ - replaces the existing filters Array with a new filters Array. If a string name is supplied, will add that name to the existing filters array
     S.filters = function (item) {
 
         if (!Array.isArray(this.filters)) this.filters = [];
@@ -47,13 +47,15 @@ export default function (P = {}) {
             if (Array.isArray(item)) {
 
                 this.filters = item;
+
                 this.dirtyFilters = true;
                 this.dirtyImageSubscribers = true;
         
             }
             else if (item.substring) {
                 
-                pushUnique(this.filters, item);    
+                pushUnique(this.filters, item); 
+
                 this.dirtyFilters = true;
                 this.dirtyImageSubscribers = true;
             }
@@ -78,7 +80,6 @@ export default function (P = {}) {
 
 
 // #### Prototype functions
-
 // `cleanFilters` - Internal housekeeping
     P.cleanFilters = function () {
 
@@ -94,29 +95,31 @@ export default function (P = {}) {
         myfilters.forEach(name => {
 
             myobj = filter[name];
-            order = floor(myobj.order) || 0;
 
-            if (!buckets[order]) buckets[order] = [];
+            if (myobj) {
 
-            buckets[order].push(myobj);
+                order = floor(myobj.order) || 0;
+
+                if (!buckets[order]) buckets[order] = [];
+
+                buckets[order].push(myobj);
+            }
         });
 
         this.currentFilters = buckets.reduce((a, v) => a.concat(v), []);
     };
 
 
-// `addFilters` - Add one or more filter name strings to the filters array. Filter name strings can be supplied as comma-separated arguments to the function
+// `addFilters`, `removeFilters` - Add or remove one or more filter name strings to/from the filters array. Filter name strings can be supplied as comma-separated arguments to the function
     P.addFilters = function (...args) {
 
         if (!Array.isArray(this.filters)) this.filters = [];
 
         args.forEach(item => {
 
-            if (this.name, 'addFilters', item) {
+            if (item && item.type === 'Filter') item = item.name;
+            pushUnique(this.filters, item);
 
-                if (item.substring) pushUnique(this.filters, item);
-                else if (item.type === 'Filter') pushUnique(this.filters, item.name);
-            }
         }, this);
 
         this.dirtyFilters = true;
@@ -125,19 +128,15 @@ export default function (P = {}) {
         return this;
     };
 
-
-// `removeFilters` - Remove one or more filter name strings from the filters array. Filter name strings can be supplied as comma-separated arguments to the function
     P.removeFilters = function (...args) {
 
         if (!Array.isArray(this.filters)) this.filters = [];
 
         args.forEach(item => {
 
-            if (item) {
+            if (item && item.type === 'Filter') item = item.name;
+            removeItem(this.filters, item);
 
-                if (item.substring) removeItem(this.filters, item);
-                else if (item.type === 'Filter') removeItem(this.filters, item.name);
-            }
         }, this);
 
         this.dirtyFilters = true;
@@ -145,7 +144,6 @@ export default function (P = {}) {
         
         return this;
     };
-
 
 // `clearFilters` - Clears the filters array
     P.clearFilters = function () {
@@ -158,6 +156,113 @@ export default function (P = {}) {
         this.dirtyImageSubscribers = true;
         
         return this;
+    };
+
+// `preprocessFilters` - internal function called as part of the Display cycle. The __process-image__ filter action loads a Scrawl-canvas asset into the filters web worker, where it can be used as a lineIn or lineMix argument for other filter actions.
+    P.preprocessFilters = function (filters) {
+
+        filters.forEach(filter => {
+
+            filter.actions.forEach(obj => {
+
+                if (obj.action == 'process-image') {
+
+                    let flag = true;
+
+                    let img = asset[obj.asset];
+
+                    if (img) {
+
+                        if (img.type === 'Noise') {
+
+                            img.checkSource();
+                        }
+
+                        let width = img.sourceNaturalWidth || img.sourceNaturalDimensions[0] || img.currentDimensions[0],
+                            height = img.sourceNaturalHeight || img.sourceNaturalDimensions[1] || img.currentDimensions[1];
+
+                        if (width && height) {
+
+                            flag = false;
+
+                            let copyX = obj.copyX || 0,
+                                copyY = obj.copyY || 0,
+                                copyWidth = obj.copyWidth || 1,
+                                copyHeight = obj.copyHeight || 1,
+                                destWidth = obj.width || 1,
+                                destHeight = obj.height || 1;
+
+                            if (copyX.substring) copyX = (parseFloat(copyX) / 100) * width;
+                            if (copyY.substring) copyY = (parseFloat(copyY) / 100) * height;
+                            if (copyWidth.substring) copyWidth = (parseFloat(copyWidth) / 100) * width;
+                            if (copyHeight.substring) copyHeight = (parseFloat(copyHeight) / 100) * height;
+
+                            copyX = Math.abs(copyX);
+                            copyY = Math.abs(copyY);
+                            copyWidth = Math.abs(copyWidth);
+                            copyHeight = Math.abs(copyHeight);
+
+                            if (copyX > width) {
+                                copyX = width - 2;
+                                copyWidth = 1;
+                            }
+
+                            if (copyY > height) {
+                                copyY = height - 2;
+                                copyHeight = 1;
+                            }
+
+                            if (copyWidth > width) {
+                                copyWidth = width - 1;
+                                copyX = 0;
+                            }
+
+                            if (copyHeight > height) {
+                                copyHeight = height - 1;
+                                copyY = 0;
+                            }
+
+
+                            if (copyX + copyWidth > width) {
+                                copyX = width - copyWidth - 1;
+                            }
+
+                            if (copyY + copyHeight > height) {
+                                copyY = height - copyHeight - 1;
+                            }
+
+                            let cell = requestCell(),
+                                engine = cell.engine,
+                                canvas = cell.element;
+
+                            canvas.width = destWidth;
+                            canvas.height = destHeight;
+
+                            engine.setTransform(1, 0, 0, 1, 0, 0);
+                            engine.globalCompositeOperation = 'source-over';
+                            engine.globalAlpha = 1;
+
+                            let src = img.source || img.element;
+
+                            engine.drawImage(src, copyX, copyY, copyWidth, copyHeight, 0, 0, destWidth, destHeight);
+
+                            obj.assetData = engine.getImageData(0, 0, destWidth, destHeight);
+
+                            releaseCell(cell);
+                        }
+                    }
+
+                    if (flag) {
+
+                        obj.assetData = {
+                            width: 1,
+                            height: 1,
+                            data: [0, 0, 0, 0],
+                        }
+                    }
+                }
+            });
+        });
     };
 
 // Return the prototype

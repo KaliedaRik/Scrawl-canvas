@@ -27,6 +27,7 @@ let cellGradient = scrawl.makeGradient({
 let gridGradient = scrawl.makeGradient({
     name: 'red-blue',
     endX: '100%',
+    endY: '100%',
 })
 .updateColor(0, 'red')
 .updateColor(500, 'gold')
