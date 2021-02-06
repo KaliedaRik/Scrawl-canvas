@@ -6,6 +6,7 @@
 import { startCoreAnimationLoop } from './animationloop.js';
 import { getCanvases, getStacks } from './document.js';
 import { startCoreListeners, applyCoreResizeListener, applyCoreScrollListener } from './userInteraction.js';
+import { wasmInit } from './wasmWrapper.js';
 
 
 const init = function () {
@@ -19,6 +20,11 @@ const init = function () {
 
 	// Flag to indicate if Scrawl-canvas can use OffscreenCanvas interface
     window.scrawlEnvironmentOffscreenCanvasSupported = ('OffscreenCanvas' in window) ? true : false;
+
+    window.scrawlEnvironmentWebAssemblyInitialized = false;
+    wasmInit()
+    .then(() => window.scrawlEnvironmentWebAssemblyInitialized = true)
+    .catch(e => console.log(e));
 
 
 	// #### Initialization

@@ -121,21 +121,16 @@ import scrawl from 'scrawl-canvas';
 ```
 
 ## Local development and testing
-After downloading the library and unzipping it into a directory or folder, cd into that folder on the command line, run `yarn install` or `npm install` (for the toolchain - the library itself has no external dependencies) and start a local server. For instance if you have `http-server` installed:
+After downloading the library and unzipping it into a directory or folder, cd into that folder on the command line, run `yarn install` or `npm install` (for the toolchain - the library itself has no external dependencies) and start a local server. For instance if you have [light-server](https://github.com/txchen/light-server) installed:
 
 ```
 $> cd ./path/to/Scrawl-canvas
 $> yarn install
-$> http-server
+$> light-server --serve . --open
 
-Starting up http-server, serving ./
-Available on:
-  http://127.0.0.1:8080
-  http://192.168.0.4:8080
-Hit CTRL-C to stop the server
+light-server is listening at http://0.0.0.0:4000
+  serving static dir: .
 ```
-
-Navigate to http://localhost:8080 to access the documentation and demo tests.
 
 ### Testing
 The code base does not include any ___unit testing___ frameworks. Instead, we rely on a set of Demo tests which allow us to perform ___integration testing___ and ___user interface testing___.

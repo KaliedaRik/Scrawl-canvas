@@ -25,6 +25,10 @@
 // ---------------------------------------------------------------------------------
 
 
+// ## Initialize Scrawl-canvas
+import { init } from './core/init.js';
+init();
+
 
 // ## Import Scrawl-canvas modules
 import { 
@@ -300,9 +304,9 @@ import {
 
 
 
-// ## Initialize Scrawl-canvas
-import { init } from './core/init.js';
-init();
+// // ## Initialize Scrawl-canvas
+// import { init } from './core/init.js';
+// init();
 
 
 

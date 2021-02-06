@@ -34,6 +34,7 @@
 
 // #### Imports
 import { animation } from "./library.js";
+import { logMessage } from '../core/wasmWrapper.js';
 
 // Local variables 
 let doAnimation = false,
@@ -80,21 +81,32 @@ const sortAnimations = function () {
 // The __requestAnimationFrame__ function
 const animationLoop = function () {
 
-    let promises = [];
+    if (window.scrawlEnvironmentWebAssemblyInitialized) {
 
-    if (resortBatchAnimations) sortAnimations();
+        // logMessage('wasm has loaded');
 
-    animate_sorted.forEach(item => {
+        let promises = [];
 
-        if (item && item.fn) promises.push(item.fn());
-    });
+        if (resortBatchAnimations) sortAnimations();
 
-    Promise.all(promises)
-    .then(() => {
+        animate_sorted.forEach(item => {
 
-        if (doAnimation) window.requestAnimationFrame(() => animationLoop());
-    })
-    .catch(err => console.log('animationLoop error: ', err));
+            if (item && item.fn) promises.push(item.fn());
+        });
+
+        Promise.all(promises)
+        .then(() => {
+
+            if (doAnimation) window.requestAnimationFrame(() => animationLoop());
+        })
+        .catch(err => console.log('animationLoop error: ', err));
+    }
+    else if (doAnimation) {
+
+        console.log('waiting for wasm to compile');
+        window.requestAnimationFrame(() => animationLoop());
+    }
+    else console.log('animationLoop halted');
 };
 
 // `Exported function` (modules and scrawl object). Start the RAF function running

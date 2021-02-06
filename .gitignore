@@ -7,3 +7,10 @@ node_modules/
 
 demo/temp*
 docs/demo/temp*
+
+source/sc-wasm-rust//target
+source/sc-wasm-rust/**/*.rs.bk
+source/sc-wasm-rust/Cargo.lock
+source/sc-wasm-rust/bin/
+source/sc-wasm-rust/pkg/
+source/sc-wasm-rust/wasm-pack.log

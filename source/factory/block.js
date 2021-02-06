@@ -19,7 +19,7 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver } from '../core/utilities.js';
+import { mergeOver, xt } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
@@ -35,7 +35,7 @@ const Block = function (items = {}) {
         if (!items.width) this.currentDimensions[0] = this.dimensions[0] = 10;
         if (!items.height) this.currentDimensions[1] = this.dimensions[1] = 10;
     }
-
+    console.log('is wasm ready yet?', window.scrawlEnvironmentWebAssemblyInitialized);
     return this;
 };
 
