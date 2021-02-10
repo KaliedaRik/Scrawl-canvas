@@ -5,7 +5,8 @@
   "main": "min/scrawl.js",
   "scripts": {
     "build": "rollup -c && docco ./demo/**/*.js && docco ./demo/*.js && docco ./source/**/*.js && docco ./source/scrawl.js",
-    "build-wasm": "cd source/sc-wasm-rust && wasm-pack build --release --target web && cd ../.."
+    "build-wasm": "cd source/sc-wasm-rust && wasm-pack build --release --target web && cd ../..",
+    "dev": "light-server --serve . --open"
   },
   "keywords": [
     "html5",
@@ -36,6 +37,7 @@
   "homepage": "https://github.com/KaliedaRik/Scrawl-canvas#readme",
   "devDependencies": {
     "docco": "^0.8.0",
+    "light-server": "^2.9.1",
     "rollup": "^2.15.0",
     "rollup-plugin-terser": "^6.1.0"
   },

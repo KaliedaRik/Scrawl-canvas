@@ -118,6 +118,8 @@
 import { constructors, cell, group, entity, asset } from '../core/library.js';
 import { mergeOver, removeItem, λnull } from '../core/utilities.js';
 
+import { makeFilterEngine } from './filterEngine.js';
+
 import baseMix from '../mixin/base.js';
 
 
@@ -1089,73 +1091,28 @@ const setActionsArray = {
 // No additional prototype functions defined
 
 
-// #### Filter webworker pool
-// Because starting a web worker is an expensive operation, and a number of different filters may be required to render displays across a number of different &lt;canvas> elements in a web page, Scrawl-canvas operates a pool of web workers to perform work as-and-when required.
-// + These workers (generally there's only one) are not exposed to developers using the scrawl object, thus only get called internally
-
-// START PRODUCTION CODE
-const filterPool = [];
-import { filterUrl } from '../worker/filter-string.js';
-
-const requestFilterWorker = function () {
-    if (!filterPool.length) filterPool.push(new Worker(filterUrl));
-    return filterPool.shift();
-};
-
-const releaseFilterWorker = function (f) {
-    filterPool.push(f);
-};
-
-const actionFilterWorker = function (worker, items) {
-    return new Promise((resolve, reject) => {
-        worker.onmessage = (e) => {
-            if (e && e.data && e.data.image) resolve(e.data.image);
-            else resolve(false);
-        };
-        worker.onerror = (e) => {
-            console.log('error', e.lineno, e.message);
-            resolve(false);
-        };
-        worker.postMessage(items);
-    });
-};
-// END PRODUCTION CODE
-
-
-// START DEV CODE
-/*
-const filterPool = [];
+// #### Filter engine pool
+// For now, we use one filter engine
+// + This used to be a pool of web workers which loaded up filter functionality
+// + Now it is just another module call in the main thread
+// + Which means that, as filters web workers were the only reason for using Promises, we can get rid of promises
+// + Because my testing seems to indicate that workers were no faster than this code, possibly slower!
+// + Getting rid of Promises would massively simplify the code base, but would lead to breaking changes
+// + But there is surely scope for getting rid of them as far as possible eg simplifying entity stamp workflow
+// + And now we have a good place to start our WASM experiments, with filters
+const filterPool = makeFilterEngine();
 
 const requestFilterWorker = function () {
-    if (!filterPool.length) filterPool.push(buildFilterWorker());
-    return filterPool.shift();
+    return filterPool;
 };
 
-const buildFilterWorker = function () {
-    let path = import.meta.url.slice(0, -('factory/filter.js'.length)); 
-    let filterUrl = `${path}worker/filter.js`;
-    return new Worker(filterUrl);
-};
+const releaseFilterWorker = function (f) {};
 
-const releaseFilterWorker = function (f) {
-    filterPool.push(f);
-};
+const actionFilterWorker = function (ignore, items) {
 
-const actionFilterWorker = function (worker, items) {
-    return new Promise((resolve, reject) => {
-        worker.onmessage = (e) => {
-            if (e && e.data && e.data.image) resolve(e.data.image);
-            else resolve(false);
-        };
-        worker.onerror = (e) => {
-            console.log('error', e.lineno, e.message);
-            resolve(false);
-        };
-        worker.postMessage(items);
-    });
+	let res = filterPool.action(items);
+    return Promise.resolve(res);
 };
-*/
-// END DEV CODE
 
 
 // #### Factory
