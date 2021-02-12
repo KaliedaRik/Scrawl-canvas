@@ -350,57 +350,29 @@ P.checkResponsive = function () {
 P.clear = function () {
 
     this.checkResponsive();
-
-    return Promise.resolve(true);
 };
 
 // `compile`
 P.compile = function () {
 
-    let self = this;
+    this.sortGroups();
+    this.prepareStamp()
+    this.stamp();
 
-    return new Promise((resolve, reject) => {
-
-        self.sortGroups();
-
-        self.prepareStamp()
-
-        self.stamp()
-        .then(() => {
-
-            let promises = [];
-
-            self.groupBuckets.forEach(mygroup => promises.push(mygroup.stamp()));
-
-            return Promise.all(promises);
-        })
-        .then(() => resolve(true))
-        .catch((err) => reject(false));
-    })
+    this.groupBuckets.forEach(mygroup => mygroup.stamp());
 };
 
 // `show`
 P.show = function () {
 
-    return new Promise((resolve) => {
-
-        domShow();
-        resolve(true);
-    });
+    domShow();
 };
 
 // `render`
 P.render = function () {
 
-    let self = this;
-
-    return new Promise((resolve, reject) => {
-
-        self.compile()
-        .then(() => self.show())
-        .then(() => resolve(true))
-        .catch((err) => reject(false));
-    });
+    this.compile();
+    this.show();
 };
 
 // `addExistingDomElements` - argument is a CSS query search String. All elements in the DOM matching the search will be __moved__ into the Stack wrapper's DOM element and given Scrawl-canvas Element wrappers. While Scrawl-canvas will try its best to respect the elements' CSS attributes, they will be __positioned absolutely__ within the Stack and given start, handle and offset values of `[0, 0]`. 

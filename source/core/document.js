@@ -21,7 +21,7 @@ import { makeCanvas } from "../factory/canvas.js";
 //
 // Stacks can be nested within each other, and canvases can also be nested inside a stack. (Nothing can nest inside a canvas element). Only the top level stack will be included in the rootElements array.
 //
-// The Scrawl-canvas __Display cycle__ - a cascade of Promise-based functionality for updating canvas and stack displays - can start at the rootElements array, with each member of the array processed in turn.
+// The Scrawl-canvas __Display cycle__ can start at the rootElements array, with each member of the array processed in turn.
 //
 // The __rootElements__ array keeps track of all 'root' stack artefacts, and also includes all canvas artefacts, whether they're part of a stack or not. __setRootElementSort__ forces the root
 let rootElements = [],
@@ -420,7 +420,7 @@ const addCanvas = function (items = {}) {
 //
 // The order in which DOM stack and canvas elements are processed during the display cycle can be changed by setting that element's controller's __order__ attribute to a higher or lower integer value; elements are processed (in batches) from lowest to highest order value
 //
-// Each display cycle function returns a Promise object which will resolve as true if the function completes successfully; false otherwise. These promises will never reject
+// Each display cycle function is a normal Javascript function, invoked with no arguments and returning no status
 //
 // Note that Scrawl-canvas supplies a convenience function - __makeRender()__ - for automating the process of creating an animation object to handle the Display cycle
 
@@ -480,22 +480,12 @@ const displayCycleHelper = function (items) {
 
 const displayCycleBatchProcess = function (method) {
 
-    return new Promise((resolve, reject) => {
+    rootElements_sorted.forEach(name => {
 
-        let promises = [],
-            item;
+        let item = artefact[name];
 
-        rootElements_sorted.forEach(name => {
-
-            item = artefact[name];
-
-            if (item && item[method]) promises.push(item[method]());
-        })
-
-        Promise.all(promises)
-        .then(() => resolve(true))
-        .catch(err => reject(err));
-    })
+        if (item && item[method]) item[method]();
+    });
 };
 
 
@@ -592,7 +582,8 @@ const domShow = function (singleArtefact = '') {
                     el.width = w;
                     el.height = h;
 
-                    if (art.renderOnResize) art.render().catch(err => console.log(err));
+                    // if (art.renderOnResize) art.render().catch(err => console.log(err));
+                    if (art.renderOnResize) art.render();
                 }
                 else {
 

@@ -865,7 +865,7 @@ P.simpleStamp = function (host, changes = {}) {
     }
 };
 
-// `stamp` - All entity stamping, except for simple stamps, goes through this function, which needs to return a Promise which will resolve in due course.
+// `stamp` - All entity stamping, except for simple stamps, goes through this function.
 // + While other entitys have to worry about applying filters as part of the stamping process, this is not an issue for Loom entitys because filters are defined on, and applied to, the source Picture entity, not the Loom itself
 //
 // Here we check which dirty flags need actioning, and call a range of different functions to process the work. These flags are:
@@ -887,65 +887,15 @@ P.stamp = function (force = false, host, changes) {
 
     if (this.visibility) {
 
-        let self = this,
-            dirtyInput = this.dirtyInput,
+        let dirtyInput = this.dirtyInput,
             dirtyOutput = this.dirtyOutput;
 
-        if (dirtyInput) {
+        if (dirtyInput) this.sourceImageData = this.cleanInput();
 
-            return new Promise((resolve, reject) => {
+        if (dirtyOutput) this.output = this.cleanOutput();
 
-                self.cleanInput()
-                .catch(err => {
-
-                    // We don't need to completely reject if output is not clean
-                    // + It should be enough to bale out of the stamp functionality and hope it resolves during the next RAF iteration
-                    console.log(`${self.name} - cleanInput Error: source has a zero dimension`);
-                    resolve(false);
-                })
-                .then(res => {
-
-                    self.sourceImageData = res;
-                    return self.cleanOutput();
-                })
-                .then(res => {
-
-                    self.output = res;
-                    return self.regularStamp();
-                })
-                .then(res => {
-
-                    resolve(true);
-                })
-                .catch(err => {
-                    
-                    reject(err);
-                });
-            })
-        }
-        else if (dirtyOutput) {
-
-            return new Promise((resolve, reject) => {
-
-                self.cleanOutput()
-                .then(res => {
-
-                    self.output = res;
-                    return self.regularStamp();
-                })
-                .then(res => {
-
-                    resolve(true);
-                })
-                .catch(err => {
-                    
-                    reject(err);
-                });
-            })
-        }
-        else return this.regularStamp();
+        this.regularStamp();
     }
-    else return Promise.resolve(false);
 };
 
 // #### Clean functions
@@ -953,268 +903,239 @@ P.stamp = function (force = false, host, changes) {
 // `cleanInput` - internal function called by `stamp`
 P.cleanInput = function () {
 
-    let self = this;
+    this.dirtyInput = false;
 
-    return new Promise((resolve, reject) => {
+    this.setSourceDimension();
 
-        self.dirtyInput = false;
+    let sourceDimension = this.sourceDimension;
 
-        self.setSourceDimension();
+    if (!sourceDimension) {
 
-        let sourceDimension = self.sourceDimension;
+        this.dirtyInput = true;
+        return false;
+    }
 
-        if (!sourceDimension) {
+    let cell = requestCell(),
+        engine = cell.engine,
+        canvas = cell.element;
 
-            self.dirtyInput = true;
-            reject();
-        }
+    canvas.width = sourceDimension;
+    canvas.height = sourceDimension;
+    engine.setTransform(1, 0, 0, 1, 0, 0);
 
-        let cell = requestCell(),
-            engine = cell.engine,
-            canvas = cell.element;
+    this.source.stamp(true, cell, { 
+        startX: 0,
+        startY: 0,
+        handleX: 0,
+        handleY: 0,
+        offsetX: 0,
+        offsetY: 0,
+        roll: 0,
+        scale: 1,
 
-        canvas.width = sourceDimension;
-        canvas.height = sourceDimension;
-        engine.setTransform(1, 0, 0, 1, 0, 0);
+        width: sourceDimension,
+        height: sourceDimension,
 
-        self.source.stamp(true, cell, { 
-            startX: 0,
-            startY: 0,
-            handleX: 0,
-            handleY: 0,
-            offsetX: 0,
-            offsetY: 0,
-            roll: 0,
-            scale: 1,
-
-            width: sourceDimension,
-            height: sourceDimension,
-
-            method: 'fill',
-        })
-        .then(res => {
-
-            let sourceImageData = engine.getImageData(0, 0, sourceDimension, sourceDimension);
-
-            releaseCell(cell);
-            resolve(sourceImageData);
-        })
-        .catch(err => {
-
-            releaseCell(cell);
-            reject(err);
-        });
+        method: 'fill',
     });
+    return engine.getImageData(0, 0, sourceDimension, sourceDimension);
 };
 
 // `cleanOutput` - internal function called by `stamp`
 // + If you're not a fan of big functions, please look away now.
 P.cleanOutput = function () {
     
-    let self = this;
+    this.dirtyOutput = false;
 
-    return new Promise((resolve, reject) => {
+    this.setSourceDimension();
+    
+    let sourceDimension = this.sourceDimension, 
+        sourceData = this.sourceImageData;
 
-        self.dirtyOutput = false;
+    if (sourceDimension && sourceData) {
 
-        self.setSourceDimension();
-        
-        let sourceDimension = self.sourceDimension, 
-            sourceData = self.sourceImageData;
+        let mHypot = Math.hypot,
+            mFloor = Math.floor,
+            mCeil = Math.ceil,
+            mAtan2 = Math.atan2,
+            mCos = Math.cos,
+            mSin = Math.sin;
 
-        if (sourceDimension && sourceData) {
+        let fromPathData = this.fromPathData,
+            toPathData = this.toPathData,
 
-            let mHypot = Math.hypot,
-                mFloor = Math.floor,
-                mCeil = Math.ceil,
-                mAtan2 = Math.atan2,
-                mCos = Math.cos,
-                mSin = Math.sin;
+            dataLen = fromPathData.length,
 
-            let fromPathData = self.fromPathData,
-                toPathData = self.toPathData,
+            fPathStart = this.fromPathStart,
+            fCursor = fPathStart * dataLen,
+            fStep = this.fromPathSteps || 1,
 
-                dataLen = fromPathData.length,
+            tPathStart = this.toPathStart,
+            tCursor = tPathStart * dataLen,
+            tStep = this.toPathSteps || 1,
 
-                fPathStart = self.fromPathStart,
-                fCursor = fPathStart * dataLen,
-                fStep = self.fromPathSteps || 1,
+            magicHorizontalPi = 0.5 * Math.PI,
+            magicVerticalPi = magicHorizontalPi - 1.5708,
 
-                tPathStart = self.toPathStart,
-                tCursor = tPathStart * dataLen,
-                tStep = self.toPathSteps || 1,
+            isHorizontalCopy = this.isHorizontalCopy,
+            loop = this.loopPathCursors,
 
-                magicHorizontalPi = 0.5 * Math.PI,
-                magicVerticalPi = magicHorizontalPi - 1.5708,
+            fx, fy, tx, ty, dx, dy, dLength, dAngle, cos, sin, 
 
-                isHorizontalCopy = self.isHorizontalCopy,
-                loop = self.loopPathCursors,
+            watchFromPath = this.watchFromPath,
+            watchIndex = this.watchIndex, 
+            engineInstructions = this.engineInstructions,
+            engineDeltaLengths = this.engineDeltaLengths,
+            instruction;
 
-                fx, fy, tx, ty, dx, dy, dLength, dAngle, cos, sin, 
+        let [startX, startY, outputWidth, outputHeight] = this.getBoundingBox();
 
-                watchFromPath = self.watchFromPath,
-                watchIndex = self.watchIndex, 
-                engineInstructions = self.engineInstructions,
-                engineDeltaLengths = self.engineDeltaLengths,
-                instruction;
+        let inputCell = requestCell(),
+            inputEngine = inputCell.engine,
+            inputCanvas = inputCell.element;
 
-            let [startX, startY, outputWidth, outputHeight] = self.getBoundingBox();
+        inputCanvas.width = sourceDimension;
+        inputCanvas.height = sourceDimension;
+        inputEngine.setTransform(1, 0, 0, 1, 0, 0);
+        inputEngine.putImageData(sourceData, 0, 0);
 
-            let inputCell = requestCell(),
-                inputEngine = inputCell.engine,
-                inputCanvas = inputCell.element;
+        let outputCell = requestCell(),
+            outputEngine = outputCell.engine,
+            outputCanvas = outputCell.element;
 
-            inputCanvas.width = sourceDimension;
-            inputCanvas.height = sourceDimension;
-            inputEngine.setTransform(1, 0, 0, 1, 0, 0);
-            inputEngine.putImageData(sourceData, 0, 0);
+        outputCanvas.width = outputWidth;
+        outputCanvas.height = outputHeight;
+        outputEngine.globalAlpha = this.state.globalAlpha;
+        outputEngine.setTransform(1, 0, 0, 1, 0, 0);
 
-            let outputCell = requestCell(),
-                outputEngine = outputCell.engine,
-                outputCanvas = outputCell.element;
+        if(!engineInstructions.length) {
 
-            outputCanvas.width = outputWidth;
-            outputCanvas.height = outputHeight;
-            outputEngine.globalAlpha = self.state.globalAlpha;
-            outputEngine.setTransform(1, 0, 0, 1, 0, 0);
+            for (let i = 0; i < sourceDimension; i++) {
 
-            if(!engineInstructions.length) {
+                if (watchIndex < 0) {
 
-                for (let i = 0; i < sourceDimension; i++) {
+                    if (watchFromPath && fCursor < 1) watchIndex = i;
+                    else if (!watchFromPath && tCursor < 1) watchIndex = i;
+                }
 
-                    if (watchIndex < 0) {
+                if (fCursor < dataLen && tCursor < dataLen && fCursor >= 0 && tCursor >= 0) {
 
-                        if (watchFromPath && fCursor < 1) watchIndex = i;
-                        else if (!watchFromPath && tCursor < 1) watchIndex = i;
-                    }
+                    [fx, fy] = fromPathData[mFloor(fCursor)];
+                    [tx, ty] = toPathData[mFloor(tCursor)];
 
-                    if (fCursor < dataLen && tCursor < dataLen && fCursor >= 0 && tCursor >= 0) {
+                    dx = tx - fx;
+                    dy = ty - fy;
 
-                        [fx, fy] = fromPathData[mFloor(fCursor)];
-                        [tx, ty] = toPathData[mFloor(tCursor)];
+                    dLength = mHypot(dx, dy);
 
-                        dx = tx - fx;
-                        dy = ty - fy;
+                    if (isHorizontalCopy) {
 
-                        dLength = mHypot(dx, dy);
+                        dAngle = -mAtan2(dx, dy) + magicHorizontalPi;
+                        cos = mCos(dAngle);
+                        sin = mSin(dAngle);
 
-                        if (isHorizontalCopy) {
-
-                            dAngle = -mAtan2(dx, dy) + magicHorizontalPi;
-                            cos = mCos(dAngle);
-                            sin = mSin(dAngle);
-
-                            engineInstructions.push([cos, sin, -sin, cos, fx, fy]);
-                            engineDeltaLengths.push(dLength);
-                        }
-                        else {
-
-                            dAngle = -mAtan2(dx, dy) + magicVerticalPi;
-                            cos = mCos(dAngle);
-                            sin = mSin(dAngle);
-
-                            engineInstructions.push([cos, sin, -sin, cos, fx, fy, dLength]);
-                            engineDeltaLengths.push(dLength);
-                        }
+                        engineInstructions.push([cos, sin, -sin, cos, fx, fy]);
+                        engineDeltaLengths.push(dLength);
                     }
                     else {
 
-                        engineInstructions.push(false);
-                        engineDeltaLengths.push(false);
-                    }
+                        dAngle = -mAtan2(dx, dy) + magicVerticalPi;
+                        cos = mCos(dAngle);
+                        sin = mSin(dAngle);
 
-                    fCursor += fStep;
-                    tCursor += tStep;
-
-                    if (loop) {
-
-                        if (fCursor >= dataLen) fCursor -= dataLen;
-                        if (tCursor >= dataLen) tCursor -= dataLen;
+                        engineInstructions.push([cos, sin, -sin, cos, fx, fy, dLength]);
+                        engineDeltaLengths.push(dLength);
                     }
                 }
-                if (watchIndex < 0) watchIndex = 0;
-                self.watchIndex = watchIndex;
-            }
+                else {
 
-            if (isHorizontalCopy) {
+                    engineInstructions.push(false);
+                    engineDeltaLengths.push(false);
+                }
 
+                fCursor += fStep;
+                tCursor += tStep;
 
-                for (let i = 0; i < sourceDimension; i++) {
+                if (loop) {
 
-                    instruction = engineInstructions[watchIndex];
-
-                    if (instruction) {
-
-                        outputEngine.setTransform(...instruction);
-                        outputEngine.drawImage(inputCanvas, 0, watchIndex, sourceDimension, 1, 0, 0, engineDeltaLengths[watchIndex], 1);
-                    }
-                    watchIndex++;
-
-                    if (watchIndex >= sourceDimension) watchIndex = 0;
+                    if (fCursor >= dataLen) fCursor -= dataLen;
+                    if (tCursor >= dataLen) tCursor -= dataLen;
                 }
             }
-            else {
-
-                for (let i = 0; i < sourceDimension; i++) {
-
-                    instruction = engineInstructions[watchIndex];
-
-                    if (instruction) {
-
-                        outputEngine.setTransform(...instruction);
-                        outputEngine.drawImage(inputCanvas, watchIndex, 0, 1, sourceDimension, 0, 0, 1, engineDeltaLengths[watchIndex]);
-                    }
-                    watchIndex++;
-
-                    if (watchIndex >= sourceDimension) watchIndex = 0;
-                }
-            }
-
-            let iFactor = self.interferenceFactor,
-                iLoops = self.interferenceLoops,
-
-                iWidth = mCeil(outputWidth * iFactor),
-                iHeight = mCeil(outputHeight * iFactor);
-
-            inputCanvas.width = iWidth;
-            inputCanvas.height = iHeight;
-
-            outputEngine.setTransform(1, 0, 0, 1, 0, 0);
-            inputEngine.setTransform(1, 0, 0, 1, 0, 0);
-
-            for (let j = 0; j < iLoops; j++) {
-
-                inputEngine.drawImage(outputCanvas, 0, 0, outputWidth, outputHeight, 0, 0, iWidth, iHeight);
-                outputEngine.drawImage(inputCanvas, 0, 0, iWidth, iHeight, 0, 0, outputWidth, outputHeight);
-            }
-
-            let outputData = outputEngine.getImageData(0, 0, outputWidth, outputHeight);
-
-            releaseCell(inputCell);
-            releaseCell(outputCell);
-
-            self.dirtyTargetImage = true;
-
-            resolve(outputData);
+            if (watchIndex < 0) watchIndex = 0;
+            this.watchIndex = watchIndex;
         }
-        else reject(new Error(`${this.name} - cleanOutput Error: source has a zero dimension, or no data`));
-    });
+
+        if (isHorizontalCopy) {
+
+
+            for (let i = 0; i < sourceDimension; i++) {
+
+                instruction = engineInstructions[watchIndex];
+
+                if (instruction) {
+
+                    outputEngine.setTransform(...instruction);
+                    outputEngine.drawImage(inputCanvas, 0, watchIndex, sourceDimension, 1, 0, 0, engineDeltaLengths[watchIndex], 1);
+                }
+                watchIndex++;
+
+                if (watchIndex >= sourceDimension) watchIndex = 0;
+            }
+        }
+        else {
+
+            for (let i = 0; i < sourceDimension; i++) {
+
+                instruction = engineInstructions[watchIndex];
+
+                if (instruction) {
+
+                    outputEngine.setTransform(...instruction);
+                    outputEngine.drawImage(inputCanvas, watchIndex, 0, 1, sourceDimension, 0, 0, 1, engineDeltaLengths[watchIndex]);
+                }
+                watchIndex++;
+
+                if (watchIndex >= sourceDimension) watchIndex = 0;
+            }
+        }
+
+        let iFactor = this.interferenceFactor,
+            iLoops = this.interferenceLoops,
+
+            iWidth = mCeil(outputWidth * iFactor),
+            iHeight = mCeil(outputHeight * iFactor);
+
+        inputCanvas.width = iWidth;
+        inputCanvas.height = iHeight;
+
+        outputEngine.setTransform(1, 0, 0, 1, 0, 0);
+        inputEngine.setTransform(1, 0, 0, 1, 0, 0);
+
+        for (let j = 0; j < iLoops; j++) {
+
+            inputEngine.drawImage(outputCanvas, 0, 0, outputWidth, outputHeight, 0, 0, iWidth, iHeight);
+            outputEngine.drawImage(inputCanvas, 0, 0, iWidth, iHeight, 0, 0, outputWidth, outputHeight);
+        }
+
+        let outputData = outputEngine.getImageData(0, 0, outputWidth, outputHeight);
+
+        releaseCell(inputCell);
+        releaseCell(outputCell);
+
+        this.dirtyTargetImage = true;
+
+        return outputData;
+    }
+    return false;
+        // else return new Error(`${this.name} - cleanOutput Error: source has a zero dimension, or no data`);
 };
 
 // `regularStamp` - internal function called by `stamp`
 P.regularStamp = function () {
 
-    let self = this;
-
-    return new Promise((resolve, reject) => {
-
-        if (self.currentHost) {
-
-            self.regularStampSynchronousActions();
-            resolve(true);
-        }
-        reject(new Error(`${self.name} has no current host`));
-    });
+        if (this.currentHost) this.regularStampSynchronousActions();
+        // else return new Error(`${this.name} has no current host`);
 };
 
 // `regularStampSynchronousActions` - internal function called by `regularStamp`

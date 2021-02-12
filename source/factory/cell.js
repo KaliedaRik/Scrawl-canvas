@@ -841,59 +841,52 @@ P.getComputedFontSizes = function () {
 
 
 // #### Display cycle functionality
-// This functionality is entirely Promise-based, and triggered by the Cell's Canvas wrapper controller
+// This functionality is triggered by the Cell's Canvas wrapper controller
 
 // `clear`
 P.clear = function () {
 
-    let self = this;
+    const {element, engine, backgroundColor, clearAlpha, currentDimensions} = this;
+    const [width, height] = currentDimensions;
 
-    return new Promise((resolve) => {
+    this.prepareStamp();
 
-        const {element, engine, backgroundColor, clearAlpha, currentDimensions} = self;
-        const [width, height] = currentDimensions;
+    engine.setTransform(1,0,0,1,0,0);
 
-        self.prepareStamp();
+    if (backgroundColor) {
 
-        engine.setTransform(1,0,0,1,0,0);
+        let tempBackground = engine.fillStyle,
+            tempGCO = engine.globalCompositeOperation,
+            tempAlpha = engine.globalAlpha;
 
-        if (backgroundColor) {
+        engine.fillStyle = backgroundColor;
+        engine.globalCompositeOperation = 'source-over';
+        engine.globalAlpha = 1;
+        engine.fillRect(0, 0, width, height);
+        engine.fillStyle = tempBackground;
+        engine.globalCompositeOperation = tempGCO;
+        engine.globalAlpha = tempAlpha;
+    }
+    else if (clearAlpha) {
 
-            let tempBackground = engine.fillStyle,
-                tempGCO = engine.globalCompositeOperation,
-                tempAlpha = engine.globalAlpha;
+        let tempCell = requestCell();
+        
+        let {engine:tempEngine, element:tempEl} = tempCell;
 
-            engine.fillStyle = backgroundColor;
-            engine.globalCompositeOperation = 'source-over';
-            engine.globalAlpha = 1;
-            engine.fillRect(0, 0, width, height);
-            engine.fillStyle = tempBackground;
-            engine.globalCompositeOperation = tempGCO;
-            engine.globalAlpha = tempAlpha;
-        }
-        else if (clearAlpha) {
+        tempEl.width = width;
+        tempEl.height = height;
 
-            let tempCell = requestCell();
-            
-            let {engine:tempEngine, element:tempEl} = tempCell;
+        let data = engine.getImageData(0, 0, width, height);
+        tempEngine.putImageData(data, 0, 0);
 
-            tempEl.width = width;
-            tempEl.height = height;
+        let oldAlpha = engine.globalAlpha;
 
-            let data = engine.getImageData(0, 0, width, height);
-            tempEngine.putImageData(data, 0, 0);
-
-            let oldAlpha = engine.globalAlpha;
-
-            engine.clearRect(0, 0, width, height);
-            engine.globalAlpha = clearAlpha;
-            engine.drawImage(tempEl, 0, 0);
-            engine.globalAlpha = oldAlpha;
-        }
-        else engine.clearRect(0, 0, width, height);
-
-        resolve(true);
-    });
+        engine.clearRect(0, 0, width, height);
+        engine.globalAlpha = clearAlpha;
+        engine.drawImage(tempEl, 0, 0);
+        engine.globalAlpha = oldAlpha;
+    }
+    else engine.clearRect(0, 0, width, height);
 };
 
 // `compile`
@@ -906,242 +899,168 @@ P.compile = function(){
 
     if(this.dirtyFilters || !this.currentFilters) this.cleanFilters();
 
-    let self = this;
+    this.groupBuckets.forEach(grp => {
 
-    // Doing it this way to ensure that each group completes its stamp action before the next one starts
-    let next = (counter) => {
+        if (grp && grp.stamp) grp.stamp();
+    });
 
-        return new Promise((resolve, reject) => {
-
-            let grp = self.groupBuckets[counter];
-
-            if (grp && grp.stamp) {
-
-                grp.stamp()
-                .then(res => {
-
-                    next(counter + 1)
-                    .then(res => {
-
-                        resolve(true);
-                    })
-                    .catch(err => reject(err));
-                })
-                .catch(err => reject(err));
-            }
-
-            // The else branch should only trigger once all the groups have been processed. At this point we should be okay to action any Cell-level filters on the output, and stash the output (if required)
-            else {
-
-                if (!self.noFilters && self.filters && self.filters.length) {
-
-                    self.applyFilters()
-                    .then(res => self.stashOutputAction())
-                    .then(res => resolve(true))
-                    .catch(err => reject(err));
-                }
-                else {
-
-                    self.stashOutputAction()
-                    .then(res => resolve(true))
-                    .catch(err => reject(err));
-                }
-            }
-        });
-    };
-    return next(0);
+    if (!this.noFilters && this.filters && this.filters.length) this.applyFilters();
+    this.stashOutputAction();
 };
 
 // `show` - Note that functionality here differs for __base cells__ and other Cell wrappers
 P.show = function () {
 
-    var self = this;
+    // get the destination cell's canvas context
+    let host = this.getHost(),
+        engine = (host && host.engine) ? host.engine : false;
 
-    return new Promise((resolve) => {
+    if (engine) {
 
-        // get the destination cell's canvas context
-        let host = self.getHost(),
-            engine = (host && host.engine) ? host.engine : false;
+        let floor = Math.floor,
+            hostDimensions = host.currentDimensions,
+            destWidth = floor(hostDimensions[0]),
+            destHeight = floor(hostDimensions[1]);
 
-        if (engine) {
+        // Cannot draw to the destination canvas if either of its dimensions === 0
+        // - Test on Demo component-002
+        if (!destWidth || !destHeight) return false;
 
-            let floor = Math.floor,
-                hostDimensions = host.currentDimensions,
-                destWidth = floor(hostDimensions[0]),
-                destHeight = floor(hostDimensions[1]);
+        let { currentScale:scale, currentDimensions, composite, alpha, controller, element, isBase, currentStampHandlePosition:handle, currentStampPosition:stamp } = this;
 
-            // Cannot draw to the destination canvas if either of its dimensions === 0
-            // - Test on Demo component-002
-            if (!destWidth || !destHeight) resolve(false);
+        let curWidth = floor(currentDimensions[0]),
+            curHeight = floor(currentDimensions[1]),
+            paste;
 
-            let scale = self.currentScale,
-                currentDimensions = self.currentDimensions,
-                curWidth = floor(currentDimensions[0]),
-                curHeight = floor(currentDimensions[1]),
-                composite = self.composite,
-                alpha = self.alpha,
-                controller = self.controller,
-                element = self.element,
-                paste;
+        engine.save();
+        engine.setTransform(1, 0, 0, 1, 0, 0);
+            
+        engine.filter = this.filter;
 
-            engine.save();
-            engine.setTransform(1, 0, 0, 1, 0, 0);
-                
-            engine.filter = self.filter;
+        if (isBase) {
 
-            if (self.isBase) {
+            if (!this.basePaste) this.basePaste = [];
+            paste = this.basePaste;
 
-                if (!self.basePaste) self.basePaste = [];
-                paste = self.basePaste;
+            // copy the base canvas over to the display canvas. This copy operation ignores any scale, roll or position attributes set on the base cell, instead complying with the controller's fit attribute requirements
+            this.prepareStamp();
 
-                // copy the base canvas over to the display canvas. This copy operation ignores any scale, roll or position attributes set on the base cell, instead complying with the controller's fit attribute requirements
-                self.prepareStamp();
+            engine.globalCompositeOperation = 'source-over';
+            engine.globalAlpha = 1;
+            engine.clearRect(0, 0, destWidth, destHeight);
 
-                engine.globalCompositeOperation = 'source-over';
-                engine.globalAlpha = 1;
-                engine.clearRect(0, 0, destWidth, destHeight);
+            engine.globalCompositeOperation = composite;
+            engine.globalAlpha = alpha;
 
-                engine.globalCompositeOperation = composite;
-                engine.globalAlpha = alpha;
+            let fit = (controller) ? controller.fit : 'none',
+                relWidth, relHeight;
 
-                let fit = (controller) ? controller.fit : 'none',
-                    relWidth, relHeight;
+            switch (fit) {
 
-                switch (fit) {
+                case 'contain' :
+                    // base must copy into display resized, centered, letterboxing if necessary, maintaining aspect ratio
+                    relWidth = destWidth / (curWidth || 1);
+                    relHeight = destHeight / (curHeight || 1);
 
-                    case 'contain' :
-                        // base must copy into display resized, centered, letterboxing if necessary, maintaining aspect ratio
-                        relWidth = destWidth / (curWidth || 1);
-                        relHeight = destHeight / (curHeight || 1);
+                    if (relWidth > relHeight) {
 
-                        if (relWidth > relHeight) {
-
-                            paste[0] = floor((destWidth - (curWidth * relHeight)) / 2);
-                            paste[1] = 0;
-                            paste[2] = floor(curWidth * relHeight);
-                            paste[3] = floor(curHeight * relHeight);
-                        }
-                        else {
-
-                            paste[0] = 0;
-                            paste[1] = floor((destHeight - (curHeight * relWidth)) / 2);
-                            paste[2] = floor(curWidth * relWidth);
-                            paste[3] = floor(curHeight * relWidth);
-                        }
-                        break;
-
-                    case 'cover' :
-                        // base must copy into display resized, centered, leaving no letterbox area, maintaining aspect ratio
-                        relWidth = destWidth / (curWidth || 1);
-                        relHeight = destHeight / (curHeight || 1);
-
-                        if (relWidth < relHeight) {
-
-                            paste[0] = floor((destWidth - (curWidth * relHeight)) / 2);
-                            paste[1] = 0;
-                            paste[2] = floor(curWidth * relHeight);
-                            paste[3] = floor(curHeight * relHeight);
-                        }
-                        else{
-
-                            paste[0] = 0;
-                            paste[1] = floor((destHeight - (curHeight * relWidth)) / 2);
-                            paste[2] = floor(curWidth * relWidth);
-                            paste[3] = floor(curHeight * relWidth);
-                        }
-                        break;
-
-                    case 'fill' :
-                        // base must copy into display resized, distorting the aspect ratio as necessary
-                        paste[0] = 0;
+                        paste[0] = floor((destWidth - (curWidth * relHeight)) / 2);
                         paste[1] = 0;
-                        paste[2] = floor(destWidth);
-                        paste[3] = floor(destHeight);
-                        break;
+                        paste[2] = floor(curWidth * relHeight);
+                        paste[3] = floor(curHeight * relHeight);
+                    }
+                    else {
 
-                    case 'none' :
-                    default :
-                        // base copies into display as-is, centred, maintaining aspect ratio
-                        paste[0] = floor((destWidth - curWidth) / 2);
-                        paste[1] = floor((destHeight - curHeight) / 2);
-                        paste[2] = curWidth;
-                        paste[3] = curHeight;
-                }
+                        paste[0] = 0;
+                        paste[1] = floor((destHeight - (curHeight * relWidth)) / 2);
+                        paste[2] = floor(curWidth * relWidth);
+                        paste[3] = floor(curHeight * relWidth);
+                    }
+                    break;
+
+                case 'cover' :
+                    // base must copy into display resized, centered, leaving no letterbox area, maintaining aspect ratio
+                    relWidth = destWidth / (curWidth || 1);
+                    relHeight = destHeight / (curHeight || 1);
+
+                    if (relWidth < relHeight) {
+
+                        paste[0] = floor((destWidth - (curWidth * relHeight)) / 2);
+                        paste[1] = 0;
+                        paste[2] = floor(curWidth * relHeight);
+                        paste[3] = floor(curHeight * relHeight);
+                    }
+                    else{
+
+                        paste[0] = 0;
+                        paste[1] = floor((destHeight - (curHeight * relWidth)) / 2);
+                        paste[2] = floor(curWidth * relWidth);
+                        paste[3] = floor(curHeight * relWidth);
+                    }
+                    break;
+
+                case 'fill' :
+                    // base must copy into display resized, distorting the aspect ratio as necessary
+                    paste[0] = 0;
+                    paste[1] = 0;
+                    paste[2] = floor(destWidth);
+                    paste[3] = floor(destHeight);
+                    break;
+
+                case 'none' :
+                default :
+                    // base copies into display as-is, centred, maintaining aspect ratio
+                    paste[0] = floor((destWidth - curWidth) / 2);
+                    paste[1] = floor((destHeight - curHeight) / 2);
+                    paste[2] = curWidth;
+                    paste[3] = curHeight;
             }
-            else if (scale > 0) {
-
-                if (!self.paste) self.paste = [];
-                paste = self.paste;
-
-                // Cell canvases are treated like entitys on the base canvas: they can be positioned, scaled and rotated. Positioning will respect lockTo; flipReverse and flipUpend; and can be pivoted to other artefacts, or follow a path entity, etc. If pivoted to the mouse, they will use the base canvas's .here attribute, which takes into account differences between the base and display canvas dimensions.
-
-                if (!self.noDeltaUpdates) self.setDelta(self.delta);
-
-                self.prepareStamp();
-
-                engine.globalCompositeOperation = composite;
-                engine.globalAlpha = alpha;
-
-                let handle = self.currentStampHandlePosition,
-                    stamp = self.currentStampPosition;
-
-                paste[0] = floor(-handle[0] * scale);
-                paste[1] = floor(-handle[1] * scale);
-                paste[2] = floor(curWidth * scale);
-                paste[3] = floor(curHeight * scale);
-
-                self.rotateDestination(engine, stamp[0], stamp[1]);
-            }
-
-            engine.drawImage(element, 0, 0, curWidth, curHeight, ...paste);
-            engine.restore();
-
-            resolve(true);
         }
-        else resolve(false);
-    });
+        else if (scale > 0) {
+
+            if (!this.paste) this.paste = [];
+            paste = this.paste;
+
+            // Cell canvases are treated like entitys on the base canvas: they can be positioned, scaled and rotated. Positioning will respect lockTo; flipReverse and flipUpend; and can be pivoted to other artefacts, or follow a path entity, etc. If pivoted to the mouse, they will use the base canvas's .here attribute, which takes into account differences between the base and display canvas dimensions.
+
+            if (!this.noDeltaUpdates) this.setDelta(this.delta);
+
+            this.prepareStamp();
+
+            engine.globalCompositeOperation = composite;
+            engine.globalAlpha = alpha;
+
+            paste[0] = floor(-handle[0] * scale);
+            paste[1] = floor(-handle[1] * scale);
+            paste[2] = floor(curWidth * scale);
+            paste[3] = floor(curHeight * scale);
+
+            this.rotateDestination(engine, ...stamp);
+        }
+        engine.drawImage(element, 0, 0, curWidth, curHeight, ...paste);
+        engine.restore();
+    }
 };
 
 
 // `applyFilters` - Internal function - add filters to the Cell's current output.
-// + Filters are applied via a web worker, hence the need to wrap the functionality in a Promise
 P.applyFilters = function () {
 
-    let self = this;
+    let engine = this.engine,
+        image, worker;
 
-    return new Promise(function(resolve){
+    image = engine.getImageData(0, 0, this.currentDimensions[0], this.currentDimensions[1]);
+    worker = requestFilterWorker();
 
-        let engine = self.engine,
-            image, worker;
+    // NEED TO POPULATE IMAGE FILTER ACTION OBJECTS WITH THEIR ASSET'S IMAGEDATA AT THIS POINT
+    this.preprocessFilters(this.currentFilters);
 
-        image = engine.getImageData(0, 0, self.currentDimensions[0], self.currentDimensions[1]);
-        worker = requestFilterWorker();
-
-        // NEED TO POPULATE IMAGE FILTER ACTION OBJECTS WITH THEIR ASSET'S IMAGEDATA AT THIS POINT
-        self.preprocessFilters(self.currentFilters);
-
-        actionFilterWorker(worker, {
-            image: image,
-            filters: self.currentFilters
-        })
-        .then((img) => {
-
-            releaseFilterWorker(worker);
-
-            if (img) {
-
-                engine.putImageData(img, 0, 0);
-                
-                resolve(true);
-            }
-            else resolve(false);
-        })
-        .catch((err) => {
-
-            releaseFilterWorker(worker);
-            resolve(false);
-        });
+    let img = actionFilterWorker(worker, {
+        image: image,
+        filters: this.currentFilters
     });
+
+    if (img) engine.putImageData(img, 0, 0);
 };
 
 
@@ -1152,85 +1071,79 @@ P.applyFilters = function () {
 // + If we are also stashing an image, an &lt;img> element will be generated and stored in the Cell object's __stashedImage__ attribute. We also generate an imageAsset wrapper for the object that will have the name `cellname+'-image'`, which gets added to the assets section of the Scrawl-canvas library.
 P.stashOutputAction = function () {
 
-    let self = this;
-
     if (this.stashOutput) {
 
         this.stashOutput = false;
 
-        return new Promise ((resolve, reject) => {
+        let { currentDimensions, stashCoordinates, stashDimensions, engine } = this;
 
-            let [cellWidth, cellHeight] = self.currentDimensions,
-                stashCoordinates = self.stashCoordinates,
-                stashDimensions = self.stashDimensions,
-                stashX = (stashCoordinates) ? stashCoordinates[0] : 0, 
-                stashY = (stashCoordinates) ? stashCoordinates[1] : 0, 
-                stashWidth = (stashDimensions) ? stashDimensions[0] : cellWidth, 
-                stashHeight = (stashDimensions) ? stashDimensions[1] : cellHeight;
+        let [cellWidth, cellHeight] = currentDimensions;
 
-            // Keep the stashed image within bounds of the Cell's dimensions.
-            if (stashWidth.substring || stashHeight.substring || stashX.substring || stashY.substring || stashX || stashY || stashWidth !== cellWidth || stashHeight !== cellHeight) {
+        let stashX = (stashCoordinates) ? stashCoordinates[0] : 0, 
+            stashY = (stashCoordinates) ? stashCoordinates[1] : 0, 
+            stashWidth = (stashDimensions) ? stashDimensions[0] : cellWidth, 
+            stashHeight = (stashDimensions) ? stashDimensions[1] : cellHeight;
 
-                if (stashWidth.substring) stashWidth = (parseFloat(stashWidth) / 100) * cellWidth;
-                if (isNaN(stashWidth) || stashWidth <= 0) stashWidth = 1;
-                if (stashWidth > cellWidth) stashWidth = cellWidth;
+        // Keep the stashed image within bounds of the Cell's dimensions.
+        if (stashWidth.substring || stashHeight.substring || stashX.substring || stashY.substring || stashX || stashY || stashWidth !== cellWidth || stashHeight !== cellHeight) {
 
-                if (stashHeight.substring) stashHeight = (parseFloat(stashHeight) / 100) * cellHeight;
-                if (isNaN(stashHeight) || stashHeight <= 0) stashHeight = 1;
-                if (stashHeight > cellHeight) stashHeight = cellHeight;
+            if (stashWidth.substring) stashWidth = (parseFloat(stashWidth) / 100) * cellWidth;
+            if (isNaN(stashWidth) || stashWidth <= 0) stashWidth = 1;
+            if (stashWidth > cellWidth) stashWidth = cellWidth;
 
-                if (stashX.substring) stashX = (parseFloat(stashX) / 100) * cellWidth;
-                if (isNaN(stashX) || stashX < 0) stashX = 0;
-                if (stashX + stashWidth > cellWidth) stashX = cellWidth - stashWidth;
+            if (stashHeight.substring) stashHeight = (parseFloat(stashHeight) / 100) * cellHeight;
+            if (isNaN(stashHeight) || stashHeight <= 0) stashHeight = 1;
+            if (stashHeight > cellHeight) stashHeight = cellHeight;
 
-                if (stashY.substring) stashY = (parseFloat(stashY) / 100) * cellHeight;
-                if (isNaN(stashY) || stashY < 0) stashY = 0;
-                if (stashY + stashHeight > cellHeight) stashY = cellHeight - stashHeight;
+            if (stashX.substring) stashX = (parseFloat(stashX) / 100) * cellWidth;
+            if (isNaN(stashX) || stashX < 0) stashX = 0;
+            if (stashX + stashWidth > cellWidth) stashX = cellWidth - stashWidth;
+
+            if (stashY.substring) stashY = (parseFloat(stashY) / 100) * cellHeight;
+            if (isNaN(stashY) || stashY < 0) stashY = 0;
+            if (stashY + stashHeight > cellHeight) stashY = cellHeight - stashHeight;
+        }
+
+        // Get the imageData object, and stash it
+        engine.save();
+        engine.setTransform(1, 0, 0, 1, 0, 0);
+        this.stashedImageData = engine.getImageData(stashX, stashY, stashWidth, stashHeight);
+        engine.restore();
+
+        // Get the dataUrl String, updating the stashed &lt;img> element with it
+        if (this.stashOutputAsAsset) {
+
+            this.stashOutputAsAsset = false;
+
+            let sourcecanvas, mycanvas;
+                
+            mycanvas = requestCell();
+            sourcecanvas = mycanvas.element;
+
+            sourcecanvas.width = stashWidth;
+            sourcecanvas.height = stashHeight;
+
+            mycanvas.engine.putImageData(this.stashedImageData, 0, 0);
+
+            if (!this.stashedImage) {
+
+                let newimg = this.stashedImage = document.createElement('img');
+
+                newimg.id = `${this.name}-image`;
+
+                newimg.onload = function () {
+
+                    scrawlCanvasHold.appendChild(newimg);
+                    importDomImage(`#${newimg.id}`);
+                };
+
+                newimg.src = sourcecanvas.toDataURL();
             }
+            else this.stashedImage.src = sourcecanvas.toDataURL();
 
-            // Get the imageData object, and stash it
-            self.engine.save();
-            self.engine.setTransform(1, 0, 0, 1, 0, 0);
-            self.stashedImageData = self.engine.getImageData(stashX, stashY, stashWidth, stashHeight);
-            self.engine.restore();
-
-            // Get the dataUrl String, updating the stashed &lt;img> element with it
-            if (self.stashOutputAsAsset) {
-
-                self.stashOutputAsAsset = false;
-
-                let sourcecanvas, mycanvas;
-                    
-                mycanvas = requestCell();
-                sourcecanvas = mycanvas.element;
-
-                sourcecanvas.width = stashWidth;
-                sourcecanvas.height = stashHeight;
-
-                mycanvas.engine.putImageData(self.stashedImageData, 0, 0);
-
-                if (!self.stashedImage) {
-
-                    let newimg = self.stashedImage = document.createElement('img');
-
-                    newimg.id = `${self.name}-image`;
-
-                    newimg.onload = function () {
-
-                        scrawlCanvasHold.appendChild(newimg);
-                        importDomImage(`#${newimg.id}`);
-                    };
-
-                    newimg.src = sourcecanvas.toDataURL();
-                }
-                else self.stashedImage.src = sourcecanvas.toDataURL();
-
-                releaseCell(mycanvas);
-            }
-            resolve(true);
-        });
+            releaseCell(mycanvas);
+        }
     }
-    else return Promise.resolve(false)
 };
 
 

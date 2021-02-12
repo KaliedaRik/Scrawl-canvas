@@ -4,7 +4,7 @@
   "description": "Version 8.4.0 - 2 Feb 2021",
   "main": "min/scrawl.js",
   "scripts": {
-    "build": "rollup -c && docco ./demo/**/*.js && docco ./demo/*.js && docco ./source/**/*.js && docco ./source/scrawl.js",
+    "build": "cd source/sc-wasm-rust && wasm-pack build --release --target web && cd ../.. && rollup -c && cp source/sc-wasm-rust/pkg/sc_wasm_rust_bg.wasm min/scrawl_bg.wasm && docco ./demo/**/*.js && docco ./demo/*.js && docco ./source/**/*.js && docco ./source/scrawl.js",
     "build-wasm": "cd source/sc-wasm-rust && wasm-pack build --release --target web && cd ../..",
     "dev": "light-server --serve . --open"
   },

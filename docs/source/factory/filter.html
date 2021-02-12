@@ -60,6 +60,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/wasmWrapper.html">
+                  ./source/core/wasmWrapper.js
+                </a>
+              
+                
                 <a class="source" href="action.html">
                   ./source/factory/action.js
                 </a>
@@ -122,6 +127,11 @@
                 
                 <a class="source" href="filter.html">
                   ./source/factory/filter.js
+                </a>
+              
+                
+                <a class="source" href="filterEngine.html">
+                  ./source/factory/filterEngine.js
                 </a>
               
                 
@@ -429,16 +439,6 @@
                   ./source/mixin/tween.js
                 </a>
               
-                
-                <a class="source" href="../worker/filter-string.html">
-                  ./source/worker/filter-string.js
-                </a>
-              
-                
-                <a class="source" href="../worker/filter.html">
-                  ./source/worker/filter.js
-                </a>
-              
             </div>
           </div>
         </li>
@@ -567,6 +567,8 @@ scrawl.makeFilter({
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">cell</span>, <span class="hljs-title">group</span>, <span class="hljs-title">entity</span>, <span class="hljs-title">asset</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
 <span class="hljs-keyword">import</span> { mergeOver, removeItem, λ<span class="hljs-literal">null</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { makeFilterEngine } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./filterEngine.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;</pre></div></div>
             
@@ -2317,13 +2319,33 @@ scrawl.makeFilter({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
-              <h4 id="filter-webworker-pool">Filter webworker pool</h4>
-<p>Because starting a web worker is an expensive operation, and a number of different filters may be required to render displays across a number of different &lt;canvas&gt; elements in a web page, Scrawl-canvas operates a pool of web workers to perform work as-and-when required.</p>
+              <h4 id="filter-engine-pool">Filter engine pool</h4>
+<p>For now, we use one filter engine</p>
 <ul>
-<li>These workers (generally there’s only one) are not exposed to developers using the scrawl object, thus only get called internally</li>
+<li>This used to be a pool of web workers which loaded up filter functionality</li>
+<li>Now it is just another module call in the main thread</li>
+<li>Which means that, as filters web workers were the only reason for using Promises, we can get rid of promises</li>
+<li>Because my testing seems to indicate that workers were no faster than this code, possibly slower!</li>
+<li>Getting rid of Promises would massively simplify the code base, but would lead to breaking changes</li>
+<li>But there is surely scope for getting rid of them as far as possible eg simplifying entity stamp workflow</li>
+<li>And now we have a good place to start our WASM experiments, with filters</li>
 </ul>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> filterPool = makeFilterEngine();
+
+<span class="hljs-keyword">const</span> requestFilterWorker = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> filterPool;
+};
+
+<span class="hljs-keyword">const</span> releaseFilterWorker = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{};
+
+<span class="hljs-keyword">const</span> actionFilterWorker = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">ignore, items</span>) </span>{
+
+	<span class="hljs-keyword">let</span> res = filterPool.action(items);
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.resolve(res);
+};</pre></div></div>
             
         </li>
         
@@ -2333,117 +2355,6 @@ scrawl.makeFilter({
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-70">&#182;</a>
-              </div>
-              <p>START PRODUCTION CODE</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> filterPool = [];
-<span class="hljs-keyword">import</span> { filterUrl } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../worker/filter-string.js&#x27;</span>;
-
-<span class="hljs-keyword">const</span> requestFilterWorker = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">if</span> (!filterPool.length) filterPool.push(<span class="hljs-keyword">new</span> Worker(filterUrl));
-    <span class="hljs-keyword">return</span> filterPool.shift();
-};
-
-<span class="hljs-keyword">const</span> releaseFilterWorker = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-    filterPool.push(f);
-};
-
-<span class="hljs-keyword">const</span> actionFilterWorker = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">worker, items</span>) </span>{
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {
-        worker.onmessage = <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
-            <span class="hljs-keyword">if</span> (e &amp;&amp; e.data &amp;&amp; e.data.image) resolve(e.data.image);
-            <span class="hljs-keyword">else</span> resolve(<span class="hljs-literal">false</span>);
-        };
-        worker.onerror = <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
-            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;error&#x27;</span>, e.lineno, e.message);
-            resolve(<span class="hljs-literal">false</span>);
-        };
-        worker.postMessage(items);
-    });
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-71">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-71">&#182;</a>
-              </div>
-              <p>END PRODUCTION CODE</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-72">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-72">&#182;</a>
-              </div>
-              <p>START DEV CODE</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/*
-const filterPool = [];
-
-const requestFilterWorker = function () {
-    if (!filterPool.length) filterPool.push(buildFilterWorker());
-    return filterPool.shift();
-};
-
-const buildFilterWorker = function () {
-    let path = import.meta.url.slice(0, -(&#x27;factory/filter.js&#x27;.length)); 
-    let filterUrl = `${path}worker/filter.js`;
-    return new Worker(filterUrl);
-};
-
-const releaseFilterWorker = function (f) {
-    filterPool.push(f);
-};
-
-const actionFilterWorker = function (worker, items) {
-    return new Promise((resolve, reject) =&gt; {
-        worker.onmessage = (e) =&gt; {
-            if (e &amp;&amp; e.data &amp;&amp; e.data.image) resolve(e.data.image);
-            else resolve(false);
-        };
-        worker.onerror = (e) =&gt; {
-            console.log(&#x27;error&#x27;, e.lineno, e.message);
-            resolve(false);
-        };
-        worker.postMessage(items);
-    });
-};
-*/</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-73">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-73">&#182;</a>
-              </div>
-              <p>END DEV CODE</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-74">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-74">&#182;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
@@ -2459,11 +2370,11 @@ const actionFilterWorker = function (worker, items) {
         </li>
         
         
-        <li id="section-75">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-75">&#182;</a>
+                <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

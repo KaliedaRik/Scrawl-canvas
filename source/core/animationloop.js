@@ -1,7 +1,7 @@
 // # The Animation Loop
 // Scrawl-canvas runs a single, centralized requestAnimationFrame (RAF) function - __animationLoop__ - for all animation objects. 
 //
-// Animation objects are Scrawl-canvas objects with a __fn__ attribute - a function which returns a Promise; all Animation objects contained in the __animate__ array will be invoked as part of a Promise.all action. Once the Promise.all resolves, _animationLoop_ is invoked again.
+// [Animation objects](../factory/animation.html) are Scrawl-canvas objects with a __fn__ attribute; the function will be invoked once per RAF cycle. 
 //
 // The RAF function is first invoked as part of Scrawl-canvas initialization when it loads into a web page, and continues to run while the __doAnimation__ flag remains true.
 //
@@ -83,23 +83,11 @@ const animationLoop = function () {
 
     if (window.scrawlEnvironmentWebAssemblyInitialized) {
 
-        // logMessage('wasm has loaded');
-
-        let promises = [];
-
         if (resortBatchAnimations) sortAnimations();
 
-        animate_sorted.forEach(item => {
+        animate_sorted.forEach(item => item.fn());
 
-            if (item && item.fn) promises.push(item.fn());
-        });
-
-        Promise.all(promises)
-        .then(() => {
-
-            if (doAnimation) window.requestAnimationFrame(() => animationLoop());
-        })
-        .catch(err => console.log('animationLoop error: ', err));
+        if (doAnimation) window.requestAnimationFrame(() => animationLoop());
     }
     else if (doAnimation) {
 

@@ -388,11 +388,9 @@ export default function (P = {}) {
 //
 // The main entity compile-related functions are:
 // + __prepareStamp__ - a synchronous function called at the start of the compile step where an entity will check its dirty flags and update position, dimensions and other attributes accordingly.
-// + __stamp__ - a function that returns a Promise - this is where the main drawing activity happens. This function calls one of two other functions: __filteredStamp__; or __regularStamp__ (both returning Promises) which in turn rely on the __regularStampSynchronousActions__ function where all the drawing magic happens.
+// + __stamp__ - this is where the main drawing activity happens. This function calls one of two other functions: __filteredStamp__; or __regularStamp__ which in turn rely on the __regularStampSynchronousActions__ function where all the drawing magic happens.
 // 
 // The stamp functionality can be triggered outside of the Display cycle, if required - for instance when compiling a Cell display setup as a static background layer, which excludes itself from the Display cycle cascade's `clear` and `compile` steps.
-// + Invoking `entity.stamp` is an asynchronous call returning a Promise which needs to be handled accordingly - in particular for error management.
-// + Alternatively, the __simpleStamp__ function will make the entity perform a synchronous action (no Promise returned); the function ignores any filter requirements set on the entity.
 
 // ##### Step 1: prepare the entity for stamping
 // `prepareStamp` - all entity objects need to check the following dirty flags and take corrective action when a flag is set. 
@@ -471,7 +469,7 @@ export default function (P = {}) {
     P.cleanPathObject = λnull;
 
 // ##### Step 2: invoke the entity's stamp action
-// `stamp` - returns a Promise. This is the function invoked by Group objects as they cascade the Display cycle __compile__ step through to their member artefacts.
+// `stamp` - this is the function invoked by Group objects as they cascade the Display cycle __compile__ step through to their member artefacts.
     P.stamp = function (force = false, host, changes) {
 
         let filterTest = (!this.noFilters && this.filters && this.filters.length) ? true : false;
@@ -495,174 +493,133 @@ export default function (P = {}) {
             if (this.stashOutput || filterTest) return this.filteredStamp();
             else return this.regularStamp();
         }
-        return Promise.resolve('entity.stamp');
     };
 
-// `regularStamp` - handles stamping functionality for all entitys that do not have any filter functions associated with them - returns a Promise.
+// `regularStamp` - handles stamping functionality for all entitys that do not have any filter functions associated with them.
     P.regularStamp = function () {
 
-        let self = this;
-
-        return new Promise((resolve, reject) => {
-
-            if (self.currentHost) {
-
-                self.regularStampSynchronousActions();
-                resolve('entity.regularStamp resolving');
-            }
-            reject('entity.regularStamp - no currentHost');
-        });
+        if (this.currentHost) this.regularStampSynchronousActions();
     };
 
-// `filteredStamp` - handles stamping functionality for all __entitys that have filter functions__ associated with them - returns a Promise.
-// + Filters require the use of the [Filter web worker](../worker/filter.html) which returns its results asynchronously.
-    P.filteredStamp = function(){
+// `filteredStamp` - handles stamping functionality for all __entitys that have filter functions__ associated with them.
+    P.filteredStamp = function() {
 
         // Clean and sort the Entity-level filters before sending them to the filter worker for application
         if (this.dirtyFilters || !this.currentFilters) this.cleanFilters();
 
-        let self = this;
+        // Save current host data into a set of vars, ready for restoration after web worker completes or fails
+        let currentHost = this.currentHost,
+            currentElement = currentHost.element,
+            currentEngine = currentHost.engine,
+            currentDimensions = currentHost.currentDimensions;
 
-        return new Promise((resolve, reject) => {
+        // Get and prepare a pool Cell for the filter operations
+        let filterHost = requestCell(),
+            filterElement = filterHost.element,
+            filterEngine = filterHost.engine;
 
-            // An internal cleanup function to release resources and restore the non-filter defaults to what they were before. It's also in the cleanup phase that we (finally) copy over the results of the filter over to the current canvas display, taking into account the entity's composite and alpha values
-            let cleanup = function () {
-
-                if (worker) releaseFilterWorker(worker);
-
-                currentEngine.save();
-
-                currentEngine.globalAlpha = (self.state && self.state.globalAlpha) ? self.state.globalAlpha : 1;
-                currentEngine.globalCompositeOperation = (self.state && self.state.globalCompositeOperation) ? self.state.globalCompositeOperation : 'source-over';
-                
-                currentEngine.setTransform(1, 0, 0, 1, 0, 0);
-
-                currentEngine.drawImage(filterElement, 0, 0);
-                
-                // This is also the point at which we action any requests to stash the Cell output and (optionally) create/update imageAsset objects and associated &lt;img> elements for use elsewhere in the Scrawl-canvas ecosystem.
-                if (self.stashOutput) {
-
-                    self.stashOutput = false;
-
-                    let [stashX, stashY, stashWidth, stashHeight] = self.getCellCoverage(filterEngine.getImageData(0, 0, filterElement.width, filterElement.height));
-
-                    self.stashedImageData = filterEngine.getImageData(stashX, stashY, stashWidth, stashHeight);
-
-                    if (self.stashOutputAsAsset) {
-
-                        // KNOWN ISSUE - it takes time for the images to load the new dataURLs generated from canvas elements. See demo [Canvas-020](../../demo/canvas-020.html) for a workaround.
-                        self.stashOutputAsAsset = false;
-
-                        filterElement.width = stashWidth;
-                        filterElement.height = stashHeight;
-                        filterEngine.putImageData(self.stashedImageData, 0, 0);
-
-                        if (!self.stashedImage) {
-
-                            let newimg = self.stashedImage = document.createElement('img');
-
-                            newimg.id = `${self.name}-image`;
-
-                            newimg.onload = function () {
-
-                                scrawlCanvasHold.appendChild(newimg);
-                                importDomImage(`#${newimg.id}`);
-                            };
-
-                            newimg.src = filterElement.toDataURL();
-                        }
-                        else self.stashedImage.src = filterElement.toDataURL();
-                    }
-                }
+        this.currentHost = filterHost;
         
-                releaseCell(filterHost);
+        let w = filterElement.width = currentDimensions[0] || currentElement.width,
+            h = filterElement.height = currentDimensions[1] || currentElement.height;
 
-                currentEngine.restore();
+        // Switch off fast stamp
+        let oldNoCanvasEngineUpdates = this.noCanvasEngineUpdates;
+        this.noCanvasEngineUpdates = false;
 
-                self.currentHost = currentHost;
-                self.noCanvasEngineUpdates = oldNoCanvasEngineUpdates;
-            };
+         // Stamp the entity onto the pool Cell
+        this.regularStampSynchronousActions();
 
-            // Save current host data into a set of vars, ready for restoration after web worker completes or fails
-            let currentHost = self.currentHost,
-                currentElement = currentHost.element,
-                currentEngine = currentHost.engine,
-                currentDimensions = currentHost.currentDimensions;
+        let worker, myimage;
 
-            // Get and prepare a pool Cell for the filter operations
-            let filterHost = requestCell(),
-                filterElement = filterHost.element,
-                filterEngine = filterHost.engine;
+        if (!this.noFilters && this.filters && this.filters.length) {
 
-            self.currentHost = filterHost;
-            
-            let w = filterElement.width = currentDimensions[0] || currentElement.width,
-                h = filterElement.height = currentDimensions[1] || currentElement.height;
+            // If we're using the entity as a stencil, copy the entity cell's current display over the entity in the pool Cell
+            if (this.isStencil) {
 
-            // Switch off fast stamp
-            let oldNoCanvasEngineUpdates = self.noCanvasEngineUpdates;
-            self.noCanvasEngineUpdates = false;
-
-             // Stamp the entity onto the pool Cell
-            self.regularStampSynchronousActions();
-
-            let worker, myimage;
-
-            if (!self.noFilters && self.filters && self.filters.length) {
-
-                // If we're using the entity as a stencil, copy the entity cell's current display over the entity in the pool Cell
-                if (self.isStencil) {
-
-                    filterEngine.save();
-                    filterEngine.globalCompositeOperation = 'source-in';
-                    filterEngine.globalAlpha = 1;
-                    filterEngine.setTransform(1, 0, 0, 1, 0, 0);
-                    filterEngine.drawImage(currentElement, 0, 0);
-                    filterEngine.restore();
-                } 
-
+                filterEngine.save();
+                filterEngine.globalCompositeOperation = 'source-in';
+                filterEngine.globalAlpha = 1;
                 filterEngine.setTransform(1, 0, 0, 1, 0, 0);
+                filterEngine.drawImage(currentElement, 0, 0);
+                filterEngine.restore();
+            } 
 
-                myimage = filterEngine.getImageData(0, 0, w, h);
-                worker = requestFilterWorker();
+            filterEngine.setTransform(1, 0, 0, 1, 0, 0);
 
-                // NEED TO POPULATE IMAGE FILTER ACTION OBJECTS WITH THEIR ASSET'S IMAGEDATA AT THIS POINT
-                self.preprocessFilters(self.currentFilters);
+            myimage = filterEngine.getImageData(0, 0, w, h);
+            worker = requestFilterWorker();
 
-                // Pass control over to the web worker
-                actionFilterWorker(worker, {
-                    image: myimage,
-                    filters: self.currentFilters
-                })
-                .then(img => {
+            // NEED TO POPULATE IMAGE FILTER ACTION OBJECTS WITH THEIR ASSET'S IMAGEDATA AT THIS POINT
+            this.preprocessFilters(this.currentFilters);
 
-                    // Handle the web worker response
-                    if (img) {
+            // Pass control over to the web worker
+            let img = actionFilterWorker(worker, {
+                image: myimage,
+                filters: this.currentFilters
+            })
 
-                        filterEngine.globalCompositeOperation = 'source-over';
-                        filterEngine.globalAlpha = 1;
-                        filterEngine.setTransform(1, 0, 0, 1, 0, 0);
-                        filterEngine.putImageData(img, 0, 0);
+            if (img) {
 
-                        cleanup();
-                        resolve(true);
-                    }
-                    else throw new Error('image issue');
-                })
-                .catch((err) => {
-
-                    cleanup();
-                    reject(err);
-                });
+                filterEngine.globalCompositeOperation = 'source-over';
+                filterEngine.globalAlpha = 1;
+                filterEngine.setTransform(1, 0, 0, 1, 0, 0);
+                filterEngine.putImageData(img, 0, 0);
             }
+        }
+        if (worker) releaseFilterWorker(worker);
 
-            // Where no filter is required, but we still want to stash the results
-            else {
+        currentEngine.save();
 
-                cleanup();
-                resolve(true);
+        currentEngine.globalAlpha = (this.state && this.state.globalAlpha) ? this.state.globalAlpha : 1;
+        currentEngine.globalCompositeOperation = (this.state && this.state.globalCompositeOperation) ? this.state.globalCompositeOperation : 'source-over';
+        
+        currentEngine.setTransform(1, 0, 0, 1, 0, 0);
+
+        currentEngine.drawImage(filterElement, 0, 0);
+
+        // This is also the point at which we action any requests to stash the Cell output and (optionally) create/update imageAsset objects and associated &lt;img> elements for use elsewhere in the Scrawl-canvas ecosystem.
+        if (this.stashOutput) {
+
+            this.stashOutput = false;
+
+            let [stashX, stashY, stashWidth, stashHeight] = this.getCellCoverage(filterEngine.getImageData(0, 0, filterElement.width, filterElement.height));
+
+            this.stashedImageData = filterEngine.getImageData(stashX, stashY, stashWidth, stashHeight);
+
+            if (this.stashOutputAsAsset) {
+
+                // KNOWN ISSUE - it takes time for the images to load the new dataURLs generated from canvas elements. See demo [Canvas-020](../../demo/canvas-020.html) for a workaround.
+                this.stashOutputAsAsset = false;
+
+                filterElement.width = stashWidth;
+                filterElement.height = stashHeight;
+                filterEngine.putImageData(this.stashedImageData, 0, 0);
+
+                if (!this.stashedImage) {
+
+                    let newimg = this.stashedImage = document.createElement('img');
+
+                    newimg.id = `${this.name}-image`;
+
+                    newimg.onload = function () {
+
+                        scrawlCanvasHold.appendChild(newimg);
+                        importDomImage(`#${newimg.id}`);
+                    };
+
+                    newimg.src = filterElement.toDataURL();
+                }
+                else this.stashedImage.src = filterElement.toDataURL();
             }
-        });
+        }
+
+        releaseCell(filterHost);
+
+        currentEngine.restore();
+
+        this.currentHost = currentHost;
+        this.noCanvasEngineUpdates = oldNoCanvasEngineUpdates;
     };
 
 // `getCellCoverage` - internal helper function - calculates the box start and dimensions values for the entity on its current Cell host, to help minimize work required when applying filters to the entity output. Also used when building an image when the `scrawl.createImageFromEntity` function is invoked.

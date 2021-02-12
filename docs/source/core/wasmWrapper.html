@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>The Animation Loop</title>
+  <title>WASM initialization</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
@@ -454,30 +454,8 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <h1 id="the-animation-loop">The Animation Loop</h1>
-<p>Scrawl-canvas runs a single, centralized requestAnimationFrame (RAF) function - <strong>animationLoop</strong> - for all animation objects. </p>
-<p>Animation objects are Scrawl-canvas objects with a <strong>fn</strong> attribute - a function which returns a Promise; all Animation objects contained in the <strong>animate</strong> array will be invoked as part of a Promise.all action. Once the Promise.all resolves, <em>animationLoop</em> is invoked again.</p>
-<p>The RAF function is first invoked as part of Scrawl-canvas initialization when it loads into a web page, and continues to run while the <strong>doAnimation</strong> flag remains true.</p>
-<p>To stop the RAF:</p>
-<p><code>scrawl.stopCoreAnimationLoop()</code></p>
-<p>To restart the RAF after it has been stopped:</p>
-<p><code>scrawl.startCoreAnimationLoop()</code></p>
-<p>… Functionality tested in <a href="../../demo/dom-009.html">Demo DOM-009</a></p>
-<p>As part of initialization, two animation objects are created and added to the <strong>animate</strong> array:</p>
-<ul>
-<li><strong>coreTickersAnimation</strong> (order: 0) - which will invoke all ticker animations currently subscribed to it - <a href="../factory/ticker.html">factory/ticker.js</a></li>
-<li><strong>coreListenersTracker</strong> (order: 0) - which channels window-based events (mouse/touch movement, viewport resize, scrolling) to Scrawl-canvas objects that need to take action in response (thus choking such actions to a maximum 60-per-second) - <a href="./userInteraction.html">core/userInteraction.js</a></li>
-</ul>
-<p>Additional animations can be created via a number of ‘make’ functions:</p>
-<ul>
-<li>makeAnimation (runs by default) - <a href="../factory/animation.html">factory/animation.js</a></li>
-<li>makeRender (runs by default) - <a href="../factory/renderAnimation.html">factory/renderAnimation.js</a></li>
-<li>makeTicker (halted by default) - <a href="../factory/ticker.html">factory/ticker.js</a></li>
-<li>makeTween (halted by default) - <a href="../factory/tween.html">factory/tween.js</a></li>
-</ul>
-<p>These objects can be added to the <em>animate</em> Array by invoking their <strong>run</strong> function, and removed by invoking their <strong>halt</strong> function.</p>
-<p>The order in which animations objects run during each RAF cycle (= <strong>Display cycle</strong>) can be (partly) determined by the objects’ <strong>order</strong> attribute: those with a lower order value will be invoked before those with a higher value.</p>
-<p>Note that ticker/tween animations will all run before other animations (order differences between tickers/tween objects will be respected).</p>
+              <h1 id="wasm-initialization">WASM initialization</h1>
+<p>This code will import/export all wasm functions, so they can be used in other pages</p>
 
             </div>
             
@@ -490,12 +468,9 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h4 id="imports">Imports</h4>
+              <p>Whenever a file uses a wasm function, it has to initialize the code - ASYNC FUNCTION - before it can use the other functions?</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { animation } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./library.js&quot;</span>;
-<span class="hljs-keyword">import</span> { logMessage } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/wasmWrapper.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -506,13 +481,15 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>Local variables </p>
+              <h4 id="imports">Imports</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> doAnimation = <span class="hljs-literal">false</span>,
-    resortBatchAnimations = <span class="hljs-literal">true</span>,
-    animate_sorted = [];</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> wasmInit <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../sc-wasm-rust/pkg/sc_wasm_rust.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { 
+    greet <span class="hljs-keyword">as</span> alertGreeting,
+    log_message <span class="hljs-keyword">as</span> logMessage 
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../sc-wasm-rust/pkg/sc_wasm_rust.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -523,11 +500,15 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p><code>Exported array</code> (to modules). The <strong>animate</strong> array, which holds handles to all animation objects due to be run at the next RAF invocation, is exported to other modules so code can add/remove animation objects as required.</p>
+              <h4 id="exports">Exports</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> animate = [];</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
+    wasmInit,
+    alertGreeting,
+    logMessage,
+};</pre></div></div>
             
         </li>
         
@@ -538,13 +519,9 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p><code>Exported function</code> (to modules). Force the animation objects to be sorted at the start of the next RAF invocation</p>
+              <p>import { logMessage } from ‘../core/wasmWrapper.js’;</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> resortAnimations = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-    resortBatchAnimations = <span class="hljs-literal">true</span>;
-};</pre></div></div>
             
         </li>
         
@@ -555,135 +532,10 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>Scrawl-canvas animation sorter uses a ‘bucket sort’ algorithm</p>
+              <p>if (window.scrawlEnvironmentWebAssemblyInitialized) logMessage(‘wasm is working’);
+else console.log(‘wasm not ready’);</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> sortAnimations = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">if</span> (resortBatchAnimations) {
-
-        resortBatchAnimations = <span class="hljs-literal">false</span>;
-
-        <span class="hljs-keyword">let</span> floor = <span class="hljs-built_in">Math</span>.floor,
-            buckets = [],
-            obj, order;
-
-        animate.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
-
-            obj = animation[name];
-
-            <span class="hljs-keyword">if</span> (obj) {
-
-                order = floor(obj.order) || <span class="hljs-number">0</span>;
-
-                <span class="hljs-keyword">if</span> (!buckets[order]) buckets[order] = [];
-
-                buckets[order].push(obj);
-            }
-        });
-
-        animate_sorted = buckets.reduce(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a.concat(v), []);
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <p>The <strong>requestAnimationFrame</strong> function</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> animationLoop = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">window</span>.scrawlEnvironmentWebAssemblyInitialized) {
-
-        <span class="hljs-keyword">let</span> promises = [];
-
-        <span class="hljs-keyword">if</span> (resortBatchAnimations) sortAnimations();
-
-        animate_sorted.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
-
-            <span class="hljs-keyword">if</span> (item &amp;&amp; item.fn) promises.push(item.fn());
-        });
-
-        <span class="hljs-built_in">Promise</span>.all(promises)
-        .then(<span class="hljs-function">() =&gt;</span> {
-
-            <span class="hljs-keyword">if</span> (doAnimation) <span class="hljs-built_in">window</span>.requestAnimationFrame(<span class="hljs-function">() =&gt;</span> animationLoop());
-        })
-        .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;animationLoop error: &#x27;</span>, err));
-    }
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (doAnimation) {
-
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;waiting for wasm to compile&#x27;</span>);
-        <span class="hljs-built_in">window</span>.requestAnimationFrame(<span class="hljs-function">() =&gt;</span> animationLoop());
-    }
-    <span class="hljs-keyword">else</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;animationLoop halted&#x27;</span>);
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <p><code>Exported function</code> (modules and scrawl object). Start the RAF function running</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> startCoreAnimationLoop = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    doAnimation = <span class="hljs-literal">true</span>;
-    animationLoop();
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
-              </div>
-              <p><code>Exported function</code> (modules and scrawl object). Halt the RAF function</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> stopCoreAnimationLoop = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-    
-    doAnimation = <span class="hljs-literal">false</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-10">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
-              </div>
-              <h4 id="exports">Exports</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
-    animate,
-    resortAnimations,
-    startCoreAnimationLoop,
-    stopCoreAnimationLoop,
-};</pre></div></div>
             
         </li>
         

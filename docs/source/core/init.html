@@ -60,6 +60,11 @@
                 </a>
               
                 
+                <a class="source" href="wasmWrapper.html">
+                  ./source/core/wasmWrapper.js
+                </a>
+              
+                
                 <a class="source" href="../factory/action.html">
                   ./source/factory/action.js
                 </a>
@@ -122,6 +127,11 @@
                 
                 <a class="source" href="../factory/filter.html">
                   ./source/factory/filter.js
+                </a>
+              
+                
+                <a class="source" href="../factory/filterEngine.html">
+                  ./source/factory/filterEngine.js
                 </a>
               
                 
@@ -429,16 +439,6 @@
                   ./source/mixin/tween.js
                 </a>
               
-                
-                <a class="source" href="../worker/filter-string.html">
-                  ./source/worker/filter-string.js
-                </a>
-              
-                
-                <a class="source" href="../worker/filter.html">
-                  ./source/worker/filter.js
-                </a>
-              
             </div>
           </div>
         </li>
@@ -475,6 +475,7 @@
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { startCoreAnimationLoop } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./animationloop.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { getCanvases, getStacks } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./document.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { startCoreListeners, applyCoreResizeListener, applyCoreScrollListener } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./userInteraction.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { wasmInit } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./wasmWrapper.js&#x27;</span>;
 
 
 <span class="hljs-keyword">const</span> init = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
@@ -533,7 +534,12 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">window</span>.scrawlEnvironmentOffscreenCanvasSupported = (<span class="hljs-string">&#x27;OffscreenCanvas&#x27;</span> <span class="hljs-keyword">in</span> <span class="hljs-built_in">window</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">window</span>.scrawlEnvironmentOffscreenCanvasSupported = (<span class="hljs-string">&#x27;OffscreenCanvas&#x27;</span> <span class="hljs-keyword">in</span> <span class="hljs-built_in">window</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
+
+    <span class="hljs-built_in">window</span>.scrawlEnvironmentWebAssemblyInitialized = <span class="hljs-literal">false</span>;
+    wasmInit()
+    .then(<span class="hljs-function">() =&gt;</span> <span class="hljs-built_in">window</span>.scrawlEnvironmentWebAssemblyInitialized = <span class="hljs-literal">true</span>)
+    .catch(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(e));</pre></div></div>
             
         </li>
         

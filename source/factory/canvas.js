@@ -528,77 +528,30 @@ P.killCell = function (item) {
 
 // ##### Display cycle functions
 
-// `clear` - For Cell objects in the wrapper's __cells__ (and associated) Arrays (returns a Promise):
-// + if the Cell object's `cleared` flag is true, invoke the Cell's `clear` function 
+// `clear` - For Cell objects in the wrapper's __cells__ (and associated) Arrays:
+// + If the Cell object's `cleared` flag is true, invoke the Cell's `clear` function 
+// + Note that the Display canvas itself does not clearuntil the show stage, to minimize flickering
 P.clear = function () {
 
-    let self = this;
-
-    if (self.dirtyCells) self.cleanCells();
-
-    let next = (counter) => {
-
-        return new Promise((resolve, reject) => {
-
-            let myCell = self.cellBatchesClear[counter];
-
-            if (myCell) {
-
-                myCell.clear()
-                .then(res => {
-
-                    next(counter + 1)
-                    .then(res => resolve(true))
-                    .catch(err => reject(err));
-                })
-                .catch(err => reject(err));
-            }
-            else resolve(true);
-        });
-    };
-    return next(0);
+    if (this.dirtyCells) this.cleanCells();
+    this.cellBatchesClear.forEach(myCell => myCell.clear());
 };
 
-// `compile` - For Cell objects in the wrapper's __cells__ (and associated) Arrays (returns a Promise):
+// `compile` - For Cell objects in the wrapper's __cells__ (and associated) Arrays:
 // + sort Cell objects depending on their `compileOrder` attribute - Cells with lower order values will be processed first
 // + if the Cell object's `compiled` flag is true, invoke the Cell's `compile` function 
 P.compile = function () {
 
-    let self = this;
+    // Handle constituent cells
+    if (this.dirtyCells) this.cleanCells();
+    this.cellBatchesCompile.forEach(myCell => myCell.compile());
 
-    if (self.dirtyCells) self.cleanCells();
-
-    let next = (counter) => {
-
-        return new Promise((resolve, reject) => {
-
-            let myCell = self.cellBatchesCompile[counter];
-
-            if (myCell) {
-
-                myCell.compile()
-                .then(res => {
-
-                    next(counter + 1)
-                    .then(res => resolve(true))
-                    .catch(err => reject(err));
-                })
-                .catch(err => reject(err));
-            }
-            else {
-
-                self.prepareStamp();
-
-                self.stamp()
-                .then(res => resolve(true))
-                .catch(err => reject(err));
-            }
-        });
-    };
-    return next(0);
+    // Handle display canvas
+    this.prepareStamp();
+    this.stamp();
 };
 
-// `show` - For Cell objects in the wrapper's __cells__ (and associated) Arrays (returns a Promise):
+// `show` - For Cell objects in the wrapper's __cells__ (and associated) Arrays:
 // + sort Cell objects depending on their `showOrder` attribute - Cells with lower order values will be processed first
 // + if the Cell object's `shown` flag is true, invoke the Cell's `show` function 
 //
@@ -607,60 +560,25 @@ P.compile = function () {
 // + update ARIA and other associated metadata
 P.show = function(){
 
-    let self = this;
+    // Handle constituent cells
+    if (this.dirtyCells) this.cleanCells();
+    this.cellBatchesShow.forEach(myCell => myCell.show());
 
-    if (self.dirtyCells) self.cleanCells();
+    // Clear Display canvas, and get the base cell to stamp itself onto it
+    this.engine.clearRect(0, 0, this.localWidth, this.localHeight);
+    this.base.show();
 
-    let next = (counter) => {
-
-        return new Promise((resolve, reject) => {
-
-            let myCell = self.cellBatchesShow[counter];
-
-            if (myCell) {
-
-                myCell.show()
-                .then(res => {
-
-                    next(counter + 1)
-                    .then(res => resolve(true))
-                    .catch(err => reject(err));
-                })
-                .catch(err => reject(err));
-            }
-            else {
-
-                self.engine.clearRect(0, 0, self.localWidth, self.localHeight);
-                
-                self.base.show()
-                .then(res => {
-
-                    domShow();
-
-                    if (this.dirtyAria) this.cleanAria();
-
-                    resolve(true);
-                })
-                .catch(err => reject(err));
-            }
-        });
-    };
-    return next(0);
+    // Handle DOM-related positioning and display requirements, including ARIA updates
+    domShow();
+    if (this.dirtyAria) this.cleanAria();
 };
 
-// `render` - orchestrate a single Display cycle - clear, then compile, then show (returns a Promise).
+// `render` - orchestrate a single Display cycle - clear, then compile, then show.
 P.render = function () {
 
-    let self = this;
-
-    return new Promise((resolve) => {
-
-        self.clear()
-        .then(() => self.compile())
-        .then(() => self.show())
-        .then(() => resolve(true))
-        .catch(() => resolve(false));
-    });
+    this.clear();
+    this.compile();
+    this.show();
 };
 
 // `cleanCells` - internal function triggered each time there is an update to the __cells__ Array attribute, or a constituent Cell sets the Canvas wrapper's `dirtyCell` flag.

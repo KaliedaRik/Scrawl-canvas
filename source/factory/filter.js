@@ -1110,8 +1110,7 @@ const releaseFilterWorker = function (f) {};
 
 const actionFilterWorker = function (ignore, items) {
 
-	let res = filterPool.action(items);
-    return Promise.resolve(res);
+	return filterPool.action(items);
 };
 
 

@@ -265,24 +265,19 @@ const coreListenersTracker = makeAnimation({
     delay: true,
     fn: function () {
 
-        return new Promise((resolve) => {
+        if (!uiSubscribedElements.length) return false;
 
-            if (!uiSubscribedElements.length) resolve(false);
+        if (trackMouse && mouseChanged) {
 
-            if (trackMouse && mouseChanged) {
+            mouseChanged = false;
+            updateUiSubscribedElements();
+        }
 
-                mouseChanged = false;
-                updateUiSubscribedElements();
-            }
+        if (viewportChanged) {
 
-            if (viewportChanged) {
-
-                viewportChanged = false;
-                updatePhraseEntitys();
-            }
-
-            resolve(true);
-        });
+            viewportChanged = false;
+            updatePhraseEntitys();
+        }
     },
 });
 

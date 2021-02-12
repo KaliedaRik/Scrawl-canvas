@@ -89,37 +89,22 @@ const RenderAnimation = function (items = {}) {
 
     this.readyToInitialize = true;
 
-    let self = this;
-
     // ##### The Display cycle Promise chain
     this.fn = function () {
 
-        return new Promise((resolve, reject) => {
+        this.commence();
+        this.target.clear();
+        this.afterClear();
+        this.target.compile();
+        this.afterCompile();
+        this.target.show();
+        this.afterShow();
 
-            Promise.resolve(self.commence())
-            .then(() => self.target.clear())
-            .then(() => Promise.resolve(self.afterClear()))
-            .then(() => self.target.compile())
-            .then(() => Promise.resolve(self.afterCompile()))
-            .then(() => self.target.show())
-            .then(() => Promise.resolve(self.afterShow()))
-            .then(() => {
+        if (this.readyToInitialize) {
 
-                if (self.readyToInitialize) {
-
-                    self.afterCreated();
-                    self.readyToInitialize = false;
-                }
-
-                resolve(true);
-            })
-            .catch(err => {
-
-                self.error(err);
-                reject(err);
-            });
-        });
-
+            this.afterCreated();
+            this.readyToInitialize = false;
+        }
     }
 
     // Register in Scrawl-canvas library
