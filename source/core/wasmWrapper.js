@@ -7,16 +7,20 @@
 // #### Imports
 import wasmInit from '../sc-wasm-rust/pkg/sc_wasm_rust.js';
 import { 
-    greet as alertGreeting,
-    log_message as logMessage 
+    // greet as alertGreeting,
+    log_message as logMessage,
+    average_channels,
+    FilterAverageChannels as makeFilterAverageChannels,
 } from '../sc-wasm-rust/pkg/sc_wasm_rust.js';
 
 
 // #### Exports
 export {
     wasmInit,
-    alertGreeting,
+    // alertGreeting,
     logMessage,
+    average_channels,
+    makeFilterAverageChannels,
 };
 
 // import { logMessage } from '../core/wasmWrapper.js';

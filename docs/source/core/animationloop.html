@@ -456,7 +456,7 @@
               </div>
               <h1 id="the-animation-loop">The Animation Loop</h1>
 <p>Scrawl-canvas runs a single, centralized requestAnimationFrame (RAF) function - <strong>animationLoop</strong> - for all animation objects. </p>
-<p>Animation objects are Scrawl-canvas objects with a <strong>fn</strong> attribute - a function which returns a Promise; all Animation objects contained in the <strong>animate</strong> array will be invoked as part of a Promise.all action. Once the Promise.all resolves, <em>animationLoop</em> is invoked again.</p>
+<p><a href="../factory/animation.html">Animation objects</a> are Scrawl-canvas objects with a <strong>fn</strong> attribute; the function will be invoked once per RAF cycle. </p>
 <p>The RAF function is first invoked as part of Scrawl-canvas initialization when it loads into a web page, and continues to run while the <strong>doAnimation</strong> flag remains true.</p>
 <p>To stop the RAF:</p>
 <p><code>scrawl.stopCoreAnimationLoop()</code></p>
@@ -604,21 +604,11 @@
 
     <span class="hljs-keyword">if</span> (<span class="hljs-built_in">window</span>.scrawlEnvironmentWebAssemblyInitialized) {
 
-        <span class="hljs-keyword">let</span> promises = [];
-
         <span class="hljs-keyword">if</span> (resortBatchAnimations) sortAnimations();
 
-        animate_sorted.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
+        animate_sorted.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.fn());
 
-            <span class="hljs-keyword">if</span> (item &amp;&amp; item.fn) promises.push(item.fn());
-        });
-
-        <span class="hljs-built_in">Promise</span>.all(promises)
-        .then(<span class="hljs-function">() =&gt;</span> {
-
-            <span class="hljs-keyword">if</span> (doAnimation) <span class="hljs-built_in">window</span>.requestAnimationFrame(<span class="hljs-function">() =&gt;</span> animationLoop());
-        })
-        .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;animationLoop error: &#x27;</span>, err));
+        <span class="hljs-keyword">if</span> (doAnimation) <span class="hljs-built_in">window</span>.requestAnimationFrame(<span class="hljs-function">() =&gt;</span> animationLoop());
     }
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (doAnimation) {
 

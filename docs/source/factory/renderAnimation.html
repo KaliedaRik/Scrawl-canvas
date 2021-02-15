@@ -666,9 +666,7 @@
     <span class="hljs-built_in">this</span>.afterCreated = items.afterCreated || λ<span class="hljs-literal">null</span>;
     <span class="hljs-built_in">this</span>.error = items.error || λ<span class="hljs-literal">null</span>;
 
-    <span class="hljs-built_in">this</span>.readyToInitialize = <span class="hljs-literal">true</span>;
-
-    <span class="hljs-keyword">let</span> self = <span class="hljs-built_in">this</span>;</pre></div></div>
+    <span class="hljs-built_in">this</span>.readyToInitialize = <span class="hljs-literal">true</span>;</pre></div></div>
             
         </li>
         
@@ -685,32 +683,19 @@
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.fn = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {
+        <span class="hljs-built_in">this</span>.commence();
+        <span class="hljs-built_in">this</span>.target.clear();
+        <span class="hljs-built_in">this</span>.afterClear();
+        <span class="hljs-built_in">this</span>.target.compile();
+        <span class="hljs-built_in">this</span>.afterCompile();
+        <span class="hljs-built_in">this</span>.target.show();
+        <span class="hljs-built_in">this</span>.afterShow();
 
-            <span class="hljs-built_in">Promise</span>.resolve(self.commence())
-            .then(<span class="hljs-function">() =&gt;</span> self.target.clear())
-            .then(<span class="hljs-function">() =&gt;</span> <span class="hljs-built_in">Promise</span>.resolve(self.afterClear()))
-            .then(<span class="hljs-function">() =&gt;</span> self.target.compile())
-            .then(<span class="hljs-function">() =&gt;</span> <span class="hljs-built_in">Promise</span>.resolve(self.afterCompile()))
-            .then(<span class="hljs-function">() =&gt;</span> self.target.show())
-            .then(<span class="hljs-function">() =&gt;</span> <span class="hljs-built_in">Promise</span>.resolve(self.afterShow()))
-            .then(<span class="hljs-function">() =&gt;</span> {
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.readyToInitialize) {
 
-                <span class="hljs-keyword">if</span> (self.readyToInitialize) {
-
-                    self.afterCreated();
-                    self.readyToInitialize = <span class="hljs-literal">false</span>;
-                }
-
-                resolve(<span class="hljs-literal">true</span>);
-            })
-            .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> {
-
-                self.error(err);
-                reject(err);
-            });
-        });
-
+            <span class="hljs-built_in">this</span>.afterCreated();
+            <span class="hljs-built_in">this</span>.readyToInitialize = <span class="hljs-literal">false</span>;
+        }
     }</pre></div></div>
             
         </li>

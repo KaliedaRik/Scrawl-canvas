@@ -1394,7 +1394,6 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
 <ul>
 <li>Only triggers when the Ticker is running in a qualifying state.</li>
 <li><strong>reverseOrder</strong> argument is a Boolean value; when set, subscribed Tween/Action objects will be processed in reverse order.</li>
-<li>Note that <strong><em>this function is synchronous</em></strong> - it does not return a Promise. <em>This will need to change if we ever move some Ticker/Tween/Action functionality over to a web worker</em>.</li>
 </ul>
 
             </div>
@@ -2044,9 +2043,7 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
     <span class="hljs-attr">order</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">fn</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve</span>) =&gt;</span> {
-            
-            <span class="hljs-keyword">let</span> i, iz, t;</pre></div></div>
+        <span class="hljs-keyword">let</span> i, iz, t;</pre></div></div>
             
         </li>
         
@@ -2064,29 +2061,29 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (tickerAnimationsFlag) {
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (tickerAnimationsFlag) {
 
-                tickerAnimationsFlag = <span class="hljs-literal">false</span>;
+            tickerAnimationsFlag = <span class="hljs-literal">false</span>;
 
-                <span class="hljs-keyword">let</span> tans = [].concat(tickerAnimations),
-                    floor = <span class="hljs-built_in">Math</span>.floor,
-                    buckets = [];
+            <span class="hljs-keyword">let</span> tans = [].concat(tickerAnimations),
+                floor = <span class="hljs-built_in">Math</span>.floor,
+                buckets = [];
 
-                tans.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
+            tans.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
-                    <span class="hljs-keyword">let</span> obj = animationtickers[name];
+                <span class="hljs-keyword">let</span> obj = animationtickers[name];
 
-                    <span class="hljs-keyword">if</span> (xt(obj)) {
+                <span class="hljs-keyword">if</span> (xt(obj)) {
 
-                        <span class="hljs-keyword">let</span> order = floor(obj.order) || <span class="hljs-number">0</span>;
+                    <span class="hljs-keyword">let</span> order = floor(obj.order) || <span class="hljs-number">0</span>;
 
-                        <span class="hljs-keyword">if</span> (!buckets[order]) buckets[order] = [];
+                    <span class="hljs-keyword">if</span> (!buckets[order]) buckets[order] = [];
 
-                        buckets[order].push(obj.name);
-                    }
-                });
-                tickerAnimations = buckets.reduce(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a.concat(v), []);
-            }</pre></div></div>
+                    buckets[order].push(obj.name);
+                }
+            });
+            tickerAnimations = buckets.reduce(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a.concat(v), []);
+        }</pre></div></div>
             
         </li>
         
@@ -2105,13 +2102,14 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            tickerAnimations.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>        tickerAnimations.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
-                <span class="hljs-keyword">let</span> obj = animationtickers[name];
+            <span class="hljs-keyword">let</span> obj = animationtickers[name];
 
-                <span class="hljs-keyword">if</span> (obj &amp;&amp; obj.fn) obj.fn();
-
-            });</pre></div></div>
+            <span class="hljs-keyword">if</span> (obj &amp;&amp; obj.fn) obj.fn();
+        });
+    }
+});</pre></div></div>
             
         </li>
         
@@ -2121,24 +2119,6 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-66">&#182;</a>
-              </div>
-              <p>Will only resolve the Promise when all Tickers (and their subscribed Tween/Actions) have processed their <code>fn</code>/<code>update</code> functions.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            resolve(<span class="hljs-literal">true</span>);
-        });
-    }
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-67">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
               <h4 id="resultobject-pool">ResultObject pool</h4>
 <p>… Because we generate so many of them.</p>
@@ -2154,11 +2134,11 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-68">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
+                <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
               <p><code>requestResultObject</code></p>
 
@@ -2182,11 +2162,11 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-69">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
+                <a class="pilcrow" href="#section-68">&#182;</a>
               </div>
               <p><code>releaseResultObject</code></p>
 
@@ -2207,11 +2187,11 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-70">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-70">&#182;</a>
+                <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
@@ -2226,11 +2206,11 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-71">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-71">&#182;</a>
+                <a class="pilcrow" href="#section-70">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

@@ -1110,8 +1110,6 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
             <div class="content"><div class='highlight'><pre>P.clear = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
     <span class="hljs-built_in">this</span>.checkResponsive();
-
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.resolve(<span class="hljs-literal">true</span>);
 };</pre></div></div>
             
         </li>
@@ -1129,26 +1127,11 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
             
             <div class="content"><div class='highlight'><pre>P.compile = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">let</span> self = <span class="hljs-built_in">this</span>;
+    <span class="hljs-built_in">this</span>.sortGroups();
+    <span class="hljs-built_in">this</span>.prepareStamp()
+    <span class="hljs-built_in">this</span>.stamp();
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {
-
-        self.sortGroups();
-
-        self.prepareStamp()
-
-        self.stamp()
-        .then(<span class="hljs-function">() =&gt;</span> {
-
-            <span class="hljs-keyword">let</span> promises = [];
-
-            self.groupBuckets.forEach(<span class="hljs-function"><span class="hljs-params">mygroup</span> =&gt;</span> promises.push(mygroup.stamp()));
-
-            <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.all(promises);
-        })
-        .then(<span class="hljs-function">() =&gt;</span> resolve(<span class="hljs-literal">true</span>))
-        .catch(<span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> reject(<span class="hljs-literal">false</span>));
-    })
+    <span class="hljs-built_in">this</span>.groupBuckets.forEach(<span class="hljs-function"><span class="hljs-params">mygroup</span> =&gt;</span> mygroup.stamp());
 };</pre></div></div>
             
         </li>
@@ -1166,11 +1149,7 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
             
             <div class="content"><div class='highlight'><pre>P.show = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve</span>) =&gt;</span> {
-
-        domShow();
-        resolve(<span class="hljs-literal">true</span>);
-    });
+    domShow();
 };</pre></div></div>
             
         </li>
@@ -1188,15 +1167,8 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
             
             <div class="content"><div class='highlight'><pre>P.render = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">let</span> self = <span class="hljs-built_in">this</span>;
-
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {
-
-        self.compile()
-        .then(<span class="hljs-function">() =&gt;</span> self.show())
-        .then(<span class="hljs-function">() =&gt;</span> resolve(<span class="hljs-literal">true</span>))
-        .catch(<span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> reject(<span class="hljs-literal">false</span>));
-    });
+    <span class="hljs-built_in">this</span>.compile();
+    <span class="hljs-built_in">this</span>.show();
 };</pre></div></div>
             
         </li>

@@ -2015,9 +2015,7 @@ S.trackHere = <span class="hljs-function"><span class="hljs-keyword">function</s
             
             <div class="content"><div class='highlight'><pre>    P.stamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">let</span> self = <span class="hljs-built_in">this</span>;
-
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {</pre></div></div>
+        <span class="hljs-keyword">let</span> self = <span class="hljs-built_in">this</span>;</pre></div></div>
             
         </li>
         
@@ -2028,11 +2026,9 @@ S.trackHere = <span class="hljs-function"><span class="hljs-keyword">function</s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
-              <p>do not process if the DOM element is missing</p>
+              <p>return new Promise((resolve, reject) =&gt; {</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (!self.domElement) reject(<span class="hljs-literal">false</span>);</pre></div></div>
             
         </li>
         
@@ -2043,46 +2039,10 @@ S.trackHere = <span class="hljs-function"><span class="hljs-keyword">function</s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-68">&#182;</a>
               </div>
-              <p>calculate transform strings on each iteration</p>
+              <pre><code><span class="hljs-comment">// do not process if the DOM element is missing</span>
+<span class="hljs-keyword">if</span> (!self.domElement) reject(<span class="hljs-literal">false</span>);</code></pre>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">let</span> [stampX, stampY] = self.currentStampPosition,
-                [handleX, handleY] = self.currentStampHandlePosition,
-                scale = self.currentScale;
-
-            <span class="hljs-keyword">let</span> rotation = self.currentRotation,
-                v, vx, vy, vz, angle;
-
-            <span class="hljs-keyword">let</span> nTransformOrigin = <span class="hljs-string">`<span class="hljs-subst">${handleX}</span>px <span class="hljs-subst">${handleY}</span>px 0`</span>,
-                nTransform = <span class="hljs-string">`translate(<span class="hljs-subst">${stampX - handleX}</span>px,<span class="hljs-subst">${stampY - handleY}</span>px)`</span>;
-
-            <span class="hljs-keyword">if</span> (self.yaw || self.pitch || self.roll || (self.pivot &amp;&amp; self.addPivotRotation) || (self.mimic &amp;&amp; self.useMimicRotation) || (self.path &amp;&amp; self.addPathRotation)) {
-
-                v = rotation.v;
-                vx = v.x;
-                vy = v.y;
-                vz = v.z;
-                angle = rotation.getAngle(<span class="hljs-literal">false</span>);
-
-                nTransform += <span class="hljs-string">` rotate3d(<span class="hljs-subst">${vx}</span>,<span class="hljs-subst">${vy}</span>,<span class="hljs-subst">${vz}</span>,<span class="hljs-subst">${angle}</span>rad)`</span>;
-            }
-
-            <span class="hljs-keyword">if</span> (self.offsetZ) nTransform += <span class="hljs-string">` translateZ(<span class="hljs-subst">${self.offsetZ}</span>px)`</span>;
-
-            <span class="hljs-keyword">if</span> (scale !== <span class="hljs-number">1</span>) nTransform += <span class="hljs-string">` scale(<span class="hljs-subst">${scale}</span>,<span class="hljs-subst">${scale}</span>)`</span>;
-
-            <span class="hljs-keyword">if</span> (nTransform !== self.currentTransformString) {
-
-                self.currentTransformString = nTransform;
-                self.dirtyTransform = <span class="hljs-literal">true</span>;
-            }
-
-            <span class="hljs-keyword">if</span> (nTransformOrigin !== self.currentTransformOriginString) {
-
-                self.currentTransformOriginString = nTransformOrigin;
-                self.dirtyTransformOrigin = <span class="hljs-literal">true</span>;
-            }</pre></div></div>
             
         </li>
         
@@ -2093,15 +2053,12 @@ S.trackHere = <span class="hljs-function"><span class="hljs-keyword">function</s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
-              <p>determine whether there is a need to trigger a redraw of the DOM element</p>
+              <pre><code><span class="hljs-comment">// calculate transform strings on each iteration</span>
+<span class="hljs-keyword">let</span> [stampX, stampY] = self.currentStampPosition,
+    [handleX, handleY] = self.currentStampHandlePosition,
+    scale = self.currentScale;</code></pre>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (self.dirtyTransform || self.dirtyPerspective || self.dirtyPosition || self.dirtyDomDimensions || self.dirtyTransformOrigin || self.dirtyVisibility || self.dirtyCss || self.dirtyClasses || self.domShowRequired) {
-
-                addDomShowElement(self.name);
-                setDomShowRequired(<span class="hljs-literal">true</span>);
-            }</pre></div></div>
             
         </li>
         
@@ -2112,11 +2069,10 @@ S.trackHere = <span class="hljs-function"><span class="hljs-keyword">function</s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-70">&#182;</a>
               </div>
-              <p>update artefacts subscribed to this artefact (using it as their pivot or mimic source), if required</p>
+              <pre><code><span class="hljs-keyword">let</span> rotation = self.currentRotation,
+    v, vx, vy, vz, angle;</code></pre>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (self.dirtyPositionSubscribers) self.updatePositionSubscribers();</pre></div></div>
             
         </li>
         
@@ -2127,26 +2083,10 @@ S.trackHere = <span class="hljs-function"><span class="hljs-keyword">function</s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
-              <p>if this artefact’s pivot or mimic source was playing up, reset appropriate dirty flags so we can try and fix on next iteration</p>
+              <pre><code><span class="hljs-keyword">let</span> nTransformOrigin = <span class="hljs-string">`<span class="hljs-subst">${handleX}</span>px <span class="hljs-subst">${handleY}</span>px 0`</span>,
+    nTransform = <span class="hljs-string">`translate(<span class="hljs-subst">${stampX - handleX}</span>px,<span class="hljs-subst">${stampY - handleY}</span>px)`</span>;</code></pre>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span>(self.dirtyMimicRotation || self.dirtyPivotRotation) {
-
-                self.dirtyMimicRotation = <span class="hljs-literal">false</span>;
-                self.dirtyPivotRotation = <span class="hljs-literal">false</span>;
-                self.dirtyRotation = <span class="hljs-literal">true</span>;
-            }
-
-            <span class="hljs-keyword">if</span>(self.dirtyMimicScale) {
-
-                self.dirtyMimicScale = <span class="hljs-literal">false</span>;
-                self.dirtyScale = <span class="hljs-literal">true</span>;
-            }
-
-            resolve(<span class="hljs-literal">true</span>);
-        });
-    };</pre></div></div>
             
         </li>
         
@@ -2156,6 +2096,373 @@ S.trackHere = <span class="hljs-function"><span class="hljs-keyword">function</s
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-72">&#182;</a>
+              </div>
+              <pre><code><span class="hljs-keyword">if</span> (self.yaw || self.pitch || self.roll || (self.pivot &amp;&amp; self.addPivotRotation) || (self.mimic &amp;&amp; self.useMimicRotation) || (self.path &amp;&amp; self.addPathRotation)) {</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-73">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-73">&#182;</a>
+              </div>
+              <pre><code>    v = rotation.v;
+    vx = v.x;
+    vy = v.y;
+    vz = v.z;
+    angle = rotation.getAngle(<span class="hljs-literal">false</span>);</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-74">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-74">&#182;</a>
+              </div>
+              <pre><code>    nTransform += <span class="hljs-string">` rotate3d(<span class="hljs-subst">${vx}</span>,<span class="hljs-subst">${vy}</span>,<span class="hljs-subst">${vz}</span>,<span class="hljs-subst">${angle}</span>rad)`</span>;
+}</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-75">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-75">&#182;</a>
+              </div>
+              <pre><code><span class="hljs-keyword">if</span> (self.offsetZ) nTransform += <span class="hljs-string">` translateZ(<span class="hljs-subst">${self.offsetZ}</span>px)`</span>;</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-76">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-76">&#182;</a>
+              </div>
+              <pre><code><span class="hljs-keyword">if</span> (scale !== <span class="hljs-number">1</span>) nTransform += <span class="hljs-string">` scale(<span class="hljs-subst">${scale}</span>,<span class="hljs-subst">${scale}</span>)`</span>;</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-77">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-77">&#182;</a>
+              </div>
+              <pre><code><span class="hljs-keyword">if</span> (nTransform !== self.currentTransformString) {</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-78">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-78">&#182;</a>
+              </div>
+              <pre><code>    self.currentTransformString = nTransform;
+    self.dirtyTransform = <span class="hljs-literal">true</span>;
+}</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-79">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-79">&#182;</a>
+              </div>
+              <pre><code><span class="hljs-keyword">if</span> (nTransformOrigin !== self.currentTransformOriginString) {</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-80">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-80">&#182;</a>
+              </div>
+              <pre><code>    self.currentTransformOriginString = nTransformOrigin;
+    self.dirtyTransformOrigin = <span class="hljs-literal">true</span>;
+}</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-81">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-81">&#182;</a>
+              </div>
+              <pre><code><span class="hljs-comment">// determine whether there is a need to trigger a redraw of the DOM element</span>
+<span class="hljs-keyword">if</span> (self.dirtyTransform || self.dirtyPerspective || self.dirtyPosition || self.dirtyDomDimensions || self.dirtyTransformOrigin || self.dirtyVisibility || self.dirtyCss || self.dirtyClasses || self.domShowRequired) {</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-82">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-82">&#182;</a>
+              </div>
+              <pre><code>    addDomShowElement(self.name);
+    setDomShowRequired(<span class="hljs-literal">true</span>);
+}</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-83">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-83">&#182;</a>
+              </div>
+              <pre><code><span class="hljs-comment">// update artefacts subscribed to this artefact (using it as their pivot or mimic source), if required</span>
+<span class="hljs-keyword">if</span> (self.dirtyPositionSubscribers) self.updatePositionSubscribers();</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-84">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-84">&#182;</a>
+              </div>
+              <pre><code><span class="hljs-comment">// if this artefact&#x27;s pivot or mimic source was playing up, reset appropriate dirty flags so we can try and fix on next iteration</span>
+<span class="hljs-keyword">if</span>(self.dirtyMimicRotation || self.dirtyPivotRotation) {</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-85">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-85">&#182;</a>
+              </div>
+              <pre><code>    self.dirtyMimicRotation = <span class="hljs-literal">false</span>;
+    self.dirtyPivotRotation = <span class="hljs-literal">false</span>;
+    self.dirtyRotation = <span class="hljs-literal">true</span>;
+}</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-86">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-86">&#182;</a>
+              </div>
+              <pre><code><span class="hljs-keyword">if</span>(self.dirtyMimicScale) {</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-87">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-87">&#182;</a>
+              </div>
+              <pre><code>    self.dirtyMimicScale = <span class="hljs-literal">false</span>;
+    self.dirtyScale = <span class="hljs-literal">true</span>;
+}</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-88">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-88">&#182;</a>
+              </div>
+              <pre><code>resolve(<span class="hljs-literal">true</span>);</code></pre>
+<p>});</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-89">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-89">&#182;</a>
+              </div>
+              <p>do not process if the DOM element is missing</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.domElement) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-90">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-90">&#182;</a>
+              </div>
+              <p>calculate transform strings on each iteration</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">let</span> [stampX, stampY] = <span class="hljs-built_in">this</span>.currentStampPosition,
+                [handleX, handleY] = <span class="hljs-built_in">this</span>.currentStampHandlePosition,
+                scale = <span class="hljs-built_in">this</span>.currentScale;
+
+            <span class="hljs-keyword">let</span> rotation = <span class="hljs-built_in">this</span>.currentRotation,
+                v, vx, vy, vz, angle;
+
+            <span class="hljs-keyword">let</span> nTransformOrigin = <span class="hljs-string">`<span class="hljs-subst">${handleX}</span>px <span class="hljs-subst">${handleY}</span>px 0`</span>,
+                nTransform = <span class="hljs-string">`translate(<span class="hljs-subst">${stampX - handleX}</span>px,<span class="hljs-subst">${stampY - handleY}</span>px)`</span>;
+
+            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.yaw || <span class="hljs-built_in">this</span>.pitch || <span class="hljs-built_in">this</span>.roll || (<span class="hljs-built_in">this</span>.pivot &amp;&amp; <span class="hljs-built_in">this</span>.addPivotRotation) || (<span class="hljs-built_in">this</span>.mimic &amp;&amp; <span class="hljs-built_in">this</span>.useMimicRotation) || (<span class="hljs-built_in">this</span>.path &amp;&amp; <span class="hljs-built_in">this</span>.addPathRotation)) {
+
+                v = rotation.v;
+                vx = v.x;
+                vy = v.y;
+                vz = v.z;
+                angle = rotation.getAngle(<span class="hljs-literal">false</span>);
+
+                nTransform += <span class="hljs-string">` rotate3d(<span class="hljs-subst">${vx}</span>,<span class="hljs-subst">${vy}</span>,<span class="hljs-subst">${vz}</span>,<span class="hljs-subst">${angle}</span>rad)`</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.offsetZ) nTransform += <span class="hljs-string">` translateZ(<span class="hljs-subst">${<span class="hljs-built_in">this</span>.offsetZ}</span>px)`</span>;
+
+            <span class="hljs-keyword">if</span> (scale !== <span class="hljs-number">1</span>) nTransform += <span class="hljs-string">` scale(<span class="hljs-subst">${scale}</span>,<span class="hljs-subst">${scale}</span>)`</span>;
+
+            <span class="hljs-keyword">if</span> (nTransform !== <span class="hljs-built_in">this</span>.currentTransformString) {
+
+                <span class="hljs-built_in">this</span>.currentTransformString = nTransform;
+                <span class="hljs-built_in">this</span>.dirtyTransform = <span class="hljs-literal">true</span>;
+            }
+
+            <span class="hljs-keyword">if</span> (nTransformOrigin !== <span class="hljs-built_in">this</span>.currentTransformOriginString) {
+
+                <span class="hljs-built_in">this</span>.currentTransformOriginString = nTransformOrigin;
+                <span class="hljs-built_in">this</span>.dirtyTransformOrigin = <span class="hljs-literal">true</span>;
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-91">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-91">&#182;</a>
+              </div>
+              <p>determine whether there is a need to trigger a redraw of the DOM element</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyTransform || <span class="hljs-built_in">this</span>.dirtyPerspective || <span class="hljs-built_in">this</span>.dirtyPosition || <span class="hljs-built_in">this</span>.dirtyDomDimensions || <span class="hljs-built_in">this</span>.dirtyTransformOrigin || <span class="hljs-built_in">this</span>.dirtyVisibility || <span class="hljs-built_in">this</span>.dirtyCss || <span class="hljs-built_in">this</span>.dirtyClasses || <span class="hljs-built_in">this</span>.domShowRequired) {
+
+                addDomShowElement(<span class="hljs-built_in">this</span>.name);
+                setDomShowRequired(<span class="hljs-literal">true</span>);
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-92">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-92">&#182;</a>
+              </div>
+              <p>update artefacts subscribed to this artefact (using it as their pivot or mimic source), if required</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyPositionSubscribers) <span class="hljs-built_in">this</span>.updatePositionSubscribers();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-93">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-93">&#182;</a>
+              </div>
+              <p>if this artefact’s pivot or mimic source was playing up, reset appropriate dirty flags so we can try and fix on next iteration</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span>(<span class="hljs-built_in">this</span>.dirtyMimicRotation || <span class="hljs-built_in">this</span>.dirtyPivotRotation) {
+
+                <span class="hljs-built_in">this</span>.dirtyMimicRotation = <span class="hljs-literal">false</span>;
+                <span class="hljs-built_in">this</span>.dirtyPivotRotation = <span class="hljs-literal">false</span>;
+                <span class="hljs-built_in">this</span>.dirtyRotation = <span class="hljs-literal">true</span>;
+            }
+
+            <span class="hljs-keyword">if</span>(<span class="hljs-built_in">this</span>.dirtyMimicScale) {
+
+                <span class="hljs-built_in">this</span>.dirtyMimicScale = <span class="hljs-literal">false</span>;
+                <span class="hljs-built_in">this</span>.dirtyScale = <span class="hljs-literal">true</span>;
+            }
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-94">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-94">&#182;</a>
               </div>
               <p><code>apply</code></p>
 <ul>
@@ -2169,27 +2476,22 @@ S.trackHere = <span class="hljs-function"><span class="hljs-keyword">function</s
         applyCoreResizeListener();
 
         <span class="hljs-built_in">this</span>.prepareStamp();
-
-        <span class="hljs-keyword">let</span> self = <span class="hljs-built_in">this</span>;
-
         <span class="hljs-built_in">this</span>.stamp()
-        .then(<span class="hljs-function">() =&gt;</span> {
 
-            domShow(self.name);
-            self.dirtyPathObject = <span class="hljs-literal">true</span>;
-            self.cleanPathObject();
-        })
-        .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));
+        domShow(<span class="hljs-built_in">this</span>.name);
+
+        <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+        <span class="hljs-built_in">this</span>.cleanPathObject();
     };</pre></div></div>
             
         </li>
         
         
-        <li id="section-73">
+        <li id="section-95">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-73">&#182;</a>
+                <a class="pilcrow" href="#section-95">&#182;</a>
               </div>
               <p>Return the prototype</p>
 

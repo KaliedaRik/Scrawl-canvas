@@ -1515,40 +1515,18 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
-              <p><code>clear</code> - For Cell objects in the wrapper’s <strong>cells</strong> (and associated) Arrays (returns a Promise):</p>
+              <p><code>clear</code> - For Cell objects in the wrapper’s <strong>cells</strong> (and associated) Arrays:</p>
 <ul>
-<li>if the Cell object’s <code>cleared</code> flag is true, invoke the Cell’s <code>clear</code> function </li>
+<li>If the Cell object’s <code>cleared</code> flag is true, invoke the Cell’s <code>clear</code> function </li>
+<li>Note that the Display canvas itself does not clearuntil the show stage, to minimize flickering</li>
 </ul>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>P.clear = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">let</span> self = <span class="hljs-built_in">this</span>;
-
-    <span class="hljs-keyword">if</span> (self.dirtyCells) self.cleanCells();
-
-    <span class="hljs-keyword">let</span> next = <span class="hljs-function">(<span class="hljs-params">counter</span>) =&gt;</span> {
-
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {
-
-            <span class="hljs-keyword">let</span> myCell = self.cellBatchesClear[counter];
-
-            <span class="hljs-keyword">if</span> (myCell) {
-
-                myCell.clear()
-                .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
-
-                    next(counter + <span class="hljs-number">1</span>)
-                    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> resolve(<span class="hljs-literal">true</span>))
-                    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(err));
-                })
-                .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(err));
-            }
-            <span class="hljs-keyword">else</span> resolve(<span class="hljs-literal">true</span>);
-        });
-    };
-    <span class="hljs-keyword">return</span> next(<span class="hljs-number">0</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyCells) <span class="hljs-built_in">this</span>.cleanCells();
+    <span class="hljs-built_in">this</span>.cellBatchesClear.forEach(<span class="hljs-function"><span class="hljs-params">myCell</span> =&gt;</span> myCell.clear());
 };</pre></div></div>
             
         </li>
@@ -1560,7 +1538,7 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
-              <p><code>compile</code> - For Cell objects in the wrapper’s <strong>cells</strong> (and associated) Arrays (returns a Promise):</p>
+              <p><code>compile</code> - For Cell objects in the wrapper’s <strong>cells</strong> (and associated) Arrays:</p>
 <ul>
 <li>sort Cell objects depending on their <code>compileOrder</code> attribute - Cells with lower order values will be processed first</li>
 <li>if the Cell object’s <code>compiled</code> flag is true, invoke the Cell’s <code>compile</code> function </li>
@@ -1568,41 +1546,7 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.compile = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">let</span> self = <span class="hljs-built_in">this</span>;
-
-    <span class="hljs-keyword">if</span> (self.dirtyCells) self.cleanCells();
-
-    <span class="hljs-keyword">let</span> next = <span class="hljs-function">(<span class="hljs-params">counter</span>) =&gt;</span> {
-
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {
-
-            <span class="hljs-keyword">let</span> myCell = self.cellBatchesCompile[counter];
-
-            <span class="hljs-keyword">if</span> (myCell) {
-
-                myCell.compile()
-                .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
-
-                    next(counter + <span class="hljs-number">1</span>)
-                    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> resolve(<span class="hljs-literal">true</span>))
-                    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(err));
-                })
-                .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(err));
-            }
-            <span class="hljs-keyword">else</span> {
-
-                self.prepareStamp();
-
-                self.stamp()
-                .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> resolve(<span class="hljs-literal">true</span>))
-                .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(err));
-            }
-        });
-    };
-    <span class="hljs-keyword">return</span> next(<span class="hljs-number">0</span>);
-};</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.compile = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
             
         </li>
         
@@ -1613,7 +1557,40 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
-              <p><code>show</code> - For Cell objects in the wrapper’s <strong>cells</strong> (and associated) Arrays (returns a Promise):</p>
+              <p>Handle constituent cells</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyCells) <span class="hljs-built_in">this</span>.cleanCells();
+    <span class="hljs-built_in">this</span>.cellBatchesCompile.forEach(<span class="hljs-function"><span class="hljs-params">myCell</span> =&gt;</span> myCell.compile());</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-50">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-50">&#182;</a>
+              </div>
+              <p>Handle display canvas</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.prepareStamp();
+    <span class="hljs-built_in">this</span>.stamp();
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-51">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-51">&#182;</a>
+              </div>
+              <p><code>show</code> - For Cell objects in the wrapper’s <strong>cells</strong> (and associated) Arrays:</p>
 <ul>
 <li>sort Cell objects depending on their <code>showOrder</code> attribute - Cells with lower order values will be processed first</li>
 <li>if the Cell object’s <code>shown</code> flag is true, invoke the Cell’s <code>show</code> function </li>
@@ -1626,84 +1603,85 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.show = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+            <div class="content"><div class='highlight'><pre>P.show = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-52">&#182;</a>
+              </div>
+              <p>Handle constituent cells</p>
 
-    <span class="hljs-keyword">let</span> self = <span class="hljs-built_in">this</span>;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyCells) <span class="hljs-built_in">this</span>.cleanCells();
+    <span class="hljs-built_in">this</span>.cellBatchesShow.forEach(<span class="hljs-function"><span class="hljs-params">myCell</span> =&gt;</span> myCell.show());</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-53">&#182;</a>
+              </div>
+              <p>Clear Display canvas, and get the base cell to stamp itself onto it</p>
 
-    <span class="hljs-keyword">if</span> (self.dirtyCells) self.cleanCells();
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.engine.clearRect(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-built_in">this</span>.localWidth, <span class="hljs-built_in">this</span>.localHeight);
+    <span class="hljs-built_in">this</span>.base.show();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-54">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-54">&#182;</a>
+              </div>
+              <p>Handle DOM-related positioning and display requirements, including ARIA updates</p>
 
-    <span class="hljs-keyword">let</span> next = <span class="hljs-function">(<span class="hljs-params">counter</span>) =&gt;</span> {
-
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {
-
-            <span class="hljs-keyword">let</span> myCell = self.cellBatchesShow[counter];
-
-            <span class="hljs-keyword">if</span> (myCell) {
-
-                myCell.show()
-                .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
-
-                    next(counter + <span class="hljs-number">1</span>)
-                    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> resolve(<span class="hljs-literal">true</span>))
-                    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(err));
-                })
-                .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(err));
-            }
-            <span class="hljs-keyword">else</span> {
-
-                self.engine.clearRect(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, self.localWidth, self.localHeight);
-                
-                self.base.show()
-                .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
-
-                    domShow();
-
-                    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyAria) <span class="hljs-built_in">this</span>.cleanAria();
-
-                    resolve(<span class="hljs-literal">true</span>);
-                })
-                .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(err));
-            }
-        });
-    };
-    <span class="hljs-keyword">return</span> next(<span class="hljs-number">0</span>);
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    domShow();
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyAria) <span class="hljs-built_in">this</span>.cleanAria();
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-50">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
-              <p><code>render</code> - orchestrate a single Display cycle - clear, then compile, then show (returns a Promise).</p>
+              <p><code>render</code> - orchestrate a single Display cycle - clear, then compile, then show.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>P.render = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">let</span> self = <span class="hljs-built_in">this</span>;
-
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve</span>) =&gt;</span> {
-
-        self.clear()
-        .then(<span class="hljs-function">() =&gt;</span> self.compile())
-        .then(<span class="hljs-function">() =&gt;</span> self.show())
-        .then(<span class="hljs-function">() =&gt;</span> resolve(<span class="hljs-literal">true</span>))
-        .catch(<span class="hljs-function">() =&gt;</span> resolve(<span class="hljs-literal">false</span>));
-    });
+    <span class="hljs-built_in">this</span>.clear();
+    <span class="hljs-built_in">this</span>.compile();
+    <span class="hljs-built_in">this</span>.show();
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-51">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
               <p><code>cleanCells</code> - internal function triggered each time there is an update to the <strong>cells</strong> Array attribute, or a constituent Cell sets the Canvas wrapper’s <code>dirtyCell</code> flag.</p>
 <ul>
@@ -1761,11 +1739,11 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-52">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
               <h5 id="handling-dom-events">Handling DOM events</h5>
 <p><code>cascadeEventAction</code> - The Canvas wrapper’s &lt;canvas&gt; element is part of the DOM, thus it is able to participate in all normal DOM events. We use the cascadeEventAction function to tell the wrapper which of the events it receives should be cascaded down to its constituent Cell objects and, in turn, their Groups’ artefacts. </p>
@@ -1792,11 +1770,11 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-53">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+                <a class="pilcrow" href="#section-58">&#182;</a>
               </div>
               <ol>
 <li>Find all entitys currently colliding with the mouse/touch coordinate over the canvas</li>
@@ -1816,11 +1794,11 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-54">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
+                <a class="pilcrow" href="#section-59">&#182;</a>
               </div>
               <ol start="2">
 <li>Process the returned test results</li>
@@ -1854,11 +1832,11 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-55">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+                <a class="pilcrow" href="#section-60">&#182;</a>
               </div>
               <ol start="3">
 <li>Trigger the required action on each affected entity</li>
@@ -1909,11 +1887,11 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-56">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+                <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
               <ol start="4">
 <li>Cleanup and return</li>
@@ -1929,11 +1907,11 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-57">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
+                <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
               <p><code>cleanAria</code> - internal function; transfers updated <strong>title</strong>, <strong>label</strong> and <strong>description</strong> attribute values into the relevant DOM elements</p>
 
@@ -1950,11 +1928,11 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-58">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
+                <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
@@ -1969,11 +1947,11 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-59">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
+                <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

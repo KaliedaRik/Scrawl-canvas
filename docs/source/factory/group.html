@@ -929,7 +929,8 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
     <span class="hljs-keyword">let</span> host = <span class="hljs-built_in">this</span>.currentHost;
 
     <span class="hljs-keyword">if</span> (!host || host.substring) <span class="hljs-keyword">return</span> artefact[item] || cell[item] || artefact[host] || cell[host] || <span class="hljs-literal">null</span>;
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> host;</pre></div></div>
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> host;
+};</pre></div></div>
             
         </li>
         
@@ -940,12 +941,17 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
-              <p>if (host &amp;&amp; item === host.name) return host;
-else if (item) return artefact[item] || cell[item] || null;</p>
+              <p><code>forceStamp</code> - invoke the Group to instruct its artefact members to perform a <code>stamp</code> action, ignoring whether the Group <code>visibility</code> flag setting</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>};</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.forceStamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">let</span> v = <span class="hljs-built_in">this</span>.visibility;
+    <span class="hljs-built_in">this</span>.visibility = <span class="hljs-literal">true</span>;
+    <span class="hljs-built_in">this</span>.stamp()
+    <span class="hljs-built_in">this</span>.visibility = v;
+};</pre></div></div>
             
         </li>
         
@@ -956,30 +962,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
-              <p><code>forceStamp</code> - invoke the Group to instruct its artefact members to perform a <code>stamp</code> action, ignoring whether the Group <code>visibility</code> flag setting</p>
+              <p><code>stamp</code> - the Display Cycle is mediated through Groups.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.forceStamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">var</span> self = <span class="hljs-built_in">this</span>;
-
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve</span>) =&gt;</span> {
-
-        <span class="hljs-keyword">let</span> v = self.visibility;
-        self.visibility = <span class="hljs-literal">true</span>;
-
-        self.stamp()
-        .then(<span class="hljs-function">(<span class="hljs-params">res</span>) =&gt;</span> {
-            self.visibility = v;
-            resolve(res);
-        })
-        .catch(<span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> {
-            self.visibility = v;
-            resolve(err);
-        });
-    });
-};</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.stamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
             
         </li>
         
@@ -989,21 +976,6 @@ else if (item) return artefact[item] || cell[item] || null;</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-27">&#182;</a>
-              </div>
-              <p><code>stamp</code> - the Display Cycle is mediated through Groups - these Group functions control display functionality via a series of Promise cascades which in turn allow individual artefacts to make use of web workers, where appropriate, to achieve their stamping functionality - for example when they need to apply image filters to their output.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.stamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-28">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>Check we have a host of some sort (either a Stack artefact or a Cell asset)</p>
 
@@ -1019,15 +991,26 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         <span class="hljs-keyword">else</span> <span class="hljs-built_in">this</span>.dirtyHost = <span class="hljs-literal">true</span>;
     }
 
-    <span class="hljs-keyword">let</span> self = <span class="hljs-built_in">this</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.visibility) {
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {
+        <span class="hljs-keyword">let</span> { currentHost, stashOutput, noFilters, filters } = <span class="hljs-built_in">this</span>;
 
-        <span class="hljs-keyword">if</span> (self.visibility) {
+        <span class="hljs-keyword">if</span> (currentHost) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>Check if artefacts need to be sorterd and, if yes, sort them by their order attribute</p>
 
-            <span class="hljs-keyword">let</span> currentHost = self.currentHost;
-
-            <span class="hljs-keyword">if</span> (currentHost) {</pre></div></div>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-built_in">this</span>.sortArtefacts();</pre></div></div>
             
         </li>
         
@@ -1038,11 +1021,13 @@ else if (item) return artefact[item] || cell[item] || null;</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              <p>Check if artefacts need to be sorterd and, if yes, sort them by their order attribute</p>
+              <p>Check to see if there is a Group filter in place or if the Group needs to stash its output and, if yes, pull a Cell asset from the pool</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                self.sortArtefacts();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">let</span> filterCell = (stashOutput || (!noFilters &amp;&amp; filters &amp;&amp; filters.length)) ?
+                requestCell() :
+                <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -1053,13 +1038,21 @@ else if (item) return artefact[item] || cell[item] || null;</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
-              <p>Check to see if there is a Group filter in place or if the Group needs to stash its output and, if yes, pull a Cell asset from the pool</p>
+              <p>Setup the pool Cell, if required</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">let</span> filterCell = (self.stashOutput || (!self.noFilters &amp;&amp; self.filters &amp;&amp; self.filters.length)) ?
-                    requestCell() :
-                    <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (filterCell &amp;&amp; filterCell.element) {
+
+                <span class="hljs-keyword">let</span> dims = currentHost.currentDimensions;
+
+                <span class="hljs-keyword">if</span> (dims) {
+
+                    filterCell.element.width = dims[<span class="hljs-number">0</span>];
+                    filterCell.element.height = dims[<span class="hljs-number">1</span>];
+                }
+                filterCell.engine.save();
+            }</pre></div></div>
             
         </li>
         
@@ -1070,21 +1063,14 @@ else if (item) return artefact[item] || cell[item] || null;</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
-              <p>Setup the pool Cell, if required</p>
+              <p>We save/restore the canvas engine at this point because some entitys may have their <code>method</code> attribute set to <code>clip</code> and the only way to get rid of a clip region from an engine is to save the engine before applying the clip, then restoring the engine afterwards</p>
+<ul>
+<li>This has implications for tracking engine attributes</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (filterCell &amp;&amp; filterCell.element) {
-
-                    <span class="hljs-keyword">let</span> dims = currentHost.currentDimensions;
-
-                    <span class="hljs-keyword">if</span> (dims) {
-
-                        filterCell.element.width = dims[<span class="hljs-number">0</span>];
-                        filterCell.element.height = dims[<span class="hljs-number">1</span>];
-                    }
-                    filterCell.engine.save();
-                }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (currentHost.engine) currentHost.engine.save();</pre></div></div>
             
         </li>
         
@@ -1095,14 +1081,11 @@ else if (item) return artefact[item] || cell[item] || null;</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
-              <p>We save/restore the canvas engine at this point because some entitys may have their <code>method</code> attribute set to <code>clip</code> and the only way to get rid of a clip region from an engine is to save the engine before applying the clip, then restoring the engine afterwards</p>
-<ul>
-<li>This has implications for tracking engine attributes</li>
-</ul>
+              <p>Prepare the Group’s artefacts for the forthcoming stamp activity</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (currentHost.engine) currentHost.engine.save();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-built_in">this</span>.prepareStamp(filterCell);</pre></div></div>
             
         </li>
         
@@ -1113,11 +1096,28 @@ else if (item) return artefact[item] || cell[item] || null;</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
-              <p>Prepare the Group’s artefacts for the forthcoming stamp activity</p>
+              <p>Get the Group’s artefacts to stamp themselves on the current host or pool Cell</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                self.prepareStamp(filterCell);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-built_in">this</span>.stampAction(filterCell);
+
+            <span class="hljs-keyword">if</span> (filterCell) {
+
+                filterCell.engine.restore();
+                releaseCell(filterCell);
+            }
+            <span class="hljs-keyword">else</span> {
+
+                <span class="hljs-keyword">if</span> (currentHost.engine) {
+
+                    currentHost.engine.restore();
+                    currentHost.setEngineFromState(currentHost.engine);
+                }
+            }
+        }
+    }
+};</pre></div></div>
             
         </li>
         
@@ -1127,89 +1127,6 @@ else if (item) return artefact[item] || cell[item] || null;</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-34">&#182;</a>
-              </div>
-              <p>Get the Group’s artefacts to stamp themselves on the current host or pool Cell</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                self.stampAction(filterCell)
-                .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
-
-                    <span class="hljs-keyword">if</span> (filterCell) {
-
-                        filterCell.engine.restore();
-                        releaseCell(filterCell);
-                    }
-                    <span class="hljs-keyword">else</span> {
-
-                        <span class="hljs-keyword">if</span> (currentHost.engine) {
-
-                            currentHost.engine.restore();
-                            currentHost.setEngineFromState(currentHost.engine);
-                        }
-                    }
-                    resolve(self.name);
-                })
-                .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> {
-
-                    <span class="hljs-keyword">if</span> (filterCell) {
-
-                        filterCell.engine.restore();
-                        releaseCell(filterCell);
-                    }
-                    <span class="hljs-keyword">else</span> {
-
-                        <span class="hljs-keyword">if</span> (currentHost.engine) {
-
-                            currentHost.engine.restore();
-                            currentHost.setEngineFromState(currentHost.engine);
-                        }
-                    }
-                    reject(err)
-                });
-            }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-35">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
-              </div>
-              <p>Bale out of the stamp functionality if the Group has no host on which to perform its actions</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">else</span> resolve(<span class="hljs-literal">false</span>);
-        }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-36">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
-              </div>
-              <p>Bale out of the stamp functionality if the Group is not visible</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> resolve(<span class="hljs-literal">false</span>);
-    });
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-37">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p><code>sortArtefacts</code> - internal function. Uses a bucket sort algorithm</p>
 
@@ -1241,13 +1158,13 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-38">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+                <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
-              <p><code>prepareStamp</code> - initial action in the Display cycle, before Stacks/Cells start their clear/compile/show Promise cascade</p>
+              <p><code>prepareStamp</code> - initial action in the Display cycle, before Stacks/Cells start their clear/compile/show cascade</p>
 
             </div>
             
@@ -1277,14 +1194,13 @@ else if (item) return artefact[item] || cell[item] || null;</p>
         </li>
         
         
-        <li id="section-39">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+                <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
-              <p><code>stampAction</code> - the key Group-mediated action in the Display cycle, invoked as part of the <code>compile</code> functionality. Returns a Promise defined in the <code>next</code> local function, which will be recursively called as the Group processes each of its member artifacts in turn. After the final artefact is processed the Promise chain will collapse to resolution.</p>
-<p>We process artefacts in this way because some artefacts may need to make asynchronous calls as part of their functionality - for example, when an entity needs to apply a filter to its output.</p>
+              <p><code>stampAction</code> - the key Group-mediated action in the Display cycle, invoked as part of the <code>compile</code> functionality.</p>
 
             </div>
             
@@ -1292,9 +1208,99 @@ else if (item) return artefact[item] || cell[item] || null;</p>
 
     <span class="hljs-keyword">let</span> mystash = (<span class="hljs-built_in">this</span>.currentHost &amp;&amp; <span class="hljs-built_in">this</span>.currentHost.stashOutput) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyFilters || !<span class="hljs-built_in">this</span>.currentFilters) <span class="hljs-built_in">this</span>.cleanFilters();
+    <span class="hljs-keyword">let</span> { dirtyFilters, currentFilters, artefactBuckets, noFilters, filters, stashOutput, currentHost } = <span class="hljs-built_in">this</span>;
 
-    <span class="hljs-keyword">let</span> self = <span class="hljs-built_in">this</span>;</pre></div></div>
+    <span class="hljs-keyword">if</span> (dirtyFilters || !currentFilters) <span class="hljs-built_in">this</span>.cleanFilters();
+
+    artefactBuckets.forEach(<span class="hljs-function"><span class="hljs-params">art</span> =&gt;</span> {
+
+        <span class="hljs-keyword">if</span> (art &amp;&amp; art.stamp) art.stamp();
+    });
+
+    <span class="hljs-keyword">if</span> (myCell) {
+
+        <span class="hljs-keyword">if</span> (!noFilters &amp;&amp; filters &amp;&amp; filters.length) {
+
+            <span class="hljs-keyword">let</span> img = <span class="hljs-built_in">this</span>.applyFilters(myCell);
+            <span class="hljs-built_in">this</span>.stashAction(img);
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (stashOutput) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <p>We set up things to draw the group on a pool cell if the Group’s <code>stashOutput</code> flag is set to true - so now we have to paint it back into the host Cell</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">let</span> tempElement = myCell.element,
+                tempEngine = myCell.engine,
+                realEngine = (currentHost &amp;&amp; currentHost.engine) ? currentHost.engine : <span class="hljs-literal">false</span>;
+
+            <span class="hljs-keyword">if</span> (realEngine) {
+
+                realEngine.save();
+                
+                realEngine.globalCompositeOperation = <span class="hljs-string">&#x27;source-over&#x27;</span>;
+                realEngine.globalAlpha = <span class="hljs-number">1</span>;
+                realEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+
+                realEngine.drawImage(tempElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+                
+                realEngine.restore();
+
+                <span class="hljs-keyword">let</span> tempImg = tempEngine.getImageData(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, tempElement.width, tempElement.height);
+
+                <span class="hljs-built_in">this</span>.stashAction(tempImg);
+            }
+        }
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <p><code>applyFilters</code> - filters can be applied to entity artefacts at the group level, in addition to any filters applied at the entity level.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.applyFilters = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">myCell</span>) </span>{
+
+    <span class="hljs-keyword">let</span> currentHost = <span class="hljs-built_in">this</span>.currentHost,
+        filterHost = myCell;
+
+    <span class="hljs-keyword">if</span> (!currentHost || !filterHost) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <p>Get handles to current and filter Cell elements and engines</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> currentElement = currentHost.element,
+        currentEngine = currentHost.engine;
+
+    <span class="hljs-keyword">let</span> filterElement = filterHost.element,
+        filterEngine = filterHost.engine;</pre></div></div>
             
         </li>
         
@@ -1305,27 +1311,19 @@ else if (item) return artefact[item] || cell[item] || null;</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
-              <p>The <code>next</code> function, called recursively as each artefact member gets processed by the Group.</p>
+              <p>Action a request to use the filtered artefacts as a stencil - as determined by the Group’s <code>isStencil</code> flag</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> next = <span class="hljs-function">(<span class="hljs-params">counter</span>) =&gt;</span> {
-
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {
-
-            <span class="hljs-keyword">let</span> art = self.artefactBuckets[counter];
-
-            <span class="hljs-keyword">if</span> (art &amp;&amp; art.stamp) {
-
-                art.stamp()
-                .then(<span class="hljs-function">() =&gt;</span> {
-
-                    next(counter + <span class="hljs-number">1</span>)
-                    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> resolve(<span class="hljs-literal">true</span>))
-                    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(err));
-                })
-                .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(err));
-            }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.isStencil) {
+        
+        filterEngine.save();
+        filterEngine.globalCompositeOperation = <span class="hljs-string">&#x27;source-in&#x27;</span>;
+        filterEngine.globalAlpha = <span class="hljs-number">1</span>;
+        filterEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+        filterEngine.drawImage(currentElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+        filterEngine.restore();
+    }</pre></div></div>
             
         </li>
         
@@ -1336,22 +1334,14 @@ else if (item) return artefact[item] || cell[item] || null;</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
-              <p>The else branch should only trigger once all the artefacts have been processed. At this point we should be okay to action any Group-level filters on the (entity) artefact output</p>
+              <p>At this point we will send the contents of the filterHost canvas over to the filter engine</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">else</span> {
+            <div class="content"><div class='highlight'><pre>    filterEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
 
-                <span class="hljs-keyword">if</span> (myCell) {
-
-                    <span class="hljs-keyword">if</span> (!self.noFilters &amp;&amp; self.filters &amp;&amp; self.filters.length) {
-
-                        self.applyFilters(myCell)
-                        .then(<span class="hljs-function"><span class="hljs-params">img</span> =&gt;</span> self.stashAction(img))
-                        .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> resolve(<span class="hljs-literal">true</span>))
-                        .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(err));
-                    }
-                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (self.stashOutput) {</pre></div></div>
+    <span class="hljs-keyword">let</span> myimage = filterEngine.getImageData(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, filterElement.width, filterElement.height),
+        worker = requestFilterWorker();</pre></div></div>
             
         </li>
         
@@ -1362,37 +1352,31 @@ else if (item) return artefact[item] || cell[item] || null;</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
-              <p>We set up things to draw the group on a pool cell if the Group’s <code>stashOutput</code> flag is set to true - so now we have to paint it back into the host Cell</p>
+              <p>NEED TO POPULATE IMAGE FILTER ACTION OBJECTS WITH THEIR ASSET’S IMAGEDATA AT THIS POINT</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                        <span class="hljs-keyword">let</span> tempElement = myCell.element,
-                            tempEngine = myCell.engine,
-                            realEngine = (self.currentHost &amp;&amp; self.currentHost.engine) ? 
-                                self.currentHost.engine : <span class="hljs-literal">false</span>;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.preprocessFilters(<span class="hljs-built_in">this</span>.currentFilters);
 
-                        <span class="hljs-keyword">if</span> (realEngine) {
+    <span class="hljs-keyword">let</span> img = actionFilterWorker(worker, {
+        <span class="hljs-attr">image</span>: myimage,
+        <span class="hljs-attr">filters</span>: <span class="hljs-built_in">this</span>.currentFilters,
+    })
 
-                            realEngine.save();
-                            
-                            realEngine.globalCompositeOperation = <span class="hljs-string">&#x27;source-over&#x27;</span>;
-                            realEngine.globalAlpha = <span class="hljs-number">1</span>;
-                            realEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+    <span class="hljs-keyword">if</span> (img) {
 
-                            realEngine.drawImage(tempElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-                            
-                            realEngine.restore();
+        filterEngine.globalCompositeOperation = <span class="hljs-string">&#x27;source-over&#x27;</span>;
+        filterEngine.globalAlpha = <span class="hljs-number">1</span>;
+        filterEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+        filterEngine.putImageData(img, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+    }
+    currentEngine.save();
+    currentEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+    currentEngine.drawImage(filterElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+    currentEngine.restore();
 
-                            <span class="hljs-keyword">let</span> tempImg = tempEngine.getImageData(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, tempElement.width, tempElement.height);
-
-                            self.stashAction(tempImg)
-                            .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> resolve(<span class="hljs-literal">true</span>))
-                            .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(err));
-                        }
-                        <span class="hljs-keyword">else</span> reject (<span class="hljs-string">&#x27;Could not find real engine&#x27;</span>);
-                    }
-                    <span class="hljs-keyword">else</span> resolve(<span class="hljs-literal">true</span>);
-                }</pre></div></div>
+    <span class="hljs-keyword">return</span> img;
+};</pre></div></div>
             
         </li>
         
@@ -1403,14 +1387,55 @@ else if (item) return artefact[item] || cell[item] || null;</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
-              <p>Terminate the cascade and start the resolution collapse</p>
+              <p><code>stashAction</code> - internal function which creates an ImageAsset object (and, as determined by the setting of the Group’s <code>stashOutputAsAsset</code> flag, an &lt;img&gt; element which gets attached to the DOM document in the <code>scrawlCanvasHold</code> hidden &lt;div&gt; element) from the Group’s entity’s output.</p>
+<p>NOTE: the <code>stashOutput</code> and <code>stashOutputAsAsset</code> flags are not Group object attributes. They are set on the group as a result of invoking the <code>scrawl.createImageFromGroup</code> function, and will be set to false as soon as the <code>Group.stashAction</code> function runs (in other words, stashing a Group’s output is a one-off operation).</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">else</span> resolve(<span class="hljs-literal">true</span>);
+            <div class="content"><div class='highlight'><pre>P.stashAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">img</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (!img) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.stashOutput) {
+
+        <span class="hljs-built_in">this</span>.stashOutput = <span class="hljs-literal">false</span>;
+
+        <span class="hljs-keyword">let</span> [x, y, width, height] = <span class="hljs-built_in">this</span>.getCellCoverage(img);
+
+        <span class="hljs-keyword">let</span> myCell = requestCell(),
+            myEngine = myCell.engine,
+            myElement = myCell.element;
+
+        myElement.width = width;
+        myElement.height = height;
+
+        myEngine.putImageData(img, -x, -y);
+
+        <span class="hljs-built_in">this</span>.stashedImageData = myEngine.getImageData(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, width, height);
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.stashOutputAsAsset) {
+
+            <span class="hljs-built_in">this</span>.stashOutputAsAsset = <span class="hljs-literal">false</span>;
+
+            <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.stashedImage) {
+
+                <span class="hljs-keyword">let</span> newimg = <span class="hljs-built_in">this</span>.stashedImage = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;img&#x27;</span>);
+
+                newimg.id = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span>-groupimage`</span>;
+
+                newimg.onload = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+                    scrawlCanvasHold.appendChild(newimg);
+                    importDomImage(<span class="hljs-string">`#<span class="hljs-subst">${newimg.id}</span>`</span>);
+                };
+
+                newimg.src = myElement.toDataURL();
             }
-        });
-    };</pre></div></div>
+            <span class="hljs-keyword">else</span> <span class="hljs-built_in">this</span>.stashedImage.src = myElement.toDataURL();
+        }
+        releaseCell(myCell);
+    }
+};</pre></div></div>
             
         </li>
         
@@ -1420,306 +1445,6 @@ else if (item) return artefact[item] || cell[item] || null;</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-44">&#182;</a>
-              </div>
-              <p>Start the artefact <code>stamp</code> cascade</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> next(<span class="hljs-number">0</span>);
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-45">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
-              </div>
-              <p><code>applyFilters</code> - filters can be applied to entity artefacts at the group level, in addition to any filters applied at the entity level. Returns a promise, as filters use web-workers, which are asynchronous.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.applyFilters = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">myCell</span>) </span>{</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-46">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
-              </div>
-              <p>Clean and sort the Group-level filters before sending them to the filter worker for application</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> self = <span class="hljs-built_in">this</span>;
-
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-47">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
-              </div>
-              <p>Determine if we have all the required resources to perform the filter operation and, if not, clean up and resolve</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> currentHost = self.currentHost,
-            filterHost = myCell;
-
-        <span class="hljs-keyword">if</span> (!currentHost || !filterHost) reject(<span class="hljs-string">&#x27;Group.applyFilters - no host&#x27;</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-48">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
-              </div>
-              <p>An internal cleanup function to release resources and restore the non-filter defaults to what they were before. It’s also in the cleanup phase that we (finally) copy over the results of the filter over to the current Cell display, taking into account the Group’s <code>composite</code> and <code>alpha</code> values</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> cleanup = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-            releaseFilterWorker(worker);
-
-            currentEngine.save();</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-49">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
-              </div>
-              <p>currentEngine.globalCompositeOperation = self.filterComposite;
-currentEngine.globalAlpha = self.filterAlpha;</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            currentEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-
-            currentEngine.drawImage(filterElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-            
-            currentEngine.restore();
-        };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-50">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
-              </div>
-              <p>Get handles to current and filter Cell elements and engines</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> currentElement = currentHost.element,
-            currentEngine = currentHost.engine;
-
-        <span class="hljs-keyword">let</span> filterElement = filterHost.element,
-            filterEngine = filterHost.engine;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-51">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
-              </div>
-              <p>Action a request to use the filtered artefacts as a stencil - as determined by the Group’s <code>isStencil</code> flag</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (self.isStencil) {
-            
-            filterEngine.save();
-            filterEngine.globalCompositeOperation = <span class="hljs-string">&#x27;source-in&#x27;</span>;
-            filterEngine.globalAlpha = <span class="hljs-number">1</span>;
-            filterEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-            filterEngine.drawImage(currentElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-            filterEngine.restore();
-        }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-52">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
-              </div>
-              <p>At this point we will send the contents of the filterHost canvas over to the web worker, alongside details of the filters we wish to apply to it</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        filterEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-
-        <span class="hljs-keyword">let</span> myimage = filterEngine.getImageData(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, filterElement.width, filterElement.height),
-            worker = requestFilterWorker();</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-53">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
-              </div>
-              <p>NEED TO POPULATE IMAGE FILTER ACTION OBJECTS WITH THEIR ASSET’S IMAGEDATA AT THIS POINT</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        self.preprocessFilters(self.currentFilters);
-
-        actionFilterWorker(worker, {
-            <span class="hljs-attr">image</span>: myimage,
-            <span class="hljs-attr">filters</span>: self.currentFilters,
-        })
-        .then(<span class="hljs-function"><span class="hljs-params">img</span> =&gt;</span> {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-54">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
-              </div>
-              <p>Copy the filter worker’s output back onto the filterHost canvas</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (img) {
-
-                filterEngine.globalCompositeOperation = <span class="hljs-string">&#x27;source-over&#x27;</span>;
-                filterEngine.globalAlpha = <span class="hljs-number">1</span>;
-                filterEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-                filterEngine.putImageData(img, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-55">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
-              </div>
-              <p>On success, cleanup and resolve</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                cleanup();
-                resolve(img);
-            }
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">&#x27;image issue&#x27;</span>);
-        })
-        .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> {
-
-            cleanup();
-            reject(err);
-        });
-    });
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-56">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
-              </div>
-              <p><code>stashAction</code> - internal function which creates an ImageAsset object (and, as determined by the setting of the Group’s <code>stashOutputAsAsset</code> flag, an &lt;img&gt; element which gets attached to the DOM document in the <code>scrawlCanvasHold</code> hidden &lt;div&gt; element) from the Group’s entity’s output.</p>
-<p>NOTE: the <code>stashOutput</code> and <code>stashOutputAsAsset</code> flags are not Group object attributes. They are set on the group as a result of invoking the <code>scrawl.createImageFromGroup</code> function, and will be set to false as soon as the <code>Group.stashAction</code> function runs (in other words, stashing a Group’s output is a one-off operation).</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.stashAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">img</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (!img) <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.reject(<span class="hljs-string">&#x27;No image data supplied to stashAction&#x27;</span>);
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.stashOutput) {
-
-        <span class="hljs-built_in">this</span>.stashOutput = <span class="hljs-literal">false</span>;
-
-        <span class="hljs-keyword">let</span> self = <span class="hljs-built_in">this</span>;
-
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span> (<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {
-
-            <span class="hljs-keyword">let</span> [x, y, width, height] = self.getCellCoverage(img);
-
-            <span class="hljs-keyword">let</span> myCell = requestCell(),
-                myEngine = myCell.engine,
-                myElement = myCell.element;
-
-            myElement.width = width;
-            myElement.height = height;
-
-            myEngine.putImageData(img, -x, -y);
-
-            self.stashedImageData = myEngine.getImageData(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, width, height);
-
-            <span class="hljs-keyword">if</span> (self.stashOutputAsAsset) {
-
-                self.stashOutputAsAsset = <span class="hljs-literal">false</span>;
-
-                <span class="hljs-keyword">if</span> (!self.stashedImage) {
-
-                    <span class="hljs-keyword">let</span> newimg = self.stashedImage = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;img&#x27;</span>);
-
-                    newimg.id = <span class="hljs-string">`<span class="hljs-subst">${self.name}</span>-groupimage`</span>;
-
-                    newimg.onload = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-                        scrawlCanvasHold.appendChild(newimg);
-                        importDomImage(<span class="hljs-string">`#<span class="hljs-subst">${newimg.id}</span>`</span>);
-                    };
-
-                    newimg.src = myElement.toDataURL();
-                }
-                <span class="hljs-keyword">else</span> self.stashedImage.src = myElement.toDataURL();
-            }
-            releaseCell(myCell);
-
-            resolve(<span class="hljs-literal">true</span>);
-        });
-    }
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.resolve(<span class="hljs-literal">false</span>);
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-57">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
               <p><code>getCellCoverage</code> - internal function which calculates the cumulative coverage of the Group’s artefacts. Used as part of the <code>stashAction</code> functionality</p>
 
@@ -1759,11 +1484,11 @@ currentEngine.globalAlpha = self.filterAlpha;</p>
         </li>
         
         
-        <li id="section-58">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
               <h4 id="artefact-management">Artefact management</h4>
 <p>Artefacts should be added to, and removed from, the Group object using the functions detailed below.</p>
@@ -1774,11 +1499,11 @@ currentEngine.globalAlpha = self.filterAlpha;</p>
         </li>
         
         
-        <li id="section-59">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
               <p><code>addArtefacts</code> - an artefact can belong to more than one Group</p>
 
@@ -1804,11 +1529,11 @@ currentEngine.globalAlpha = self.filterAlpha;</p>
         </li>
         
         
-        <li id="section-60">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+                <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
               <p><code>removeArtefacts</code> - remove an artefact from this Group</p>
 
@@ -1832,11 +1557,11 @@ currentEngine.globalAlpha = self.filterAlpha;</p>
         </li>
         
         
-        <li id="section-61">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+                <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
               <p><code>moveArtefactsIntoGroup</code> - remove the artefact from their current Group (which is generally their Display cycle group, as set in their <code>group</code> and/or <code>host</code> attribute) and add them to this Group</p>
 
@@ -1875,11 +1600,11 @@ currentEngine.globalAlpha = self.filterAlpha;</p>
         </li>
         
         
-        <li id="section-62">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
+                <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
               <p><code>clearArtefacts</code> - remove all artefacts from this Group</p>
 
@@ -1896,11 +1621,11 @@ currentEngine.globalAlpha = self.filterAlpha;</p>
         </li>
         
         
-        <li id="section-63">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
+                <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
               <p><code>updateArtefacts</code> - passes the <strong>items</strong> argument object through to each of the Group’s artefact’s <code>setDelta</code> function</p>
 
@@ -1915,11 +1640,11 @@ currentEngine.globalAlpha = self.filterAlpha;</p>
         </li>
         
         
-        <li id="section-64">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
+                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
               <p><code>setArtefacts</code> - passes the <strong>items</strong> argument object through to each of the Group’s artefact’s <code>set</code> function</p>
 
@@ -1934,11 +1659,11 @@ currentEngine.globalAlpha = self.filterAlpha;</p>
         </li>
         
         
-        <li id="section-65">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+                <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
               <p><code>updateByDelta</code> - passes the <strong>items</strong> argument object through to each of the Group’s artefact’s <code>updateByDelta</code> function</p>
 
@@ -1953,11 +1678,11 @@ currentEngine.globalAlpha = self.filterAlpha;</p>
         </li>
         
         
-        <li id="section-66">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
+                <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
               <p><code>reverseByDelta</code> - passes the <strong>items</strong> argument object through to each of the Group’s artefact’s <code>reverseByDelta</code> function</p>
 
@@ -1972,11 +1697,11 @@ currentEngine.globalAlpha = self.filterAlpha;</p>
         </li>
         
         
-        <li id="section-67">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
+                <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
               <p><code>addArtefactClasses</code> - specifically for non-entity artefacts. Passes the <strong>items</strong> argument String through to each of the Group’s artefact’s <code>addClasses</code> function</p>
 
@@ -1991,11 +1716,11 @@ currentEngine.globalAlpha = self.filterAlpha;</p>
         </li>
         
         
-        <li id="section-68">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
               <p><code>removeArtefactClasses</code> - specifically for non-entity artefacts. Passes the <strong>items</strong> argument String through to each of the Group’s artefact’s <code>removeClasses</code> function</p>
 
@@ -2010,11 +1735,11 @@ currentEngine.globalAlpha = self.filterAlpha;</p>
         </li>
         
         
-        <li id="section-69">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
               <p><code>cascadeAction</code> - internal helper function for the above artefact manipulation functionality</p>
 
@@ -2034,11 +1759,11 @@ currentEngine.globalAlpha = self.filterAlpha;</p>
         </li>
         
         
-        <li id="section-70">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-70">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
               <p><code>setDeltaValues</code> - passes the <strong>items</strong> argument object through to each of the Group’s artefact’s <code>setDeltaValues</code> function</p>
 
@@ -2054,11 +1779,11 @@ currentEngine.globalAlpha = self.filterAlpha;</p>
         </li>
         
         
-        <li id="section-71">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-71">&#182;</a>
+                <a class="pilcrow" href="#section-58">&#182;</a>
               </div>
               <p>We can add and remove filters to each of the Group’s entity artefacts using the following functions. The argument for each function can be one or more Filter name-Strings, or the Filter objects themselves, separated by commas.</p>
 
@@ -2067,11 +1792,11 @@ currentEngine.globalAlpha = self.filterAlpha;</p>
         </li>
         
         
-        <li id="section-72">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-72">&#182;</a>
+                <a class="pilcrow" href="#section-59">&#182;</a>
               </div>
               <p><code>addFiltersToEntitys</code></p>
 
@@ -2091,11 +1816,11 @@ currentEngine.globalAlpha = self.filterAlpha;</p>
         </li>
         
         
-        <li id="section-73">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-73">&#182;</a>
+                <a class="pilcrow" href="#section-60">&#182;</a>
               </div>
               <p><code>removeFiltersFromEntitys</code></p>
 
@@ -2115,11 +1840,11 @@ currentEngine.globalAlpha = self.filterAlpha;</p>
         </li>
         
         
-        <li id="section-74">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-74">&#182;</a>
+                <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
               <p><code>clearFiltersFromEntitys</code> - clears all filters from all the Group’s entity artefacts.</p>
 
@@ -2139,11 +1864,11 @@ currentEngine.globalAlpha = self.filterAlpha;</p>
         </li>
         
         
-        <li id="section-75">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-75">&#182;</a>
+                <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
               <h4 id="collision-functionality">Collision functionality</h4>
 <p>The <code>getArtefactAt</code> function checks to see if any of the Group object’s artefacts are located at the supplied coordinates in the argument object. </p>
@@ -2189,11 +1914,11 @@ currentEngine.globalAlpha = self.filterAlpha;</p>
         </li>
         
         
-        <li id="section-76">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-76">&#182;</a>
+                <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
               <p>The <code>getAllArtefactsAt</code> function returns an array of hit reports from all of the Group object’s artefacts located at the supplied coordinates in the argument object. The artefact with the highest order attribute value will be returned first in the response array.</p>
 <p>The function will always return an array of hit reports, or an empty array if no hits are reported.</p>
@@ -2237,11 +1962,11 @@ currentEngine.globalAlpha = self.filterAlpha;</p>
         </li>
         
         
-        <li id="section-77">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-77">&#182;</a>
+                <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
               <p>The <code>getArtefactCollisions</code> function returns an array of hit reports from all of the Group object’s artefacts which are currently in collision with the <strong>sensor</strong> coordinates supplied by the artefact argument. The function will always return an array of hit reports, or an empty array if no hits are reported.</p>
 <p>The argument must be either the artefact object itself, or its String name.</p>
@@ -2253,11 +1978,11 @@ currentEngine.globalAlpha = self.filterAlpha;</p>
         </li>
         
         
-        <li id="section-78">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-78">&#182;</a>
+                <a class="pilcrow" href="#section-65">&#182;</a>
               </div>
               <p>return empty array if no argument, or the argument is not an artefact, or the Group is empty</p>
 
@@ -2270,11 +1995,11 @@ currentEngine.globalAlpha = self.filterAlpha;</p>
         </li>
         
         
-        <li id="section-79">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-79">&#182;</a>
+                <a class="pilcrow" href="#section-66">&#182;</a>
               </div>
               <p>Return empty array if the artefact argument has not been setup to check for collisions</p>
 
@@ -2289,11 +2014,11 @@ currentEngine.globalAlpha = self.filterAlpha;</p>
         </li>
         
         
-        <li id="section-80">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-80">&#182;</a>
+                <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
               <p>Get entity collision data</p>
 
@@ -2304,11 +2029,11 @@ currentEngine.globalAlpha = self.filterAlpha;</p>
         </li>
         
         
-        <li id="section-81">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-81">&#182;</a>
+                <a class="pilcrow" href="#section-68">&#182;</a>
               </div>
               <p>Winnow step 1: don’t check the entity itself, or any missing or malformed artefacts in the Group</p>
 
@@ -2325,11 +2050,11 @@ currentEngine.globalAlpha = self.filterAlpha;</p>
         </li>
         
         
-        <li id="section-82">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-82">&#182;</a>
+                <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
               <p>Winnow step 2: exclude all targets outside the artefact/target collision radius</p>
 
@@ -2361,11 +2086,11 @@ currentEngine.globalAlpha = self.filterAlpha;</p>
         </li>
         
         
-        <li id="section-83">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-83">&#182;</a>
+                <a class="pilcrow" href="#section-70">&#182;</a>
               </div>
               <p>Winnow step 3: perform hit checks on remaining targets - this will not retrieve targets entirely inside the artefact</p>
 
@@ -2383,11 +2108,11 @@ currentEngine.globalAlpha = self.filterAlpha;</p>
         </li>
         
         
-        <li id="section-84">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-84">&#182;</a>
+                <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
               <p>return filtered results</p>
 
@@ -2401,11 +2126,11 @@ currentEngine.globalAlpha = self.filterAlpha;</p>
         </li>
         
         
-        <li id="section-85">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-85">&#182;</a>
+                <a class="pilcrow" href="#section-72">&#182;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code><span class="hljs-keyword">let</span> faces = scrawl.makeGroup({
@@ -2429,11 +2154,11 @@ currentEngine.globalAlpha = self.filterAlpha;</p>
         </li>
         
         
-        <li id="section-86">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-86">&#182;</a>
+                <a class="pilcrow" href="#section-73">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

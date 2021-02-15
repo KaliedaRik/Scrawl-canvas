@@ -931,24 +931,19 @@
     <span class="hljs-attr">delay</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">fn</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve</span>) =&gt;</span> {
+        <span class="hljs-keyword">if</span> (!uiSubscribedElements.length) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 
-            <span class="hljs-keyword">if</span> (!uiSubscribedElements.length) resolve(<span class="hljs-literal">false</span>);
+        <span class="hljs-keyword">if</span> (trackMouse &amp;&amp; mouseChanged) {
 
-            <span class="hljs-keyword">if</span> (trackMouse &amp;&amp; mouseChanged) {
+            mouseChanged = <span class="hljs-literal">false</span>;
+            updateUiSubscribedElements();
+        }
 
-                mouseChanged = <span class="hljs-literal">false</span>;
-                updateUiSubscribedElements();
-            }
+        <span class="hljs-keyword">if</span> (viewportChanged) {
 
-            <span class="hljs-keyword">if</span> (viewportChanged) {
-
-                viewportChanged = <span class="hljs-literal">false</span>;
-                updatePhraseEntitys();
-            }
-
-            resolve(<span class="hljs-literal">true</span>);
-        });
+            viewportChanged = <span class="hljs-literal">false</span>;
+            updatePhraseEntitys();
+        }
     },
 });</pre></div></div>
             

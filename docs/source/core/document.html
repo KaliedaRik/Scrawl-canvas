@@ -493,7 +493,7 @@
               <h4 id="root-elements">Root elements</h4>
 <p><code>Exported array and function</code> (to modules). Root elements are the boxes whose dimensions define the dimensions and positioning of all that they contain. All &lt;canvas&gt; elements are root elements. Scrawl-canvas also allows other DOM elements (typically &lt;div&gt; elements) to be defined as root elements called <strong>stacks</strong>, whose child elements can then be positioned and dimensioned just like entity objects in a canvas.</p>
 <p>Stacks can be nested within each other, and canvases can also be nested inside a stack. (Nothing can nest inside a canvas element). Only the top level stack will be included in the rootElements array.</p>
-<p>The Scrawl-canvas <strong>Display cycle</strong> - a cascade of Promise-based functionality for updating canvas and stack displays - can start at the rootElements array, with each member of the array processed in turn.</p>
+<p>The Scrawl-canvas <strong>Display cycle</strong> can start at the rootElements array, with each member of the array processed in turn.</p>
 <p>The <strong>rootElements</strong> array keeps track of all ‘root’ stack artefacts, and also includes all canvas artefacts, whether they’re part of a stack or not. <strong>setRootElementSort</strong> forces the root</p>
 
             </div>
@@ -1261,7 +1261,7 @@
               <h4 id="the-display-cycle">The Display cycle</h4>
 <p>Scrawl-canvas breaks down the Display cycle into three parts: <strong>clear</strong>; <strong>compile</strong>; and <strong>show</strong>. These can be triggered either as a single, combined <strong>render</strong> operation, or separately as-and-when needed.</p>
 <p>The order in which DOM stack and canvas elements are processed during the display cycle can be changed by setting that element’s controller’s <strong>order</strong> attribute to a higher or lower integer value; elements are processed (in batches) from lowest to highest order value</p>
-<p>Each display cycle function returns a Promise object which will resolve as true if the function completes successfully; false otherwise. These promises will never reject</p>
+<p>Each display cycle function is a normal Javascript function, invoked with no arguments and returning no status</p>
 <p>Note that Scrawl-canvas supplies a convenience function - <strong>makeRender()</strong> - for automating the process of creating an animation object to handle the Display cycle</p>
 
             </div>
@@ -1430,22 +1430,12 @@
 
 <span class="hljs-keyword">const</span> displayCycleBatchProcess = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">method</span>) </span>{
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {
+    rootElements_sorted.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
-        <span class="hljs-keyword">let</span> promises = [],
-            item;
+        <span class="hljs-keyword">let</span> item = artefact[name];
 
-        rootElements_sorted.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
-
-            item = artefact[name];
-
-            <span class="hljs-keyword">if</span> (item &amp;&amp; item[method]) promises.push(item[method]());
-        })
-
-        <span class="hljs-built_in">Promise</span>.all(promises)
-        .then(<span class="hljs-function">() =&gt;</span> resolve(<span class="hljs-literal">true</span>))
-        .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(err));
-    })
+        <span class="hljs-keyword">if</span> (item &amp;&amp; item[method]) item[method]();
+    });
 };</pre></div></div>
             
         </li>
@@ -1643,9 +1633,22 @@
                 <span class="hljs-keyword">if</span> (art.type === <span class="hljs-string">&#x27;Canvas&#x27;</span>) {
 
                     el.width = w;
-                    el.height = h;
+                    el.height = h;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-53">&#182;</a>
+              </div>
+              <p>if (art.renderOnResize) art.render().catch(err =&gt; console.log(err));</p>
 
-                    <span class="hljs-keyword">if</span> (art.renderOnResize) art.render().catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">if</span> (art.renderOnResize) art.render();
                 }
                 <span class="hljs-keyword">else</span> {
 
@@ -1657,11 +1660,11 @@
         </li>
         
         
-        <li id="section-53">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+                <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
               <p>update handle/transformOrigin</p>
 
@@ -1676,11 +1679,11 @@
         </li>
         
         
-        <li id="section-54">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
               <p>update transform</p>
 
@@ -1695,11 +1698,11 @@
         </li>
         
         
-        <li id="section-55">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
               <p>update visibility</p>
 
@@ -1714,11 +1717,11 @@
         </li>
         
         
-        <li id="section-56">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
               <p>update other CSS changes</p>
 
@@ -1753,11 +1756,11 @@
         </li>
         
         
-        <li id="section-57">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
+                <a class="pilcrow" href="#section-58">&#182;</a>
               </div>
               <p>update element classes</p>
 
@@ -1775,11 +1778,11 @@
         </li>
         
         
-        <li id="section-58">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
+                <a class="pilcrow" href="#section-59">&#182;</a>
               </div>
               <h4 id="dom-holding-areas">DOM Holding areas</h4>
 <p><code>Exported handles</code> (to modules). During its initialization phase, Scrawl-canvas will add two hidden ‘hold’ elements at the top and bottom of the document body where it can add additional elements as-and-when required. </p>
@@ -1789,11 +1792,11 @@
         </li>
         
         
-        <li id="section-59">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
+                <a class="pilcrow" href="#section-60">&#182;</a>
               </div>
               <p>Mainly for ARIA content. ARIA labels and descriptions are used by Scrawl-canvas &lt;canvas&gt; elements to inform non-visual website visitors about content in the canvas.</p>
 
@@ -1814,11 +1817,11 @@ scrawlCanvasHold.id = <span class="hljs-string">&#x27;Scrawl-ARIA-default-hold&#
         </li>
         
         
-        <li id="section-60">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+                <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
               <p>Navigation area - canvas anchor links. Canvases create their own (hidden) &lt;nav&gt; elements that directly follow them in the DOM. These are used to store &lt;a&gt; links for clickable entitys in the canvas display, making them accessible to non-visual users (for example: screen readers)</p>
 
@@ -1834,11 +1837,11 @@ scrawlNavigationHold.id = <span class="hljs-string">&#x27;Scrawl-navigation-defa
         </li>
         
         
-        <li id="section-61">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+                <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 
