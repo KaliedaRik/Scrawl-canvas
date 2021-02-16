@@ -849,23 +849,6 @@ P.theBigActionsObject = {
         if (null == excludeGreen) excludeGreen = false;
         if (null == excludeBlue) excludeBlue = false;
 
-        // Call WASM
-        // let res = average_channels(len, input.r, input.g, input.b, input.a, output.r, output.g, output.b, output.a, includeRed, includeGreen, includeBlue, excludeRed, excludeGreen, excludeBlue);
-
-        let instance = new makeFilterAverageChannels;
-        instance.length = len;
-        instance.include_red = includeRed;
-        instance.input = input;
-
-        let back_one = average_channels(instance);
-
-        console.log(typeof back_one, back_one)
-        // let res = JSON.parse(back_one);
-
-        // console.log(res.len, res.includeRed, res.input.r.length);
-        // console.log(includeRed);
-        // console.log(res.len);
-
         let divisor = 0;
         if (includeRed) divisor++;
         if (includeGreen) divisor++;

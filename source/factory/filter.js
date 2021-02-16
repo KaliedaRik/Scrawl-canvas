@@ -353,6 +353,8 @@ P.set = function (items = {}) {
     }
     if (this.method && setActionsArray[this.method]) setActionsArray[this.method](this);
 
+    this.dirtyFiltersCache = true;
+
     return this;
 };
 
@@ -379,6 +381,8 @@ P.setDelta = function (items = {}) {
     }
     if (this.method && setActionsArray[this.method]) setActionsArray[this.method](this);
 
+    this.dirtyFiltersCache = true;
+    
     return this;
 };
 
@@ -1095,11 +1099,6 @@ const setActionsArray = {
 // For now, we use one filter engine
 // + This used to be a pool of web workers which loaded up filter functionality
 // + Now it is just another module call in the main thread
-// + Which means that, as filters web workers were the only reason for using Promises, we can get rid of promises
-// + Because my testing seems to indicate that workers were no faster than this code, possibly slower!
-// + Getting rid of Promises would massively simplify the code base, but would lead to breaking changes
-// + But there is surely scope for getting rid of them as far as possible eg simplifying entity stamp workflow
-// + And now we have a good place to start our WASM experiments, with filters
 const filterPool = makeFilterEngine();
 
 const requestFilterWorker = function () {

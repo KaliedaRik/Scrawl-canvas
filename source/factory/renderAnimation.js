@@ -102,7 +102,7 @@ const RenderAnimation = function (items = {}) {
 
         if (this.readyToInitialize) {
 
-            this.afterCreated();
+            this.afterCreated(this);
             this.readyToInitialize = false;
         }
     }

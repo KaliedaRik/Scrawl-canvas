@@ -8,10 +8,10 @@ import scrawl from '../source/scrawl.js';
 // #### Scene setup
 const canvases = scrawl.library.canvas,
     entitys = scrawl.library.entity,
-    c1 = canvases['canvas-1'],
-    c2 = canvases['canvas-2'],
-    c3 = canvases['canvas-3'],
-    c4 = canvases['canvas-4'];
+    c1 = canvases['hackney'],
+    c2 = canvases['heathrow'],
+    c3 = canvases['kingston'],
+    c4 = canvases['burglary'];
 
 // Import the images we defined in the DOM (in &lt;img> elements)
 scrawl.importDomImage('.places');
@@ -20,22 +20,22 @@ scrawl.importDomImage('.places');
 const data = [
     {
         canvas: c1,
-        image: 'hackney',
+        image: 'hackney-bg',
         transparency: 'transparent',
     },
     {
         canvas: c2,
-        image: 'heathrow',
+        image: 'heathrow-bg',
         transparency: 'rgba(0,0,0,0)',
     },
     {
         canvas: c3,
-        image: 'kingston',
+        image: 'kingston-bg',
         transparency: '#00000000',
     },
     {
         canvas: c4,
-        image: 'burglary',
+        image: 'burglary-bg',
         transparency: '#0000',
     },
 ];
@@ -117,29 +117,28 @@ data.forEach(scene => {
 });
 
 // This function will run once, at the end of the first Display cycle
-const postInitialization = () => {
+const postInitialization = (anim) => {
 
-    data.forEach(scene => {
+    console.log(anim.target.name, 'postInitialization')
 
-        let original = entitys[`${scene.image}-original`];
+    let original = entitys[`${anim.target.name}-bg-original`];
 
-        // Update our original Picture entity, in particular to remove the blur filter and set up its composition in the scene
-        original.set({
-            filters: [],
-            order: 2,
-            globalCompositeOperation: 'destination-over',
-        });
-
-        // Create a second Picture entity using the blurred image asset Scrawl-canvas created for us during the first iteration of the Display cycle.
-        // + Note that we've asked Scrawl-canvas to create an &lt;img> element (outside of the DOM) from our original Picture's blurred output. Element creation takes time (it's an asynchronous action), which means that our new Picture entity won't show up for up to a second after the demo starts running.
-        original.clone({
-            name: `${scene.image}-blurred`,
-            asset: `${scene.image}-original-image`,
-            order: 1,
-            globalCompositeOperation: 'source-atop',
-        });
+    // Update our original Picture entity, in particular to remove the blur filter and set up its composition in the scene
+    original.set({
+        filters: [],
+        order: 2,
+        globalCompositeOperation: 'destination-over',
     });
-}
+
+    // Create a second Picture entity using the blurred image asset Scrawl-canvas created for us during the first iteration of the Display cycle.
+    // + Note that we've asked Scrawl-canvas to create an &lt;img> element (outside of the DOM) from our original Picture's blurred output. Element creation takes time (it's an asynchronous action), which means that our new Picture entity won't show up for up to a second after the demo starts running.
+    original.clone({
+        name: `${anim.target.name}-bg-blurred`,
+        asset: `${anim.target.name}-bg-original-image`,
+        order: 1,
+        globalCompositeOperation: 'source-atop',
+    });
+};
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo

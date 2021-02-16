@@ -84,6 +84,7 @@ export default function (P = {}) {
     P.cleanFilters = function () {
 
         this.dirtyFilters = false;
+        this.dirtyFiltersCache = true;
 
         if (!this.filters) this.filters = [];
 
