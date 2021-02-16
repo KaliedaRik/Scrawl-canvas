@@ -35,7 +35,6 @@ const Block = function (items = {}) {
         if (!items.width) this.currentDimensions[0] = this.dimensions[0] = 10;
         if (!items.height) this.currentDimensions[1] = this.dimensions[1] = 10;
     }
-    console.log('is wasm ready yet?', window.scrawlEnvironmentWebAssemblyInitialized);
     return this;
 };
 

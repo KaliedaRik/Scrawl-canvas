@@ -132,13 +132,6 @@ light-server is listening at http://0.0.0.0:4000
   serving static dir: .
 ```
 
-
-#### Web Assembly
-Scrawl-canvas has included WASM functionality since version 8.5.0. Development of code that utilizes WASM requires additional setup:
-+ Set up the toolchain for compiling Rust programs to WebAssembly by following the instructions in the [Rust and WebAssembly 'Game of Life' tutorial](https://rustwasm.github.io/docs/book/game-of-life/setup.html).
-+ In the `source/sc-wasm-rust` folder, run the command `wasm-pack build --release --target web` after updating the Rust files, to generate the updated WASM binary.
-
-
 ### Testing
 The code base does not include any ___unit testing___ frameworks. Instead, we rely on a set of Demo tests which allow us to perform ___integration testing___ and ___user interface testing___.
 

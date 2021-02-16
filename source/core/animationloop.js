@@ -34,7 +34,6 @@
 
 // #### Imports
 import { animation } from "./library.js";
-import { logMessage } from '../core/wasmWrapper.js';
 
 // Local variables 
 let doAnimation = false,
@@ -81,20 +80,11 @@ const sortAnimations = function () {
 // The __requestAnimationFrame__ function
 const animationLoop = function () {
 
-    if (window.scrawlEnvironmentWebAssemblyInitialized) {
+    if (resortBatchAnimations) sortAnimations();
 
-        if (resortBatchAnimations) sortAnimations();
+    animate_sorted.forEach(item => item.fn());
 
-        animate_sorted.forEach(item => item.fn());
-
-        if (doAnimation) window.requestAnimationFrame(() => animationLoop());
-    }
-    else if (doAnimation) {
-
-        console.log('waiting for wasm to compile');
-        window.requestAnimationFrame(() => animationLoop());
-    }
-    else console.log('animationLoop halted');
+    if (doAnimation) window.requestAnimationFrame(() => animationLoop());
 };
 
 // `Exported function` (modules and scrawl object). Start the RAF function running

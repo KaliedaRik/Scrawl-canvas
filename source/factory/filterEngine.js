@@ -6,8 +6,6 @@
 
 import { constructors } from '../core/library.js';
 
-import { logMessage, average_channels, makeFilterAverageChannels } from '../core/wasmWrapper.js';
-
 
 // #### FilterEngine constructor
 const FilterEngine = function () {
@@ -41,33 +39,30 @@ P.action = function (packet) {
 
     this.image = image;
 
-    if (window.scrawlEnvironmentWebAssemblyInitialized) {
+    let { workstoreLastAccessed, workstore, actions, choke, theBigActionsObject } = this;
 
-        let { workstoreLastAccessed, workstore, actions, choke, theBigActionsObject } = this;
+    let workstoreKeys = Object.keys(workstore), 
+        workstoreChoke = Date.now() - choke;
 
-        let workstoreKeys = Object.keys(workstore), 
-            workstoreChoke = Date.now() - choke;
+    workstoreKeys.forEach(k => {
 
-        workstoreKeys.forEach(k => {
+        if (workstoreLastAccessed[k] < workstoreChoke) {
 
-            if (workstoreLastAccessed[k] < workstoreChoke) {
-
-                delete workstore[k];
-                delete workstoreLastAccessed[k];
-            }
-        });
-
-        this.cache = {};
-
-        actions.length = 0;
-        filters.forEach(f => actions.push(...f.actions));
-
-        if (actions.length) {
-
-            this.unknit(image);
-            actions.forEach(a => theBigActionsObject[a.action] && theBigActionsObject[a.action].call(this, a));
-            this.knit();
+            delete workstore[k];
+            delete workstoreLastAccessed[k];
         }
+    });
+
+    this.cache = {};
+
+    actions.length = 0;
+    filters.forEach(f => actions.push(...f.actions));
+
+    if (actions.length) {
+
+        this.unknit(image);
+        actions.forEach(a => theBigActionsObject[a.action] && theBigActionsObject[a.action].call(this, a));
+        this.knit();
     }
     return(this.image);
 }
