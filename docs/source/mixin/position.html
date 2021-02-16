@@ -446,8 +446,8 @@
         <li id="section-1">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-1">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="position-mixin">Position mixin</h1>
 <p>This mixin defines the key attributes and functionality of Scrawl-canvas <strong>artefact objects</strong>. </p>
@@ -462,13 +462,13 @@
 <ul>
 <li><strong>absolute</strong> positioning - where we give the artefact a coordinate, measured in pixels from the top left corner of the container (<code>[0, 0]</code>, <code>[347, 26.4]</code>, etc). </li>
 <li><strong>relative</strong> positioning - where we supply the artefact with percentage coordinates, with <code>[&#39;0%&#39;, &#39;0%&#39;]</code> representing the top left corner of the container, and <code>[&#39;100%&#39;, &#39;100%&#39;]</code> its bottom right corner.</li>
-<li><strong>reference</strong> positioning - this is where an artefact will use another artefact’s <strong><em>current</em></strong> (not given) coordinate to determine its own position. We can reference by <code>pivot</code>, or by <code>mimic</code>, or by <code>path</code>.</li>
+<li><strong>reference</strong> positioning - this is where an artefact will use another artefact’s <em><strong>current</strong></em> (not given) coordinate to determine its own position. We can reference by <code>pivot</code>, or by <code>mimic</code>, or by <code>path</code>.</li>
 </ul>
-<p>Scrawl-canvas uses <a href="../factory/coordinate.html">Coordinate Arrays</a> - <code>[x, y]</code> - for storing artefact coordinates. The <strong><em>Javascript types</em></strong> of the <code>x</code> and <code>y</code> parts of the coordinate can be either Numbers or Strings, and do not need to match each other: <code>[&#39;5%&#39;, 20]</code> and <code>[10, &#39;15.4%&#39;]</code> are as valid as <code>[10, 20]</code> and <code>[&#39;5%&#39;, &#39;15.4%&#39;]</code>.</p>
+<p>Scrawl-canvas uses <a href="../factory/coordinate.html">Coordinate Arrays</a> - <code>[x, y]</code> - for storing artefact coordinates. The <em><strong>Javascript types</strong></em> of the <code>x</code> and <code>y</code> parts of the coordinate can be either Numbers or Strings, and do not need to match each other: <code>[&#39;5%&#39;, 20]</code> and <code>[10, &#39;15.4%&#39;]</code> are as valid as <code>[10, 20]</code> and <code>[&#39;5%&#39;, &#39;15.4%&#39;]</code>.</p>
 <h5 id="the-artefact-rotation-reflection-point">The artefact ‘rotation-reflection’ point</h5>
 <p>Every artefact has a <strong>start</strong> coordinate which, by default, is set at the artefact’s top-left corner - even for Wheels and Shapes! </p>
 <ul>
-<li>When we rotate an artefact, we rotate it around this coordinate. When we <strong><em>flip</em></strong> entity artefacts, we flip them around the artefact’s local horizontal or vertical axis drawn through this coordinate. </li>
+<li>When we rotate an artefact, we rotate it around this coordinate. When we <em><strong>flip</strong></em> entity artefacts, we flip them around the artefact’s local horizontal or vertical axis drawn through this coordinate. </li>
 <li>Thus what we call a ‘start’ coordinate is in fact the artefact’s <strong>Rotation-Reflection</strong> point.</li>
 </ul>
 <p>The R-R point does not need to be at the artefact’s top-left corner. We can move it by giving the artefact a <strong>handle</strong> coordinate - a distance measured from the artefact’s top-left corner. Just as for the start coordinate, we can set the handle coordinate using absolute, relative or reference values:</p>
@@ -476,12 +476,12 @@
 <li><strong>absolute</strong> handles - where we give the artefact a distance, measured in pixels from its top left corner . </li>
 <li><strong>relative</strong> handles - where we supply the artefact with percentage distances measured against the artefact’s own dimensions.</li>
 <li><strong>reference</strong> handles.</li>
-<li>In all cases, <strong><em>the distancing effect is along the artefact’s local horizontal and vertical axes</em></strong> - if the artefact is rotated, then those axes will not be perpendicular to the containing Canvas or Stack axes.</li>
+<li>In all cases, <em><strong>the distancing effect is along the artefact’s local horizontal and vertical axes</strong></em> - if the artefact is rotated, then those axes will not be perpendicular to the containing Canvas or Stack axes.</li>
 </ul>
 <p>Normally this is enough information to position an artefact in its container. However there may be times when we need to move the artefact’s R-R point a given distance along the container axes. We can achieve this by giving the artefact an <strong>offset</strong> coordinate.</p>
 <ul>
 <li><strong>absolute</strong> offsets - where we give the artefact a distance, measured in pixels from its top left corner. </li>
-<li><strong>relative</strong> offsets - where we supply the artefact with percentage distances measured against the <strong><em>container’s dimensions</em></strong>.</li>
+<li><strong>relative</strong> offsets - where we supply the artefact with percentage distances measured against the <em><strong>container’s dimensions</strong></em>.</li>
 <li><strong>reference</strong> offsets.</li>
 </ul>
 <p>An artefact can have both a handle and an offset; handle distances move the R-R point along the artefact’s axes (which may be diagonal lines), while offsets move it along the container’s axes.</p>
@@ -490,7 +490,7 @@
 <p>Just as for positioning data, an artefact’s dimensions data can be supplied in absolute, relative or reference terms:</p>
 <ul>
 <li><strong>absolute</strong> dimensions - where we give the artefact a width and height, measured in pixels from its top left corner. </li>
-<li><strong>relative</strong> dimensions - where we supply the artefact with percentage widths and height values, measured against the <strong><em>container’s dimensions</em></strong>.</li>
+<li><strong>relative</strong> dimensions - where we supply the artefact with percentage widths and height values, measured against the <em><strong>container’s dimensions</strong></em>.</li>
 <li><strong>reference</strong> dimensions.</li>
 </ul>
 <h5 id="artefact-pseudo-attributes">Artefact pseudo-attributes</h5>
@@ -501,7 +501,7 @@
 <li><strong>offsetX</strong> and <strong>offsetY</strong> - for getting and setting the <code>offset</code> Coordinate values</li>
 <li><strong>width</strong> and <strong>height</strong> - for getting and setting the <code>dimensions</code> Coordinate values</li>
 </ul>
-<p>Scrawl-canvas also supports the following <strong><em>pseudo-values</em></strong>, which can be used when setting <strong>relative</strong> coordinates:</p>
+<p>Scrawl-canvas also supports the following <em><strong>pseudo-values</strong></em>, which can be used when setting <strong>relative</strong> coordinates:</p>
 <ul>
 <li><code>[&#39;left&#39;, &#39;top&#39;]</code> == <code>[&#39;0%&#39;, &#39;0%&#39;]</code></li>
 <li><code>[&#39;center&#39;, &#39;center&#39;]</code> == <code>[&#39;50%&#39;, &#39;50%&#39;]</code></li>
@@ -528,7 +528,8 @@ scrawl.makeBlock({
     <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
 
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
-});</code></pre>
+});
+</code></pre>
 <h5 id="referencing-other-artefacts">Referencing other artefacts</h5>
 <p>Scrawl-canvas allows an artefact to reference other artefacts. The referenced objects supply data back to the first artefact, which it then uses to update its position and dimensions. </p>
 <ul>
@@ -558,8 +559,8 @@ scrawl.makeBlock({
 <h5 id="artefact-rotation">Artefact rotation</h5>
 <p>Scrawl-canvas artefacts can be rotated around their <strong>Rotation-Reflection point</strong>: </p>
 <ul>
-<li>Entity artefacts, being representations of 2-dimensional graphical shapes drawn on a &lt;canvas&gt; element, are restricted to rotating around the R-R point’s <strong><em>z-axis</em></strong>.</li>
-<li>Other artefacts, when part of a Stack container, can be rotated in 3 dimensions along the R-R point’s <strong><em>x-axis</em></strong>, <strong><em>y-axis</em></strong> and <strong><em>z-axis</em></strong>.</li>
+<li>Entity artefacts, being representations of 2-dimensional graphical shapes drawn on a &lt;canvas&gt; element, are restricted to rotating around the R-R point’s <em><strong>z-axis</strong></em>.</li>
+<li>Other artefacts, when part of a Stack container, can be rotated in 3 dimensions along the R-R point’s <em><strong>x-axis</strong></em>, <em><strong>y-axis</strong></em> and <em><strong>z-axis</strong></em>.</li>
 </ul>
 <p>Scrawl canvas measures rotations in <strong>degrees</strong>, not radians. An artefact’s rotation values are stored in the following attributes:</p>
 <ul>
@@ -576,7 +577,7 @@ scrawl.makeBlock({
 <li>a <code>reversed</code> entity is effectively flipped 180&deg; around a vertical line passing through that entity’s rotation-reflection (start) point - a face looking to the right will now look to the left</li>
 <li>an <code>upended</code> entity is effectively flipped 180&deg; around a horizontal line passing through that entity’s rotation-reflection (start) point - a normal face will now appear upside-down</li>
 </ul>
-<p>We can <strong><em>emulate 3D rotations for Picture entity artefacts</em></strong> using the <a href="../factory/loom.html">Loom entity</a> - see Demo <a href="../../demo/dom-015.html">DOM-015</a> for an example of this in action.</p>
+<p>We can <em><strong>emulate 3D rotations for Picture entity artefacts</strong></em> using the <a href="../factory/loom.html">Loom entity</a> - see Demo <a href="../../demo/dom-015.html">DOM-015</a> for an example of this in action.</p>
 <h5 id="collision-detection">Collision detection</h5>
 <p>Collision detection functionality - beyond mouse drag-and-drop - has been removed from Scrawl-canvas since v8.2.0</p>
 
@@ -588,8 +589,8 @@ scrawl.makeBlock({
         <li id="section-2">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-2">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
               <h4 id="imports">Imports</h4>
 
@@ -608,8 +609,8 @@ scrawl.makeBlock({
         <li id="section-3">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-3">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
               <h4 id="export-function">Export function</h4>
 
@@ -623,8 +624,8 @@ scrawl.makeBlock({
         <li id="section-4">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <h4 id="shared-attributes">Shared attributes</h4>
 
@@ -638,8 +639,8 @@ scrawl.makeBlock({
         <li id="section-5">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p><strong>group</strong> - every Scrawl-canvas artefact should belong to at least one Group, and can belong to more than one Group. Groups can be used for a variety of purposes, and play a major role in the <strong>Display cycle</strong> and in <strong>collision detection</strong>.</p>
 <ul>
@@ -652,17 +653,20 @@ scrawl.makeBlock({
 
 <span class="hljs-keyword">let</span> myBlock = scrawl.makeBlock({
     <span class="hljs-attr">group</span>: myGroup,
-});</code></pre>
+});
+</code></pre>
 <ul>
 <li>Similarly the <strong>set</strong> function’s object argument can accept a name String, or the new group’s object itself:</li>
 </ul>
 <pre><code>myBlock.set({
     <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;my-first-group&#x27;</span>,
-});</code></pre>
+});
+</code></pre>
 <ul>
-<li>If no group value is supplied when building a new <strong>entity</strong>, then the <strong><em>current group</em></strong> will be assigned as the entity’s group. This is a Scrawl-canvas ‘global’ value which will update whenever the user sets a Canvas wrapper as the current canvas:</li>
+<li>If no group value is supplied when building a new <strong>entity</strong>, then the <em><strong>current group</strong></em> will be assigned as the entity’s group. This is a Scrawl-canvas ‘global’ value which will update whenever the user sets a Canvas wrapper as the current canvas:</li>
 </ul>
-<pre><code>scrawl.setCurrentCanvas(<span class="hljs-string">&#x27;my-other-canvas&#x27;</span>);</code></pre>
+<pre><code>scrawl.setCurrentCanvas(<span class="hljs-string">&#x27;my-other-canvas&#x27;</span>);
+</code></pre>
 <ul>
 <li>For some Canvas and Stack wrappers, the value of their group attribute will be set to <code>root</code> - this indicates that the wrapper’s DOM element is not contained within another Stack.</li>
 <li>TODO: we need to decide whether we want a user-available scrawl.setCurrentStack function and, if yes, how that will impact on the core/document.js <strong>currentGroup</strong> variable exported by that module - given that we will then have both currentStack and currentCanvas variables, but only one currentGroup variable shared between them.</li>
@@ -678,8 +682,8 @@ scrawl.makeBlock({
         <li id="section-6">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>The <strong>visibility</strong> attribute is a boolean flag (default: true); when the flag is set, the Display cycle functionality will run on the artefact. If the attribute’s value is false, then the Display cycle functionality will ignore the artefact. This has the following effects:</p>
 <ul>
@@ -697,8 +701,8 @@ scrawl.makeBlock({
         <li id="section-7">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>The <strong>order</strong> attribute - an integer Number (default: 0) - determines the order in which an artefact will be processed as part of a Group. </p>
 <ul>
@@ -706,7 +710,7 @@ scrawl.makeBlock({
 <li>Note that Group objects also have an order attribute: all artefacts in a Group with a lower order value will be processed before those with a higher order value.</li>
 <li>Cell wrappers (a Canvas wrapper can have more than one Cell) have a <code>compileOrder</code> attribute which does the same job.</li>
 <li>Finally, Animation objects have order values; the same effect applies.</li>
-<li><strong><em>If the display of an artefact does not appear to be following the order value it has been given</em></strong>, the problem may lie in either the order values assigned to that artefact’s Group, or host (Cell, Canvas, Stack), or even the Animation object that contributes to the Display cycle.</li>
+<li><em><strong>If the display of an artefact does not appear to be following the order value it has been given</strong></em>, the problem may lie in either the order values assigned to that artefact’s Group, or host (Cell, Canvas, Stack), or even the Animation object that contributes to the Display cycle.</li>
 </ul>
 
             </div>
@@ -719,10 +723,10 @@ scrawl.makeBlock({
         <li id="section-8">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p>The <strong>start</strong> attribute represents an artefact’s <strong><em>Rotation-Reflexion point</em></strong>, and is held in an <code>[x, y]</code> Coordinate Array. The default values are <code>[0, 0]</code>, placing the artifact at the container object’s (Cell, Stack) top-left corner.</p>
+              <p>The <strong>start</strong> attribute represents an artefact’s <em><strong>Rotation-Reflexion point</strong></em>, and is held in an <code>[x, y]</code> Coordinate Array. The default values are <code>[0, 0]</code>, placing the artifact at the container object’s (Cell, Stack) top-left corner.</p>
 <pre><code><span class="hljs-keyword">let</span> myBlock = scrawl.makeBlock({
     <span class="hljs-attr">startX</span>: <span class="hljs-number">20</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
@@ -746,7 +750,8 @@ myBlock.setDelta({
 
 myBlock.setDelta({
     <span class="hljs-attr">start</span>: [<span class="hljs-number">1</span>, <span class="hljs-string">&#x27;0.5%&#x27;</span>],
-});</code></pre>
+});
+</code></pre>
 <ul>
 <li>Start values DO NOT respect the artefact’s <code>scale</code> attribute.</li>
 </ul>
@@ -761,10 +766,10 @@ myBlock.setDelta({
         <li id="section-9">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p>The <strong>handle</strong> attribute represents a distance from the artefact’s <strong><em>Rotation-Reflexion</em></strong> point, measured along the <strong><em>artefact’s local axes</em></strong>. It is held in an <code>[x, y]</code> Coordinate Array. The default values are <code>[0, 0]</code>.</p>
+              <p>The <strong>handle</strong> attribute represents a distance from the artefact’s <em><strong>Rotation-Reflexion</strong></em> point, measured along the <em><strong>artefact’s local axes</strong></em>. It is held in an <code>[x, y]</code> Coordinate Array. The default values are <code>[0, 0]</code>.</p>
 <ul>
 <li>Handle values WILL respect the artefact’s <code>scale</code> attribute.</li>
 </ul>
@@ -779,10 +784,10 @@ myBlock.setDelta({
         <li id="section-10">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <p>The <strong>offset</strong> attribute represents an offset from the artefact’s <strong><em>Rotation-Reflexion</em></strong> point, measured along the <strong><em>container’s axes</em></strong>. It is held in an <code>[x, y]</code> Coordinate Array. The default values are <code>[0, 0]</code>.</p>
+              <p>The <strong>offset</strong> attribute represents an offset from the artefact’s <em><strong>Rotation-Reflexion</strong></em> point, measured along the <em><strong>container’s axes</strong></em>. It is held in an <code>[x, y]</code> Coordinate Array. The default values are <code>[0, 0]</code>.</p>
 <ul>
 <li>Offset values DO NOT respect the artefact’s <strong>scale</strong> attribute.</li>
 <li>the <em>pseudo-values</em> <code>top</code>, <code>center</code>, etc have no meaning in the context of offsets.</li>
@@ -798,8 +803,8 @@ myBlock.setDelta({
         <li id="section-11">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>The <strong>dimensions</strong> attribute represents the artefact’s <strong>width</strong> and <strong>height</strong>. It is held in a <code>[w, h]</code> Coordinate Array. The default values vary between different types of artefact.</p>
 <ul>
@@ -816,8 +821,8 @@ myBlock.setDelta({
         <li id="section-12">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p><strong>pivoted</strong> - internal Array holding details of the artefacts using this artefact as their pivot reference.</p>
 
@@ -831,8 +836,8 @@ myBlock.setDelta({
         <li id="section-13">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p><strong>mimicked</strong> - internal Array holding details of the artefacts using this artefact as their mimic reference.</p>
 
@@ -846,8 +851,8 @@ myBlock.setDelta({
         <li id="section-14">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p><strong>particle</strong> - attribute to store any particle the artefact mey be using for its position reference</p>
 
@@ -861,8 +866,8 @@ myBlock.setDelta({
         <li id="section-15">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p><strong>lockTo</strong> - <code>[x-lock, y-lock]</code> Array; locks can be set to: <code>start</code> (the default), <code>pivot</code>, <code>path</code>, <code>mimic</code>, <code>particle</code>, or <code>mouse</code>.</p>
 <ul>
@@ -879,8 +884,8 @@ myBlock.setDelta({
         <li id="section-16">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p><strong>bringToFrontOnDrag</strong> - flag which, when set (default), will force the artefact currently being dragged to appear on top of other artefacts</p>
 
@@ -894,8 +899,8 @@ myBlock.setDelta({
         <li id="section-17">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>All artefacts (except compound entities such as Loom) can be scaled by setting their <strong>scale</strong> attribute to an appropriate float Number value:</p>
 <ul>
@@ -915,12 +920,12 @@ myBlock.setDelta({
         <li id="section-18">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
-              <p><strong>roll</strong> - float Number representing the artefact’s rotation around the <code>z-axis</code> of its <strong><em>Rotation-Reflection point</em></strong>.</p>
+              <p><strong>roll</strong> - float Number representing the artefact’s rotation around the <code>z-axis</code> of its <em><strong>Rotation-Reflection point</strong></em>.</p>
 <ul>
-<li>values represent <strong><em>degrees</em></strong>, not radians.</li>
+<li>values represent <em><strong>degrees</strong></em>, not radians.</li>
 <li>Some effort is made in the code to keep this value within the bounds of <code>-360</code> and <code>+360</code>. Value is measured in degrees (not radians!)</li>
 </ul>
 
@@ -934,8 +939,8 @@ myBlock.setDelta({
         <li id="section-19">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <h5 id="animation-speed">Animation speed</h5>
 <p>Scrawl-canvas assumes that an artefact will be <em>ready for anything</em>. However if we know beforehand that an artefact will not be requiring certain functionalities, we can switch them off; this will help make the artefact render more quickly. These <strong>noXXX</strong> flags include:</p>
@@ -966,8 +971,8 @@ myBlock.setDelta({
         <li id="section-20">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p><strong>purge</strong> - ?</p>
 
@@ -983,8 +988,8 @@ myBlock.setDelta({
         <li id="section-21">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
@@ -1035,8 +1040,8 @@ myBlock.setDelta({
         <li id="section-22">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>No additional clone functionality defined here</p>
@@ -1049,8 +1054,8 @@ myBlock.setDelta({
         <li id="section-23">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 
@@ -1066,8 +1071,8 @@ myBlock.setDelta({
         <li id="section-24">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p>Remove artefact from all groups</p>
 
@@ -1084,8 +1089,8 @@ myBlock.setDelta({
         <li id="section-25">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p>If the artefact has an anchor, it needs to be removed</p>
 
@@ -1099,8 +1104,8 @@ myBlock.setDelta({
         <li id="section-26">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p>Remove from other artefacts</p>
 
@@ -1133,8 +1138,8 @@ myBlock.setDelta({
         <li id="section-27">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p>Remove from tweens and actions targets arrays</p>
 
@@ -1151,8 +1156,8 @@ myBlock.setDelta({
         <li id="section-28">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p>Factory-specific actions required to complete the kill</p>
 
@@ -1166,8 +1171,8 @@ myBlock.setDelta({
         <li id="section-29">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p>Remove artefact from the Scrawl-canvas library</p>
 
@@ -1184,8 +1189,8 @@ myBlock.setDelta({
         <li id="section-30">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p>Specific factories can overwrite this function to perform additional actions required to clean themselves from the Scrawl-canvas system</p>
 
@@ -1199,8 +1204,8 @@ myBlock.setDelta({
         <li id="section-31">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 <ul>
@@ -1219,8 +1224,8 @@ myBlock.setDelta({
         <li id="section-32">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p><strong>position</strong>, <strong>positionX</strong>, <strong>positionY</strong></p>
 <ul>
@@ -1248,8 +1253,8 @@ myBlock.setDelta({
         <li id="section-33">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p><strong>start</strong>, <strong>startX</strong>, <strong>startY</strong></p>
 
@@ -1312,8 +1317,8 @@ myBlock.setDelta({
         <li id="section-34">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p><strong>handle</strong>, <strong>handleX</strong>, <strong>handleY</strong></p>
 
@@ -1376,8 +1381,8 @@ myBlock.setDelta({
         <li id="section-35">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p><strong>offset</strong>, <strong>offsetX</strong>, <strong>offsetY</strong></p>
 
@@ -1440,8 +1445,8 @@ myBlock.setDelta({
         <li id="section-36">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p><strong>dimensions</strong>, <strong>width</strong>, <strong>height</strong></p>
 
@@ -1504,8 +1509,8 @@ myBlock.setDelta({
         <li id="section-37">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p><strong>particle</strong></p>
 
@@ -1537,8 +1542,8 @@ myBlock.setDelta({
         <li id="section-38">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p><strong>lockXTo</strong>, <strong>lockYTo</strong>, <strong>lockTo</strong></p>
 
@@ -1578,8 +1583,8 @@ myBlock.setDelta({
         <li id="section-39">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p><strong>roll</strong></p>
 
@@ -1606,8 +1611,8 @@ myBlock.setDelta({
         <li id="section-40">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p><strong>scale</strong></p>
 
@@ -1634,8 +1639,8 @@ myBlock.setDelta({
         <li id="section-41">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p><strong>host</strong> - internal function</p>
 
@@ -1664,8 +1669,8 @@ myBlock.setDelta({
         <li id="section-42">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p><strong>group</strong></p>
 
@@ -1698,8 +1703,8 @@ myBlock.setDelta({
         <li id="section-43">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -1711,8 +1716,8 @@ myBlock.setDelta({
         <li id="section-44">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p><code>purgeArtefact</code> - Artefact objects gather many attributes during their creation. Many of these may not be subsequentlyt used - for instance, if the artefact is never going to mimic another artefact, then it doesn’t need all the attributes and flags associated with mimic functionality. In such cases, we can purge the artefact object of those attributes to free up a tiny bit of extra memory</p>
 <ul>
@@ -1789,8 +1794,8 @@ myBlock.setDelta({
         <li id="section-45">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p><code>initializePositions</code> - Internal function called by all artefact factories </p>
 <ul>
@@ -1847,8 +1852,8 @@ myBlock.setDelta({
         <li id="section-46">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p><code>setCoordinateHelper</code> - internal helper function used by positional and dimensional setter (S.) functions. Arguments are:</p>
 <ul>
@@ -1895,8 +1900,8 @@ myBlock.setDelta({
         <li id="section-47">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p><code>setCoordinateHelper</code> - internal helper function used by positional and dimensional delta-setter (D.) functions. Arguments are:</p>
 <ul>
@@ -1945,8 +1950,8 @@ myBlock.setDelta({
         <li id="section-48">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p><code>getHost</code> - internal function - return the <strong>host</strong> object. Hosts can be various things, for instance:</p>
 <ul>
@@ -1982,13 +1987,15 @@ myBlock.setDelta({
         <li id="section-49">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p><code>getHere</code> - the <strong>here</strong> parameter is owned by Canvas, Stack and (if enabled) Element artefacts and is set on them by calling <code>updateUiSubscribedElement</code> - thus not defined or updated by the artefact itself.</p>
-<pre><code>here {x, y, w, h, normX, normY, offsetX, offsetY, type, active}</code></pre>
+<pre><code>here {x, y, w, h, normX, normY, offsetX, offsetY, type, active}
+</code></pre>
 <p>Cell assets also have a <strong>here</strong> parameter, defined and updated by themselves with reference to their current Canvas host</p>
-<pre><code>here {x, y, w, h, xRatio, yRatio}</code></pre>
+<pre><code>here {x, y, w, h, xRatio, yRatio}
+</code></pre>
 <ul>
 <li>NOTE: Canvas, Stack, Element (if enabled) and Cell all need to create their <code>here</code> attribute immediately after they first calculate their <code>currentDimensions</code> Coordinate, which needs to happen as part of the constructor!</li>
 </ul>
@@ -2027,8 +2034,8 @@ myBlock.setDelta({
         <li id="section-50">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <h4 id="clean-functions">Clean functions</h4>
 <p>Clean functions are triggered by artefacts as they prepare to stamp themselves into their host environment. The decision to trigger a clean function is mediated by various <code>dirty...</code> flags, which get set when the artefact is updated via <code>set</code> and <code>deltaSet</code> calls.</p>
@@ -2041,8 +2048,8 @@ myBlock.setDelta({
         <li id="section-51">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p><code>cleanPosition</code> - internal helper function used by <code>cleanStart</code>, <code>cleanHandle</code> and <code>cleanOffset</code> functions</p>
 
@@ -2071,8 +2078,8 @@ myBlock.setDelta({
         <li id="section-52">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p><code>cleanScale</code> - set the artefact’s <strong>currentScale</strong> value.</p>
 <ul>
@@ -2123,8 +2130,8 @@ myBlock.setDelta({
         <li id="section-53">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p><code>cleanDimensions</code> - calculate the artefact’s <strong>currentDimensions</strong> Array</p>
 <ul>
@@ -2192,8 +2199,8 @@ myBlock.setDelta({
         <li id="section-54">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p><code>cleanDimensionsAdditionalActions</code> - overwritten by some artefact factory files</p>
 
@@ -2207,8 +2214,8 @@ myBlock.setDelta({
         <li id="section-55">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p><code>cleanLock</code> - clean function for <strong>lockTo</strong> array</p>
 
@@ -2228,8 +2235,8 @@ myBlock.setDelta({
         <li id="section-56">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p><code>cleanStart</code> - calculate the artefact’s <strong>currentStart</strong> Array</p>
 <ul>
@@ -2272,8 +2279,8 @@ myBlock.setDelta({
         <li id="section-57">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p><code>cleanOffset</code> - calculate the artefact’s <strong>currentOffset</strong> Array</p>
 <ul>
@@ -2318,8 +2325,8 @@ myBlock.setDelta({
         <li id="section-58">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p><code>cleanHandle</code> - calculate the artefact’s <strong>currentHandle</strong> Array</p>
 <ul>
@@ -2348,8 +2355,8 @@ myBlock.setDelta({
         <li id="section-59">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p><code>cleanRotation</code> - calculate the artefact’s <strong>currentRotation</strong> value</p>
 <ul>
@@ -2416,8 +2423,8 @@ myBlock.setDelta({
         <li id="section-60">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <p>If this artefact is being mimicked by other artefacts, it needs to check its rotation values on every iteration of the display cycle</p>
 
@@ -2432,8 +2439,8 @@ myBlock.setDelta({
         <li id="section-61">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p><code>cleanStampPositions</code> </p>
 <ul>
@@ -2456,8 +2463,8 @@ myBlock.setDelta({
         <li id="section-62">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p>this.dirtyStampPositions = false;</p>
 
@@ -2469,8 +2476,8 @@ myBlock.setDelta({
         <li id="section-63">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p>let stamp = this.currentStampPosition,
     start = this.currentStart,
@@ -2485,8 +2492,8 @@ myBlock.setDelta({
         <li id="section-64">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <p>if (this.noPositionDependencies) {</p>
 
@@ -2498,11 +2505,12 @@ myBlock.setDelta({
         <li id="section-65">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <pre><code>stamp[<span class="hljs-number">0</span>] = start[<span class="hljs-number">0</span>];
-stamp[<span class="hljs-number">1</span>] = start[<span class="hljs-number">1</span>];</code></pre>
+stamp[<span class="hljs-number">1</span>] = start[<span class="hljs-number">1</span>];
+</code></pre>
 <p>}
 else {</p>
 
@@ -2514,8 +2522,8 @@ else {</p>
         <li id="section-66">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <pre><code><span class="hljs-keyword">let</span> lockArray = <span class="hljs-built_in">this</span>.lockTo,
     localLockArray = [],
@@ -2528,7 +2536,8 @@ else {</p>
     pivot = <span class="hljs-built_in">this</span>.pivot,
     path = <span class="hljs-built_in">this</span>.path,
     mimic = <span class="hljs-built_in">this</span>.mimic,
-    part = <span class="hljs-built_in">this</span>.particle;</code></pre>
+    part = <span class="hljs-built_in">this</span>.particle;
+</code></pre>
 
             </div>
             
@@ -2538,10 +2547,11 @@ else {</p>
         <li id="section-67">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
-              <pre><code><span class="hljs-keyword">if</span> (isBeingDragged) {</code></pre>
+              <pre><code><span class="hljs-keyword">if</span> (isBeingDragged) {
+</code></pre>
 
             </div>
             
@@ -2551,11 +2561,12 @@ else {</p>
         <li id="section-68">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <pre><code>    localLockArray = [<span class="hljs-string">&#x27;mouse&#x27;</span>, <span class="hljs-string">&#x27;mouse&#x27;</span>];
-    hereFlag = <span class="hljs-literal">true</span>;</code></pre>
+    hereFlag = <span class="hljs-literal">true</span>;
+</code></pre>
 
             </div>
             
@@ -2565,12 +2576,13 @@ else {</p>
         <li id="section-69">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <pre><code>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.getCornerCoordinate) <span class="hljs-built_in">this</span>.cleanPathObject();
 }
-<span class="hljs-keyword">else</span> {</code></pre>
+<span class="hljs-keyword">else</span> {
+</code></pre>
 
             </div>
             
@@ -2580,11 +2592,12 @@ else {</p>
         <li id="section-70">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-70">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <pre><code>    <span class="hljs-comment">// `x` and `y` coordinates can have different lockTo values</span>
-    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">2</span>; i++) {</code></pre>
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">2</span>; i++) {
+</code></pre>
 
             </div>
             
@@ -2594,10 +2607,11 @@ else {</p>
         <li id="section-71">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-71">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
-              <pre><code>        lock = lockArray[i];</code></pre>
+              <pre><code>        lock = lockArray[i];
+</code></pre>
 
             </div>
             
@@ -2607,13 +2621,14 @@ else {</p>
         <li id="section-72">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-72">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <pre><code>        <span class="hljs-keyword">if</span> (lock === <span class="hljs-string">&#x27;pivot&#x27;</span> &amp;&amp; !pivot) lock = <span class="hljs-string">&#x27;start&#x27;</span>;
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (lock === <span class="hljs-string">&#x27;path&#x27;</span> &amp;&amp; !path) lock = <span class="hljs-string">&#x27;start&#x27;</span>;
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (lock === <span class="hljs-string">&#x27;mimic&#x27;</span> &amp;&amp; !mimic) lock = <span class="hljs-string">&#x27;start&#x27;</span>;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (lock === <span class="hljs-string">&#x27;particle&#x27;</span> &amp;&amp; !part) lock = <span class="hljs-string">&#x27;start&#x27;</span>;</code></pre>
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (lock === <span class="hljs-string">&#x27;particle&#x27;</span> &amp;&amp; !part) lock = <span class="hljs-string">&#x27;start&#x27;</span>;
+</code></pre>
 
             </div>
             
@@ -2623,10 +2638,11 @@ else {</p>
         <li id="section-73">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-73">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-73">&#x00a7;</a>
               </div>
-              <pre><code>        <span class="hljs-keyword">if</span> (lock === <span class="hljs-string">&#x27;mouse&#x27;</span>) hereFlag = <span class="hljs-literal">true</span>;</code></pre>
+              <pre><code>        <span class="hljs-keyword">if</span> (lock === <span class="hljs-string">&#x27;mouse&#x27;</span>) hereFlag = <span class="hljs-literal">true</span>;
+</code></pre>
 
             </div>
             
@@ -2636,12 +2652,13 @@ else {</p>
         <li id="section-74">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-74">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-74">&#x00a7;</a>
               </div>
               <pre><code>        localLockArray[i] = lock;
     }
-}</code></pre>
+}
+</code></pre>
 
             </div>
             
@@ -2651,10 +2668,11 @@ else {</p>
         <li id="section-75">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-75">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-75">&#x00a7;</a>
               </div>
-              <pre><code><span class="hljs-keyword">if</span> (hereFlag) here = <span class="hljs-built_in">this</span>.getHere();</code></pre>
+              <pre><code><span class="hljs-keyword">if</span> (hereFlag) here = <span class="hljs-built_in">this</span>.getHere();
+</code></pre>
 
             </div>
             
@@ -2664,11 +2682,12 @@ else {</p>
         <li id="section-76">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-76">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-76">&#x00a7;</a>
               </div>
               <pre><code><span class="hljs-comment">// We loop twice - once for each coordinate: `x` is calculated on the first loop (`i === 0`); `y` on the second (`i === 1`)</span>
-<span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">2</span>; i++) {</code></pre>
+<span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">2</span>; i++) {
+</code></pre>
 
             </div>
             
@@ -2678,10 +2697,11 @@ else {</p>
         <li id="section-77">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-77">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-77">&#x00a7;</a>
               </div>
-              <pre><code>    lock = localLockArray[i];</code></pre>
+              <pre><code>    lock = localLockArray[i];
+</code></pre>
 
             </div>
             
@@ -2691,10 +2711,11 @@ else {</p>
         <li id="section-78">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-78">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-78">&#x00a7;</a>
               </div>
-              <pre><code>    <span class="hljs-keyword">switch</span> (lock) {</code></pre>
+              <pre><code>    <span class="hljs-keyword">switch</span> (lock) {
+</code></pre>
 
             </div>
             
@@ -2704,10 +2725,11 @@ else {</p>
         <li id="section-79">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-79">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-79">&#x00a7;</a>
               </div>
-              <pre><code>        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;start&#x27;</span> :</code></pre>
+              <pre><code>        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;start&#x27;</span> :
+</code></pre>
 
             </div>
             
@@ -2717,11 +2739,12 @@ else {</p>
         <li id="section-80">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-80">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-80">&#x00a7;</a>
               </div>
               <pre><code>            coord = start[i] + offset[i];
-            <span class="hljs-keyword">break</span>;</code></pre>
+            <span class="hljs-keyword">break</span>;
+</code></pre>
 
             </div>
             
@@ -2731,10 +2754,11 @@ else {</p>
         <li id="section-81">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-81">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-81">&#x00a7;</a>
               </div>
-              <pre><code>        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;pivot&#x27;</span> :</code></pre>
+              <pre><code>        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;pivot&#x27;</span> :
+</code></pre>
 
             </div>
             
@@ -2744,11 +2768,12 @@ else {</p>
         <li id="section-82">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-82">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-82">&#x00a7;</a>
               </div>
               <pre><code>            <span class="hljs-comment">// When the pivot is an Element artefact, can use its corner values as pivots</span>
-            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.pivotCorner &amp;&amp; pivot.getCornerCoordinate) {</code></pre>
+            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.pivotCorner &amp;&amp; pivot.getCornerCoordinate) {
+</code></pre>
 
             </div>
             
@@ -2758,11 +2783,12 @@ else {</p>
         <li id="section-83">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-83">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-83">&#x00a7;</a>
               </div>
               <pre><code>                coord = pivot.getCornerCoordinate(<span class="hljs-built_in">this</span>.pivotCorner, (i) ? <span class="hljs-string">&#x27;y&#x27;</span> : <span class="hljs-string">&#x27;x&#x27;</span>);
-            }</code></pre>
+            }
+</code></pre>
 
             </div>
             
@@ -2772,11 +2798,12 @@ else {</p>
         <li id="section-84">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-84">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-84">&#x00a7;</a>
               </div>
               <pre><code>            <span class="hljs-comment">// When the pivot is a Polyline entity, need also to confirm which pin to use (default 0)</span>
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (pivot.type === <span class="hljs-string">&#x27;Polyline&#x27;</span>) {</code></pre>
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (pivot.type === <span class="hljs-string">&#x27;Polyline&#x27;</span>) {
+</code></pre>
 
             </div>
             
@@ -2786,11 +2813,12 @@ else {</p>
         <li id="section-85">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-85">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-85">&#x00a7;</a>
               </div>
               <pre><code>                coord = pivot.getPinAt(<span class="hljs-built_in">this</span>.pivotPin, (i) ? <span class="hljs-string">&#x27;y&#x27;</span> : <span class="hljs-string">&#x27;x&#x27;</span>);
-            }</code></pre>
+            }
+</code></pre>
 
             </div>
             
@@ -2800,11 +2828,12 @@ else {</p>
         <li id="section-86">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-86">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-86">&#x00a7;</a>
               </div>
               <pre><code>            <span class="hljs-comment">// Everything else</span>
-            <span class="hljs-keyword">else</span> coord = pivot.currentStampPosition[i];</code></pre>
+            <span class="hljs-keyword">else</span> coord = pivot.currentStampPosition[i];
+</code></pre>
 
             </div>
             
@@ -2814,10 +2843,11 @@ else {</p>
         <li id="section-87">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-87">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-87">&#x00a7;</a>
               </div>
-              <pre><code>            <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.addPivotOffset) coord -= pivot.currentOffset[i];</code></pre>
+              <pre><code>            <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.addPivotOffset) coord -= pivot.currentOffset[i];
+</code></pre>
 
             </div>
             
@@ -2827,10 +2857,11 @@ else {</p>
         <li id="section-88">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-88">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-88">&#x00a7;</a>
               </div>
-              <pre><code>            coord += offset[i];</code></pre>
+              <pre><code>            coord += offset[i];
+</code></pre>
 
             </div>
             
@@ -2840,10 +2871,11 @@ else {</p>
         <li id="section-89">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-89">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-89">&#x00a7;</a>
               </div>
-              <pre><code>            <span class="hljs-keyword">break</span>;</code></pre>
+              <pre><code>            <span class="hljs-keyword">break</span>;
+</code></pre>
 
             </div>
             
@@ -2853,11 +2885,12 @@ else {</p>
         <li id="section-90">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-90">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-90">&#x00a7;</a>
               </div>
               <pre><code>        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;path&#x27;</span> :
-            pathData = <span class="hljs-built_in">this</span>.getPathData();</code></pre>
+            pathData = <span class="hljs-built_in">this</span>.getPathData();
+</code></pre>
 
             </div>
             
@@ -2867,10 +2900,11 @@ else {</p>
         <li id="section-91">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-91">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-91">&#x00a7;</a>
               </div>
-              <pre><code>            <span class="hljs-keyword">if</span> (pathData) {</code></pre>
+              <pre><code>            <span class="hljs-keyword">if</span> (pathData) {
+</code></pre>
 
             </div>
             
@@ -2880,10 +2914,11 @@ else {</p>
         <li id="section-92">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-92">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-92">&#x00a7;</a>
               </div>
-              <pre><code>                coord = (i) ? pathData.y : pathData.x;</code></pre>
+              <pre><code>                coord = (i) ? pathData.y : pathData.x;
+</code></pre>
 
             </div>
             
@@ -2893,12 +2928,13 @@ else {</p>
         <li id="section-93">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-93">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-93">&#x00a7;</a>
               </div>
               <pre><code>                <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.addPathOffset) coord -= path.currentOffset[i];
             }
-            <span class="hljs-keyword">else</span> coord = start[i] + offset[i];</code></pre>
+            <span class="hljs-keyword">else</span> coord = start[i] + offset[i];
+</code></pre>
 
             </div>
             
@@ -2908,10 +2944,11 @@ else {</p>
         <li id="section-94">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-94">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-94">&#x00a7;</a>
               </div>
-              <pre><code>            <span class="hljs-keyword">break</span>;</code></pre>
+              <pre><code>            <span class="hljs-keyword">break</span>;
+</code></pre>
 
             </div>
             
@@ -2921,11 +2958,12 @@ else {</p>
         <li id="section-95">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-95">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-95">&#x00a7;</a>
               </div>
               <pre><code>        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;mimic&#x27;</span> :
-            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.useMimicStart || <span class="hljs-built_in">this</span>.useMimicOffset) {</code></pre>
+            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.useMimicStart || <span class="hljs-built_in">this</span>.useMimicOffset) {
+</code></pre>
 
             </div>
             
@@ -2935,10 +2973,11 @@ else {</p>
         <li id="section-96">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-96">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-96">&#x00a7;</a>
               </div>
-              <pre><code>                coord = mimic.currentStampPosition[i];</code></pre>
+              <pre><code>                coord = mimic.currentStampPosition[i];
+</code></pre>
 
             </div>
             
@@ -2948,11 +2987,12 @@ else {</p>
         <li id="section-97">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-97">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-97">&#x00a7;</a>
               </div>
               <pre><code>                <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.useMimicStart &amp;&amp; <span class="hljs-built_in">this</span>.addOwnStartToMimic) coord += start[i];
-                <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.useMimicOffset &amp;&amp; <span class="hljs-built_in">this</span>.addOwnOffsetToMimic) coord += offset[i];</code></pre>
+                <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.useMimicOffset &amp;&amp; <span class="hljs-built_in">this</span>.addOwnOffsetToMimic) coord += offset[i];
+</code></pre>
 
             </div>
             
@@ -2962,13 +3002,14 @@ else {</p>
         <li id="section-98">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-98">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-98">&#x00a7;</a>
               </div>
               <pre><code>                <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.useMimicStart) coord = coord - mimic.currentStart[i] + start[i];
                 <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.useMimicOffset) coord = coord - mimic.currentOffset[i] + offset[i];
             }
-            <span class="hljs-keyword">else</span> coord = start[i] + offset[i];</code></pre>
+            <span class="hljs-keyword">else</span> coord = start[i] + offset[i];
+</code></pre>
 
             </div>
             
@@ -2978,10 +3019,11 @@ else {</p>
         <li id="section-99">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-99">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-99">&#x00a7;</a>
               </div>
-              <pre><code>            <span class="hljs-keyword">break</span>;</code></pre>
+              <pre><code>            <span class="hljs-keyword">break</span>;
+</code></pre>
 
             </div>
             
@@ -2991,10 +3033,11 @@ else {</p>
         <li id="section-100">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-100">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-100">&#x00a7;</a>
               </div>
-              <pre><code>        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;particle&#x27;</span> :</code></pre>
+              <pre><code>        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;particle&#x27;</span> :
+</code></pre>
 
             </div>
             
@@ -3004,10 +3047,11 @@ else {</p>
         <li id="section-101">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-101">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-101">&#x00a7;</a>
               </div>
-              <pre><code>            <span class="hljs-keyword">let</span> tempPart = part;</code></pre>
+              <pre><code>            <span class="hljs-keyword">let</span> tempPart = part;
+</code></pre>
 
             </div>
             
@@ -3017,10 +3061,11 @@ else {</p>
         <li id="section-102">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-102">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-102">&#x00a7;</a>
               </div>
-              <pre><code>            <span class="hljs-keyword">if</span> (part.substring) {</code></pre>
+              <pre><code>            <span class="hljs-keyword">if</span> (part.substring) {
+</code></pre>
 
             </div>
             
@@ -3030,12 +3075,13 @@ else {</p>
         <li id="section-103">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-103">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-103">&#x00a7;</a>
               </div>
               <pre><code>                tempPart = part;
                 <span class="hljs-built_in">this</span>.particle = part = particle[part];
-            }</code></pre>
+            }
+</code></pre>
 
             </div>
             
@@ -3045,10 +3091,11 @@ else {</p>
         <li id="section-104">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-104">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-104">&#x00a7;</a>
               </div>
-              <pre><code>            <span class="hljs-keyword">if</span> (!part) {</code></pre>
+              <pre><code>            <span class="hljs-keyword">if</span> (!part) {
+</code></pre>
 
             </div>
             
@@ -3058,13 +3105,14 @@ else {</p>
         <li id="section-105">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-105">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-105">&#x00a7;</a>
               </div>
               <pre><code>                <span class="hljs-built_in">this</span>.particle = part = tempPart;
                 coord = start[i] + offset[i];
             }
-            <span class="hljs-keyword">else</span> {</code></pre>
+            <span class="hljs-keyword">else</span> {
+</code></pre>
 
             </div>
             
@@ -3074,13 +3122,14 @@ else {</p>
         <li id="section-106">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-106">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-106">&#x00a7;</a>
               </div>
               <pre><code>             <span class="hljs-keyword">if</span> (i) coord = part.position.y + offset[i];
              <span class="hljs-keyword">else</span> coord = part.position.x + offset[i];
             }
-            <span class="hljs-keyword">break</span>;</code></pre>
+            <span class="hljs-keyword">break</span>;
+</code></pre>
 
             </div>
             
@@ -3090,11 +3139,12 @@ else {</p>
         <li id="section-107">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-107">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-107">&#x00a7;</a>
               </div>
               <pre><code>        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;mouse&#x27;</span> :
-            coord = (i === <span class="hljs-number">0</span>) ? here.x : here.y;</code></pre>
+            coord = (i === <span class="hljs-number">0</span>) ? here.x : here.y;
+</code></pre>
 
             </div>
             
@@ -3104,10 +3154,11 @@ else {</p>
         <li id="section-108">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-108">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-108">&#x00a7;</a>
               </div>
-              <pre><code>            <span class="hljs-keyword">if</span> (isBeingDragged) {</code></pre>
+              <pre><code>            <span class="hljs-keyword">if</span> (isBeingDragged) {
+</code></pre>
 
             </div>
             
@@ -3117,13 +3168,14 @@ else {</p>
         <li id="section-109">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-109">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-109">&#x00a7;</a>
               </div>
               <pre><code>                cache[i] = coord;
                 coord += drag[i];
             }
-            coord += offset[i];</code></pre>
+            coord += offset[i];
+</code></pre>
 
             </div>
             
@@ -3133,10 +3185,11 @@ else {</p>
         <li id="section-110">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-110">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-110">&#x00a7;</a>
               </div>
-              <pre><code>            <span class="hljs-keyword">break</span>;</code></pre>
+              <pre><code>            <span class="hljs-keyword">break</span>;
+</code></pre>
 
             </div>
             
@@ -3146,14 +3199,15 @@ else {</p>
         <li id="section-111">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-111">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-111">&#x00a7;</a>
               </div>
               <pre><code>        <span class="hljs-keyword">default</span> :
             coord = start[i] + offset[i];
     }
     stamp[i] = coord;
-}</code></pre>
+}
+</code></pre>
 <p>}
 if (oldX !== stamp[0] || oldY !== stamp[1]) this.dirtyPositionSubscribers = true;</p>
 
@@ -3203,8 +3257,8 @@ if (oldX !== stamp[0] || oldY !== stamp[1]) this.dirtyPositionSubscribers = true
         <li id="section-112">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-112">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-112">&#x00a7;</a>
               </div>
               <p>When the pivot is an Element artefact, can use its corner values as pivots</p>
 
@@ -3221,8 +3275,8 @@ if (oldX !== stamp[0] || oldY !== stamp[1]) this.dirtyPositionSubscribers = true
         <li id="section-113">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-113">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-113">&#x00a7;</a>
               </div>
               <p>When the pivot is a Polyline entity, need also to confirm which pin to use (default 0)</p>
 
@@ -3239,8 +3293,8 @@ if (oldX !== stamp[0] || oldY !== stamp[1]) this.dirtyPositionSubscribers = true
         <li id="section-114">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-114">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-114">&#x00a7;</a>
               </div>
               <p>Everything else</p>
 
@@ -3315,8 +3369,8 @@ if (oldX !== stamp[0] || oldY !== stamp[1]) this.dirtyPositionSubscribers = true
         <li id="section-115">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-115">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-115">&#x00a7;</a>
               </div>
               <p><code>x</code> and <code>y</code> coordinates can have different lockTo values</p>
 
@@ -3366,8 +3420,8 @@ if (oldX !== stamp[0] || oldY !== stamp[1]) this.dirtyPositionSubscribers = true
         <li id="section-116">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-116">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-116">&#x00a7;</a>
               </div>
               <p><code>cleanStampHandlePositions</code> </p>
 <ul>
@@ -3408,8 +3462,8 @@ if (oldX !== stamp[0] || oldY !== stamp[1]) this.dirtyPositionSubscribers = true
         <li id="section-117">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-117">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-117">&#x00a7;</a>
               </div>
               <p>We loop twice - once for each coordinate: <code>x</code> is calculated on the first loop (<code>i === 0</code>); <code>y</code> on the second (<code>i === 1</code>)</p>
 
@@ -3454,8 +3508,8 @@ if (oldX !== stamp[0] || oldY !== stamp[1]) this.dirtyPositionSubscribers = true
         <li id="section-118">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-118">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-118">&#x00a7;</a>
               </div>
               <p>At the moment only Shape type artefacts require additional calculations to complete the cleanHandle functionality. </p>
 
@@ -3473,8 +3527,8 @@ if (oldX !== stamp[0] || oldY !== stamp[1]) this.dirtyPositionSubscribers = true
         <li id="section-119">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-119">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-119">&#x00a7;</a>
               </div>
               <p><code>checkHit</code></p>
 <ul>
@@ -3548,8 +3602,8 @@ if (oldX !== stamp[0] || oldY !== stamp[1]) this.dirtyPositionSubscribers = true
         <li id="section-120">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-120">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-120">&#x00a7;</a>
               </div>
               <p>Function overwritten by entitys, if required</p>
 
@@ -3570,8 +3624,8 @@ if (oldX !== stamp[0] || oldY !== stamp[1]) this.dirtyPositionSubscribers = true
         <li id="section-121">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-121">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-121">&#x00a7;</a>
               </div>
               <p><code>pickupArtefact</code></p>
 
@@ -3623,8 +3677,8 @@ if (oldX !== stamp[0] || oldY !== stamp[1]) this.dirtyPositionSubscribers = true
         <li id="section-122">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-122">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-122">&#x00a7;</a>
               </div>
               <p><code>dropArtefact</code></p>
 
@@ -3660,8 +3714,8 @@ if (oldX !== stamp[0] || oldY !== stamp[1]) this.dirtyPositionSubscribers = true
         <li id="section-123">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-123">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-123">&#x00a7;</a>
               </div>
               <h4 id="subscription-management">Subscription management</h4>
 <p>Artefacts can subscribe to other artefacts so that they can be notified when a particular attribute changes. </p>
@@ -3681,8 +3735,8 @@ if (oldX !== stamp[0] || oldY !== stamp[1]) this.dirtyPositionSubscribers = true
         <li id="section-124">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-124">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-124">&#x00a7;</a>
               </div>
               <p><code>updatePositionSubscribers</code></p>
 
@@ -3703,8 +3757,8 @@ if (oldX !== stamp[0] || oldY !== stamp[1]) this.dirtyPositionSubscribers = true
         <li id="section-125">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-125">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-125">&#x00a7;</a>
               </div>
               <p><code>updatePivotSubscribers</code></p>
 
@@ -3718,8 +3772,8 @@ if (oldX !== stamp[0] || oldY !== stamp[1]) this.dirtyPositionSubscribers = true
         <li id="section-126">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-126">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-126">&#x00a7;</a>
               </div>
               <p><code>updateMimicSubscribers</code></p>
 
@@ -3733,8 +3787,8 @@ if (oldX !== stamp[0] || oldY !== stamp[1]) this.dirtyPositionSubscribers = true
         <li id="section-127">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-127">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-127">&#x00a7;</a>
               </div>
               <p><code>updatePathSubscribers</code></p>
 
@@ -3748,8 +3802,8 @@ if (oldX !== stamp[0] || oldY !== stamp[1]) this.dirtyPositionSubscribers = true
         <li id="section-128">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-128">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-128">&#x00a7;</a>
               </div>
               <p><code>updateImageSubscribers</code></p>
 
@@ -3763,8 +3817,8 @@ if (oldX !== stamp[0] || oldY !== stamp[1]) this.dirtyPositionSubscribers = true
         <li id="section-129">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-129">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-129">&#x00a7;</a>
               </div>
               <p>Return the prototype</p>
 

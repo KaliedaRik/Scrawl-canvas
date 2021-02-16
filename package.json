@@ -1,7 +1,7 @@
 {
   "name": "scrawl-canvas",
-  "version": "8.4.0",
-  "description": "Version 8.4.0 - 2 Feb 2021",
+  "version": "8.5.0",
+  "description": "Version 8.5.0 - 17 Feb 2021",
   "main": "min/scrawl.js",
   "scripts": {
     "build": "rollup -c && docco ./demo/**/*.js && docco ./demo/*.js && docco ./source/**/*.js && docco ./source/scrawl.js",
@@ -35,7 +35,7 @@
   },
   "homepage": "https://github.com/KaliedaRik/Scrawl-canvas#readme",
   "devDependencies": {
-    "docco": "^0.8.0",
+    "docco": "^0.8.1",
     "light-server": "^2.9.1",
     "rollup": "^2.15.0",
     "rollup-plugin-terser": "^6.1.0"

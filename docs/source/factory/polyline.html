@@ -446,12 +446,12 @@
         <li id="section-1">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-1">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="polyline-factory">Polyline factory</h1>
 <p>A factory for generating an open or closed line/curve based shape entity, using a set of pins to mark the course the line</p>
-<p><strong><em>To be aware - this entity factory is experimental; its API will be subject to short-notice breaking changes as we amend and improve the entity’s functionality</em></strong></p>
+<p><em><strong>To be aware - this entity factory is experimental; its API will be subject to short-notice breaking changes as we amend and improve the entity’s functionality</strong></em></p>
 <p>Path-defined entitys represent a diverse range of shapes rendered onto a DOM &lt;canvas&gt; element using the Canvas API’s <a href="https://developer.mozilla.org/en-US/docs/Web/API/Path2D">Path2D interface</a>. They use the <a href="../mixin/shapeBasic.html">shapeBasic</a> and <a href="../mixin/shapePathCalculation.html">shapePathCalculation</a> (some also use <a href="../mixin/shapeCurve.html">shapeCurve</a>) mixins to define much of their functionality.</p>
 <p>All path-defined entitys can be positioned, cloned, filtered etc:</p>
 <ul>
@@ -473,8 +473,8 @@
         <li id="section-2">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-2">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
               <h4 id="using-path-defined-entitys-as-scrawl-canvas-paths">Using path-defined entitys as Scrawl-canvas paths</h4>
 <p>A path is a track - straight, or curved, or as complex as required - placed across a container which artefacts can use as a source of their positioning data. We can animate an artifact to move along the path:</p>
@@ -484,7 +484,7 @@
 <li>We position the artefact by setting its <code>pathPosition</code> attribute to a float Number value between <code>0.0 - 1.0</code>, with <code>0</code> being the start of the path, and <code>1</code> being its end.</li>
 <li>Path-defined entitys can use other path-defined entitys as a path.</li>
 <li>Phrase entitys can use a path to position their text block; they can also use a path to position each letter individually along the path.</li>
-<li>Artefacts (and letters) can be rotated so that they match the rotation at that point along the path - <strong><em>tangential rotation</em></strong> by setting their <code>addPathRotation</code> flag to <code>true</code>.</li>
+<li>Artefacts (and letters) can be rotated so that they match the rotation at that point along the path - <em><strong>tangential rotation</strong></em> by setting their <code>addPathRotation</code> flag to <code>true</code>.</li>
 <li>Animate an artefact along the path by either using the artefact’s <code>delta</code> object, or triggering a Tween to perform the movement.</li>
 </ul>
 
@@ -496,8 +496,8 @@
         <li id="section-3">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-3">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
               <h4 id="demos">Demos:</h4>
 <ul>
@@ -513,8 +513,8 @@
         <li id="section-4">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <h4 id="imports">Imports</h4>
 
@@ -534,8 +534,8 @@
         <li id="section-5">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <h4 id="polyline-constructor">Polyline constructor</h4>
 
@@ -558,8 +558,8 @@
         <li id="section-6">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="polyline-prototype">Polyline prototype</h4>
 
@@ -577,8 +577,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         <li id="section-7">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
 <ul>
@@ -597,8 +597,8 @@ P = shapeMix(P);</pre></div></div>
         <li id="section-8">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h4 id="polyline-attributes">Polyline attributes</h4>
 <ul>
@@ -624,8 +624,8 @@ P = shapeMix(P);</pre></div></div>
         <li id="section-9">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>The <strong>pins</strong> attribute takes an array with elements which are:</p>
 <ul>
@@ -644,8 +644,8 @@ P = shapeMix(P);</pre></div></div>
         <li id="section-10">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p><strong>tension</strong> - gives us the curviness of the line:</p>
 <ul>
@@ -665,8 +665,8 @@ P = shapeMix(P);</pre></div></div>
         <li id="section-11">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p><strong>closed</strong> - whether to connect all the pins (true), or run from first to last pin only (false)</p>
 
@@ -682,8 +682,8 @@ P = shapeMix(P);</pre></div></div>
         <li id="section-12">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p><strong>useParticlesAsPins</strong> - when true, all pins should map directly to Particle objects (as supplied in a Net entity)</p>
 
@@ -699,8 +699,8 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         <li id="section-13">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
@@ -743,8 +743,8 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
         <li id="section-14">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>No additional clone functionality required</p>
@@ -757,8 +757,8 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
         <li id="section-15">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 <p>No additional kill functionality required</p>
@@ -771,8 +771,8 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
         <li id="section-16">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -869,8 +869,8 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
         <li id="section-17">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p><strong>flipUpend</strong></p>
 
@@ -888,8 +888,8 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
         <li id="section-18">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p><strong>flipReverse</strong></p>
 
@@ -907,8 +907,8 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
         <li id="section-19">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p><strong>flipReverse</strong></p>
 
@@ -926,8 +926,8 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
         <li id="section-20">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p><strong>pivot</strong></p>
 
@@ -971,8 +971,8 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
         <li id="section-21">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -984,8 +984,8 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
         <li id="section-22">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p><code>updateDirty</code> - internal setter helper function</p>
 
@@ -1004,8 +1004,8 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
         <li id="section-23">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p><code>getPinAt</code> - </p>
 
@@ -1052,8 +1052,8 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
         <li id="section-24">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p><code>updatePinAt</code> - </p>
 
@@ -1085,8 +1085,8 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
         <li id="section-25">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p><code>removePinAt</code> - </p>
 
@@ -1115,8 +1115,8 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
         <li id="section-26">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p><code>prepareStamp</code> - the purpose of most of these actions is described in the <a href="http://localhost:8080/docs/source/mixin/entity.html#section-31">entity mixin function</a> that this function overwrites</p>
 
@@ -1165,8 +1165,8 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
         <li id="section-27">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p><code>cleanSpecies</code> - internal helper function - called by <code>prepareStamp</code></p>
 
@@ -1188,8 +1188,8 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
         <li id="section-28">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p><code>getPathParts</code> - internal helper function - called by <code>makePolylinePath</code></p>
 
@@ -1218,8 +1218,8 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
         <li id="section-29">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p><code>buildLine</code> - internal helper function - called by <code>makePolylinePath</code></p>
 
@@ -1245,8 +1245,8 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
         <li id="section-30">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p><code>buildCurve</code> - internal helper function - called by <code>makePolylinePath</code></p>
 
@@ -1279,8 +1279,8 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
         <li id="section-31">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p><code>cleanCoordinate</code> - internal helper function - called by <code>cleanPinsArray</code></p>
 
@@ -1301,8 +1301,8 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
         <li id="section-32">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p><code>cleanPinsArray</code> - internal helper function - called by <code>makePolylinePath</code></p>
 
@@ -1394,8 +1394,8 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
         <li id="section-33">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p>Calculate the local offset</p>
 
@@ -1421,8 +1421,8 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
         <li id="section-34">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p><code>makePolylinePath</code> - internal helper function - called by <code>cleanSpecies</code></p>
 
@@ -1444,8 +1444,8 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
         <li id="section-35">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <ol>
 <li>go through the pins array and get current values for each, pushed into currentPins array</li>
@@ -1463,8 +1463,8 @@ S.mapToPins = <span class="hljs-function"><span class="hljs-keyword">function</s
         <li id="section-36">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <ol start="2">
 <li>build the line</li>
@@ -1534,8 +1534,8 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
         <li id="section-37">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p>ALWAYS, when invoking <code>calculateLocalPath</code> from <code>calculateLocalPathAdditionalActions</code>, include the second argument, set to <code>true</code>! Failure to do this leads to an infinite loop which will make your machine weep.</p>
 <ul>
@@ -1553,8 +1553,8 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
         <li id="section-38">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p><code>updatePathSubscribers</code></p>
 
@@ -1576,8 +1576,8 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
         <li id="section-39">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <h4 id="factories">Factories</h4>
 
@@ -1589,8 +1589,8 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
         <li id="section-40">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <h5 id="makepolyline">makePolyline</h5>
 <p>Accepts argument with attributes:</p>
@@ -1617,7 +1617,8 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
     <span class="hljs-attr">shadowColor</span>: <span class="hljs-string">&#x27;black&#x27;</span>,
 
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
-});</code></pre>
+});
+</code></pre>
 
             </div>
             
@@ -1635,8 +1636,8 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
         <li id="section-41">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

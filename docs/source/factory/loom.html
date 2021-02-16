@@ -446,12 +446,12 @@
         <li id="section-1">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-1">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="loom-factory">Loom factory</h1>
 <p>A Loom offers functionality to render an image onto a &lt;canvas&gt; element, where the image is not a rectangle - it can have curved borders. It can also offer the illusion of flat 3D images in the canvas, giving them perspective.</p>
-<p>Loom entitys are <strong><em>composite entitys</em></strong> - an entity that relies on other entitys for its basic functionality.</p>
+<p>Loom entitys are <em><strong>composite entitys</strong></em> - an entity that relies on other entitys for its basic functionality.</p>
 <ul>
 <li>Every Loom object requires two (or one) path-enabled <a href="./shape.html">Shape</a> entitys to act as its left and right tracks.</li>
 <li>A Loom entity also requires a <a href="./picture.html">Picture</a> entity to act as its image source.</li>
@@ -461,7 +461,7 @@
 <li>They can be <strong>animated</strong> directly, or using delta animation, or act as the target for <strong>Tween</strong> animations.</li>
 <li>Looms can be cloned, and killed.</li>
 </ul>
-<p><strong><em>Note that this is experimental technology!</em></strong></p>
+<p><em><strong>Note that this is experimental technology!</strong></em></p>
 <ul>
 <li>Current code does not use <a href="./mixin/position.html">position</a> or <a href="./mixin/entity.html">entity</a> mixins, meaning much of the code here has been copied over from those mixins (DRY issue).</li>
 <li>TODO: clone functionality not yet tested. A possible use case is to clome a Loom so they share the same Shape struts, but have different Picture sources and <code>from/toPathStart/End</code> cursor values - multiple images tracked and animated.</li>
@@ -475,8 +475,8 @@
         <li id="section-2">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-2">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
               <h4 id="demos">Demos:</h4>
 <ul>
@@ -492,8 +492,8 @@
         <li id="section-3">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-3">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
               <h4 id="imports">Imports</h4>
 
@@ -515,8 +515,8 @@
         <li id="section-4">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <h4 id="loom-constructor">Loom constructor</h4>
 
@@ -559,8 +559,8 @@
         <li id="section-5">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <h4 id="loom-prototype">Loom prototype</h4>
 
@@ -578,8 +578,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         <li id="section-6">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
 
@@ -594,8 +594,8 @@ P = anchorMix(P);</pre></div></div>
         <li id="section-7">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="loom-attributes">Loom attributes</h4>
 <ul>
@@ -613,8 +613,8 @@ P = anchorMix(P);</pre></div></div>
         <li id="section-8">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p><strong>fromPath</strong>, <strong>toPath</strong> - A Loom entity uses 2 Shape paths to construct a frame between which the image will be redrawn. These attributes can be set using the Shapes’ name-String, or the Shape objects themselves</p>
 <ul>
@@ -633,8 +633,8 @@ P = anchorMix(P);</pre></div></div>
         <li id="section-9">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p><strong>fromPathStart</strong>, <strong>fromPathEnd</strong> and <strong>toPathStart</strong>, <strong>toPathEnd</strong> - float Numbers generally between <code>0.0 - 1.0</code> - The Loom entity can set the start and end cursors on each of its path struts, between which the image will be drawn. </p>
 <ul>
@@ -655,8 +655,8 @@ P = anchorMix(P);</pre></div></div>
         <li id="section-10">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p><strong>synchronizePathCursors</strong> - Boolean flag - To make sure the <code>from...</code> and <code>to...</code> strut start points, and end points, have the same value set the attribute to <code>true</code> (default). </p>
 <ul>
@@ -673,8 +673,8 @@ P = anchorMix(P);</pre></div></div>
         <li id="section-11">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p> <strong>loopPathCursors</strong> - Boolean flag - For animation purposes, the image will move between the struts with the bottom of the page appearing again at the top of the Loom as it moves down (and vice versa). </p>
 <ul>
@@ -692,8 +692,8 @@ P = anchorMix(P);</pre></div></div>
         <li id="section-12">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p><strong>isHorizontalCopy</strong> - Boolean flag - Copying the source image to the output happens, by default, by rows - which effectively means the struts are on the left-hand and right-hand edges of the image. </p>
 <ul>
@@ -710,8 +710,8 @@ P = anchorMix(P);</pre></div></div>
         <li id="section-13">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p><strong>showBoundingBox</strong> (Boolean), <strong>boundingBoxColor</strong> (CSS color String) - Mainly for library development/testing work - shows the loom entity’s bounding box - which is calculated from the constituent Shape entitys’ current bounding boxes.</p>
 
@@ -726,13 +726,13 @@ P = anchorMix(P);</pre></div></div>
         <li id="section-14">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p><strong>source</strong> - The Picture entity source for this loom. For initialization and/or <code>set</code>, we can supply either the Picture entity itself, or its name-String value.</p>
 <ul>
 <li>The content image displayed by the Loom entity are set in the Picture entity, not the Loom, and can be any artefact supported by the Picture (image, video, sprite, or a Cell artefact).</li>
-<li>Note that any <strong><em>filters should be applied to the Picture entity</em></strong>; Loom entitys do not support filter functionality but will apply a Picture’s filters to the source image as-and-where appropriate.</li>
+<li>Note that any <em><strong>filters should be applied to the Picture entity</strong></em>; Loom entitys do not support filter functionality but will apply a Picture’s filters to the source image as-and-where appropriate.</li>
 </ul>
 
             </div>
@@ -745,8 +745,8 @@ P = anchorMix(P);</pre></div></div>
         <li id="section-15">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p><strong>sourceIsVideoOrSprite</strong> - Boolean flag - If the Picture entity is hosting a video or sprite asset, we need to update the input on every frame. </p>
 <ul>
@@ -764,8 +764,8 @@ P = anchorMix(P);</pre></div></div>
         <li id="section-16">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>The current Frame drawing process often leads to <a href="https://en.wikipedia.org/wiki/Moir%C3%A9_pattern">moiré interference patterns</a> appearing in the resulting image. Scrawl-canvas uses a resize trick to blur out these patterns. </p>
 <p><strong>interferenceLoops</strong> (positive integer Number), <strong>interferenceFactor</strong> (positive float Number) - The interferenceFactor attribute sets the resizing ratio; while he interferenceLoops attribute sets the number of times the image gets resized. </p>
@@ -784,8 +784,8 @@ P = anchorMix(P);</pre></div></div>
         <li id="section-17">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>The Loom entity does not use the <a href="./mixin/position.html">position</a> or <a href="./mixin/entity.html">entity</a> mixins (used by most other entitys) as its positioning is entirely dependent on the position, rotation, scale etc of its constituent Shape path entity struts. </p>
 <p>It does, however, use these attributes (alongside their setters and getters): <strong>visibility</strong>, <strong>order</strong>, <strong>delta</strong>, <strong>host</strong>, <strong>group</strong>, <strong>anchor</strong>, <strong>collides</strong>.</p>
@@ -805,8 +805,8 @@ P = anchorMix(P);</pre></div></div>
         <li id="section-18">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p><strong>noCanvasEngineUpdates</strong> - Boolean flag - Canvas engine updates are required for the Loom’s border - strokeStyle and line styling; if a Loom is to be drawn without a border, then setting this flag to <code>true</code> may help improve rendering efficiency.</p>
 
@@ -820,8 +820,8 @@ P = anchorMix(P);</pre></div></div>
         <li id="section-19">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p><strong>noDeltaUpdates</strong> - Boolean flag - Loom entitys support delta animation - achieved by updating the <code>...path</code> attributes by appropriate (and small!) values. If the Loom is not going to be animated by delta values, setting the flag to <code>true</code> may help improve rendering efficiency.</p>
 
@@ -835,10 +835,10 @@ P = anchorMix(P);</pre></div></div>
         <li id="section-20">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
-              <p><strong>onEnter</strong>, <strong>onLeave</strong>, <strong>onDown</strong>, <strong>onUp</strong> - Loom entitys support <strong><em>collision detection</em></strong>, reporting a hit when a test coordinate falls within the Loom’s output image. As a result, Looms can also accept and act on the four <strong>on</strong> functions - see <a href="../mixin/entity.html#section-11">entity event listener functions</a> for more details.</p>
+              <p><strong>onEnter</strong>, <strong>onLeave</strong>, <strong>onDown</strong>, <strong>onUp</strong> - Loom entitys support <em><strong>collision detection</strong></em>, reporting a hit when a test coordinate falls within the Loom’s output image. As a result, Looms can also accept and act on the four <strong>on</strong> functions - see <a href="../mixin/entity.html#section-11">entity event listener functions</a> for more details.</p>
 
             </div>
             
@@ -853,8 +853,8 @@ P = anchorMix(P);</pre></div></div>
         <li id="section-21">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p><strong>noUserInteraction</strong> - Boolean flag - To switch off collision detection for a Loom entity - which might help improve rendering efficiency - set the flag to <code>true</code>.</p>
 
@@ -868,8 +868,8 @@ P = anchorMix(P);</pre></div></div>
         <li id="section-22">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p><a href="./anchor.html">Anchor objects</a> can be assigned to Loom entitys, meaning the following attributes are supported:</p>
 <ul>
@@ -895,7 +895,8 @@ P = anchorMix(P);</pre></div></div>
         target:
         anchorType
         <span class="hljs-attr">clickAction</span>: 
-    }</code></pre>
+    }
+</code></pre>
 <p>Note that Loom entitys DO NOT SUPPORT the sensor component of the Scrawl-canvas collisions system and will return an empty array when asked to supply sensor coordinates for testing against other artefacts.</p>
 
             </div>
@@ -906,8 +907,8 @@ P = anchorMix(P);</pre></div></div>
         <li id="section-23">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p><strong>method</strong> - All normal Scrawl-canvas entity stamping methods are supported.</p>
 
@@ -921,12 +922,12 @@ P = anchorMix(P);</pre></div></div>
         <li id="section-24">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p>Loom entitys support appropriate styling attributes, mainly for their stroke styles (used with the <code>draw</code>, <code>drawAndFill</code>, <code>fillAndDraw</code>, <code>drawThenFill</code> and <code>fillThenDraw</code> stamping methods). </p>
 <ul>
-<li>These <strong><em>state</em></strong> attributes are stored directly on the object, rather than in a separate <a href="./state.html">State</a> object. </li>
+<li>These <em><strong>state</strong></em> attributes are stored directly on the object, rather than in a separate <a href="./state.html">State</a> object. </li>
 </ul>
 <p>The following attributes are thus supported:</p>
 <p>Alpha and Composite operations will be applied to both the Loom entity’s border (the Shape entitys, with connecting lines between their paths’ start and end points) and fill (the image displayed between the Loom’s struts)</p>
@@ -966,8 +967,8 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         <li id="section-25">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
@@ -1014,8 +1015,8 @@ P.handlePacketAnchor = <span class="hljs-function"><span class="hljs-keyword">fu
         <li id="section-26">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>TODO - this functionality is currently disabled, need to enable it and make it work properly</p>
@@ -1030,8 +1031,8 @@ P.handlePacketAnchor = <span class="hljs-function"><span class="hljs-keyword">fu
         <li id="section-27">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 <p>No additional kill functionality required</p>
@@ -1044,8 +1045,8 @@ P.handlePacketAnchor = <span class="hljs-function"><span class="hljs-keyword">fu
         <li id="section-28">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -1061,8 +1062,8 @@ P.handlePacketAnchor = <span class="hljs-function"><span class="hljs-keyword">fu
         <li id="section-29">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p><strong>get</strong> - copied over from the entity mixin</p>
 
@@ -1103,8 +1104,8 @@ P.handlePacketAnchor = <span class="hljs-function"><span class="hljs-keyword">fu
         <li id="section-30">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p><strong>set</strong> - copied over from the entity mixin.</p>
 
@@ -1149,8 +1150,8 @@ P.handlePacketAnchor = <span class="hljs-function"><span class="hljs-keyword">fu
         <li id="section-31">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p><strong>setDelta</strong> - copied over from the entity mixin.</p>
 
@@ -1195,8 +1196,8 @@ P.handlePacketAnchor = <span class="hljs-function"><span class="hljs-keyword">fu
         <li id="section-32">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p><strong>host</strong>, <strong>getHost</strong> - copied over from the position mixin.</p>
 
@@ -1220,8 +1221,8 @@ P.handlePacketAnchor = <span class="hljs-function"><span class="hljs-keyword">fu
         <li id="section-33">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p><strong>group</strong> - copied over from the position mixin.</p>
 
@@ -1258,8 +1259,8 @@ S.group = <span class="hljs-function"><span class="hljs-keyword">function</span>
         <li id="section-34">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p><strong>getHere</strong> - returns current core position.</p>
 
@@ -1276,8 +1277,8 @@ S.group = <span class="hljs-function"><span class="hljs-keyword">function</span>
         <li id="section-35">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p><strong>delta</strong> - copied over from the position mixin.</p>
 
@@ -1294,8 +1295,8 @@ S.group = <span class="hljs-function"><span class="hljs-keyword">function</span>
         <li id="section-36">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p><strong>fromPath</strong></p>
 
@@ -1328,8 +1329,8 @@ S.group = <span class="hljs-function"><span class="hljs-keyword">function</span>
         <li id="section-37">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p><strong>toPath</strong></p>
 
@@ -1362,8 +1363,8 @@ S.group = <span class="hljs-function"><span class="hljs-keyword">function</span>
         <li id="section-38">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p><strong>source</strong></p>
 
@@ -1391,8 +1392,8 @@ S.group = <span class="hljs-function"><span class="hljs-keyword">function</span>
         <li id="section-39">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p><strong>isHorizontalCopy</strong></p>
 
@@ -1410,8 +1411,8 @@ S.group = <span class="hljs-function"><span class="hljs-keyword">function</span>
         <li id="section-40">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p><strong>synchronizePathCursors</strong></p>
 
@@ -1436,8 +1437,8 @@ S.group = <span class="hljs-function"><span class="hljs-keyword">function</span>
         <li id="section-41">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p><strong>loopPathCursors</strong></p>
 
@@ -1474,8 +1475,8 @@ S.group = <span class="hljs-function"><span class="hljs-keyword">function</span>
         <li id="section-42">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p><strong>fromPathStart</strong></p>
 
@@ -1504,8 +1505,8 @@ D.fromPathStart = <span class="hljs-function"><span class="hljs-keyword">functio
         <li id="section-43">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p><strong>fromPathEnd</strong></p>
 
@@ -1534,8 +1535,8 @@ D.fromPathEnd = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-44">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p><strong>toPathStart</strong></p>
 
@@ -1564,8 +1565,8 @@ D.toPathStart = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-45">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p><strong>toPathEnd</strong></p>
 
@@ -1594,8 +1595,8 @@ D.toPathEnd = <span class="hljs-function"><span class="hljs-keyword">function</s
         <li id="section-46">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -1607,8 +1608,8 @@ D.toPathEnd = <span class="hljs-function"><span class="hljs-keyword">function</s
         <li id="section-47">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p><code>getHost</code> - copied over from the position mixin.</p>
 
@@ -1637,8 +1638,8 @@ D.toPathEnd = <span class="hljs-function"><span class="hljs-keyword">function</s
         <li id="section-48">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p><code>updateByDelta</code>, <code>reverseByDelta</code> - copied over from the position mixin.</p>
 
@@ -1674,8 +1675,8 @@ P.reverseByDelta = <span class="hljs-function"><span class="hljs-keyword">functi
         <li id="section-49">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p><code>setDeltaValues</code> - copied over from the position mixin.</p>
 
@@ -1705,8 +1706,8 @@ P.reverseByDelta = <span class="hljs-function"><span class="hljs-keyword">functi
         <li id="section-50">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p>TODO: reverse String% (and em, etc) values</p>
 
@@ -1723,8 +1724,8 @@ P.reverseByDelta = <span class="hljs-function"><span class="hljs-keyword">functi
         <li id="section-51">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p>TODO: zero String% (and em, etc) values</p>
 
@@ -1755,8 +1756,8 @@ P.reverseByDelta = <span class="hljs-function"><span class="hljs-keyword">functi
         <li id="section-52">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p>Invalidate mid-init functionality</p>
 
@@ -1770,8 +1771,8 @@ P.reverseByDelta = <span class="hljs-function"><span class="hljs-keyword">functi
         <li id="section-53">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p>Invalidating sensor functionality</p>
 
@@ -1792,8 +1793,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <li id="section-54">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <h4 id="display-cycle-functionality">Display cycle functionality</h4>
 
@@ -1805,8 +1806,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <li id="section-55">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p><code>prepareStamp</code> - function called as part of the Display cycle <code>compile</code> step.</p>
 <ul>
@@ -1828,8 +1829,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <li id="section-56">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p>Sanity check 1</p>
 <ul>
@@ -1847,8 +1848,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <li id="section-57">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p>Sanity check 2</p>
 <ul>
@@ -1948,8 +1949,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <li id="section-58">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p><code>setSourceDimension</code> - internal function called by <code>prepareStamp</code>.</p>
 <ul>
@@ -1967,8 +1968,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <li id="section-59">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <ul>
 <li><code>prepareStamp</code> does the dimension calculation itself, then supplies the new value</li>
@@ -1992,8 +1993,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <li id="section-60">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <p>if other functions call setSourceDimension, they will do it without supplying a new value</p>
 <ul>
@@ -2029,8 +2030,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <li id="section-61">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p><code>simpleStamp</code> - Simple stamping is entirely synchronous</p>
 <ul>
@@ -2061,8 +2062,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <li id="section-62">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p><code>stamp</code> - All entity stamping, except for simple stamps, goes through this function.</p>
 <ul>
@@ -2109,8 +2110,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <li id="section-63">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <h4 id="clean-functions">Clean functions</h4>
 
@@ -2122,8 +2123,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <li id="section-64">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <p><code>cleanInput</code> - internal function called by <code>stamp</code></p>
 
@@ -2175,8 +2176,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <li id="section-65">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <p><code>cleanOutput</code> - internal function called by <code>stamp</code></p>
 <ul>
@@ -2377,8 +2378,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <li id="section-66">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <p>else return new Error(<code>${this.name} - cleanOutput Error: source has a zero dimension, or no data</code>);</p>
 
@@ -2392,8 +2393,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <li id="section-67">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <p><code>regularStamp</code> - internal function called by <code>stamp</code></p>
 
@@ -2409,8 +2410,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <li id="section-68">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <p>else return new Error(<code>${this.name} has no current host</code>);</p>
 
@@ -2424,8 +2425,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <li id="section-69">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <p><code>regularStampSynchronousActions</code> - internal function called by <code>regularStamp</code></p>
 
@@ -2451,10 +2452,10 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <li id="section-70">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-70">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
-              <p><code>getBoundingBox</code> - internal function called by <code>prepareStamp</code> and <code>cleanOutput</code> functions, as well as the various <strong><em>method</em></strong> functions.</p>
+              <p><code>getBoundingBox</code> - internal function called by <code>prepareStamp</code> and <code>cleanOutput</code> functions, as well as the various <em><strong>method</strong></em> functions.</p>
 <ul>
 <li>Loom calculates its bounding box from the Shape path entitys associated with it</li>
 <li>This function recalculates when presented with a <code>dirtyStart</code> flag - we rely on the Shape entitys to tell us when their paths have changed/updated</li>
@@ -2511,8 +2512,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <li id="section-71">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-71">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <h5 id="stamp-methods">Stamp methods</h5>
 <p>These ‘method’ functions stamp the Loom entity onto the canvas context supplied to them in the <code>engine</code> argument.</p>
@@ -2525,8 +2526,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <li id="section-72">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-72">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <p><code>fill</code></p>
 
@@ -2547,8 +2548,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <li id="section-73">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-73">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-73">&#x00a7;</a>
               </div>
               <p><code>draw</code></p>
 
@@ -2567,8 +2568,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <li id="section-74">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-74">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-74">&#x00a7;</a>
               </div>
               <p><code>drawAndFill</code></p>
 
@@ -2589,8 +2590,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <li id="section-75">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-75">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-75">&#x00a7;</a>
               </div>
               <p><code>fillAndDraw</code></p>
 
@@ -2611,8 +2612,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <li id="section-76">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-76">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-76">&#x00a7;</a>
               </div>
               <p><code>drawThenFill</code></p>
 
@@ -2632,8 +2633,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <li id="section-77">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-77">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-77">&#x00a7;</a>
               </div>
               <p><code>fillThenDraw</code></p>
 
@@ -2653,8 +2654,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <li id="section-78">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-78">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-78">&#x00a7;</a>
               </div>
               <p><code>clear</code></p>
 
@@ -2694,8 +2695,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <li id="section-79">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-79">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-79">&#x00a7;</a>
               </div>
               <p><code>none</code></p>
 
@@ -2709,8 +2710,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <li id="section-80">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-80">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-80">&#x00a7;</a>
               </div>
               <p>These <strong>stroke</strong> and <strong>fill</strong> functions handle most of the stuff that the method functions require to stamp the Loom entity onto a canvas cell.</p>
 
@@ -2722,8 +2723,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <li id="section-81">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-81">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-81">&#x00a7;</a>
               </div>
               <p><code>doStroke</code></p>
 
@@ -2769,8 +2770,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <li id="section-82">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-82">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-82">&#x00a7;</a>
               </div>
               <p><code>doFill</code></p>
 <ul>
@@ -2810,8 +2811,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <li id="section-83">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-83">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-83">&#x00a7;</a>
               </div>
               <p><code>drawBoundingBox</code></p>
 <ul>
@@ -2849,8 +2850,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <li id="section-84">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-84">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-84">&#x00a7;</a>
               </div>
               <h4 id="collision-functionality">Collision functionality</h4>
 
@@ -2862,8 +2863,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <li id="section-85">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-85">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-85">&#x00a7;</a>
               </div>
               <p>The <code>checkHit</code> functionality can be used in the same way it is for other entitys (and groups)</p>
 <ul>
@@ -2929,8 +2930,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         <li id="section-86">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-86">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-86">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.makeQuadratic({
@@ -2979,7 +2980,8 @@ scrawl.makePicture({
     <span class="hljs-attr">showBoundingBox</span>: <span class="hljs-literal">true</span>,
 
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
-});</code></pre>
+});
+</code></pre>
 
             </div>
             
@@ -2995,8 +2997,8 @@ scrawl.makePicture({
         <li id="section-87">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-87">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-87">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

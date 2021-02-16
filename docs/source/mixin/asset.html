@@ -446,8 +446,8 @@
         <li id="section-1">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-1">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="asset-mixin">Asset mixin</h1>
 <p>The asset factories - <a href="../factory/imageAsset.html">ImageAsset</a>, <a href="../factory/spriteAsset.html">SpriteAsset</a>, and <a href="../factory/videoAsset.html">VideoAsset</a> - are wrappers around images and videos which can either be pulled from the current document (DOM-based assets) or fetched from the server using an URL address.</p>
@@ -465,8 +465,8 @@
         <li id="section-2">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-2">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
               <p>Assets can be loaded into scrawl using dedicated import and create functions:</p>
 <ul>
@@ -496,8 +496,8 @@
         <li id="section-3">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-3">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
               <h4 id="imports">Imports</h4>
 
@@ -511,8 +511,8 @@
         <li id="section-4">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <h4 id="export-function">Export function</h4>
 
@@ -526,8 +526,8 @@
         <li id="section-5">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <h4 id="shared-attributes">Shared attributes</h4>
 
@@ -541,8 +541,8 @@
         <li id="section-6">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p><strong>sourceLoaded</strong> - A flag to indicate that the source image or video has completed sufficient loading (or streaming) to be usefully consumed by Picture entitys and Pattern styles.</p>
 <ul>
@@ -559,17 +559,17 @@
         <li id="section-7">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p><strong>source</strong> - A handle to the DOM element supplying the image - either an &lt;img&gt;, &lt;video&gt; or &lt;canvas&gt; element.</p>
 <ul>
-<li>Note that the <strong><em>Web Canvas API does not support</em></strong> using the &lt;picture&gt; element as a legitimate image source. </li>
+<li>Note that the <em><strong>Web Canvas API does not support</strong></em> using the &lt;picture&gt; element as a legitimate image source. </li>
 <li>However most browsers allow the &lt;img&gt; element to use <strong>srcset</strong> and <strong>sizes</strong> attributes, which will give them the same type of functionality as picture elements - for example to determine the most appropriately sized image file for the browser/device’s viewport dimensions.</li>
 <li>Asset wrappers will detect, and handle actions required, if/when a browser decides to download a new image file, to update the &lt;img&gt; element with a more detailed image, for instance when the browser viewport changes its dimensions, or a device is rotated from portrait to landscape viewing.</li>
 <li>The web Canvas API claims that <strong>SVG</strong> images can be used as legitimate image sources for the canvas element. To make this happen, the SVG file needs to be set as the src attribute of an &lt;img&gt; element, and the resulting image will be entirely static, and rasterized! </li>
 <li>For this reason, we don’t recommend trying to use SVG files for canvas image sources; instead, the SVG can be included in a Scrawl-canvas display by adding it - as an &lt;svg&gt; element - to a Scrawl-canvas stack (see Demo DOM-003 for an example of this approach).</li>
-<li><strong><em>Be aware that this attribute cannot be directly or indirectly set.</em></strong> Scrawl-canvas will update it as part of its asset loading and wrapper creation functionality.</li>
+<li><em><strong>Be aware that this attribute cannot be directly or indirectly set.</strong></em> Scrawl-canvas will update it as part of its asset loading and wrapper creation functionality.</li>
 </ul>
 
             </div>
@@ -582,13 +582,13 @@
         <li id="section-8">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p><strong>subscribers</strong> - An Array containing the Picture entity and Pattern style Objects, who wish to use the asset as their source. </p>
 <ul>
 <li>Pictures and Patterns may subscribe to a maximum of ONE asset at any given time, though they may set/update that asset subscription to a different asset whenever required (which involves unsubscribing their existing asset).</li>
-<li><strong><em>Note that the contents of this Array cannot be directly or indirectly set.</em></strong> Picture entitys and Pattern styles will subscribe and unsubscribe to an asset as part of their source acquisition functionality (via the asset wrapper’s <strong>subscribe</strong> and <strong>unsubscribe</strong> functions).</li>
+<li><em><strong>Note that the contents of this Array cannot be directly or indirectly set.</strong></em> Picture entitys and Pattern styles will subscribe and unsubscribe to an asset as part of their source acquisition functionality (via the asset wrapper’s <strong>subscribe</strong> and <strong>unsubscribe</strong> functions).</li>
 </ul>
 
             </div>
@@ -603,8 +603,8 @@
         <li id="section-9">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 <p>Assets do not include their source images (or videos!) in their packet output. They do include the String name values of each of their subscribers.</p>
@@ -629,8 +629,8 @@
         <li id="section-10">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>No additional clone functionality defined here</p>
@@ -643,8 +643,8 @@
         <li id="section-11">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 
@@ -662,8 +662,8 @@
         <li id="section-12">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -679,8 +679,8 @@
         <li id="section-13">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p><strong>source</strong> - imageAsset.js and videoAsset.js overwrite this function, thus only put here so cell.js also gains the function - which I don’t think it will ever need as cells ARE their own source.</p>
 
@@ -696,8 +696,8 @@
         <li id="section-14">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>No action required for Canvas objects as they don’t have a source; they ARE the source!</p>
 
@@ -713,8 +713,8 @@
         <li id="section-15">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p><strong>subscribers</strong> - we disable the ability to set the subscribers Array directly. Picture entitys and Pattern styles will manage their subscription to the asset using their subscribe() and unsubscribe() functions.</p>
 
@@ -728,8 +728,8 @@
         <li id="section-16">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -741,8 +741,8 @@
         <li id="section-17">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p><code>assetConstructor</code> - Common actions required by <strong>imageAsset</strong>, <strong>spriteAsset</strong>, and <strong>videoAsset</strong> factories as part if their instance constructor work.</p>
 
@@ -767,8 +767,8 @@
         <li id="section-18">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <h5 id="subscribe-and-unsubscribe-to-an-asset">Subscribe and unsubscribe to an asset</h5>
 <p><code>subscribe</code></p>
@@ -791,8 +791,8 @@
         <li id="section-19">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p><code>subscribeAction</code> - separated out because cells handle things differently (they ARE the source)</p>
 
@@ -812,8 +812,8 @@
         <li id="section-20">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p><code>unsubscribe</code></p>
 
@@ -844,8 +844,8 @@
         <li id="section-21">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p><code>notifySubscribers</code>, <code>notifySubscriber</code> - Subscriber notification in the asset factories will happen when something changes with the image. Changes vary across the different types of asset:</p>
 <ul>
@@ -881,8 +881,8 @@
         <li id="section-22">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p>Return the prototype</p>
 
