@@ -60,11 +60,6 @@
                 </a>
               
                 
-                <a class="source" href="../core/wasmWrapper.html">
-                  ./source/core/wasmWrapper.js
-                </a>
-              
-                
                 <a class="source" href="../factory/action.html">
                   ./source/factory/action.js
                 </a>
@@ -686,6 +681,7 @@
             <div class="content"><div class='highlight'><pre>    P.cleanFilters = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
         <span class="hljs-built_in">this</span>.dirtyFilters = <span class="hljs-literal">false</span>;
+        <span class="hljs-built_in">this</span>.dirtyFiltersCache = <span class="hljs-literal">true</span>;
 
         <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.filters) <span class="hljs-built_in">this</span>.filters = [];
 

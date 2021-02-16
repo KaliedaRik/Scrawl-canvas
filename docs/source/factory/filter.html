@@ -60,11 +60,6 @@
                 </a>
               
                 
-                <a class="source" href="../core/wasmWrapper.html">
-                  ./source/core/wasmWrapper.js
-                </a>
-              
-                
                 <a class="source" href="action.html">
                   ./source/factory/action.js
                 </a>
@@ -1017,6 +1012,8 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
     }
     <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.method &amp;&amp; setActionsArray[<span class="hljs-built_in">this</span>.method]) setActionsArray[<span class="hljs-built_in">this</span>.method](<span class="hljs-built_in">this</span>);
 
+    <span class="hljs-built_in">this</span>.dirtyFiltersCache = <span class="hljs-literal">true</span>;
+
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
@@ -1054,6 +1051,8 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
     }
     <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.method &amp;&amp; setActionsArray[<span class="hljs-built_in">this</span>.method]) setActionsArray[<span class="hljs-built_in">this</span>.method](<span class="hljs-built_in">this</span>);
 
+    <span class="hljs-built_in">this</span>.dirtyFiltersCache = <span class="hljs-literal">true</span>;
+    
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
@@ -2324,11 +2323,6 @@ scrawl.makeFilter({
 <ul>
 <li>This used to be a pool of web workers which loaded up filter functionality</li>
 <li>Now it is just another module call in the main thread</li>
-<li>Which means that, as filters web workers were the only reason for using Promises, we can get rid of promises</li>
-<li>Because my testing seems to indicate that workers were no faster than this code, possibly slower!</li>
-<li>Getting rid of Promises would massively simplify the code base, but would lead to breaking changes</li>
-<li>But there is surely scope for getting rid of them as far as possible eg simplifying entity stamp workflow</li>
-<li>And now we have a good place to start our WASM experiments, with filters</li>
 </ul>
 
             </div>

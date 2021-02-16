@@ -60,11 +60,6 @@
                 </a>
               
                 
-                <a class="source" href="wasmWrapper.html">
-                  ./source/core/wasmWrapper.js
-                </a>
-              
-                
                 <a class="source" href="../factory/action.html">
                   ./source/factory/action.js
                 </a>
@@ -475,7 +470,6 @@
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { startCoreAnimationLoop } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./animationloop.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { getCanvases, getStacks } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./document.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { startCoreListeners, applyCoreResizeListener, applyCoreScrollListener } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./userInteraction.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { wasmInit } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./wasmWrapper.js&#x27;</span>;
 
 
 <span class="hljs-keyword">const</span> init = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
@@ -530,16 +524,9 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>Flag to indicate if Scrawl-canvas can use OffscreenCanvas interface</p>
+              <h4 id="initialization">Initialization</h4>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">window</span>.scrawlEnvironmentOffscreenCanvasSupported = (<span class="hljs-string">&#x27;OffscreenCanvas&#x27;</span> <span class="hljs-keyword">in</span> <span class="hljs-built_in">window</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
-
-    <span class="hljs-built_in">window</span>.scrawlEnvironmentWebAssemblyInitialized = <span class="hljs-literal">false</span>;
-    wasmInit()
-    .then(<span class="hljs-function">() =&gt;</span> <span class="hljs-built_in">window</span>.scrawlEnvironmentWebAssemblyInitialized = <span class="hljs-literal">true</span>)
-    .catch(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(e));</pre></div></div>
             
         </li>
         
@@ -549,19 +536,6 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <h4 id="initialization">Initialization</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <p>Discovery phase - collect all canvas elements present in the DOM, and any other elements with a ‘data-stack’ attribute</p>
 
@@ -573,11 +547,11 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <p>Start the core animation loop</p>
 
@@ -588,11 +562,11 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <p>Start the core listeners on the window object</p>
 
@@ -606,11 +580,11 @@
         </li>
         
         
-        <li id="section-11">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <h4 id="exports">Exports</h4>
 
