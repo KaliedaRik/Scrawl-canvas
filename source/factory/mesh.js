@@ -733,7 +733,7 @@ P.setSourceDimension = function () {
 };
 
 // `simpleStamp` - Simple stamping is entirely synchronous
-// + TODO: we may have to disable this functionality for the Mesh entity, if we use a web worker for either the prepareStamp calculations, or to build the output image itself
+// + TODO: we may have to disable this functionality for the Mesh entity, if we use a Web Assembly module for either the prepareStamp calculations, or to build the output image itself
 P.simpleStamp = function (host, changes = {}) {
 
     if (host && host.type === 'Cell') {

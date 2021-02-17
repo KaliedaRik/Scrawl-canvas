@@ -1,7 +1,7 @@
-// # Scrawl-canvas filters web worker
-// This web worker code is called in a just-in-time manner; the code will not be requested from the server until a Scrawl-canvas entity, Group or Cell with a non-zero `filters` attribute is processed during the Display cycle. 
-// 
-// All Scrawl-canvas filters-related image manipulation work happens in this worker code. Note that this functionality is entirely separate from the &lt;canvas> element's context engine's native `filter` functionality, which allows us to add CSS/SVG-based filters to the canvas context
+// # Scrawl-canvas filter engine
+// All Scrawl-canvas filters-related image manipulation work happens in this engine code. Note that this functionality is entirely separate from the &lt;canvas> element's context engine's native `filter` functionality, which allows us to add CSS/SVG-based filters to the canvas context
+// + Note that prior to v8.5.0 most of this code lived in an (asynchronous) web worker. Web worker functionality has now been removed from Scrawl-canvas as it was not adding sufficient efficiency to rendering speed
+// + At some point in the future we may implement this code as a WebAssembly module.
 
 
 import { constructors } from '../core/library.js';
@@ -15,10 +15,10 @@ const FilterEngine = function () {
     // __image__ - the original imageData `{width, height, data}` object supplied in the message
     this.image = null; 
 
-    // __cache__ - an Object consisting of `key:Object` pairs where the key is the named input of a `process-image` action or the output of any action object. This object is cleared and re-initialized each time the worker receives a new message
+    // __cache__ - an Object consisting of `key:Object` pairs where the key is the named input of a `process-image` action or the output of any action object. This object is cleared and re-initialized each time the `engine.action` function is invoked
     this.cache = null; 
 
-    // __actions__ - the Array of action objects that the worker needs to process - data supplied by the main thread in its message's `packetFiltersArray` attribute.
+    // __actions__ - the Array of action objects that the engine needs to process - data supplied by the main thread in its message's `packetFiltersArray` attribute.
     this.actions = [];
 
     this.choke = 3000;
@@ -70,14 +70,14 @@ P.action = function (packet) {
 
 // ### Permanent variables
 
-// The web worker maintains a semi-permanent storage space - the __workstore__ - for some processing objects that are computationally expensive, for instance grids, matrix reference data objects, etc. The web worker maintains a record of when each of these processing objects was last accessed and will remove objects if they have not been accessed in the last three seconds.
+// The filter engine maintains a semi-permanent storage space - the __workstore__ - for some processing objects that are computationally expensive, for instance grids, matrix reference data objects, etc. The engine also maintains a record of when each of these processing objects was last accessed and will remove objects if they have not been accessed in the last three seconds.
 P.workstore = {},
 P.workstoreLastAccessed = {};
 
 
 // ### Result objects
 
-// `createResultObject` - to make the following code easier to maintain, the web worker will create result objects for all source image data it receives, and for each action object output. These result objects contain four arrays - one for each color channle, and one for the alpha channel.
+// `createResultObject` - to make the following code easier to maintain, the filter emngine will create result objects for all source image data it receives, and for each action object output. These result objects contain four arrays - one for each color channle, and one for the alpha channel.
 P.createResultObject = function (len) {
 
     return {
@@ -546,7 +546,7 @@ P.checkChannelLevelsParameters = function (f) {
     f.alpha = doCheck(f.alpha, true);
 };
 
-// `cacheOutput` - insert an action function's output into the worker's cache
+// `cacheOutput` - insert an action function's output into the filter engine's cache
 P.cacheOutput = function (name, obj, caller) {
 
     cache[name] = obj;
@@ -2785,7 +2785,7 @@ P.theBigActionsObject = {
         else this.processResults(work, output, opacity);
     },
 
-// __user-defined-legacy__ - Previous to version 8.4, filters could be defined with an argument which passed a function string to the filter worker, which the worker would then run against the source input image as-and-when required. This functionality has been removed from the new filter system. All such filters will now return the input image unchanged.
+// __user-defined-legacy__ - Previous to version 8.4, filters could be defined with an argument which passed a function string to the filter engine, which the engine would then run against the source input image as-and-when required. This functionality has been removed from the new filter functionality. All such filters will now return the input image unchanged.
 
     'user-defined-legacy': function (requirements) {
 

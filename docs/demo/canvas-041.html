@@ -762,8 +762,7 @@ canvas.setBase({
               <p>Create the Display cycle animation</p>
 <ul>
 <li>We can use <code>makeAnimation</code> instead of <code>makeRender</code></li>
-<li>In the <code>fn</code> function, we need to return a Promise</li>
-<li>Inside the Promise, we construct our Display cycle, which is a promise-based chain of functions</li>
+<li>Inside the function, we construct our Display cycle</li>
 </ul>
 
             </div>
@@ -800,9 +799,7 @@ scrawl.makeAnimation({</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    fn: <span class="hljs-function">() =&gt;</span> {
-
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    fn: <span class="hljs-function">() =&gt;</span> {</pre></div></div>
             
         </li>
         
@@ -822,7 +819,7 @@ scrawl.makeAnimation({</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-built_in">Promise</span>.resolve(canvas.clear())</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        canvas.clear();</pre></div></div>
             
         </li>
         
@@ -837,9 +834,9 @@ scrawl.makeAnimation({</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            .then(<span class="hljs-function">() =&gt;</span> <span class="hljs-built_in">Promise</span>.resolve(drawBlade(canvas.base.engine, ++rotation)))
+            <div class="content"><div class='highlight'><pre>        drawBlade(canvas.base.engine, ++rotation);
 
-            .then(<span class="hljs-function">() =&gt;</span> canvas.show())</pre></div></div>
+        canvas.show();</pre></div></div>
             
         </li>
         
@@ -854,7 +851,9 @@ scrawl.makeAnimation({</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            .then(<span class="hljs-function">() =&gt;</span> <span class="hljs-built_in">Promise</span>.resolve(report()))</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        report();
+    },
+});</pre></div></div>
             
         </li>
         
@@ -864,39 +863,6 @@ scrawl.makeAnimation({</pre></div></div>
               
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
-              </div>
-              <p>Always <code>resolve</code> the Display cycle!</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            .then(<span class="hljs-function">() =&gt;</span> resolve(<span class="hljs-literal">true</span>))</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
-              </div>
-              <p>Always catch errors - if something goes wrong the Promise chain needs to <code>reject</code>, not resolve</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(err));
-        });
-    },
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

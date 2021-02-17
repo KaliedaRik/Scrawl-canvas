@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Scrawl-canvas filters web worker</title>
+  <title>Scrawl-canvas filter engine</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
@@ -449,9 +449,12 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
-              <h1 id="scrawl-canvas-filters-web-worker">Scrawl-canvas filters web worker</h1>
-<p>This web worker code is called in a just-in-time manner; the code will not be requested from the server until a Scrawl-canvas entity, Group or Cell with a non-zero <code>filters</code> attribute is processed during the Display cycle. </p>
-<p>All Scrawl-canvas filters-related image manipulation work happens in this worker code. Note that this functionality is entirely separate from the &lt;canvas&gt; element’s context engine’s native <code>filter</code> functionality, which allows us to add CSS/SVG-based filters to the canvas context</p>
+              <h1 id="scrawl-canvas-filter-engine">Scrawl-canvas filter engine</h1>
+<p>All Scrawl-canvas filters-related image manipulation work happens in this engine code. Note that this functionality is entirely separate from the &lt;canvas&gt; element’s context engine’s native <code>filter</code> functionality, which allows us to add CSS/SVG-based filters to the canvas context</p>
+<ul>
+<li>Note that prior to v8.5.0 most of this code lived in an (asynchronous) web worker. Web worker functionality has now been removed from Scrawl-canvas as it was not adding sufficient efficiency to rendering speed</li>
+<li>At some point in the future we may implement this code as a WebAssembly module.</li>
+</ul>
 
             </div>
             
@@ -511,7 +514,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <p><strong>cache</strong> - an Object consisting of <code>key:Object</code> pairs where the key is the named input of a <code>process-image</code> action or the output of any action object. This object is cleared and re-initialized each time the worker receives a new message</p>
+              <p><strong>cache</strong> - an Object consisting of <code>key:Object</code> pairs where the key is the named input of a <code>process-image</code> action or the output of any action object. This object is cleared and re-initialized each time the <code>engine.action</code> function is invoked</p>
 
             </div>
             
@@ -526,7 +529,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <p><strong>actions</strong> - the Array of action objects that the worker needs to process - data supplied by the main thread in its message’s <code>packetFiltersArray</code> attribute.</p>
+              <p><strong>actions</strong> - the Array of action objects that the engine needs to process - data supplied by the main thread in its message’s <code>packetFiltersArray</code> attribute.</p>
 
             </div>
             
@@ -623,7 +626,7 @@ P.action = <span class="hljs-function"><span class="hljs-keyword">function</span
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <p>The web worker maintains a semi-permanent storage space - the <strong>workstore</strong> - for some processing objects that are computationally expensive, for instance grids, matrix reference data objects, etc. The web worker maintains a record of when each of these processing objects was last accessed and will remove objects if they have not been accessed in the last three seconds.</p>
+              <p>The filter engine maintains a semi-permanent storage space - the <strong>workstore</strong> - for some processing objects that are computationally expensive, for instance grids, matrix reference data objects, etc. The engine also maintains a record of when each of these processing objects was last accessed and will remove objects if they have not been accessed in the last three seconds.</p>
 
             </div>
             
@@ -652,7 +655,7 @@ P.workstoreLastAccessed = {};</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <p><code>createResultObject</code> - to make the following code easier to maintain, the web worker will create result objects for all source image data it receives, and for each action object output. These result objects contain four arrays - one for each color channle, and one for the alpha channel.</p>
+              <p><code>createResultObject</code> - to make the following code easier to maintain, the filter emngine will create result objects for all source image data it receives, and for each action object output. These result objects contain four arrays - one for each color channle, and one for the alpha channel.</p>
 
             </div>
             
@@ -1251,7 +1254,7 @@ P.workstoreLastAccessed = {};</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
-              <p><code>cacheOutput</code> - insert an action function’s output into the worker’s cache</p>
+              <p><code>cacheOutput</code> - insert an action function’s output into the filter engine’s cache</p>
 
             </div>
             
@@ -3885,7 +3888,7 @@ P.workstoreLastAccessed = {};</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
-              <p><strong>user-defined-legacy</strong> - Previous to version 8.4, filters could be defined with an argument which passed a function string to the filter worker, which the worker would then run against the source input image as-and-when required. This functionality has been removed from the new filter system. All such filters will now return the input image unchanged.</p>
+              <p><strong>user-defined-legacy</strong> - Previous to version 8.4, filters could be defined with an argument which passed a function string to the filter engine, which the engine would then run against the source input image as-and-when required. This functionality has been removed from the new filter functionality. All such filters will now return the input image unchanged.</p>
 
             </div>
             

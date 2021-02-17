@@ -1364,13 +1364,21 @@ scrawl.makePhrase({
                 <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
+<p>Function will be called 3 times - once per canvas - so we need to make sure the appropriate function gets invoked for that canvas</p>
+<ul>
+<li>Multiple calls invoked because the makeRender function will generate separate animation objects for each canvas target.</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> postInitialization = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> postInitialization = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">anim</span>) </span>{
 
-    canvasTwoPostInitialization();
-    canvasThreePostInitialization();
+    <span class="hljs-built_in">console</span>.log(anim.target.name);
+
+    <span class="hljs-keyword">let</span> target = anim.target.name;
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;canvas2&#x27;</span> === target) canvasTwoPostInitialization();
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;canvas3&#x27;</span> === target) canvasThreePostInitialization();
 };
 
 scrawl.makeRender({

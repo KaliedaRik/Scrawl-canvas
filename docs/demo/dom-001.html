@@ -755,21 +755,17 @@
             
             <div class="content"><div class='highlight'><pre>    fn: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve</span>) =&gt;</span> {
+        scrawl.render()
 
-            scrawl.render()
-            .then(<span class="hljs-function">() =&gt;</span> {
+        <span class="hljs-keyword">let</span> here = myStack.here || {};
 
-                <span class="hljs-keyword">let</span> here = myStack.here || {};
-
-                reportmessage.textContent =  <span class="hljs-string">`File dom-001.js has loaded successfully
+        reportmessage.textContent =  <span class="hljs-string">`File dom-001.js has loaded successfully
    Stack name: <span class="hljs-subst">${myStack.name}</span> - width: <span class="hljs-subst">${here.w}</span>, height: <span class="hljs-subst">${here.h}</span>
    Interaction type: <span class="hljs-subst">${here.type}</span> - active: <span class="hljs-subst">${here.active}</span>
    Current cursor coordinates - x: <span class="hljs-subst">${here.x}</span>, y: <span class="hljs-subst">${here.y}</span> 
    Current stack normals values - x: <span class="hljs-subst">${here.normX.toFixed(<span class="hljs-number">4</span>)}</span>, y: <span class="hljs-subst">${here.normY.toFixed(<span class="hljs-number">4</span>)}</span>`</span>;
-
-                resolve(<span class="hljs-literal">true</span>);
-            })</pre></div></div>
+    }
+});</pre></div></div>
             
         </li>
         
@@ -779,28 +775,6 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
-              </div>
-              <p>Always (ALWAYS!) include a .catch function in the render promise chain (usually at the end)</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> {
-
-                reportmessage.textContent = err.message;
-                resolve(<span class="hljs-literal">false</span>);
-            });
-        });
-    }
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 <p>Because the code has been loaded as a <strong>module</strong>, Scrawl-canvas attributes and functions do not get added to the global namespace. For development work, we can overcome this issue (to a small extent) by console logging the scrawl library, so we can check internal attribute values and calculation results.</p>
@@ -812,11 +786,11 @@
         </li>
         
         
-        <li id="section-12">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>A more interactive method is to assign the scrawl object to a window global variable - this then allows us to access all of the objects created by Scrawl-canvas and interact with them in the browser console:</p>
 <pre><code><span class="hljs-comment">// In the .js module file</span>

@@ -504,10 +504,10 @@ export default function (P = {}) {
 // `filteredStamp` - handles stamping functionality for all __entitys that have filter functions__ associated with them.
     P.filteredStamp = function() {
 
-        // Clean and sort the Entity-level filters before sending them to the filter worker for application
+        // Clean and sort the Entity-level filters before sending them to the filter engine for application
         if (this.dirtyFilters || !this.currentFilters) this.cleanFilters();
 
-        // Save current host data into a set of vars, ready for restoration after web worker completes or fails
+        // Save current host data into a set of vars, ready for restoration after web engine completes or fails
         let currentHost = this.currentHost,
             currentElement = currentHost.element,
             currentEngine = currentHost.engine,
@@ -553,7 +553,7 @@ export default function (P = {}) {
             // NEED TO POPULATE IMAGE FILTER ACTION OBJECTS WITH THEIR ASSET'S IMAGEDATA AT THIS POINT
             this.preprocessFilters(this.currentFilters);
 
-            // Pass control over to the web worker
+            // Pass control over to the filter engine
             let img = actionFilterWorker(worker, {
                 image: myimage,
                 filters: this.currentFilters
@@ -656,7 +656,7 @@ export default function (P = {}) {
 
 // `simpleStamp` - an alternative to the `stamp` function, to get an entity to stamp its output onto a Cell.
 // + Note that this is a synchronous action, thus cannot be included in a Display cycle cascade.
-// + Will ignore any filters assigned to the entity (because they require asynchronous Promises for the Filter web worker)
+// + Will ignore any filters assigned to the entity (because they require asynchronous Promises for the filter engine)
     P.simpleStamp = function (host, changes = {}) {
 
         if (host && host.type === 'Cell') {

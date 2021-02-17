@@ -452,8 +452,8 @@
               <h1 id="filter-factory">Filter factory</h1>
 <p>Filters take in an image representation of an <a href="../mixin/entity.html">entity</a>, <a href="./group.html">Group</a> of entitys or a <a href="./cell.html">Cell</a> display and, by manipulating the image’s data, return an updated image which replaces those entitys or Cell in the final output display.</p>
 <p>Scrawl-canvas defines its filters in <strong>Filter objects</strong>, detailed in this module. The functionality to make use of these objects is coded up in the <a href="../mixin/filter.html">filter mixin</a>, which is used by the Cell, Group and all entity factories.</p>
-<p>Scrawl-canvas uses a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API">web worker</a> to generate filter outputs - defined in the <a href="../worker/filter.html">filter web worker</a>. The web worker implements a number of common filter algorithms. These algorithms - <strong>called filter actions</strong> - can be combined in a wide variety of ways, including the use of multiple pathways, to create complex filter results.</p>
-<h4 id="web-worker-filter-actions">Web worker filter actions</h4>
+<p>The Scrawl-canvas filter engine implements a number of common filter algorithms. These algorithms - <strong>called filter actions</strong> - can be combined in a wide variety of ways, including the use of multiple pathways, to create complex filter results.</p>
+<h4 id="filter-engine-actions">Filter engine actions</h4>
 <p><code>alpha-to-channels</code> - Copies the alpha channel value over to the selected value or, alternatively, sets that channels value to zero, or leaves the channel’s value unchanged. Setting the appropriate “includeChannel” flags will copy the alpha channel value to that channel; when that flag is false, setting the appropriate “excludeChannel” flag will set that channel’s value to zero. Object attributes: action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue, excludeRed, excludeGreen, excludeBlue</p>
 <p><code>area-alpha</code> - Places a tile schema across the input, quarters each tile and then sets the alpha channels of the pixels in selected quarters of each tile to zero. Can be used to create horizontal or vertical bars, or chequerboard effects. Object attributes: action, lineIn, lineOut, opacity, tileWidth, tileHeight, offsetX, offsetY, gutterWidth, gutterHeight, areaAlphaLevels</p>
 <p><code>average-channels</code> - Calculates an average value from each pixel’s included channels and applies that value to all channels that have not been specifically excluded; excluded channels have their values set to 0. Object attributes: action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue, excludeRed, excludeGreen, excludeBlue</p>
@@ -480,7 +480,7 @@
 <p><code>step-channels</code> - Takes three divisor values - “red”, “green”, “blue”. For each pixel, its color channel values are divided by the corresponding color divisor, floored to the integer value and then multiplied by the divisor. For example a divisor value of ‘50’ applied to a channel value of ‘120’ will give a result of ‘100’. The output is a form of posterization. Object attributes: action, lineIn, lineOut, opacity, red, green, blue</p>
 <p><code>threshold</code> - Grayscales the input then, for each pixel, checks the color channel values against a “level” argument: pixels with channel values above the level value are assigned to the ‘high’ color; otherwise they are updated to the ‘low’ color. The “high” and “low” arguments are [red, green, blue] integer Number Arrays. The convenience function will accept the pseudo-attributes “highRed”, “lowRed” etc in place of the “high” and “low” Arrays. Object attributes: action, lineIn, lineOut, opacity, low, high; pseudo-arguments: lowRed, lowGreen, lowBlue, highRed, highGreen, highBlue</p>
 <p><code>tint-channels</code> - Has similarities to the SVG <feColorMatrix> filter element, but excludes the alpha channel from calculations. Rather than set a matrix, we set nine arguments to determine how the value of each color channel in a pixel will affect both itself and its fellow color channels. The ‘sepia’ convenience filter presets these values to create a sepia effect. Object attributes: action, lineIn, lineOut, opacity, redInRed, redInGreen, redInBlue, greenInRed, greenInGreen, greenInBlue, blueInRed, blueInGreen, blueInBlue</p>
-<p><code>user-defined-legacy</code> - Previous to Scrawl-canvas version 8.4.0, filters could be defined with an argument which passed a function string to the filter worker, which the worker would then run against the source input image as-and-when required. This functionality has been removed from the new filter system. All such filters will now return the input image unchanged. Object attributes: action, lineIn, lineOut, opacity</p>
+<p><code>user-defined-legacy</code> - Previous to Scrawl-canvas version 8.4.0, filters could be defined with an argument which passed a function string to a filter web worker, which the worker would then run against the source input image as-and-when required. This functionality has been removed from the new filter system. All such filters will now return the input image unchanged. Object attributes: action, lineIn, lineOut, opacity</p>
 <pre><code><span class="hljs-comment">// Example: the following code creates a filter that applies a thick red border around the entitys </span>
 <span class="hljs-comment">// it is applied to; if used on a group then it will outline the outside of the group&#x27;s entitys, </span>
 <span class="hljs-comment">// ignoring overlaps between entitys:</span>
@@ -655,7 +655,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h5 id="how-the-filter-factory-builds-filters">How the filter factory builds filters</h5>
-<p>Filter actions are defined in action objects - which are vanilla Javascript Objects which are collected together in the <strong>actions</strong> array. Each action object is processed sequentially by the web worker to produce the final output for that filter.</p>
+<p>Filter actions are defined in action objects - which are vanilla Javascript Objects which are collected together in the <strong>actions</strong> array. Each action object is processed sequentially by the filter engine to produce the final output for that filter.</p>
 
             </div>
             
@@ -691,17 +691,17 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <h5 id="how-filters-process-data">How filters process data</h5>
-<p>The Scrawl-canvas filters web worker can use <em><strong>multiple pathways</strong></em> to process a filter’s Array of action objects. In essence, a filter action can store the results of its work in a named cache, which can then be used by other filter actions further down the line.</p>
+<p>The Scrawl-canvas filter engine can use <em><strong>multiple pathways</strong></em> to process a filter’s Array of action objects. In essence, a filter action can store the results of its work in a named cache, which can then be used by other filter actions further down the line.</p>
 <ul>
 <li>When Scrawl-canvas applies filters to an entity, Group or Cell it will go through the entity’s <code>filters</code> Array looking for any <code>process-image</code> actions; when it finds one it will add a snapshot of the associated asset’s current image state to the filter object (thus Cell and Noise assets are naturally dynamic).</li>
-<li>Then the system sends all of the filter’s action objects over to the filters web worker, alongside a snapshot of the entity, Group or Cell to be processed.</li>
+<li>Then the system sends all of the filter’s action objects over to the filter engine, alongside a snapshot of the entity, Group or Cell to be processed.</li>
 <li>If the entity, Group or Cell is acting as a stencil (its <code>isStencil</code> flag has been set to true) then a snapshot of the background behind the entity/Group/Cell is sent instead of the entitys themselves.</li>
-<li>When the web worker recieves the data packet, it stores the snapshot in its <code>source</code> cache, and replicates it into the <code>work</code> object.</li>
+<li>When the filter engine recieves the data packet, it stores the snapshot in its <code>source</code> cache, and replicates it into the <code>work</code> object.</li>
 <li>All filter actions require a <strong>lineIn</strong> string which references a cached image or snapshot. If this is not supplied, then the action will process the data stored in the <code>work</code> object.</li>
 <li>Additional sources for the lineIn (or lineMix) data are <code>source</code>, which copies the original source image data and delivers it to the action; and <code>source-alpha</code> which copies the original source’s alpha channel data to each of the color channels and delivers it to the action.</li>
 <li>Similarly all filter actions require a <strong>lineOut</strong> which identifies the name of a cache in which the processed data can be stored. If this is not supplied, then the action will copy the processed data back into the <code>work</code> object</li>
 <li>Some filter actions - specifically <code>blend</code>, <code>compose</code> and <code>displace</code> - use two inputs, combining the data referenced by the <strong>lineIn</strong> and <strong>lineMix</strong> attribute into <strong>lineOut</strong> cache or work object.</li>
-<li>When processing completes, the updated data held in the work object is returned by the web worker, which Scrawl-canvas then uses to stamp the entity/Group/Cell into the display canvas.</li>
+<li>When processing completes, the updated data held in the work object is returned by the filter engine, which Scrawl-canvas then uses to stamp the entity/Group/Cell into the display canvas.</li>
 </ul>
 
             </div>
@@ -1068,7 +1068,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               </div>
               <h4 id="compatibility-with-scrawl-canvas-legacy-filters-functionality">Compatibility with Scrawl-canvas legacy filters functionality</h4>
 <p>The Scrawl-canvas filters code was rewritten from scratch for version 8.4.0. The new functionality introduced the concept of “line processing” - <em><strong>lineIn, lineMix, lineOut</strong></em> (analagous to SVG in, in2 and result attributes) - alongside the addition of more sophisticated image processing tools such as blend modes, compositing, more adaptable matrices, image loading, displacement mapping, etc.</p>
-<p>The legacy system - defining filters using <strong>method</strong> String attributes - has been adapted to use the new system behind the scenes. As a result all legacy filters will continue to work as expected - with one exception: user-defined filters, which allowed the user to coder a function string to pass on to the web worker, will no longer function in Scrawl-canvas v8.4.0.</p>
+<p>The legacy system - defining filters using <strong>method</strong> String attributes - has been adapted to use the new system behind the scenes. As a result all legacy filters will continue to work as expected - with one exception: user-defined filters, which allowed the user to coder a function string to pass on to the filter engine, will no longer function in Scrawl-canvas v8.4.0.</p>
 <p>Note that there are no plans to deprecate the legacy method of defining/creating Filters. The following code will continue to work:</p>
 <pre><code><span class="hljs-comment">// __Brightness__ filter</span>
 scrawl.makeFilter({
@@ -1777,7 +1777,7 @@ scrawl.makeFilter({
               <div class="sswrap ">
                 <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
-              <p><strong>image</strong> (new in v8.4.0) - load an image into the web worker, where it can then be used by other filter actions - useful for effects such as watermarking an image</p>
+              <p><strong>image</strong> (new in v8.4.0) - load an image into the filter engine, where it can then be used by other filter actions - useful for effects such as watermarking an image</p>
 
             </div>
             

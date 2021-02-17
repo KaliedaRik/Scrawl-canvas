@@ -711,20 +711,7 @@ element - <span class="hljs-subst">${el.length}</span>, <span class="hljs-subst"
             <div class="content"><div class='highlight'><pre>scrawl.makeAnimation({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
-
-    <span class="hljs-attr">fn</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {
-
-            scrawl.render()
-            .then(<span class="hljs-function">() =&gt;</span> {
-
-                report();
-                resolve(<span class="hljs-literal">true</span>);
-            })
-            .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> reject(err));
-        });
-    }
+    <span class="hljs-attr">fn</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{scrawl.render()},
 });</pre></div></div>
             
         </li>
