@@ -1,7 +1,7 @@
 {
   "name": "scrawl-canvas",
-  "version": "8.5.0",
-  "description": "Version 8.5.0 - 17 Feb 2021",
+  "version": "8.5.0-β",
+  "description": "Version 8.5.0-β - 17 Feb 2021",
   "main": "min/scrawl.js",
   "scripts": {
     "build": "rollup -c && docco ./demo/**/*.js && docco ./demo/*.js && docco ./source/**/*.js && docco ./source/scrawl.js",
