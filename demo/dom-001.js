@@ -53,29 +53,15 @@ scrawl.makeAnimation({
     // This is because some animation functions (for instance: canvas filters) rely on web workers to speed up their calculations which are - by definition - asynchronous. The promise should resolve as true if all is well; false otherwise
     fn: function () {
 
-        return new Promise((resolve) => {
+        scrawl.render()
 
-            scrawl.render()
-            .then(() => {
+        let here = myStack.here || {};
 
-                let here = myStack.here || {};
-
-                reportmessage.textContent =  `File dom-001.js has loaded successfully
+        reportmessage.textContent =  `File dom-001.js has loaded successfully
    Stack name: ${myStack.name} - width: ${here.w}, height: ${here.h}
    Interaction type: ${here.type} - active: ${here.active}
    Current cursor coordinates - x: ${here.x}, y: ${here.y} 
    Current stack normals values - x: ${here.normX.toFixed(4)}, y: ${here.normY.toFixed(4)}`;
-
-                resolve(true);
-            })
-
-            // Always (ALWAYS!) include a .catch function in the render promise chain (usually at the end)
-            .catch(err => {
-
-                reportmessage.textContent = err.message;
-                resolve(false);
-            });
-        });
     }
 });
 

@@ -76,8 +76,7 @@ const report = function () {
 
 // Create the Display cycle animation
 // + We can use `makeAnimation` instead of `makeRender`
-// + In the `fn` function, we need to return a Promise
-// + Inside the Promise, we construct our Display cycle, which is a promise-based chain of functions
+// + Inside the function, we construct our Display cycle
 let rotation = 0;
 
 scrawl.makeAnimation({
@@ -88,28 +87,19 @@ scrawl.makeAnimation({
     // Every Animation object __must__ have a `fn` attribute!
     fn: () => {
 
-        return new Promise((resolve, reject) => {
+        // The Display cycle includes 3 key steps:
+        // + `clear()` - to wipe the canvas's drawing areas clean
+        // + `compile()` - which takes place on the Canvas wrapper object's `base` canvas. 
+        // + `show()` - which copies over everything drawn on the base canvas and pastes it into the display canvas
+        canvas.clear();
 
-            // The Display cycle includes 3 key steps:
-            // + `clear()` - to wipe the canvas's drawing areas clean
-            // + `compile()` - which takes place on the Canvas wrapper object's `base` canvas. 
-            // + `show()` - which copies over everything drawn on the base canvas and pastes it into the display canvas
-            Promise.resolve(canvas.clear())
+        // In this instance, we're using our `drawBlade()` function instead of the built-in `compile` function
+        drawBlade(canvas.base.engine, ++rotation);
 
-            // In this instance, we're using our `drawBlade()` function instead of the built-in `compile` function
-            .then(() => Promise.resolve(drawBlade(canvas.base.engine, ++rotation)))
+        canvas.show();
 
-            .then(() => canvas.show())
-
-            // We can invoke additional functions at any time, wrapping them in `Promise.resolve()` functions
-            .then(() => Promise.resolve(report()))
-
-            // Always `resolve` the Display cycle!
-            .then(() => resolve(true))
-
-            // Always catch errors - if something goes wrong the Promise chain needs to `reject`, not resolve
-            .catch(err => reject(err));
-        });
+        // We can invoke additional functions at any time, wrapping them in `Promise.resolve()` functions
+        report();
     },
 });
 

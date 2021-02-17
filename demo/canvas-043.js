@@ -431,10 +431,16 @@ const canvasThreePostInitialization = function () {
 
 
 // #### Scene animation
-const postInitialization = function () {
+// Function will be called 3 times - once per canvas - so we need to make sure the appropriate function gets invoked for that canvas
+// + Multiple calls invoked because the makeRender function will generate separate animation objects for each canvas target.
+const postInitialization = function (anim) {
 
-    canvasTwoPostInitialization();
-    canvasThreePostInitialization();
+    console.log(anim.target.name);
+
+    let target = anim.target.name;
+
+    if ('canvas2' === target) canvasTwoPostInitialization();
+    else if ('canvas3' === target) canvasThreePostInitialization();
 };
 
 scrawl.makeRender({

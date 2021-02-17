@@ -54,24 +54,7 @@ cell - ${c.length}, ${cellnames.length}: [${(cellnames).join(', ')}]`;
 scrawl.makeAnimation({
 
     name: 'demo-animation',
-
-    fn: function () {
-
-        return new Promise((resolve, reject) => {
-
-            scrawl.render()
-            .then(() => {
-
-                report();
-                resolve(true);
-            })
-            .catch(err => {
-
-                console.log('demo-animation error', err);
-                reject(false);
-            });
-        });
-    }
+    fn: function () { scrawl.render() },
 });
 
 
