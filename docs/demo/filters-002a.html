@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Demo Particles 004</title>
+  <title>Demo Filters 002a</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../docco.css" />
@@ -624,8 +624,8 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
-              <h1 id="demo-particles-004">Demo Particles 004</h1>
-<p>Emit particles along the length of a path</p>
+              <h1 id="demo-filters-002a">Demo Filters 002a</h1>
+<p>Filters - cache output to improve render speeds</p>
 
             </div>
             
@@ -638,11 +638,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
-              <p><a href="../../demo/particles-004.html">Run code</a></p>
+              <p><a href="../../demo/filters-002a.html">Run code</a></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -654,14 +654,14 @@
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
               <h4 id="scene-setup">Scene setup</h4>
+<p>Create some convenience shortcut variables to various sections of the Scrawl-canvas library</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.library.artefact.mycanvas;
-
-canvas.setBase({
-    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;aliceblue&#x27;</span>,
-});</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.library.canvas.mycanvas,
+    filters = scrawl.library.filter,
+    groups = scrawl.library.group,
+    entitys = scrawl.library.entity;</pre></div></div>
             
         </li>
         
@@ -672,9 +672,11 @@ canvas.setBase({
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <h4 id="particle-physics-animation-scene">Particle physics animation scene</h4>
+              <p>Import image from the DOM</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -685,14 +687,46 @@ canvas.setBase({
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <p>Create a World object which we can then assign to the particle emitter</p>
+              <p>Create the filters</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myWorld = scrawl.makeWorld({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-world&#x27;</span>,
-    <span class="hljs-attr">tickMultiplier</span>: <span class="hljs-number">2</span>,
+            <div class="content"><div class='highlight'><pre>scrawl.makeFilter({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
+}).clone({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;green&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;green&#x27;</span>,
+}).clone({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
+}).clone({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;cyan&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;cyan&#x27;</span>,
+}).clone({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;magenta&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;magenta&#x27;</span>,
+}).clone({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;yellow&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;yellow&#x27;</span>,
+}).clone({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;notred&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;notred&#x27;</span>,
+}).clone({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;notgreen&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;notgreen&#x27;</span>,
+}).clone({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;notblue&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;notblue&#x27;</span>,
+}).clone({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;grayscale&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;grayscale&#x27;</span>,
+}).clone({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;sepia&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;sepia&#x27;</span>,
+}).clone({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;invert&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;invert&#x27;</span>,
 });</pre></div></div>
             
         </li>
@@ -704,9 +738,99 @@ canvas.setBase({
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <h4 id="user-controlled-bezier-curve-with-star-emitter-along-its-length">User-controlled bezier curve with star emitter along its length</h4>
+              <h4 id="original-entitys">Original entitys</h4>
+<p>For each filter, we shall create a Picture entity which applies that filter to the source image. To make things easier for us later on, we’ll gather these entitys into their own Group</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> originals = scrawl.makeGroup({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;originals&#x27;</span>,
+    <span class="hljs-attr">host</span>: canvas.base.name,
+});
+
+scrawl.makePicture({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;red-filter&#x27;</span>,
+    <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;originals&#x27;</span>,
+    <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;iris&#x27;</span>,
+
+    <span class="hljs-attr">start</span>: [<span class="hljs-number">10</span>, <span class="hljs-number">10</span>],
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">120</span>, <span class="hljs-number">120</span>],
+
+    <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+    <span class="hljs-attr">copyHeight</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
+
+    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;red&#x27;</span>],
+
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;green-filter&#x27;</span>,
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">140</span>,
+    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;green&#x27;</span>],
+
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;blue-filter&#x27;</span>,
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">270</span>,
+    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;blue&#x27;</span>],
+
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;cyan-filter&#x27;</span>,
+    <span class="hljs-attr">start</span>: [<span class="hljs-number">10</span>, <span class="hljs-number">140</span>],
+    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;cyan&#x27;</span>],
+
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;magenta-filter&#x27;</span>,
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">140</span>,
+    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;magenta&#x27;</span>],
+
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;yellow-filter&#x27;</span>,
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">270</span>,
+    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;yellow&#x27;</span>],
+
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;notred-filter&#x27;</span>,
+    <span class="hljs-attr">start</span>: [<span class="hljs-number">10</span>, <span class="hljs-number">270</span>],
+    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;notred&#x27;</span>],
+
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;notgreen-filter&#x27;</span>,
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">140</span>,
+    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;notgreen&#x27;</span>],
+
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;notblue-filter&#x27;</span>,
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">270</span>,
+    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;notblue&#x27;</span>],
+
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;grayscale-filter&#x27;</span>,
+    <span class="hljs-attr">start</span>: [<span class="hljs-number">10</span>, <span class="hljs-number">400</span>],
+    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;grayscale&#x27;</span>],
+
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;sepia-filter&#x27;</span>,
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">140</span>,
+    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;sepia&#x27;</span>],
+
+}).clone({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;invert-filter&#x27;</span>,
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">270</span>,
+    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;invert&#x27;</span>],
+});</pre></div></div>
             
         </li>
         
@@ -717,39 +841,18 @@ canvas.setBase({
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <p>Pins to control the shape of the bezier </p>
+              <h4 id="cache-entitys">Cache entitys</h4>
+<p>We delay creating the Picture entitys that make use of the original entitys’ cached output until after the first Display cycle completes. As for the original entitys, we’ll store the cache entitys in their own group to make things easier for us going forward</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeWheel({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> cache = scrawl.makeGroup({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pin-1&#x27;</span>,
-    <span class="hljs-attr">order</span>: <span class="hljs-number">2</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;cache&#x27;</span>,
+    <span class="hljs-attr">host</span>: canvas.base.name,
+});
 
-    <span class="hljs-attr">startX</span>: <span class="hljs-number">75</span>,
-    <span class="hljs-attr">startY</span>: <span class="hljs-number">200</span>,
-
-    <span class="hljs-attr">handleX</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
-    <span class="hljs-attr">handleY</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
-
-    <span class="hljs-attr">radius</span>: <span class="hljs-number">10</span>,
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
-    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;darkgray&#x27;</span>,
-    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillAndDraw&#x27;</span>,
-
-}).clone({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pin-2&#x27;</span>,
-    <span class="hljs-attr">startX</span>: <span class="hljs-number">225</span>,
-
-}).clone({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pin-3&#x27;</span>,
-    <span class="hljs-attr">startX</span>: <span class="hljs-number">375</span>,
-
-}).clone({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pin-4&#x27;</span>,
-    <span class="hljs-attr">startX</span>: <span class="hljs-number">525</span>,
-});</pre></div></div>
+<span class="hljs-keyword">const</span> createCachePictures = <span class="hljs-function">() =&gt;</span> {</pre></div></div>
             
         </li>
         
@@ -760,15 +863,30 @@ canvas.setBase({
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p>A group to help manage pin drag-and-drop functionality</p>
+              <p>We can get a lot of the data for each cache entity from the original entity that it’s shadowing. And we can iterate through each original entity using the originals Group object</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> pins = scrawl.makeGroup({
+            <div class="content"><div class='highlight'><pre>    originals.artefacts.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-pins&#x27;</span>,
+        <span class="hljs-keyword">let</span> e = entitys[name];
 
-}).addArtefacts(<span class="hljs-string">&#x27;pin-1&#x27;</span>, <span class="hljs-string">&#x27;pin-2&#x27;</span>, <span class="hljs-string">&#x27;pin-3&#x27;</span>, <span class="hljs-string">&#x27;pin-4&#x27;</span>);</pre></div></div>
+        <span class="hljs-keyword">if</span> (e) {
+
+            scrawl.makePicture({
+
+                <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-cached`</span>,
+                <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;cache&#x27;</span>,
+                <span class="hljs-attr">asset</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-image`</span>,
+
+                <span class="hljs-attr">start</span>: e.get(<span class="hljs-string">&#x27;start&#x27;</span>),
+                <span class="hljs-attr">handle</span>: e.get(<span class="hljs-string">&#x27;handle&#x27;</span>),
+                <span class="hljs-attr">dimensions</span>: e.get(<span class="hljs-string">&#x27;dimensions&#x27;</span>),
+                <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+            });
+        }
+    });
+};</pre></div></div>
             
         </li>
         
@@ -779,16 +897,11 @@ canvas.setBase({
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p>Bezier curve using pins as its control points</p>
+              <p>We will also be displaying labels over each Picture entity to let people know which filter we’ve used on the Picture entity. We will position these labels using Picture entitys as pivots.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> userControlledBezier = scrawl.makeBezier({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-bezier&#x27;</span>,
-
-    <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;pin-1&#x27;</span>,
-    <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> addLabels = <span class="hljs-function">() =&gt;</span> {</pre></div></div>
             
         </li>
         
@@ -799,25 +912,97 @@ canvas.setBase({
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <p>start: [75, 200],</p>
+              <p>The Phrase entitys can go in the canvas element’s default Group. To make sure they display correctly (after the Picture entitys have been stamped) we’ll set the default Group’s order attribute to a higher value</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    useStartAsControlPoint: <span class="hljs-literal">true</span>,
+            <div class="content"><div class='highlight'><pre>    groups[canvas.base.name].set({
+        <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
+    });
 
-    <span class="hljs-attr">startControlPivot</span>: <span class="hljs-string">&#x27;pin-2&#x27;</span>,
-    <span class="hljs-attr">startControlLockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
+    scrawl.makePhrase({
 
-    <span class="hljs-attr">endControlPivot</span>: <span class="hljs-string">&#x27;pin-3&#x27;</span>,
-    <span class="hljs-attr">endControlLockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
+        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;red-label&#x27;</span>,
+        <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Red&#x27;</span>,
 
-    <span class="hljs-attr">endPivot</span>: <span class="hljs-string">&#x27;pin-4&#x27;</span>,
-    <span class="hljs-attr">endLockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
+        <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;20px sans-serif&#x27;</span>,
 
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
+        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;white&#x27;</span>,
+        <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">4</span>,
 
-    <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
-});</pre></div></div>
+        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;drawThenFill&#x27;</span>,
+
+        <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;red-filter-cached&#x27;</span>,
+        <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
+        <span class="hljs-attr">offset</span>: [<span class="hljs-number">5</span>, <span class="hljs-number">5</span>],
+
+    }).clone({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;green-label&#x27;</span>,
+        <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Green&#x27;</span>,
+        <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;green-filter-cached&#x27;</span>,
+
+    }).clone({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;blue-label&#x27;</span>,
+        <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Blue&#x27;</span>,
+        <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;blue-filter-cached&#x27;</span>,
+
+    }).clone({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;cyan-label&#x27;</span>,
+        <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Cyan&#x27;</span>,
+        <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;cyan-filter-cached&#x27;</span>,
+
+    }).clone({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;magenta-label&#x27;</span>,
+        <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Magenta&#x27;</span>,
+        <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;magenta-filter-cached&#x27;</span>,
+
+    }).clone({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;yellow-label&#x27;</span>,
+        <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Yellow&#x27;</span>,
+        <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;yellow-filter-cached&#x27;</span>,
+
+    }).clone({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;notred-label&#x27;</span>,
+        <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Notred&#x27;</span>,
+        <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;notred-filter-cached&#x27;</span>,
+
+    }).clone({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;notgreen-label&#x27;</span>,
+        <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Notgreen&#x27;</span>,
+        <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;notgreen-filter-cached&#x27;</span>,
+
+    }).clone({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;notblue-label&#x27;</span>,
+        <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Notblue&#x27;</span>,
+        <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;notblue-filter-cached&#x27;</span>,
+
+    }).clone({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;grayscale-label&#x27;</span>,
+        <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Grayscale&#x27;</span>,
+        <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;grayscale-filter-cached&#x27;</span>,
+
+    }).clone({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;sepia-label&#x27;</span>,
+        <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Sepia&#x27;</span>,
+        <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;sepia-filter-cached&#x27;</span>,
+
+    }).clone({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;invert-label&#x27;</span>,
+        <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Invert&#x27;</span>,
+        <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;invert-filter-cached&#x27;</span>,
+    });
+};</pre></div></div>
             
         </li>
         
@@ -828,30 +1013,26 @@ canvas.setBase({
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <p>Star entity template</p>
+              <h4 id="caching-picture-entity-output">Caching Picture entity output</h4>
+<p>Because we need to recapture filter output whenever the user updates the filters’ <code>opacity</code> attribute, we’ll put these calls in a dedicated function</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> stars = scrawl.makeStar({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> cacheAction = <span class="hljs-function">() =&gt;</span> {
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;particle-star-template&#x27;</span>,
-
-    <span class="hljs-attr">radius1</span>: <span class="hljs-number">6</span>,
-    <span class="hljs-attr">radius2</span>: <span class="hljs-number">4</span>,
-
-    <span class="hljs-attr">points</span>: <span class="hljs-number">5</span>,
-
-    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;gold&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
-    <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>, 
-
-    <span class="hljs-attr">noUserInteraction</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">noPositionDependencies</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">noFilters</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">noDeltaUpdates</span>: <span class="hljs-literal">true</span>,
-});</pre></div></div>
+    scrawl.createImageFromEntity(entitys[<span class="hljs-string">&#x27;red-filter&#x27;</span>], <span class="hljs-literal">true</span>);
+    scrawl.createImageFromEntity(entitys[<span class="hljs-string">&#x27;green-filter&#x27;</span>], <span class="hljs-literal">true</span>);
+    scrawl.createImageFromEntity(entitys[<span class="hljs-string">&#x27;blue-filter&#x27;</span>], <span class="hljs-literal">true</span>);
+    scrawl.createImageFromEntity(entitys[<span class="hljs-string">&#x27;cyan-filter&#x27;</span>], <span class="hljs-literal">true</span>);
+    scrawl.createImageFromEntity(entitys[<span class="hljs-string">&#x27;magenta-filter&#x27;</span>], <span class="hljs-literal">true</span>);
+    scrawl.createImageFromEntity(entitys[<span class="hljs-string">&#x27;yellow-filter&#x27;</span>], <span class="hljs-literal">true</span>);
+    scrawl.createImageFromEntity(entitys[<span class="hljs-string">&#x27;notred-filter&#x27;</span>], <span class="hljs-literal">true</span>);
+    scrawl.createImageFromEntity(entitys[<span class="hljs-string">&#x27;notgreen-filter&#x27;</span>], <span class="hljs-literal">true</span>);
+    scrawl.createImageFromEntity(entitys[<span class="hljs-string">&#x27;notblue-filter&#x27;</span>], <span class="hljs-literal">true</span>);
+    scrawl.createImageFromEntity(entitys[<span class="hljs-string">&#x27;grayscale-filter&#x27;</span>], <span class="hljs-literal">true</span>);
+    scrawl.createImageFromEntity(entitys[<span class="hljs-string">&#x27;sepia-filter&#x27;</span>], <span class="hljs-literal">true</span>);
+    scrawl.createImageFromEntity(entitys[<span class="hljs-string">&#x27;invert-filter&#x27;</span>], <span class="hljs-literal">true</span>);
+};</pre></div></div>
             
         </li>
         
@@ -862,17 +1043,11 @@ canvas.setBase({
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <p>Particle Emitter entity using the bezier curve as its emission line</p>
+              <p>Invoke the cache function before the first Display cycle</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> emitter = scrawl.makeEmitter({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;emitter-1&#x27;</span>,
-    <span class="hljs-attr">world</span>: myWorld,
-
-    <span class="hljs-attr">generationRate</span>: <span class="hljs-number">20</span>,
-    <span class="hljs-attr">killAfterTime</span>: <span class="hljs-number">5</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>cacheAction();</pre></div></div>
             
         </li>
         
@@ -883,31 +1058,29 @@ canvas.setBase({
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
-              <p>We tell the Emitter to generate its particles along our curve by setting its <code>generateAlongPath</code> attribute to the Bezier entity’s String name, or the entity object itself.</p>
+              <h4 id="scene-animation">Scene animation</h4>
+<p>Function to display frames-per-second data, and other information relevant to the demo</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    generateAlongPath: <span class="hljs-string">&#x27;my-bezier&#x27;</span>,
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-attr">artefact</span>: stars.clone({ <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;stars-1&#x27;</span> }),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+        testTime, testNow,
+        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-attr">stampAction</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) </span>{
+    <span class="hljs-keyword">let</span> opacity = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#opacity&#x27;</span>);
 
-        <span class="hljs-keyword">let</span> history = particle.history,
-            remaining, start, z;
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">if</span> (history.length) {
+        testNow = <span class="hljs-built_in">Date</span>.now();
+        testTime = testNow - testTicker;
+        testTicker = testNow;
 
-            [remaining, z, ...start] = history[<span class="hljs-number">0</span>];
-
-            artefact.simpleStamp(host, {
-
-                start, 
-                <span class="hljs-attr">globalAlpha</span>: remaining / <span class="hljs-number">5</span>,
-            });
-        }
-    },
-});</pre></div></div>
+        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
+    Opacity: <span class="hljs-subst">${opacity.value}</span>`</span>;
+    };
+}();</pre></div></div>
             
         </li>
         
@@ -918,9 +1091,15 @@ canvas.setBase({
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
-              <h4 id="other-examples-of-emission-along-a-path">Other examples of emission along a path</h4>
+              <p>Create the Display cycle animation</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.makeRender({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-animation&quot;</span>,
+    <span class="hljs-attr">target</span>: canvas,
+    <span class="hljs-attr">afterShow</span>: report,</pre></div></div>
             
         </li>
         
@@ -931,29 +1110,16 @@ canvas.setBase({
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
-              <p>Static line</p>
+              <h4 id="caching-continued">Caching (continued)</h4>
+<p>Hide the originals group; create the Picture entitys that will display the cached images, alongside the Phrase labels that describe them</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeLine({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;line-1&#x27;</span>,
-    <span class="hljs-attr">start</span>: [<span class="hljs-number">50</span>, <span class="hljs-number">50</span>],
-    <span class="hljs-attr">end</span>: [<span class="hljs-number">550</span>, <span class="hljs-number">50</span>],
-    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;green&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
-    <span class="hljs-attr">roll</span>: <span class="hljs-number">10</span>,
-    <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
-});
-
-emitter.clone({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;emitter-2&#x27;</span>,
-    <span class="hljs-attr">artefact</span>: stars.clone({ 
-        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;stars-2&#x27;</span>,
-        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
-    }),
-    <span class="hljs-attr">generateAlongPath</span>: <span class="hljs-string">&#x27;line-1&#x27;</span>,
+            <div class="content"><div class='highlight'><pre>    afterCreated: <span class="hljs-function">() =&gt;</span> {
+        originals.set({ <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span> });
+        createCachePictures();
+        addLabels();
+    },
 });</pre></div></div>
             
         </li>
@@ -965,31 +1131,24 @@ emitter.clone({
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
-              <p>Static oval</p>
+              <h4 id="user-interaction">User interaction</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeOval({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;oval-1&#x27;</span>,
-    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-number">320</span>],
-    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-    <span class="hljs-attr">radiusX</span>: <span class="hljs-number">90</span>,
-    <span class="hljs-attr">radiusY</span>: <span class="hljs-number">50</span>,
-    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;green&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
-    <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
-});
-
-emitter.clone({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;emitter-3&#x27;</span>,
-    <span class="hljs-attr">artefact</span>: stars.clone({ 
-        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;stars-3&#x27;</span>,
-        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
-    }),
-    <span class="hljs-attr">generateAlongPath</span>: <span class="hljs-string">&#x27;oval-1&#x27;</span>,
-});</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myFilters = [
+    filters.red,
+    filters.green,
+    filters.blue,
+    filters.cyan,
+    filters.magenta,
+    filters.yellow,
+    filters.notred,
+    filters.notgreen,
+    filters.notblue,
+    filters.grayscale,
+    filters.sepia,
+    filters.invert
+];</pre></div></div>
             
         </li>
         
@@ -1000,26 +1159,15 @@ emitter.clone({
               <div class="sswrap ">
                 <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
-              <h4 id="scene-animation">Scene animation</h4>
-<p>Function to display frames-per-second data, and other information relevant to the demo</p>
+              <p>Update the <code>opacity</code> attribute for all the filters</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
-        testTime, testNow, dragging,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+    <span class="hljs-keyword">let</span> val = <span class="hljs-built_in">parseFloat</span>(e.target.value);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-        testNow = <span class="hljs-built_in">Date</span>.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
-    };
-}();</pre></div></div>
+    myFilters.forEach(<span class="hljs-function"><span class="hljs-params">f</span> =&gt;</span> f.set({ <span class="hljs-attr">opacity</span>: val }));</pre></div></div>
             
         </li>
         
@@ -1030,16 +1178,13 @@ emitter.clone({
               <div class="sswrap ">
                 <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
-              <p>Create the Display cycle animation</p>
+              <p>To capture the new filtered output we need to make sure the original entitys take part in the next Display cycle. We also need to instruct them to capture the results of that Display cycle</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeRender({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
-    <span class="hljs-attr">target</span>: canvas,
-    <span class="hljs-attr">afterShow</span>: report,
-});</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    originals.set({ <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span> });
+    cache.set({ <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span> });
+    cacheAction();</pre></div></div>
             
         </li>
         
@@ -1050,16 +1195,16 @@ emitter.clone({
               <div class="sswrap ">
                 <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
-              <h4 id="user-interaction">User interaction</h4>
+              <p>We give the Display cycle sufficient time to run before again hiding the original entitys and displaying the cache entitys in their place</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeDragZone({
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
+        originals.set({ <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span> });
+        cache.set({ <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span> });
+    }, <span class="hljs-number">50</span>);
 
-    <span class="hljs-attr">zone</span>: canvas,
-    <span class="hljs-attr">collisionGroup</span>: pins,
-    <span class="hljs-attr">endOn</span>: [<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-string">&#x27;leave&#x27;</span>],
-});</pre></div></div>
+}, <span class="hljs-string">&#x27;#opacity&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1069,6 +1214,21 @@ emitter.clone({
               
               <div class="sswrap ">
                 <a class="ss" href="#section-20">&#x00a7;</a>
+              </div>
+              <p>Setup form</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#opacity&#x27;</span>).value = <span class="hljs-number">1</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 
