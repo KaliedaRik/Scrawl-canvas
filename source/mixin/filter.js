@@ -84,6 +84,7 @@ export default function (P = {}) {
     P.cleanFilters = function () {
 
         this.dirtyFilters = false;
+        this.dirtyFiltersCache = true;
 
         if (!this.filters) this.filters = [];
 
@@ -158,7 +159,7 @@ export default function (P = {}) {
         return this;
     };
 
-// `preprocessFilters` - internal function called as part of the Display cycle. The __process-image__ filter action loads a Scrawl-canvas asset into the filters web worker, where it can be used as a lineIn or lineMix argument for other filter actions.
+// `preprocessFilters` - internal function called as part of the Display cycle. The __process-image__ filter action loads a Scrawl-canvas asset into the filters engine, where it can be used as a lineIn or lineMix argument for other filter actions.
     P.preprocessFilters = function (filters) {
 
         filters.forEach(filter => {

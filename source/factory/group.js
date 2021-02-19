@@ -208,35 +208,19 @@ P.getHost = function (item) {
 
     if (!host || host.substring) return artefact[item] || cell[item] || artefact[host] || cell[host] || null;
     else return host;
-
-    // if (host && item === host.name) return host;
-    // else if (item) return artefact[item] || cell[item] || null;
 };
 
 // `forceStamp` - invoke the Group to instruct its artefact members to perform a `stamp` action, ignoring whether the Group `visibility` flag setting
 P.forceStamp = function () {
 
-    var self = this;
-
-    return new Promise((resolve) => {
-
-        let v = self.visibility;
-        self.visibility = true;
-
-        self.stamp()
-        .then((res) => {
-            self.visibility = v;
-            resolve(res);
-        })
-        .catch((err) => {
-            self.visibility = v;
-            resolve(err);
-        });
-    });
+    let v = this.visibility;
+    this.visibility = true;
+    this.stamp()
+    this.visibility = v;
 };
 
 
-// `stamp` - the Display Cycle is mediated through Groups - these Group functions control display functionality via a series of Promise cascades which in turn allow individual artefacts to make use of web workers, where appropriate, to achieve their stamping functionality - for example when they need to apply image filters to their output.
+// `stamp` - the Display Cycle is mediated through Groups.
 P.stamp = function () {
 
     // Check we have a host of some sort (either a Stack artefact or a Cell asset)
@@ -250,88 +234,58 @@ P.stamp = function () {
         else this.dirtyHost = true;
     }
 
-    let self = this;
+    if (this.visibility) {
 
-    return new Promise((resolve, reject) => {
+        let { currentHost, stashOutput, noFilters, filters } = this;
 
-        if (self.visibility) {
+        if (currentHost) {
 
-            let currentHost = self.currentHost;
+            // Check if artefacts need to be sorterd and, if yes, sort them by their order attribute
+            this.sortArtefacts();
 
-            if (currentHost) {
+            // Check to see if there is a Group filter in place or if the Group needs to stash its output and, if yes, pull a Cell asset from the pool
+            let filterCell = (stashOutput || (!noFilters && filters && filters.length)) ?
+                requestCell() :
+                false;
 
-                // Check if artefacts need to be sorterd and, if yes, sort them by their order attribute
-                self.sortArtefacts();
+            // Setup the pool Cell, if required
+            if (filterCell && filterCell.element) {
 
-                // Check to see if there is a Group filter in place or if the Group needs to stash its output and, if yes, pull a Cell asset from the pool
-                let filterCell = (self.stashOutput || (!self.noFilters && self.filters && self.filters.length)) ?
-                    requestCell() :
-                    false;
+                let dims = currentHost.currentDimensions;
 
-                // Setup the pool Cell, if required
-                if (filterCell && filterCell.element) {
+                if (dims) {
 
-                    let dims = currentHost.currentDimensions;
-
-                    if (dims) {
-
-                        filterCell.element.width = dims[0];
-                        filterCell.element.height = dims[1];
-                    }
-                    filterCell.engine.save();
+                    filterCell.element.width = dims[0];
+                    filterCell.element.height = dims[1];
                 }
-                // We save/restore the canvas engine at this point because some entitys may have their `method` attribute set to `clip` and the only way to get rid of a clip region from an engine is to save the engine before applying the clip, then restoring the engine afterwards
-                // + This has implications for tracking engine attributes
-                else if (currentHost.engine) currentHost.engine.save();
-
-                // Prepare the Group's artefacts for the forthcoming stamp activity
-                self.prepareStamp(filterCell);
-
-                // Get the Group's artefacts to stamp themselves on the current host or pool Cell
-                self.stampAction(filterCell)
-                .then(res => {
-
-                    if (filterCell) {
-
-                        filterCell.engine.restore();
-                        releaseCell(filterCell);
-                    }
-                    else {
-
-                        if (currentHost.engine) {
-
-                            currentHost.engine.restore();
-                            currentHost.setEngineFromState(currentHost.engine);
-                        }
-                    }
-                    resolve(self.name);
-                })
-                .catch(err => {
-
-                    if (filterCell) {
-
-                        filterCell.engine.restore();
-                        releaseCell(filterCell);
-                    }
-                    else {
-
-                        if (currentHost.engine) {
-
-                            currentHost.engine.restore();
-                            currentHost.setEngineFromState(currentHost.engine);
-                        }
-                    }
-                    reject(err)
-                });
+                filterCell.engine.save();
             }
 
-            // Bale out of the stamp functionality if the Group has no host on which to perform its actions
-            else resolve(false);
-        }
+            // We save/restore the canvas engine at this point because some entitys may have their `method` attribute set to `clip` and the only way to get rid of a clip region from an engine is to save the engine before applying the clip, then restoring the engine afterwards
+            // + This has implications for tracking engine attributes
+            else if (currentHost.engine) currentHost.engine.save();
 
-        // Bale out of the stamp functionality if the Group is not visible
-        else resolve(false);
-    });
+            // Prepare the Group's artefacts for the forthcoming stamp activity
+            this.prepareStamp(filterCell);
+
+            // Get the Group's artefacts to stamp themselves on the current host or pool Cell
+            this.stampAction(filterCell);
+
+            if (filterCell) {
+
+                filterCell.engine.restore();
+                releaseCell(filterCell);
+            }
+            else {
+
+                if (currentHost.engine) {
+
+                    currentHost.engine.restore();
+                    currentHost.setEngineFromState(currentHost.engine);
+                }
+            }
+        }
+    }
 };
 
 // `sortArtefacts` - internal function. Uses a bucket sort algorithm
@@ -358,7 +312,7 @@ P.sortArtefacts = function () {
     }
 };
 
-// `prepareStamp` - initial action in the Display cycle, before Stacks/Cells start their clear/compile/show Promise cascade
+// `prepareStamp` - initial action in the Display cycle, before Stacks/Cells start their clear/compile/show cascade
 P.prepareStamp = function (myCell) {
 
     let host = this.currentHost;
@@ -382,172 +336,107 @@ P.prepareStamp = function (myCell) {
     });
 };
 
-// `stampAction` - the key Group-mediated action in the Display cycle, invoked as part of the `compile` functionality. Returns a Promise defined in the `next` local function, which will be recursively called as the Group processes each of its member artifacts in turn. After the final artefact is processed the Promise chain will collapse to resolution.
-//
-// We process artefacts in this way because some artefacts may need to make asynchronous calls as part of their functionality - for example, when an entity needs to apply a filter to its output.
+// `stampAction` - the key Group-mediated action in the Display cycle, invoked as part of the `compile` functionality.
 P.stampAction = function (myCell) {
 
     let mystash = (this.currentHost && this.currentHost.stashOutput) ? true : false;
 
-    if (this.dirtyFilters || !this.currentFilters) this.cleanFilters();
+    let { dirtyFilters, currentFilters, artefactBuckets, noFilters, filters, stashOutput, currentHost } = this;
 
-    let self = this;
+    if (dirtyFilters || !currentFilters) this.cleanFilters();
 
-    // The `next` function, called recursively as each artefact member gets processed by the Group.
-    let next = (counter) => {
+    artefactBuckets.forEach(art => {
 
-        return new Promise((resolve, reject) => {
+        if (art && art.stamp) art.stamp();
+    });
 
-            let art = self.artefactBuckets[counter];
+    if (myCell) {
 
-            if (art && art.stamp) {
+        if (!noFilters && filters && filters.length) {
 
-                art.stamp()
-                .then(() => {
+            let img = this.applyFilters(myCell);
+            this.stashAction(img);
+        }
+        else if (stashOutput) {
 
-                    next(counter + 1)
-                    .then(res => resolve(true))
-                    .catch(err => reject(err));
-                })
-                .catch(err => reject(err));
+            // We set up things to draw the group on a pool cell if the Group's `stashOutput` flag is set to true - so now we have to paint it back into the host Cell
+            let tempElement = myCell.element,
+                tempEngine = myCell.engine,
+                realEngine = (currentHost && currentHost.engine) ? currentHost.engine : false;
+
+            if (realEngine) {
+
+                realEngine.save();
+                
+                realEngine.globalCompositeOperation = 'source-over';
+                realEngine.globalAlpha = 1;
+                realEngine.setTransform(1, 0, 0, 1, 0, 0);
+
+                realEngine.drawImage(tempElement, 0, 0);
+                
+                realEngine.restore();
+
+                let tempImg = tempEngine.getImageData(0, 0, tempElement.width, tempElement.height);
+
+                this.stashAction(tempImg);
             }
-
-            // The else branch should only trigger once all the artefacts have been processed. At this point we should be okay to action any Group-level filters on the (entity) artefact output
-            else {
-
-                if (myCell) {
-
-                    if (!self.noFilters && self.filters && self.filters.length) {
-
-                        self.applyFilters(myCell)
-                        .then(img => self.stashAction(img))
-                        .then(res => resolve(true))
-                        .catch(err => reject(err));
-                    }
-                    else if (self.stashOutput) {
-
-                        // We set up things to draw the group on a pool cell if the Group's `stashOutput` flag is set to true - so now we have to paint it back into the host Cell
-                        let tempElement = myCell.element,
-                            tempEngine = myCell.engine,
-                            realEngine = (self.currentHost && self.currentHost.engine) ? 
-                                self.currentHost.engine : false;
-
-                        if (realEngine) {
-
-                            realEngine.save();
-                            
-                            realEngine.globalCompositeOperation = 'source-over';
-                            realEngine.globalAlpha = 1;
-                            realEngine.setTransform(1, 0, 0, 1, 0, 0);
-
-                            realEngine.drawImage(tempElement, 0, 0);
-                            
-                            realEngine.restore();
-
-                            let tempImg = tempEngine.getImageData(0, 0, tempElement.width, tempElement.height);
-
-                            self.stashAction(tempImg)
-                            .then(res => resolve(true))
-                            .catch(err => reject(err));
-                        }
-                        else reject ('Could not find real engine');
-                    }
-                    else resolve(true);
-                }
-
-                // Terminate the cascade and start the resolution collapse
-                else resolve(true);
-            }
-        });
-    };
-
-    // Start the artefact `stamp` cascade
-    return next(0);
+        }
+    }
 };
 
-// `applyFilters` - filters can be applied to entity artefacts at the group level, in addition to any filters applied at the entity level. Returns a promise, as filters use web-workers, which are asynchronous.
+// `applyFilters` - filters can be applied to entity artefacts at the group level, in addition to any filters applied at the entity level.
 P.applyFilters = function (myCell) {
 
-    // Clean and sort the Group-level filters before sending them to the filter worker for application
-    let self = this;
+    let currentHost = this.currentHost,
+        filterHost = myCell;
 
-    return new Promise((resolve, reject) => {
+    if (!currentHost || !filterHost) return false;
 
-        // Determine if we have all the required resources to perform the filter operation and, if not, clean up and resolve
-        let currentHost = self.currentHost,
-            filterHost = myCell;
+    // Get handles to current and filter Cell elements and engines
+    let currentElement = currentHost.element,
+        currentEngine = currentHost.engine;
 
-        if (!currentHost || !filterHost) reject('Group.applyFilters - no host');
+    let filterElement = filterHost.element,
+        filterEngine = filterHost.engine;
 
-        // An internal cleanup function to release resources and restore the non-filter defaults to what they were before. It's also in the cleanup phase that we (finally) copy over the results of the filter over to the current Cell display, taking into account the Group's `composite` and `alpha` values
-        let cleanup = function () {
-
-            releaseFilterWorker(worker);
-
-            currentEngine.save();
-            
-            // currentEngine.globalCompositeOperation = self.filterComposite;
-            // currentEngine.globalAlpha = self.filterAlpha;
-            currentEngine.setTransform(1, 0, 0, 1, 0, 0);
-
-            currentEngine.drawImage(filterElement, 0, 0);
-            
-            currentEngine.restore();
-        };
-
-        // Get handles to current and filter Cell elements and engines
-        let currentElement = currentHost.element,
-            currentEngine = currentHost.engine;
-
-        let filterElement = filterHost.element,
-            filterEngine = filterHost.engine;
-
-        // Action a request to use the filtered artefacts as a stencil - as determined by the Group's `isStencil` flag
-        if (self.isStencil) {
-            
-            filterEngine.save();
-            filterEngine.globalCompositeOperation = 'source-in';
-            filterEngine.globalAlpha = 1;
-            filterEngine.setTransform(1, 0, 0, 1, 0, 0);
-            filterEngine.drawImage(currentElement, 0, 0);
-            filterEngine.restore();
-        } 
-
-        // At this point we will send the contents of the filterHost canvas over to the web worker, alongside details of the filters we wish to apply to it
+    // Action a request to use the filtered artefacts as a stencil - as determined by the Group's `isStencil` flag
+    if (this.isStencil) {
+        
+        filterEngine.save();
+        filterEngine.globalCompositeOperation = 'source-in';
+        filterEngine.globalAlpha = 1;
         filterEngine.setTransform(1, 0, 0, 1, 0, 0);
+        filterEngine.drawImage(currentElement, 0, 0);
+        filterEngine.restore();
+    } 
 
-        let myimage = filterEngine.getImageData(0, 0, filterElement.width, filterElement.height),
-            worker = requestFilterWorker();
+    // At this point we will send the contents of the filterHost canvas over to the filter engine
+    filterEngine.setTransform(1, 0, 0, 1, 0, 0);
 
-        // NEED TO POPULATE IMAGE FILTER ACTION OBJECTS WITH THEIR ASSET'S IMAGEDATA AT THIS POINT
-        self.preprocessFilters(self.currentFilters);
+    let myimage = filterEngine.getImageData(0, 0, filterElement.width, filterElement.height),
+        worker = requestFilterWorker();
 
-        actionFilterWorker(worker, {
-            image: myimage,
-            filters: self.currentFilters,
-        })
-        .then(img => {
+    // NEED TO POPULATE IMAGE FILTER ACTION OBJECTS WITH THEIR ASSET'S IMAGEDATA AT THIS POINT
+    this.preprocessFilters(this.currentFilters);
 
-            // Copy the filter worker's output back onto the filterHost canvas
-            if (img) {
+    let img = actionFilterWorker(worker, {
+        image: myimage,
+        filters: this.currentFilters,
+    })
 
-                filterEngine.globalCompositeOperation = 'source-over';
-                filterEngine.globalAlpha = 1;
-                filterEngine.setTransform(1, 0, 0, 1, 0, 0);
-                filterEngine.putImageData(img, 0, 0);
+    if (img) {
 
-                // On success, cleanup and resolve
-                cleanup();
-                resolve(img);
-            }
-            else throw new Error('image issue');
-        })
-        .catch(err => {
+        filterEngine.globalCompositeOperation = 'source-over';
+        filterEngine.globalAlpha = 1;
+        filterEngine.setTransform(1, 0, 0, 1, 0, 0);
+        filterEngine.putImageData(img, 0, 0);
+    }
+    currentEngine.save();
+    currentEngine.setTransform(1, 0, 0, 1, 0, 0);
+    currentEngine.drawImage(filterElement, 0, 0);
+    currentEngine.restore();
 
-            cleanup();
-            reject(err);
-        });
-    });
+    return img;
 };
 
 
@@ -556,55 +445,47 @@ P.applyFilters = function (myCell) {
 // NOTE: the `stashOutput` and `stashOutputAsAsset` flags are not Group object attributes. They are set on the group as a result of invoking the `scrawl.createImageFromGroup` function, and will be set to false as soon as the `Group.stashAction` function runs (in other words, stashing a Group's output is a one-off operation).
 P.stashAction = function (img) {
 
-    if (!img) return Promise.reject('No image data supplied to stashAction');
+    if (!img) return false;
 
     if (this.stashOutput) {
 
         this.stashOutput = false;
 
-        let self = this;
+        let [x, y, width, height] = this.getCellCoverage(img);
 
-        return new Promise ((resolve, reject) => {
+        let myCell = requestCell(),
+            myEngine = myCell.engine,
+            myElement = myCell.element;
 
-            let [x, y, width, height] = self.getCellCoverage(img);
+        myElement.width = width;
+        myElement.height = height;
 
-            let myCell = requestCell(),
-                myEngine = myCell.engine,
-                myElement = myCell.element;
+        myEngine.putImageData(img, -x, -y);
 
-            myElement.width = width;
-            myElement.height = height;
+        this.stashedImageData = myEngine.getImageData(0, 0, width, height);
 
-            myEngine.putImageData(img, -x, -y);
+        if (this.stashOutputAsAsset) {
 
-            self.stashedImageData = myEngine.getImageData(0, 0, width, height);
+            this.stashOutputAsAsset = false;
 
-            if (self.stashOutputAsAsset) {
+            if (!this.stashedImage) {
 
-                self.stashOutputAsAsset = false;
+                let newimg = this.stashedImage = document.createElement('img');
 
-                if (!self.stashedImage) {
+                newimg.id = `${this.name}-groupimage`;
 
-                    let newimg = self.stashedImage = document.createElement('img');
+                newimg.onload = function () {
 
-                    newimg.id = `${self.name}-groupimage`;
+                    scrawlCanvasHold.appendChild(newimg);
+                    importDomImage(`#${newimg.id}`);
+                };
 
-                    newimg.onload = function () {
-
-                        scrawlCanvasHold.appendChild(newimg);
-                        importDomImage(`#${newimg.id}`);
-                    };
-
-                    newimg.src = myElement.toDataURL();
-                }
-                else self.stashedImage.src = myElement.toDataURL();
+                newimg.src = myElement.toDataURL();
             }
-            releaseCell(myCell);
-
-            resolve(true);
-        });
+            else this.stashedImage.src = myElement.toDataURL();
+        }
+        releaseCell(myCell);
     }
-    else return Promise.resolve(false);
 };
 
 // `getCellCoverage` - internal function which calculates the cumulative coverage of the Group's artefacts. Used as part of the `stashAction` functionality

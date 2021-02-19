@@ -1,5 +1,5 @@
 # Scrawl-canvas Library 
-Version: `8.4.0 - 2 Feb 2021` 
+Version: `8.5.0 - 19 Feb 2021` 
 
 Scrawl-canvas website: [scrawl-v8.rikweb.org.uk](https://scrawl-v8.rikweb.org.uk).
 
@@ -46,7 +46,7 @@ There are three main ways to include Scrawl-canvas in your project:
 2. Unzip the file to a folder in your project. 
 3. Import the library into the script code where you will be using it.
 
-Alternatively, a zip package of the v8.4.0 files can be downloaded from this link: [scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-4-0.zip](https://scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-4-0.zip) - this package only includes the minified file.
+Alternatively, a zip package of the v8.5.0 files can be downloaded from this link: [scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-5-0.zip](https://scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-5-0.zip) - this package only includes the minified file.
 
 ```html
 <!-- Hello world -->
@@ -95,7 +95,7 @@ Alternatively, a zip package of the v8.4.0 files can be downloaded from this lin
 This will pull the requested npm package directly into your web page:
 ```html
 <script type="module">
-    import scrawl from 'https://unpkg.com/scrawl-canvas@8.4.0';
+    import scrawl from 'https://unpkg.com/scrawl-canvas@8.5.0';
     [...]
 </script>
 ```
@@ -121,21 +121,16 @@ import scrawl from 'scrawl-canvas';
 ```
 
 ## Local development and testing
-After downloading the library and unzipping it into a directory or folder, cd into that folder on the command line, run `yarn install` or `npm install` (for the toolchain - the library itself has no external dependencies) and start a local server. For instance if you have `http-server` installed:
+After downloading the library and unzipping it into a directory or folder, cd into that folder on the command line, run `yarn install` or `npm install` (for the toolchain - the library itself has no external dependencies) and start a local server. For instance if you have [light-server](https://github.com/txchen/light-server) installed:
 
 ```sh
 $> cd ./path/to/Scrawl-canvas
 $> yarn install
-$> http-server
+$> light-server --serve . --open
 
-Starting up http-server, serving ./
-Available on:
-  http://127.0.0.1:8080
-  http://192.168.0.4:8080
-Hit CTRL-C to stop the server
+light-server is listening at http://0.0.0.0:4000
+  serving static dir: .
 ```
-
-Navigate to http://localhost:8080 to access the documentation and demo tests.
 
 ### Testing
 The code base does not include any ___unit testing___ frameworks. Instead, we rely on a set of Demo tests which allow us to perform ___integration testing___ and ___user interface testing___.

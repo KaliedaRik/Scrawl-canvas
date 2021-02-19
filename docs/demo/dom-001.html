@@ -95,6 +95,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-015a.html">
+                  ./demo/canvas-015a.js
+                </a>
+              
+                
                 <a class="source" href="canvas-016.html">
                   ./demo/canvas-016.js
                 </a>
@@ -395,6 +400,11 @@
                 </a>
               
                 
+                <a class="source" href="filters-002a.html">
+                  ./demo/filters-002a.js
+                </a>
+              
+                
                 <a class="source" href="filters-003.html">
                   ./demo/filters-003.js
                 </a>
@@ -611,8 +621,8 @@
         <li id="section-1">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-1">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="demo-dom-001">Demo DOM 001</h1>
 <p>Loading the scrawl-canvas library using a script tag in the HTML code</p>
@@ -625,8 +635,8 @@
         <li id="section-2">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-2">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
               <p><a href="../../demo/dom-001.html">Run code</a></p>
 
@@ -638,8 +648,8 @@
         <li id="section-3">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-3">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
               <h4 id="imports">Imports</h4>
 <p>Import Scrawl-canvas. It will auto-initialize the page as soon as it loads.</p>
@@ -654,8 +664,8 @@
         <li id="section-4">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <h4 id="scene-setup">Scene setup</h4>
 <p>Define some demo variables. All Scrawl-canvas wrappers for DOM elements can be found in the <strong>scrawl.library.artefact</strong> section of the Scrawl-canvas library. The elements themselves are held in the <strong>domElement</strong> attribute of the wrapper. </p>
@@ -672,8 +682,8 @@
         <li id="section-5">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p>Scrawl-canvas stack elements calculate the positions and dimensions of their member artefacts on the assumption that the stack element itself has no padding. If the element does include padding then all member artefacts will be offset (rightwards and downwards) by the left and top padfding values.</p>
 <p>Stack element padding can be set to zero either using regular CSS, or programatically as shown below.</p>
@@ -693,8 +703,8 @@
         <li id="section-6">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>Position and size the report &lt;div&gt; element, which is where we will be displaying details about the stack.</p>
 <p>Note that moving this div element will leave a gap at the top of the stack. The positions and dimensions of Stack member artefacts (in other words, all immediate child elements of the stack element) are calculated when Scrawl-canvas initializes, before Scrawl-canvas updates their CSS position value to “absolute”. Thus moving the report div downwards will not trigger a DOM redraw/reflow action</p>
@@ -713,8 +723,8 @@
         <li id="section-7">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>The animation loop updates the output with details of the stack’s dimensions and positioning, and details of the mouse cursor’s position in relation to the stack’s top-left hand corner.</p>
@@ -730,8 +740,8 @@
         <li id="section-8">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>Giving the animation object a name will make it easy to find in the Scrawl-canvas library object</p>
 
@@ -745,31 +755,27 @@
         <li id="section-9">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p>Every animation object must include a <strong>fn</strong> function attribute which <strong><em>MUST</em></strong> return a Promise object - even if the functionality within the function is entirely synchronous. </p>
+              <p>Every animation object must include a <strong>fn</strong> function attribute which <em><strong>MUST</strong></em> return a Promise object - even if the functionality within the function is entirely synchronous. </p>
 <p>This is because some animation functions (for instance: canvas filters) rely on web workers to speed up their calculations which are - by definition - asynchronous. The promise should resolve as true if all is well; false otherwise</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    fn: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve</span>) =&gt;</span> {
+        scrawl.render()
 
-            scrawl.render()
-            .then(<span class="hljs-function">() =&gt;</span> {
+        <span class="hljs-keyword">let</span> here = myStack.here || {};
 
-                <span class="hljs-keyword">let</span> here = myStack.here || {};
-
-                reportmessage.textContent =  <span class="hljs-string">`File dom-001.js has loaded successfully
+        reportmessage.textContent =  <span class="hljs-string">`File dom-001.js has loaded successfully
    Stack name: <span class="hljs-subst">${myStack.name}</span> - width: <span class="hljs-subst">${here.w}</span>, height: <span class="hljs-subst">${here.h}</span>
    Interaction type: <span class="hljs-subst">${here.type}</span> - active: <span class="hljs-subst">${here.active}</span>
    Current cursor coordinates - x: <span class="hljs-subst">${here.x}</span>, y: <span class="hljs-subst">${here.y}</span> 
    Current stack normals values - x: <span class="hljs-subst">${here.normX.toFixed(<span class="hljs-number">4</span>)}</span>, y: <span class="hljs-subst">${here.normY.toFixed(<span class="hljs-number">4</span>)}</span>`</span>;
-
-                resolve(<span class="hljs-literal">true</span>);
-            })</pre></div></div>
+    }
+});</pre></div></div>
             
         </li>
         
@@ -777,30 +783,8 @@
         <li id="section-10">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
-              </div>
-              <p>Always (ALWAYS!) include a .catch function in the render promise chain (usually at the end)</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> {
-
-                reportmessage.textContent = err.message;
-                resolve(<span class="hljs-literal">false</span>);
-            });
-        });
-    }
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 <p>Because the code has been loaded as a <strong>module</strong>, Scrawl-canvas attributes and functions do not get added to the global namespace. For development work, we can overcome this issue (to a small extent) by console logging the scrawl library, so we can check internal attribute values and calculation results.</p>
@@ -812,11 +796,11 @@
         </li>
         
         
-        <li id="section-12">
+        <li id="section-11">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>A more interactive method is to assign the scrawl object to a window global variable - this then allows us to access all of the objects created by Scrawl-canvas and interact with them in the browser console:</p>
 <pre><code><span class="hljs-comment">// In the .js module file</span>
@@ -827,7 +811,8 @@
 b.set({ ... etc ... });
 
 <span class="hljs-keyword">let</span> a = scrawl.library.artefact[<span class="hljs-string">&#x27;my-artefact&#x27;</span>];
-a.set({ ... etc ... })</code></pre>
+a.set({ ... etc ... })
+</code></pre>
 
             </div>
             

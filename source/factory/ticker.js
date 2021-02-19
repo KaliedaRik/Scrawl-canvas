@@ -461,7 +461,6 @@ P.setEffectiveDuration = function() {
 // `fn` - internal - the __animation function__ will trigger once per RequestAnimationFrame (RAF) tick - approximately 60 times a second, depending on other calculation work.
 // + Only triggers when the Ticker is running in a qualifying state.
 // + __reverseOrder__ argument is a Boolean value; when set, subscribed Tween/Action objects will be processed in reverse order.
-// + Note that ___this function is synchronous___ - it does not return a Promise. _This will need to change if we ever move some Ticker/Tween/Action functionality over to a web worker_.
 P.fn = function (reverseOrder) {
 
     // Request a `result` object from the pool.
@@ -812,49 +811,42 @@ const coreTickersAnimation = makeAnimation({
     order: 0,
     fn: function () {
 
-        return new Promise((resolve) => {
-            
-            let i, iz, t;
+        let i, iz, t;
 
-            // We only sort active Ticker objects when absolutely necessary.
-            // + Sorted using a bucket sort algorithm.
-            if (tickerAnimationsFlag) {
+        // We only sort active Ticker objects when absolutely necessary.
+        // + Sorted using a bucket sort algorithm.
+        if (tickerAnimationsFlag) {
 
-                tickerAnimationsFlag = false;
+            tickerAnimationsFlag = false;
 
-                let tans = [].concat(tickerAnimations),
-                    floor = Math.floor,
-                    buckets = [];
+            let tans = [].concat(tickerAnimations),
+                floor = Math.floor,
+                buckets = [];
 
-                tans.forEach(name => {
-
-                    let obj = animationtickers[name];
-
-                    if (xt(obj)) {
-
-                        let order = floor(obj.order) || 0;
-
-                        if (!buckets[order]) buckets[order] = [];
-
-                        buckets[order].push(obj.name);
-                    }
-                });
-                tickerAnimations = buckets.reduce((a, v) => a.concat(v), []);
-            }
-
-            // Invoke each Ticker's `fn` function.
-            // + It's up to the Ticker object to decide whether it's active
-            // + Ticker `fn` functions are (currently) synchronous functions; they do not return Promises.
-            tickerAnimations.forEach(name => {
+            tans.forEach(name => {
 
                 let obj = animationtickers[name];
 
-                if (obj && obj.fn) obj.fn();
+                if (xt(obj)) {
 
+                    let order = floor(obj.order) || 0;
+
+                    if (!buckets[order]) buckets[order] = [];
+
+                    buckets[order].push(obj.name);
+                }
             });
+            tickerAnimations = buckets.reduce((a, v) => a.concat(v), []);
+        }
 
-            // Will only resolve the Promise when all Tickers (and their subscribed Tween/Actions) have processed their `fn`/`update` functions.
-            resolve(true);
+        // Invoke each Ticker's `fn` function.
+        // + It's up to the Ticker object to decide whether it's active
+        // + Ticker `fn` functions are (currently) synchronous functions; they do not return Promises.
+        tickerAnimations.forEach(name => {
+
+            let obj = animationtickers[name];
+
+            if (obj && obj.fn) obj.fn();
         });
     }
 });

@@ -123,7 +123,7 @@ const generateUuid = () => {
 };
 
 
-// __generateUuid__ is a simple (crude) uuid generator 
+// __generateUniqueString__ is a simple random String generator
 // https://gist.github.com/SimonHoiberg/ad2710c8626c5a74cddd8f6385795cc0
 // (imported 2020-11-22)
 const generateUniqueString = () => {

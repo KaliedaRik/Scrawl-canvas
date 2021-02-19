@@ -125,6 +125,11 @@
                 </a>
               
                 
+                <a class="source" href="filterEngine.html">
+                  ./source/factory/filterEngine.js
+                </a>
+              
+                
                 <a class="source" href="fontAttributes.html">
                   ./source/factory/fontAttributes.js
                 </a>
@@ -429,16 +434,6 @@
                   ./source/mixin/tween.js
                 </a>
               
-                
-                <a class="source" href="../worker/filter-string.html">
-                  ./source/worker/filter-string.js
-                </a>
-              
-                
-                <a class="source" href="../worker/filter.html">
-                  ./source/worker/filter.js
-                </a>
-              
             </div>
           </div>
         </li>
@@ -451,8 +446,8 @@
         <li id="section-1">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-1">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="vector-factory">Vector factory</h1>
 <p>Scrawl-canvas uses vector objects for some of its calculations - in particular for calculating rotations. These objects are not stored in the library; rather, they are kept in a <strong>vector pool</strong> and pulled from it when required.</p>
@@ -465,8 +460,8 @@
         <li id="section-2">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-2">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
               <h4 id="imports">Imports</h4>
 
@@ -481,8 +476,8 @@
         <li id="section-3">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-3">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
               <h4 id="vector-constructor">Vector constructor</h4>
 
@@ -505,8 +500,8 @@
         <li id="section-4">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <h4 id="vector-prototype">Vector prototype</h4>
 
@@ -521,8 +516,8 @@ P.type = <span class="hljs-string">&#x27;Vector&#x27;</span>;</pre></div></div>
         <li id="section-5">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
 <p>Vector objects do not use mixins - they are regular Javascript objects. As such, they do not possess packet, clone or kill functionality.</p>
@@ -535,8 +530,8 @@ P.type = <span class="hljs-string">&#x27;Vector&#x27;</span>;</pre></div></div>
         <li id="section-6">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="vector-attributes">Vector attributes</h4>
 <p>The <strong>x</strong>, <strong>y</strong> and <strong>z</strong> attributes are set in the Vector constructor - the Vector object does not have a <code>defs</code> object.</p>
@@ -549,8 +544,8 @@ P.type = <span class="hljs-string">&#x27;Vector&#x27;</span>;</pre></div></div>
         <li id="section-7">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -562,8 +557,8 @@ P.type = <span class="hljs-string">&#x27;Vector&#x27;</span>;</pre></div></div>
         <li id="section-8">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>Vector attributes can be retrieved directly - <code>myvector.x</code>, etc. The following convenience getters are defined on the Vector prototype, and return an Array</p>
 
@@ -585,8 +580,8 @@ P.getXYZCoordinate = <span class="hljs-function"><span class="hljs-keyword">func
         <li id="section-9">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>Vector attributes can be set directly - <code>myvector.x = 0</code>, etc. The following convenience setters are defined on the Vector prototype</p>
 
@@ -635,8 +630,8 @@ P.setXY = <span class="hljs-function"><span class="hljs-keyword">function</span>
         <li id="section-10">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>The Vector <code>set</code> function is overloaded. It can accept the following arguments:</p>
 <ul>
@@ -691,8 +686,8 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
         <li id="section-11">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -704,8 +699,8 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
         <li id="section-12">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>Set the Vector attributes to their default values</p>
 
@@ -726,8 +721,8 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
         <li id="section-13">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Add a Vector, or an Array of Number values, to this Vector</p>
 
@@ -763,8 +758,8 @@ P.vectorAddArray = <span class="hljs-function"><span class="hljs-keyword">functi
         <li id="section-14">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Subtract a Vector, or an Array of Number values, from this Vector</p>
 
@@ -800,8 +795,8 @@ P.vectorSubtractArray = <span class="hljs-function"><span class="hljs-keyword">f
         <li id="section-15">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>Multiply all Vector attributes by the argument Number</p>
 
@@ -848,8 +843,8 @@ P.vectorMultiplyArray = <span class="hljs-function"><span class="hljs-keyword">f
         <li id="section-16">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>Divide all Vector attributes by the argument Number</p>
 
@@ -873,8 +868,8 @@ P.vectorMultiplyArray = <span class="hljs-function"><span class="hljs-keyword">f
         <li id="section-17">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>Get the Vector’s <strong>magnitude</strong> value</p>
 
@@ -891,8 +886,8 @@ P.vectorMultiplyArray = <span class="hljs-function"><span class="hljs-keyword">f
         <li id="section-18">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>Rotate a Vector by a given angle. Argument is a Number representing degrees, not radians.</p>
 
@@ -919,8 +914,8 @@ P.vectorMultiplyArray = <span class="hljs-function"><span class="hljs-keyword">f
         <li id="section-19">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>Change the numerical sign of all Vector attributes</p>
 
@@ -941,8 +936,8 @@ P.vectorMultiplyArray = <span class="hljs-function"><span class="hljs-keyword">f
         <li id="section-20">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p>Normalize the Vector</p>
 
@@ -966,8 +961,8 @@ P.vectorMultiplyArray = <span class="hljs-function"><span class="hljs-keyword">f
         <li id="section-21">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <h4 id="vector-pool">Vector pool</h4>
 <p>An attempt to reuse vectors rather than constantly creating and deleting them</p>
@@ -982,8 +977,8 @@ P.vectorMultiplyArray = <span class="hljs-function"><span class="hljs-keyword">f
         <li id="section-22">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p><code>exported function</code> - retrieve a Vector from the vector pool</p>
 
@@ -1006,8 +1001,8 @@ P.vectorMultiplyArray = <span class="hljs-function"><span class="hljs-keyword">f
         <li id="section-23">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p><code>exported function</code> - return a Vector to the vector pool. Failing to return Vectors to the pool may lead to more inefficient code and possible memory leaks.</p>
 
@@ -1024,8 +1019,8 @@ P.vectorMultiplyArray = <span class="hljs-function"><span class="hljs-keyword">f
         <li id="section-24">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
@@ -1044,8 +1039,8 @@ P.vectorMultiplyArray = <span class="hljs-function"><span class="hljs-keyword">f
         <li id="section-25">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

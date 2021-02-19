@@ -1,122 +1,48 @@
-// # Scrawl-canvas filters web worker
-// This web worker code is called in a just-in-time manner; the code will not be requested from the server until a Scrawl-canvas entity, Group or Cell with a non-zero `filters` attribute is processed during the Display cycle. 
-// 
-// All Scrawl-canvas filters-related image manipulation work happens in this worker code. Note that this functionality is entirely separate from the &lt;canvas> element's context engine's native `filter` functionality, which allows us to add CSS/SVG-based filters to the canvas context
-
-// ##### Road map
-// At some point we shall attempt to convert this code into something that can be run as WebAssembly code, possibly using Rust or AssemblyScript.
-//
-// ##### Development
-// Compress this file using https://javascript-minifier.com/
-//
-// Copy the results of the compression into the string in worker/filter-string.js
-//
-// ### Common variables
-// __packet__ and `packetFiltersArray` will hold data contained in the message sent to the web worker; the packet object will be returned to the main program when processing completes (or errors) in the worker
-let packet, packetFiltersArray;
-
-// __source__ - the original image data supplied in the message
-let source; 
-
-// __work__ - a copy of the source image which then gets manipulated by the functions invoked by each action object included in the filter
-let work; 
-
-// __cache__ - an Object consisting of `key:Object` pairs where the key is the named input of a `process-image` action or the output of any action object. This object is cleared and re-initialized each time the worker receives a new message
-let cache; 
-
-// __actions__ - the Array of action objects that the worker needs to process - data supplied by the main thread in its message's `packetFiltersArray` attribute.
-let actions;
-
-// The web worker maintains a semi-permanent storage space - the __workstore__ - for some processing objects that are computationally expensive, for instance grids, matrix reference data objects, etc. The web worker maintains a record of when each of these processing objects was last accessed and will remove objects if they have not been accessed in the last three seconds.
-let workstore = {},
-    workstoreLastAccessed = {};
+// # Scrawl-canvas filter engine
+// All Scrawl-canvas filters-related image manipulation work happens in this engine code. Note that this functionality is entirely separate from the &lt;canvas> element's context engine's native `filter` functionality, which allows us to add CSS/SVG-based filters to the canvas context
+// + Note that prior to v8.5.0 most of this code lived in an (asynchronous) web worker. Web worker functionality has now been removed from Scrawl-canvas as it was not adding sufficient efficiency to rendering speed
+// + At some point in the future we may implement this code as a WebAssembly module.
 
 
-// ### Result objects
+import { constructors } from '../core/library.js';
 
-// `createResultObject` - to make the following code easier to maintain, the web worker will create result objects for all source image data it receives, and for each action object output. These result objects contain four arrays - one for each color channle, and one for the alpha channel.
-const createResultObject = function (len) {
 
-    return {
-        r: new Uint8ClampedArray(len),
-        g: new Uint8ClampedArray(len),
-        b: new Uint8ClampedArray(len),
-        a: new Uint8ClampedArray(len),
-    };
+// #### FilterEngine constructor
+const FilterEngine = function () {
+
+    // ### Transactional variables
+
+    // __image__ - the original imageData `{width, height, data}` object supplied in the message
+    this.image = null; 
+
+    // __cache__ - an Object consisting of `key:Object` pairs where the key is the named input of a `process-image` action or the output of any action object. This object is cleared and re-initialized each time the `engine.action` function is invoked
+    this.cache = null; 
+
+    // __actions__ - the Array of action objects that the engine needs to process - data supplied by the main thread in its message's `packetFiltersArray` attribute.
+    this.actions = [];
+
+    this.choke = 3000;
+
+    return this;
 };
 
-// `unknit` - called at the start of each new message action chain. Creates and populates the __source__ and __work__ objects from the image data supplied in the message
-const unknit = function (iData) {
 
-    let imageData = iData.data;
+// #### FilterEngine prototype
+let P = FilterEngine.prototype = Object.create(Object.prototype);
+P.type = 'FilterEngine';
 
-    let len = Math.floor(imageData.length / 4);
+P.action = function (packet) {
 
+    // logMessage('actioning some filters');
 
-    source = createResultObject(len);
-    iData.channels = source;
+    let { filters, image } = packet;
 
-    let sourceRed = source.r,
-        sourceGreen = source.g,
-        sourceBlue = source.b,
-        sourceAlpha = source.a;
+    this.image = image;
 
-    work = createResultObject(len);
-
-    let workRed = work.r,
-        workGreen = work.g,
-        workBlue = work.b,
-        workAlpha = work.a;
-
-    let counter = 0;
-
-    for (let i = 0, iz = imageData.length; i < iz; i += 4) {
-
-        sourceRed[counter] = imageData[i];
-        sourceGreen[counter] = imageData[i + 1];
-        sourceBlue[counter] = imageData[i + 2];
-        sourceAlpha[counter] = imageData[i + 3];
-
-        workRed[counter] = imageData[i];
-        workGreen[counter] = imageData[i + 1];
-        workBlue[counter] = imageData[i + 2];
-        workAlpha[counter] = imageData[i + 3];
-
-        counter++;
-    }
-};
-
-// `knit` - called at the end of each message action chain. Recreates the message image data in the correct format so it can be used by the main thread
-const knit = function () {
-
-    let imageData = packet.image.data;
-
-    let workRed = work.r,
-        workGreen = work.g,
-        workBlue = work.b,
-        workAlpha = work.a;
-
-    let counter = 0;
-
-    for (let i = 0, iz = imageData.length; i < iz; i += 4) {
-
-        imageData[i] = workRed[counter];
-        imageData[i + 1] = workGreen[counter];
-        imageData[i + 2] = workBlue[counter];
-        imageData[i + 3] = workAlpha[counter];
-
-        counter++;
-    }
-};
-
-// ### Messaging functionality
-onmessage = function (msg) {
-
-    packet = msg.data;
-    packetFiltersArray = packet.filters;
+    let { workstoreLastAccessed, workstore, actions, choke, theBigActionsObject } = this;
 
     let workstoreKeys = Object.keys(workstore), 
-        workstoreChoke = Date.now() - 3000;
+        workstoreChoke = Date.now() - choke;
 
     workstoreKeys.forEach(k => {
 
@@ -127,54 +53,146 @@ onmessage = function (msg) {
         }
     });
 
-    cache = {};
-    actions = [];
+    this.cache = {};
 
-    cache.source = packet.image;
-
-    packetFiltersArray.forEach(f => actions.push(...f.actions));
+    actions.length = 0;
+    filters.forEach(f => actions.push(...f.actions));
 
     if (actions.length) {
 
-        unknit(cache.source);
-        actions.forEach(a => theBigActionsObject[a.action] && theBigActionsObject[a.action](a));
-        knit();
+        this.unknit(image);
+        actions.forEach(a => theBigActionsObject[a.action] && theBigActionsObject[a.action].call(this, a));
+        this.knit();
     }
+    return(this.image);
+}
 
-    postMessage(packet);
+
+// ### Permanent variables
+
+// The filter engine maintains a semi-permanent storage space - the __workstore__ - for some processing objects that are computationally expensive, for instance grids, matrix reference data objects, etc. The engine also maintains a record of when each of these processing objects was last accessed and will remove objects if they have not been accessed in the last three seconds.
+P.workstore = {},
+P.workstoreLastAccessed = {};
+
+
+// ### Result objects
+
+// `createResultObject` - to make the following code easier to maintain, the filter emngine will create result objects for all source image data it receives, and for each action object output. These result objects contain four arrays - one for each color channle, and one for the alpha channel.
+P.createResultObject = function (len) {
+
+    return {
+        r: new Uint8ClampedArray(len),
+        g: new Uint8ClampedArray(len),
+        b: new Uint8ClampedArray(len),
+        a: new Uint8ClampedArray(len),
+    };
 };
 
-onerror = function (e) {
+// `copyOver` - copy the values from one results object to another
+P.copyOver = function (f, t) {
 
-    console.log('error' + e.message);
-    postMessage(packet);
+    if (f && f.channels) f = f.channels;
+    if (t && t.channels) t = t.channels;
+
+    let {r:fromR, g:fromG, b:fromB, a:fromA } = f;
+    let {r:toR, g:toG, b:toB, a:toA } = t;
+
+    for (let i = 0; i < fromR.length; i++) {
+
+        toR[i] = fromR[i];
+        toG[i] = fromG[i];
+        toB[i] = fromB[i];
+        toA[i] = fromA[i];
+    }
+};
+
+// `unknit` - called at the start of each new message action chain. Creates and populates the __source__ and __work__ objects from the image data supplied in the message
+P.unknit = function () {
+
+    let { cache, image } = this;
+
+    let { width, height, data } = image;
+
+    let len = Math.floor(data.length / 4);
+
+    let source = this.createResultObject(len);
+    let { r:sourceRed, g:sourceGreen, b:sourceBlue, a:sourceAlpha } = source;
+
+    for (let i = 0, iz = data.length, counter = 0; i < iz; i += 4) {
+
+        sourceRed[counter] = data[i];
+        sourceGreen[counter] = data[i + 1];
+        sourceBlue[counter] = data[i + 2];
+        sourceAlpha[counter] = data[i + 3];
+
+        counter++;
+    }
+
+    let work = this.createResultObject(len);
+    this.copyOver(source, work);
+
+    cache.source = {
+        width,
+        height,
+        channels: source,
+    };
+
+    cache.work = {
+        width,
+        height,
+        channels: work,
+    };
+};
+
+// `knit` - called at the end of each message action chain. Recreates the message image data in the correct format so it can be used by the main thread
+P.knit = function () {
+
+    let { image, cache } = this;
+
+    let { data } = image;
+    let { work } = cache;
+
+    let { r:workRed, g:workGreen, b:workBlue, a:workAlpha } = work.channels;
+
+    for (let i = 0, iz = data.length, counter = 0; i < iz; i += 4) {
+
+        data[i] = workRed[counter];
+        data[i + 1] = workGreen[counter];
+        data[i + 2] = workBlue[counter];
+        data[i + 3] = workAlpha[counter];
+
+        counter++;
+    }
 };
 
 
 // ### Functions invoked by a range of different action functions
 // 
-// `buildImageGrid` creates an Array of Arrays which contain the indexes of each pixel in the data channel Arrays
-const buildImageGrid = function (data) {
+// `buildImageGrid` creates an Array of Arrays which contain the indexes of each pixel in the image channel Arrays
+P.buildImageGrid = function (image) {
 
-    if (!data) data = cache.source;
+    let { cache, workstore, workstoreLastAccessed } = this;
 
-    if (data && data.width && data.height) {
+    if (!image) image = cache.source;
 
-        let name = `grid-${data.width}-${data.height}`;
+    let { width, height } = image
+
+    if (width && height) {
+
+        let name = `grid-${width}-${height}`;
         if (workstore[name]) {
             workstoreLastAccessed[name] = Date.now();
             return workstore[name];
         }
 
-
         let grid = [],
             counter = 0;
 
-        for (let y = 0, yz = data.height; y < yz; y++) {
+        for (let y = 0; y < height; y++) {
 
             let row = [];
 
-            for (let x = 0, xz = data.width; x < xz; x++) {
+            for (let x = 0; x < width; x++) {
                 
                 row.push(counter);
                 counter++;
@@ -189,14 +207,15 @@ const buildImageGrid = function (data) {
 };
 
 // `buildAlphaTileSets` - creates a record of which pixels belong to which tile - used for manipulating alpha channel values. Resulting object will be cached in the store
-const buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeight, offsetX, offsetY, areaAlphaLevels, data) {
+P.buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeight, offsetX, offsetY, areaAlphaLevels, image) {
 
-    if (!data) data = cache.source;
+    let { cache, workstore, workstoreLastAccessed } = this;
 
-    if (data && data.width && data.height) {
+    if (!image) image = cache.source;
 
-        let iWidth = data.width,
-            iHeight = data.height;
+    let { width:iWidth, height:iHeight } = image;
+
+    if (iWidth && iHeight) {
 
         tileWidth = (tileWidth.toFixed && !isNaN(tileWidth)) ? tileWidth : 1;
         tileHeight = (tileHeight.toFixed && !isNaN(tileHeight)) ? tileHeight : 1;
@@ -286,14 +305,15 @@ const buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterH
 };
 
 // `buildImageTileSets` - creates a record of which pixels belong to which tile - used for manipulating color channels values. Resulting object will be cached in the store
-const buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY, data) {
+P.buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY, image) {
 
-    if (!data) data = cache.source;
+    let { cache, workstore, workstoreLastAccessed } = this;
 
-    if (data && data.width && data.height) {
+    if (!image) image = cache.source;
 
-        let iWidth = data.width,
-            iHeight = data.height;
+    let { width:iWidth, height:iHeight } = image;
+
+    if (iWidth && iHeight) {
 
         tileWidth = (tileWidth.toFixed && !isNaN(tileWidth)) ? tileWidth : 1;
         tileHeight = (tileHeight.toFixed && !isNaN(tileHeight)) ? tileHeight : 1;
@@ -323,7 +343,7 @@ const buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY, da
 
                 let hold = [];
                 
-                for (y = j, yz = j + tileHeight; y < yz; y++) {
+                for (let y = j, yz = j + tileHeight; y < yz; y++) {
 
                     if (y >= 0 && y < iHeight) {
 
@@ -344,7 +364,9 @@ const buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY, da
 };
 
 // `buildHorizontalBlur` - creates an Array of Arrays detailing which pixels contribute to the horizontal part of each pixel's blur calculation. Resulting object will be cached in the store
-const buildHorizontalBlur = function (grid, radius) {
+P.buildHorizontalBlur = function (grid, radius) {
+
+    let { workstore, workstoreLastAccessed } = this;
 
     if (!radius || !radius.toFixed || isNaN(radius)) radius = 0;
 
@@ -379,7 +401,9 @@ const buildHorizontalBlur = function (grid, radius) {
 };
 
 // `buildVerticalBlur` - creates an Array of Arrays detailing which pixels contribute to the vertical part of each pixel's blur calculation. Resulting object will be cached in the store
-const buildVerticalBlur = function (grid, radius) {
+P.buildVerticalBlur = function (grid, radius) {
+
+    let { workstore, workstoreLastAccessed } = this;
 
     if (!radius || !radius.toFixed || isNaN(radius)) radius = 0;
 
@@ -414,9 +438,13 @@ const buildVerticalBlur = function (grid, radius) {
 };
 
 // `buildMatrixGrid` - creates an Array of Arrays detailing which pixels contribute to each pixel's matrix calculation. Resulting object will be cached in the store
-const buildMatrixGrid = function (mWidth, mHeight, mX, mY, alpha, data) {
+P.buildMatrixGrid = function (mWidth, mHeight, mX, mY, alpha, image) {
 
-    if (!data) data = cache.source;
+    let { cache, workstore, workstoreLastAccessed } = this;
+
+    if (!image) image = cache.source;
+
+    let { width:iWidth, height:iHeight, channels } = image;
 
     if (mWidth == null || mWidth < 1) mWidth = 1;
     if (mHeight == null || mHeight < 1) mHeight = 1;
@@ -427,16 +455,13 @@ const buildMatrixGrid = function (mWidth, mHeight, mX, mY, alpha, data) {
     if (mY == null || mY < 0) mY = 0;
     else if (mY >= mHeight) mY = mHeight - 1;
 
-    let iWidth = data.width,
-        iHeight = data.height;
-
     let name = `matrix-${iWidth}-${iHeight}-${mWidth}-${mHeight}-${mX}-${mY}`;
     if (workstore[name]) {
         workstoreLastAccessed[name] = Date.now();
         return workstore[name];
     }
 
-    let dataLength = data.data.length,
+    let dataLength = channels.r.length,
         x, xz, y, yz, i, iz,
         cellsTemplate = [],
         grid = [];
@@ -474,7 +499,7 @@ const buildMatrixGrid = function (mWidth, mHeight, mX, mY, alpha, data) {
 };
 
 // `checkChannelLevelsParameters` - divide each channel into discrete sequences of pixels
-const checkChannelLevelsParameters = function (f) {
+P.checkChannelLevelsParameters = function (f) {
 
     const doCheck = function (v, isHigh = false) {
 
@@ -521,29 +546,16 @@ const checkChannelLevelsParameters = function (f) {
     f.alpha = doCheck(f.alpha, true);
 };
 
-// `cacheOutput` - insert an action function's output into the worker's cache
-const cacheOutput = function (name, obj, caller) {
+// `cacheOutput` - insert an action function's output into the filter engine's cache
+P.cacheOutput = function (name, obj, caller) {
 
     cache[name] = obj;
 };
 
-// `copyOver` - copy the values from one results object to another
-const copyOver = function (f, t) {
-
-    let {r:fromR, g:fromG, b:fromB, a:fromA } = f;
-    let {r:toR, g:toG, b:toB, a:toA } = t;
-
-    for (let i = 0; i < fromR.length; i++) {
-
-        toR[i] = fromR[i];
-        toG[i] = fromG[i];
-        toB[i] = fromB[i];
-        toA[i] = fromA[i];
-    }
-};
-
 // `getInputAndOutputDimensions` - determine, and return, the dimensions (width, height) for the appropriate results object for the lineIn, lineMix and lineOut values supplied to each action function when it gets invoked
-const getInputAndOutputDimensions = function (requirements) {
+P.getInputAndOutputDimensions = function (requirements) {
+
+    let { cache } = this;
 
     let data = cache.source,
         results = [];
@@ -572,9 +584,11 @@ const getInputAndOutputDimensions = function (requirements) {
 };
 
 // `getInputAndOutputChannels` - determine, and return, the appropriate results object for the lineIn, lineMix and lineOut values supplied to each action function when it gets invoked
-const getInputAndOutputChannels = function (requirements) {
+P.getInputAndOutputChannels = function (requirements) {
 
-    let lineIn = work;
+    let { cache } = this;
+
+    let lineIn = cache.work.channels;
     let len = lineIn.r.length;
     let data = cache.source;
 
@@ -583,7 +597,7 @@ const getInputAndOutputChannels = function (requirements) {
         if (requirements.lineIn == 'source') lineIn = data.channels;
         else if (requirements.lineIn == 'source-alpha') {
 
-            lineIn = createResultObject(len);
+            lineIn = this.createResultObject(len);
 
             let destAlpha = lineIn.a,
                 sourceAlpha = data.channels.a;
@@ -607,7 +621,7 @@ const getInputAndOutputChannels = function (requirements) {
         if (requirements.lineMix == 'source') lineMix = cache.source.channels;
         else if (requirements.lineMix == 'source-alpha') {
 
-            lineMix = createResultObject(len);
+            lineMix = this.createResultObject(len);
 
             let destAlpha = lineMix.a,
                 sourceAlpha = cache.source.channels.a;
@@ -627,7 +641,7 @@ const getInputAndOutputChannels = function (requirements) {
         if (cache[requirements.lineOut]) lineOut = cache[requirements.lineOut].channels;
         else {
 
-            lineOut = createResultObject(len);
+            lineOut = this.createResultObject(len);
             cache[requirements.lineOut] = {
                 width: data.width,
                 height: data.height,
@@ -635,13 +649,13 @@ const getInputAndOutputChannels = function (requirements) {
             };
         }
     }
-    else lineOut = createResultObject(len);
+    else lineOut = this.createResultObject(len);
 
     return [lineIn, lineOut, lineMix];
 };
 
 // `processResults` - at the conclusion of each action function, combine the results of the function's manipulations back into the data supplied for manipulation, in line with the value of the action object's `opacity` attribute
-const processResults = function (store, incoming, ratio) {
+P.processResults = function (store, incoming, ratio) {
 
     let sR = store.r,
         sG = store.g,
@@ -653,10 +667,10 @@ const processResults = function (store, incoming, ratio) {
         iB = incoming.b,
         iA = incoming.a;
 
-    if (ratio === 1) copyOver(incoming, store);
+    if (ratio === 1) this.copyOver(incoming, store);
     else if (ratio > 0) {
 
-        antiRatio = 1 - ratio;
+        let antiRatio = 1 - ratio;
 
         for (let i = 0, iz = sR.length; i < iz; i++) {
 
@@ -669,7 +683,7 @@ const processResults = function (store, incoming, ratio) {
 };
 
 // `getHSLfromRGB` - convert an RGB format color into an HSL format color
-const getHSLfromRGB = function (dr, dg, db) {
+P.getHSLfromRGB = function (dr, dg, db) {
 
     let minColor = Math.min(dr, dg, db),
         maxColor = Math.max(dr, dg, db);
@@ -698,7 +712,7 @@ const getHSLfromRGB = function (dr, dg, db) {
 };
 
 // `getRGBfromHSL` - convert an HSL format color into an RGB format color
-const getRGBfromHSL = function (h, s, l) {
+P.getRGBfromHSL = function (h, s, l) {
 
     if (!s) {
 
@@ -740,12 +754,12 @@ const getRGBfromHSL = function (h, s, l) {
 
 // ## Filter action functions
 // Each function is held in the `theBigActionsObject` object, for convenience
-const theBigActionsObject = {
+P.theBigActionsObject = {
 
 // __alpha-to-channels__ - Copies the alpha channel value over to the selected value or, alternatively, sets that channels value to zero, or leaves the channel's value unchanged. Setting the appropriate "includeChannel" flags will copy the alpha channel value to that channel; when that flag is false, setting the appropriate "excludeChannel" flag will set that channel's value to zero.
     'alpha-to-channels': function (requirements) {
 
-        let [input, output] = getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
@@ -770,14 +784,15 @@ const theBigActionsObject = {
         }
         outA.fill(255, 0, outA.length - 1);
 
-        if (lineOut) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
+        let work = this.cache.work.channels;
+        if (lineOut) this.processResults(output, work, 1 - opacity);
+        else this.processResults(work, output, opacity);
     },
 
 // __area-alpha__ - Places a tile schema across the input, quarters each tile and then sets the alpha channels of the pixels in selected quarters of each tile to zero. Can be used to create horizontal or vertical bars, or chequerboard effects.
     'area-alpha': function (requirements) {
 
-        let [input, output] = getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
@@ -792,7 +807,7 @@ const theBigActionsObject = {
         if (null == gutterHeight) gutterHeight = 1;
         if (null == areaAlphaLevels) areaAlphaLevels = [255,0,0,0];
 
-        let tiles = buildAlphaTileSets(tileWidth, tileHeight, gutterWidth, gutterHeight, offsetX, offsetY, areaAlphaLevels);
+        let tiles = this.buildAlphaTileSets(tileWidth, tileHeight, gutterWidth, gutterHeight, offsetX, offsetY, areaAlphaLevels);
 
         if (!Array.isArray(areaAlphaLevels)) areaAlphaLevels = [255,0,0,0];
 
@@ -812,14 +827,15 @@ const theBigActionsObject = {
             }
         });
 
-        if (lineOut) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
+        let work = this.cache.work.channels;
+        if (lineOut) this.processResults(output, work, 1 - opacity);
+        else this.processResults(work, output, opacity);
     },
 
 // __average-channels__ - Calculates an average value from each pixel's included channels and applies that value to all channels that have not been specifically excluded; excluded channels have their values set to 0.
     'average-channels': function (requirements) {
 
-        let [input, output] = getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
@@ -876,14 +892,16 @@ const theBigActionsObject = {
                 outA[i] = inA[i];
             }
         }
-        if (lineOut) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
+
+        let work = this.cache.work.channels;
+        if (lineOut) this.processResults(output, work, 1 - opacity);
+        else this.processResults(work, output, opacity);
     },
 
 // __binary__ - Set the channel to either 0 or 255, depending on whether the channel value is below or above a given level. Level values are set using the "red", "green", "blue" and "alpha" arguments. Setting these values to 0 disables the action for that channel.
     'binary': function (requirements) {
 
-        let [input, output] = getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
@@ -913,14 +931,15 @@ const theBigActionsObject = {
             else outA[i] = inA[i];
         }
 
-        if (lineOut) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
+        let work = this.cache.work.channels;
+        if (lineOut) this.processResults(output, work, 1 - opacity);
+        else this.processResults(work, output, opacity);
     },
 
 // __blend__ - Using two source images (from the "lineIn" and "lineMix" arguments), combine their color information using various separable and non-separable blend modes (as defined by the W3C Compositing and Blending Level 1 recommendations. The blending method is determined by the String value supplied in the "blend" argument; permitted values are: 'color-burn', 'color-dodge', 'darken', 'difference', 'exclusion', 'hard-light', 'lighten', 'lighter', 'multiply', 'overlay', 'screen', 'soft-light', 'color', 'hue', 'luminosity', and 'saturation'. Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the "offsetX" and "offsetY" arguments.
     'blend': function (requirements) {
 
-        let [input, output, mix] = getInputAndOutputChannels(requirements);
+        let [input, output, mix] = this.getInputAndOutputChannels(requirements);
 
         let len = output.r.length;
 
@@ -935,7 +954,7 @@ const theBigActionsObject = {
         const {r:outR, g:outG, b:outB, a:outA} = output;
         const {r:mixR, g:mixG, b:mixB, a:mixA} = mix;
 
-        let [iWidth, iHeight, oWidth, oHeight, mWidth, mHeight] = getInputAndOutputDimensions(requirements);
+        let [iWidth, iHeight, oWidth, oHeight, mWidth, mHeight] = this.getInputAndOutputDimensions(requirements);
 
         const copyPixel = function (fromPos, toPos, channel) {
 
@@ -1262,10 +1281,10 @@ const theBigActionsObject = {
             case 'color' :
                 const colorCalc = (iR, iG, iB, mR, mG, mB) => {
 
-                    let [iH, iS, iL] = getHSLfromRGB(iR, iG, iB);
-                    let [mH, mS, mL] = getHSLfromRGB(mR, mG, mB);
+                    let [iH, iS, iL] = this.getHSLfromRGB(iR, iG, iB);
+                    let [mH, mS, mL] = this.getHSLfromRGB(mR, mG, mB);
 
-                    return getRGBfromHSL(iH, iS, mL);
+                    return this.getRGBfromHSL(iH, iS, mL);
                 }
                 for (let y = 0; y < iHeight; y++) {
                     for (let x = 0; x < iWidth; x++) {
@@ -1292,10 +1311,10 @@ const theBigActionsObject = {
             case 'hue' :
                 const hueCalc = (iR, iG, iB, mR, mG, mB) => {
 
-                    let [iH, iS, iL] = getHSLfromRGB(iR, iG, iB);
-                    let [mH, mS, mL] = getHSLfromRGB(mR, mG, mB);
+                    let [iH, iS, iL] = this.getHSLfromRGB(iR, iG, iB);
+                    let [mH, mS, mL] = this.getHSLfromRGB(mR, mG, mB);
 
-                    return getRGBfromHSL(iH, mS, mL);
+                    return this.getRGBfromHSL(iH, mS, mL);
                 }
                 for (let y = 0; y < iHeight; y++) {
                     for (let x = 0; x < iWidth; x++) {
@@ -1322,10 +1341,10 @@ const theBigActionsObject = {
             case 'luminosity' :
                 const luminosityCalc = (iR, iG, iB, mR, mG, mB) => {
 
-                    let [iH, iS, iL] = getHSLfromRGB(iR, iG, iB);
-                    let [mH, mS, mL] = getHSLfromRGB(mR, mG, mB);
+                    let [iH, iS, iL] = this.getHSLfromRGB(iR, iG, iB);
+                    let [mH, mS, mL] = this.getHSLfromRGB(mR, mG, mB);
 
-                    return getRGBfromHSL(mH, mS, iL);
+                    return this.getRGBfromHSL(mH, mS, iL);
                 }
                 for (let y = 0; y < iHeight; y++) {
                     for (let x = 0; x < iWidth; x++) {
@@ -1352,10 +1371,10 @@ const theBigActionsObject = {
             case 'saturation' :
                 const saturationCalc = (iR, iG, iB, mR, mG, mB) => {
 
-                    let [iH, iS, iL] = getHSLfromRGB(iR, iG, iB);
-                    let [mH, mS, mL] = getHSLfromRGB(mR, mG, mB);
+                    let [iH, iS, iL] = this.getHSLfromRGB(iR, iG, iB);
+                    let [mH, mS, mL] = this.getHSLfromRGB(mR, mG, mB);
 
-                    return getRGBfromHSL(mH, iS, mL);
+                    return this.getRGBfromHSL(mH, iS, mL);
                 }
                 for (let y = 0; y < iHeight; y++) {
                     for (let x = 0; x < iWidth; x++) {
@@ -1401,14 +1420,16 @@ const theBigActionsObject = {
                     }
                 }
         }
-        if (lineOut) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
+
+        let work = this.cache.work.channels;
+        if (lineOut) this.processResults(output, work, 1 - opacity);
+        else this.processResults(work, output, opacity);
     },
 
 // __blur__ - Performs a multi-loop, two-step 'horizontal-then-vertical averaging sweep' calculation across all pixels to create a blur effect. Note that this filter is expensive, thus much slower to complete compared to other filter effects.
     'blur': function (requirements) {
 
-        let [input, output] = getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
@@ -1429,11 +1450,11 @@ const theBigActionsObject = {
 
         if (processHorizontal || processVertical) {
 
-            let grid = buildImageGrid();
+            let grid = this.buildImageGrid();
 
-            if (processHorizontal)  horizontalBlurGrid = buildHorizontalBlur(grid, radius);
+            if (processHorizontal)  horizontalBlurGrid = this.buildHorizontalBlur(grid, radius);
 
-            if (processVertical) verticalBlurGrid = buildVerticalBlur(grid, radius);
+            if (processVertical) verticalBlurGrid = this.buildVerticalBlur(grid, radius);
         }
 
         const {r:inR, g:inG, b:inB, a:inA} = input;
@@ -1472,13 +1493,13 @@ const theBigActionsObject = {
             return holdChannel[pos];
         }
 
-        if (!passes || (!processHorizontal && !processVertical)) copyOver(input, output);
+        if (!passes || (!processHorizontal && !processVertical)) this.copyOver(input, output);
         else {
 
-            const hold = createResultObject(len);
+            const hold = this.createResultObject(len);
             const {r:holdR, g:holdG, b:holdB, a:holdA} = hold;
 
-            copyOver(input, hold);
+            this.copyOver(input, hold);
 
             for (let pass = 0; pass < passes; pass++) {
 
@@ -1494,7 +1515,7 @@ const theBigActionsObject = {
                             outA[k] = getValue(includeAlpha, horizontalBlurGrid, k, holdA, false);
                         }
                     }
-                    if (processVertical || pass < passes - 1) copyOver(output, hold);
+                    if (processVertical || pass < passes - 1) this.copyOver(output, hold);
                 }
 
                 if (processVertical) {
@@ -1509,18 +1530,19 @@ const theBigActionsObject = {
                             outA[k] = getValue(includeAlpha, verticalBlurGrid, k, holdA, false);
                         }
                     }
-                    if (pass < passes - 1) copyOver(output, hold);
+                    if (pass < passes - 1) this.copyOver(output, hold);
                 }
             }
         }
-        if (lineOut) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
+        let work = this.cache.work.channels;
+        if (lineOut) this.processResults(output, work, 1 - opacity);
+        else this.processResults(work, output, opacity);
     },
 
 // __channels-to-alpha__ - Calculates an average value from each pixel's included channels and applies that value to the alpha channel.
     'channels-to-alpha': function (requirements) {
 
-        let [input, output] = getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
@@ -1559,14 +1581,15 @@ const theBigActionsObject = {
             }
             else outA[i] = inA[i];
         }
-        if (lineOut) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
+        let work = this.cache.work.channels;
+        if (lineOut) this.processResults(output, work, 1 - opacity);
+        else this.processResults(work, output, opacity);
     },
 
 // __chroma__ - Using an array of 'range' arrays, determine whether a pixel's values lie entirely within a range's values and, if true, sets that pixel's alpha channel value to zero. Each 'range' array comprises six Numbers representing [minimum-red, minimum-green, minimum-blue, maximum-red, maximum-green, maximum-blue] values.
     'chroma': function (requirements) {
 
-        let [input, output] = getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
@@ -1586,7 +1609,7 @@ const theBigActionsObject = {
                 g = inG[j],
                 b = inB[j];
 
-            for (i = 0, iz = ranges.length; i < iz; i++) {
+            for (let i = 0, iz = ranges.length; i < iz; i++) {
 
                 let range = ranges[i];
 
@@ -1604,14 +1627,15 @@ const theBigActionsObject = {
             outA[j] = (flag) ? 0 : inA[j];
         }
 
-        if (lineOut) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
+        let work = this.cache.work.channels;
+        if (lineOut) this.processResults(output, work, 1 - opacity);
+        else this.processResults(work, output, opacity);
     },
 
 // __clamp-channels__ - Clamp each color channel to a range set by lowColor and highColor values
     'clamp-channels': function (requirements) {
 
-        let [input, output] = getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
@@ -1652,14 +1676,15 @@ const theBigActionsObject = {
                 outA[i] = inA[i];
             }
         }
-        if (lineOut) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
+        let work = this.cache.work.channels;
+        if (lineOut) this.processResults(output, work, 1 - opacity);
+        else this.processResults(work, output, opacity);
     },
 
 // __colors-to-alpha__ - Determine the alpha channel value for each pixel depending on the closeness to that pixel's color channel values to a reference color supplied in the "red", "green" and "blue" arguments. The sensitivity of the effect can be manipulated using the "transparentAt" and "opaqueAt" values, both of which lie in the range 0-1.
     'colors-to-alpha': function (requirements) {
 
-        let [input, output] = getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
@@ -1696,14 +1721,15 @@ const theBigActionsObject = {
             outA[i] = getValue(inR[i], inG[i], inB[i]);
         }
 
-        if (lineOut) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
+        let work = this.cache.work.channels;
+        if (lineOut) this.processResults(output, work, 1 - opacity);
+        else this.processResults(work, output, opacity);
     },
 
 // __compose__ - Using two source images (from the "lineIn" and "lineMix" arguments), combine their color information using alpha compositing rules (as defined by Porter/Duff). The compositing method is determined by the String value supplied in the "compose" argument; permitted values are: 'destination-only', 'destination-over', 'destination-in', 'destination-out', 'destination-atop', 'source-only', 'source-over' (default), 'source-in', 'source-out', 'source-atop', 'clear', 'xor', or 'lighter'. Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the "offsetX" and "offsetY" arguments.
     'compose': function (requirements) {
 
-        let [input, output, mix] = getInputAndOutputChannels(requirements);
+        let [input, output, mix] = this.getInputAndOutputChannels(requirements);
 
         let len = output.r.length;
 
@@ -1718,7 +1744,7 @@ const theBigActionsObject = {
         const {r:outR, g:outG, b:outB, a:outA} = output;
         const {r:mixR, g:mixG, b:mixB, a:mixA} = mix;
 
-        let [iWidth, iHeight, oWidth, oHeight, mWidth, mHeight] = getInputAndOutputDimensions(requirements);
+        let [iWidth, iHeight, oWidth, oHeight, mWidth, mHeight] = this.getInputAndOutputDimensions(requirements);
 
         const copyPixel = function (fromPos, toPos, channel) {
 
@@ -1746,7 +1772,7 @@ const theBigActionsObject = {
         switch (compose) {
 
             case 'source-only' :
-                copyOver(input, output);
+                this.copyOver(input, output);
                 break;
 
             case 'source-atop' :
@@ -1956,14 +1982,15 @@ const theBigActionsObject = {
                     }
                 }
         }
-        if (lineOut) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
+        let work = this.cache.work.channels;
+        if (lineOut) this.processResults(output, work, 1 - opacity);
+        else this.processResults(work, output, opacity);
     },
 
 // __displace__ - Shift pixels around the image, based on the values supplied in a displacement image
     'displace': function (requirements) {
 
-        let [input, output, mix] = getInputAndOutputChannels(requirements);
+        let [input, output, mix] = this.getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
@@ -1992,7 +2019,7 @@ const theBigActionsObject = {
         else if (channelY == 'blue') channelY = mixB;
         else channelY = mixA;
 
-        let [iWidth, iHeight, oWidth, oHeight, mWidth, mHeight] = getInputAndOutputDimensions(requirements);
+        let [iWidth, iHeight, oWidth, oHeight, mWidth, mHeight] = this.getInputAndOutputDimensions(requirements);
 
         const copyPixel = function (fromPos, toPos, channel) {
 
@@ -2052,14 +2079,15 @@ const theBigActionsObject = {
                 else copyPixel(iPos, iPos, input);
             }
         }
-        if (lineOut) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
+        let work = this.cache.work.channels;
+        if (lineOut) this.processResults(output, work, 1 - opacity);
+        else this.processResults(work, output, opacity);
     },
 
 // __emboss__ - A 3x3 matrix transform; the matrix weights are calculated internally from the values of two arguments: "strength", and "angle" - which is a value measured in degrees, with 0 degrees pointing to the right of the origin (along the positive x axis). Post-processing options include removing unchanged pixels, or setting then to mid-gray. The convenience method includes additional arguments which will add a choice of grayscale, then channel clamping, then blurring actions before passing the results to this emboss action
     'emboss': function (requirements) {
 
-        let [input, output] = getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
@@ -2139,7 +2167,7 @@ const theBigActionsObject = {
         const {r:inR, g:inG, b:inB, a:inA} = input;
         const {r:outR, g:outG, b:outB, a:outA} = output;
 
-        grid = buildMatrixGrid(3, 3, 1, 1, inA);
+        const grid = this.buildMatrixGrid(3, 3, 1, 1, inA);
 
         const doCalculations = function (inChannel, matrix) {
 
@@ -2177,14 +2205,15 @@ const theBigActionsObject = {
                 }
             }
         }
-        if (lineOut) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
+        let work = this.cache.work.channels;
+        if (lineOut) this.processResults(output, work, 1 - opacity);
+        else this.processResults(work, output, opacity);
     },
 
 // __flood__ - Set all pixels to the channel values supplied in the "red", "green", "blue" and "alpha" arguments
     'flood': function (requirements) {
 
-        let [input, output] = getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputChannels(requirements);
 
         let len = input.r.length,
             floor = Math.floor;
@@ -2204,14 +2233,15 @@ const theBigActionsObject = {
         outB.fill(blue, 0, len - 1);
         outA.fill(alpha, 0, len - 1);
 
-        if (lineOut) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
+        let work = this.cache.work.channels;
+        if (lineOut) this.processResults(output, work, 1 - opacity);
+        else this.processResults(work, output, opacity);
     },
 
 // __grayscale__ - For each pixel, averages the weighted color channels and applies the result across all the color channels. This gives a more realistic monochrome effect.
     'grayscale': function (requirements) {
 
-        let [input, output] = getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
@@ -2232,14 +2262,15 @@ const theBigActionsObject = {
             outA[i] = inA[i];
         }
 
-        if (lineOut) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
+        let work = this.cache.work.channels;
+        if (lineOut) this.processResults(output, work, 1 - opacity);
+        else this.processResults(work, output, opacity);
     },
 
 // __invert-channels__ - For each pixel, subtracts its current channel values - when included - from 255.
     'invert-channels': function (requirements) {
 
-        let [input, output] = getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
@@ -2261,14 +2292,15 @@ const theBigActionsObject = {
             outB[i] = (includeBlue) ? 255 - inB[i] : inB[i];
             outA[i] = (includeAlpha) ? 255 - inA[i] : inA[i];
         }
-        if (lineOut) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
+        let work = this.cache.work.channels;
+        if (lineOut) this.processResults(output, work, 1 - opacity);
+        else this.processResults(work, output, opacity);
     },
 
 // __lock-channels-to-levels__ - Produces a posterize effect. Takes in four arguments - "red", "green", "blue" and "alpha" - each of which is an Array of zero or more integer Numbers (between 0 and 255). The filter works by looking at each pixel's channel value and determines which of the corresponding Array's Number values it is closest to; it then sets the channel value to that Number value.
     'lock-channels-to-levels': function (requirements) {
 
-        checkChannelLevelsParameters(requirements)
+        this.checkChannelLevelsParameters(requirements)
 
         const getValue = function (val, levels) {
 
@@ -2281,7 +2313,7 @@ const theBigActionsObject = {
             }
         };
 
-        let [input, output] = getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
@@ -2303,14 +2335,15 @@ const theBigActionsObject = {
             outA[i] = getValue(inA[i], alpha);
         }
 
-        if (lineOut) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
+        let work = this.cache.work.channels;
+        if (lineOut) this.processResults(output, work, 1 - opacity);
+        else this.processResults(work, output, opacity);
     },
 
 // __matrix__ - Performs a matrix operation on each pixel's channels, calculating the new value using neighbouring pixel weighted values. Also known as a convolution matrix, kernel or mask operation. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the "width" and "height" arguments, while setting the home pixel's position within the matrix can be set using the "offsetX" and "offsetY" arguments. The weights to be applied need to be supplied in the "weights" argument - an Array listing the weights row-by-row starting from the top-left corner of the matrix. By default all color channels are included in the calculations while the alpha channel is excluded. The 'edgeDetect', 'emboss' and 'sharpen' convenience filter methods all use the matrix action, pre-setting the required weights.
     'matrix': function (requirements) {
 
-        let [input, output] = getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
@@ -2330,7 +2363,7 @@ const theBigActionsObject = {
             weights[Math.floor(weights.length / 2) + 1] = 1;
         }
 
-        grid = buildMatrixGrid(width, height, offsetX, offsetY, input.a);
+        let grid = this.buildMatrixGrid(width, height, offsetX, offsetY, input.a);
 
         const doCalculations = function (inChannel, matrix) {
 
@@ -2363,14 +2396,15 @@ const theBigActionsObject = {
                 else outA[i] = inA[i];
             }
         }
-        if (lineOut) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
+        let work = this.cache.work.channels;
+        if (lineOut) this.processResults(output, work, 1 - opacity);
+        else this.processResults(work, output, opacity);
     },
 
 // __modulate-channels__ - Multiplies each channel's value by the supplied argument value. A channel-argument's value of '0' will set that channel's value to zero; a value of '1' will leave the channel value unchanged. If the "saturation" flag is set to 'true' the calculation changes to start at the color range mid point. The 'brightness' and 'saturation' filters are special forms of the 'channels' filter which use a single "levels" argument to set all three color channel arguments to the same value.
     'modulate-channels': function (requirements) {
 
-        let [input, output] = getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
@@ -2404,14 +2438,15 @@ const theBigActionsObject = {
                 outA[i] = inA[i] * alpha;
             }
         }
-        if (lineOut) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
+        let work = this.cache.work.channels;
+        if (lineOut) this.processResults(output, work, 1 - opacity);
+        else this.processResults(work, output, opacity);
     },
 
 // __offset__ - Offset the input image in the output image.
     'offset': function (requirements) {
 
-        let [input, output] = getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputChannels(requirements);
 
         let {opacity, offsetRedX, offsetRedY, offsetGreenX, offsetGreenY, offsetBlueX, offsetBlueY, offsetAlphaX, offsetAlphaY, lineOut} = requirements;
 
@@ -2432,7 +2467,7 @@ const theBigActionsObject = {
         const {r:inR, g:inG, b:inB, a:inA} = input;
         const {r:outR, g:outG, b:outB, a:outA} = output;
 
-        let grid = buildImageGrid(),
+        let grid = this.buildImageGrid(),
             gWidth = grid[0].length,
             gHeight = grid.length,
             drx, dry, dgx, dgy, dbx, dby, dax, day, inCell, outCell;
@@ -2496,8 +2531,9 @@ const theBigActionsObject = {
                 }
             }
         }
-        if (lineOut) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
+        let work = this.cache.work.channels;
+        if (lineOut) this.processResults(output, work, 1 - opacity);
+        else this.processResults(work, output, opacity);
     },
 
 // __pixelate__ - Pixelizes the input image by creating a grid of tiles across it and then averaging the color values of each pixel in a tile and setting its value to the average. Tile width and height, and their offset from the top left corner of the image, are set via the "tileWidth", "tileHeight", "offsetX" and "offsetY" arguments.
@@ -2526,7 +2562,7 @@ const theBigActionsObject = {
             }
         };
 
-        let [input, output] = getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
@@ -2542,7 +2578,7 @@ const theBigActionsObject = {
         if (null == offsetX) offsetX = 0;
         if (null == offsetY) offsetY = 0;
 
-        const tiles = buildImageTileSets(tileWidth, tileHeight, offsetX, offsetY);
+        const tiles = this.buildImageTileSets(tileWidth, tileHeight, offsetX, offsetY);
 
         const {r:inR, g:inG, b:inB, a:inA} = input;
         const {r:outR, g:outG, b:outB, a:outA} = output;
@@ -2561,8 +2597,9 @@ const theBigActionsObject = {
             else setOutValueToInValue(inA, outA, t);
         })
 
-        if (lineOut) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
+        let work = this.cache.work.channels;
+        if (lineOut) this.processResults(output, work, 1 - opacity);
+        else this.processResults(work, output, opacity);
     },
 
 // __Add an asset image to the filter process chain. The asset - the String name of the asset object - must be pre-loaded before it can be included in the filter. The "width" and "height" arguments are measured in integer Number pixels; the "copy" arguments can be either percentage Strings (relative to the asset's natural dimensions) or absolute Number values (in pixels). The "lineOut" argument is required - be aware that the filter action does not check for any pre-existing assets cached under this name and, if they exist, will overwrite them with this asset's data.__ - 
@@ -2575,7 +2612,7 @@ const theBigActionsObject = {
             let d = assetData.data;
             let len = d.length;
 
-            let res = createResultObject(len / 4);
+            let res = this.createResultObject(len / 4);
 
             let r = res.r,
                 g = res.g,
@@ -2595,14 +2632,14 @@ const theBigActionsObject = {
             }
             assetData.channels = res;
 
-            cache[lineOut] = assetData;
+            this.cache[lineOut] = assetData;
         }
     },
 
 // __set-channel-to-level__ - Sets the value of each pixel's included channel to the value supplied in the "level" argument.
     'set-channel-to-level': function (requirements) {
 
-        let [input, output] = getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
@@ -2625,14 +2662,15 @@ const theBigActionsObject = {
             outB[i] = (includeBlue) ? level : inB[i];
             outA[i] = (includeAlpha) ? level : inA[i];
         }
-        if (lineOut) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
+        let work = this.cache.work.channels;
+        if (lineOut) this.processResults(output, work, 1 - opacity);
+        else this.processResults(work, output, opacity);
     },
 
 // __step-channels__ - Takes three divisor values - "red", "green", "blue". For each pixel, its color channel values are divided by the corresponding color divisor, floored to the integer value and then multiplied by the divisor. For example a divisor value of '50' applied to a channel value of '120' will give a result of '100'. The output is a form of posterization.
     'step-channels': function (requirements) {
 
-        let [input, output] = getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputChannels(requirements);
 
         let len = input.r.length,
             floor = Math.floor;
@@ -2658,14 +2696,15 @@ const theBigActionsObject = {
             outA[i] = inA[i];
         }
 
-        if (lineOut) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
+        let work = this.cache.work.channels;
+        if (lineOut) this.processResults(output, work, 1 - opacity);
+        else this.processResults(work, output, opacity);
     },
 
 // __threshold__ - Grayscales the input then, for each pixel, checks the color channel values against a "level" argument: pixels with channel values above the level value are assigned to the 'high' color; otherwise they are updated to the 'low' color. The "high" and "low" arguments are [red, green, blue] integer Number Arrays. The convenience function will accept the pseudo-attributes "highRed", "lowRed" etc in place of the "high" and "low" Arrays.
     'threshold': function (requirements) {
 
-        let [input, output] = getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
@@ -2701,14 +2740,15 @@ const theBigActionsObject = {
             outA[i] = inA[i];
         }
 
-        if (lineOut) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
+        let work = this.cache.work.channels;
+        if (lineOut) this.processResults(output, work, 1 - opacity);
+        else this.processResults(work, output, opacity);
     },
 
 // __tint-channels__ - Has similarities to the SVG &lt;feColorMatrix> filter element, but excludes the alpha channel from calculations. Rather than set a matrix, we set nine arguments to determine how the value of each color channel in a pixel will affect both itself and its fellow color channels. The 'sepia' convenience filter presets these values to create a sepia effect.
     'tint-channels': function (requirements) {
 
-        let [input, output] = getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputChannels(requirements);
 
         let len = input.r.length;
 
@@ -2740,23 +2780,40 @@ const theBigActionsObject = {
             outA[i] = inA[i];
         }
 
-        if (lineOut) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
+        let work = this.cache.work.channels;
+        if (lineOut) this.processResults(output, work, 1 - opacity);
+        else this.processResults(work, output, opacity);
     },
 
-// __user-defined-legacy__ - Previous to version 8.4, filters could be defined with an argument which passed a function string to the filter worker, which the worker would then run against the source input image as-and-when required. This functionality has been removed from the new filter system. All such filters will now return the input image unchanged.
+// __user-defined-legacy__ - Previous to version 8.4, filters could be defined with an argument which passed a function string to the filter engine, which the engine would then run against the source input image as-and-when required. This functionality has been removed from the new filter functionality. All such filters will now return the input image unchanged.
 
     'user-defined-legacy': function (requirements) {
 
-        let [input, output] = getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputChannels(requirements);
 
         let {opacity, lineOut} = requirements;
 
         if (null == opacity) opacity = 1;
 
-        copyOver(input, output);
+        this.copyOver(input, output);
 
-        if (lineOut) processResults(output, work, 1 - opacity);
-        else processResults(work, output, opacity);
+        let work = this.cache.work.channels;
+        if (lineOut) this.processResults(output, work, 1 - opacity);
+        else this.processResults(work, output, opacity);
     },
+};
+
+
+// #### Factory
+const makeFilterEngine = function (items = {}) {
+
+    return new FilterEngine(items);
+};
+
+constructors.FilterEngine = FilterEngine;
+
+
+// #### Exports
+export {
+    makeFilterEngine,
 };

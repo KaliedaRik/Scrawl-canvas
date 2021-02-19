@@ -3,9 +3,9 @@
 //
 // Scrawl-canvas defines its filters in __Filter objects__, detailed in this module. The functionality to make use of these objects is coded up in the [filter mixin](../mixin/filter.html), which is used by the Cell, Group and all entity factories.
 //
-// Scrawl-canvas uses a [web worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API) to generate filter outputs - defined in the [filter web worker](../worker/filter.html). The web worker implements a number of common filter algorithms. These algorithms - __called filter actions__ - can be combined in a wide variety of ways, including the use of multiple pathways, to create complex filter results.
+// The Scrawl-canvas filter engine implements a number of common filter algorithms. These algorithms - __called filter actions__ - can be combined in a wide variety of ways, including the use of multiple pathways, to create complex filter results.
 // 
-// #### Web worker filter actions
+// #### Filter engine actions
 // `alpha-to-channels` - Copies the alpha channel value over to the selected value or, alternatively, sets that channels value to zero, or leaves the channel's value unchanged. Setting the appropriate "includeChannel" flags will copy the alpha channel value to that channel; when that flag is false, setting the appropriate "excludeChannel" flag will set that channel's value to zero. Object attributes: action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue, excludeRed, excludeGreen, excludeBlue
 // 
 // `area-alpha` - Places a tile schema across the input, quarters each tile and then sets the alpha channels of the pixels in selected quarters of each tile to zero. Can be used to create horizontal or vertical bars, or chequerboard effects. Object attributes: action, lineIn, lineOut, opacity, tileWidth, tileHeight, offsetX, offsetY, gutterWidth, gutterHeight, areaAlphaLevels
@@ -58,7 +58,7 @@
 // 
 // `tint-channels` - Has similarities to the SVG <feColorMatrix> filter element, but excludes the alpha channel from calculations. Rather than set a matrix, we set nine arguments to determine how the value of each color channel in a pixel will affect both itself and its fellow color channels. The 'sepia' convenience filter presets these values to create a sepia effect. Object attributes: action, lineIn, lineOut, opacity, redInRed, redInGreen, redInBlue, greenInRed, greenInGreen, greenInBlue, blueInRed, blueInGreen, blueInBlue
 // 
-// `user-defined-legacy` - Previous to Scrawl-canvas version 8.4.0, filters could be defined with an argument which passed a function string to the filter worker, which the worker would then run against the source input image as-and-when required. This functionality has been removed from the new filter system. All such filters will now return the input image unchanged. Object attributes: action, lineIn, lineOut, opacity
+// `user-defined-legacy` - Previous to Scrawl-canvas version 8.4.0, filters could be defined with an argument which passed a function string to a filter web worker, which the worker would then run against the source input image as-and-when required. This functionality has been removed from the new filter system. All such filters will now return the input image unchanged. Object attributes: action, lineIn, lineOut, opacity
 //
 // ```
 // // Example: the following code creates a filter that applies a thick red border around the entitys 
@@ -118,6 +118,8 @@
 import { constructors, cell, group, entity, asset } from '../core/library.js';
 import { mergeOver, removeItem, λnull } from '../core/utilities.js';
 
+import { makeFilterEngine } from './filterEngine.js';
+
 import baseMix from '../mixin/base.js';
 
 
@@ -152,7 +154,7 @@ P = baseMix(P);
 let defaultAttributes = {
 
     // ##### How the filter factory builds filters
-    // Filter actions are defined in action objects - which are vanilla Javascript Objects which are collected together in the __actions__ array. Each action object is processed sequentially by the web worker to produce the final output for that filter.
+    // Filter actions are defined in action objects - which are vanilla Javascript Objects which are collected together in the __actions__ array. Each action object is processed sequentially by the filter engine to produce the final output for that filter.
     actions: null,
 
     // The __method__ attribute is a String which, in legacy filters, determines the actions which that filter will take on the image. An entity, Group or Cell can include more than one filter object in its `filters` Array. 
@@ -162,16 +164,16 @@ let defaultAttributes = {
     method: '',
 
     // ##### How filters process data
-    // The Scrawl-canvas filters web worker can use ___multiple pathways___ to process a filter's Array of action objects. In essence, a filter action can store the results of its work in a named cache, which can then be used by other filter actions further down the line.
+    // The Scrawl-canvas filter engine can use ___multiple pathways___ to process a filter's Array of action objects. In essence, a filter action can store the results of its work in a named cache, which can then be used by other filter actions further down the line.
     // + When Scrawl-canvas applies filters to an entity, Group or Cell it will go through the entity's `filters` Array looking for any `process-image` actions; when it finds one it will add a snapshot of the associated asset's current image state to the filter object (thus Cell and Noise assets are naturally dynamic).
-    // + Then the system sends all of the filter's action objects over to the filters web worker, alongside a snapshot of the entity, Group or Cell to be processed.
+    // + Then the system sends all of the filter's action objects over to the filter engine, alongside a snapshot of the entity, Group or Cell to be processed.
     // + If the entity, Group or Cell is acting as a stencil (its `isStencil` flag has been set to true) then a snapshot of the background behind the entity/Group/Cell is sent instead of the entitys themselves.
-    // + When the web worker recieves the data packet, it stores the snapshot in its `source` cache, and replicates it into the `work` object.
+    // + When the filter engine recieves the data packet, it stores the snapshot in its `source` cache, and replicates it into the `work` object.
     // + All filter actions require a __lineIn__ string which references a cached image or snapshot. If this is not supplied, then the action will process the data stored in the `work` object.
     // + Additional sources for the lineIn (or lineMix) data are `source`, which copies the original source image data and delivers it to the action; and `source-alpha` which copies the original source's alpha channel data to each of the color channels and delivers it to the action.
     // + Similarly all filter actions require a __lineOut__ which identifies the name of a cache in which the processed data can be stored. If this is not supplied, then the action will copy the processed data back into the `work` object
     // + Some filter actions - specifically `blend`, `compose` and `displace` - use two inputs, combining the data referenced by the __lineIn__ and __lineMix__ attribute into __lineOut__ cache or work object.
-    // + When processing completes, the updated data held in the work object is returned by the web worker, which Scrawl-canvas then uses to stamp the entity/Group/Cell into the display canvas.
+    // + When processing completes, the updated data held in the work object is returned by the filter engine, which Scrawl-canvas then uses to stamp the entity/Group/Cell into the display canvas.
     lineIn: '',
     lineMix: '',
     lineOut: '',
@@ -351,6 +353,8 @@ P.set = function (items = {}) {
     }
     if (this.method && setActionsArray[this.method]) setActionsArray[this.method](this);
 
+    this.dirtyFiltersCache = true;
+
     return this;
 };
 
@@ -377,13 +381,15 @@ P.setDelta = function (items = {}) {
     }
     if (this.method && setActionsArray[this.method]) setActionsArray[this.method](this);
 
+    this.dirtyFiltersCache = true;
+    
     return this;
 };
 
 // #### Compatibility with Scrawl-canvas legacy filters functionality
 // The Scrawl-canvas filters code was rewritten from scratch for version 8.4.0. The new functionality introduced the concept of "line processing" - ___lineIn, lineMix, lineOut___ (analagous to SVG in, in2 and result attributes) - alongside the addition of more sophisticated image processing tools such as blend modes, compositing, more adaptable matrices, image loading, displacement mapping, etc.
 //
-// The legacy system - defining filters using __method__ String attributes - has been adapted to use the new system behind the scenes. As a result all legacy filters will continue to work as expected - with one exception: user-defined filters, which allowed the user to coder a function string to pass on to the web worker, will no longer function in Scrawl-canvas v8.4.0.
+// The legacy system - defining filters using __method__ String attributes - has been adapted to use the new system behind the scenes. As a result all legacy filters will continue to work as expected - with one exception: user-defined filters, which allowed the user to coder a function string to pass on to the filter engine, will no longer function in Scrawl-canvas v8.4.0.
 // 
 // Note that there are no plans to deprecate the legacy method of defining/creating Filters. The following code will continue to work:
 // ```
@@ -782,7 +788,7 @@ const setActionsArray = {
         }];
     },
 
-// __image__ (new in v8.4.0) - load an image into the web worker, where it can then be used by other filter actions - useful for effects such as watermarking an image
+// __image__ (new in v8.4.0) - load an image into the filter engine, where it can then be used by other filter actions - useful for effects such as watermarking an image
     image: function (f) {
 
         f.actions = [{
@@ -1089,73 +1095,22 @@ const setActionsArray = {
 // No additional prototype functions defined
 
 
-// #### Filter webworker pool
-// Because starting a web worker is an expensive operation, and a number of different filters may be required to render displays across a number of different &lt;canvas> elements in a web page, Scrawl-canvas operates a pool of web workers to perform work as-and-when required.
-// + These workers (generally there's only one) are not exposed to developers using the scrawl object, thus only get called internally
-
-// START PRODUCTION CODE
-const filterPool = [];
-import { filterUrl } from '../worker/filter-string.js';
+// #### Filter engine pool
+// For now, we use one filter engine
+// + This used to be a pool of web workers which loaded up filter functionality
+// + Now it is just another module call in the main thread
+const filterPool = makeFilterEngine();
 
 const requestFilterWorker = function () {
-    if (!filterPool.length) filterPool.push(new Worker(filterUrl));
-    return filterPool.shift();
+    return filterPool;
 };
 
-const releaseFilterWorker = function (f) {
-    filterPool.push(f);
+const releaseFilterWorker = function (f) {};
+
+const actionFilterWorker = function (ignore, items) {
+
+	return filterPool.action(items);
 };
-
-const actionFilterWorker = function (worker, items) {
-    return new Promise((resolve, reject) => {
-        worker.onmessage = (e) => {
-            if (e && e.data && e.data.image) resolve(e.data.image);
-            else resolve(false);
-        };
-        worker.onerror = (e) => {
-            console.log('error', e.lineno, e.message);
-            resolve(false);
-        };
-        worker.postMessage(items);
-    });
-};
-// END PRODUCTION CODE
-
-
-// START DEV CODE
-/*
-const filterPool = [];
-
-const requestFilterWorker = function () {
-    if (!filterPool.length) filterPool.push(buildFilterWorker());
-    return filterPool.shift();
-};
-
-const buildFilterWorker = function () {
-    let path = import.meta.url.slice(0, -('factory/filter.js'.length)); 
-    let filterUrl = `${path}worker/filter.js`;
-    return new Worker(filterUrl);
-};
-
-const releaseFilterWorker = function (f) {
-    filterPool.push(f);
-};
-
-const actionFilterWorker = function (worker, items) {
-    return new Promise((resolve, reject) => {
-        worker.onmessage = (e) => {
-            if (e && e.data && e.data.image) resolve(e.data.image);
-            else resolve(false);
-        };
-        worker.onerror = (e) => {
-            console.log('error', e.lineno, e.message);
-            resolve(false);
-        };
-        worker.postMessage(items);
-    });
-};
-*/
-// END DEV CODE
 
 
 // #### Factory

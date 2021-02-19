@@ -784,23 +784,91 @@ S.trackHere = function(val) {
 
         let self = this;
 
-        return new Promise((resolve, reject) => {
+        // return new Promise((resolve, reject) => {
+
+        //     // do not process if the DOM element is missing
+        //     if (!self.domElement) reject(false);
+
+        //     // calculate transform strings on each iteration
+        //     let [stampX, stampY] = self.currentStampPosition,
+        //         [handleX, handleY] = self.currentStampHandlePosition,
+        //         scale = self.currentScale;
+
+        //     let rotation = self.currentRotation,
+        //         v, vx, vy, vz, angle;
+
+        //     let nTransformOrigin = `${handleX}px ${handleY}px 0`,
+        //         nTransform = `translate(${stampX - handleX}px,${stampY - handleY}px)`;
+
+        //     if (self.yaw || self.pitch || self.roll || (self.pivot && self.addPivotRotation) || (self.mimic && self.useMimicRotation) || (self.path && self.addPathRotation)) {
+
+        //         v = rotation.v;
+        //         vx = v.x;
+        //         vy = v.y;
+        //         vz = v.z;
+        //         angle = rotation.getAngle(false);
+
+        //         nTransform += ` rotate3d(${vx},${vy},${vz},${angle}rad)`;
+        //     }
+
+        //     if (self.offsetZ) nTransform += ` translateZ(${self.offsetZ}px)`;
+
+        //     if (scale !== 1) nTransform += ` scale(${scale},${scale})`;
+
+        //     if (nTransform !== self.currentTransformString) {
+
+        //         self.currentTransformString = nTransform;
+        //         self.dirtyTransform = true;
+        //     }
+
+        //     if (nTransformOrigin !== self.currentTransformOriginString) {
+
+        //         self.currentTransformOriginString = nTransformOrigin;
+        //         self.dirtyTransformOrigin = true;
+        //     }
+
+        //     // determine whether there is a need to trigger a redraw of the DOM element
+        //     if (self.dirtyTransform || self.dirtyPerspective || self.dirtyPosition || self.dirtyDomDimensions || self.dirtyTransformOrigin || self.dirtyVisibility || self.dirtyCss || self.dirtyClasses || self.domShowRequired) {
+
+        //         addDomShowElement(self.name);
+        //         setDomShowRequired(true);
+        //     }
+
+        //     // update artefacts subscribed to this artefact (using it as their pivot or mimic source), if required
+        //     if (self.dirtyPositionSubscribers) self.updatePositionSubscribers();
+
+        //     // if this artefact's pivot or mimic source was playing up, reset appropriate dirty flags so we can try and fix on next iteration
+        //     if(self.dirtyMimicRotation || self.dirtyPivotRotation) {
+
+        //         self.dirtyMimicRotation = false;
+        //         self.dirtyPivotRotation = false;
+        //         self.dirtyRotation = true;
+        //     }
+
+        //     if(self.dirtyMimicScale) {
+
+        //         self.dirtyMimicScale = false;
+        //         self.dirtyScale = true;
+        //     }
+
+        //     resolve(true);
+        // });
 
             // do not process if the DOM element is missing
-            if (!self.domElement) reject(false);
+            if (!this.domElement) return false;
 
             // calculate transform strings on each iteration
-            let [stampX, stampY] = self.currentStampPosition,
-                [handleX, handleY] = self.currentStampHandlePosition,
-                scale = self.currentScale;
+            let [stampX, stampY] = this.currentStampPosition,
+                [handleX, handleY] = this.currentStampHandlePosition,
+                scale = this.currentScale;
 
-            let rotation = self.currentRotation,
+            let rotation = this.currentRotation,
                 v, vx, vy, vz, angle;
 
             let nTransformOrigin = `${handleX}px ${handleY}px 0`,
                 nTransform = `translate(${stampX - handleX}px,${stampY - handleY}px)`;
 
-            if (self.yaw || self.pitch || self.roll || (self.pivot && self.addPivotRotation) || (self.mimic && self.useMimicRotation) || (self.path && self.addPathRotation)) {
+            if (this.yaw || this.pitch || this.roll || (this.pivot && this.addPivotRotation) || (this.mimic && this.useMimicRotation) || (this.path && this.addPathRotation)) {
 
                 v = rotation.v;
                 vx = v.x;
@@ -811,48 +879,45 @@ S.trackHere = function(val) {
                 nTransform += ` rotate3d(${vx},${vy},${vz},${angle}rad)`;
             }
 
-            if (self.offsetZ) nTransform += ` translateZ(${self.offsetZ}px)`;
+            if (this.offsetZ) nTransform += ` translateZ(${this.offsetZ}px)`;
 
             if (scale !== 1) nTransform += ` scale(${scale},${scale})`;
 
-            if (nTransform !== self.currentTransformString) {
+            if (nTransform !== this.currentTransformString) {
 
-                self.currentTransformString = nTransform;
-                self.dirtyTransform = true;
+                this.currentTransformString = nTransform;
+                this.dirtyTransform = true;
             }
 
-            if (nTransformOrigin !== self.currentTransformOriginString) {
+            if (nTransformOrigin !== this.currentTransformOriginString) {
 
-                self.currentTransformOriginString = nTransformOrigin;
-                self.dirtyTransformOrigin = true;
+                this.currentTransformOriginString = nTransformOrigin;
+                this.dirtyTransformOrigin = true;
             }
 
             // determine whether there is a need to trigger a redraw of the DOM element
-            if (self.dirtyTransform || self.dirtyPerspective || self.dirtyPosition || self.dirtyDomDimensions || self.dirtyTransformOrigin || self.dirtyVisibility || self.dirtyCss || self.dirtyClasses || self.domShowRequired) {
+            if (this.dirtyTransform || this.dirtyPerspective || this.dirtyPosition || this.dirtyDomDimensions || this.dirtyTransformOrigin || this.dirtyVisibility || this.dirtyCss || this.dirtyClasses || this.domShowRequired) {
 
-                addDomShowElement(self.name);
+                addDomShowElement(this.name);
                 setDomShowRequired(true);
             }
 
             // update artefacts subscribed to this artefact (using it as their pivot or mimic source), if required
-            if (self.dirtyPositionSubscribers) self.updatePositionSubscribers();
+            if (this.dirtyPositionSubscribers) this.updatePositionSubscribers();
 
             // if this artefact's pivot or mimic source was playing up, reset appropriate dirty flags so we can try and fix on next iteration
-            if(self.dirtyMimicRotation || self.dirtyPivotRotation) {
+            if(this.dirtyMimicRotation || this.dirtyPivotRotation) {
 
-                self.dirtyMimicRotation = false;
-                self.dirtyPivotRotation = false;
-                self.dirtyRotation = true;
+                this.dirtyMimicRotation = false;
+                this.dirtyPivotRotation = false;
+                this.dirtyRotation = true;
             }
 
-            if(self.dirtyMimicScale) {
+            if(this.dirtyMimicScale) {
 
-                self.dirtyMimicScale = false;
-                self.dirtyScale = true;
+                this.dirtyMimicScale = false;
+                this.dirtyScale = true;
             }
-
-            resolve(true);
-        });
     };
 
 // `apply`
@@ -862,17 +927,12 @@ S.trackHere = function(val) {
         applyCoreResizeListener();
 
         this.prepareStamp();
-
-        let self = this;
-
         this.stamp()
-        .then(() => {
 
-            domShow(self.name);
-            self.dirtyPathObject = true;
-            self.cleanPathObject();
-        })
-        .catch(err => console.log(err));
+        domShow(this.name);
+
+        this.dirtyPathObject = true;
+        this.cleanPathObject();
     };
 
 // Return the prototype

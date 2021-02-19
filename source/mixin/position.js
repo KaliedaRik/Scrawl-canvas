@@ -171,7 +171,7 @@ export default function (P = {}) {
 
 // The __visibility__ attribute is a boolean flag (default: true); when the flag is set, the Display cycle functionality will run on the artefact. If the attribute's value is false, then the Display cycle functionality will ignore the artefact. This has the following effects:
 // + for DOM-based artefacts, the dom element will have its CSS tweaked to hide the element (`display: block` switches to `display: none`).
-// + for canvas-based entitys, the entity will be ignored during the Display cycle's `compile` step's Promise cascade.
+// + for canvas-based entitys, the entity will be ignored during the Display cycle's `compile` step.
         visibility: true,
 
 

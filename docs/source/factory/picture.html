@@ -125,6 +125,11 @@
                 </a>
               
                 
+                <a class="source" href="filterEngine.html">
+                  ./source/factory/filterEngine.js
+                </a>
+              
+                
                 <a class="source" href="fontAttributes.html">
                   ./source/factory/fontAttributes.js
                 </a>
@@ -429,16 +434,6 @@
                   ./source/mixin/tween.js
                 </a>
               
-                
-                <a class="source" href="../worker/filter-string.html">
-                  ./source/worker/filter-string.js
-                </a>
-              
-                
-                <a class="source" href="../worker/filter.html">
-                  ./source/worker/filter.js
-                </a>
-              
             </div>
           </div>
         </li>
@@ -451,8 +446,8 @@
         <li id="section-1">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-1">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="picture-factory">Picture factory</h1>
 <p>Picture entitys are image, video or canvas-based rectangles rendered onto a DOM &lt;canvas&gt; element using the Canvas API’s <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D">CanvasRenderingContext2D interface</a> - in particular the <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage">drawImage</a> method.</p>
@@ -467,7 +462,7 @@
 <li><strong>absolute</strong> positioning and dimensions - where we give the artefact a Number coordinate measured in pixels. </li>
 <li><strong>relative</strong> positioning and dimensions - where we use String percentage coordinates, with <code>[&#39;0%&#39;, &#39;0%&#39;]</code> representing the top left corner of the source, and <code>[&#39;100%&#39;, &#39;100%&#39;]</code> its bottom right corner.</li>
 </ul>
-<p>Source dimensions are the <strong><em>natural width and height</em></strong> of the image or video</p>
+<p>Source dimensions are the <em><strong>natural width and height</strong></em> of the image or video</p>
 <ul>
 <li>The code will check automatically to make sure that any combination of start and dimensions values does not lead to an attempt to copy image data that does not exist (which otherwise throws an error).</li>
 <li>Where <code>copyStartX + width</code> values are greater than the source width, the start value will be reduced until the copy frame fits within the bounds of the source dimensions.</li>
@@ -496,8 +491,8 @@
         <li id="section-2">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-2">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
               <h4 id="demos">Demos:</h4>
 <ul>
@@ -518,8 +513,8 @@
         <li id="section-3">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-3">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
               <h4 id="imports">Imports</h4>
 
@@ -544,8 +539,8 @@
         <li id="section-4">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <h4 id="picture-constructor">Picture constructor</h4>
 
@@ -591,8 +586,8 @@
         <li id="section-5">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <h4 id="picture-prototype">Picture prototype</h4>
 
@@ -610,8 +605,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         <li id="section-6">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
 <ul>
@@ -632,8 +627,8 @@ P = assetConsumerMix(P);</pre></div></div>
         <li id="section-7">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="picture-attributes">Picture attributes</h4>
 <ul>
@@ -659,8 +654,8 @@ P = assetConsumerMix(P);</pre></div></div>
         <li id="section-8">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p><strong>copyStart</strong> - Coordinate array</p>
 <ul>
@@ -677,8 +672,8 @@ P = assetConsumerMix(P);</pre></div></div>
         <li id="section-9">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p><strong>copyDimensions</strong> - Coordinate array</p>
 <ul>
@@ -695,8 +690,8 @@ P = assetConsumerMix(P);</pre></div></div>
         <li id="section-10">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p><strong>checkHitIgnoreTransparency</strong> - Boolean - when set, will check the stashedImage data to return whether a coordinate is hitting the image; otherwise checkHit will use the Picture entity’s dimensions to calculate the hit</p>
 
@@ -710,10 +705,10 @@ P = assetConsumerMix(P);</pre></div></div>
         <li id="section-11">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <p><strong><em>Additional attributes and pseudo-attributes</em></strong> are defined in the <a href="../mixin/assetConsumer.html">assetConsumer mixin</a></p>
+              <p><em><strong>Additional attributes and pseudo-attributes</strong></em> are defined in the <a href="../mixin/assetConsumer.html">assetConsumer mixin</a></p>
 
             </div>
             
@@ -726,8 +721,8 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         <li id="section-12">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
@@ -742,8 +737,8 @@ P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">&#x27;a
         <li id="section-13">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>No additional clone functionality required</p>
@@ -756,8 +751,8 @@ P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">&#x27;a
         <li id="section-14">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 
@@ -775,8 +770,8 @@ P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">&#x27;a
         <li id="section-15">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>Cascade kill invocation to the asset object, if required</p>
 
@@ -795,8 +790,8 @@ P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">&#x27;a
         <li id="section-16">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -812,8 +807,8 @@ P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">&#x27;a
         <li id="section-17">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p><strong>copyStart</strong></p>
 <ul>
@@ -880,8 +875,8 @@ D.copyStart = <span class="hljs-function"><span class="hljs-keyword">function</s
         <li id="section-18">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p><strong>copyDimensions</strong></p>
 <ul>
@@ -956,8 +951,8 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
         <li id="section-19">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>Picture <code>get</code> and <code>set</code> (but not <code>deltaSet</code>) functions need to take into account their current source, whose attributes can be retrieved/amended directly on the Picture object</p>
 
@@ -969,8 +964,8 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
         <li id="section-20">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p><code>get</code></p>
 
@@ -1022,8 +1017,8 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
         <li id="section-21">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p><code>set</code></p>
 
@@ -1075,8 +1070,8 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
         <li id="section-22">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <h4 id="subscriber-management">Subscriber management</h4>
 
@@ -1088,8 +1083,8 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
         <li id="section-23">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p><code>updateImageSubscribers</code></p>
 
@@ -1116,8 +1111,8 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
         <li id="section-24">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p><code>imageSubscribe</code></p>
 
@@ -1134,8 +1129,8 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
         <li id="section-25">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p><code>imageUnsubscribe</code></p>
 
@@ -1152,8 +1147,8 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
         <li id="section-26">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <h4 id="display-cycle-functionality">Display cycle functionality</h4>
 
@@ -1165,8 +1160,8 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
         <li id="section-27">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p><code>cleanImage</code></p>
 
@@ -1205,8 +1200,8 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
         <li id="section-28">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p><code>cleanCopyStart</code></p>
 
@@ -1248,8 +1243,8 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
         <li id="section-29">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p><code>cleanCopyDimensions</code></p>
 
@@ -1299,8 +1294,8 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
         <li id="section-30">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p><code>prepareStamp</code></p>
 
@@ -1314,8 +1309,8 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
         <li id="section-31">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p>The asset itself will update the Picture entity object when changes occur, by setting the entity’s <code>dirtyAsset</code> flag</p>
 
@@ -1329,8 +1324,8 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
         <li id="section-32">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p>Not content with the dirty flag, the entity now interrogates its asset via its <code>checkSource</code> to trigger it to directly rewrite key information if it has changed - particularly dimensional data</p>
 
@@ -1352,8 +1347,8 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
         <li id="section-33">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p> See the <a href="http://localhost:8080/docs/source/mixin/entity.html#section-31">entity mixin function</a> for details on the following checks and actions</p>
 
@@ -1393,8 +1388,8 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
         <li id="section-34">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p>Update artefacts subscribed to this artefact (using it as their pivot or mimic source), if required</p>
 
@@ -1408,8 +1403,8 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
         <li id="section-35">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p>Specifically for Loom entitys</p>
 
@@ -1424,8 +1419,8 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
         <li id="section-36">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p><code>preparePasteObject</code> - internal function</p>
 <ul>
@@ -1461,8 +1456,8 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
         <li id="section-37">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p><code>cleanPathObject</code> - internal function</p>
 <ul>
@@ -1491,8 +1486,8 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
         <li id="section-38">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <h5 id="stamp-methods">Stamp methods</h5>
 
@@ -1504,8 +1499,8 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
         <li id="section-39">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p><code>draw</code></p>
 
@@ -1522,8 +1517,8 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
         <li id="section-40">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p><code>fill</code></p>
 
@@ -1541,8 +1536,8 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
         <li id="section-41">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p><code>drawAndFill</code></p>
 
@@ -1566,8 +1561,8 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
         <li id="section-42">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p><code>fillAndDraw</code></p>
 
@@ -1593,8 +1588,8 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
         <li id="section-43">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p><code>drawThenFill</code></p>
 
@@ -1614,8 +1609,8 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
         <li id="section-44">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p><code>fillThenDraw</code></p>
 
@@ -1635,8 +1630,8 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
         <li id="section-45">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p><code>checkHitReturn</code> - overwrites mixin/position.js function</p>
 
@@ -1683,8 +1678,8 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
         <li id="section-46">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);
@@ -1733,7 +1728,8 @@ scrawl.makePicture({
 
     <span class="hljs-attr">order</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
-});</code></pre>
+});
+</code></pre>
 
             </div>
             
@@ -1749,8 +1745,8 @@ scrawl.makePicture({
         <li id="section-47">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

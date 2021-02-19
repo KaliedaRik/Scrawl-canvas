@@ -65,78 +65,67 @@ const buildSmokeRing = function (namespace, canvasWrapper, color) {
     });
 
     // We need to perform a clear-compile on the Cell, outside of the Display cycle
-    // + These functions return Promises, thus can be chained
-    cell.clear()
-    .then(() => {
+    cell.clear();
+    scrawl.createImageFromCell(cell, true);
+    cell.compile();
+    snake.kill();
+    cell.kill();
 
-        // Create the image asset, including adding an &lt;img> element to the DOM
-        scrawl.createImageFromCell(cell, true);
-        return cell.compile();
-    })
-    .then(() => {
+    // Create the Picture entity which will destroy the (dearly departed) Polyline on the canvas
+    let img = scrawl.makePicture({
+        name: `${namespace}-smokering`,
+        group: canvasWrapper.base.name,
 
-        // Cleanup - destroy the Polyline, and the Cell
-        snake.kill();
-        cell.kill();
+        start: ['center', 'center'],
+        handle: ['center', 'center'],
 
-        // Create the Picture entity which will destroy the (dearly departed) Polyline on the canvas
-        let img = scrawl.makePicture({
-            name: `${namespace}-smokering`,
-            group: canvasWrapper.base.name,
+        asset: `${namespace}-cell-image`,
 
-            start: ['center', 'center'],
-            handle: ['center', 'center'],
+        // 'dom' - is the magic String that tells Scrawl-canvas to remove both the asset wrapper object, and the &lt;img> element itself. Any other non-false value will cause only the asset wrapper object to remove itself.
+        removeAssetOnKill: 'dom',
 
-            asset: `${namespace}-cell-image`,
+        dimensions: [600, 600],
+        copyDimensions: [600, 600],
+    });
 
-            // 'dom' - is the magic String that tells Scrawl-canvas to remove both the asset wrapper object, and the &lt;img> element itself. Any other non-false value will cause only the asset wrapper object to remove itself.
-            removeAssetOnKill: 'dom',
+    // Create the Tween that will animate the Picture entity
+    scrawl.makeTween({
 
-            dimensions: [600, 600],
-            copyDimensions: [600, 600],
-        });
+        name: `${namespace}-tween`,
+        duration: '16s',
+        targets: `${namespace}-smokering`,
 
-        // Create the Tween that will animate the Picture entity
-        scrawl.makeTween({
+        // The Tween will run once and then destroy the Picture, the &lt;img> element and its asset wrapper, and then itself
+        cycles: 1,
+        killOnComplete: true,
+        completeAction: () => {
 
-            name: `${namespace}-tween`,
-            duration: '16s',
-            targets: `${namespace}-smokering`,
+            img.kill(true);
 
-            // The Tween will run once and then destroy the Picture, the &lt;img> element and its asset wrapper, and then itself
-            cycles: 1,
-            killOnComplete: true,
-            completeAction: () => {
+            counter++;
+            buildSmokeRing(`ring${counter}`, canvas, colorMaker.getRangeColor(Math.random()));
+        },
 
-                img.kill(true);
-
-                counter++;
-                buildSmokeRing(`ring${counter}`, canvas, colorMaker.getRangeColor(Math.random()));
+        definitions: [
+            {
+                attribute: 'scale',
+                start: 0,
+                end: 2,
+                engine: 'easeIn3',
             },
-
-            definitions: [
-                {
-                    attribute: 'scale',
-                    start: 0,
-                    end: 2,
-                    engine: 'easeIn3',
-                },
-                {
-                    attribute: 'globalAlpha',
-                    start: 1,
-                    end: 0,
-                },
-                {
-                    attribute: 'roll',
-                    start: 0,
-                    end: (Math.random() * 180) - 90,
-                    engine: 'easeIn',
-                },
-            ]
-        }).run();
-    })
-    // Cell clear and compile functions return promises, thus we need to catch errors
-    .catch(e => console.log('buildSmokeRing error', e));
+            {
+                attribute: 'globalAlpha',
+                start: 1,
+                end: 0,
+            },
+            {
+                attribute: 'roll',
+                start: 0,
+                end: (Math.random() * 180) - 90,
+                engine: 'easeIn',
+            },
+        ]
+    }).run();
 };
 
 

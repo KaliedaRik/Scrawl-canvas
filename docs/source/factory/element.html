@@ -125,6 +125,11 @@
                 </a>
               
                 
+                <a class="source" href="filterEngine.html">
+                  ./source/factory/filterEngine.js
+                </a>
+              
+                
                 <a class="source" href="fontAttributes.html">
                   ./source/factory/fontAttributes.js
                 </a>
@@ -429,16 +434,6 @@
                   ./source/mixin/tween.js
                 </a>
               
-                
-                <a class="source" href="../worker/filter-string.html">
-                  ./source/worker/filter-string.js
-                </a>
-              
-                
-                <a class="source" href="../worker/filter.html">
-                  ./source/worker/filter.js
-                </a>
-              
             </div>
           </div>
         </li>
@@ -451,8 +446,8 @@
         <li id="section-1">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-1">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="element-factory">Element factory</h1>
 <p>The Scrawl-canvas Stack/Element system is an attempt to supplement DOM elements with Scrawl-canvas entity <a href="../mixin/position.html">positioning and dimensioning</a> functionality.</p>
@@ -465,7 +460,8 @@
 </ul>
 <p><strong>A <a href="./stack.html">Stack</a> is a wrapper object around a DOM element</strong>, whose direct children are given Scrawl-canvas Element wrappers:</p>
 <pre><code>Stack    ~~&gt; Canvas/Cell  
-Element  ~~&gt; Entity (eg Block)  </code></pre>
+Element  ~~&gt; Entity (eg Block)  
+</code></pre>
 <p>During initialization Scrawl-canvas will search the DOM tree and automatically create Stack wrappers for any element which has been given a <code>data-stack</code> attribute which resolves to true. Every direct (first level) child inside the stack element will have Element wrappers created for them (except for &lt;canvas&gt; elements). As part of this work, Scrawl-canvas will modify the affected elements’ <code>position</code> CSS style:</p>
 <ul>
 <li>Stack elements have <code>relative</code> positioning within the DOM</li>
@@ -483,8 +479,8 @@ Element  ~~&gt; Entity (eg Block)  </code></pre>
         <li id="section-2">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-2">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
               <h4 id="demos">Demos:</h4>
 <ul>
@@ -505,8 +501,8 @@ Element  ~~&gt; Entity (eg Block)  </code></pre>
         <li id="section-3">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-3">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
               <h4 id="imports">Imports</h4>
 
@@ -527,8 +523,8 @@ Element  ~~&gt; Entity (eg Block)  </code></pre>
         <li id="section-4">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <h4 id="element-constructor">Element constructor</h4>
 
@@ -549,8 +545,8 @@ Element  ~~&gt; Entity (eg Block)  </code></pre>
         <li id="section-5">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p>Scrawl-canvas does not retain an Element’s textContent or innerHTML values internally. However these can be set on initialization, and subsequently, by using the attributes <code>text</code> (for textContent, which automatically escapes all HTML-related tags and entities) and <code>content</code> (which should respect HTML tags and entities) </p>
 
@@ -587,8 +583,8 @@ Element  ~~&gt; Entity (eg Block)  </code></pre>
         <li id="section-6">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="element-prototype">Element prototype</h4>
 
@@ -606,8 +602,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         <li id="section-7">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
 <ul>
@@ -626,8 +622,8 @@ P = domMix(P);</pre></div></div>
         <li id="section-8">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h4 id="element-attributes">Element attributes</h4>
 <ul>
@@ -650,8 +646,8 @@ P = domMix(P);</pre></div></div>
         <li id="section-9">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 <p>No additional packet functionality required</p>
@@ -664,8 +660,8 @@ P = domMix(P);</pre></div></div>
         <li id="section-10">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>No additional clone functionality required</p>
@@ -678,8 +674,8 @@ P = domMix(P);</pre></div></div>
         <li id="section-11">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 
@@ -698,8 +694,8 @@ P = domMix(P);</pre></div></div>
         <li id="section-12">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -713,8 +709,8 @@ P = domMix(P);</pre></div></div>
         <li id="section-13">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p><code>text</code> - <strong>this is the preferred way to update an element’s text content</strong> because the text supplied in the argument is not treated as HTML by the browser. </p>
 <p>When we update the DOM attribute <code>element.textContent</code>, it deletes any position-reporting corner divs we may have added to the element. Thus we need to repopulate the element with its ‘kids’ after updating the text</p>
@@ -742,8 +738,8 @@ P = domMix(P);</pre></div></div>
         <li id="section-14">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p><code>content</code> - <strong>WARNING - this is a dangerous function!</strong> It does not perform any character escaping before inserting the supplied argument into the element. Raw HTML (including, for instance, &lt;script&gt; tags) will be added to the DOM. It’s up to the developer to make sure this content is safe!</p>
 <p>When we update the DOM attribute <code>element.innerHTML</code>, it deletes any position-reporting corner divs we may have added to the element. Thus we need to repopulate the element with its ‘kids’ after updating the text</p>
@@ -771,8 +767,8 @@ P = domMix(P);</pre></div></div>
         <li id="section-15">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -784,8 +780,8 @@ P = domMix(P);</pre></div></div>
         <li id="section-16">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p><code>cleanDimensionsAdditionalActions</code> - overwrites mixin/position function.</p>
 
@@ -802,8 +798,8 @@ P = domMix(P);</pre></div></div>
         <li id="section-17">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <h4 id="component-related-functions">Component-related functions</h4>
 
@@ -815,8 +811,8 @@ P = domMix(P);</pre></div></div>
         <li id="section-18">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p><code>addCanvas</code> - adds a new &lt;canvas&gt; element to Scrawl-canvas stack immediately before this element, and sets up the canvas to mimic the element (meaning it will mimic changes to the element’s dimensions, positioning, scale and 3D rotational values)</p>
 <ul>
@@ -880,8 +876,8 @@ P = domMix(P);</pre></div></div>
         <li id="section-19">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>Get a handle to a Stack wrapper
@@ -929,7 +925,8 @@ stack.addNewElement({
     <span class="hljs-attr">css</span>: {
         <span class="hljs-attr">border</span>: <span class="hljs-number">0</span>,
     },
-});</code></pre>
+});
+</code></pre>
 
             </div>
             
@@ -946,8 +943,8 @@ stack.addNewElement({
         <li id="section-20">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

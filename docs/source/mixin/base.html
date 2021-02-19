@@ -125,6 +125,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/filterEngine.html">
+                  ./source/factory/filterEngine.js
+                </a>
+              
+                
                 <a class="source" href="../factory/fontAttributes.html">
                   ./source/factory/fontAttributes.js
                 </a>
@@ -429,16 +434,6 @@
                   ./source/mixin/tween.js
                 </a>
               
-                
-                <a class="source" href="../worker/filter-string.html">
-                  ./source/worker/filter-string.js
-                </a>
-              
-                
-                <a class="source" href="../worker/filter.html">
-                  ./source/worker/filter.js
-                </a>
-              
             </div>
           </div>
         </li>
@@ -451,8 +446,8 @@
         <li id="section-1">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-1">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="base-mixin">Base mixin</h1>
 <p>This mixin sets up much of the basic functionality of a Scrawl-canvas Object:</p>
@@ -477,8 +472,8 @@
         <li id="section-2">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-2">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
               <h4 id="imports">Imports</h4>
 
@@ -493,8 +488,8 @@
         <li id="section-3">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-3">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
               <h4 id="export-function">Export function</h4>
 
@@ -508,8 +503,8 @@
         <li id="section-4">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 <p>The <strong>defs</strong> object supplies default values for a Scrawl-canvas object. Setter functions will check to see that a related defs attribute exists before allowing users to update an object attribute. Similarly the getter function will use the defs object to supply default values for an attribute that has not otherwise been set, or has been deleted by a user.</p>
@@ -524,8 +519,8 @@
         <li id="section-5">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p>The <strong>getters</strong> object holds a suite of functions for given factory object attributes that need to have their values processed before they can be returned to the user.</p>
 
@@ -539,8 +534,8 @@
         <li id="section-6">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>The <strong>setters</strong> object holds a suite of functions for given factory object attributes that need to process a new value before setting it to the attribute.</p>
 
@@ -554,8 +549,8 @@
         <li id="section-7">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>The <strong>deltaSetters</strong> object holds a suite of functions for given factory object attributes that need to process a new value before adding it to the attribute’s existing value.</p>
 
@@ -569,12 +564,13 @@
         <li id="section-8">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p><code>get</code> - Retrieve an attribute value using the <strong>get</strong> function. While many attributes can be retrieved directly - for example, <em>scrawl.artefact.myelement.scale</em> - some attributes should only ever be retrieved using get:</p>
 <pre><code>scrawl.artefact.myelement.get(<span class="hljs-string">&#x27;startX&#x27;</span>);
--&gt; <span class="hljs-number">200</span></code></pre>
+-&gt; <span class="hljs-number">200</span>
+</code></pre>
 
             </div>
             
@@ -606,8 +602,8 @@
         <li id="section-9">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p><code>set</code> - Set an attribute value using the <strong>set</strong> function. It is extremely important that all factory object attributes are set using the set function; setting an attribute directly will lead to unexpected behaviour! The set function takes a single object as its argument.</p>
 <pre><code>scrawl.artefact.myelement.set({
@@ -615,7 +611,8 @@
     <span class="hljs-attr">startY</span>: <span class="hljs-number">200</span>,
     <span class="hljs-attr">scale</span>: <span class="hljs-number">1.5</span>,
     <span class="hljs-attr">roll</span>: <span class="hljs-number">90</span>,
-});</code></pre>
+});
+</code></pre>
 
             </div>
             
@@ -647,8 +644,8 @@
         <li id="section-10">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p><code>setDelta</code> - Add a value to an existing attribute value using the <strong>setDelta</strong> function. It is extremely important that all factory object attributes are updated using the setDelta function; updating an attribute directly will lead to unexpected behaviour! The setDelta function takes a single object as its argument.</p>
 <pre><code>scrawl.artefact.myelement.setDelta({
@@ -656,7 +653,8 @@
     <span class="hljs-attr">startY</span>: -<span class="hljs-number">20</span>,
     <span class="hljs-attr">scale</span>: <span class="hljs-number">0.05</span>,
     <span class="hljs-attr">roll</span>: <span class="hljs-number">5</span>,
-});</code></pre>
+});
+</code></pre>
 
             </div>
             
@@ -688,8 +686,8 @@
         <li id="section-11">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <h4 id="shared-attributes">Shared attributes</h4>
 
@@ -703,8 +701,8 @@
         <li id="section-12">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>Scrawl-canvas relies on unique <strong>name</strong> values being present in a factory object for a wide range of functionalities. Most of the library sections store an object by its name value, for example: <em>scrawl.artefact.myelement</em></p>
 
@@ -720,13 +718,14 @@
         <li id="section-13">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 <p><strong>Packets</strong> are Scrawl-canvas’s way of generating and consuming SC object data, both locally and over a network. A packet is a formatted JSON String which can be captured in a variable or saved to a text file.</p>
 <p>The packet format is as follows:</p>
-<pre><code><span class="hljs-string">&quot;[object-name, object-type, object&#x27;s-library-section, {object-data-key:value-pairs}]&quot;</span></code></pre>
+<pre><code><span class="hljs-string">&quot;[object-name, object-type, object&#x27;s-library-section, {object-data-key:value-pairs}]&quot;</span>
+</code></pre>
 <ul>
 <li>Use <strong>saveAsPacket()</strong> to get a stringified representation of a Scrawl-canvas object, which can then be consumed by other SC objects at a later date.</li>
 <li>Use <strong>actionPacket(‘packet-string’)</strong> to apply a previously saved packet to an existing SC object, or to create a new SC object from the packet if it doesn’t exist already</li>
@@ -788,7 +787,8 @@ box.kill()
 <span class="hljs-keyword">let</span> resurrectedBox = canvas.actionPacket(boxPacket);
 
 <span class="hljs-comment">// recreate the entity - if we had saved the packet to a file on a server</span>
-<span class="hljs-keyword">let</span> fetchedBox = canvas.importPacket(<span class="hljs-string">&#x27;https://example.com/path/to/boxPacket.txt&#x27;</span>);</code></pre>
+<span class="hljs-keyword">let</span> fetchedBox = canvas.importPacket(<span class="hljs-string">&#x27;https://example.com/path/to/boxPacket.txt&#x27;</span>);
+</code></pre>
 
             </div>
             
@@ -798,8 +798,8 @@ box.kill()
         <li id="section-14">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Internal processing Arrays</p>
 
@@ -817,8 +817,8 @@ box.kill()
         <li id="section-15">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p><code>saveAsPacket</code> - accepts an items {key:value} object argument with the following (optional) attributes:</p>
 <ul>
@@ -893,8 +893,8 @@ box.kill()
         <li id="section-16">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>Start cascade down to factory to pick up factory-specific exclusions</p>
 
@@ -912,8 +912,8 @@ box.kill()
         <li id="section-17">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>Start cascade down to factory to complete the copy object’s build</p>
 
@@ -927,8 +927,8 @@ box.kill()
         <li id="section-18">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>Return a JSON string</p>
 
@@ -943,8 +943,8 @@ box.kill()
         <li id="section-19">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>Helper functions that get defined in various mixins and factories - localizing the functionality to meet the specific needs of that factory’s object instances</p>
 
@@ -956,8 +956,8 @@ box.kill()
         <li id="section-20">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p><code>stringifyFunction</code></p>
 
@@ -971,8 +971,8 @@ box.kill()
         <li id="section-21">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p>The dotAll /s regex flag currently not supported by Firefox
 let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
@@ -992,8 +992,8 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         <li id="section-22">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p><code>processPacketOut</code></p>
 
@@ -1014,8 +1014,8 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         <li id="section-23">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p><code>finalizePacketOut</code></p>
 
@@ -1032,8 +1032,8 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         <li id="section-24">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p><code>importPacket</code> - Import and unpack a string representation of a factory object using the <strong>saveAsPacket</strong> function.</p>
 <ul>
@@ -1063,8 +1063,8 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         <li id="section-25">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p>Looks like we already have a packet for processing</p>
 
@@ -1081,8 +1081,8 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         <li id="section-26">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p>This is not much of a test …</p>
 
@@ -1096,8 +1096,8 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         <li id="section-27">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p>Looks like we have a packet for processing, but it’s malformed</p>
 
@@ -1113,8 +1113,8 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         <li id="section-28">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p>Attempt to fetch the packet from a remote server</p>
 
@@ -1160,8 +1160,8 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         <li id="section-29">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p><code>actionPacket</code> - This function:</p>
 <ol>
@@ -1213,8 +1213,8 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         <li id="section-30">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p>Stack-based artefacts need a DOM element that they can pass into the factory</p>
 
@@ -1254,8 +1254,8 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         <li id="section-31">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p>For the main object</p>
 
@@ -1269,8 +1269,8 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         <li id="section-32">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p>For artefact anchors - I know that anchors only have the one function to worry about, but doing it this way so I don’t forget how to approach it eg for SC sub-objects that have more than one user-settable function (eg timeline actions)</p>
 
@@ -1286,8 +1286,8 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         <li id="section-33">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p>Anchor.setters.clickAction(arg) explicitly checks that the supplied arg is a function - if it isn’t (like in packet cases) then the attribute doesn’t get updated when we invoke <em>obj.set(update);</em> earlier in this function.</p>
 
@@ -1302,8 +1302,8 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         <li id="section-34">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p>Anchors are a bit of an exception case because they add a user-interactive and yet otherwise untracked DOM element to the page, which has to be updated in its own sweet, special way…</p>
 
@@ -1319,8 +1319,8 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         <li id="section-35">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p>Specific to Phrase entitys, which doesn’t include a simple way to set or update glyphStyle objects</p>
 
@@ -1352,8 +1352,8 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         <li id="section-36">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p><code>actionPacketFunctions</code> - internal helper function - creates functions from Strings</p>
 
@@ -1381,8 +1381,8 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         <li id="section-37">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p>Native code raises non-terminal errors (because it is native code!) - so we dodge that bullet.</p>
 
@@ -1405,15 +1405,16 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         <li id="section-38">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>Most Scrawl-canvas factory objects can be copied using the <strong>clone</strong> function. The result will be an exact copy of the original, additionally set with values supplied in the argument object.</p>
 <pre><code>scrawl.artefact.myelement.clone({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myclonedelement&#x27;</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-number">60</span>,
-});</code></pre>
+});
+</code></pre>
 
             </div>
             
@@ -1423,8 +1424,8 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         <li id="section-39">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p><code>clone</code></p>
 
@@ -1443,8 +1444,8 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         <li id="section-40">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p>Tickers are specific to Tween and Action objects</p>
 
@@ -1464,8 +1465,8 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         <li id="section-41">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p>Everything else</p>
 
@@ -1495,8 +1496,8 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         <li id="section-42">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p><code>postCloneAction</code> - overwritten by a variety of mixins and factories</p>
 
@@ -1513,8 +1514,8 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         <li id="section-43">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 
@@ -1526,8 +1527,8 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         <li id="section-44">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p><code>kill</code> - overwritten by various mixins and factories</p>
 
@@ -1544,8 +1545,8 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         <li id="section-45">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 <p><code>makeName</code> - If the developer doesn’t supply a name value for a factory function, then Scrawl-canvas will generate a random name for the object to use.</p>
@@ -1566,8 +1567,8 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         <li id="section-46">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p><code>register</code> - Many (but not all) factory functions will register their result objects in the scrawl lobrary. The section where the object is stored is dependent on the factory function’s type value. </p>
 <ul>
@@ -1607,8 +1608,8 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         <li id="section-47">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p><code>deregister</code> - Reverse what register() does</p>
 
@@ -1645,8 +1646,8 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
         <li id="section-48">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p>Return the prototype</p>
 

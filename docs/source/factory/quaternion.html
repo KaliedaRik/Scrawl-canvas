@@ -125,6 +125,11 @@
                 </a>
               
                 
+                <a class="source" href="filterEngine.html">
+                  ./source/factory/filterEngine.js
+                </a>
+              
+                
                 <a class="source" href="fontAttributes.html">
                   ./source/factory/fontAttributes.js
                 </a>
@@ -429,16 +434,6 @@
                   ./source/mixin/tween.js
                 </a>
               
-                
-                <a class="source" href="../worker/filter-string.html">
-                  ./source/worker/filter-string.js
-                </a>
-              
-                
-                <a class="source" href="../worker/filter.html">
-                  ./source/worker/filter.js
-                </a>
-              
             </div>
           </div>
         </li>
@@ -451,8 +446,8 @@
         <li id="section-1">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-1">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="quaternion-factory">Quaternion factory</h1>
 <p>Scrawl-canvas uses quaternion objects for some of its calculations - in particular for calculating DOM element 3D rotation values. These objects are not stored in the library; rather, they are kept in a <strong>quaternion pool</strong> and pulled from it when required.</p>
@@ -472,8 +467,8 @@
         <li id="section-2">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-2">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
               <h4 id="imports">Imports</h4>
 
@@ -490,8 +485,8 @@
         <li id="section-3">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-3">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
               <h4 id="quaternion-constructor">Quaternion constructor</h4>
 
@@ -514,8 +509,8 @@
         <li id="section-4">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <h4 id="quaternion-prototype">Quaternion prototype</h4>
 
@@ -530,8 +525,8 @@ P.type = <span class="hljs-string">&#x27;Quaternion&#x27;</span>;</pre></div></d
         <li id="section-5">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
 <p>Quaternion objects do not use mixins - they are regular Javascript objects. As such, they do not possess packet, clone or kill functionality.</p>
@@ -544,8 +539,8 @@ P.type = <span class="hljs-string">&#x27;Quaternion&#x27;</span>;</pre></div></d
         <li id="section-6">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="quaternion-attributes">Quaternion attributes</h4>
 <p>The <strong>name</strong>, <strong>n</strong> and <strong>v</strong> (Vector object) attributes are set in the Quaternion constructor - the Quaternion object does not have a <code>defs</code> object. The Vector attributes <strong>v.x</strong>, <strong>v.y</strong>, <strong>v.z</strong> can also be set directly.</p>
@@ -559,8 +554,8 @@ P.type = <span class="hljs-string">&#x27;Quaternion&#x27;</span>;</pre></div></d
         <li id="section-7">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -572,8 +567,8 @@ P.type = <span class="hljs-string">&#x27;Quaternion&#x27;</span>;</pre></div></d
         <li id="section-8">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>Quaternion attributes can be retrieved directly - <code>myquaternion.n</code>, <code>myquaternion.v</code>. The <strong>v</strong> attribute is a Vector object, thus its attributes can be retrieved using that object’s convenience functions <code>myquaternion.v.getXYCoordinate</code> and <code>myquaternion.v.getXYZCoordinate</code> - these functions will return Arrays.</p>
 
@@ -585,8 +580,8 @@ P.type = <span class="hljs-string">&#x27;Quaternion&#x27;</span>;</pre></div></d
         <li id="section-9">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>The Quaternion <code>set</code> function is overloaded. It can accept the following arguments:</p>
 <ul>
@@ -674,8 +669,8 @@ P.setFromEuler = <span class="hljs-function"><span class="hljs-keyword">function
         <li id="section-10">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -687,8 +682,8 @@ P.setFromEuler = <span class="hljs-function"><span class="hljs-keyword">function
         <li id="section-11">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>Set the Quaternion attributes to their default values</p>
 
@@ -712,8 +707,8 @@ P.setFromEuler = <span class="hljs-function"><span class="hljs-keyword">function
         <li id="section-12">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>Get the Quaternion’s <strong>magnitude</strong> value</p>
 
@@ -732,8 +727,8 @@ P.setFromEuler = <span class="hljs-function"><span class="hljs-keyword">function
         <li id="section-13">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Normalize the Quaternion</p>
 
@@ -767,8 +762,8 @@ P.setFromEuler = <span class="hljs-function"><span class="hljs-keyword">function
         <li id="section-14">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Multiply the Quaternion by another Quaternion</p>
 
@@ -806,8 +801,8 @@ P.setFromEuler = <span class="hljs-function"><span class="hljs-keyword">function
         <li id="section-15">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>Retrieve the Quaternion’s current angle (returns a Number representing degrees, not radians)</p>
 
@@ -835,8 +830,8 @@ P.setFromEuler = <span class="hljs-function"><span class="hljs-keyword">function
         <li id="section-16">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>Rotate the Quaternion using another Quaternion’s values</p>
 
@@ -863,8 +858,8 @@ P.setFromEuler = <span class="hljs-function"><span class="hljs-keyword">function
         <li id="section-17">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <h4 id="quaternion-pool">Quaternion pool</h4>
 <p>An attempt to reuse quaternions rather than constantly creating and deleting them</p>
@@ -879,8 +874,8 @@ P.setFromEuler = <span class="hljs-function"><span class="hljs-keyword">function
         <li id="section-18">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p><code>exported function</code> - retrieve a Quaternion from the quaternion pool</p>
 
@@ -908,8 +903,8 @@ P.setFromEuler = <span class="hljs-function"><span class="hljs-keyword">function
         <li id="section-19">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p><code>exported function</code> - return a Quaternion to the quaternion pool. Failing to return Quaternion to the pool may lead to more inefficient code and possible memory leaks.</p>
 
@@ -929,8 +924,8 @@ P.setFromEuler = <span class="hljs-function"><span class="hljs-keyword">function
         <li id="section-20">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
@@ -951,8 +946,8 @@ P.setFromEuler = <span class="hljs-function"><span class="hljs-keyword">function
         <li id="section-21">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

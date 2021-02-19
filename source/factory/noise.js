@@ -1,5 +1,5 @@
 // # Noise factory
-// The purpose of the Noise asset is to give us a resource for generating noisy (semi-regular) maps. These can then be used directly as Picture or Pattern images, or uploaded to the filter worker object as part of a filter that uses displacement map functionality.
+// The purpose of the Noise asset is to give us a resource for generating noisy (semi-regular) maps. These can then be used directly as Picture or Pattern images, or uploaded to the filter engine as part of a filter that uses displacement map functionality.
 
 
 // #### Current functionality

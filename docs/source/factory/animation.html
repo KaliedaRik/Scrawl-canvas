@@ -125,6 +125,11 @@
                 </a>
               
                 
+                <a class="source" href="filterEngine.html">
+                  ./source/factory/filterEngine.js
+                </a>
+              
+                
                 <a class="source" href="fontAttributes.html">
                   ./source/factory/fontAttributes.js
                 </a>
@@ -429,16 +434,6 @@
                   ./source/mixin/tween.js
                 </a>
               
-                
-                <a class="source" href="../worker/filter-string.html">
-                  ./source/worker/filter-string.js
-                </a>
-              
-                
-                <a class="source" href="../worker/filter.html">
-                  ./source/worker/filter.js
-                </a>
-              
             </div>
           </div>
         </li>
@@ -451,8 +446,8 @@
         <li id="section-1">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-1">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="animation-factory">Animation factory</h1>
 <p>Animations lie at the heart of Scrawl-canvas functionality. While static <a href="./canvas.html">Canvas</a> and <a href="./stack.html">Stack</a> displays can be rendered once and then forgotten, any Canvas or Stack that implements any form of user interaction, or movement in the display, needs to implement an Animation object to make that functionality happen.</p>
@@ -477,8 +472,8 @@
         <li id="section-2">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-2">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
               <h4 id="demos">Demos:</h4>
 <ul>
@@ -495,8 +490,8 @@
         <li id="section-3">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-3">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
               <h4 id="imports">Imports</h4>
 
@@ -514,8 +509,8 @@
         <li id="section-4">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <h4 id="animation-constructor">Animation constructor</h4>
 
@@ -543,8 +538,8 @@
         <li id="section-5">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <h4 id="animation-prototype">Animation prototype</h4>
 
@@ -563,8 +558,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         <li id="section-6">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
 
@@ -578,8 +573,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         <li id="section-7">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="animation-attributes">Animation attributes</h4>
 <ul>
@@ -596,8 +591,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         <li id="section-8">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p><strong>order</strong> - positive integer Number - determines the order in which each Animation object will be actioned before the Display cycle starts. </p>
 <ul>
@@ -615,8 +610,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         <li id="section-9">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p><strong>fn</strong> - the main function that the Animation object will run on each RequestAnimationFrame tick. This function <strong>must return a Promise</strong>.</p>
 
@@ -630,8 +625,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         <li id="section-10">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>The Animation object supports some <strong>animation hook functions</strong>:</p>
 <ul>
@@ -652,8 +647,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         <li id="section-11">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p><strong>delay</strong> - by default, Animation objects will start running as soon as they are created. To prevent this happening the constructor argument can take a non-retained <code>delay</code> Boolean flag which, when set to true, will prevent the Animation object from adding itself to the Scrawl-canvas animation loop. The animation can be started at any subsequent time by invoking its <code>run</code> function.</p>
 
@@ -668,8 +663,8 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         <li id="section-12">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 <p>This functionality is disabled for Animation objects</p>
@@ -690,8 +685,8 @@ P.saveAsPacket = <span class="hljs-function"><span class="hljs-keyword">function
         <li id="section-13">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>This functionality is disabled for Animation objects</p>
@@ -706,8 +701,8 @@ P.saveAsPacket = <span class="hljs-function"><span class="hljs-keyword">function
         <li id="section-14">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 <p>Kill functionality is managed as one of the Animation object’s hook functions - see below</p>
@@ -720,8 +715,8 @@ P.saveAsPacket = <span class="hljs-function"><span class="hljs-keyword">function
         <li id="section-15">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 <p>No additional getter or setter functionality required</p>
@@ -734,8 +729,8 @@ P.saveAsPacket = <span class="hljs-function"><span class="hljs-keyword">function
         <li id="section-16">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -747,8 +742,8 @@ P.saveAsPacket = <span class="hljs-function"><span class="hljs-keyword">function
         <li id="section-17">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p><code>run</code> - start the animation, if it is not already running</p>
 
@@ -768,8 +763,8 @@ P.saveAsPacket = <span class="hljs-function"><span class="hljs-keyword">function
         <li id="section-18">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p><code>isRunning</code> - returns true if animation is running; false otherwise</p>
 
@@ -786,8 +781,8 @@ P.saveAsPacket = <span class="hljs-function"><span class="hljs-keyword">function
         <li id="section-19">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p><code>halt</code> - stop the animation, if it is already running</p>
 
@@ -807,8 +802,8 @@ P.saveAsPacket = <span class="hljs-function"><span class="hljs-keyword">function
         <li id="section-20">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p><code>kill</code> - stop the animation if it is already running, and remove it from the Scrawl-canvas library</p>
 
@@ -831,8 +826,8 @@ P.saveAsPacket = <span class="hljs-function"><span class="hljs-keyword">function
         <li id="section-21">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.makeAnimation({
@@ -850,7 +845,8 @@ P.saveAsPacket = <span class="hljs-function"><span class="hljs-keyword">function
             .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> resolve(<span class="hljs-literal">false</span>));
         });
     }
-});</code></pre>
+});
+</code></pre>
 
             </div>
             
@@ -867,8 +863,8 @@ P.saveAsPacket = <span class="hljs-function"><span class="hljs-keyword">function
         <li id="section-22">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

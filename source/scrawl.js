@@ -1,6 +1,6 @@
 // # Scrawl-canvas
 //
-// #### Version 8.4.0 - 2 Feb 2021
+// #### Version 8.5.0 - 19 Feb 2021
 //
 // ---------------------------------------------------------------------------------
 // The MIT License (MIT)
@@ -24,6 +24,10 @@
 // THE SOFTWARE.
 // ---------------------------------------------------------------------------------
 
+
+// ## Initialize Scrawl-canvas
+import { init } from './core/init.js';
+init();
 
 
 // ## Import Scrawl-canvas modules
@@ -300,9 +304,9 @@ import {
 
 
 
-// ## Initialize Scrawl-canvas
-import { init } from './core/init.js';
-init();
+// // ## Initialize Scrawl-canvas
+// import { init } from './core/init.js';
+// init();
 
 
 

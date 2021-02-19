@@ -125,6 +125,11 @@
                 </a>
               
                 
+                <a class="source" href="filterEngine.html">
+                  ./source/factory/filterEngine.js
+                </a>
+              
+                
                 <a class="source" href="fontAttributes.html">
                   ./source/factory/fontAttributes.js
                 </a>
@@ -429,16 +434,6 @@
                   ./source/mixin/tween.js
                 </a>
               
-                
-                <a class="source" href="../worker/filter-string.html">
-                  ./source/worker/filter-string.js
-                </a>
-              
-                
-                <a class="source" href="../worker/filter.html">
-                  ./source/worker/filter.js
-                </a>
-              
             </div>
           </div>
         </li>
@@ -451,20 +446,20 @@
         <li id="section-1">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-1">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="ticker-factory">Ticker factory</h1>
 <p>Ticker objects represent a timeline against which <a href="./tween.html">Tween</a> and <a href="./action.html">Action</a> objects will run.</p>
 <ul>
-<li><strong><em>A Ticker is an animation</em></strong> (but not a Scrawl-canvas <a href="./animation.html">Animation</a>) object; it defines a <code>fn</code> function internally which will check through all Tween and Action objects subscribing to it and, where appropriate, trigger their <code>update</code> functions.</li>
+<li><em><strong>A Ticker is an animation</strong></em> (but not a Scrawl-canvas <a href="./animation.html">Animation</a>) object; it defines a <code>fn</code> function internally which will check through all Tween and Action objects subscribing to it and, where appropriate, trigger their <code>update</code> functions.</li>
 <li>This module defines and launches a <code>coreTickersAnimation</code> Animation object; all Ticker objects get added to this object when their <code>run</code> or <code>resume</code> functions are triggered.</li>
 <li>The <code>coreTickersAnimation</code> object runs in the Scrawl-canvas <code>animationLoop</code> which is tied to the browser/device’s requestAnimationFrame (RAF) functionality. </li>
-<li><code>coreTickersAnimation</code> runs before other Animation objects, thus <strong><em>Tween/Action updates happen before any Display cycle functionality</em></strong>.</li>
-<li>Unlike Animation objects, <strong><em>Ticker objects do not run automatically</em></strong> as soon as they have been created.</li>
+<li><code>coreTickersAnimation</code> runs before other Animation objects, thus <em><strong>Tween/Action updates happen before any Display cycle functionality</strong></em>.</li>
+<li>Unlike Animation objects, <em><strong>Ticker objects do not run automatically</strong></em> as soon as they have been created.</li>
 <li>To trigger a Ticker object, invoke its <code>run</code> or <code>resume</code> functions.</li>
 </ul>
-<p>Ticker objects have an <strong><em>effective duration</em></strong> - a set number of milliseconds for which they will run.</p>
+<p>Ticker objects have an <em><strong>effective duration</strong></em> - a set number of milliseconds for which they will run.</p>
 <ul>
 <li>We can set this value directly, using the <code>duration</code> attribute.</li>
 <li>We can also ask the Ticker to calculate its own effective duration, taking into accout the start times and duration of its currently subscribed Tweens and Actions</li>
@@ -476,7 +471,7 @@
 <p>Tickers (unlike Animations) take part in Scrawl-canvas packet functionality; they can be saved, restored and cloned.</p>
 <p>Tickers can be controlled through a set of trigger functions: <strong>run, halt, reverse, resume, seekTo, seekFor, complete, reset</strong>.</p>
 <ul>
-<li>We can add <strong><em>Ticker hook functions</em></strong> to each of these trigger functions.</li>
+<li>We can add <em><strong>Ticker hook functions</strong></em> to each of these trigger functions.</li>
 </ul>
 <p>A Ticker can be made to dispatch a <a href="https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent">DOM Custom Event</a> at regular intervals as it runs, by setting its <code>eventChoke</code> attribute to a Number value (representing milliseconds) greater than <code>0</code>.</p>
 <ul>
@@ -488,7 +483,7 @@
 <ul>
 <li>Each Ticker can have more than one Tween (and 0 or more Actions) subscribed to it.</li>
 <li>Tweens and Actions can be told to subscribe to a Ticker when they are created; they can change their Ticker subscription at any time.</li>
-<li><strong><em>A Tween can make its own Ticker when it is created.</em></strong></li>
+<li><em><strong>A Tween can make its own Ticker when it is created.</strong></em></li>
 </ul>
 
             </div>
@@ -499,8 +494,8 @@
         <li id="section-2">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-2">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
               <p>TODO: basic packet and kill functionality tested in Demo DOM-004, but there’s a lot of Ticker/Tween/Action functionality that needs to be explored and tested further:</p>
 <ul>
@@ -509,7 +504,7 @@
 <li>A Ticker can have more than one subscribed Tween/Action; can (should?) Tweens/Actions be able to subscribe to more than one Ticker? <em>Initial thoughts: no - if such functionality required, clone the Tween/Action</em></li>
 <li>Can Tickers be nested? How could we use nested Tickers? <em>Initial thoughts: yes to nesting, possibly use an Action on one ticker to run/halt a second Ticker; one use case may be to break up a complex animation into smaller, more discrete parts? But this all begs the question: if we halt a nested Ticker (via user interaction), how would we cascade that through to parent/sibling Tickers?</em></li>
 <li>Possible additional demo - tie a more complex Ticker/Tween/Action sequence to a graphical timeline - see blog post <a href="https://blog.rikworks.co.uk/2018/05/26/Adding-some-canvas-love-to-Hexo/">Adding some canvas love to Hexo</a>.</li>
-<li>Would be a Big Win if we can tether Ticker/Tween/Actions to progress while a video plays - opens up the world of <strong><em>interactive video</em></strong>.</li>
+<li>Would be a Big Win if we can tether Ticker/Tween/Actions to progress while a video plays - opens up the world of <em><strong>interactive video</strong></em>.</li>
 </ul>
 
             </div>
@@ -520,8 +515,8 @@
         <li id="section-3">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-3">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
               <h4 id="demos">Demos:</h4>
 <ul>
@@ -542,8 +537,8 @@
         <li id="section-4">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <h4 id="imports">Imports</h4>
 
@@ -562,8 +557,8 @@
         <li id="section-5">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <h4 id="ticker-constructor">Ticker constructor</h4>
 
@@ -600,8 +595,8 @@
         <li id="section-6">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="ticker-prototype">Ticker prototype</h4>
 
@@ -619,8 +614,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         <li id="section-7">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
 
@@ -634,8 +629,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         <li id="section-8">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h4 id="ticker-attributes">Ticker attributes</h4>
 <ul>
@@ -652,8 +647,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         <li id="section-9">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p><strong>order</strong> - positive integer Number - determines the order in which each Ticker animation object will be actioned before the Display cycle starts. </p>
 <ul>
@@ -671,8 +666,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         <li id="section-10">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p><strong>duration</strong> - can accept a variety of values:</p>
 <ul>
@@ -691,8 +686,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         <li id="section-11">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p><strong>subscribers</strong> - Array of Tween and Action name-Strings. Use <code>subscribe</code> and <code>unsubscribe</code> functions rather than the <code>set</code> function to add/remove Tweens and/or Actions to/from the Ticker</p>
 
@@ -706,8 +701,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         <li id="section-12">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p><strong>killOnComplete</strong> - Boolean flag. When set, the Ticker will kill both itself and all Tweens and Actions associated with it at the end of its run</p>
 
@@ -721,8 +716,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         <li id="section-13">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p><strong>cycles</strong> - positive integer Number representing the number of cycles the Ticker will run before it completes. </p>
 <ul>
@@ -740,8 +735,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         <li id="section-14">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p><strong>eventChoke</strong> - positive Number representing the time to elapse before the Ticker creates and emits another event. A value of <code>0</code> stops the Ticker emitting events as it runs.</p>
 
@@ -755,8 +750,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         <li id="section-15">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>The Ticker object supports some <strong>hook functions</strong>:</p>
 <ul>
@@ -789,8 +784,8 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         <li id="section-16">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
@@ -805,8 +800,8 @@ P.packetFunctions = pushUnique(P.packetFunctions, [<span class="hljs-string">&#x
         <li id="section-17">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>No additional clone functionality required.</p>
@@ -819,8 +814,8 @@ P.packetFunctions = pushUnique(P.packetFunctions, [<span class="hljs-string">&#x
         <li id="section-18">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 <p><code>kill</code> - remove Ticker from Scrawl-canvas system.</p>
@@ -845,8 +840,8 @@ P.packetFunctions = pushUnique(P.packetFunctions, [<span class="hljs-string">&#x
         <li id="section-19">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p><code>killTweens</code> - remove a Ticker’s subscribed Tweens from Scrawl-canvas system.</p>
 <ul>
@@ -881,8 +876,8 @@ P.packetFunctions = pushUnique(P.packetFunctions, [<span class="hljs-string">&#x
         <li id="section-20">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -897,8 +892,8 @@ P.packetFunctions = pushUnique(P.packetFunctions, [<span class="hljs-string">&#x
         <li id="section-21">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p><strong>subscribers</strong> - see also the <code>subscribe</code> and <code>unsubscribe</code> functions below</p>
 <ul>
@@ -924,8 +919,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-22">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p><strong>order</strong></p>
 
@@ -944,8 +939,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-23">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p><strong>cycles</strong></p>
 
@@ -964,8 +959,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-24">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p><strong>duration</strong> - changes to the <code>duration</code> (and as a consequence <code>effectiveDuration</code>) attributes will be cascaded down to subscribed Tweens and Actions immediately.</p>
 
@@ -1001,8 +996,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-25">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <h4 id="subscription-management">Subscription management</h4>
 
@@ -1014,8 +1009,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-26">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p><code>subscribe</code> - accepts a Tween or Action name-String, or an Array of such Strings. </p>
 
@@ -1053,8 +1048,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-27">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p><code>unsubscribe</code> - accepts a Tween or Action name-String, or an Array of such Strings.</p>
 
@@ -1089,8 +1084,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-28">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p><code>repopulateSubscriberObjects</code></p>
 
@@ -1118,8 +1113,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-29">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p><code>getSubscriberObjects</code></p>
 
@@ -1138,8 +1133,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-30">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p><code>sortSubscribers</code> - internal Helper function called by <code>subscribe</code> and <code>unsubscribe</code></p>
 
@@ -1175,8 +1170,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-31">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p><code>updateSubscribers</code> - internal function called by the <code>run</code>, <code>reset</code> and <code>complete</code> functions below.</p>
 <ul>
@@ -1216,8 +1211,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-32">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p><code>changeSubscriberDirection</code> - internal function - when invoked, Tween/Actions will be told to reverse their current direction.</p>
 
@@ -1238,8 +1233,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-33">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <h4 id="events">Events</h4>
 
@@ -1251,8 +1246,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-34">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p><code>makeTickerUpdateEvent</code> - internal function - generates a new CustomEvent object.</p>
 
@@ -1278,8 +1273,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-35">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <h4 id="animation">Animation</h4>
 
@@ -1291,8 +1286,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-36">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-36">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p><code>recalculateEffectiveDuration</code> - where a Ticker has not been given a <code>duration</code> value, it needs to consult its subscribed Tween/Action objects to calculate an <code>effectiveDuration</code> value with sufficient time allocated for each Tween to run to completion, and each Action to trigger.</p>
 <ul>
@@ -1325,8 +1320,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-37">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-37">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p>Shouldn’t cause an infinite loop …</p>
 
@@ -1343,8 +1338,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-38">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-38">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p><code>setEffectiveDuration</code> - internal helper function - convert <code>duration</code> value into <code>effectiveDuration</code> value.</p>
 
@@ -1364,8 +1359,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-39">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-39">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p>Cannot use %-String values for Ticker <code>duration</code> attribute</p>
 
@@ -1387,14 +1382,13 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-40">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p><code>fn</code> - internal - the <strong>animation function</strong> will trigger once per RequestAnimationFrame (RAF) tick - approximately 60 times a second, depending on other calculation work.</p>
 <ul>
 <li>Only triggers when the Ticker is running in a qualifying state.</li>
 <li><strong>reverseOrder</strong> argument is a Boolean value; when set, subscribed Tween/Action objects will be processed in reverse order.</li>
-<li>Note that <strong><em>this function is synchronous</em></strong> - it does not return a Promise. <em>This will need to change if we ever move some Ticker/Tween/Action functionality over to a web worker</em>.</li>
 </ul>
 
             </div>
@@ -1407,8 +1401,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-41">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p>Request a <code>result</code> object from the pool.</p>
 
@@ -1422,8 +1416,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-42">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p>Determine the order in which subscribed objects will be processed</p>
 
@@ -1446,10 +1440,10 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-43">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
-              <p>Process only if the Ticker is currently <strong><em>active</em></strong> and has a <strong><em>startTime</em></strong> value assigned to it.</p>
+              <p>Process only if the Ticker is currently <em><strong>active</strong></em> and has a <em><strong>startTime</strong></em> value assigned to it.</p>
 
             </div>
             
@@ -1461,8 +1455,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-44">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p>Process only if the Ticker’s <code>cycles</code> attribute has been set to <code>0</code>, or if the Ticker has not yet completed all its cycles.</p>
 
@@ -1479,12 +1473,12 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-45">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p>Update the results object</p>
 <ul>
-<li>Functionality performed if the <strong><em>Tween is not on its final cycle</em></strong>.</li>
+<li>Functionality performed if the <em><strong>Tween is not on its final cycle</strong></em>.</li>
 </ul>
 
             </div>
@@ -1519,11 +1513,11 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-46">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <ul>
-<li>Functionality performed only when the <strong><em>Tween is on its final cycle</em></strong>.</li>
+<li>Functionality performed only when the <em><strong>Tween is on its final cycle</strong></em>.</li>
 </ul>
 
             </div>
@@ -1556,8 +1550,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-47">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p>Invoke the <code>update</code> function on each subscribed Tween/Action</p>
 
@@ -1586,8 +1580,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-48">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p>Dispatch the Ticker Event, if required.</p>
 
@@ -1612,8 +1606,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-49">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p>If this invocation of the function has completed the Ticker’s run, switch it off.</p>
 
@@ -1627,8 +1621,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-50">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-50">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p>If the Ticker’s run is completed and the <code>killOnComplete</code> flag is set, kill everything.</p>
 
@@ -1644,8 +1638,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-51">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p>Release the <code>result</code> object back to the pool.</p>
 
@@ -1660,8 +1654,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-52">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <h4 id="animation-control">Animation control</h4>
 
@@ -1673,8 +1667,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-53">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p><code>run</code> </p>
 <ul>
@@ -1712,8 +1706,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-54">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p><code>isRunning</code> - check to see if Ticker is in a running state.</p>
 
@@ -1730,8 +1724,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-55">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p><code>reset</code></p>
 <ul>
@@ -1770,8 +1764,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-56">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p><code>complete</code></p>
 <ul>
@@ -1810,8 +1804,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-57">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p><code>reverse</code> - simulates a reversal in the Ticker’s animation.</p>
 <ul>
@@ -1855,8 +1849,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-58">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p><code>halt</code></p>
 <ul>
@@ -1883,8 +1877,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-59">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p><code>resume</code> - this function can also be triggered by the <code>reverse</code>, <code>seekTo</code> and <code>seekFor</code> functions</p>
 <ul>
@@ -1921,8 +1915,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-60">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <p><code>seekTo</code></p>
 <ul>
@@ -1968,8 +1962,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-61">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p><code>seekFor</code></p>
 <ul>
@@ -2015,8 +2009,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-62">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <h4 id="ticker-animation-controller">Ticker animation controller</h4>
 
@@ -2031,8 +2025,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-63">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p><code>coreTickersAnimation</code></p>
 
@@ -2044,9 +2038,7 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
     <span class="hljs-attr">order</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">fn</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve</span>) =&gt;</span> {
-            
-            <span class="hljs-keyword">let</span> i, iz, t;</pre></div></div>
+        <span class="hljs-keyword">let</span> i, iz, t;</pre></div></div>
             
         </li>
         
@@ -2054,8 +2046,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-64">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <p>We only sort active Ticker objects when absolutely necessary.</p>
 <ul>
@@ -2064,29 +2056,29 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (tickerAnimationsFlag) {
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (tickerAnimationsFlag) {
 
-                tickerAnimationsFlag = <span class="hljs-literal">false</span>;
+            tickerAnimationsFlag = <span class="hljs-literal">false</span>;
 
-                <span class="hljs-keyword">let</span> tans = [].concat(tickerAnimations),
-                    floor = <span class="hljs-built_in">Math</span>.floor,
-                    buckets = [];
+            <span class="hljs-keyword">let</span> tans = [].concat(tickerAnimations),
+                floor = <span class="hljs-built_in">Math</span>.floor,
+                buckets = [];
 
-                tans.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
+            tans.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
-                    <span class="hljs-keyword">let</span> obj = animationtickers[name];
+                <span class="hljs-keyword">let</span> obj = animationtickers[name];
 
-                    <span class="hljs-keyword">if</span> (xt(obj)) {
+                <span class="hljs-keyword">if</span> (xt(obj)) {
 
-                        <span class="hljs-keyword">let</span> order = floor(obj.order) || <span class="hljs-number">0</span>;
+                    <span class="hljs-keyword">let</span> order = floor(obj.order) || <span class="hljs-number">0</span>;
 
-                        <span class="hljs-keyword">if</span> (!buckets[order]) buckets[order] = [];
+                    <span class="hljs-keyword">if</span> (!buckets[order]) buckets[order] = [];
 
-                        buckets[order].push(obj.name);
-                    }
-                });
-                tickerAnimations = buckets.reduce(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a.concat(v), []);
-            }</pre></div></div>
+                    buckets[order].push(obj.name);
+                }
+            });
+            tickerAnimations = buckets.reduce(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a.concat(v), []);
+        }</pre></div></div>
             
         </li>
         
@@ -2094,8 +2086,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         <li id="section-65">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <p>Invoke each Ticker’s <code>fn</code> function.</p>
 <ul>
@@ -2105,28 +2097,11 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            tickerAnimations.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>        tickerAnimations.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
-                <span class="hljs-keyword">let</span> obj = animationtickers[name];
+            <span class="hljs-keyword">let</span> obj = animationtickers[name];
 
-                <span class="hljs-keyword">if</span> (obj &amp;&amp; obj.fn) obj.fn();
-
-            });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-66">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
-              </div>
-              <p>Will only resolve the Promise when all Tickers (and their subscribed Tween/Actions) have processed their <code>fn</code>/<code>update</code> functions.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            resolve(<span class="hljs-literal">true</span>);
+            <span class="hljs-keyword">if</span> (obj &amp;&amp; obj.fn) obj.fn();
         });
     }
 });</pre></div></div>
@@ -2134,11 +2109,11 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-67">
+        <li id="section-66">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <h4 id="resultobject-pool">ResultObject pool</h4>
 <p>… Because we generate so many of them.</p>
@@ -2154,11 +2129,11 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-68">
+        <li id="section-67">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <p><code>requestResultObject</code></p>
 
@@ -2182,11 +2157,11 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-69">
+        <li id="section-68">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <p><code>releaseResultObject</code></p>
 
@@ -2207,11 +2182,11 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-70">
+        <li id="section-69">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-70">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
@@ -2226,11 +2201,11 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
         </li>
         
         
-        <li id="section-71">
+        <li id="section-70">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-71">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

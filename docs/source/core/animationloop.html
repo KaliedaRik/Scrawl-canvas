@@ -125,6 +125,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/filterEngine.html">
+                  ./source/factory/filterEngine.js
+                </a>
+              
+                
                 <a class="source" href="../factory/fontAttributes.html">
                   ./source/factory/fontAttributes.js
                 </a>
@@ -429,16 +434,6 @@
                   ./source/mixin/tween.js
                 </a>
               
-                
-                <a class="source" href="../worker/filter-string.html">
-                  ./source/worker/filter-string.js
-                </a>
-              
-                
-                <a class="source" href="../worker/filter.html">
-                  ./source/worker/filter.js
-                </a>
-              
             </div>
           </div>
         </li>
@@ -451,12 +446,12 @@
         <li id="section-1">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-1">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="the-animation-loop">The Animation Loop</h1>
 <p>Scrawl-canvas runs a single, centralized requestAnimationFrame (RAF) function - <strong>animationLoop</strong> - for all animation objects. </p>
-<p>Animation objects are Scrawl-canvas objects with a <strong>fn</strong> attribute - a function which returns a Promise; all Animation objects contained in the <strong>animate</strong> array will be invoked as part of a Promise.all action. Once the Promise.all resolves, <em>animationLoop</em> is invoked again.</p>
+<p><a href="../factory/animation.html">Animation objects</a> are Scrawl-canvas objects with a <strong>fn</strong> attribute; the function will be invoked once per RAF cycle. </p>
 <p>The RAF function is first invoked as part of Scrawl-canvas initialization when it loads into a web page, and continues to run while the <strong>doAnimation</strong> flag remains true.</p>
 <p>To stop the RAF:</p>
 <p><code>scrawl.stopCoreAnimationLoop()</code></p>
@@ -487,14 +482,14 @@
         <li id="section-2">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-2">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
               <h4 id="imports">Imports</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { animation } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./library.js&quot;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { animation, filter } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./library.js&quot;</span>;</pre></div></div>
             
         </li>
         
@@ -502,8 +497,8 @@
         <li id="section-3">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-3">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
               <p>Local variables </p>
 
@@ -519,8 +514,8 @@
         <li id="section-4">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <p><code>Exported array</code> (to modules). The <strong>animate</strong> array, which holds handles to all animation objects due to be run at the next RAF invocation, is exported to other modules so code can add/remove animation objects as required.</p>
 
@@ -534,8 +529,8 @@
         <li id="section-5">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p><code>Exported function</code> (to modules). Force the animation objects to be sorted at the start of the next RAF invocation</p>
 
@@ -551,8 +546,8 @@
         <li id="section-6">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>Scrawl-canvas animation sorter uses a ‘bucket sort’ algorithm</p>
 
@@ -592,8 +587,8 @@
         <li id="section-7">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>The <strong>requestAnimationFrame</strong> function</p>
 
@@ -601,21 +596,11 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> animationLoop = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">let</span> promises = [];
-
     <span class="hljs-keyword">if</span> (resortBatchAnimations) sortAnimations();
 
-    animate_sorted.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
+    animate_sorted.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.fn());
 
-        <span class="hljs-keyword">if</span> (item &amp;&amp; item.fn) promises.push(item.fn());
-    });
-
-    <span class="hljs-built_in">Promise</span>.all(promises)
-    .then(<span class="hljs-function">() =&gt;</span> {
-
-        <span class="hljs-keyword">if</span> (doAnimation) <span class="hljs-built_in">window</span>.requestAnimationFrame(<span class="hljs-function">() =&gt;</span> animationLoop());
-    })
-    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;animationLoop error: &#x27;</span>, err));
+    <span class="hljs-keyword">if</span> (doAnimation) <span class="hljs-built_in">window</span>.requestAnimationFrame(<span class="hljs-function">() =&gt;</span> animationLoop());
 };</pre></div></div>
             
         </li>
@@ -624,8 +609,8 @@
         <li id="section-8">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p><code>Exported function</code> (modules and scrawl object). Start the RAF function running</p>
 
@@ -643,8 +628,8 @@
         <li id="section-9">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p><code>Exported function</code> (modules and scrawl object). Halt the RAF function</p>
 
@@ -661,8 +646,8 @@
         <li id="section-10">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

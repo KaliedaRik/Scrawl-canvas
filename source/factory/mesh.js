@@ -733,7 +733,7 @@ P.setSourceDimension = function () {
 };
 
 // `simpleStamp` - Simple stamping is entirely synchronous
-// + TODO: we may have to disable this functionality for the Mesh entity, if we use a web worker for either the prepareStamp calculations, or to build the output image itself
+// + TODO: we may have to disable this functionality for the Mesh entity, if we use a Web Assembly module for either the prepareStamp calculations, or to build the output image itself
 P.simpleStamp = function (host, changes = {}) {
 
     if (host && host.type === 'Cell') {
@@ -766,49 +766,21 @@ P.stamp = function (force = false, host, changes) {
             this.set(changes);
             this.prepareStamp();
         }
-        return this.regularStamp();
+        this.regularStamp();
     }
 
     if (this.visibility) {
 
-        let self = this,
-            dirtyInput = this.dirtyInput;
+        if (this.dirtyInput) {
 
-        if (dirtyInput) {
+            this.sourceImageData = this.cleanInput();
 
-            return new Promise((resolve, reject) => {
-
-                self.cleanInput()
-                .catch(err => {
-
-                    // We don't need to completely reject if output is not clean
-                    // + It should be enough to bale out of the stamp functionality and hope it resolves during the next RAF iteration
-                    console.log(`${self.name} - cleanInput Error: source has a zero dimension`);
-                    resolve(false);
-                })
-                .then(res => {
-
-                    self.sourceImageData = res;
-                    return self.cleanOutput();
-                })
-                .then(res => {
-
-                    self.output = res;
-                    return self.regularStamp();
-                })
-                .then(res => {
-
-                    resolve(true);
-                })
-                .catch(err => {
-                    
-                    reject(err);
-                });
-            })
+            if (this.sourceImageData) this.output = this.cleanOutput();
+            else this.dirtyInput = true;
         }
-        else return this.regularStamp();
+
+        if (this.output) this.regularStamp();
     }
-    else return Promise.resolve(false);
 };
 
 // #### Clean functions
@@ -816,204 +788,176 @@ P.stamp = function (force = false, host, changes) {
 // `cleanInput` - internal function called by `stamp`
 P.cleanInput = function () {
 
-    let self = this;
+    this.dirtyInput = false;
 
-    return new Promise((resolve, reject) => {
+    this.setSourceDimension();
 
-        self.dirtyInput = false;
+    let sourceDimension = this.sourceDimension;
 
-        self.setSourceDimension();
+    if (!sourceDimension) {
 
-        let sourceDimension = self.sourceDimension;
+        this.dirtyInput = true;
+        return false;
+    }
 
-        if (!sourceDimension) {
+    let cell = requestCell(),
+        engine = cell.engine,
+        canvas = cell.element;
 
-            self.dirtyInput = true;
-            reject();
-        }
+    canvas.width = sourceDimension;
+    canvas.height = sourceDimension;
+    engine.setTransform(1, 0, 0, 1, 0, 0);
 
-        let cell = requestCell(),
-            engine = cell.engine,
-            canvas = cell.element;
+    this.source.stamp(true, cell, { 
+        startX: 0,
+        startY: 0,
+        handleX: 0,
+        handleY: 0,
+        offsetX: 0,
+        offsetY: 0,
+        roll: 0,
+        scale: 1,
 
-        canvas.width = sourceDimension;
-        canvas.height = sourceDimension;
-        engine.setTransform(1, 0, 0, 1, 0, 0);
+        width: sourceDimension,
+        height: sourceDimension,
 
-        self.source.stamp(true, cell, { 
-            startX: 0,
-            startY: 0,
-            handleX: 0,
-            handleY: 0,
-            offsetX: 0,
-            offsetY: 0,
-            roll: 0,
-            scale: 1,
+        method: 'fill',
+    })
+    let sourceImageData = engine.getImageData(0, 0, sourceDimension, sourceDimension);
 
-            width: sourceDimension,
-            height: sourceDimension,
-
-            method: 'fill',
-        })
-        .then(res => {
-
-            let sourceImageData = engine.getImageData(0, 0, sourceDimension, sourceDimension);
-
-            releaseCell(cell);
-            resolve(sourceImageData);
-        })
-        .catch(err => {
-
-            releaseCell(cell);
-            reject(err);
-        });
-    });
+    releaseCell(cell);
+    return sourceImageData;
 };
 
 // `cleanOutput` - internal function called by `stamp`
 // + If you're not a fan of big functions, please look away now.
 P.cleanOutput = function () {
     
-    let self = this;
+    const halfPi = Math.PI / 2;
 
-    return new Promise((resolve, reject) => {
+    this.dirtyOutput = false;
 
-        const halfPi = Math.PI / 2;
+    let {sourceDimension, sourceImageData, columns, rows, struts, boundingBox} = this;
 
-        self.dirtyOutput = false;
+    sourceDimension = Math.ceil(sourceDimension);
 
-        let {sourceDimension, sourceImageData, columns, rows, struts, boundingBox} = self;
+    if (sourceImageData && rows - 1 > 0) {
 
-        sourceDimension = Math.ceil(sourceDimension);
+        let [startX, startY, outputWidth, outputHeight] = boundingBox;
 
-        if (sourceImageData && rows - 1 > 0) {
+        outputWidth += startX;
+        outputHeight += startY;
 
-            let [startX, startY, outputWidth, outputHeight] = boundingBox;
+        const inputCell = requestCell(),
+            inputEngine = inputCell.engine,
+            inputCanvas = inputCell.element;
 
-            outputWidth += startX;
-            outputHeight += startY;
+        inputCanvas.width = sourceDimension;
+        inputCanvas.height = sourceDimension;
+        inputEngine.setTransform(1, 0, 0, 1, 0, 0);
+        inputEngine.putImageData(sourceImageData, 0, 0);
 
-            const inputCell = requestCell(),
-                inputEngine = inputCell.engine,
-                inputCanvas = inputCell.element;
+        const outputCell = requestCell(),
+            outputEngine = outputCell.engine,
+            outputCanvas = outputCell.element;
 
-            inputCanvas.width = sourceDimension;
-            inputCanvas.height = sourceDimension;
-            inputEngine.setTransform(1, 0, 0, 1, 0, 0);
-            inputEngine.putImageData(sourceImageData, 0, 0);
+        outputCanvas.width = outputWidth;
+        outputCanvas.height = outputHeight;
+        outputEngine.globalAlpha = this.state.globalAlpha;
+        outputEngine.setTransform(1, 0, 0, 1, 0, 0);
 
-            const outputCell = requestCell(),
-                outputEngine = outputCell.engine,
-                outputCanvas = outputCell.element;
+        const inputStrutHeight = parseFloat((sourceDimension / (rows - 1)).toFixed(4)),
+            inputStrutWidth = parseFloat((sourceDimension / (columns - 1)).toFixed(4));
 
-            outputCanvas.width = outputWidth;
-            outputCanvas.height = outputHeight;
-            outputEngine.globalAlpha = self.state.globalAlpha;
-            outputEngine.setTransform(1, 0, 0, 1, 0, 0);
+        let topStruts, baseStruts,
+            maxLen, tStep, bStep, iStep, xtStep, ytStep, xbStep, ybStep, tx, ty, bx, by, sx, sy,
+            xLen, yLen, stripLength, stripAngle,
+            c, cz, r, rz, i, iz;
 
-            const inputStrutHeight = parseFloat((sourceDimension / (rows - 1)).toFixed(4)),
-                inputStrutWidth = parseFloat((sourceDimension / (columns - 1)).toFixed(4));
+        for (r = 0, rz = rows - 1; r < rz; r++) {
 
-            let topStruts, baseStruts,
-                maxLen, tStep, bStep, iStep, xtStep, ytStep, xbStep, ybStep, tx, ty, bx, by, sx, sy,
-                xLen, yLen, stripLength, stripAngle,
-                c, cz, r, rz, i, iz;
+            topStruts = struts[r];
+            baseStruts = struts[r + 1];
 
-            for (r = 0, rz = rows - 1; r < rz; r++) {
+            for (c = 0, cz = columns - 1; c < cz; c++) {
 
-                topStruts = struts[r];
-                baseStruts = struts[r + 1];
+                let [ltx, lty, rtx, rty, tLen] = topStruts[c];
+                let [lbx, lby, rbx, rby, bLen] = baseStruts[c];
 
-                for (c = 0, cz = columns - 1; c < cz; c++) {
+                tLen *= sourceDimension;
+                bLen *= sourceDimension;
 
-                    let [ltx, lty, rtx, rty, tLen] = topStruts[c];
-                    let [lbx, lby, rbx, rby, bLen] = baseStruts[c];
+                maxLen = Math.max(tLen, bLen, inputStrutWidth);
 
-                    tLen *= sourceDimension;
-                    bLen *= sourceDimension;
+                tStep = tLen / maxLen;
+                bStep = bLen / maxLen;
+                iStep = inputStrutWidth / maxLen;
 
-                    maxLen = Math.max(tLen, bLen, inputStrutWidth);
+                xtStep = (rtx - ltx) / maxLen;
+                ytStep = (rty - lty) / maxLen;
+                xbStep = (rbx - lbx) / maxLen;
+                ybStep = (rby - lby) / maxLen;
 
-                    tStep = tLen / maxLen;
-                    bStep = bLen / maxLen;
-                    iStep = inputStrutWidth / maxLen;
+                for (i = 0; i < maxLen; i++) {
 
-                    xtStep = (rtx - ltx) / maxLen;
-                    ytStep = (rty - lty) / maxLen;
-                    xbStep = (rbx - lbx) / maxLen;
-                    ybStep = (rby - lby) / maxLen;
+                    tx = ltx + (xtStep * i);
+                    ty = lty + (ytStep * i);
+                    bx = lbx + (xbStep * i);
+                    by = lby + (ybStep * i);
+                    sy = r * inputStrutHeight;
+                    sx = (c * inputStrutWidth) + (iStep * i);
 
-                    for (i = 0; i < maxLen; i++) {
+                    xLen = tx - bx;
+                    yLen = ty - by;
+                    stripLength = Math.sqrt((xLen * xLen) + (yLen * yLen));
+                    stripAngle = Math.atan2(yLen, xLen) + halfPi;
 
-                        tx = ltx + (xtStep * i);
-                        ty = lty + (ytStep * i);
-                        bx = lbx + (xbStep * i);
-                        by = lby + (ybStep * i);
-                        sy = r * inputStrutHeight;
-                        sx = (c * inputStrutWidth) + (iStep * i);
+                    outputEngine.setTransform(1, 0, 0, 1, tx, ty);
+                    outputEngine.rotate(stripAngle);
 
-                        xLen = tx - bx;
-                        yLen = ty - by;
-                        stripLength = Math.sqrt((xLen * xLen) + (yLen * yLen));
-                        stripAngle = Math.atan2(yLen, xLen) + halfPi;
+                    // Safari bugfix because we fall foul of of the Safari source-out-of-bounds bug
+                    // + [Stack Overflow question identifying the issue](https://stackoverflow.com/questions/35500999/cropping-with-drawimage-not-working-in-safari)
+                    let testHeight = (sy + inputStrutHeight > sourceDimension) ? sourceDimension - sy : inputStrutHeight;
 
-                        outputEngine.setTransform(1, 0, 0, 1, tx, ty);
-                        outputEngine.rotate(stripAngle);
-
-                        // Safari bugfix because we fall foul of of the Safari source-out-of-bounds bug
-                        // + [Stack Overflow question identifying the issue](https://stackoverflow.com/questions/35500999/cropping-with-drawimage-not-working-in-safari)
-                        let testHeight = (sy + inputStrutHeight > sourceDimension) ? sourceDimension - sy : inputStrutHeight;
-
-                        outputEngine.drawImage(inputCanvas, sx, sy, 1, testHeight, 0, 0, 1, stripLength);
-                    }
+                    outputEngine.drawImage(inputCanvas, sx, sy, 1, testHeight, 0, 0, 1, stripLength);
                 }
             }
-
-            let iFactor = self.interferenceFactor,
-                iLoops = self.interferenceLoops,
-
-                iWidth = Math.ceil(outputWidth * iFactor),
-                iHeight = Math.ceil(outputHeight * iFactor);
-
-            inputCanvas.width = iWidth;
-            inputCanvas.height = iHeight;
-
-            outputEngine.setTransform(1, 0, 0, 1, 0, 0);
-            inputEngine.setTransform(1, 0, 0, 1, 0, 0);
-
-            for (let j = 0; j < iLoops; j++) {
-
-                inputEngine.drawImage(outputCanvas, 0, 0, outputWidth, outputHeight, 0, 0, iWidth, iHeight);
-                outputEngine.drawImage(inputCanvas, 0, 0, iWidth, iHeight, 0, 0, outputWidth, outputHeight);
-            }
-
-            let outputData = outputEngine.getImageData(0, 0, outputWidth, outputHeight);
-
-            releaseCell(inputCell);
-            releaseCell(outputCell);
-
-            self.dirtyTargetImage = true;
-
-            resolve(outputData);
         }
-        else reject(new Error(`${this.name} - cleanOutput Error: source has a zero dimension, or no data`));
-    });
+
+        let iFactor = this.interferenceFactor,
+            iLoops = this.interferenceLoops,
+
+            iWidth = Math.ceil(outputWidth * iFactor),
+            iHeight = Math.ceil(outputHeight * iFactor);
+
+        inputCanvas.width = iWidth;
+        inputCanvas.height = iHeight;
+
+        outputEngine.setTransform(1, 0, 0, 1, 0, 0);
+        inputEngine.setTransform(1, 0, 0, 1, 0, 0);
+
+        for (let j = 0; j < iLoops; j++) {
+
+            inputEngine.drawImage(outputCanvas, 0, 0, outputWidth, outputHeight, 0, 0, iWidth, iHeight);
+            outputEngine.drawImage(inputCanvas, 0, 0, iWidth, iHeight, 0, 0, outputWidth, outputHeight);
+        }
+
+        let outputData = outputEngine.getImageData(0, 0, outputWidth, outputHeight);
+
+        releaseCell(inputCell);
+        releaseCell(outputCell);
+
+        this.dirtyTargetImage = true;
+
+        return outputData;
+    }
+    return false;
 };
 
 // `regularStamp` - internal function called by `stamp`
 P.regularStamp = function () {
 
-    let self = this;
-
-    return new Promise((resolve, reject) => {
-
-        if (self.currentHost) {
-
-            self.regularStampSynchronousActions();
-            resolve(true);
-        }
-        reject(new Error(`${self.name} has no current host`));
-    });
+        if (this.currentHost) this.regularStampSynchronousActions();
 };
 
 // `regularStampSynchronousActions` - internal function called by `regularStamp`

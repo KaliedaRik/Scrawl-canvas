@@ -125,6 +125,11 @@
                 </a>
               
                 
+                <a class="source" href="filterEngine.html">
+                  ./source/factory/filterEngine.js
+                </a>
+              
+                
                 <a class="source" href="fontAttributes.html">
                   ./source/factory/fontAttributes.js
                 </a>
@@ -429,16 +434,6 @@
                   ./source/mixin/tween.js
                 </a>
               
-                
-                <a class="source" href="../worker/filter-string.html">
-                  ./source/worker/filter-string.js
-                </a>
-              
-                
-                <a class="source" href="../worker/filter.html">
-                  ./source/worker/filter.js
-                </a>
-              
             </div>
           </div>
         </li>
@@ -451,8 +446,8 @@
         <li id="section-1">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-1">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="spiral-factory">Spiral factory</h1>
 <p>A factory for generating spiral shape-based entitys</p>
@@ -477,8 +472,8 @@
         <li id="section-2">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-2">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
               <h4 id="using-path-defined-entitys-as-scrawl-canvas-paths">Using path-defined entitys as Scrawl-canvas paths</h4>
 <p>A path is a track - straight, or curved, or as complex as required - placed across a container which artefacts can use as a source of their positioning data. We can animate an artifact to move along the path:</p>
@@ -488,7 +483,7 @@
 <li>We position the artefact by setting its <code>pathPosition</code> attribute to a float Number value between <code>0.0 - 1.0</code>, with <code>0</code> being the start of the path, and <code>1</code> being its end.</li>
 <li>Path-defined entitys can use other path-defined entitys as a path.</li>
 <li>Phrase entitys can use a path to position their text block; they can also use a path to position each letter individually along the path.</li>
-<li>Artefacts (and letters) can be rotated so that they match the rotation at that point along the path - <strong><em>tangential rotation</em></strong> by setting their <code>addPathRotation</code> flag to <code>true</code>.</li>
+<li>Artefacts (and letters) can be rotated so that they match the rotation at that point along the path - <em><strong>tangential rotation</strong></em> by setting their <code>addPathRotation</code> flag to <code>true</code>.</li>
 <li>Animate an artefact along the path by either using the artefact’s <code>delta</code> object, or triggering a Tween to perform the movement.</li>
 </ul>
 
@@ -500,8 +495,8 @@
         <li id="section-3">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-3">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
               <h4 id="demos">Demos:</h4>
 <ul>
@@ -525,8 +520,8 @@
         <li id="section-4">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <h4 id="imports">Imports</h4>
 
@@ -544,8 +539,8 @@
         <li id="section-5">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <h4 id="spiral-constructor">Spiral constructor</h4>
 
@@ -563,8 +558,8 @@
         <li id="section-6">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="spiral-prototype">Spiral prototype</h4>
 
@@ -582,8 +577,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
         <li id="section-7">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="mixins">Mixins</h4>
 <ul>
@@ -602,8 +597,8 @@ P = shapeMix(P);</pre></div></div>
         <li id="section-8">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h4 id="spiral-attributes">Spiral attributes</h4>
 <ul>
@@ -635,8 +630,8 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         <li id="section-9">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 <p>No additional packet functionality required</p>
@@ -649,8 +644,8 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         <li id="section-10">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>No additional clone functionality required</p>
@@ -663,8 +658,8 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         <li id="section-11">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 <p>No additional kill functionality required</p>
@@ -677,8 +672,8 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         <li id="section-12">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -693,8 +688,8 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         <li id="section-13">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p><strong>loops</strong></p>
 
@@ -717,8 +712,8 @@ D.loops = <span class="hljs-function"><span class="hljs-keyword">function</span>
         <li id="section-14">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p><strong>loopIncrement</strong></p>
 
@@ -741,8 +736,8 @@ D.loopIncrement = <span class="hljs-function"><span class="hljs-keyword">functio
         <li id="section-15">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p><strong>drawFromLoop</strong></p>
 
@@ -765,8 +760,8 @@ D.drawFromLoop = <span class="hljs-function"><span class="hljs-keyword">function
         <li id="section-16">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -778,8 +773,8 @@ D.drawFromLoop = <span class="hljs-function"><span class="hljs-keyword">function
         <li id="section-17">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p><code>cleanSpecies</code> - internal helper function - called by <code>prepareStamp</code></p>
 
@@ -801,8 +796,8 @@ D.drawFromLoop = <span class="hljs-function"><span class="hljs-keyword">function
         <li id="section-18">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>Magic numbers!</p>
 <ul>
@@ -840,8 +835,8 @@ P.subsequentTurns = [
         <li id="section-19">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p><code>makeSpiralPath</code> - internal helper function - called by <code>cleanSpecies</code></p>
 
@@ -896,8 +891,8 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
         <li id="section-20">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p>ALWAYS, when invoking <code>calculateLocalPath</code> from <code>calculateLocalPathAdditionalActions</code>, include the second argument, set to <code>true</code>! Failure to do this leads to an infinite loop which will make your machine weep.</p>
 <ul>
@@ -915,8 +910,8 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
         <li id="section-21">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <h4 id="factories">Factories</h4>
 
@@ -928,8 +923,8 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
         <li id="section-22">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <h5 id="makespiral">makeSpiral</h5>
 <p>A spiral drawn from an inner-radius outwards by a given number of loops, with the distance between each loop determined by a given increment. Accepts argument with attributes:</p>
@@ -951,7 +946,8 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
     <span class="hljs-attr">loops</span>: <span class="hljs-number">5</span>,
     <span class="hljs-attr">loopIncrement</span>: <span class="hljs-number">0.8</span>,
     <span class="hljs-attr">drawFromLoop</span>: <span class="hljs-number">1</span>,
-});</code></pre>
+});
+</code></pre>
 
             </div>
             
@@ -969,8 +965,8 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
         <li id="section-23">
             <div class="annotation">
               
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+              <div class="sswrap ">
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 
