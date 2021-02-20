@@ -7,7 +7,7 @@
 // Because creating an Animation object from this factory can be quite fiddly, Scrawl-canvas supplies some additional convenience factories to make the process easier: 
 // + `scrawl.makeRender` - use this function to create an animation object which will __control the Display cycle for a canvas or stack__. The function allows users to add a number of hook functions that will trigger at various points in the Display cycle, alongside functions that will trigger whenever the animation object starts running, stops running, or errors.
 // + `scrawl.makeTween` and `scrawl.makeTicker` - both of these factory functions use animation objects under the hood
-// + `scrawl.makeComponent` - used in component files, the factory function will automatically add an animation object to the component, alongside much of the functionality supplied by `makeRender`. It will also create an `IntersectionObserver` on the window object that will automatically run/stop the animation object dependant on its canvas element's position in the browser/device viewport.
+// + `scrawl.makeSnippet` - used in snippet files, the factory function will automatically add an animation object to the snippet, alongside much of the functionality supplied by `makeRender`. It will also create an `IntersectionObserver` on the window object that will automatically run/stop the animation object dependant on its canvas element's position in the browser/device viewport.
 //
 // Animation objects can be controlled through some simple functions: `run` to start the animation running; `halt` to stop it; and `kill` to remove it from the system.
 // 

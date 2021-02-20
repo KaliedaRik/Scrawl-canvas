@@ -111,7 +111,7 @@ export default function (el) {
     }();
 
     // Generate the snippet for the DOM element
-    let snippet = scrawl.makeComponent({
+    let snippet = scrawl.makeSnippet({
 
         // (__required__) The DOM element we are about to componentize
         domElement: el,
@@ -136,7 +136,7 @@ export default function (el) {
         canvasSpecs: {},
     })
 
-    // NOTE: makeComponent() defines its own __afterClear__ animation hook
+    // NOTE: makeSnippet() defines its own __afterClear__ animation hook
     // + the functionality is to keep the canvas properly aligned and sized with its DOM element
     // + overwriting this hook here will lose that functionality!
     // + instead, use the __commence__ animation hook for all display cycle preparations

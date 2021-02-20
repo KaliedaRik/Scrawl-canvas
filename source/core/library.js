@@ -106,7 +106,7 @@ const styles = {};
 const stylesnames = [];
 
 
-// DOM unstackedElement wrappers created using the __makeUnstackedElement__ and __makeComponent__ factories
+// DOM unstackedElement wrappers created using the __makeUnstackedElement__ and __makeSnippet__ factories
 const unstackedelement = {};
 const unstackedelementnames = [];
 

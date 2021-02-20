@@ -50,7 +50,7 @@ export default function (el) {
         };
     }();
 
-    let snippet = scrawl.makeComponent({
+    let snippet = scrawl.makeSnippet({
         domElement: el,
         animationHooks: {
             afterShow: report,

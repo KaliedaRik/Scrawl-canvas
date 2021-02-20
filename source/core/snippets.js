@@ -1,4 +1,4 @@
-// # Scrawl-canvas components
+// # Scrawl-canvas snippets
 
 // ___To be aware - this functionality is HIGHLY EXPERIMENTAL; it will be subject to short-notice breaking changes as we amend and inprove the concept of Scrawl-canvas components___
 
@@ -17,7 +17,7 @@ import { makeUnstackedElement } from "../factory/unstackedElement.js";
 
 
 // TODO - documentation
-const makeComponent = function (items) {
+const makeSnippet = function (items) {
 
     let domElement = (isa_dom(items.domElement)) ? items.domElement : false,
         animationHooks = (isa_obj(items.animationHooks)) ? items.animationHooks : {},
@@ -27,13 +27,13 @@ const makeComponent = function (items) {
 
     if (domElement && domElement.id && artefact[domElement.id]) {
 
-        return makeStackComponent(domElement, canvasSpecs, animationHooks, observerSpecs);
+        return makeStackSnippet(domElement, canvasSpecs, animationHooks, observerSpecs);
     }
-    return makeUnstackedComponent(domElement, canvasSpecs, animationHooks, observerSpecs, includeCanvas);
+    return makeUnstackedSnippet(domElement, canvasSpecs, animationHooks, observerSpecs, includeCanvas);
 };
 
 // TODO - documentation
-const makeStackComponent = function (domElement, canvasSpecs, animationHooks, observerSpecs) {
+const makeStackSnippet = function (domElement, canvasSpecs, animationHooks, observerSpecs) {
 
     let myElement = artefact[domElement.id];
 
@@ -66,7 +66,7 @@ const makeStackComponent = function (domElement, canvasSpecs, animationHooks, ob
 };
 
 // TODO - documentation
-const makeUnstackedComponent = function (domElement, canvasSpecs, animationHooks, observerSpecs, includeCanvas) {
+const makeUnstackedSnippet = function (domElement, canvasSpecs, animationHooks, observerSpecs, includeCanvas) {
 
     let myElement,
         id = domElement.id;
@@ -107,5 +107,5 @@ const makeUnstackedComponent = function (domElement, canvasSpecs, animationHooks
 
 // TODO - documentation
 export {
-    makeComponent,
+    makeSnippet,
 };

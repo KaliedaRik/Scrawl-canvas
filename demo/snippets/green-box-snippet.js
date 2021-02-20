@@ -38,7 +38,7 @@ import scrawl from '../../source/scrawl.js'
 // __Effects on the element:__ no additional effects.
 export default function (el) {
 
-    let snippet = scrawl.makeComponent({
+    let snippet = scrawl.makeSnippet({
         domElement: el,
     });
 
