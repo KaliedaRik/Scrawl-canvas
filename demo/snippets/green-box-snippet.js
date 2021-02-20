@@ -1,12 +1,4 @@
-// # Component definitions
-// See [test-001.js](./test-001.html) code for further details about component definitions
-
-
-// #### Imports
-import scrawl from '../../source/scrawl.js'
-
-
-// #### 'Green box' component
+// # 'Green box' snippet
 //
 // __Purpose:__ adds a translucent green box to an element.
 //
@@ -16,31 +8,37 @@ import scrawl from '../../source/scrawl.js'
 // ```
 // {
 //     element     // the Scrawl-canvas wrapper for the DOM element supplied to the function
-//     canvas      // the Scrawl-canvas wrapper for the component's canvas
+//     canvas      // the Scrawl-canvas wrapper for the snippet's canvas
 //     animation   // the Scrawl-canvas animation object
-//     demolish    // remove the component from the Scrawl-canvas library
+//     demolish    // remove the snippet from the Scrawl-canvas library
 // }
 // ```
 //
 // __Usage example:__
 // ```
-// import scrawl from '../relative/or/absolute/path/to/scrawl.js';
 // import { greenBox } from './relative/or/absolute/path/to/this/file.js';
 //
 // let myElements = document.querySelectorAll('.some-class');
+//
 // myElements.forEach(el => greenBox(el));
 // ```
 //
-// __Effects on the element:__ no additional effects.
-const greenBox = (el) => {
 
-    let component = scrawl.makeComponent({
+
+// #### Imports
+import scrawl from '../../source/scrawl.js'
+
+
+// __Effects on the element:__ no additional effects.
+export default function (el) {
+
+    let snippet = scrawl.makeComponent({
         domElement: el,
     });
 
-    if (component) {
+    if (snippet) {
 
-        let canvas = component.canvas;
+        let canvas = snippet.canvas;
         canvas.setAsCurrentCanvas();
 
         scrawl.makeBlock({
@@ -56,11 +54,5 @@ const greenBox = (el) => {
         });
     }
 
-    return component;
+    return snippet;
 };
-
-
-// #### Exports
-export {
-    greenBox,
-}

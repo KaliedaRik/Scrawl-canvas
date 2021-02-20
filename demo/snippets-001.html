@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Demo Component 001</title>
+  <title>Demo Snippets 001</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   
@@ -51,8 +51,8 @@
 </head>
 
 <body>
-  <h1><a href="index.html">Scrawl-canvas v8</a> - Component test 001</h1>
-  <h2>Scrawl-canvas DOM element components</h2>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Snippets test 001</h1>
+  <h2>Scrawl-canvas DOM element snippets</h2>
 
   <p>All &lt;button> elements have been set with CSS styles <i>"width: 70%; margin-bottom: 1rem; padding: 0.5rem 0"</i>. In the test, the gradient line length should update alongside button widths (for example when resizing the browser window).</p>
   <button class="jazzy-button" id="counter-zero">&nbsp;</button>
@@ -92,25 +92,29 @@
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>Create some elements to be componentized in the HTML file</li>
-      <li>Find and componentize the elements (according to their class values)</li>
-      <li>Check that the canvases added to each Scrawl-canvas enhanced component size correctly to their element and do not block user interaction with the element</li>
-      <li>Check that components interact with mouse cursor movements and clicks over the element/canvas</li>
-      <li>Check that component canvases correctly mimic their elements, in particular to width/height updates</li>
-      <li>Check that component animations disable themselves when they move out of the viewport, and restart when they come back into view</li>
-      <li>Componentize the 'reportmessage' &lt;p> element (with no canvas added to it); give it functionality to report back on page performance eg frames-per-second etc</li>
+      <li>Create some elements to be snippet-ized (warning: made-up word!) in the HTML file</li>
+      <li>Find and snippet-ize the elements (according to their class values)</li>
+      <li>Check that the canvases added to each Scrawl-canvas enhanced snippet size correctly to their element and do not block user interaction with the element</li>
+      <li>Check that snippets interact with mouse cursor movements and clicks over the element/canvas</li>
+      <li>Check that snippet canvases correctly mimic their elements, in particular to width/height updates</li>
+      <li>Check that snippet animations disable themselves when they move out of the viewport, and restart when they come back into view</li>
+      <li>Snippet-ize the 'reportmessage' &lt;p> element (with no canvas added to it); give it functionality to report back on page performance eg frames-per-second etc</li>
     </ul>
 
-    <p>Note that the main file loads the minified version of the library, while the components load the source version - test to see if any conflicts from the two arise.</p>
-    <p><a href="../docs/demo/component-001.html">Annotated code</a></p>
-    <p><a href="../docs/demo/components/test-001.html">Annotated component code</a></p>
+    <p>Note that the main file loads the minified version of the library, while the snippets load the source version - test to see if any conflicts from the two arise.</p>
+    <p><a href="../docs/demo/snippets-001.html">Annotated code</a></p>
+    <ul>
+      <li><a href="../docs/demo/snippets/spotlight-text-snippet.html">Spotlight text snippet</a></li>
+      <li><a href="../docs/demo/snippets/jazzy-button-snippet.html">Jazzy button snippet</a></li>
+      <li><a href="../docs/demo/snippets/page-performance-snippet.html">Page performance snippet</a></li>
+    </ul>
   </div>
 
   <p id="reportmessage"></p>
 
-  <p>Scrawl-canvas components do not need to include a canvas. All components will shut down their animations when not visible to the user.</p>
+  <p>Scrawl-canvas snippets do not need to include a canvas. All snippets will shut down their animations when not visible to the user.</p>
 
-  <script src="component-001.js" type="module"></script>
+  <script src="snippets-001.js" type="module"></script>
 </body>
 
 </html>

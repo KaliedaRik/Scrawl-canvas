@@ -1,18 +1,14 @@
-// # Demo Component 002
-// Scrawl-canvas stack element components
+// # Demo Snippets 002
+// Scrawl-canvas stack element snippets
 
-// [Run code](../../demo/component-002.html)
-//
-// [See component code](./components/test-002.html)
+// [Run code](../../demo/snippets-002.html)
 
 
-// #### Imports
-// Initialize scrawl-canvas
+// Import Scrawl-canvas
 import scrawl from '../source/scrawl.js'
 
-
-// Import the component code we want to use
-import { greenBox } from './components/test-002.js';
+// Import and apply snippet code to DOM elements
+import greenBox from './snippets/green-box-snippet.js';
 let boxElements = document.querySelectorAll('.green-box');
 boxElements.forEach(el => greenBox(el));
 
