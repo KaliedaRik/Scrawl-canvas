@@ -1,7 +1,7 @@
-// # Demo Component 004
+// # Demo Packets 002
 // Scrawl-canvas packets - save and load a range of different entitys
 
-// [Run code](../../demo/component-004.html)
+// [Run code](../../demo/packets-002.html)
 import scrawl from '../source/scrawl.js'
 
 

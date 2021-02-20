@@ -1,7 +1,7 @@
-// # Demo Component 003
+// # Demo Packets 001
 // Save and load Scrawl-canvas entity using text packets
 
-// [Run code](../../demo/component-003.html)
+// [Run code](../../demo/packets-001.html)
 import scrawl from '../source/scrawl.js';
 
 
@@ -233,19 +233,19 @@ canvas.importPacket(boxPacket1)
 setTimeout(() => {
 
     // __Import test 3__ - expect the import to fail due to incorrect url (missing .txt)
-    canvas.importPacket('./packets/demo-component-003-block')
+    canvas.importPacket('./packets/packets-003-block')
     .then(res => console.log('Import test 3 success -', res))
     .catch(err => console.log('Import test 3 error -', err));
 
     // __Import test 4__ - expect the import to succeed
-    canvas.importPacket('./packets/demo-component-003-block.txt')
+    canvas.importPacket('./packets/packets-003-block.txt')
     .then(res => console.log('Import test 4 success -', res))
     .catch(err => console.log('Import test 4 error -', err));
 
     setTimeout(() => {
 
         // __Import test 5__ - expect the import to succeed
-        canvas.importPacket('./packets/demo-component-003-block-updated.txt')
+        canvas.importPacket('./packets/packets-003-block-updated.txt')
         .then(res => console.log('Import test 5 success -', res))
         .catch(err => console.log('Import test 5 error -', err));
     }, 5000);
@@ -263,7 +263,7 @@ setTimeout(() => {
 //     Import test 2 success - |> Block
 //    
 //     TEST 3
-//     Import test 3 error - Error: Packet import from server failed - 404: Not Found - http://localhost:8080/demo/packets/demo-component-003-block
+//     Import test 3 error - Error: Packet import from server failed - 404: Not Found - http://localhost:8080/demo/packets/packets-003-block
 //    
 //     TEST 4
 //     Import test 4 success - |> Block
