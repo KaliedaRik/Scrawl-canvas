@@ -1,6 +1,9 @@
 // # Demo Modules 002
 // Spiral charts
-
+//
+// Related files:
+// + [Wikipedia views spiral chart module](./modules/wikipedia-views-spiral-chart.html)
+//
 // [Run code](../../demo/modules-002.html)
 import scrawl from '../source/scrawl.js';
 

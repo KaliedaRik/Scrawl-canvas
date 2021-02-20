@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>simple-graph-lines.js</title>
+  <title>Demo Modules 001</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
@@ -91,12 +91,6 @@
     
     <ul class="sections">
         
-          <li id="title">
-              <div class="annotation">
-                  <h1>simple-graph-lines.js</h1>
-              </div>
-          </li>
-        
         
         
         <li id="section-1">
@@ -105,16 +99,32 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
-              
+              <h1 id="demo-modules-001">Demo Modules 001</h1>
+<p>Scrawl-canvas modularized code - London crime charts</p>
+<p>Related files:</p>
+<ul>
+<li><a href="../modules-001.html">London crime charts - main module</a></li>
+<li><a href="./london-crime-graphic.html">London crime graphic module</a></li>
+<li><a href="./london-crime-lines.html">London crime lines module</a></li>
+<li><a href="./london-crime-stacked-bars.html">London crime stacked bar module</a></li>
+<li><a href="./simple-chart-frame.html">Simple chart frame module</a></li>
+<li><a href="./simple-chart-frame-tests.html">Simple chart frame tests module</a></li>
+<li><a href="./simple-graph-lines.html">Simple graph lines module</a></li>
+<li><a href="./simple-graph-stacked-bars.html">Simple graph stacked bars module</a></li>
+</ul>
+
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/*
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-comment">/*
 Data supplied to graph module as Javascript object with structure:
 {
     yearLabels: [&#x27;year-1-label&#x27;, &#x27;year-2-label&#x27;, ...],
     data:       [year-1-data, year-2-data, ...],
 }
-*/</span></pre></div></div>
+*/</span>
+
+<span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../../source/scrawl.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -125,21 +135,6 @@ Data supplied to graph module as Javascript object with structure:
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
-              <p>import scrawl from ‘<a href="https://unpkg.com/scrawl-canvas@8.0.11&#39;">https://unpkg.com/scrawl-canvas@8.0.11&#39;</a>;</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../../source/scrawl.js&#x27;</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-3">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-3">&#x00a7;</a>
-              </div>
               <p>We need to adapt the graph frame with data specific to this graph</p>
 
             </div>
@@ -149,11 +144,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-4">
+        <li id="section-3">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
+                <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
               <p>Get the Magic Numbers from the chart frame</p>
 
@@ -167,11 +162,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-5">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <p>Define the group variables</p>
 
@@ -184,11 +179,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-6">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p>The exported ‘build’ function</p>
 
@@ -199,11 +194,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-7">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>Only build the Groups and entitys if they don’t already exist</p>
 
@@ -217,11 +212,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-8">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>The ‘positions’ Group</p>
 <ul>
@@ -241,11 +236,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-9">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>The ‘lines’ Group</p>
 <ul>
@@ -266,11 +261,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-10">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>The ‘pins’ Group</p>
 <ul>
@@ -292,11 +287,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-11">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>Build the entitys</p>
 
@@ -307,11 +302,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-12">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>Hidden position Blocks</p>
 
@@ -335,11 +330,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-13">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>Line Shapes</p>
 
@@ -368,11 +363,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-14">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Visible pin Wheels</p>
 
@@ -402,11 +397,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-15">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>All further calculation happens in the ‘update’ function</p>
 
@@ -417,11 +412,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-16">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>Display the graph entitys</p>
 
@@ -434,11 +429,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-17">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>Determine the range batch</p>
 <ul>
@@ -467,11 +462,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-18">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>the exported ‘update’ function</p>
 
@@ -482,11 +477,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-19">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>Only update if we have entitys to update</p>
 
@@ -497,11 +492,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-20">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>Initial positioning calculations</p>
 
@@ -522,11 +517,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-21">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p>Grab a handle to the ‘entity’ section in the Scrawl-canvas library</p>
 
@@ -537,11 +532,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-22">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p>Reset any highlighted pin Wheel</p>
 
@@ -555,11 +550,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-23">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p>Final calculations and updates</p>
 
@@ -597,11 +592,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-24">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p>Update the chart frame</p>
 
@@ -618,11 +613,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-25">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p>Exported ‘kill’ function</p>
 
@@ -645,11 +640,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-26">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p>Exported ‘hide’ function</p>
 
@@ -668,11 +663,11 @@ Data supplied to graph module as Javascript object with structure:
         </li>
         
         
-        <li id="section-27">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p>Exported ‘show’ function</p>
 

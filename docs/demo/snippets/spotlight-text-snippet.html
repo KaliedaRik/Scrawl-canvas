@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Snippet definitions</title>
+  <title>Demo Snippets 001</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
@@ -99,10 +99,54 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
-              <h1 id="snippet-definitions">Snippet definitions</h1>
+              <h1 id="demo-snippets-001">Demo Snippets 001</h1>
+<p>Scrawl-canvas DOM element snippets</p>
+<p>Related files:</p>
+<ul>
+<li><a href="../snippets-001.html">DOM element snippets - main module</a></li>
+<li><a href="./spotlight-text-snippet.html">Spotlight text snippet</a></li>
+<li><a href="./jazzy-button-snippet.html">Jazzy button snippet</a></li>
+<li><a href="./page-performance-snippet.html">Page performance snippet</a></li>
+</ul>
+<h3 id="snippet-definitions">Snippet definitions</h3>
 <p>Snippet definitions are functions that take a DOM element and manipulate it to supply it with additional functionality, including the ability to add Scrawl-canvas displays and animations to the DOM element</p>
+<p>Example of how a Javascript module can import and use a snippet definition:</p>
+<pre><code><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../relative/or/absolute/path/to/scrawl.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { myScrawlComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./relative/or/absolute/path/to/snippet/definition/file.js&#x27;</span>;
+
+<span class="hljs-keyword">let</span> myElements = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">&#x27;.some-class&#x27;</span>);
+myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> myScrawlComponent(el));
+</code></pre>
+<p>Snippet definition functions can be written in any way the developer sees fit - a developer could write a snippet definition so that it:</p>
+<ul>
+<li>can accept additional data to help further personalize how the snippet gets built</li>
+<li>visits remote APIs to gather additional data as part of the snippet build</li>
+<li>holds local state for the snippet</li>
+<li>supplies a return object, class instance or function containing handles to the objects built by the definition, or functions for manipulating the Scrawl-canvas assets, artefacts, styles, animation(s) and/or canvas built by the definition (a ‘mini-API’ for each snippet)</li>
+<li>etc…</li>
+</ul>
+<p>At a minimum, a snippet definition function will need to take a DOM element (or a pointer to it) as an argument. Note that Scrawl-canvas will manipulate the element in the following ways to make it work as a snippet:</p>
+<ul>
+<li>the element’s CSS ‘position’ value, if set to ‘static’ (the default value), will change to either ‘relative’ or ‘absolute’ - this is required to get any added canvas to <em>stick to</em> its element in the final display</li>
+<li>it will also be given a unique Scrawl-canvas identifier in a new <strong>data-scrawl-name</strong> attribute on the element</li>
+<li>the new &lt;canvas&gt; element will be added to the element as its <em>first child</em>; the canvas will be absolutely positioned within the element</li>
+<li>Scrawl-canvas will also add a hidden <em>text-hold</em> &lt;div&gt; element immediately after the canvas element - this is where Scrawl-canvas keeps dynamic text (for assistive technology)</li>
+<li>by default, the canvas is built so that it displays beneath the element, using a lower z-index CSS property on the canvas element (compared to the host’s z-index value)</li>
+<li>the new canvas’s dimensions will include the element’s padding and border as well as its content</li>
+</ul>
+<p>For the sake of fellow developers, each snippet definition function should come with some documentation to explain:</p>
+<ul>
+<li>the purpose and usage of the snippet that the definition function will deliver/render</li>
+<li>any effects (beyond those explained above) that componentization will have on the DOM element and any child elements it may contain</li>
+<li>what input the function requires, and in what format and argument order</li>
+<li>what - if anything - the definition function will return</li>
+</ul>
+<p>Each of the following snippet definition functions could live in its own file; we can also bundle snippets together so that related snippets can be imported into another Javascript module using a single <strong>import</strong> statement in that file</p>
+<p>BOILERPLATE: import the Scrawl-canvas object - the path to the file will vary according to where in a particular site’s server’s directory structure the Scrawl-canvas files have been placed</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../../source/scrawl.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -112,113 +156,6 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
-              </div>
-              <p>Example of how a Javascript module can import and use a snippet definition:</p>
-<pre><code><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../relative/or/absolute/path/to/scrawl.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { myScrawlComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./relative/or/absolute/path/to/snippet/definition/file.js&#x27;</span>;
-
-<span class="hljs-keyword">let</span> myElements = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">&#x27;.some-class&#x27;</span>);
-myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> myScrawlComponent(el));
-</code></pre>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-3">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-3">&#x00a7;</a>
-              </div>
-              <p>Snippet definition functions can be written in any way the developer sees fit - a developer could write a snippet definition so that it:</p>
-<ul>
-<li>can accept additional data to help further personalize how the snippet gets built</li>
-<li>visits remote APIs to gather additional data as part of the snippet build</li>
-<li>holds local state for the snippet</li>
-<li>supplies a return object, class instance or function containing handles to the objects built by the definition, or functions for manipulating the Scrawl-canvas assets, artefacts, styles, animation(s) and/or canvas built by the definition (a ‘mini-API’ for each snippet)</li>
-<li>etc…</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
-              </div>
-              <p>At a minimum, a snippet definition function will need to take a DOM element (or a pointer to it) as an argument. Note that Scrawl-canvas will manipulate the element in the following ways to make it work as a snippet:</p>
-<ul>
-<li>the element’s CSS ‘position’ value, if set to ‘static’ (the default value), will change to either ‘relative’ or ‘absolute’ - this is required to get any added canvas to <em>stick to</em> its element in the final display</li>
-<li>it will also be given a unique Scrawl-canvas identifier in a new <strong>data-scrawl-name</strong> attribute on the element</li>
-<li>the new &lt;canvas&gt; element will be added to the element as its <em>first child</em>; the canvas will be absolutely positioned within the element</li>
-<li>Scrawl-canvas will also add a hidden <em>text-hold</em> &lt;div&gt; element immediately after the canvas element - this is where Scrawl-canvas keeps dynamic text (for assistive technology)</li>
-<li>by default, the canvas is built so that it displays beneath the element, using a lower z-index CSS property on the canvas element (compared to the host’s z-index value)</li>
-<li>the new canvas’s dimensions will include the element’s padding and border as well as its content</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
-              </div>
-              <p>For the sake of fellow developers, each snippet definition function should come with some documentation to explain:</p>
-<ul>
-<li>the purpose and usage of the snippet that the definition function will deliver/render</li>
-<li>any effects (beyond those explained above) that componentization will have on the DOM element and any child elements it may contain</li>
-<li>what input the function requires, and in what format and argument order</li>
-<li>what - if anything - the definition function will return</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
-              </div>
-              <p>Each of the following snippet definition functions could live in its own file; we can also bundle snippets together so that related snippets can be imported into another Javascript module using a single <strong>import</strong> statement in that file</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
-              </div>
-              <p>BOILERPLATE: import the Scrawl-canvas object - the path to the file will vary according to where in a particular site’s server’s directory structure the Scrawl-canvas files have been placed</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../../source/scrawl.js&#x27;</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h3 id="spotlight-text-snippet">‘Spotlight text’ snippet</h3>
 <p><strong>Purpose:</strong> adds a spotlight effect to an element. When the user hovers the mouse over the element, a ‘spotlight’ gradient will track the mouse’s movements.</p>
@@ -247,11 +184,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-9">
+        <li id="section-3">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
               <p>Define some variables and functions we’ll be using as part of the snippet build</p>
 
@@ -262,11 +199,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-10">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <p>Define the gradient</p>
 
@@ -286,11 +223,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-11">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p>This animation hook uses the variables and gradient we defined above</p>
 <ul>
@@ -312,11 +249,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-12">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>The block entity swaps between the gradient and a color fill, dependent on user interaction</p>
 
@@ -333,11 +270,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-13">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>Generate the snippet for the DOM element</p>
 
@@ -348,11 +285,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-14">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>(<strong>required</strong>) The DOM element we are about to componentize</p>
 
@@ -363,11 +300,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-15">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>(<strong>optional</strong>) An array of animation hook functions with the following attributes
 <code>commence</code> - for an preparatory work required before the display cycle kicks off
@@ -385,11 +322,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-16">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>(<strong>optional</strong>) Options we can supply for the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API">IntersectionObserver</a>. Defaults are usually good enough; changing the ‘threshold’ value is probably the most useful option to play with</p>
 
@@ -400,11 +337,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-17">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>(<strong>optional</strong> - default: true) Scrawl-canvas snippets don’t have to include a canvas!</p>
 
@@ -415,11 +352,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-18">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>(<strong>optional</strong>, and only useful if we are including a canvas) - canvas-specific options. The most useful attribute is (probably) <strong>fit</strong>, whose value can be one of: <code>contain</code>, <code>cover</code>, <code>fill</code>, or <code>none</code> (the default value)</p>
 
@@ -431,11 +368,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-19">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>NOTE: makeComponent() defines its own <strong>afterClear</strong> animation hook</p>
 <ul>
@@ -452,11 +389,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-20">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Set the canvas as the current canvas - not required, it just makes things simpler for building artefacts etc</p>
 
@@ -468,11 +405,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-21">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>Define the block which will (sometimes) display our spotlingt gradient</p>
 
@@ -509,11 +446,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-22">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>Return the snippet, so coders can access the snippet’s parts - in case they need to tweak the output to meet the web page’s specific requirements</p>
 

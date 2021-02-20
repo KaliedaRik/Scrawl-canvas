@@ -1,4 +1,10 @@
-// # 'Green box' snippet
+// # Demo Snippets 002
+// Scrawl-canvas stack element snippets
+//
+// Related files:
+// + [Stack element snippets - main module](../snippets-002.html)
+//
+// ### 'Green box' snippet
 //
 // __Purpose:__ adds a translucent green box to an element.
 //

@@ -1,6 +1,9 @@
 // # Demo Modules 003
 // Factory functions to create more complex, compound entitys
-
+//
+// Related files:
+// + [Wikipedia views spiral chart module](./modules/entity-ring-builder.html)
+//
 // [Run code](../../demo/modules-003.html)
 import scrawl from '../source/scrawl.js';
 

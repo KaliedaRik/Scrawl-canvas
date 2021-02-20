@@ -1,4 +1,13 @@
-// # 'Jazzy button' snippet
+// # Demo Snippets 001
+// Scrawl-canvas DOM element snippets
+//
+// Related files:
+// + [DOM element snippets - main module](../snippets-001.html)
+// + [Spotlight text snippet](./spotlight-text-snippet.html)
+// + [Jazzy button snippet](./jazzy-button-snippet.html)
+// + [Page performance snippet](./page-performance-snippet.html)
+//
+// ### 'Jazzy button' snippet
 // __Purpose:__ display the number of times a user has clicked on a button element; animate the text and its line when the user clicks on the button.
 // __Function input:__ a &lt;button> element, or any other block-displayed DOM element containing no child elements.
 //

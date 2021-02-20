@@ -1,3 +1,9 @@
+// # Demo Modules 002
+// Spiral charts
+//
+// Related files:
+// + [Spiral charts - main module](../modules-002.html)
+//
 // Import the Scrawl-canvas object 
 // + There's various ways to do this. See [Demo DOM-001](../dom-001.html) for more details
 import scrawl from '../../source/scrawl.js';

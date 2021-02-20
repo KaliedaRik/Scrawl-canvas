@@ -1,6 +1,15 @@
-// # Snippet definitions
+// # Demo Snippets 001
+// Scrawl-canvas DOM element snippets
+//
+// Related files:
+// + [DOM element snippets - main module](../snippets-001.html)
+// + [Spotlight text snippet](./spotlight-text-snippet.html)
+// + [Jazzy button snippet](./jazzy-button-snippet.html)
+// + [Page performance snippet](./page-performance-snippet.html)
+//
+// ###  Snippet definitions
 // Snippet definitions are functions that take a DOM element and manipulate it to supply it with additional functionality, including the ability to add Scrawl-canvas displays and animations to the DOM element
-
+//
 // Example of how a Javascript module can import and use a snippet definition:
 // ```
 // import scrawl from '../relative/or/absolute/path/to/scrawl.js';
@@ -9,14 +18,14 @@
 // let myElements = document.querySelectorAll('.some-class');
 // myElements.forEach(el => myScrawlComponent(el));
 // ```
-
+//
 // Snippet definition functions can be written in any way the developer sees fit - a developer could write a snippet definition so that it:
 // + can accept additional data to help further personalize how the snippet gets built
 // + visits remote APIs to gather additional data as part of the snippet build
 // + holds local state for the snippet
 // + supplies a return object, class instance or function containing handles to the objects built by the definition, or functions for manipulating the Scrawl-canvas assets, artefacts, styles, animation(s) and/or canvas built by the definition (a 'mini-API' for each snippet)
 // + etc...
-
+//
 // At a minimum, a snippet definition function will need to take a DOM element (or a pointer to it) as an argument. Note that Scrawl-canvas will manipulate the element in the following ways to make it work as a snippet:
 // + the element's CSS 'position' value, if set to 'static' (the default value), will change to either 'relative' or 'absolute' - this is required to get any added canvas to _stick to_ its element in the final display
 // + it will also be given a unique Scrawl-canvas identifier in a new __data-scrawl-name__ attribute on the element
@@ -24,15 +33,15 @@
 // + Scrawl-canvas will also add a hidden _text-hold_ &lt;div> element immediately after the canvas element - this is where Scrawl-canvas keeps dynamic text (for assistive technology)
 // + by default, the canvas is built so that it displays beneath the element, using a lower z-index CSS property on the canvas element (compared to the host's z-index value)
 // + the new canvas's dimensions will include the element's padding and border as well as its content
-
+//
 // For the sake of fellow developers, each snippet definition function should come with some documentation to explain:
 // + the purpose and usage of the snippet that the definition function will deliver/render
 // + any effects (beyond those explained above) that componentization will have on the DOM element and any child elements it may contain
 // + what input the function requires, and in what format and argument order
 // + what - if anything - the definition function will return
-
+//
 // Each of the following snippet definition functions could live in its own file; we can also bundle snippets together so that related snippets can be imported into another Javascript module using a single __import__ statement in that file
-
+//
 // BOILERPLATE: import the Scrawl-canvas object - the path to the file will vary according to where in a particular site's server's directory structure the Scrawl-canvas files have been placed
 import scrawl from '../../source/scrawl.js';
 

@@ -1,3 +1,9 @@
+// # Demo Modules 003
+// Factory functions to create more complex, compound entitys
+//
+// Related files:
+// + [Compound entitys - main module](../modules-003.html)
+//
 // Import the Scrawl-canvas object 
 // + There's various ways to do this. See [Demo DOM-001](../dom-001.html) for more details
 import scrawl from '../../source/scrawl.js';

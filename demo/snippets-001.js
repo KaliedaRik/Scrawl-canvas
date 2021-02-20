@@ -1,6 +1,12 @@
 // # Demo Snippets 001
 // Scrawl-canvas DOM element snippets
-
+//
+// Related files:
+// + [DOM element snippets - main module](../snippets-001.html)
+// + [Spotlight text snippet](./snippets/spotlight-text-snippet.html)
+// + [Jazzy button snippet](./snippets/jazzy-button-snippet.html)
+// + [Page performance snippet](./snippets/page-performance-snippet.html)
+//
 // [Run code](../../demo/snippets-001.html)
 
 

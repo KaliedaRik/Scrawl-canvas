@@ -1,6 +1,9 @@
 // # Demo Snippets 002
 // Scrawl-canvas stack element snippets
-
+//
+// Related files:
+// + [Green box snippet](./snippets/green-box-snippet.html)
+//
 // [Run code](../../demo/snippets-002.html)
 
 

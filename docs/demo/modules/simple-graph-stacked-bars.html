@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>simple-graph-stacked-bars.js</title>
+  <title>Demo Modules 001</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
@@ -91,12 +91,6 @@
     
     <ul class="sections">
         
-          <li id="title">
-              <div class="annotation">
-                  <h1>simple-graph-stacked-bars.js</h1>
-              </div>
-          </li>
-        
         
         
         <li id="section-1">
@@ -105,10 +99,24 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
-              
+              <h1 id="demo-modules-001">Demo Modules 001</h1>
+<p>Scrawl-canvas modularized code - London crime charts</p>
+<p>Related files:</p>
+<ul>
+<li><a href="../modules-001.html">London crime charts - main module</a></li>
+<li><a href="./london-crime-graphic.html">London crime graphic module</a></li>
+<li><a href="./london-crime-lines.html">London crime lines module</a></li>
+<li><a href="./london-crime-stacked-bars.html">London crime stacked bar module</a></li>
+<li><a href="./simple-chart-frame.html">Simple chart frame module</a></li>
+<li><a href="./simple-chart-frame-tests.html">Simple chart frame tests module</a></li>
+<li><a href="./simple-graph-lines.html">Simple graph lines module</a></li>
+<li><a href="./simple-graph-stacked-bars.html">Simple graph stacked bars module</a></li>
+</ul>
+
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/*
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-comment">/*
 Data format requirements - a Javascript object with structure:
 
 {
@@ -121,7 +129,9 @@ Data format requirements - a Javascript object with structure:
         ...
     }
 }
-*/</span></pre></div></div>
+*/</span>
+
+<span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../../source/scrawl.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -132,21 +142,6 @@ Data format requirements - a Javascript object with structure:
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
-              <p>import scrawl from ‘<a href="https://unpkg.com/scrawl-canvas@8.0.11&#39;">https://unpkg.com/scrawl-canvas@8.0.11&#39;</a>;</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../../source/scrawl.js&#x27;</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-3">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-3">&#x00a7;</a>
-              </div>
               <p>We need to adapt the graph frame with data specific to this graph</p>
 
             </div>
@@ -156,11 +151,11 @@ Data format requirements - a Javascript object with structure:
         </li>
         
         
-        <li id="section-4">
+        <li id="section-3">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
+                <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
               <p>Calculate height of the largest year</p>
 <ul>
@@ -184,11 +179,11 @@ Data format requirements - a Javascript object with structure:
         </li>
         
         
-        <li id="section-5">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <p>Variables shared across functions</p>
 
@@ -199,11 +194,11 @@ Data format requirements - a Javascript object with structure:
         </li>
         
         
-        <li id="section-6">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p>The exported ‘build’ function</p>
 
@@ -214,11 +209,11 @@ Data format requirements - a Javascript object with structure:
         </li>
         
         
-        <li id="section-7">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>Local variables defined at the top of the build function</p>
 
@@ -234,11 +229,11 @@ Data format requirements - a Javascript object with structure:
         </li>
         
         
-        <li id="section-8">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>Magic numbers</p>
 
@@ -252,11 +247,11 @@ Data format requirements - a Javascript object with structure:
         </li>
         
         
-        <li id="section-9">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>Graph baseline calculations</p>
 
@@ -271,11 +266,11 @@ Data format requirements - a Javascript object with structure:
         </li>
         
         
-        <li id="section-10">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>Create group</p>
 
@@ -292,11 +287,11 @@ Data format requirements - a Javascript object with structure:
         </li>
         
         
-        <li id="section-11">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>Build bars</p>
 
@@ -348,11 +343,11 @@ Data format requirements - a Javascript object with structure:
         </li>
         
         
-        <li id="section-12">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>Because an entity can belong to multiple Group objects</p>
 <ul>
@@ -373,11 +368,11 @@ Data format requirements - a Javascript object with structure:
         </li>
         
         
-        <li id="section-13">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>Personalize the chart frame to meet this graph’s requirements</p>
 
@@ -394,11 +389,11 @@ Data format requirements - a Javascript object with structure:
         </li>
         
         
-        <li id="section-14">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Other exported functions</p>
 

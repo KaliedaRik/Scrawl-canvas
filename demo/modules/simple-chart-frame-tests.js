@@ -1,4 +1,16 @@
-// import scrawl from 'https://unpkg.com/scrawl-canvas@8.0.11';
+// # Demo Modules 001
+// Scrawl-canvas modularized code - London crime charts
+//
+// Related files:
+// + [London crime charts - main module](../modules-001.html)
+// + [London crime graphic module](./london-crime-graphic.html)
+// + [London crime lines module](./london-crime-lines.html)
+// + [London crime stacked bar module](./london-crime-stacked-bars.html)
+// + [Simple chart frame module](./simple-chart-frame.html)
+// + [Simple chart frame tests module](./simple-chart-frame-tests.html)
+// + [Simple graph lines module](./simple-graph-lines.html)
+// + [Simple graph stacked bars module](./simple-graph-stacked-bars.html)
+
 import scrawl from './source/scrawl.js';
 
 import * as frame from './simple-chart-frame.js';
