@@ -1,7 +1,7 @@
-// # Demo Component 007
+// # Demo Modules 003
 // Factory functions to create more complex, compound entitys
 
-// [Run code](../../demo/component-007.html)
+// [Run code](../../demo/modules-003.html)
 import scrawl from '../source/scrawl.js';
 
 
@@ -14,97 +14,8 @@ canvas.setBase({
 });
 
 
-// THE RING FACTORY
-// We could put this code into its own file, then import it into any animation where we need to construct a ring of entitys
-const buildEntityRing = function (items = {}) {
-
-    if (!items.canvas || !items.entity || !items.name) return false;
-
-    let canvas = items.canvas,
-        name = items.name,
-        entity = items.entity,
-        dimensions = items.dimensions || 400,
-        buildStartAngle = items.buildStartAngle || -45,
-        buildEndAngle = items.buildEndAngle || 225,
-        buildStepAngle = items.buildStepAngle || 15,
-        buildOffset = items.buildOffset || 0,
-        reflectOnly = items.reflectOnly || false;
-
-    const cell = canvas.buildCell({
-        name: `${name}-cell`,
-        dimensions: [dimensions, dimensions],
-        shown: false,
-        compileOrder: 0,
-    });
-
-    const clip = scrawl.makeGroup({
-        name: `${name}-clip-group`,
-        host: `${name}-cell`,
-        order: 0,
-    });
-
-    const reflect = scrawl.makeGroup({
-        name: `${name}-reflect-group`,
-        host: `${name}-cell`,
-        order: 1,
-    });
-
-    scrawl.makeBlock({
-        name: `${name}-clipper`,
-        group: `${name}-clip-group`,
-        start: ['left', 'center'],
-        dimensions: ['100%', '50%'],
-        method: 'clip'
-    });
-
-    let v = scrawl.requestVector(0, buildOffset);
-    v.rotate(buildStartAngle);
-
-    for (let i = buildStartAngle; i <= buildEndAngle; i += buildStepAngle) {
-
-        entity.clone({
-            name: `${name}-ringitem-${i}`,
-            group: `${name}-clip-group`,
-            roll: i,
-            offset: [v.x, v.y],
-        });
-
-        v.rotate(buildStepAngle);
-    }
-
-    scrawl.releaseVector(v);
-
-    scrawl.makePicture({
-        name: `${name}-reflection`,
-        group: `${name}-reflect-group`,
-        asset: `${name}-cell`,
-
-        start: ['center', '25%'],
-        handle: ['center', 'center'],
-        flipUpend: true,
-        flipReverse: !reflectOnly,
-
-        dimensions: ['100%', '50%'],
-        copyDimensions: ['100%', '50%'],
-        copyStartY: '50%',
-
-        method: 'fill',
-    });
-
-    entity.set({
-        visibility: false,
-    });
-
-    return {
-        cell,
-        kill: () => {
-
-            clip.kill(true);
-            reflect.kill(true);
-            cell.kill();
-        },
-    }
-};
+// Import the entity ring factory
+import buildEntityRing from './modules/entity-ring-builder.js';
 
 
 // Some gradients for our scene
@@ -125,6 +36,7 @@ scrawl.makeGradient({
 
 
 // A parasol compound-entity
+// + See the [entity ring builder module](./modules/entity-ring-builder.html) for an explanation of the argument attributes used to construct the compound entity
 const parasol = buildEntityRing({
 
     name: 'parasol',

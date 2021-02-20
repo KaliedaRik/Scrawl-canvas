@@ -7,9 +7,9 @@ import scrawl from '../source/scrawl.js';
 let canvas = scrawl.library.canvas.mycanvas,
     namespace = 'London-crimes';
 
-import * as frame from './components/simple-chart-frame.js';
-import * as barGraph from './components/london-crime-stacked-bars.js';
-import * as lineGraph from './components/london-crime-lines.js';
+import * as frame from './modules/simple-chart-frame.js';
+import * as barGraph from './modules/london-crime-stacked-bars.js';
+import * as lineGraph from './modules/london-crime-lines.js';
 
 canvas.set({
 
@@ -93,7 +93,7 @@ scrawl.addNativeListener(['input', 'change'], function (e) {
                         barGraph.build(
                             `${namespace}-bars`, 
                             canvas, 
-                            `packets/crimes-in-${currentArea.toLowerCase()}.json`
+                            `data/crimes-in-${currentArea.toLowerCase()}.json`
                         );
                     }
                     else if (currentGraphType === 'lines') {
@@ -103,7 +103,7 @@ scrawl.addNativeListener(['input', 'change'], function (e) {
                         lineGraph.build(
                             `${namespace}-lines`, 
                             canvas, 
-                            `packets/crimes-in-${currentArea.toLowerCase()}.json`, 
+                            `data/crimes-in-${currentArea.toLowerCase()}.json`, 
                             currentCategory
                         );
                     }
@@ -123,7 +123,7 @@ scrawl.addNativeListener(['input', 'change'], function (e) {
                         barGraph.build(
                             `${namespace}-bars`, 
                             canvas, 
-                            `packets/crimes-in-${currentArea.toLowerCase()}.json`
+                            `data/crimes-in-${currentArea.toLowerCase()}.json`
                         );
 
                         crimeCategoryInput.setAttribute('disabled', '');
@@ -135,7 +135,7 @@ scrawl.addNativeListener(['input', 'change'], function (e) {
                         lineGraph.build(
                             `${namespace}-lines`, 
                             canvas, 
-                            `packets/crimes-in-${currentArea.toLowerCase()}.json`, 
+                            `data/crimes-in-${currentArea.toLowerCase()}.json`, 
                             currentCategory
                         );
 
@@ -163,7 +163,7 @@ scrawl.addNativeListener(['input', 'change'], function (e) {
 
 // Initial display
 frame.build(`${namespace}-frame`, canvas, 'Hackney');
-barGraph.build(`${namespace}-bars`, canvas, 'packets/crimes-in-hackney.json');
+barGraph.build(`${namespace}-bars`, canvas, 'data/crimes-in-hackney.json');
 
 crimeCategoryInput.value = 'Burglary';
 crimeCategoryInput.setAttribute('disabled', '');
