@@ -25,11 +25,6 @@
                 </a>
               
                 
-                <a class="source" href="../core/component.html">
-                  ./source/core/component.js
-                </a>
-              
-                
                 <a class="source" href="../core/document.html">
                   ./source/core/document.js
                 </a>
@@ -47,6 +42,11 @@
                 
                 <a class="source" href="../core/library.html">
                   ./source/core/library.js
+                </a>
+              
+                
+                <a class="source" href="../core/snippets.html">
+                  ./source/core/snippets.js
                 </a>
               
                 
@@ -459,7 +459,7 @@
 <ul>
 <li><code>scrawl.makeRender</code> - use this function to create an animation object which will <strong>control the Display cycle for a canvas or stack</strong>. The function allows users to add a number of hook functions that will trigger at various points in the Display cycle, alongside functions that will trigger whenever the animation object starts running, stops running, or errors.</li>
 <li><code>scrawl.makeTween</code> and <code>scrawl.makeTicker</code> - both of these factory functions use animation objects under the hood</li>
-<li><code>scrawl.makeComponent</code> - used in component files, the factory function will automatically add an animation object to the component, alongside much of the functionality supplied by <code>makeRender</code>. It will also create an <code>IntersectionObserver</code> on the window object that will automatically run/stop the animation object dependant on its canvas element’s position in the browser/device viewport.</li>
+<li><code>scrawl.makeSnippet</code> - used in snippet files, the factory function will automatically add an animation object to the snippet, alongside much of the functionality supplied by <code>makeRender</code>. It will also create an <code>IntersectionObserver</code> on the window object that will automatically run/stop the animation object dependant on its canvas element’s position in the browser/device viewport.</li>
 </ul>
 <p>Animation objects can be controlled through some simple functions: <code>run</code> to start the animation running; <code>halt</code> to stop it; and <code>kill</code> to remove it from the system.</p>
 <p>NOTE that Animation objects do not take part in Scrawl-canvas’s <code>packet</code> save-and-load functionality, as a result of which they cannot be cloned.</p>
