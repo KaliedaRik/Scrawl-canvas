@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Snippets 003</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  
+  <style>
+    .div-grid {
+      display: grid;
+
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      grid-column-gap: 2px;
+
+      grid-template-rows: auto;
+      grid-row-gap: 2px;
+
+      font-size:  1rem;
+    }
+
+    .div-grid div {
+      width: 80%;
+      height: 100px;
+      margin: 1em;
+      background-color: beige;
+    }
+
+    .standard {
+      font-size: 2em;
+      background-color: beige;
+    }
+
+    .three-dimensions-area {
+      perspective-origin: center center;
+      perspective: 800px;
+      position: relative;
+      width: 100%;
+      height: 400px;
+      border: 1px dashed red;
+    }
+
+    .three-dimensions-area div {
+      position: absolute;
+      width: 160px;
+      height: 100px;
+      border: 1px solid black;
+      padding: 0.5em;
+      background-color: beige;
+    }
+    h3 {
+      margin-top: 2em;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Snippets test 003</h1>
+  <h2>DOM element snippet - test canvas adaption to local element variations</h2>
+
+  <h3>Unshaped DOM elements</h3>
+  <p>The ripple effect is a fading filled circle of lighter color than the background which expands from the point of the click to cross the entire element. The effect will run behind the text and any border set on the element.</p>
+  <section>
+    <p class="standard">This is a standard, no nonsense &lt;p> element with some simple CSS styling for its background (we hope you like beige).</p>
+    <p id="brenda" class="standard ripple">This &lt;p> element is exactly the same as the one above it, except it has an additional class - "ripple" - which we use to add the ripple effect snippet to it. When the user clicks anywhere on this element, we should be able to see the ripple effect animation.</p>
+  </section>
+
+  <h3>CSS-shaped DOM elements</h3>
+  <p>The ripple effect should trigger whenever the user clicks inside the &lt;div> element, or on its border, or on its text, but not just outside the border. Note that the snippet we are using in this Demo will pick up the DOM element's background color for its own canvas background color, and set the element's background color to 'transparent'.</p>
+  <section class="div-grid">
+    <div id="gavin" class="ripple" style="border-radius: 0">Lorem ipsum</div>
+    <div class="ripple" style="border-radius: 10px">Lorem ipsum</div>
+    <div class="ripple" style="border-radius: 20%">Lorem ipsum</div>
+    <div class="ripple" style="border-radius: 50%">Lorem ipsum</div>
+    <div class="ripple" style="border: 5px solid black; border-radius: 0">Lorem ipsum</div>
+    <div class="ripple" style="border: 5px solid black; border-radius: 10px">Lorem ipsum</div>
+    <div class="ripple" style="border: 5px solid black; border-radius: 20%; background-color: pink">Lorem ipsum</div>
+    <div class="ripple" style="border: 5px solid black; border-radius: 50%">Lorem ipsum</div>
+    <div class="ripple" style="border: 1.3rem solid gray; border-radius: 0; background-color: honeydew">Lorem ipsum</div>
+    <div class="ripple" style="border: 1.3rem solid gray; border-radius: 10px">Lorem ipsum</div>
+    <div class="ripple" style="border: 1.3rem solid gray; border-radius: 20%">Lorem ipsum</div>
+    <div class="ripple" style="border: 1.3rem solid gray; border-radius: 50%">Lorem ipsum</div>
+    <div class="ripple" style="border: 5px solid black; padding: 1em; border-radius: 0">lorem ipsum padded</div>
+    <div class="ripple" style="border: 5px solid black; padding: 1em; border-radius: 10px; background-color: azure">lorem ipsum padded</div>
+    <div class="ripple" style="border: 5px solid black; padding: 1em; border-radius: 20%">lorem ipsum padded</div>
+    <div class="ripple" style="border: 5px solid black; padding: 1em; border-radius: 50%">lorem ipsum padded</div>
+    <div class="ripple" style="border: 5px solid black; padding: 1em; box-sizing: border-box; border-radius: 0">lorem ipsum padded, border-box</div>
+    <div class="ripple" style="border: 5px solid black; padding: 1em; box-sizing: border-box; border-radius: 10px">lorem ipsum padded, border-box</div>
+    <div class="ripple" style="border: 5px solid black; padding: 1em; box-sizing: border-box; border-radius: 20%">lorem ipsum padded, border-box</div>
+    <div class="ripple" style="border: 5px solid black; padding: 1em; box-sizing: border-box; border-radius: 50%; background-color: yellow">lorem ipsum padded, border-box</div>
+  </section>
+
+  <h3>DOM elements positioned absolutely and rotated in  three dimensions</h3>
+  <p><b>Note: the failures in this part of the Demo are the reason why <i>Scrawl-canvas snippets remain an experimental (and unstable) feature!</i></b> To pass this part of the test the canvas elements created by the snippet functionality should match exactly the position and rotation of their parent element. For the current codebase this only holds true for elements positioned absolutely by their top/left CSS attributes. CSS transforms - in particular scale and rotation - lead to badly sized and positioned canvas elements. This in turn has a detrimental effect on mouse/pointer cursor positioning over the generated canvas elements. In some instances this can lead to web page failure!</p>
+  <section class="three-dimensions-area">
+    <div class="ripple" style="top: 5%; left: 5%">Lorem ipsum style="top: 5%; left: 5%"</div>
+    <div class="ripple" style="transform: translate3d(20px, 200px, -80px)">Lorem ipsum style="transform: translate3d(20px, 200px, -80px)"</div>
+    <div class="ripple" style="transform: translate(260px, 20px)">Lorem ipsum style="transform: translate(260px, 20px)"</div>
+    <div class="ripple" style="top: 200px; left: 260px; transform: scale(1.2)">Lorem ipsum style="top: 200px; left: 260px; transform: scale(1.2)"</div>
+    <div class="ripple" style="top: 20px; left: 530px; transform: rotate3d(0)">Lorem ipsum style="top: 20px; left: 460px; transform: rotate3d(0)"</div>
+    <div class="ripple" style="top: 20px; left: 740px; transform: rotate3d(1, 1, 1, 45deg)">Lorem ipsum style="top: 20px; left: 460px; transform: rotate3d(1, 1, 1, 45deg)"</div>
+    <div class="ripple" style="top: 200px; left: 530px; transform: rotate3d(2, -1, -1, -0.2turn)">Lorem ipsum style="top: 20px; left: 460px; transform: rotate3d(2, -1, -1, -0.2turn)"</div>
+
+    <!-- This version breaks the page: the canvas will recalculate its position in relation to its div and get the calculation wrong, each iteration making the error worse -->
+    <!-- <div class="ripple" style="top: 200px; left: 740px; transform: rotate3d(0, 1, 0.5, 3.142rad)">Lorem ipsum style="top: 20px; left: 460px; transform: rotate3d(0, 1, 0.5, 3.142rad)"</div> -->
+  </section>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li><b>Scrawl-canvas snippets remain an experimental functionality!</b></li>
+      <li>Generate a series of Scrawl-canvas snippet-enhanced &lt;div> elements across the web page</li>
+      <li>In every case, the canvas element generated for the DOM element should match its position, dimensions and rotation</li>
+      <li>The snippet used in this Demo will transfer a DOM element's background-color style attribute over to the element's child &lt;canvas> element</li>
+      <li>Clicking on a DOM element should trigger the ripple effect in the child canvas; the effect should start at the point where the user clicked on the element and spread across the entire element over the course of one second</li>
+      <li>Clicking outside a snippet-enhanced element should not trigger the animation in any element; the only exception is when DOM element text extends outside the element's border</li>
+      <li><b>As of v8.5.0, the 3d-transformed and rotated DOM elements will fail these tests</b> - this is a known issue.</li>
+    </ul>
+
+    <p><a href="../docs/demo/snippets-003.html">Annotated code</a></p>
+    <ul>
+      <li><a href="../docs/demo/snippets/ripple-effect-snippet.html">Ripple effect snippet</a></li>
+    </ul>
+  </div>
+
+  <script src="snippets-003.js" type="module"></script>
+</body>
+
+</html>

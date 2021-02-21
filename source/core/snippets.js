@@ -42,6 +42,7 @@ const makeStackSnippet = function (domElement, canvasSpecs, animationHooks, obse
     canvasSpecs.isComponent = true;
 
     let myCanvas = myElement.addCanvas(canvasSpecs);
+    myElement.elementComputedStyles = window.getComputedStyle(domElement);
 
     animationHooks.name = `${myElement.name}-animation`;
     animationHooks.target = myCanvas;

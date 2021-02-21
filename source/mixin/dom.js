@@ -450,6 +450,9 @@ S.trackHere = function(val) {
                 p.style.width = 0;
                 p.style.height = 0;
                 p.style.position = 'absolute';
+                p.style.margin = 0;
+                p.style.border = 0;
+                p.style.padding = 0;
 
                 return p;
             };

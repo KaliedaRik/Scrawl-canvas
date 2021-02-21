@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Snippets 004</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  
+  <style>
+    .div-grid {
+      display: grid;
+
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      grid-column-gap: 2px;
+
+      grid-template-rows: auto;
+      grid-row-gap: 2px;
+
+      font-size:  1rem;
+    }
+
+    .div-grid div {
+      width: 80%;
+      height: 100px;
+      padding: 1em;
+      margin-bottom: 1em;
+      border: 1px solid black;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Snippets test 004</h1>
+  <h2>Snippets included in the Scrawl-canvas demo/snippets folder</h2>
+  <h3>These can be copied and amended to help you develop your own library of snippets</h3>
+
+  <section class="div-grid">
+    <div class="ripple-effect" style="background-color: beige">Ripple effect - click to see effect</div>
+    <div class="green-box">Green box - this is the effect</div>
+    <div class="jazzy-button">Jazzy button - click to see effect</div>
+    <div class="spotlight-effect">Spotlight effect - hover to see effect</div>
+    <div id="my-page-performance-div" class="page-performance" style="background-color: beige">Page performance - this text will be overwritten by the effect</div>
+  </section>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>This is not a test, just a reference page</li>
+    </ul>
+
+    <p><a href="../docs/demo/snippets-004.html">Annotated code</a></p>
+    <ul>
+      <li><a href="../docs/demo/snippets/ripple-effect-snippet.html">Ripple effect snippet</a></li>
+    </ul>
+  </div>
+
+  <script src="snippets-004.js" type="module"></script>
+</body>
+
+</html>
