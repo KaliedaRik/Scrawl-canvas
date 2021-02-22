@@ -118,7 +118,7 @@ P.addCanvas = function (items = {}) {
 
         art.set(items);
 
-        this.updateCanvas()
+        this.updateCanvas();
 
         return art;
     }
@@ -150,11 +150,20 @@ P.checkElementStyleValues = function () {
         let host = this.hostStyles,
             style = this.elementComputedStyles,
             canvas = wrapper.domElement,
-            includedStyles = this.includedStyles,
-            mMax = Math.max;
+            includedStyles = this.includedStyles;
 
         let {x: elX, y: elY, width: elW, height: elH} = el.getBoundingClientRect();
         let {x: canvasX, y: canvasY} = canvas.getBoundingClientRect();
+        let {zIndex: styleZ, width: styleW, height: styleH} = style;
+
+        elX = Math.floor(elX);
+        elY = Math.floor(elY);
+        canvasX = Math.floor(canvasX);
+        canvasY = Math.floor(canvasY);
+        elW = Math.floor(elW);
+        elH = Math.floor(elH);
+        styleW = Math.floor(parseFloat(styleW));
+        styleH = Math.floor(parseFloat(styleH));
 
         includedStyles.forEach(item => {
 
@@ -162,7 +171,7 @@ P.checkElementStyleValues = function () {
 
                 case 'width' :
 
-                    let w = mMax(parseFloat(style.width), elW);
+                    let w = Math.max(styleW, elW);
                     if (this.canvasWidth !== w) {
 
                         this.canvasWidth = w;
@@ -172,7 +181,7 @@ P.checkElementStyleValues = function () {
 
                 case 'height' :
 
-                    let h = mMax(parseFloat(style.height), elH);
+                    let h = Math.max(styleH, elH);
                     if (this.canvasHeight !== h) {
 
                         this.canvasHeight = h;
@@ -182,7 +191,7 @@ P.checkElementStyleValues = function () {
 
                 case 'zIndex' :
 
-                    let z = (style.zIndex === 'auto') ? 0 : parseInt(style.zIndex, 10);
+                    let z = (styleZ === 'auto') ? 0 : parseInt(styleZ, 10);
                     z = (this.canvasOnTop) ? z + 1 : z - 1;
 
                     if (this.canvasZIndex !== z) {

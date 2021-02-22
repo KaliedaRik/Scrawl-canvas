@@ -45,6 +45,8 @@ export default function (el) {
             testTicker = testNow;
 
             testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+
+            console.log('report animation is running')
         };
     }();
 

@@ -71,10 +71,7 @@ import scrawl from '../../source/scrawl.js';
 // myElements.forEach(el => spotlightText(el));
 // ```
 // __Effects on the element:__ no additional effects.
-export default function (el, args = {}) {
-
-    let spotlightColor = args.spotlightColor || 'white',
-        backgroundColor = args.backgroundColor || 'lightgray';
+export default function (el) {
 
     // Define some variables and functions we'll be using as part of the snippet build
     let canvas, block;
@@ -88,8 +85,8 @@ export default function (el, args = {}) {
         endY: '50%',
         endRadius: '20%',
     })
-    .updateColor(0, spotlightColor)
-    .updateColor(999, backgroundColor);
+    .updateColor(0, 'white')
+    .updateColor(999, 'lightgray');
 
     // This animation hook uses the variables and gradient we defined above
     //
@@ -107,7 +104,7 @@ export default function (el, args = {}) {
                 // The block entity swaps between the gradient and a color fill, dependent on user interaction
                 block.set({
                     lockTo: (active) ? 'mouse' : 'start',
-                    fillStyle: (active) ? spotlightGradient : backgroundColor,
+                    fillStyle: (active) ? spotlightGradient : 'lightgray',
                 });
             }
         };
@@ -151,7 +148,7 @@ export default function (el, args = {}) {
         canvas = snippet.canvas;
         canvas.setAsCurrentCanvas();
 
-        // Define the block which will (sometimes) display our spotlight gradient
+        // Define the block which will (sometimes) display our spotlingt gradient
         block = scrawl.makeBlock({
             width: '200%',
             height: '200%',
@@ -161,10 +158,22 @@ export default function (el, args = {}) {
             handleX: "50%",
             handleY: "50%",
 
-            fillStyle: backgroundColor,
+            fillStyle: 'lightgray',
             lockFillStyleToEntity: true,
 
             method: 'fill', 
+        });
+
+        scrawl.makeBlock({
+
+            width: '50%',
+            height: '50%',
+            startX: '25%',
+            startY: '25%',
+            globalAlpha: 0.3,
+            strokeStyle: 'lightgreen',
+            lineWidth: 40,
+            method: 'draw',
         });
     }
 

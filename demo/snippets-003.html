@@ -93,16 +93,18 @@
     <div class="ripple" style="border: 5px solid black; padding: 1em; box-sizing: border-box; border-radius: 50%; background-color: yellow">lorem ipsum padded, border-box</div>
   </section>
 
-  <h3>DOM elements positioned absolutely and rotated in  three dimensions</h3>
-  <p><b>Note: the failures in this part of the Demo are the reason why <i>Scrawl-canvas snippets remain an experimental (and unstable) feature!</i></b> To pass this part of the test the canvas elements created by the snippet functionality should match exactly the position and rotation of their parent element. For the current codebase this only holds true for elements positioned absolutely by their top/left CSS attributes. CSS transforms - in particular scale and rotation - lead to badly sized and positioned canvas elements. This in turn has a detrimental effect on mouse/pointer cursor positioning over the generated canvas elements. In some instances this can lead to web page failure!</p>
+  <h3>DOM elements positioned absolutely and rotated in three dimensions</h3>
+  <p><b>Note: the failures in this part of the Demo are the reason why <i>Scrawl-canvas snippets remain an experimental (and unstable) feature!</i></b> If somethinhg in the environment - third party CSS or Javascript code, for instance - for any reason applies a CSS transform to the DOM element, then the element and the canvas it contains can fall out of sync with each other. Scaling and 3d transforms will lead to mismatched dimensions and positions. In the worst case scenario, the canvas may decide to animate itself off the web page, breaking it.</p>
+  <p>To pass this part of the test the canvas elements created by the snippet functionality should match exactly the position and rotation of their parent element. For the current codebase this only holds true for elements positioned absolutely by their top/left CSS attributes, with no additional transforms applied to them.</p>
+  <p><b>To apply a Scrawl-canvas snippet to a 3D-transformed DOM element, use Scrawl-canvas stacks</b> - see <a href="snippets-002.html">Demo Snippets 002</a> for an example.</p>
   <section class="three-dimensions-area">
-    <div class="ripple" style="top: 5%; left: 5%">Lorem ipsum style="top: 5%; left: 5%"</div>
-    <div class="ripple" style="transform: translate3d(20px, 200px, -80px)">Lorem ipsum style="transform: translate3d(20px, 200px, -80px)"</div>
-    <div class="ripple" style="transform: translate(260px, 20px)">Lorem ipsum style="transform: translate(260px, 20px)"</div>
-    <div class="ripple" style="top: 200px; left: 260px; transform: scale(1.2)">Lorem ipsum style="top: 200px; left: 260px; transform: scale(1.2)"</div>
-    <div class="ripple" style="top: 20px; left: 530px; transform: rotate3d(0)">Lorem ipsum style="top: 20px; left: 460px; transform: rotate3d(0)"</div>
-    <div class="ripple" style="top: 20px; left: 740px; transform: rotate3d(1, 1, 1, 45deg)">Lorem ipsum style="top: 20px; left: 460px; transform: rotate3d(1, 1, 1, 45deg)"</div>
-    <div class="ripple" style="top: 200px; left: 530px; transform: rotate3d(2, -1, -1, -0.2turn)">Lorem ipsum style="top: 20px; left: 460px; transform: rotate3d(2, -1, -1, -0.2turn)"</div>
+    <div id="moved-by-top-left" class="ripple" style="top: 5%; left: 5%">Lorem ipsum - moved-by-top-left</div>
+    <div id="shrunk-by-translate-3d" class="ripple" style="transform: translate3d(20px, 200px, -80px)">Lorem ipsum - shrunk-by-translate-3d</div>
+    <div  id="moved-by-transform" class="ripple" style="transform: translate(260px, 20px)">Lorem ipsum - moved-by-transform</div>
+    <div id="grown-by-scale" class="ripple" style="top: 200px; left: 260px; transform: scale(1.2)">Lorem ipsum - grown-by-scale</div>
+    <div id="rotated-0" class="ripple" style="top: 20px; left: 530px; transform: rotate3d(0)">Lorem ipsum - rotated-0</div>
+    <div id="rotated-1" class="ripple" style="top: 20px; left: 740px; transform: rotate3d(1, 1, 1, 45deg)">Lorem ipsum - rotated-1</div>
+    <div id="rotated-2" class="ripple" style="top: 200px; left: 530px; transform: rotate3d(2, -1, -1, -0.2turn)">Lorem ipsum - rotated-2</div>
 
     <!-- This version breaks the page: the canvas will recalculate its position in relation to its div and get the calculation wrong, each iteration making the error worse -->
     <!-- <div class="ripple" style="top: 200px; left: 740px; transform: rotate3d(0, 1, 0.5, 3.142rad)">Lorem ipsum style="top: 20px; left: 460px; transform: rotate3d(0, 1, 0.5, 3.142rad)"</div> -->

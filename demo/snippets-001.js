@@ -10,9 +10,9 @@
 
 
 // Import snippets
-import spotlightText from './snippets/spotlight-text-snippet.js';
+import spotlightText from './snippets/spotlight-text-snippet-test.js';
 import jazzyButton from './snippets/jazzy-button-snippet.js';
-import pagePerformance from './snippets/page-performance-snippet.js';
+import pagePerformance from './snippets/page-performance-snippet-test.js';
 
 
 // Get the relevant Scrawl-canvas stack elements that need snippet skinning

@@ -9,8 +9,14 @@
 
 // Import snippets
 import rippleEffect from './snippets/ripple-effect-snippet.js';
-let rippleEffectElements = document.querySelectorAll('.ripple-effect');
-rippleEffectElements.forEach(el => rippleEffect(el));
+rippleEffect(document.getElementById('ripple-01'));
+rippleEffect(document.querySelector('#ripple-02'));
+rippleEffect(document.querySelector('#ripple-04'));
+
+rippleEffect(document.querySelector('#ripple-03'), {
+	backgroundColor: 'rgb(255, 170, 170)',
+	rippleColor: 'rgb(255, 220, 220)',
+});
 
 import greenBox from './snippets/green-box-snippet.js';
 let greenBoxElements = document.querySelectorAll('.green-box');
@@ -21,8 +27,12 @@ let jazzyButtonElements = document.querySelectorAll('.jazzy-button');
 jazzyButtonElements.forEach(el => jazzyButton(el));
 
 import spotlight from './snippets/spotlight-text-snippet.js';
-let spotlightElements = document.querySelectorAll('.spotlight-effect');
-spotlightElements.forEach(el => spotlight(el));
+spotlight(document.querySelector('#spotlight-01'));
+
+spotlight(document.querySelector('#spotlight-02'), {
+	backgroundColor: 'gold',
+	spotlightColor: 'yellow',
+});
 
 import pagePerformance from './snippets/page-performance-snippet.js';
 let performanceElements = document.querySelectorAll('.page-performance');
