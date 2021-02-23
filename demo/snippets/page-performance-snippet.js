@@ -29,9 +29,11 @@
 import scrawl from '../../source/scrawl.js';
 
 
-// __Effects on the element:__ updates the &lt;div> element's innerHTML data, which will replace any child elements or text placed between the element's opening and closing tags.
+// __Effects on the element:__ 
+// + updates the &lt;div> element's `innerHTML` data, which will replace any child elements or text placed between the element's opening and closing tags.
 export default function (el) {
 
+    // Define the report function that will record the time taken for each Display cycle animation
     let report = function () {
 
         let testTicker = Date.now(),
@@ -48,6 +50,8 @@ export default function (el) {
         };
     }();
 
+
+    // Apply the snippet to the DOM element
     let snippet = scrawl.makeSnippet({
         domElement: el,
         animationHooks: {
@@ -56,5 +60,6 @@ export default function (el) {
         includeCanvas: false,
     })
 
+    // The return value for this snippet is a boolean, not a JS Object containing links to major actors/actions in the snippet
     return (snippet) ? true : false;
 };

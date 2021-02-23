@@ -35,7 +35,8 @@
 import scrawl from '../../source/scrawl.js'
 
 
-// __Effects on the element:__ no additional effects.
+// __Effects on the element:__ 
+// + Adds a green box to the background display
 export default function (el) {
 
     let snippet = scrawl.makeSnippet({
@@ -44,11 +45,10 @@ export default function (el) {
 
     if (snippet) {
 
-        let canvas = snippet.canvas;
-        canvas.setAsCurrentCanvas();
-
         scrawl.makeBlock({
 
+            name: `${snippet.element.name}-box`,
+            group: snippet.canvas.base.name,
             width: '50%',
             height: '50%',
             startX: '25%',
@@ -59,6 +59,5 @@ export default function (el) {
             method: 'draw',
         });
     }
-
     return snippet;
 };

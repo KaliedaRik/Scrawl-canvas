@@ -42,16 +42,18 @@
 //
 // Each of the following snippet definition functions could live in its own file; we can also bundle snippets together so that related snippets can be imported into another Javascript module using a single __import__ statement in that file
 //
-// BOILERPLATE: import the Scrawl-canvas object - the path to the file will vary according to where in a particular site's server's directory structure the Scrawl-canvas files have been placed
+// Import the Scrawl-canvas object 
+// + there's various ways to do this. See [Demo DOM-001](../dom-001.html) for more details
 import scrawl from '../../source/scrawl.js';
-
 
 
 // ### 'Spotlight text' snippet
 //
 // __Purpose:__ adds a spotlight effect to an element. When the user hovers the mouse over the element, a 'spotlight' gradient will track the mouse's movements.
 //
-// __Function input:__ the DOM element, or a handle to it, as the only argument.
+// __Function input:__ 
+// + the DOM element, or a handle to it, as the first argument.
+// + an optional key:value Object as the second argument
 //
 // __Function output:__ a Javascript object will be returned, containing the following attributes
 // ```
@@ -64,70 +66,39 @@ import scrawl from '../../source/scrawl.js';
 // ```
 // ##### Usage example:
 // ```
-// import { spotlightText } from './relative/or/absolute/path/to/this/file.js';
+// import spotlightText from './relative/or/absolute/path/to/this/file.js';
 //
 // let myElements = document.querySelectorAll('.some-class');
 //
 // myElements.forEach(el => spotlightText(el));
 // ```
-// __Effects on the element:__ no additional effects.
+// __Effects on the element:__ 
+// + no additional effects on the DOM element
+// + setting any background fill on the DOM element will hide the snippet canvas, unless it is deliberately brought forward
 export default function (el, args = {}) {
 
+    // The snippet will accept an optional key:value Object as the second argument
+    // + __spotlightColor__ - default: `white`
+    // + __backgroundColor__ - default: `lightgray`
     let spotlightColor = args.spotlightColor || 'white',
         backgroundColor = args.backgroundColor || 'lightgray';
 
-    // Define some variables and functions we'll be using as part of the snippet build
-    let canvas, block;
 
-    // Define the gradient
-    let spotlightGradient = scrawl.makeRadialGradient({
-        name: 'mygradient',
-        startX: '50%',
-        startY: '50%',
-        endX: '50%',
-        endY: '50%',
-        endRadius: '20%',
-    })
-    .updateColor(0, spotlightColor)
-    .updateColor(999, backgroundColor);
-
-    // This animation hook uses the variables and gradient we defined above
-    //
-    // - not defining them first leads to the animation functionality failing
-    let checkMouseHover = function () {
-
-        let active = false;
-
-        return function () {
-
-            if (canvas.here.active !== active) {
-
-                active = canvas.here.active;
-
-                // The block entity swaps between the gradient and a color fill, dependent on user interaction
-                block.set({
-                    lockTo: (active) ? 'mouse' : 'start',
-                    fillStyle: (active) ? spotlightGradient : backgroundColor,
-                });
-            }
-        };
-    }();
-
-    // Generate the snippet for the DOM element
+    // Apply the snippet to the DOM element
     let snippet = scrawl.makeSnippet({
 
         // (__required__) The DOM element we are about to componentize
         domElement: el,
 
         // (__optional__) An array of animation hook functions with the following attributes
-        // `commence` - for an preparatory work required before the display cycle kicks off
-        // `afterClear` - runs between the 'clear' and 'compile' stages of the display cycle
-        // `afterCompile` - runs between the 'compile' and 'show' stages of the display cycle
-        // `afterShow` - for any cleanup work required after the display cycle completes
-        // `error` - a function to run when an error in the display cycle occurs
-        animationHooks: {
-            commence: checkMouseHover,
-        },
+        // + `commence` - for an preparatory work required before the display cycle kicks off
+        // + `afterClear` - runs between the 'clear' and 'compile' stages of the display cycle
+        // + `afterCompile` - runs between the 'compile' and 'show' stages of the display cycle
+        // + `afterShow` - for any cleanup work required after the display cycle completes
+        // + `error` - a function to run when an error in the display cycle occurs
+        // 
+        // For this snippet, we'll define and add an animation hook function after the animation object has been created
+        animationHooks: {},
 
         // (__optional__) Options we can supply for the [IntersectionObserver](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API). Defaults are usually good enough; changing the 'threshold' value is probably the most useful option to play with
         observerSpecs: {},
@@ -137,7 +108,7 @@ export default function (el, args = {}) {
 
         // (__optional__, and only useful if we are including a canvas) - canvas-specific options. The most useful attribute is (probably) __fit__, whose value can be one of: `contain`, `cover`, `fill`, or `none` (the default value)
         canvasSpecs: {},
-    })
+    });
 
     // NOTE: makeSnippet() defines its own __afterClear__ animation hook
     // + the functionality is to keep the canvas properly aligned and sized with its DOM element
@@ -147,12 +118,51 @@ export default function (el, args = {}) {
     // Once the snippet is built, we can supply values to our previously defined variables
     if (snippet) {
 
-        // Set the canvas as the current canvas - not required, it just makes things simpler for building artefacts etc
-        canvas = snippet.canvas;
+        // Set some convenience variables
+        let canvas = snippet.canvas,
+            animation = snippet.animation,
+            wrapper = snippet.element,
+            name = wrapper.name;
+
         canvas.setAsCurrentCanvas();
 
-        // Define the block which will (sometimes) display our spotlight gradient
-        block = scrawl.makeBlock({
+        // Define the gradient
+        let spotlightGradient = scrawl.makeRadialGradient({
+
+            name: `${name}-gradient`,
+            startX: '50%',
+            startY: '50%',
+            endX: '50%',
+            endY: '50%',
+            endRadius: '20%',
+        })
+        .updateColor(0, spotlightColor)
+        .updateColor(999, backgroundColor);
+
+        // This animation hook uses the variables and gradient we defined above
+        animation.commence = function () {
+
+            let active = false;
+
+            return function () {
+
+                if (canvas.here.active !== active) {
+
+                    active = canvas.here.active;
+
+                    // The block entity swaps between the gradient and a color fill, dependent on user interaction
+                    block.set({
+                        lockTo: (active) ? 'mouse' : 'start',
+                        fillStyle: (active) ? spotlightGradient : backgroundColor,
+                    });
+                }
+            };
+        }();
+
+        // Define the block which will (sometimes) display our spotlingt gradient
+        let block = scrawl.makeBlock({
+
+            name: `${name}-spotlight`,
             width: '200%',
             height: '200%',
 

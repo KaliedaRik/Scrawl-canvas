@@ -29,13 +29,27 @@
       margin-bottom: 1em;
       border: 1px solid black;
     }
+
+    .div-grid p {
+      width: 100%;
+      height: auto;
+      padding: 1em;
+      margin-bottom: 1em;
+      box-sizing: border-box;
+    }
+
+    span {
+      display: inline-block;
+    }
   </style>
 </head>
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Snippets test 004</h1>
   <h2>Snippets included in the Scrawl-canvas demo/snippets folder</h2>
-  <h3>These can be copied and amended to help you develop your own library of snippets</h3>
+  <p style="text-align: center">These can be copied and amended to help you develop your own library of snippets</p>
+
+  <h3>These examples are all responsive - resize the browser window to confirm.</h3>
 
   <section class="div-grid">
 
@@ -47,13 +61,29 @@
 
     <div id="ripple-04" style="background-color: rgb(0, 180, 0); border-radius: 20px; border-width: 8px; border-color: rgba(0, 0, 0, 0.3); color: #f6f6f6">Ripple effect - translucent DOM element border</div>
 
-    <div class="green-box">Green box - this is the effect</div>
+    <div id="green-box-01" class="green-box">Green box - this is the effect</div>
 
-    <div class="jazzy-button">Jazzy button - click to see effect</div>
+    <div id="jazzy-button-01" class="jazzy-button">Jazzy button - click to see effect</div>
+
+    <div id="jazzy-button-02" class="jazzy-button" style="font-family: cursive; font-size: 1.1rem; color: darkred">Pick up element's font</div>
 
     <div id="spotlight-01">Spotlight effect - hover to see effect</div>
 
     <div id="spotlight-02">Spotlight effect - set the spotlight and background colors when applying the snippet</div>
+
+    <div id="placeholder-01" class="placeholder" style="background-color: azure">Placeholder - this is the effect</div>
+
+    <div id="placeholder-02" class="placeholder" style="background-color: aliceblue; border: 5px solid black; border-radius: 50%">Placeholder - another example</div>
+
+    <div id="placeholder-03" class="placeholder" data-line-width="8" data-line-color="orange">Placeholder - pass in arguments using data attributes on the element</div>
+
+    <p>This is the <b>word highlighter snippet</b>, <span id="highlighter-01" class="default-highlighter">consectetur</span> adipiscing elit, sed do eiusmod tempor incididunt ut <span id="highlighter-02" class="thick-orange-highlighter">labore et dolore</span> magna aliqua. Risus nec feugiat in fermentum posuere urna nec.</p>
+
+    <p class="emphasis-test">Snippets won't work on inline elements. <em id="highlighter-03" style="display: inline-block" class="default-highlighter">They need elements that have a blocky type of display.</em> For example, the previous &lt;em> element displays as "inline-block".</p>
+
+    <p>Fames ac <span id="hover-gradient-01" class="animated-hover-gradient">turpis</span> <b>animated hover gradient snippet</b>. Odio eu <span id="hover-gradient-02" class="animated-hover-gradient">feugiat</span> pretium nibh ipsum consequat. <span id="hover-gradient-03" class="animated-hover-gradient">Vitae</span> ultricies leo integer malesuada nunc vel risus <span id="hover-gradient-04" class="animated-hover-gradient">commodo viverra.</span></p>
+
+    <p>Fames ac <span id="word-gradient-01" class="animated-word-gradient">turpis</span> <b>animated word gradient snippet</b>. Odio eu <span id="word-gradient-02" class="animated-word-gradient">feugiat</span> canvas text is <b><i>never</i></b> as good as DOM text. <span id="word-gradient-03" class="animated-word-gradient">Vitae</span> but at least this text can still be copied and pasted! <span id="word-gradient-04" class="animated-word-gradient">Commodo viverra.</span></p>
 
     <div id="my-page-performance-div" class="page-performance" style="background-color: beige">Page performance - this text will be overwritten by the effect</div>
 

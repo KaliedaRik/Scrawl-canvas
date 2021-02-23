@@ -7,8 +7,8 @@
 // ### 'Ripple effect' snippet
 // __Purpose:__ replicate the Material design 'ripple effect' when user clicks on an element decorated with this snippet.
 // __Function input:__ 
-// + any block-displayed DOM element
-// + a Javascript object containing key:value pairs defining the canvas ___backgroundColor___ (default: 'beige') and the ___rippleColor___ (default: 'white')
+// + the DOM element, or a handle to it, as the first argument.
+// + an optional key:value Object as the second argument
 //
 // __Function output:__ 
 // ```
@@ -21,7 +21,7 @@
 // ```
 // ##### Usage example:
 // ```
-// import { ripples } from './relative/or/absolute/path/to/this/file.js';
+// import ripples from './relative/or/absolute/path/to/this/file.js';
 //
 // let myElements = document.querySelectorAll('.some-class');
 //
@@ -36,29 +36,38 @@
 import scrawl from '../../source/scrawl.js';
 
 
-// __Effects on the element:__ no additional effects.
+// __Effects on the element:__ 
+// + The DOM element's background color will be brought into the canvas, with the element's backgroundColor set to `transparent` - any background image, gradient, etc will be hidden by the snippet effect
 export default function (el, args = {}) {
 
+    // The snippet will accept an optional key:value Object as the second argument
+    // + __rippleColor__ - default: `white`
+    // + __backgroundColor__ - default: false (will use the DOM element's background-color style)
     let backgroundColor = args.backgroundColor || false,
         rippleColor = args.rippleColor || 'white';
 
+    // Apply the snippet to the DOM element
     let snippet = scrawl.makeSnippet({
         domElement: el,
     });
 
     if (snippet) {
 
+        // Set some convenience variables
         let canvas = snippet.canvas,
-            wrapper = snippet.element;
+            wrapper = snippet.element,
+            styles = wrapper.elementComputedStyles,
+            name = wrapper.name;
 
         // Transfer the DOM element's current background-color style over to the canvas
         // + This does not handle situations where the DOM element has a gradient assigned to it
         // + if the function is invoked with the backgroundColor attribute set in the args Object, that color will replace the DOM element's current background color
         canvas.set({
-            backgroundColor: backgroundColor || wrapper.elementComputedStyles.backgroundColor,
+            backgroundColor: backgroundColor || styles.backgroundColor,
         })        
         wrapper.domElement.style.backgroundColor = 'transparent';
  
+        // We add an event listener to the DOM element
         let clickAction = (e) => {
 
             let {x, y, active} = canvas.here;
@@ -66,9 +75,8 @@ export default function (el, args = {}) {
             if (active) {
 
                 // Implement the ripple effect using a run-once-and-die tween operating on a create-and-destroy Wheel entity
-                // + We're not bothering to name these Scrawl-canvas objects because they're both short-lived and clean up after themselves when we invoke their kill functions
-                // + We do need to be explicit about the entity's group, otherwise all the entitys will end up in the last DOM element processed by the calling code
                 let r = scrawl.makeWheel({
+                    name: `${name}-ripple`,
                     start: [x, y],
                     group: canvas.base.name,
                     handle: ['center', 'center'],
@@ -77,6 +85,7 @@ export default function (el, args = {}) {
                 });
 
                 scrawl.makeTween({
+                    name: `${name}-tween`,
                     targets: r,
                     duration: 1000,
                     completeAction: () => r.kill(),

@@ -38,3 +38,21 @@ import pagePerformance from './snippets/page-performance-snippet.js';
 let performanceElements = document.querySelectorAll('.page-performance');
 performanceElements.forEach(el => pagePerformance(el));
 
+import placeholder from './snippets/placeholder-effect-snippet.js';
+let placeholderElements = document.querySelectorAll('.placeholder');
+placeholderElements.forEach(el => placeholder(el));
+
+import wordHighlighter from './snippets/word-highlighter-snippet.js';
+document.querySelectorAll('.default-highlighter').forEach(el => wordHighlighter(el));
+
+document.querySelectorAll('.thick-orange-highlighter').forEach(el => wordHighlighter(el, {
+	highlightColor: 'orange',
+	thickness: 6,
+}));
+
+import animatedHoverGradient from './snippets/animated-hover-gradient-snippet.js';
+document.querySelectorAll('.animated-hover-gradient').forEach(el => animatedHoverGradient(el));
+
+import animatedWordGradient from './snippets/animated-word-gradient-snippet.js';
+document.querySelectorAll('.animated-word-gradient').forEach(el => animatedWordGradient(el));
+

@@ -342,6 +342,13 @@ S.element = function (item) {
 };
 
 // Display cycle Boolean flags `cleared`, `compiled`, `shown`
+S.backgroundColor = function (item) {
+
+    // If we try to clear the cell with a transparent color, it will not clear. Setting it to an empty string fixes this issue
+    if ('rgba(0, 0, 0, 0)' === item || 'transparent' === item || '#00000000' === item || '#0000' === item) item = '';
+    this.backgroundColor = item;
+};
+
 S.cleared = function (item) {
 
     this.cleared = item;

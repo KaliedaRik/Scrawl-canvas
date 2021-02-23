@@ -9,6 +9,7 @@
 //
 // ### 'Jazzy button' snippet
 // __Purpose:__ display the number of times a user has clicked on a button element; animate the text and its line when the user clicks on the button.
+//
 // __Function input:__ a &lt;button> element, or any other block-displayed DOM element containing no child elements.
 //
 // __Function output:__ 
@@ -49,23 +50,32 @@
 import scrawl from '../../source/scrawl.js';
 
 
-// __Effects on the element:__ no additional effects.
+// __Effects on the element:__ 
+// + The DOM element will appear to have a light gray background
 export default function (el) {
 
+    // Apply the snippet to the DOM element
     let snippet = scrawl.makeSnippet({
         domElement: el,
     });
 
     if (snippet) {
 
+        // Set some convenience variables
         let canvas = snippet.canvas;
         canvas.setAsCurrentCanvas();
+
+        let wrapper = snippet.element,
+            name = wrapper.name,
+            styles = wrapper.elementComputedStyles;
+
+        // The snippet will take details of its font family, size and color from the DOM element's computed styles
+        let color = styles.color || 'black',
+            font = styles.font || '20px sans-serif';
 
         canvas.set({
             backgroundColor: '#f2f2f2',
         })
-
-        let wrapper = snippet.element;
 
         // define the text we'll be displaying in the button
         let counter = 0;
@@ -73,7 +83,7 @@ export default function (el) {
 
         // A path for the text to animate along, together with a gradient for its strokeStyle
         let lineGradient = scrawl.makeGradient({
-            name: `${wrapper.name}-gradient`,
+            name: `${name}-gradient`,
             endX: '100%',
             cyclePalette: true
         })
@@ -85,7 +95,7 @@ export default function (el) {
 
         let trackLine = scrawl.makeLine({
 
-            name: `${wrapper.name}-line`,
+            name: `${name}-line`,
             startX: 20,
             endX: '95%',
             startY: '70%',
@@ -109,19 +119,21 @@ export default function (el) {
             name: `${wrapper.name}-label`,
 
             text: `Hello - ${setClickText()}`,
-            font: `20px sans-serif`,
+
+            // Use the font set on the DOM element via CSS
+            font,
+            fillStyle: color,
+
             handleY: '68%',
 
-            fillStyle: '#000080',
-
-            textPath: `${wrapper.name}-line`,
+            textPath: `${name}-line`,
             textPathPosition: 0,
             textPathLoop: false,
         });
 
         // Animate the phrase entity along the line when button element is clicked
         let textTween = scrawl.makeTween({
-            name: `${wrapper.name}-textTween`,
+            name: `${name}-textTween`,
             duration: 2500,
             targets: label,
             definitions: [
@@ -142,7 +154,7 @@ export default function (el) {
 
         // Animate the gradient for the Line the text moves along
         let gradientTween = scrawl.makeTween({
-            name: `${wrapper.name}-gradientTween`,
+            name: `${name}-gradientTween`,
             targets: lineGradient,
             duration: 2500,
             definitions: [

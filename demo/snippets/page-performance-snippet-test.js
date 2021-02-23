@@ -1,35 +1,5 @@
-// # Demo Snippets 001
-// Scrawl-canvas DOM element snippets
-//
-// Related files:
-// + [DOM element snippets - main module](../snippets-001.html)
-// + [Spotlight text snippet](./spotlight-text-snippet.html)
-// + [Jazzy button snippet](./jazzy-button-snippet.html)
-// + [Page performance snippet](./page-performance-snippet.html)
-//
-// ### 'Page performance' reporter
-// __Purpose:__ (roughly) measure and display the time taken between calls to RequestAnimationFrame, and the resultant animated frames-per-second performance of the web page.
-//
-// __Function input:__ an empty &lt;div> element.
-//
-// __Function output:__ true if snippet builds; false otherwise
-//
-// ##### Usage example:
-// ```
-// import { pagePerformance } from './relative/or/absolute/path/to/this/page-performance-snippet.js';
-//
-// let myElements = document.querySelectorAll('.some-class');
-//
-// myElements.forEach(el => pagePerformance(el));
-// ```
-
-
-// Import the Scrawl-canvas object 
-// + There's various ways to do this. See [Demo DOM-001](../dom-001.html) for more details
 import scrawl from '../../source/scrawl.js';
 
-
-// __Effects on the element:__ updates the &lt;div> element's innerHTML data, which will replace any child elements or text placed between the element's opening and closing tags.
 export default function (el) {
 
     let report = function () {
