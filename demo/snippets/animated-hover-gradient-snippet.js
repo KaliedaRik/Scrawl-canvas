@@ -3,8 +3,18 @@
 //
 // Related files:
 // + [Snippets included in the Scrawl-canvas demo/snippets folder](../snippets-004.html)
-//
-//
+// + [Animated hover gradient snippet](./animated-hover-gradient-snippet.html)
+// + [Animated word gradient snippet](./animated-word-gradient-snippet.html)
+// + [Green box snippet](./green-box-snippet.html)
+// + [Jazzy button snippet](./jazzy-button-snippet.html)
+// + [Page performance snippet](./page-performance-snippet.html)
+// + [Pan image snippet](./pan-image-snippet.html)
+// + [Placeholder effect snippet](./placeholder-effect-snippet.html)
+// + [Ripple effect snippet](./ripple-effect-snippet.html)
+// + [Spotlight text snippet](./spotlight-text-snippet.html)
+// + [Word highlighter snippet](./word-highlighter-snippet.html)
+
+
 // ### 'Animated hover gradient' snippet
 //
 // __Purpose:__ adds a gradient behind the words, which animates on user hover over the &lt;span> (or similar) element.
@@ -23,11 +33,11 @@
 // ```
 // ##### Usage example:
 // ```
-// import spotlightText from './relative/or/absolute/path/to/this/file.js';
+// import hoverGradient from './relative/or/absolute/path/to/this/file.js';
 //
 // let myElements = document.querySelectorAll('.some-class');
 //
-// myElements.forEach(el => spotlightText(el));
+// myElements.forEach(el => hoverGradient(el));
 // ```
 
 

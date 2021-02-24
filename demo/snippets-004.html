@@ -38,6 +38,14 @@
       box-sizing: border-box;
     }
 
+    .larger-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .larger-grid div {
+      height: 200px;
+    }
+
     span {
       display: inline-block;
     }
@@ -47,17 +55,38 @@
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Snippets test 004</h1>
   <h2>Snippets included in the Scrawl-canvas demo/snippets folder</h2>
-  <p style="text-align: center">These can be copied and amended to help you develop your own library of snippets</p>
-
   <h3>These examples are all responsive - resize the browser window to confirm.</h3>
+
+  <p>Scrawl-canvas snippets are small pieces of code which can be imported into a &lt;script> tag in an HTML5 document, and then applied to elements in the document. For instance:</p>
+
+  <code>
+&lt;script type="module">
+
+    // Add a spotlight effect to the background of an element with id="#spotlight-me"
+
+    import spotlight from './snippets/spotlight-text-snippet.js';
+
+    spotlight(document.querySelector('#spotlight-me'));
+
+    // Add a highlighter background effect to inline words and phrases via &lt;span> elements
+    // - We can customize the displayed output, making this effect's line thick and orange
+
+    import wordHighlighter from './snippets/word-highlighter-snippet.js';
+
+    document.querySelectorAll('.thick-orange-highlighter').forEach(el => wordHighlighter(el, {
+      highlightColor: 'orange',
+      thickness: 6,
+    }));
+&lt;/script>
+  </code>
 
   <section class="div-grid">
 
-    <div id="ripple-01" style="background-color: beige">Ripple effect - click to see effect</div>
+    <div id="ripple-01">Ripple effect - click to see effect</div>
 
     <div id="ripple-02" style="background-color: yellow">Ripple effect - pick up the DOM element's background color</div>
 
-    <div id="ripple-03" style="background-color: beige">Ripple effect - set the DOM element and ripple colors when applying the snippet</div>
+    <div id="ripple-03">Ripple effect - set the DOM element and ripple colors when applying the snippet</div>
 
     <div id="ripple-04" style="background-color: rgb(0, 180, 0); border-radius: 20px; border-width: 8px; border-color: rgba(0, 0, 0, 0.3); color: #f6f6f6">Ripple effect - translucent DOM element border</div>
 
@@ -85,9 +114,52 @@
 
     <p>Fames ac <span id="word-gradient-01" class="animated-word-gradient">turpis</span> <b>animated word gradient snippet</b>. Odio eu <span id="word-gradient-02" class="animated-word-gradient">feugiat</span> canvas text is <b><i>never</i></b> as good as DOM text. <span id="word-gradient-03" class="animated-word-gradient">Vitae</span> but at least this text can still be copied and pasted! <span id="word-gradient-04" class="animated-word-gradient">Commodo viverra.</span></p>
 
-    <div id="my-page-performance-div" class="page-performance" style="background-color: beige">Page performance - this text will be overwritten by the effect</div>
-
   </section>
+
+  <h4>Images and forms</h4>
+
+  <p>Scrawl-canvas snippets work by inserting a &lt;canvas> element between the opening and closing tags of the element they are applied to. Thus Scrawl-canvas snippets cannot be applied to <a href="https://developer.mozilla.org/en-US/docs/Glossary/Empty_element">empty elements</a> such as &lt;img> or &lt;input>.</p>
+
+  <p>What we can do, instead, is build snippets that can be applied to the parent element. For instance the snippets used below are applied to &lt;div> elements which contain &lt;img> elements. When they run on the &lt;div> element they process and import all the images into Scrawl-canvas, then display them in various ways in the &lt;canvas> element that they add to the &lt;div> element:</p>
+
+  <code>
+&lt;script type="module">
+    import panImage from './snippets/pan-image-snippet.js';
+    document.querySelectorAll('.pan-image').forEach(el => panImage(el));
+&lt;/script>
+  </code>
+
+  <section class="div-grid larger-grid">
+  
+    <div id="draggable-image-1" class="pan-image" style="cursor: grab">
+      <img alt="Iris flower static image" src="img/iris.png">
+      <p style="color: red; text-shadow: 0 0 3px yellow">This simple image is draggable</p>
+    </div>
+  
+    <div id="draggable-image-2" class="pan-image" data-x="25%" data-y="30%" style="cursor: grab">
+      <p style="color: red; text-shadow: 0 0 3px yellow">This responsive image is draggable</p>
+      <img alt="River scene responsive image"
+        src="img/river.jpg"
+        srcset="img/river-300.jpg 300w,
+          img/river-600.jpg 600w,
+          img/river-900.jpg 900w,
+          img/river-1200.jpg 1200w,
+          img/river-1600.jpg 1600w,
+          img/river-2000.jpg 2000w,
+          img/river-2400.jpg 2400w,
+          img/river-2800.jpg 2800w,
+          img/river-3200.jpg 3200w,
+          img/river-3600.jpg 3600w,
+          img/river-4000.jpg 4000w" 
+        data-dimensions='{"river-300.jpg": [300, 225], "river-600.jpg": [600, 450], "river-900.jpg": [900, 675], "river-1200.jpg": [1200, 900], "river-1600.jpg": [1600, 1200], "river-2000.jpg": [2000, 1500], "river-2400.jpg": [2400, 1800], "river-2800.jpg": [2800, 2100], "river-3200.jpg": [3200, 2400], "river-3600.jpg": [3600, 2700], "river-4000.jpg": [4000, 3000]}' />
+    </div>
+  </section>
+
+  <p><b>When it comes to forms, and elements such as &lt;input>, &lt;select>, and &lt;textarea></b>, the best approach is to style the elements using CSS or - if absolutely necessary - SVG. There's <a href="https://www.cssscript.com/best-checkbox-radio-input-replacement-libraries/">plenty of libraries out there in the wild</a> that have already done the hard work for you. Adding any sort of canvas-based embellishments and replacements to a form will (probably) make the form more distracting, less useful and (almost certainly) less accessible!</p>
+
+  <p>Finally, remember: Scrawl-canvas snippets that do not add a &lt;canvas> element to the DOM can also be written, such as this page performance snippet:</p>
+
+  <div id="my-page-performance-div" class="page-performance" style="background-color: beige">Page performance - this text will be overwritten by the effect</div>
 
   <div class="testinfo">
     <h4>Test purpose</h4>
@@ -97,11 +169,16 @@
 
     <p><a href="../docs/demo/snippets-004.html">Annotated code</a></p>
     <ul>
-      <li><a href="../docs/demo/snippets/ripple-effect-snippet.html">Ripple effect snippet</a></li>
+      <li><a href="../docs/demo/snippets/animated-hover-gradient-snippet.html">Animated hover gradient snippet</a></li>
+      <li><a href="../docs/demo/snippets/animated-word-gradient-snippet.html">Animated word gradient snippet</a></li>
       <li><a href="../docs/demo/snippets/green-box-snippet.html">Green box snippet</a></li>
       <li><a href="../docs/demo/snippets/jazzy-button-snippet.html">Jazzy button snippet</a></li>
-      <li><a href="../docs/demo/snippets/spotlight-text-snippet.html">Spotlight effect snippet</a></li>
       <li><a href="../docs/demo/snippets/page-performance-snippet.html">Page performance snippet</a></li>
+      <li><a href="../docs/demo/snippets/pan-image-snippet.html">Pan image snippet</a></li>
+      <li><a href="../docs/demo/snippets/placeholder-effect-snippet.html">Placeholder effect snippet</a></li>
+      <li><a href="../docs/demo/snippets/ripple-effect-snippet.html">Ripple effect snippet</a></li>
+      <li><a href="../docs/demo/snippets/spotlight-text-snippet.html">Spotlight effect snippet</a></li>
+      <li><a href="../docs/demo/snippets/word-highlighter-snippet.html">Word highlighter snippet</a></li>
     </ul>
   </div>
 

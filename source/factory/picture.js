@@ -165,6 +165,10 @@ let G = P.getters,
 
 // __copyStart__
 // + Including __copyStartX__, __copyStartY__
+G.copyStart = function () {
+
+    return [].concat(this.currentCopyStart);
+};
 G.copyStartX = function () {
 
     return this.currentCopyStart[0];
@@ -226,6 +230,10 @@ G.copyWidth = function () {
 G.copyHeight = function () {
 
     return this.currentCopyDimensions[1];
+};
+G.copyDimensions = function (w, h) {
+
+    return [].concat(this.currentCopyDimensions);
 };
 S.copyWidth = function (val) {
 

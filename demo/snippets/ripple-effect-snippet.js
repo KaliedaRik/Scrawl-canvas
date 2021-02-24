@@ -62,8 +62,13 @@ export default function (el, args = {}) {
         // Transfer the DOM element's current background-color style over to the canvas
         // + This does not handle situations where the DOM element has a gradient assigned to it
         // + if the function is invoked with the backgroundColor attribute set in the args Object, that color will replace the DOM element's current background color
+        if (!backgroundColor) backgroundColor = styles.backgroundColor;
+
+        // We don't want a transparent background - default to beige!
+        if ('rgba(0, 0, 0, 0)' === backgroundColor || 'transparent' === backgroundColor || '#00000000' === backgroundColor || '#0000' === backgroundColor) backgroundColor = 'beige';
+
         canvas.set({
-            backgroundColor: backgroundColor || styles.backgroundColor,
+            backgroundColor,
         })        
         wrapper.domElement.style.backgroundColor = 'transparent';
  

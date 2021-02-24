@@ -38,7 +38,7 @@
 // ```
 // ##### Usage example:
 // ```
-// import { jazzyButton } from './relative/or/absolute/path/to/this/file.js';
+// import jazzyButton from './relative/or/absolute/path/to/this/file.js';
 //
 // let myElements = document.querySelectorAll('.some-class');
 //

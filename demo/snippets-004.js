@@ -56,3 +56,6 @@ document.querySelectorAll('.animated-hover-gradient').forEach(el => animatedHove
 import animatedWordGradient from './snippets/animated-word-gradient-snippet.js';
 document.querySelectorAll('.animated-word-gradient').forEach(el => animatedWordGradient(el));
 
+import panImage from './snippets/pan-image-snippet.js';
+document.querySelectorAll('.pan-image').forEach(el => panImage(el));
+
