@@ -65,6 +65,16 @@
                 </a>
               
                 
+                <a class="source" href="animated-hover-gradient-snippet.html">
+                  ./demo/snippets/animated-hover-gradient-snippet.js
+                </a>
+              
+                
+                <a class="source" href="animated-word-gradient-snippet.html">
+                  ./demo/snippets/animated-word-gradient-snippet.js
+                </a>
+              
+                
                 <a class="source" href="green-box-snippet.html">
                   ./demo/snippets/green-box-snippet.js
                 </a>
@@ -75,13 +85,43 @@
                 </a>
               
                 
+                <a class="source" href="page-performance-snippet-test.html">
+                  ./demo/snippets/page-performance-snippet-test.js
+                </a>
+              
+                
                 <a class="source" href="page-performance-snippet.html">
                   ./demo/snippets/page-performance-snippet.js
                 </a>
               
                 
+                <a class="source" href="pan-image-snippet.html">
+                  ./demo/snippets/pan-image-snippet.js
+                </a>
+              
+                
+                <a class="source" href="placeholder-effect-snippet.html">
+                  ./demo/snippets/placeholder-effect-snippet.js
+                </a>
+              
+                
+                <a class="source" href="ripple-effect-snippet.html">
+                  ./demo/snippets/ripple-effect-snippet.js
+                </a>
+              
+                
+                <a class="source" href="spotlight-text-snippet-test.html">
+                  ./demo/snippets/spotlight-text-snippet-test.js
+                </a>
+              
+                
                 <a class="source" href="spotlight-text-snippet.html">
                   ./demo/snippets/spotlight-text-snippet.js
+                </a>
+              
+                
+                <a class="source" href="word-highlighter-snippet.html">
+                  ./demo/snippets/word-highlighter-snippet.js
                 </a>
               
             </div>
@@ -142,7 +182,10 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 <li>what - if anything - the definition function will return</li>
 </ul>
 <p>Each of the following snippet definition functions could live in its own file; we can also bundle snippets together so that related snippets can be imported into another Javascript module using a single <strong>import</strong> statement in that file</p>
-<p>BOILERPLATE: import the Scrawl-canvas object - the path to the file will vary according to where in a particular site’s server’s directory structure the Scrawl-canvas files have been placed</p>
+<p>Import the Scrawl-canvas object </p>
+<ul>
+<li>there’s various ways to do this. See <a href="../dom-001.html">Demo DOM-001</a> for more details</li>
+</ul>
 
             </div>
             
@@ -159,7 +202,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
               </div>
               <h3 id="spotlight-text-snippet">‘Spotlight text’ snippet</h3>
 <p><strong>Purpose:</strong> adds a spotlight effect to an element. When the user hovers the mouse over the element, a ‘spotlight’ gradient will track the mouse’s movements.</p>
-<p><strong>Function input:</strong> the DOM element, or a handle to it, as the only argument.</p>
+<p><strong>Function input:</strong> </p>
+<ul>
+<li>the DOM element, or a handle to it, as the first argument.</li>
+<li>an optional key:value Object as the second argument</li>
+</ul>
 <p><strong>Function output:</strong> a Javascript object will be returned, containing the following attributes</p>
 <pre><code>{
     element     <span class="hljs-comment">// the Scrawl-canvas wrapper for the DOM element supplied to the function</span>
@@ -169,17 +216,21 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 }
 </code></pre>
 <h5 id="usage-example">Usage example:</h5>
-<pre><code><span class="hljs-keyword">import</span> { spotlightText } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./relative/or/absolute/path/to/this/file.js&#x27;</span>;
+<pre><code><span class="hljs-keyword">import</span> spotlightText <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./relative/or/absolute/path/to/this/file.js&#x27;</span>;
 
 <span class="hljs-keyword">let</span> myElements = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">&#x27;.some-class&#x27;</span>);
 
 myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> spotlightText(el));
 </code></pre>
-<p><strong>Effects on the element:</strong> no additional effects.</p>
+<p><strong>Effects on the element:</strong> </p>
+<ul>
+<li>no additional effects on the DOM element</li>
+<li>setting any background fill on the DOM element will hide the snippet canvas, unless it is deliberately brought forward</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">el</span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">el, args = {}</span>) </span>{</pre></div></div>
             
         </li>
         
@@ -190,11 +241,16 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <p>Define some variables and functions we’ll be using as part of the snippet build</p>
+              <p>The snippet will accept an optional key:value Object as the second argument</p>
+<ul>
+<li><strong>spotlightColor</strong> - default: <code>white</code></li>
+<li><strong>backgroundColor</strong> - default: <code>lightgray</code></li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> canvas, block;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> spotlightColor = args.spotlightColor || <span class="hljs-string">&#x27;white&#x27;</span>,
+        backgroundColor = args.backgroundColor || <span class="hljs-string">&#x27;lightgray&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -205,20 +261,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p>Define the gradient</p>
+              <p>Apply the snippet to the DOM element</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> spotlightGradient = scrawl.makeRadialGradient({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;mygradient&#x27;</span>,
-        <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
-        <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
-        <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
-        <span class="hljs-attr">endY</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
-        <span class="hljs-attr">endRadius</span>: <span class="hljs-string">&#x27;20%&#x27;</span>,
-    })
-    .updateColor(<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;white&#x27;</span>)
-    .updateColor(<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;lightgray&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> snippet = scrawl.makeSnippet({</pre></div></div>
             
         </li>
         
@@ -229,22 +276,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <p>This animation hook uses the variables and gradient we defined above</p>
-<ul>
-<li>not defining them first leads to the animation functionality failing</li>
-</ul>
+              <p>(<strong>required</strong>) The DOM element we are about to componentize</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> checkMouseHover = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-        <span class="hljs-keyword">let</span> active = <span class="hljs-literal">false</span>;
-
-        <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-            <span class="hljs-keyword">if</span> (canvas.here.active !== active) {
-
-                active = canvas.here.active;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        domElement: el,</pre></div></div>
             
         </li>
         
@@ -255,17 +291,19 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <p>The block entity swaps between the gradient and a color fill, dependent on user interaction</p>
+              <p>(<strong>optional</strong>) An array of animation hook functions with the following attributes</p>
+<ul>
+<li><code>commence</code> - for an preparatory work required before the display cycle kicks off</li>
+<li><code>afterClear</code> - runs between the ‘clear’ and ‘compile’ stages of the display cycle</li>
+<li><code>afterCompile</code> - runs between the ‘compile’ and ‘show’ stages of the display cycle</li>
+<li><code>afterShow</code> - for any cleanup work required after the display cycle completes</li>
+<li><code>error</code> - a function to run when an error in the display cycle occurs</li>
+</ul>
+<p>For this snippet, we’ll define and add an animation hook function after the animation object has been created</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                block.set({
-                    <span class="hljs-attr">lockTo</span>: (active) ? <span class="hljs-string">&#x27;mouse&#x27;</span> : <span class="hljs-string">&#x27;start&#x27;</span>,
-                    <span class="hljs-attr">fillStyle</span>: (active) ? spotlightGradient : <span class="hljs-string">&#x27;lightgray&#x27;</span>,
-                });
-            }
-        };
-    }();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        animationHooks: {},</pre></div></div>
             
         </li>
         
@@ -276,11 +314,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <p>Generate the snippet for the DOM element</p>
+              <p>(<strong>optional</strong>) Options we can supply for the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API">IntersectionObserver</a>. Defaults are usually good enough; changing the ‘threshold’ value is probably the most useful option to play with</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> snippet = scrawl.makeSnippet({</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        observerSpecs: {},</pre></div></div>
             
         </li>
         
@@ -291,11 +329,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p>(<strong>required</strong>) The DOM element we are about to componentize</p>
+              <p>(<strong>optional</strong> - default: true) Scrawl-canvas snippets don’t have to include a canvas!</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        domElement: el,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        includeCanvas: <span class="hljs-literal">true</span>,</pre></div></div>
             
         </li>
         
@@ -306,18 +344,12 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p>(<strong>optional</strong>) An array of animation hook functions with the following attributes
-<code>commence</code> - for an preparatory work required before the display cycle kicks off
-<code>afterClear</code> - runs between the ‘clear’ and ‘compile’ stages of the display cycle
-<code>afterCompile</code> - runs between the ‘compile’ and ‘show’ stages of the display cycle
-<code>afterShow</code> - for any cleanup work required after the display cycle completes
-<code>error</code> - a function to run when an error in the display cycle occurs</p>
+              <p>(<strong>optional</strong>, and only useful if we are including a canvas) - canvas-specific options. The most useful attribute is (probably) <strong>fit</strong>, whose value can be one of: <code>contain</code>, <code>cover</code>, <code>fill</code>, or <code>none</code> (the default value)</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        animationHooks: {
-            <span class="hljs-attr">commence</span>: checkMouseHover,
-        },</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        canvasSpecs: {},
+    });</pre></div></div>
             
         </li>
         
@@ -327,52 +359,6 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
               
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
-              </div>
-              <p>(<strong>optional</strong>) Options we can supply for the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API">IntersectionObserver</a>. Defaults are usually good enough; changing the ‘threshold’ value is probably the most useful option to play with</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        observerSpecs: {},</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
-              </div>
-              <p>(<strong>optional</strong> - default: true) Scrawl-canvas snippets don’t have to include a canvas!</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        includeCanvas: <span class="hljs-literal">true</span>,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-12">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
-              </div>
-              <p>(<strong>optional</strong>, and only useful if we are including a canvas) - canvas-specific options. The most useful attribute is (probably) <strong>fit</strong>, whose value can be one of: <code>contain</code>, <code>cover</code>, <code>fill</code>, or <code>none</code> (the default value)</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        canvasSpecs: {},
-    })</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-13">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>NOTE: makeSnippet() defines its own <strong>afterClear</strong> animation hook</p>
 <ul>
@@ -389,18 +375,91 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
+              <p>Set some convenience variables</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> canvas = snippet.canvas,
+            animation = snippet.animation,
+            wrapper = snippet.element,
+            name = wrapper.name;
+
+        canvas.setAsCurrentCanvas();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
+              </div>
+              <p>Define the gradient</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> spotlightGradient = scrawl.makeRadialGradient({
+
+            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-gradient`</span>,
+            <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+            <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+            <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+            <span class="hljs-attr">endY</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+            <span class="hljs-attr">endRadius</span>: <span class="hljs-string">&#x27;20%&#x27;</span>,
+        })
+        .updateColor(<span class="hljs-number">0</span>, spotlightColor)
+        .updateColor(<span class="hljs-number">999</span>, backgroundColor);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
+              <p>This animation hook uses the variables and gradient we defined above</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        animation.commence = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+            <span class="hljs-keyword">let</span> active = <span class="hljs-literal">false</span>;
+
+            <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+                <span class="hljs-keyword">if</span> (canvas.here.active !== active) {
+
+                    active = canvas.here.active;</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
-              <p>Set the canvas as the current canvas - not required, it just makes things simpler for building artefacts etc</p>
+              <p>The block entity swaps between the gradient and a color fill, dependent on user interaction</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        canvas = snippet.canvas;
-        canvas.setAsCurrentCanvas();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                    block.set({
+                        <span class="hljs-attr">lockTo</span>: (active) ? <span class="hljs-string">&#x27;mouse&#x27;</span> : <span class="hljs-string">&#x27;start&#x27;</span>,
+                        <span class="hljs-attr">fillStyle</span>: (active) ? spotlightGradient : backgroundColor,
+                    });
+                }
+            };
+        }();</pre></div></div>
             
         </li>
         
@@ -415,7 +474,9 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        block = scrawl.makeBlock({
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> block = scrawl.makeBlock({
+
+            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-spotlight`</span>,
             <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;200%&#x27;</span>,
             <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;200%&#x27;</span>,
 
@@ -424,22 +485,10 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
             <span class="hljs-attr">handleX</span>: <span class="hljs-string">&quot;50%&quot;</span>,
             <span class="hljs-attr">handleY</span>: <span class="hljs-string">&quot;50%&quot;</span>,
 
-            <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;lightgray&#x27;</span>,
+            <span class="hljs-attr">fillStyle</span>: backgroundColor,
             <span class="hljs-attr">lockFillStyleToEntity</span>: <span class="hljs-literal">true</span>,
 
             <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>, 
-        });
-
-        scrawl.makeBlock({
-
-            <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
-            <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
-            <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;25%&#x27;</span>,
-            <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;25%&#x27;</span>,
-            <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0.3</span>,
-            <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;lightgreen&#x27;</span>,
-            <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">40</span>,
-            <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
         });
     }</pre></div></div>
             

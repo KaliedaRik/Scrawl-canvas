@@ -618,7 +618,13 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> S = P.setters;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> G = P.getters,
+        S = P.setters;
+
+    G.sourceDimensions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+        <span class="hljs-keyword">return</span> [<span class="hljs-built_in">this</span>.sourceNaturalWidth, <span class="hljs-built_in">this</span>.sourceNaturalHeight];
+    };</pre></div></div>
             
         </li>
         

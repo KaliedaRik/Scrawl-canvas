@@ -549,6 +549,7 @@
     canvasSpecs.isComponent = <span class="hljs-literal">true</span>;
 
     <span class="hljs-keyword">let</span> myCanvas = myElement.addCanvas(canvasSpecs);
+    myElement.elementComputedStyles = <span class="hljs-built_in">window</span>.getComputedStyle(domElement);
 
     animationHooks.name = <span class="hljs-string">`<span class="hljs-subst">${myElement.name}</span>-animation`</span>;
     animationHooks.target = myCanvas;
@@ -586,6 +587,10 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeUnstackedSnippet = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">domElement, canvasSpecs, animationHooks, observerSpecs, includeCanvas</span>) </span>{
+
+    <span class="hljs-keyword">const</span> unsupportedElements = [<span class="hljs-string">&#x27;AREA&#x27;</span>, <span class="hljs-string">&#x27;BASE&#x27;</span>, <span class="hljs-string">&#x27;BR&#x27;</span>, <span class="hljs-string">&#x27;COL&#x27;</span>, <span class="hljs-string">&#x27;EMBED&#x27;</span>, <span class="hljs-string">&#x27;HR&#x27;</span>, <span class="hljs-string">&#x27;IMG&#x27;</span>, <span class="hljs-string">&#x27;INPUT&#x27;</span>, <span class="hljs-string">&#x27;KEYGEN&#x27;</span>, <span class="hljs-string">&#x27;LINK&#x27;</span>, <span class="hljs-string">&#x27;META&#x27;</span>, <span class="hljs-string">&#x27;PARAM&#x27;</span>, <span class="hljs-string">&#x27;SOURCE&#x27;</span>, <span class="hljs-string">&#x27;TRACK&#x27;</span>, <span class="hljs-string">&#x27;WBR&#x27;</span>];
+
+    <span class="hljs-keyword">if</span> (!domElement || unsupportedElements.indexOf(domElement.tagName) &gt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> {};
 
     <span class="hljs-keyword">let</span> myElement,
         id = domElement.id;

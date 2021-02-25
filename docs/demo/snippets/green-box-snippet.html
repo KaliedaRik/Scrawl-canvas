@@ -65,6 +65,16 @@
                 </a>
               
                 
+                <a class="source" href="animated-hover-gradient-snippet.html">
+                  ./demo/snippets/animated-hover-gradient-snippet.js
+                </a>
+              
+                
+                <a class="source" href="animated-word-gradient-snippet.html">
+                  ./demo/snippets/animated-word-gradient-snippet.js
+                </a>
+              
+                
                 <a class="source" href="green-box-snippet.html">
                   ./demo/snippets/green-box-snippet.js
                 </a>
@@ -75,13 +85,43 @@
                 </a>
               
                 
+                <a class="source" href="page-performance-snippet-test.html">
+                  ./demo/snippets/page-performance-snippet-test.js
+                </a>
+              
+                
                 <a class="source" href="page-performance-snippet.html">
                   ./demo/snippets/page-performance-snippet.js
                 </a>
               
                 
+                <a class="source" href="pan-image-snippet.html">
+                  ./demo/snippets/pan-image-snippet.js
+                </a>
+              
+                
+                <a class="source" href="placeholder-effect-snippet.html">
+                  ./demo/snippets/placeholder-effect-snippet.js
+                </a>
+              
+                
+                <a class="source" href="ripple-effect-snippet.html">
+                  ./demo/snippets/ripple-effect-snippet.js
+                </a>
+              
+                
+                <a class="source" href="spotlight-text-snippet-test.html">
+                  ./demo/snippets/spotlight-text-snippet-test.js
+                </a>
+              
+                
                 <a class="source" href="spotlight-text-snippet.html">
                   ./demo/snippets/spotlight-text-snippet.js
+                </a>
+              
+                
+                <a class="source" href="word-highlighter-snippet.html">
+                  ./demo/snippets/word-highlighter-snippet.js
                 </a>
               
             </div>
@@ -117,7 +157,7 @@
 }
 </code></pre>
 <p><strong>Usage example:</strong></p>
-<pre><code><span class="hljs-keyword">import</span> { greenBox } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./relative/or/absolute/path/to/this/file.js&#x27;</span>;
+<pre><code><span class="hljs-keyword">import</span> greenBox <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./relative/or/absolute/path/to/this/file.js&#x27;</span>;
 
 <span class="hljs-keyword">let</span> myElements = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">&#x27;.some-class&#x27;</span>);
 
@@ -150,7 +190,10 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <p><strong>Effects on the element:</strong> no additional effects.</p>
+              <p><strong>Effects on the element:</strong> </p>
+<ul>
+<li>Adds a green box to the background display</li>
+</ul>
 
             </div>
             
@@ -162,11 +205,10 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
     <span class="hljs-keyword">if</span> (snippet) {
 
-        <span class="hljs-keyword">let</span> canvas = snippet.canvas;
-        canvas.setAsCurrentCanvas();
-
         scrawl.makeBlock({
 
+            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${snippet.element.name}</span>-box`</span>,
+            <span class="hljs-attr">group</span>: snippet.canvas.base.name,
             <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
             <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
             <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;25%&#x27;</span>,
@@ -177,7 +219,6 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
             <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
         });
     }
-
     <span class="hljs-keyword">return</span> snippet;
 };</pre></div></div>
             

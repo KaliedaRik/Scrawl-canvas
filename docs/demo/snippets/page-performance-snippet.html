@@ -65,6 +65,16 @@
                 </a>
               
                 
+                <a class="source" href="animated-hover-gradient-snippet.html">
+                  ./demo/snippets/animated-hover-gradient-snippet.js
+                </a>
+              
+                
+                <a class="source" href="animated-word-gradient-snippet.html">
+                  ./demo/snippets/animated-word-gradient-snippet.js
+                </a>
+              
+                
                 <a class="source" href="green-box-snippet.html">
                   ./demo/snippets/green-box-snippet.js
                 </a>
@@ -75,13 +85,43 @@
                 </a>
               
                 
+                <a class="source" href="page-performance-snippet-test.html">
+                  ./demo/snippets/page-performance-snippet-test.js
+                </a>
+              
+                
                 <a class="source" href="page-performance-snippet.html">
                   ./demo/snippets/page-performance-snippet.js
                 </a>
               
                 
+                <a class="source" href="pan-image-snippet.html">
+                  ./demo/snippets/pan-image-snippet.js
+                </a>
+              
+                
+                <a class="source" href="placeholder-effect-snippet.html">
+                  ./demo/snippets/placeholder-effect-snippet.js
+                </a>
+              
+                
+                <a class="source" href="ripple-effect-snippet.html">
+                  ./demo/snippets/ripple-effect-snippet.js
+                </a>
+              
+                
+                <a class="source" href="spotlight-text-snippet-test.html">
+                  ./demo/snippets/spotlight-text-snippet-test.js
+                </a>
+              
+                
                 <a class="source" href="spotlight-text-snippet.html">
                   ./demo/snippets/spotlight-text-snippet.js
+                </a>
+              
+                
+                <a class="source" href="word-highlighter-snippet.html">
+                  ./demo/snippets/word-highlighter-snippet.js
                 </a>
               
             </div>
@@ -149,13 +189,29 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <p><strong>Effects on the element:</strong> updates the &lt;div&gt; element’s innerHTML data, which will replace any child elements or text placed between the element’s opening and closing tags.</p>
+              <p><strong>Effects on the element:</strong> </p>
+<ul>
+<li>updates the &lt;div&gt; element’s <code>innerHTML</code> data, which will replace any child elements or text placed between the element’s opening and closing tags.</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">el</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">el</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Define the report function that will record the time taken for each Display cycle animation</p>
 
-    <span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
         <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
             testTime, testNow,
@@ -168,20 +224,44 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
             testTicker = testNow;
 
             testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
-
-            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;report animation is running&#x27;</span>)
         };
-    }();
+    }();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <p>Apply the snippet to the DOM element</p>
 
-    <span class="hljs-keyword">let</span> snippet = scrawl.makeSnippet({
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> snippet = scrawl.makeSnippet({
         <span class="hljs-attr">domElement</span>: el,
         <span class="hljs-attr">animationHooks</span>: {
             <span class="hljs-attr">afterShow</span>: report,
         },
         <span class="hljs-attr">includeCanvas</span>: <span class="hljs-literal">false</span>,
-    })
+    })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
+              </div>
+              <p>The return value for this snippet is a boolean, not a JS Object containing links to major actors/actions in the snippet</p>
 
-    <span class="hljs-keyword">return</span> (snippet) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> (snippet) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
 };</pre></div></div>
             
         </li>

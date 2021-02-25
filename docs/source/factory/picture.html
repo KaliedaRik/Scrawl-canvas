@@ -817,7 +817,11 @@ P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">&#x27;a
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>G.copyStartX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>G.copyStart = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">return</span> [].concat(<span class="hljs-built_in">this</span>.currentCopyStart);
+};
+G.copyStartX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.currentCopyStart[<span class="hljs-number">0</span>];
 };
@@ -892,6 +896,10 @@ D.copyStart = <span class="hljs-function"><span class="hljs-keyword">function</s
 G.copyHeight = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.currentCopyDimensions[<span class="hljs-number">1</span>];
+};
+G.copyDimensions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">w, h</span>) </span>{
+
+    <span class="hljs-keyword">return</span> [].concat(<span class="hljs-built_in">this</span>.currentCopyDimensions);
 };
 S.copyWidth = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{
 

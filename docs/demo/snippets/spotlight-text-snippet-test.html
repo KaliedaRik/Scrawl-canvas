@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>spotlight-text-snippet-test.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="../../docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
+              
+                
+                <a class="source" href="../modules/entity-ring-builder.html">
+                  ./demo/modules/entity-ring-builder.js
+                </a>
+              
+                
+                <a class="source" href="../modules/london-crime-graphic.html">
+                  ./demo/modules/london-crime-graphic.js
+                </a>
+              
+                
+                <a class="source" href="../modules/london-crime-lines.html">
+                  ./demo/modules/london-crime-lines.js
+                </a>
+              
+                
+                <a class="source" href="../modules/london-crime-stacked-bars.html">
+                  ./demo/modules/london-crime-stacked-bars.js
+                </a>
+              
+                
+                <a class="source" href="../modules/simple-chart-frame-tests.html">
+                  ./demo/modules/simple-chart-frame-tests.js
+                </a>
+              
+                
+                <a class="source" href="../modules/simple-chart-frame.html">
+                  ./demo/modules/simple-chart-frame.js
+                </a>
+              
+                
+                <a class="source" href="../modules/simple-graph-lines.html">
+                  ./demo/modules/simple-graph-lines.js
+                </a>
+              
+                
+                <a class="source" href="../modules/simple-graph-stacked-bars.html">
+                  ./demo/modules/simple-graph-stacked-bars.js
+                </a>
+              
+                
+                <a class="source" href="../modules/wikipedia-views-spiral-chart.html">
+                  ./demo/modules/wikipedia-views-spiral-chart.js
+                </a>
+              
+                
+                <a class="source" href="animated-hover-gradient-snippet.html">
+                  ./demo/snippets/animated-hover-gradient-snippet.js
+                </a>
+              
+                
+                <a class="source" href="animated-word-gradient-snippet.html">
+                  ./demo/snippets/animated-word-gradient-snippet.js
+                </a>
+              
+                
+                <a class="source" href="green-box-snippet.html">
+                  ./demo/snippets/green-box-snippet.js
+                </a>
+              
+                
+                <a class="source" href="jazzy-button-snippet.html">
+                  ./demo/snippets/jazzy-button-snippet.js
+                </a>
+              
+                
+                <a class="source" href="page-performance-snippet-test.html">
+                  ./demo/snippets/page-performance-snippet-test.js
+                </a>
+              
+                
+                <a class="source" href="page-performance-snippet.html">
+                  ./demo/snippets/page-performance-snippet.js
+                </a>
+              
+                
+                <a class="source" href="pan-image-snippet.html">
+                  ./demo/snippets/pan-image-snippet.js
+                </a>
+              
+                
+                <a class="source" href="placeholder-effect-snippet.html">
+                  ./demo/snippets/placeholder-effect-snippet.js
+                </a>
+              
+                
+                <a class="source" href="ripple-effect-snippet.html">
+                  ./demo/snippets/ripple-effect-snippet.js
+                </a>
+              
+                
+                <a class="source" href="spotlight-text-snippet-test.html">
+                  ./demo/snippets/spotlight-text-snippet-test.js
+                </a>
+              
+                
+                <a class="source" href="spotlight-text-snippet.html">
+                  ./demo/snippets/spotlight-text-snippet.js
+                </a>
+              
+                
+                <a class="source" href="word-highlighter-snippet.html">
+                  ./demo/snippets/word-highlighter-snippet.js
+                </a>
+              
+            </div>
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>spotlight-text-snippet-test.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-1">&#x00a7;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../../source/scrawl.js&#x27;</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">el</span>) </span>{
+
+    <span class="hljs-keyword">let</span> snippet = scrawl.makeSnippet({
+        <span class="hljs-attr">domElement</span>: el,
+    });
+
+    <span class="hljs-keyword">if</span> (snippet) {
+
+        <span class="hljs-keyword">let</span> canvas = snippet.canvas,
+            animation = snippet.animation,
+            wrapper = snippet.element,
+            name = wrapper.name;
+
+        canvas.setAsCurrentCanvas();
+
+        <span class="hljs-keyword">let</span> spotlightGradient = scrawl.makeRadialGradient({
+            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-gradient`</span>,
+            <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+            <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+            <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+            <span class="hljs-attr">endY</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+            <span class="hljs-attr">endRadius</span>: <span class="hljs-string">&#x27;20%&#x27;</span>,
+        })
+        .updateColor(<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;white&#x27;</span>)
+        .updateColor(<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;lightgray&#x27;</span>);
+
+        animation.commence = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+            <span class="hljs-keyword">let</span> active = <span class="hljs-literal">false</span>;
+
+            <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+                <span class="hljs-keyword">if</span> (canvas.here.active !== active) {
+
+                    active = canvas.here.active;
+                    block.set({
+                        <span class="hljs-attr">lockTo</span>: (active) ? <span class="hljs-string">&#x27;mouse&#x27;</span> : <span class="hljs-string">&#x27;start&#x27;</span>,
+                        <span class="hljs-attr">fillStyle</span>: (active) ? spotlightGradient : <span class="hljs-string">&#x27;lightgray&#x27;</span>,
+                    });
+                }
+            };
+        }();
+
+        <span class="hljs-keyword">let</span> block = scrawl.makeBlock({
+            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-spotlight`</span>,
+            <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;200%&#x27;</span>,
+            <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;200%&#x27;</span>,
+
+            <span class="hljs-attr">startX</span>: <span class="hljs-string">&quot;50%&quot;</span>,
+            <span class="hljs-attr">startY</span>: <span class="hljs-string">&quot;50%&quot;</span>,
+            <span class="hljs-attr">handleX</span>: <span class="hljs-string">&quot;50%&quot;</span>,
+            <span class="hljs-attr">handleY</span>: <span class="hljs-string">&quot;50%&quot;</span>,
+
+            <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;lightgray&#x27;</span>,
+            <span class="hljs-attr">lockFillStyleToEntity</span>: <span class="hljs-literal">true</span>,
+
+            <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>, 
+        });
+
+        scrawl.makeBlock({
+            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-box`</span>,
+            <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+            <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+            <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;25%&#x27;</span>,
+            <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;25%&#x27;</span>,
+            <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0.3</span>,
+            <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;lightgreen&#x27;</span>,
+            <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">40</span>,
+            <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
+        });
+    }
+    <span class="hljs-keyword">return</span> snippet;
+};</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

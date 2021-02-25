@@ -65,6 +65,16 @@
                 </a>
               
                 
+                <a class="source" href="animated-hover-gradient-snippet.html">
+                  ./demo/snippets/animated-hover-gradient-snippet.js
+                </a>
+              
+                
+                <a class="source" href="animated-word-gradient-snippet.html">
+                  ./demo/snippets/animated-word-gradient-snippet.js
+                </a>
+              
+                
                 <a class="source" href="green-box-snippet.html">
                   ./demo/snippets/green-box-snippet.js
                 </a>
@@ -75,13 +85,43 @@
                 </a>
               
                 
+                <a class="source" href="page-performance-snippet-test.html">
+                  ./demo/snippets/page-performance-snippet-test.js
+                </a>
+              
+                
                 <a class="source" href="page-performance-snippet.html">
                   ./demo/snippets/page-performance-snippet.js
                 </a>
               
                 
+                <a class="source" href="pan-image-snippet.html">
+                  ./demo/snippets/pan-image-snippet.js
+                </a>
+              
+                
+                <a class="source" href="placeholder-effect-snippet.html">
+                  ./demo/snippets/placeholder-effect-snippet.js
+                </a>
+              
+                
+                <a class="source" href="ripple-effect-snippet.html">
+                  ./demo/snippets/ripple-effect-snippet.js
+                </a>
+              
+                
+                <a class="source" href="spotlight-text-snippet-test.html">
+                  ./demo/snippets/spotlight-text-snippet-test.js
+                </a>
+              
+                
                 <a class="source" href="spotlight-text-snippet.html">
                   ./demo/snippets/spotlight-text-snippet.js
+                </a>
+              
+                
+                <a class="source" href="word-highlighter-snippet.html">
+                  ./demo/snippets/word-highlighter-snippet.js
                 </a>
               
             </div>
@@ -109,8 +149,8 @@
 <li><a href="./page-performance-snippet.html">Page performance snippet</a></li>
 </ul>
 <h3 id="jazzy-button-snippet">‘Jazzy button’ snippet</h3>
-<p><strong>Purpose:</strong> display the number of times a user has clicked on a button element; animate the text and its line when the user clicks on the button.
-<strong>Function input:</strong> a &lt;button&gt; element, or any other block-displayed DOM element containing no child elements.</p>
+<p><strong>Purpose:</strong> display the number of times a user has clicked on a button element; animate the text and its line when the user clicks on the button.</p>
+<p><strong>Function input:</strong> a &lt;button&gt; element, or any other block-displayed DOM element containing no child elements.</p>
 <p><strong>Function output:</strong> </p>
 <pre><code>{
     element           <span class="hljs-comment">// wrapper</span>
@@ -135,7 +175,7 @@
 }
 </code></pre>
 <h5 id="usage-example">Usage example:</h5>
-<pre><code><span class="hljs-keyword">import</span> { jazzyButton } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./relative/or/absolute/path/to/this/file.js&#x27;</span>;
+<pre><code><span class="hljs-keyword">import</span> jazzyButton <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./relative/or/absolute/path/to/this/file.js&#x27;</span>;
 
 <span class="hljs-keyword">let</span> myElements = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">&#x27;.some-class&#x27;</span>);
 
@@ -171,26 +211,14 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <p><strong>Effects on the element:</strong> no additional effects.</p>
+              <p><strong>Effects on the element:</strong> </p>
+<ul>
+<li>The DOM element will appear to have a light gray background</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">el</span>) </span>{
-
-    <span class="hljs-keyword">let</span> snippet = scrawl.makeSnippet({
-        <span class="hljs-attr">domElement</span>: el,
-    });
-
-    <span class="hljs-keyword">if</span> (snippet) {
-
-        <span class="hljs-keyword">let</span> canvas = snippet.canvas;
-        canvas.setAsCurrentCanvas();
-
-        canvas.set({
-            <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;#f2f2f2&#x27;</span>,
-        })
-
-        <span class="hljs-keyword">let</span> wrapper = snippet.element;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">el</span>) </span>{</pre></div></div>
             
         </li>
         
@@ -200,6 +228,65 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
               
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>Apply the snippet to the DOM element</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> snippet = scrawl.makeSnippet({
+        <span class="hljs-attr">domElement</span>: el,
+    });
+
+    <span class="hljs-keyword">if</span> (snippet) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <p>Set some convenience variables</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> canvas = snippet.canvas;
+        canvas.setAsCurrentCanvas();
+
+        <span class="hljs-keyword">let</span> wrapper = snippet.element,
+            name = wrapper.name,
+            styles = wrapper.elementComputedStyles;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
+              </div>
+              <p>The snippet will take details of its font family, size and color from the DOM element’s computed styles</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> color = styles.color || <span class="hljs-string">&#x27;black&#x27;</span>,
+            font = styles.font || <span class="hljs-string">&#x27;20px sans-serif&#x27;</span>;
+
+        canvas.set({
+            <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;#f2f2f2&#x27;</span>,
+        })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>define the text we’ll be displaying in the button</p>
 
@@ -211,18 +298,18 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-5">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>A path for the text to animate along, together with a gradient for its strokeStyle</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> lineGradient = scrawl.makeGradient({
-            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${wrapper.name}</span>-gradient`</span>,
+            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-gradient`</span>,
             <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
             <span class="hljs-attr">cyclePalette</span>: <span class="hljs-literal">true</span>
         })
@@ -234,7 +321,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
         <span class="hljs-keyword">let</span> trackLine = scrawl.makeLine({
 
-            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${wrapper.name}</span>-line`</span>,
+            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-line`</span>,
             <span class="hljs-attr">startX</span>: <span class="hljs-number">20</span>,
             <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;95%&#x27;</span>,
             <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;70%&#x27;</span>,
@@ -255,11 +342,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-6">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>The phrase entity that will display the text</p>
 
@@ -269,13 +356,27 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${wrapper.name}</span>-label`</span>,
 
-            <span class="hljs-attr">text</span>: <span class="hljs-string">`Hello - <span class="hljs-subst">${setClickText()}</span>`</span>,
-            <span class="hljs-attr">font</span>: <span class="hljs-string">`20px sans-serif`</span>,
+            <span class="hljs-attr">text</span>: <span class="hljs-string">`Hello - <span class="hljs-subst">${setClickText()}</span>`</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
+              </div>
+              <p>Use the font set on the DOM element via CSS</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            font,
+            <span class="hljs-attr">fillStyle</span>: color,
+
             <span class="hljs-attr">handleY</span>: <span class="hljs-string">&#x27;68%&#x27;</span>,
 
-            <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;#000080&#x27;</span>,
-
-            <span class="hljs-attr">textPath</span>: <span class="hljs-string">`<span class="hljs-subst">${wrapper.name}</span>-line`</span>,
+            <span class="hljs-attr">textPath</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-line`</span>,
             <span class="hljs-attr">textPathPosition</span>: <span class="hljs-number">0</span>,
             <span class="hljs-attr">textPathLoop</span>: <span class="hljs-literal">false</span>,
         });</pre></div></div>
@@ -283,18 +384,18 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-7">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>Animate the phrase entity along the line when button element is clicked</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> textTween = scrawl.makeTween({
-            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${wrapper.name}</span>-textTween`</span>,
+            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-textTween`</span>,
             <span class="hljs-attr">duration</span>: <span class="hljs-number">2500</span>,
             <span class="hljs-attr">targets</span>: label,
             <span class="hljs-attr">definitions</span>: [
@@ -316,18 +417,18 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-8">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>Animate the gradient for the Line the text moves along</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> gradientTween = scrawl.makeTween({
-            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${wrapper.name}</span>-gradientTween`</span>,
+            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-gradientTween`</span>,
             <span class="hljs-attr">targets</span>: lineGradient,
             <span class="hljs-attr">duration</span>: <span class="hljs-number">2500</span>,
             <span class="hljs-attr">definitions</span>: [
@@ -352,11 +453,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-9">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Increase the local counter; update the Phrase entity with new text</p>
 
@@ -371,11 +472,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-10">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Both tweens need to halt and restart if user clicks on them while they are running</p>
 
