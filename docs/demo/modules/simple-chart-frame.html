@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Demo Modules 001</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="../../docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
+              
+                
+                <a class="source" href="entity-ring-builder.html">
+                  ./demo/modules/entity-ring-builder.js
+                </a>
+              
+                
+                <a class="source" href="london-crime-graphic.html">
+                  ./demo/modules/london-crime-graphic.js
+                </a>
+              
+                
+                <a class="source" href="london-crime-lines.html">
+                  ./demo/modules/london-crime-lines.js
+                </a>
+              
+                
+                <a class="source" href="london-crime-stacked-bars.html">
+                  ./demo/modules/london-crime-stacked-bars.js
+                </a>
+              
+                
+                <a class="source" href="simple-chart-frame-tests.html">
+                  ./demo/modules/simple-chart-frame-tests.js
+                </a>
+              
+                
+                <a class="source" href="simple-chart-frame.html">
+                  ./demo/modules/simple-chart-frame.js
+                </a>
+              
+                
+                <a class="source" href="simple-graph-lines.html">
+                  ./demo/modules/simple-graph-lines.js
+                </a>
+              
+                
+                <a class="source" href="simple-graph-stacked-bars.html">
+                  ./demo/modules/simple-graph-stacked-bars.js
+                </a>
+              
+                
+                <a class="source" href="wikipedia-views-spiral-chart.html">
+                  ./demo/modules/wikipedia-views-spiral-chart.js
+                </a>
+              
+                
+                <a class="source" href="../snippets/animated-hover-gradient-snippet.html">
+                  ./demo/snippets/animated-hover-gradient-snippet.js
+                </a>
+              
+                
+                <a class="source" href="../snippets/animated-word-gradient-snippet.html">
+                  ./demo/snippets/animated-word-gradient-snippet.js
+                </a>
+              
+                
+                <a class="source" href="../snippets/green-box-snippet.html">
+                  ./demo/snippets/green-box-snippet.js
+                </a>
+              
+                
+                <a class="source" href="../snippets/jazzy-button-snippet.html">
+                  ./demo/snippets/jazzy-button-snippet.js
+                </a>
+              
+                
+                <a class="source" href="../snippets/page-performance-snippet-test.html">
+                  ./demo/snippets/page-performance-snippet-test.js
+                </a>
+              
+                
+                <a class="source" href="../snippets/page-performance-snippet.html">
+                  ./demo/snippets/page-performance-snippet.js
+                </a>
+              
+                
+                <a class="source" href="../snippets/pan-image-snippet.html">
+                  ./demo/snippets/pan-image-snippet.js
+                </a>
+              
+                
+                <a class="source" href="../snippets/placeholder-effect-snippet.html">
+                  ./demo/snippets/placeholder-effect-snippet.js
+                </a>
+              
+                
+                <a class="source" href="../snippets/ripple-effect-snippet.html">
+                  ./demo/snippets/ripple-effect-snippet.js
+                </a>
+              
+                
+                <a class="source" href="../snippets/spotlight-text-snippet-test.html">
+                  ./demo/snippets/spotlight-text-snippet-test.js
+                </a>
+              
+                
+                <a class="source" href="../snippets/spotlight-text-snippet.html">
+                  ./demo/snippets/spotlight-text-snippet.js
+                </a>
+              
+                
+                <a class="source" href="../snippets/word-highlighter-snippet.html">
+                  ./demo/snippets/word-highlighter-snippet.js
+                </a>
+              
+            </div>
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-1">&#x00a7;</a>
+              </div>
+              <h1 id="demo-modules-001">Demo Modules 001</h1>
+<p>Scrawl-canvas modularized code - London crime charts</p>
+<p>Related files:</p>
+<ul>
+<li><a href="../modules-001.html">London crime charts - main module</a></li>
+<li><a href="./london-crime-graphic.html">London crime graphic module</a></li>
+<li><a href="./london-crime-lines.html">London crime lines module</a></li>
+<li><a href="./london-crime-stacked-bars.html">London crime stacked bar module</a></li>
+<li><a href="./simple-chart-frame.html">Simple chart frame module</a></li>
+<li><a href="./simple-chart-frame-tests.html">Simple chart frame tests module</a></li>
+<li><a href="./simple-graph-lines.html">Simple graph lines module</a></li>
+<li><a href="./simple-graph-stacked-bars.html">Simple graph stacked bars module</a></li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../../source/scrawl.js&#x27;</span>;
+
+scrawl.importDomImage(<span class="hljs-string">&#x27;.crime&#x27;</span>);
+
+<span class="hljs-keyword">let</span> background, 
+    title, subtitle, 
+    yLabelTop, yLabelBottom, 
+    xLabelLeft, xLabelRight, 
+    group;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-2">&#x00a7;</a>
+              </div>
+              <p>Magic numbers to define where the chart will go within the grid</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> graphWidth = <span class="hljs-number">90</span>;
+<span class="hljs-keyword">const</span> graphHeight = <span class="hljs-number">80</span>;
+<span class="hljs-keyword">const</span> graphBottom = <span class="hljs-number">95</span>;
+<span class="hljs-keyword">const</span> graphLeft = <span class="hljs-number">10</span>;
+
+<span class="hljs-keyword">const</span> build = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">namespace, canvas, backgroundImage</span>) </span>{
+
+    group = scrawl.makeGroup({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-group`</span>,
+        <span class="hljs-attr">host</span>: canvas.base.name,
+        <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
+        <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
+    });
+
+    background = scrawl.makePicture({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-background`</span>,
+        <span class="hljs-attr">group</span>: group,
+        <span class="hljs-attr">order</span>: <span class="hljs-number">0</span>,
+
+        <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+        <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+
+        <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+        <span class="hljs-attr">copyHeight</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+
+        <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0.65</span>,
+
+        <span class="hljs-attr">asset</span>: backgroundImage,
+    });
+
+    title = scrawl.makePhrase({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-title`</span>,
+        <span class="hljs-attr">group</span>: group,
+        <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
+
+        <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;No title&#x27;</span>,
+
+        <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+        <span class="hljs-attr">justify</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
+
+        <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;3%&#x27;</span>,
+
+        <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;1.5rem Roboto, Arial, sans-serif&#x27;</span>,
+
+        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;black&#x27;</span>,
+
+        <span class="hljs-attr">shadowColor</span>: <span class="hljs-string">&#x27;white&#x27;</span>,
+        <span class="hljs-attr">shadowBlur</span>: <span class="hljs-number">6</span>,
+    });
+
+    subtitle = title.clone({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-subtitle`</span>,
+        <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;No data selected&#x27;</span>,
+
+        <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;9%&#x27;</span>,
+        <span class="hljs-attr">size</span>: <span class="hljs-string">&#x27;1.2rem&#x27;</span>,
+    });
+    subtitle.addSectionClass(<span class="hljs-string">&#x27;RED&#x27;</span>, { <span class="hljs-attr">fill</span>: <span class="hljs-string">&#x27;darkred&#x27;</span> });
+
+    yLabelTop = scrawl.makePhrase({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-y-top`</span>,
+        <span class="hljs-attr">group</span>: group,
+        <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
+
+        <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;0&#x27;</span>,
+
+        <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;1%&#x27;</span>,
+        <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;12%&#x27;</span>,
+
+        <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;0.9rem Roboto, Arial, sans-serif&#x27;</span>,
+
+        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;darkred&#x27;</span>,
+
+        <span class="hljs-attr">shadowColor</span>: <span class="hljs-string">&#x27;white&#x27;</span>,
+        <span class="hljs-attr">shadowBlur</span>: <span class="hljs-number">6</span>,
+    });
+
+    yLabelBottom = yLabelTop.clone({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-y-bottom`</span>,
+        <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;92%&#x27;</span>,
+    });
+
+    xLabelLeft = yLabelTop.clone({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-x-left`</span>,
+        <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;10%&#x27;</span>,
+        <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;96%&#x27;</span>,
+    });
+
+    xLabelRight = xLabelLeft.clone({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-x-right`</span>,
+        <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;89%&#x27;</span>,
+    });
+
+    scrawl.makeLine({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-upperline`</span>,
+        <span class="hljs-attr">group</span>: group,
+        <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
+
+        <span class="hljs-attr">startX</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-attr">startY</span>: <span class="hljs-string">`<span class="hljs-subst">${graphBottom - graphHeight}</span>%`</span>,
+
+        <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+        <span class="hljs-attr">endY</span>: <span class="hljs-string">`<span class="hljs-subst">${graphBottom - graphHeight}</span>%`</span>,
+
+        <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
+        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
+
+        <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">1</span>,
+
+    }).clone({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-lowerline`</span>,
+
+        <span class="hljs-attr">startY</span>: <span class="hljs-string">`<span class="hljs-subst">${graphBottom}</span>%`</span>,
+        <span class="hljs-attr">endY</span>: <span class="hljs-string">`<span class="hljs-subst">${graphBottom}</span>%`</span>,
+
+    }).clone({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-leftline`</span>,
+
+        <span class="hljs-attr">startX</span>: <span class="hljs-string">`<span class="hljs-subst">${graphLeft}</span>%`</span>,
+        <span class="hljs-attr">endX</span>: <span class="hljs-string">`<span class="hljs-subst">${graphLeft}</span>%`</span>,
+
+        <span class="hljs-attr">startY</span>: <span class="hljs-string">`<span class="hljs-subst">${graphBottom - graphHeight}</span>%`</span>,
+        <span class="hljs-attr">endY</span>: <span class="hljs-string">`<span class="hljs-subst">${graphBottom}</span>%`</span>,
+    });
+
+    show();
+};
+
+<span class="hljs-keyword">const</span> kill = <span class="hljs-function">() =&gt;</span> group.kill(<span class="hljs-literal">true</span>);
+
+<span class="hljs-keyword">const</span> hide = <span class="hljs-function">() =&gt;</span> group.visibility = <span class="hljs-literal">false</span>;
+<span class="hljs-keyword">const</span> show = <span class="hljs-function">() =&gt;</span> group.visibility = <span class="hljs-literal">true</span>;
+
+<span class="hljs-keyword">const</span> updateTextHelper = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item, text</span>) </span>{
+
+    item.set({
+        <span class="hljs-attr">text</span>: text,
+    });
+};
+
+<span class="hljs-keyword">const</span> updateTitle = <span class="hljs-function">(<span class="hljs-params">text</span>) =&gt;</span> updateTextHelper(title, text);
+<span class="hljs-keyword">const</span> updateSubtitle = <span class="hljs-function">(<span class="hljs-params">text</span>) =&gt;</span> updateTextHelper(subtitle, text);
+<span class="hljs-keyword">const</span> updateYTop = <span class="hljs-function">(<span class="hljs-params">text</span>) =&gt;</span> updateTextHelper(yLabelTop, text);
+<span class="hljs-keyword">const</span> updateYBottom = <span class="hljs-function">(<span class="hljs-params">text</span>) =&gt;</span> updateTextHelper(yLabelBottom, text);
+<span class="hljs-keyword">const</span> updateXLeft = <span class="hljs-function">(<span class="hljs-params">text</span>) =&gt;</span> updateTextHelper(xLabelLeft, text);
+<span class="hljs-keyword">const</span> updateXRight = <span class="hljs-function">(<span class="hljs-params">text</span>) =&gt;</span> updateTextHelper(xLabelRight, text);
+
+<span class="hljs-keyword">const</span> updateBackground = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">asset</span>) </span>{
+
+    background.set({
+        <span class="hljs-attr">asset</span>: asset,
+    });
+};
+
+<span class="hljs-keyword">export</span> {
+    graphWidth,
+    graphHeight,
+    graphBottom,
+    graphLeft,
+
+    build,
+    kill,
+
+    hide,
+    show,
+
+    updateTitle,
+    updateSubtitle,
+    updateYTop,
+    updateYBottom,
+    updateXLeft,
+    updateXRight,
+
+    updateBackground,
+};</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

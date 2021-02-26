@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Scrawl-canvas snippets</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="../../docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
+              
+                
+                <a class="source" href="animationloop.html">
+                  ./source/core/animationloop.js
+                </a>
+              
+                
+                <a class="source" href="document.html">
+                  ./source/core/document.js
+                </a>
+              
+                
+                <a class="source" href="events.html">
+                  ./source/core/events.js
+                </a>
+              
+                
+                <a class="source" href="init.html">
+                  ./source/core/init.js
+                </a>
+              
+                
+                <a class="source" href="library.html">
+                  ./source/core/library.js
+                </a>
+              
+                
+                <a class="source" href="snippets.html">
+                  ./source/core/snippets.js
+                </a>
+              
+                
+                <a class="source" href="userInteraction.html">
+                  ./source/core/userInteraction.js
+                </a>
+              
+                
+                <a class="source" href="utilities.html">
+                  ./source/core/utilities.js
+                </a>
+              
+                
+                <a class="source" href="../factory/action.html">
+                  ./source/factory/action.js
+                </a>
+              
+                
+                <a class="source" href="../factory/anchor.html">
+                  ./source/factory/anchor.js
+                </a>
+              
+                
+                <a class="source" href="../factory/animation.html">
+                  ./source/factory/animation.js
+                </a>
+              
+                
+                <a class="source" href="../factory/bezier.html">
+                  ./source/factory/bezier.js
+                </a>
+              
+                
+                <a class="source" href="../factory/block.html">
+                  ./source/factory/block.js
+                </a>
+              
+                
+                <a class="source" href="../factory/canvas.html">
+                  ./source/factory/canvas.js
+                </a>
+              
+                
+                <a class="source" href="../factory/cell.html">
+                  ./source/factory/cell.js
+                </a>
+              
+                
+                <a class="source" href="../factory/cog.html">
+                  ./source/factory/cog.js
+                </a>
+              
+                
+                <a class="source" href="../factory/color.html">
+                  ./source/factory/color.js
+                </a>
+              
+                
+                <a class="source" href="../factory/coordinate.html">
+                  ./source/factory/coordinate.js
+                </a>
+              
+                
+                <a class="source" href="../factory/element.html">
+                  ./source/factory/element.js
+                </a>
+              
+                
+                <a class="source" href="../factory/emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
+                <a class="source" href="../factory/filter.html">
+                  ./source/factory/filter.js
+                </a>
+              
+                
+                <a class="source" href="../factory/filterEngine.html">
+                  ./source/factory/filterEngine.js
+                </a>
+              
+                
+                <a class="source" href="../factory/fontAttributes.html">
+                  ./source/factory/fontAttributes.js
+                </a>
+              
+                
+                <a class="source" href="../factory/gradient.html">
+                  ./source/factory/gradient.js
+                </a>
+              
+                
+                <a class="source" href="../factory/grid.html">
+                  ./source/factory/grid.js
+                </a>
+              
+                
+                <a class="source" href="../factory/group.html">
+                  ./source/factory/group.js
+                </a>
+              
+                
+                <a class="source" href="../factory/imageAsset.html">
+                  ./source/factory/imageAsset.js
+                </a>
+              
+                
+                <a class="source" href="../factory/line.html">
+                  ./source/factory/line.js
+                </a>
+              
+                
+                <a class="source" href="../factory/loom.html">
+                  ./source/factory/loom.js
+                </a>
+              
+                
+                <a class="source" href="../factory/mesh.html">
+                  ./source/factory/mesh.js
+                </a>
+              
+                
+                <a class="source" href="../factory/net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
+                <a class="source" href="../factory/noise.html">
+                  ./source/factory/noise.js
+                </a>
+              
+                
+                <a class="source" href="../factory/oval.html">
+                  ./source/factory/oval.js
+                </a>
+              
+                
+                <a class="source" href="../factory/palette.html">
+                  ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleForce.html">
+                  ./source/factory/particleForce.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleHistory.html">
+                  ./source/factory/particleHistory.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleSpring.html">
+                  ./source/factory/particleSpring.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleWorld.html">
+                  ./source/factory/particleWorld.js
+                </a>
+              
+                
+                <a class="source" href="../factory/pattern.html">
+                  ./source/factory/pattern.js
+                </a>
+              
+                
+                <a class="source" href="../factory/phrase.html">
+                  ./source/factory/phrase.js
+                </a>
+              
+                
+                <a class="source" href="../factory/picture.html">
+                  ./source/factory/picture.js
+                </a>
+              
+                
+                <a class="source" href="../factory/polygon.html">
+                  ./source/factory/polygon.js
+                </a>
+              
+                
+                <a class="source" href="../factory/polyline.html">
+                  ./source/factory/polyline.js
+                </a>
+              
+                
+                <a class="source" href="../factory/quadratic.html">
+                  ./source/factory/quadratic.js
+                </a>
+              
+                
+                <a class="source" href="../factory/quaternion.html">
+                  ./source/factory/quaternion.js
+                </a>
+              
+                
+                <a class="source" href="../factory/radialGradient.html">
+                  ./source/factory/radialGradient.js
+                </a>
+              
+                
+                <a class="source" href="../factory/rectangle.html">
+                  ./source/factory/rectangle.js
+                </a>
+              
+                
+                <a class="source" href="../factory/renderAnimation.html">
+                  ./source/factory/renderAnimation.js
+                </a>
+              
+                
+                <a class="source" href="../factory/shape.html">
+                  ./source/factory/shape.js
+                </a>
+              
+                
+                <a class="source" href="../factory/spiral.html">
+                  ./source/factory/spiral.js
+                </a>
+              
+                
+                <a class="source" href="../factory/spriteAsset.html">
+                  ./source/factory/spriteAsset.js
+                </a>
+              
+                
+                <a class="source" href="../factory/stack.html">
+                  ./source/factory/stack.js
+                </a>
+              
+                
+                <a class="source" href="../factory/star.html">
+                  ./source/factory/star.js
+                </a>
+              
+                
+                <a class="source" href="../factory/state.html">
+                  ./source/factory/state.js
+                </a>
+              
+                
+                <a class="source" href="../factory/tetragon.html">
+                  ./source/factory/tetragon.js
+                </a>
+              
+                
+                <a class="source" href="../factory/ticker.html">
+                  ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="../factory/tracer.html">
+                  ./source/factory/tracer.js
+                </a>
+              
+                
+                <a class="source" href="../factory/tween.html">
+                  ./source/factory/tween.js
+                </a>
+              
+                
+                <a class="source" href="../factory/unstackedElement.html">
+                  ./source/factory/unstackedElement.js
+                </a>
+              
+                
+                <a class="source" href="../factory/vector.html">
+                  ./source/factory/vector.js
+                </a>
+              
+                
+                <a class="source" href="../factory/videoAsset.html">
+                  ./source/factory/videoAsset.js
+                </a>
+              
+                
+                <a class="source" href="../factory/wheel.html">
+                  ./source/factory/wheel.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/anchor.html">
+                  ./source/mixin/anchor.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/asset.html">
+                  ./source/mixin/asset.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/assetConsumer.html">
+                  ./source/mixin/assetConsumer.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/base.html">
+                  ./source/mixin/base.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/cascade.html">
+                  ./source/mixin/cascade.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/delta.html">
+                  ./source/mixin/delta.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/displayShape.html">
+                  ./source/mixin/displayShape.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/dom.html">
+                  ./source/mixin/dom.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/entity.html">
+                  ./source/mixin/entity.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/filter.html">
+                  ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/mimic.html">
+                  ./source/mixin/mimic.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/path.html">
+                  ./source/mixin/path.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/pattern.html">
+                  ./source/mixin/pattern.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/pivot.html">
+                  ./source/mixin/pivot.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/position.html">
+                  ./source/mixin/position.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/shapeBasic.html">
+                  ./source/mixin/shapeBasic.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/shapeCurve.html">
+                  ./source/mixin/shapeCurve.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/shapePathCalculation.html">
+                  ./source/mixin/shapePathCalculation.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/styles.html">
+                  ./source/mixin/styles.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/tween.html">
+                  ./source/mixin/tween.js
+                </a>
+              
+            </div>
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-1">&#x00a7;</a>
+              </div>
+              <h1 id="scrawl-canvas-snippets">Scrawl-canvas snippets</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-2">&#x00a7;</a>
+              </div>
+              <p><em><strong>To be aware - this functionality is HIGHLY EXPERIMENTAL; it will be subject to short-notice breaking changes as we amend and inprove the concept of Scrawl-canvas components</strong></em></p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-3">&#x00a7;</a>
+              </div>
+              <p>TODO - documentation</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <h2 id="imports">Imports</h2>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { isa_dom, isa_boolean, isa_obj } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./utilities.js&quot;</span>;
+<span class="hljs-keyword">import</span> { artefact, unstackedelement } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./library.js&quot;</span>;
+<span class="hljs-keyword">import</span> { makeAnimationObserver } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./events.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { makeRender } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../factory/renderAnimation.js&quot;</span>;
+<span class="hljs-keyword">import</span> { makeUnstackedElement } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../factory/unstackedElement.js&quot;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <p>TODO - documentation</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeSnippet = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+
+    <span class="hljs-keyword">let</span> domElement = (isa_dom(items.domElement)) ? items.domElement : <span class="hljs-literal">false</span>,
+        animationHooks = (isa_obj(items.animationHooks)) ? items.animationHooks : {},
+        canvasSpecs = (isa_obj(items.canvasSpecs)) ? items.canvasSpecs : {},
+        observerSpecs = (isa_obj(items.observerSpecs)) ? items.observerSpecs : {},
+        includeCanvas = (isa_boolean(items.includeCanvas)) ? items.includeCanvas : <span class="hljs-literal">true</span>;
+
+    <span class="hljs-keyword">if</span> (domElement &amp;&amp; domElement.id &amp;&amp; artefact[domElement.id]) {
+
+        <span class="hljs-keyword">return</span> makeStackSnippet(domElement, canvasSpecs, animationHooks, observerSpecs);
+    }
+    <span class="hljs-keyword">return</span> makeUnstackedSnippet(domElement, canvasSpecs, animationHooks, observerSpecs, includeCanvas);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
+              </div>
+              <p>TODO - documentation</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeStackSnippet = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">domElement, canvasSpecs, animationHooks, observerSpecs</span>) </span>{
+
+    <span class="hljs-keyword">let</span> myElement = artefact[domElement.id];
+
+    <span class="hljs-keyword">if</span> (!myElement) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+
+    canvasSpecs.isComponent = <span class="hljs-literal">true</span>;
+
+    <span class="hljs-keyword">let</span> myCanvas = myElement.addCanvas(canvasSpecs);
+    myElement.elementComputedStyles = <span class="hljs-built_in">window</span>.getComputedStyle(domElement);
+
+    animationHooks.name = <span class="hljs-string">`<span class="hljs-subst">${myElement.name}</span>-animation`</span>;
+    animationHooks.target = myCanvas;
+
+    <span class="hljs-keyword">let</span> myAnimation = makeRender(animationHooks);
+
+    <span class="hljs-keyword">let</span> myObserver = makeAnimationObserver(myAnimation, myElement, observerSpecs);
+
+    <span class="hljs-keyword">let</span> destroy = <span class="hljs-function">() =&gt;</span> {
+        myObserver();
+        myAnimation.kill();
+        myCanvas.demolish();
+        myElement.demolish(<span class="hljs-literal">true</span>);
+    };
+
+    <span class="hljs-keyword">return</span> {
+        <span class="hljs-attr">element</span>: myElement,
+        <span class="hljs-attr">canvas</span>: myCanvas,
+        <span class="hljs-attr">animation</span>: myAnimation,
+        <span class="hljs-attr">demolish</span>: destroy,
+    };
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
+              </div>
+              <p>TODO - documentation</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeUnstackedSnippet = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">domElement, canvasSpecs, animationHooks, observerSpecs, includeCanvas</span>) </span>{
+
+    <span class="hljs-keyword">const</span> unsupportedElements = [<span class="hljs-string">&#x27;AREA&#x27;</span>, <span class="hljs-string">&#x27;BASE&#x27;</span>, <span class="hljs-string">&#x27;BR&#x27;</span>, <span class="hljs-string">&#x27;COL&#x27;</span>, <span class="hljs-string">&#x27;EMBED&#x27;</span>, <span class="hljs-string">&#x27;HR&#x27;</span>, <span class="hljs-string">&#x27;IMG&#x27;</span>, <span class="hljs-string">&#x27;INPUT&#x27;</span>, <span class="hljs-string">&#x27;KEYGEN&#x27;</span>, <span class="hljs-string">&#x27;LINK&#x27;</span>, <span class="hljs-string">&#x27;META&#x27;</span>, <span class="hljs-string">&#x27;PARAM&#x27;</span>, <span class="hljs-string">&#x27;SOURCE&#x27;</span>, <span class="hljs-string">&#x27;TRACK&#x27;</span>, <span class="hljs-string">&#x27;WBR&#x27;</span>];
+
+    <span class="hljs-keyword">if</span> (!domElement || unsupportedElements.indexOf(domElement.tagName) &gt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> {};
+
+    <span class="hljs-keyword">let</span> myElement,
+        id = domElement.id;
+
+    <span class="hljs-keyword">if</span> (id &amp;&amp; unstackedelement[id]) myElement = unstackedelement[id];
+    <span class="hljs-keyword">else</span> myElement = makeUnstackedElement(domElement);
+
+    canvasSpecs.isComponent = <span class="hljs-literal">true</span>;
+
+    <span class="hljs-keyword">let</span> myCanvas = (includeCanvas) ? myElement.addCanvas(canvasSpecs) : <span class="hljs-literal">false</span>;
+
+    animationHooks.name = <span class="hljs-string">`<span class="hljs-subst">${myElement.name}</span>-animation`</span>;
+    <span class="hljs-keyword">if</span> (myCanvas) {
+
+        <span class="hljs-keyword">if</span> (!animationHooks.afterClear) animationHooks.afterClear = <span class="hljs-function">() =&gt;</span> myElement.updateCanvas();
+        animationHooks.target = myCanvas;
+    }
+
+    <span class="hljs-keyword">let</span> myAnimation = makeRender(animationHooks);
+
+    <span class="hljs-keyword">let</span> myObserver = makeAnimationObserver(myAnimation, myElement, observerSpecs);
+
+    <span class="hljs-keyword">let</span> destroy = <span class="hljs-function">() =&gt;</span> {
+        myObserver();
+        myAnimation.kill();
+        <span class="hljs-keyword">if</span> (myCanvas) myCanvas.demolish();
+        myElement.demolish(<span class="hljs-literal">true</span>);
+    };
+
+    <span class="hljs-keyword">return</span> {
+        <span class="hljs-attr">element</span>: myElement,
+        <span class="hljs-attr">canvas</span>: myCanvas,
+        <span class="hljs-attr">animation</span>: myAnimation,
+        <span class="hljs-attr">demolish</span>: destroy,
+    };
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
+              </div>
+              <p>TODO - documentation</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
+    makeSnippet,
+};</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

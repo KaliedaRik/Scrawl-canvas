@@ -25,11 +25,6 @@
                 </a>
               
                 
-                <a class="source" href="../core/component.html">
-                  ./source/core/component.js
-                </a>
-              
-                
                 <a class="source" href="../core/document.html">
                   ./source/core/document.js
                 </a>
@@ -47,6 +42,11 @@
                 
                 <a class="source" href="../core/library.html">
                   ./source/core/library.js
+                </a>
+              
+                
+                <a class="source" href="../core/snippets.html">
+                  ./source/core/snippets.js
                 </a>
               
                 
@@ -788,7 +788,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
         art.set(items);
 
-        <span class="hljs-built_in">this</span>.updateCanvas()
+        <span class="hljs-built_in">this</span>.updateCanvas();
 
         <span class="hljs-keyword">return</span> art;
     }
@@ -866,11 +866,20 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         <span class="hljs-keyword">let</span> host = <span class="hljs-built_in">this</span>.hostStyles,
             style = <span class="hljs-built_in">this</span>.elementComputedStyles,
             canvas = wrapper.domElement,
-            includedStyles = <span class="hljs-built_in">this</span>.includedStyles,
-            mMax = <span class="hljs-built_in">Math</span>.max;
+            includedStyles = <span class="hljs-built_in">this</span>.includedStyles;
 
         <span class="hljs-keyword">let</span> {<span class="hljs-attr">x</span>: elX, <span class="hljs-attr">y</span>: elY, <span class="hljs-attr">width</span>: elW, <span class="hljs-attr">height</span>: elH} = el.getBoundingClientRect();
         <span class="hljs-keyword">let</span> {<span class="hljs-attr">x</span>: canvasX, <span class="hljs-attr">y</span>: canvasY} = canvas.getBoundingClientRect();
+        <span class="hljs-keyword">let</span> {<span class="hljs-attr">zIndex</span>: styleZ, <span class="hljs-attr">width</span>: styleW, <span class="hljs-attr">height</span>: styleH} = style;
+
+        elX = <span class="hljs-built_in">Math</span>.floor(elX);
+        elY = <span class="hljs-built_in">Math</span>.floor(elY);
+        canvasX = <span class="hljs-built_in">Math</span>.floor(canvasX);
+        canvasY = <span class="hljs-built_in">Math</span>.floor(canvasY);
+        elW = <span class="hljs-built_in">Math</span>.floor(elW);
+        elH = <span class="hljs-built_in">Math</span>.floor(elH);
+        styleW = <span class="hljs-built_in">Math</span>.floor(<span class="hljs-built_in">parseFloat</span>(styleW));
+        styleH = <span class="hljs-built_in">Math</span>.floor(<span class="hljs-built_in">parseFloat</span>(styleH));
 
         includedStyles.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
 
@@ -878,7 +887,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
                 <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;width&#x27;</span> :
 
-                    <span class="hljs-keyword">let</span> w = mMax(<span class="hljs-built_in">parseFloat</span>(style.width), elW);
+                    <span class="hljs-keyword">let</span> w = <span class="hljs-built_in">Math</span>.max(styleW, elW);
                     <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.canvasWidth !== w) {
 
                         <span class="hljs-built_in">this</span>.canvasWidth = w;
@@ -888,7 +897,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
                 <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;height&#x27;</span> :
 
-                    <span class="hljs-keyword">let</span> h = mMax(<span class="hljs-built_in">parseFloat</span>(style.height), elH);
+                    <span class="hljs-keyword">let</span> h = <span class="hljs-built_in">Math</span>.max(styleH, elH);
                     <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.canvasHeight !== h) {
 
                         <span class="hljs-built_in">this</span>.canvasHeight = h;
@@ -898,7 +907,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
                 <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;zIndex&#x27;</span> :
 
-                    <span class="hljs-keyword">let</span> z = (style.zIndex === <span class="hljs-string">&#x27;auto&#x27;</span>) ? <span class="hljs-number">0</span> : <span class="hljs-built_in">parseInt</span>(style.zIndex, <span class="hljs-number">10</span>);
+                    <span class="hljs-keyword">let</span> z = (styleZ === <span class="hljs-string">&#x27;auto&#x27;</span>) ? <span class="hljs-number">0</span> : <span class="hljs-built_in">parseInt</span>(styleZ, <span class="hljs-number">10</span>);
                     z = (<span class="hljs-built_in">this</span>.canvasOnTop) ? z + <span class="hljs-number">1</span> : z - <span class="hljs-number">1</span>;
 
                     <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.canvasZIndex !== z) {

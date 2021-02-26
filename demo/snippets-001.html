@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Snippets 001</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  
+  <style>
+    .spotlight-text {
+      border: 3px solid rgba(40, 200, 40, 0.6);
+      padding: 1rem;
+      margin-bottom: 2rem;
+      overflow: auto;
+      resize: both;
+    }
+    .jazzy-button {
+      display: block;
+      width: 70%;
+      min-width: 170px;
+      padding: 0.5rem 0;
+      background-color: transparent;
+      outline-width: 0;
+      margin-bottom: 1rem;
+    }
+    .my-grid {
+      display: grid;
+
+      grid-template-columns: 1fr 1fr 1fr;      
+      grid-column-gap: 2px;
+
+      grid-template-rows: auto;
+      grid-row-gap: 2px;
+
+      justify-items: center;
+
+      margin-bottom: 1rem;
+
+      background-color: rgba(200, 240, 255, 0.5);
+      overflow: hidden;
+      resize: both;
+
+      height: 200px;
+      min-height: 36px;
+      min-width: 520px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Snippets test 001</h1>
+  <h2>Scrawl-canvas DOM element snippets</h2>
+
+  <p>All &lt;button> elements have been set with CSS styles <i>"width: 70%; margin-bottom: 1rem; padding: 0.5rem 0"</i>. In the test, the gradient line length should update alongside button widths (for example when resizing the browser window).</p>
+  <button class="jazzy-button" id="counter-zero">&nbsp;</button>
+
+  <p>This &lt;grid> element has a CSS styling <i>"height: 200px; background-color: rgba(200, 240, 255, 0.5)"</i> declaration. The translucent background obscures two of the button elements' canvas displays (automated <b>negative</b> <i>z-index</i> on the canvas), except for the middle button which is displaying its canvas over its button element (automated <b>positive</b> <i>z-index</i>). The grid is resizable (bottom right corner).</p>
+  <div class="my-grid">
+    <button class="jazzy-button" id="counter-one">&nbsp;</button>
+    <button class="jazzy-button" name="counter-two">&nbsp;</button>
+    <button class="jazzy-button" name="counter-three">&nbsp;</button>
+  </div>
+
+  <p>This button element has CSS style <i>"margin: 0 auto"</i>.</p>
+  <button class="jazzy-button" id="counter-four" style="margin: 0 auto 1rem">&nbsp;</button>
+
+  <p>The button on the left has CSS styling <i>"border-radius: 1rem; overflow: hidden"</i>, while the one on the right has <i>"padding: 1rem"</i> values. Both are in &lt;div> elements with %limited CSS widths.</p>
+  <div style="display: inline-block; width: 30%">
+    <button class="jazzy-button" id="counter-five"style="border-radius: 1rem; overflow: hidden">&nbsp;</button>
+  </div>
+  <div style="display: inline-block; width: 60%">
+    <button class="jazzy-button" id="counter-six" style="padding: 1rem;">&nbsp;</button>
+  </div>
+
+  <p>The &lt;div> element below, containing &lt;p> elements, is resizable (bottom right corner). The radius of the spotlight effect should resize in line with updates to the div's width.</p>
+
+  <div id="lorem-ipsum-text" class="spotlight-text">
+    <p>Proin sed ex nibh. In hac habitasse platea dictumst. Pellentesque vitae gravida elit. Praesent interdum facilisis ligula, lobortis volutpat augue hendrerit nec. Aliquam ut fermentum dui. Etiam mollis tincidunt gravida. Nam ut ipsum at ipsum laoreet volutpat. Donec et mi facilisis, porta nisi et, malesuada nisl. Proin elit magna, tincidunt pulvinar ante quis, ultrices vehicula velit. Donec tortor nibh, maximus sit amet sagittis a, ornare ullamcorper magna. Mauris dapibus, mauris a gravida pharetra, urna libero laoreet libero, ut efficitur diam metus a purus. Aenean accumsan sollicitudin feugiat. Sed laoreet ut dui eu elementum. In et hendrerit mi. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. In purus erat, ultrices id erat sed, placerat consequat dolor.</p>
+
+    <p>Vivamus ac dictum lacus. Pellentesque tristique lacus ut augue finibus pretium. Fusce sed arcu id augue placerat malesuada. Nulla viverra ultricies est, vel convallis leo hendrerit a. Cras nec tortor dolor. Sed facilisis urna dui, eu semper diam imperdiet ac. Praesent at diam et est rhoncus auctor id sed lectus. Phasellus consectetur felis tellus, quis egestas nisl suscipit vel.</p>
+
+    <p>Etiam vitae vehicula risus. Aliquam luctus porta egestas. Quisque vitae nulla sollicitudin, ultrices arcu sit amet, sagittis erat. Donec lacinia euismod diam ac rutrum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Fusce sed auctor dui, ac commodo lorem. Proin molestie ullamcorper mi sed laoreet. Aliquam vel orci eu sapien tincidunt luctus.</p>
+
+    <p>Suspendisse mollis erat at semper porttitor. Pellentesque blandit porttitor imperdiet. Sed nisi augue, ullamcorper nec ullamcorper sed, ullamcorper quis tortor. Quisque vehicula augue non tempor suscipit. Etiam vel mi felis. In imperdiet fermentum purus. In aliquam tellus sed ex auctor maximus. Nam sed ligula et dui tempor scelerisque. Etiam sed mollis sem. Vivamus at lorem quis risus mollis auctor. Suspendisse ac dictum ligula. Aliquam sodales ligula sit amet sem efficitur rhoncus. Nulla cursus ipsum non tortor venenatis gravida. Curabitur eleifend ornare nunc ac placerat. Nunc mauris tellus, semper at sollicitudin a, imperdiet blandit ipsum.</p>
+
+    <p>Integer mollis, leo eget aliquet tincidunt, nulla turpis pellentesque massa, a mollis mi neque in eros. Pellentesque dictum blandit est, a varius mi pulvinar nec. Nulla in felis ut est viverra vehicula. Vivamus rutrum placerat eros sed iaculis. Ut in suscipit ante. Integer vel sapien gravida, consequat metus at, sodales purus. Aliquam erat volutpat. Pellentesque non semper lorem, at pulvinar tellus. Ut commodo, tellus nec imperdiet tristique, eros nisl condimentum risus, sit amet fermentum velit dolor sed enim.</p>
+  </div>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Create some elements to be snippet-ized (warning: made-up word!) in the HTML file</li>
+      <li>Find and snippet-ize the elements (according to their class values)</li>
+      <li>Check that the canvases added to each Scrawl-canvas enhanced snippet size correctly to their element and do not block user interaction with the element</li>
+      <li>Check that snippets interact with mouse cursor movements and clicks over the element/canvas</li>
+      <li>Check that snippet canvases correctly mimic their elements, in particular to width/height updates</li>
+      <li>Check that snippet animations disable themselves when they move out of the viewport, and restart when they come back into view</li>
+      <li>Snippet-ize the 'reportmessage' &lt;p> element (with no canvas added to it); give it functionality to report back on page performance eg frames-per-second etc</li>
+    </ul>
+
+    <p>Note that the main file loads the minified version of the library, while the snippets load the source version - test to see if any conflicts from the two arise.</p>
+    <p><a href="../docs/demo/snippets-001.html">Annotated code</a></p>
+    <ul>
+      <li><a href="../docs/demo/snippets/spotlight-text-snippet.html">Spotlight text snippet</a></li>
+      <li><a href="../docs/demo/snippets/jazzy-button-snippet.html">Jazzy button snippet</a></li>
+      <li><a href="../docs/demo/snippets/page-performance-snippet.html">Page performance snippet</a></li>
+    </ul>
+  </div>
+
+  <p id="reportmessage"></p>
+
+  <p>Scrawl-canvas snippets do not need to include a canvas. All snippets will shut down their animations when not visible to the user.</p>
+
+  <script src="snippets-001.js" type="module"></script>
+</body>
+
+</html>

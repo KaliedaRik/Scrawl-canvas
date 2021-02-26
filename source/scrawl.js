@@ -1,6 +1,6 @@
 // # Scrawl-canvas
 //
-// #### Version 8.5.0 - 19 Feb 2021
+// #### Version 8.5.1 - 26 Feb 2021
 //
 // ---------------------------------------------------------------------------------
 // The MIT License (MIT)
@@ -38,11 +38,6 @@ import {
 
 
 import { 
-    makeComponent,
-} from './core/component.js';
-
-
-import { 
     addStack,
     getStack,
     addCanvas,
@@ -68,7 +63,14 @@ import {
     setColorSchemeLightAction,
 } from './core/events.js';
 
+
 import * as library from './core/library.js';
+
+
+import { 
+    makeSnippet,
+} from './core/snippets.js';
+
 
 import { 
     currentCorePosition, 
@@ -330,10 +332,6 @@ export default {
     makeDragZone,
 
 
-    // core/component.js
-    makeComponent,
-
-
     // core/document.js
     addStack,
     getStack,
@@ -358,6 +356,10 @@ export default {
     colorSchemeActions,
     setColorSchemeDarkAction,
     setColorSchemeLightAction,
+
+
+    // core/snippets.js
+    makeSnippet,
 
 
     // factory/action.js

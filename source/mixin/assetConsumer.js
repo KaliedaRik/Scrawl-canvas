@@ -56,7 +56,13 @@ export default function (P = {}) {
 
 
 // #### Get, Set, deltaSet
-    let S = P.setters;
+    let G = P.getters,
+        S = P.setters;
+
+    G.sourceDimensions = function () {
+
+        return [this.sourceNaturalWidth, this.sourceNaturalHeight];
+    };
 
 // __asset__ - Setting the Asset object. Updating the asset will set the dirtyAsset flag.
     S.asset = function (item) {

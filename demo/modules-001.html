@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Modules 001</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  <style type="text/css">
+    html {
+      font-size: 18px;
+      font-family: roboto;
+    }
+    canvas {
+      width: 100%;
+      height: 100%;
+    }
+    .canvas-container {
+      position: relative;
+      overflow: hidden;
+      resize: both;
+      width: 500px;
+      height: 500px;
+      min-height: 350px;
+      min-width: 350px;
+      max-height: 600px;
+      max-width: 600px;
+      border: 1px dashed red;
+    }
+    .image-hold {
+      height: 0;
+      display: none;
+    }
+    #library-reporter {
+      background: honeydew;
+      white-space: pre-wrap;
+      font: 12px monospace;
+      padding: 1em;
+    }
+    #display-controls {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      font-family: monospace;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Modules test 001</h1>
+  <h2>Scrawl-canvas modularized code - London crime charts</h2>
+
+  <div id="display-controls">
+    <p>Select area: 
+      <select class="control-item" id="areas">
+        <option value="Hackney">Hackney</option>
+        <option value="Kingston">Kingston upon Thames</option>
+        <option value="Heathrow">Heathrow Airport</option>
+      </select>
+    </p>
+
+    <p>Graph type: 
+      <select class="control-item" id="graph-types">
+        <option value="bars">Stacked bar graph - all data</option>
+        <option value="lines">Line graphs by crime category</option>
+      </select>
+    </p>
+
+    <p>Crime category: 
+      <select class="control-item" id="crime-categories">
+        <option value="Burglary">Burglary</option>
+        <option value="Criminal Damage">Criminal Damage</option>
+        <option value="Drugs">Drugs</option>
+        <option value="Fraud or Forgery">Fraud or Forgery</option>
+        <option value="Other Notifiable Offences">Other Notifiable Offences</option>
+        <option value="Robbery">Robbery</option>
+        <option value="Sexual Offences">Sexual Offences</option>
+        <option value="Theft and Handling">Theft and Handling</option>
+        <option value="Violence Against the Person">Violence Against the Person</option>
+      </select>
+    </p>
+  </div>
+
+  <div class="canvas-container">
+    <canvas id="mycanvas"></canvas>
+  </div>
+
+  <p id="library-reporter"></p>
+
+  <div class="image-hold">
+    <img id="Burglary" class="crime" src="img/burglary-grey.jpg" />
+    <img id="Criminal Damage" class="crime" src="img/damage-grey.jpg" />
+    <img id="Drugs" class="crime" src="img/drugs-grey.jpg" />
+    <img id="Fraud or Forgery" class="crime" src="img/fraud-grey.jpg" />
+    <img id="Other Notifiable Offences" class="crime" src="img/other-grey.jpg" />
+    <img id="Robbery" class="crime" src="img/robbery-grey.jpg" />
+    <img id="Sexual Offences" class="crime" src="img/sexual-grey.jpg" />
+    <img id="Theft and Handling" class="crime" src="img/theft-grey.jpg" />
+    <img id="Violence Against the Person" class="crime" src="img/violence-grey.jpg" />
+    <img id="Hackney" class="crime" src="img/hackney-grey.jpg" />
+    <img id="Kingston" class="crime" src="img/kingston-grey.jpg" />
+    <img id="Heathrow" class="crime" src="img/heathrow-grey.jpg" />
+  </div>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Split code into modules</li>
+      <li>Pull in JSON data from server</li>
+      <li>Render a range of charts from the JSON data sources</li>
+    </ul>
+    <p>Results from each test will appear in the console</p>
+    <p><b>Known issue:</b> this Demo is far less responsive in Firefox than in other browsers.</p>
+
+    <p><a href="../docs/demo/modules-001.html">Annotated code</a></p>
+    <ul>
+      <li><a href="../docs/demo/modules/london-crime-graphic.html">London crime graphic module</a></li>
+      <li><a href="../docs/demo/modules/london-crime-lines.html">London crime lines module</a></li>
+      <li><a href="../docs/demo/modules/london-crime-stacked-bars.html">London crime stacked bars module</a></li>
+      <li><a href="../docs/demo/modules/simple-chart-frame.html">Simple chart frame module</a></li>
+      <li><a href="../docs/demo/modules/simple-chart-frame-tests.html">Simple chart frame tests module</a></li>
+      <li><a href="../docs/demo/modules/simple-graph-lines.html">Simple graph lines module</a></li>
+      <li><a href="../docs/demo/modules/simple-graph-stacked-bar.html">Simple graph stacked bars module</a></li>
+    </ul>
+  </div>
+
+  <script src="modules-001.js" type="module"></script>
+
+</body>
+
+</html>

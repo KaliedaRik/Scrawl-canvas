@@ -10,8 +10,37 @@
   <link href="css/tests.css" rel="stylesheet" />
   <style>
 
+    html {
+        font-size: 18px;
+    }
+
+    body {
+        background-color: aliceblue;
+        font-size: 1rem;
+        line-height: 1.3;
+    }
+
+    h1 {
+      margin-bottom: 1rem;
+      border-bottom: 1px solid #e9e9e9;
+      text-align: left;
+    }
+    
     h2 {
-      margin: 2em 0 1em 0;
+      margin: 2rem 0 0.5rem 0;
+      text-align: left;
+      border-top: 2px solid #e9e9e9;
+      padding-top: 0.5rem;
+    }
+    
+    a {
+      text-decoration: none;
+      transition: color 0.5s;
+      color: darkblue;
+    }
+    a:hover {
+      text-decoration: underline;
+      color: red;
     }
     
     .container {
@@ -28,27 +57,39 @@
       align-items: top;
 
       background-color: #f9f9f9;
-      padding: 0.5em;
+      padding: 0.5rem;
     }
     .container div {
       width: 100%;
+      border: 1px solid #e9e9e9;
+      background-color: #f1f1f1;
+      padding: 0 0.25rem;
+      box-sizing: border-box;
+      line-height: 1.3;
     }
     .container div a {
       display: block;
-      margin-bottom: 1em;
+      margin-bottom: 0.5rem;
     }
     .container div img {
       width: 100%;
-      max-width: 8em;
+      max-width: 8rem;
+    }
+    .container div.no-padding {
+      padding: 0;
     }
 
-    @media (min-width: 40em) {
+    strong {
+        color: darkred;
+    }
+
+    @media (min-width: 40rem) {
       .container {
         grid-template-columns: 1fr 2fr 1fr 2fr;
       }
     }
 
-    @media (min-width: 60em) {
+    @media (min-width: 60rem) {
       .container {
         grid-template-columns: 1fr 2fr 1fr 2fr 1fr 2fr;
       }
@@ -57,388 +98,780 @@
 </head>
 
 <body>
-  <h1><a href="index.html">Scrawl-canvas v8</a> - tests index</h1>
+  <h1><a href="index.html">Scrawl-canvas v8</a>
+        tests index</h1>
 
-  <h2>Hello World</h2>
+  <p>The Scrawl-canvas library has been designed to make it easier to create and use &lt;canvas> presentations and scenes in a web page. Canvases discovered on a page, or added to it, will be enhanced by the library to help make them more responsive and accessible, and easy to interact with.</p>
+
+  <p><strong>These demos represent the library's testing suite.</strong> They have been designed to cover as much functionality as possible in sets of integration tests. Testing is (currently) conducted by hand: all demos must run as expected before changes can be pushed to the library's v8 or master branches on GitHub.</p>
+
+  <h2>Core functionality tests:</h2>
+
+  <p>Scrawl-canvas represents a system to define a set of <strong>graphical entitys</strong> and their associated <strong>styles</strong> (colors, gradients, patterns) and <strong>assets</strong> (images, spritesheets, video, media stream, noise, other canvas elements), then <strong>position</strong> (absolutely, relatively, by reference to other entitys) and <strong>animate them</strong> (by delta, by tween) across the canvas - often in response to user interaction. Animation can also be extended to styles and asset display.</p>
+
+  <p>Entitys include:</p>
+
+  <ul>
+    <li>Basic shapes such as rectangles (<strong>Block</strong>), circles (<strong>Wheel</strong>) and text (<strong>Phrase</strong>).</li>
+    <li>Text can be automatically broken over multiple lines, and different styling applied to words and individual letters; text can be animated along paths. CSS font strings are supported as far as possible, including font-sizes declared using suffixes such as 'em', 'rem', 'vw', 'pt', etc.</li>
+    <li>SVG path-defined entitys (<strong>Shape</strong>), and a range of pre-defined, path-based entitys (<strong>Oval, Rectangle, Line, Quadratic, Bezier, Tetragon, Polygon, Star, Spiral, Cog, Line, Quadratic, Bezier, Polyline</strong>).</li>
+    <li>Line, Quadratic, Bezier and Polyline entitys can have their start, end and control coordinates positioned absolutely, relatively, or by reference to other entitys (including along paths).</li>
+    <li>Images, video and related pixel-based image streams (<strong>Picture</strong>), both in whole and in part; the proportion of the image displayed can be controlled and animated. Spritesheet animation is also supported.</li>
+    <li>Compound entitys built on top of other entitys which can be used to combine the output of images in various ways (<strong>Grid</strong>) or distort the output (<strong>Loom, Mesh</strong>).</li>
+  </ul>
+
+  <p>Scrawl-canvas helps developers build graphical representations and scenes that are <strong>real-time responsive</strong> to their DOM environment, and easier to <strong>make accessible</strong> to non-visibility-based technology. The coding paradigm encourages developers to <strong>split their code into ES6 modules</strong>: this makes code easier to maintain and easier to reuse.</p>
 
   <div class="container">
 
-    <div></div>
-    <div></div>
+    <div class="no-padding"><img src="thumbs/canvas-001.webp" /></div>
+    <div>
+        <a href="canvas-001.html">Canvas 001</a>
+        Block and Wheel entitys (make, clone, method); drag and drop block and wheel entitys
+    </div>
 
-    <div><img src="thumbs/hello-world.webp" /></div>
-    <div><a href="hello-world.html">Hello world test</a></div>
+    <div class="no-padding"><img src="thumbs/canvas-002.webp" /></div>
+    <div>
+        <a href="canvas-002.html">Canvas 002</a>
+        Block and wheel entity positioning (start, pivot, mimic, mouse)
+    </div>
 
-    <div></div>
-    <div></div>
-  </div>
+    <div class="no-padding"><img src="thumbs/canvas-003.webp" /></div>
+    <div>
+        <a href="canvas-003.html">Canvas 003</a>
+        Linear gradients
+    </div>
 
-  <h2>Canvas tests</h2>
+    <div class="no-padding"><img src="thumbs/canvas-004.webp" /></div>
+    <div>
+        <a href="canvas-004.html">Canvas 004</a>
+        Radial gradients
+    </div>
 
-  <div class="container">
+    <div class="no-padding"><img src="thumbs/canvas-005.webp" /></div>
+    <div>
+        <a href="canvas-005.html">Canvas 005</a>
+        Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween
+    </div>
 
-    <div><img src="thumbs/canvas-001.webp" /></div>
-    <div><a href="canvas-001.html">Canvas 001</a> - Block and Wheel entitys (make, clone, method); drag and drop block and wheel entitys</div>
+    <div class="no-padding"><img src="thumbs/canvas-006.webp" /></div>
+    <div>
+        <a href="canvas-006.html">Canvas 006</a>
+        Canvas tween stress test
+    </div>
 
-    <div><img src="thumbs/canvas-002.webp" /></div>
-    <div><a href="canvas-002.html">Canvas 002</a> - Block and wheel entity positioning (start, pivot, mimic, mouse)</div>
+    <div class="no-padding"><img src="thumbs/canvas-007.webp" /></div>
+    <div>
+        <a href="canvas-007.html">Canvas 007</a>
+        Apply filters at the entity, group and cell level
+    </div>
 
-    <div><img src="thumbs/canvas-003.webp" /></div>
-    <div><a href="canvas-003.html">Canvas 003</a> - Linear gradients</div>
+    <div class="no-padding"><img src="thumbs/canvas-008.webp" /></div>
+    <div>
+        <a href="canvas-008.html">Canvas 008</a>
+        Picture entity position; manipulate copy attributes
+    </div>
 
-    <div><img src="thumbs/canvas-004.webp" /></div>
-    <div><a href="canvas-004.html">Canvas 004</a> - Radial gradients</div>
+    <div class="no-padding"><img src="thumbs/canvas-009.webp" /></div>
+    <div>
+        <a href="canvas-009.html">Canvas 009</a>
+        Pattern styles; Entity web link anchors; Dynamic accessibility
+    </div>
 
-    <div><img src="thumbs/canvas-005.webp" /></div>
-    <div><a href="canvas-005.html">Canvas 005</a> - Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween</div>
+    <div class="no-padding"><img src="thumbs/canvas-010.webp" /></div>
+    <div>
+        <a href="canvas-010.html">Canvas 010</a>
+        Use video sources and media streams for Picture entitys
+    </div>
 
-    <div><img src="thumbs/canvas-006.webp" /></div>
-    <div><a href="canvas-006.html">Canvas 006</a> - Canvas tween stress test</div>
+    <div class="no-padding"><img src="thumbs/canvas-011.webp" /></div>
+    <div>
+        <a href="canvas-011.html">Canvas 011</a>
+        Shape entity (make, clone, method); drag and drop shape entitys
+    </div>
 
-    <div><img src="thumbs/canvas-007.webp" /></div>
-    <div><a href="canvas-007.html">Canvas 007</a> - Apply filters at the entity, group and cell level</div>
+    <div class="no-padding"><img src="thumbs/canvas-012.webp" /></div>
+    <div>
+        <a href="canvas-012.html">Canvas 012</a>
+        Shape entity position; shape entity as a path for other artefacts to follow
+    </div>
 
-    <div><img src="thumbs/canvas-008.webp" /></div>
-    <div><a href="canvas-008.html">Canvas 008</a> - Picture entity position; manipulate copy attributes</div>
+    <div class="no-padding"><img src="thumbs/canvas-013.webp" /></div>
+    <div>
+        <a href="canvas-013.html">Canvas 013</a>
+        Path-defined entitys: Oval, Rectangle, Line, Quadratic, Bezier, Tetragon, Polygon, Star, Spiral, Cog
+    </div>
 
-    <div><img src="thumbs/canvas-009.webp" /></div>
-    <div><a href="canvas-009.html">Canvas 009</a> - Pattern styles; Entity web link anchors; Dynamic accessibility</div>
+    <div class="no-padding"><img src="thumbs/canvas-014.webp" /></div>
+    <div>
+        <a href="canvas-014.html">Canvas 014</a>
+        Line, Quadratic and Bezier entitys - control lock alternatives
+    </div>
 
-    <div><img src="thumbs/canvas-010.webp" /></div>
-    <div><a href="canvas-010.html">Canvas 010</a> - Use video sources and media streams for Picture entitys</div>
+    <div class="no-padding"><img src="thumbs/canvas-015.webp" /></div>
+    <div>
+        <a href="canvas-015.html">Canvas 015</a>
+        Phrase entity (make, clone, method, multiline)
+    </div>
 
-    <div><img src="thumbs/canvas-011.webp" /></div>
-    <div><a href="canvas-011.html">Canvas 011</a> - Shape entity (make, clone, method); drag and drop shape entitys</div>
+    <div class="no-padding"><img src="thumbs/canvas-015.webp" /></div>
+    <div>
+        <a href="canvas-015a.html">Canvas 015a</a>
+        Phrase entity - cache output to improve render speeds
+    </div>
 
-    <div><img src="thumbs/canvas-012.webp" /></div>
-    <div><a href="canvas-012.html">Canvas 012</a> - Shape entity position; shape entity as a path for other artefacts to follow</div>
+    <div class="no-padding"><img src="thumbs/canvas-016.webp" /></div>
+    <div>
+        <a href="canvas-016.html">Canvas 016</a>
+        Phrase entity position and font attributes; Block mimic functionality
+    </div>
 
-    <div><img src="thumbs/canvas-013.webp" /></div>
-    <div><a href="canvas-013.html">Canvas 013</a> - Path-defined entitys: Oval, Rectangle, Line, Quadratic, Bezier, Tetragon, Polygon, Star, Spiral, Cog</div>
+    <div class="no-padding"><img src="thumbs/canvas-017.webp" /></div>
+    <div>
+        <a href="canvas-017.html">Canvas 017</a>
+        Phrase entity - test lineHeight, letterSpacing and justify attributes; Section classes functionality
+    </div>
 
-    <div><img src="thumbs/canvas-014.webp" /></div>
-    <div><a href="canvas-014.html">Canvas 014</a> - Line, Quadratic and Bezier entitys - control lock alternatives</div>
+    <div class="no-padding"><img src="thumbs/canvas-018.webp" /></div>
+    <div>
+        <a href="canvas-018.html">Canvas 018</a>
+        Phrase entity - text along a path
+    </div>
 
-    <div><img src="thumbs/canvas-015.webp" /></div>
-    <div><a href="canvas-015.html">Canvas 015</a> - Phrase entity (make, clone, method, multiline)</div>
+    <div class="no-padding"><img src="thumbs/canvas-019.webp" /></div>
+    <div>
+        <a href="canvas-019.html">Canvas 019</a>
+        Gradient and Color factories - transparency
+    </div>
 
-    <div><img src="thumbs/canvas-015.webp" /></div>
-    <div><a href="canvas-015a.html">Canvas 015a</a> - Phrase entity - cache output to improve render speeds</div>
+    <div class="no-padding"><img src="thumbs/canvas-020.webp" /></div>
+    <div>
+        <a href="canvas-020.html">Canvas 020</a>
+        Testing createImageFromXXX functionality
+    </div>
 
-    <div><img src="thumbs/canvas-016.webp" /></div>
-    <div><a href="canvas-016.html">Canvas 016</a> - Phrase entity position and font attributes; Block mimic functionality</div>
+    <div class="no-padding"><img src="thumbs/canvas-021.webp" /></div>
+    <div>
+        <a href="canvas-021.html">Canvas 021</a>
+        Import and use spritesheets
+    </div>
 
-    <div><img src="thumbs/canvas-017.webp" /></div>
-    <div><a href="canvas-017.html">Canvas 017</a> - Phrase entity - test lineHeight, letterSpacing and justify attributes; Section classes functionality</div>
+    <div class="no-padding"><img src="thumbs/canvas-022.webp" /></div>
+    <div>
+        <a href="canvas-022.html">Canvas 022</a>
+        Grid entity - basic functionality (color, gradients)
+    </div>
 
-    <div><img src="thumbs/canvas-018.webp" /></div>
-    <div><a href="canvas-018.html">Canvas 018</a> - Phrase entity - text along a path</div>
+    <div class="no-padding"><img src="thumbs/canvas-023.webp" /></div>
+    <div>
+        <a href="canvas-023.html">Canvas 023</a>
+        Grid entity - using picture-based assets (image, video, sprite)
+    </div>
 
-    <div><img src="thumbs/canvas-019.webp" /></div>
-    <div><a href="canvas-019.html">Canvas 019</a> - Gradient and Color factories - transparency</div>
+    <div class="no-padding"><img src="thumbs/canvas-024.webp" /></div>
+    <div>
+        <a href="canvas-024.html">Canvas 024</a>
+        Loom entity functionality
+    </div>
 
-    <div><img src="thumbs/canvas-020.webp" /></div>
-    <div><a href="canvas-020.html">Canvas 020</a> - Testing createImageFromXXX functionality</div>
+    <div class="no-padding"><img src="thumbs/canvas-025.webp" /></div>
+    <div>
+        <a href="canvas-025.html">Canvas 025</a>
+        Responsive images
+    </div>
 
-    <div><img src="thumbs/canvas-021.webp" /></div>
-    <div><a href="canvas-021.html">Canvas 021</a> - Import and use spritesheets</div>
+    <div class="no-padding"><img src="thumbs/canvas-026.webp" /></div>
+    <div>
+        <a href="canvas-026.html">Canvas 026</a>
+        Tower of Hanoi
+    </div>
 
-    <div><img src="thumbs/canvas-022.webp" /></div>
-    <div><a href="canvas-022.html">Canvas 022</a> - Grid entity - basic functionality (color, gradients)</div>
+    <div class="no-padding"><img src="thumbs/canvas-027.webp" /></div>
+    <div>
+        <a href="canvas-027.html">Canvas 027</a>
+        Video control and manipulation; chroma-based hit zone
+    </div>
 
-    <div><img src="thumbs/canvas-023.webp" /></div>
-    <div><a href="canvas-023.html">Canvas 023</a> - Grid entity - using picture-based assets (image, video, sprite)</div>
+    <div class="no-padding"><img src="thumbs/canvas-028.webp" /></div>
+    <div>
+        <a href="canvas-028.html">Canvas 028</a>
+        Image magnifier; test some composite operations
+    </div>
 
-    <div><img src="thumbs/canvas-024.webp" /></div>
-    <div><a href="canvas-024.html">Canvas 024</a> - Loom entity functionality</div>
+    <div class="no-padding"><img src="thumbs/canvas-029.webp" /></div>
+    <div>
+        <a href="canvas-029.html">Canvas 029</a>
+        Phrase entitys and gradients
+    </div>
 
-    <div><img src="thumbs/canvas-025.webp" /></div>
-    <div><a href="canvas-025.html">Canvas 025</a> - Responsive images</div>
+    <div class="no-padding"><img src="thumbs/canvas-030.webp" /></div>
+    <div>
+        <a href="canvas-030.html">Canvas 030</a>
+        Polyline entity functionality
+    </div>
 
-    <div><img src="thumbs/canvas-026.webp" /></div>
-    <div><a href="canvas-026.html">Canvas 026</a> - Tower of Hanoi</div>
+    <div class="no-padding"><img src="thumbs/canvas-031.webp" /></div>
+    <div>
+        <a href="canvas-031.html">Canvas 031</a>
+        Cell generation and processing order - kaleidoscope clock
+    </div>
 
-    <div><img src="thumbs/canvas-027.webp" /></div>
-    <div><a href="canvas-027.html">Canvas 027</a> - Video control and manipulation; chroma-based hit zone</div>
+    <div class="no-padding"><img src="thumbs/canvas-032.webp" /></div>
+    <div>
+        <a href="canvas-032.html">Canvas 032</a>
+        Freehand drawing
+    </div>
 
-    <div><img src="thumbs/canvas-028.webp" /></div>
-    <div><a href="canvas-028.html">Canvas 028</a> - Image magnifier; test some composite operations</div>
+    <div class="no-padding"><img src="thumbs/canvas-033.webp" /></div>
+    <div>
+        <a href="canvas-033.html">Canvas 033</a>
+        User preferences: prefers-color-scheme; prefers-reduced-motion; Javascript disabled
+    </div>
 
-    <div><img src="thumbs/canvas-029.webp" /></div>
-    <div><a href="canvas-029.html">Canvas 029</a> - Phrase entitys and gradients</div>
+    <div class="no-padding"><img src="thumbs/canvas-034.webp" /></div>
+    <div>
+        <a href="canvas-034.html">Canvas 034</a>
+        Determine the displayed shape of the visible canvas; react to changes in the displayed shape
+    </div>
 
-    <div><img src="thumbs/canvas-030.webp" /></div>
-    <div><a href="canvas-030.html">Canvas 030</a> - Polyline entity functionality</div>
+    <div class="no-padding"><img src="thumbs/canvas-035.webp" /></div>
+    <div>
+        <a href="canvas-035.html">Canvas 035</a>
+        Pattern style functionality
+    </div>
 
-    <div><img src="thumbs/canvas-031.webp" /></div>
-    <div><a href="canvas-031.html">Canvas 031</a> - Cell generation and processing order - kaleidoscope clock</div>
+    <div class="no-padding"><img src="thumbs/canvas-036.webp" /></div>
+    <div>
+        <a href="canvas-036.html">Canvas 036</a>
+        Cell artefact-like positional functionality
+    </div>
 
-    <div><img src="thumbs/canvas-032.webp" /></div>
-    <div><a href="canvas-032.html">Canvas 032</a> - Freehand drawing</div>
+    <div class="no-padding"><img src="thumbs/canvas-037.webp" /></div>
+    <div>
+        <a href="canvas-037.html">Canvas 037</a>
+        Pan and zoom using a Picture entity
+    </div>
 
-    <div><img src="thumbs/canvas-033.webp" /></div>
-    <div><a href="canvas-033.html">Canvas 033</a> - User preferences: prefers-color-scheme; prefers-reduced-motion; Javascript disabled</div>
+    <div class="no-padding"><img src="thumbs/canvas-038.webp" /></div>
+    <div>
+        <a href="canvas-038.html">Canvas 038</a>
+        Responsive Shape-based entitys
+    </div>
 
-    <div><img src="thumbs/canvas-034.webp" /></div>
-    <div><a href="canvas-034.html">Canvas 034</a> - Determine the displayed shape of the visible canvas; react to changes in the displayed shape</div>
+    <div class="no-padding"><img src="thumbs/canvas-039.webp" /></div>
+    <div>
+        <a href="canvas-039.html">Canvas 039</a>
+        Detecting mouse/pointer cursor movements across a non-base Cell
+    </div>
 
-    <div><img src="thumbs/canvas-035.webp" /></div>
-    <div><a href="canvas-035.html">Canvas 035</a> - Pattern style functionality</div>
+    <div class="no-padding"><img src="thumbs/canvas-040.webp" /></div>
+    <div>
+        <a href="canvas-040.html">Canvas 040</a>
+        Trace out a Shape path over time
+    </div>
 
-    <div><img src="thumbs/canvas-036.webp" /></div>
-    <div><a href="canvas-036.html">Canvas 036</a> - Cell artefact-like positional functionality</div>
+    <div class="no-padding"><img src="thumbs/canvas-041.webp" /></div>
+    <div>
+        <a href="canvas-041.html">Canvas 041</a>
+        Access and use a canvas context engine using the makeAnimation factory
+    </div>
 
-    <div><img src="thumbs/canvas-037.webp" /></div>
-    <div><a href="canvas-037.html">Canvas 037</a> - Pan and zoom using a Picture entity</div>
+    <div class="no-padding"><img src="thumbs/canvas-042.webp" /></div>
+    <div>
+        <a href="canvas-042.html">Canvas 042</a>
+        Canvas entity clip regions
+    </div>
 
-    <div><img src="thumbs/canvas-038.webp" /></div>
-    <div><a href="canvas-038.html">Canvas 038</a> - Responsive Shape-based entitys</div>
+    <div class="no-padding"><img src="thumbs/canvas-043.webp" /></div>
+    <div>
+        <a href="canvas-043.html">Canvas 043</a>
+        Test various clipping strategies
+    </div>
 
-    <div><img src="thumbs/canvas-039.webp" /></div>
-    <div><a href="canvas-039.html">Canvas 039</a> - Detecting mouse/pointer cursor movements across a non-base Cell</div>
+    <div class="no-padding"><img src="thumbs/canvas-044.webp" /></div>
+    <div>
+        <a href="canvas-044.html">Canvas 044</a>
+        Building more complex patterns
+    </div>
 
-    <div><img src="thumbs/canvas-040.webp" /></div>
-    <div><a href="canvas-040.html">Canvas 040</a> - Trace out a Shape path over time</div>
+    <div class="no-padding"><img src="thumbs/canvas-045.webp" /></div>
+    <div>
+        <a href="canvas-045.html">Canvas 045</a>
+        Use clipping entitys as pivots; clipping entitys and cascade events
+    </div>
 
-    <div><img src="thumbs/canvas-041.webp" /></div>
-    <div><a href="canvas-041.html">Canvas 041</a> - Access and use a canvas context engine using the makeAnimation factory</div>
-
-    <div><img src="thumbs/canvas-042.webp" /></div>
-    <div><a href="canvas-042.html">Canvas 042</a> - Canvas entity clip regions</div>
-
-    <div><img src="thumbs/canvas-043.webp" /></div>
-    <div><a href="canvas-043.html">Canvas 043</a> - Test various clipping strategies</div>
-
-    <div><img src="thumbs/canvas-044.webp" /></div>
-    <div><a href="canvas-044.html">Canvas 044</a> - Building more complex patterns</div>
-
-    <div><img src="thumbs/canvas-045.webp" /></div>
-    <div><a href="canvas-045.html">Canvas 045</a> - Use clipping entitys as pivots; clipping entitys and cascade events</div>
-
-    <div><img src="thumbs/canvas-046.webp" /></div>
-    <div><a href="canvas-046.html">Canvas 046</a> - Kill cycles for Cell, Group, Tween/Ticker, Picture and Asset objects, and Picture source elements in the DOM</div>
+    <div class="no-padding"><img src="thumbs/canvas-046.webp" /></div>
+    <div>
+        <a href="canvas-046.html">Canvas 046</a>
+        Kill cycles for Cell, Group, Tween/Ticker, Picture and Asset objects, and Picture source elements in the DOM
+    </div>
 
     <div><img src="thumbs/canvas-047.webp" /></div>
-    <div><a href="canvas-047.html">Canvas 047</a> - Easing functions for Color and Tween factories</div>
+    <div>
+        <a href="canvas-047.html">Canvas 047</a>
+        Easing functions for Color and Tween factories
+    </div>
   </div>
 
   <h2>Filters functionality tests</h2>
   
+  <p>The Scrawl-canvas <strong>filters functionality is inspired by SVG filters</strong>. Filter operations can be ordered in ways to combine different sets of operations to achieve complex effects. The library comes with <strong>an extensive set of pre-built filters</strong>, including:</p>
+
+  <ul>
+      <li>color and alpha channel manipulations;</li>
+      <li>matrix, pixellate, blur;</li>
+      <li>compositing and blending operations;</li>
+      <li>image and noise asset upload (for use with composites and blends); and</li>
+      <li>displacement mapping.</li>
+  </ul>
+
+  <p><strong>Filters can be animated</strong> using Scrawl-canvas tween functionality.</p>
+
   <div class="container">
 
-    <div><img src="thumbs/filters-001.webp" /></div>
-    <div><a href="filters-001.html">Filters 001</a> - Parameters for: blur filter</div>
+    <div class="no-padding"><img src="thumbs/filters-001.webp" /></div>
+    <div>
+        <a href="filters-001.html">Filters 001</a>
+        Parameters for: blur filter
+    </div>
 
-    <div><img src="thumbs/filters-002.webp" /></div>
-    <div><a href="filters-002.html">Filters 002</a> - Parameters for: red, green, blue, cyan, magenta, yellow, notred, notgreen, notblue, grayscale, sepia, invert filters</div>
+    <div class="no-padding"><img src="thumbs/filters-002.webp" /></div>
+    <div>
+        <a href="filters-002.html">Filters 002</a>
+        Parameters for: red, green, blue, cyan, magenta, yellow, notred, notgreen, notblue, grayscale, sepia, invert filters
+    </div>
 
-    <div><img src="thumbs/filters-002.webp" /></div>
-    <div><a href="filters-002a.html">Filters 002a</a> - Cache output to improve render speeds</div>
+    <div class="no-padding"><img src="thumbs/filters-002.webp" /></div>
+    <div>
+        <a href="filters-002a.html">Filters 002a</a>
+        Cache output to improve render speeds
+    </div>
 
-    <div><img src="thumbs/filters-003.webp" /></div>
-    <div><a href="filters-003.html">Filters 003</a> - Parameters for: brightness, saturation filters</div>
+    <div class="no-padding"><img src="thumbs/filters-003.webp" /></div>
+    <div>
+        <a href="filters-003.html">Filters 003</a>
+        Parameters for: brightness, saturation filters
+    </div>
 
-    <div><img src="thumbs/filters-004.webp" /></div>
-    <div><a href="filters-004.html">Filters 004</a> - Parameters for: threshold filter</div>
+    <div class="no-padding"><img src="thumbs/filters-004.webp" /></div>
+    <div>
+        <a href="filters-004.html">Filters 004</a>
+        Parameters for: threshold filter
+    </div>
 
-    <div><img src="thumbs/filters-005.webp" /></div>
-    <div><a href="filters-005.html">Filters 005</a> - Parameters for: channelstep filter</div>
+    <div class="no-padding"><img src="thumbs/filters-005.webp" /></div>
+    <div>
+        <a href="filters-005.html">Filters 005</a>
+        Parameters for: channelstep filter
+    </div>
 
-    <div><img src="thumbs/filters-006.webp" /></div>
-    <div><a href="filters-006.html">Filters 006</a> - Parameters for: channelLevels filter</div>
+    <div class="no-padding"><img src="thumbs/filters-006.webp" /></div>
+    <div>
+        <a href="filters-006.html">Filters 006</a>
+        Parameters for: channelLevels filter
+    </div>
 
-    <div><img src="thumbs/filters-007.webp" /></div>
-    <div><a href="filters-007.html">Filters 007</a> - Parameters for: channels filter</div>
+    <div class="no-padding"><img src="thumbs/filters-007.webp" /></div>
+    <div>
+        <a href="filters-007.html">Filters 007</a>
+        Parameters for: channels filter
+    </div>
 
-    <div><img src="thumbs/filters-008.webp" /></div>
-    <div><a href="filters-008.html">Filters 008</a> - Parameters for: tint filter</div>
+    <div class="no-padding"><img src="thumbs/filters-008.webp" /></div>
+    <div>
+        <a href="filters-008.html">Filters 008</a>
+        Parameters for: tint filter
+    </div>
 
-    <div><img src="thumbs/filters-009.webp" /></div>
-    <div><a href="filters-009.html">Filters 009</a> - Parameters for: pixelate filter</div>
+    <div class="no-padding"><img src="thumbs/filters-009.webp" /></div>
+    <div>
+        <a href="filters-009.html">Filters 009</a>
+        Parameters for: pixelate filter
+    </div>
 
-    <div><img src="thumbs/filters-010.webp" /></div>
-    <div><a href="filters-010.html">Filters 010</a> - Parameters for: chroma filter</div>
+    <div class="no-padding"><img src="thumbs/filters-010.webp" /></div>
+    <div>
+        <a href="filters-010.html">Filters 010</a>
+        Parameters for: chroma filter
+    </div>
 
-    <div><img src="thumbs/filters-011.webp" /></div>
-    <div><a href="filters-011.html">Filters 011</a> - Parameters for: chromakey filter</div>
+    <div class="no-padding"><img src="thumbs/filters-011.webp" /></div>
+    <div>
+        <a href="filters-011.html">Filters 011</a>
+        Parameters for: chromakey filter
+    </div>
 
-    <div><img src="thumbs/filters-012.webp" /></div>
-    <div><a href="filters-012.html">Filters 012</a> - Parameters for: matrix, matrix5 filters</div>
+    <div class="no-padding"><img src="thumbs/filters-012.webp" /></div>
+    <div>
+        <a href="filters-012.html">Filters 012</a>
+        Parameters for: matrix, matrix5 filters
+    </div>
 
-    <div><img src="thumbs/filters-013.webp" /></div>
-    <div><a href="filters-013.html">Filters 013</a> - Parameters for: flood filter</div>
+    <div class="no-padding"><img src="thumbs/filters-013.webp" /></div>
+    <div>
+        <a href="filters-013.html">Filters 013</a>
+        Parameters for: flood filter
+    </div>
 
-    <div><img src="thumbs/filters-014.webp" /></div>
-    <div><a href="filters-014.html">Filters 014</a> - Parameters for: areaAlpha filter</div>
+    <div class="no-padding"><img src="thumbs/filters-014.webp" /></div>
+    <div>
+        <a href="filters-014.html">Filters 014</a>
+        Parameters for: areaAlpha filter
+    </div>
 
-    <div><img src="thumbs/filters-015.webp" /></div>
-    <div><a href="filters-015.html">Filters 015</a> - Using assets in the filter stream; filter compositing</div>
+    <div class="no-padding"><img src="thumbs/filters-015.webp" /></div>
+    <div>
+        <a href="filters-015.html">Filters 015</a>
+        Using assets in the filter stream; filter compositing
+    </div>
 
-    <div><img src="thumbs/filters-016.webp" /></div>
-    <div><a href="filters-016.html">Filters 016</a> - Filter blend operation</div>
+    <div class="no-padding"><img src="thumbs/filters-016.webp" /></div>
+    <div>
+        <a href="filters-016.html">Filters 016</a>
+        Filter blend operation
+    </div>
 
-    <div><img src="thumbs/filters-017.webp" /></div>
-    <div><a href="filters-017.html">Filters 017</a> - Parameters for: displace filter</div>
+    <div class="no-padding"><img src="thumbs/filters-017.webp" /></div>
+    <div>
+        <a href="filters-017.html">Filters 017</a>
+        Parameters for: displace filter
+    </div>
 
-    <div><img src="thumbs/filters-018.webp" /></div>
-    <div><a href="filters-018.html">Filters 018</a> - Parameters for: emboss filter</div>
+    <div class="no-padding"><img src="thumbs/filters-018.webp" /></div>
+    <div>
+        <a href="filters-018.html">Filters 018</a>
+        Parameters for: emboss filter
+    </div>
 
-    <div><img src="thumbs/filters-019.webp" /></div>
-    <div><a href="filters-019.html">Filters 019</a> - Using a Noise asset with a displace filter</div>
+    <div class="no-padding"><img src="thumbs/filters-019.webp" /></div>
+    <div>
+        <a href="filters-019.html">Filters 019</a>
+        Using a Noise asset with a displace filter
+    </div>
 
-    <div><img src="thumbs/filters-020.webp" /></div>
-    <div><a href="filters-020.html">Filters 020</a> - Parameters for: clampChannels filter</div>
+    <div class="no-padding"><img src="thumbs/filters-020.webp" /></div>
+    <div>
+        <a href="filters-020.html">Filters 020</a>
+        Parameters for: clampChannels filter
+    </div>
 
   </div>
 
   <h2>CSS/SVG filter String functionality tests</h2>
 
-  <p>To be aware: CSS and SVG based filters are not currently supported by all browsers (specifically: Safari).</p>
+  <p>In addition to Scrawl-canvas's extensive filters functionality, the library also supports the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/filter">CSS filter property</a>. Be aware that CSS and SVG based filters are not currently supported by all browsers (specifically: Safari).</p>
+
   <div class="container">
 
-    <div><img src="thumbs/filters-501.webp" /></div>
-    <div><a href="filters-501.html">Filters 501</a> - Canvas engine filter strings (based on CSS filters)</div>
+    <div class="no-padding"><img src="thumbs/filters-501.webp" /></div>
+    <div>
+        <a href="filters-501.html">Filters 501</a>
+        Canvas engine filter strings (based on CSS filters)
+    </div>
 
-    <div><img src="thumbs/filters-502.webp" /></div>
-    <div><a href="filters-502.html">Filters 502</a> - SVG-based filter example: gaussian blur</div>
+    <div class="no-padding"><img src="thumbs/filters-502.webp" /></div>
+    <div>
+        <a href="filters-502.html">Filters 502</a>
+        SVG-based filter example: gaussian blur
+    </div>
 
-    <div><img src="thumbs/filters-503.webp" /></div>
-    <div><a href="filters-503.html">Filters 503</a> - SVG-based filter example: posterize</div>
+    <div class="no-padding"><img src="thumbs/filters-503.webp" /></div>
+    <div>
+        <a href="filters-503.html">Filters 503</a>
+        SVG-based filter example: posterize
+    </div>
 
-    <div><img src="thumbs/filters-504.webp" /></div>
-    <div><a href="filters-504.html">Filters 504</a> - SVG-based filter example: duotone</div>
+    <div class="no-padding"><img src="thumbs/filters-504.webp" /></div>
+    <div>
+        <a href="filters-504.html">Filters 504</a>
+        SVG-based filter example: duotone
+    </div>
 
-    <div><img src="thumbs/filters-505.webp" /></div>
-    <div><a href="filters-505.html">Filters 505</a> - SVG-based filter example: noise</div>
+    <div class="no-padding"><img src="thumbs/filters-505.webp" /></div>
+    <div>
+        <a href="filters-505.html">Filters 505</a>
+        SVG-based filter example: noise
+    </div>
   </div>
 
   <h2>Particles and physics tests</h2>
 
+  <p>Scrawl-canvas includes a <strong>particle-based physics engine</strong>. Particle systems (<strong>Emitter, Net, Tracer</strong>) are treated as entitys and can be positioned and rotated like any other entity.</p>
+
   <div class="container">
 
-    <div><img src="thumbs/particles-001.webp" /></div>
-    <div><a href="particles-001.html">Particles 001</a> - Emitter entity, and Particle World, basic functionality</div>
+    <div class="no-padding"><img src="thumbs/particles-001.webp" /></div>
+    <div>
+        <a href="particles-001.html">Particles 001</a>
+        Emitter entity, and Particle World, basic functionality
+    </div>
 
-    <div><img src="thumbs/particles-002.webp" /></div>
-    <div><a href="particles-002.html">Particles 002</a> - Emitter using artefacts</div>
+    <div class="no-padding"><img src="thumbs/particles-002.webp" /></div>
+    <div>
+        <a href="particles-002.html">Particles 002</a>
+        Emitter using artefacts
+    </div>
 
-    <div><img src="thumbs/particles-003.webp" /></div>
-    <div><a href="particles-003.html">Particles 003</a> - Position Emitter entity: start; pivot; mimic; path; mouse; drag-and-drop</div>
+    <div class="no-padding"><img src="thumbs/particles-003.webp" /></div>
+    <div>
+        <a href="particles-003.html">Particles 003</a>
+        Position Emitter entity: start; pivot; mimic; path; mouse; drag-and-drop
+    </div>
 
-    <div><img src="thumbs/particles-004.webp" /></div>
-    <div><a href="particles-004.html">Particles 004</a> - Emit particles along the length of a path</div>
+    <div class="no-padding"><img src="thumbs/particles-004.webp" /></div>
+    <div>
+        <a href="particles-004.html">Particles 004</a>
+        Emit particles along the length of a path
+    </div>
 
-    <div><img src="thumbs/particles-005.webp" /></div>
-    <div><a href="particles-005.html">Particles 005</a> - Emit particles from inside an artefact's area</div>
+    <div class="no-padding"><img src="thumbs/particles-005.webp" /></div>
+    <div>
+        <a href="particles-005.html">Particles 005</a>
+        Emit particles from inside an artefact's area
+    </div>
 
-    <div><img src="thumbs/particles-006.webp" /></div>
-    <div><a href="particles-006.html">Particles 006</a> - Fixed number of particles in a field; preAction and postAction functionality</div>
+    <div class="no-padding"><img src="thumbs/particles-006.webp" /></div>
+    <div>
+        <a href="particles-006.html">Particles 006</a>
+        Fixed number of particles in a field; preAction and postAction functionality
+    </div>
 
-    <div><img src="thumbs/particles-007.webp" /></div>
-    <div><a href="particles-007.html">Particles 007</a> - Particle Force objects: generation and functionality</div>
+    <div class="no-padding"><img src="thumbs/particles-007.webp" /></div>
+    <div>
+        <a href="particles-007.html">Particles 007</a>
+        Particle Force objects: generation and functionality
+    </div>
 
-    <div><img src="thumbs/particles-008.webp" /></div>
-    <div><a href="particles-008.html">Particles 008</a> - Net entity: generation and basic functionality, including Spring objects</div>
+    <div class="no-padding"><img src="thumbs/particles-008.webp" /></div>
+    <div>
+        <a href="particles-008.html">Particles 008</a>
+        Net entity: generation and basic functionality, including Spring objects
+    </div>
 
-    <div><img src="thumbs/particles-009.webp" /></div>
-    <div><a href="particles-009.html">Particles 009</a> - Net particles: drag-and-drop functionality</div>
+    <div class="no-padding"><img src="thumbs/particles-009.webp" /></div>
+    <div>
+        <a href="particles-009.html">Particles 009</a>
+        Net particles: drag-and-drop functionality
+    </div>
 
-    <div><img src="thumbs/particles-010.webp" /></div>
-    <div><a href="particles-010.html">Particles 010</a> - Net entity: using a shape path as a net template</div>
+    <div class="no-padding"><img src="thumbs/particles-010.webp" /></div>
+    <div>
+        <a href="particles-010.html">Particles 010</a>
+        Net entity: using a shape path as a net template
+    </div>
 
-    <div><img src="thumbs/particles-011.webp" /></div>
-    <div><a href="particles-011.html">Particles 011</a> - Tracer entity: generation and functionality</div>
+    <div class="no-padding"><img src="thumbs/particles-011.webp" /></div>
+    <div>
+        <a href="particles-011.html">Particles 011</a>
+        Tracer entity: generation and functionality
+    </div>
 
-    <div><img src="thumbs/particles-012.webp" /></div>
-    <div><a href="particles-012.html">Particles 012</a> - Use Net entity particles as reference coordinates for other artefacts</div>
+    <div class="no-padding"><img src="thumbs/particles-012.webp" /></div>
+    <div>
+        <a href="particles-012.html">Particles 012</a>
+        Use Net entity particles as reference coordinates for other artefacts
+    </div>
 
-    <div><img src="thumbs/particles-013.webp" /></div>
-    <div><a href="particles-013.html">Particles 013</a> - Seasons greetings</div>
+    <div class="no-padding"><img src="thumbs/particles-013.webp" /></div>
+    <div>
+        <a href="particles-013.html">Particles 013</a>
+        Seasons greetings
+    </div>
 
-    <div><img src="thumbs/particles-014.webp" /></div>
-    <div><a href="particles-014.html">Particles 014</a> - Emitter functionality: generate from existing particles</div>
+    <div class="no-padding"><img src="thumbs/particles-014.webp" /></div>
+    <div>
+        <a href="particles-014.html">Particles 014</a>
+        Emitter functionality: generate from existing particles
+    </div>
 
-    <div><img src="thumbs/particles-015.webp" /></div>
-    <div><a href="particles-015.html">Particles 015</a> - Emitter functionality: generate from existing particle histories</div>
+    <div class="no-padding"><img src="thumbs/particles-015.webp" /></div>
+    <div>
+        <a href="particles-015.html">Particles 015</a>
+        Emitter functionality: generate from existing particle histories
+    </div>
 
-    <div><img src="thumbs/particles-016.webp" /></div>
-    <div><a href="particles-016.html">Particles 016</a> - Mesh entitys</div>
+    <div class="no-padding"><img src="thumbs/particles-016.webp" /></div>
+    <div>
+        <a href="particles-016.html">Particles 016</a>
+        Mesh entitys
+    </div>
   </div>
 
-  <h2>Component tests (experimental!)</h2>
+  <h2>Module and packet code tests</h2>
+
+  <p>Many Scrawl-canvas objects can be saved to JSON strings known as <strong>packets</strong>, and restored from them. Scrawl-canvas <strong>clone</strong> functionality is built on top of its packet functionality; every demo that invokes a clone call on a Scrawl-canvas artefact or object is also testing that artefact/object's packet functionality. Similarly, many demos test object <strong>kill</strong> functionality, using packets to restore the objects after they have been killed.</p>
+
+  <p>Scrawl-canvas code is easy to use in <strong>ES6 modules</strong>.</p>
+
+  <p>Modular code, and the ability to kill and restore Scrawl-canvas objects, becomes important when using Scrawl-canvas in framework environments such as <strong>React</strong> or <strong>Svelte</strong>.</p>
 
   <div class="container">
 
-    <div><img src="thumbs/component-001.webp" /></div>
-    <div><a href="component-001.html">Component 001</a> - Scrawl-canvas DOM element components</div>
+    <div class="no-padding"><img src="thumbs/modules-001.webp" /></div>
+    <div>
+        <a href="modules-001.html">Modules 001</a>
+        Scrawl-canvas modularized code - London crime charts
+    </div>
 
-    <div><img src="thumbs/component-002.webp" /></div>
-    <div><a href="component-002.html">Component 002</a> - Scrawl-canvas stack element components</div>
+    <div class="no-padding"><img src="thumbs/modules-002.webp" /></div>
+    <div>
+        <a href="modules-002.html">Modules 002</a>
+        Spiral charts
+    </div>
 
-    <div><img src="thumbs/component-003.webp" /></div>
-    <div><a href="component-003.html">Component 003</a> - Save and load Scrawl-canvas entity using text packets</div>
+    <div class="no-padding"><img src="thumbs/modules-003.webp" /></div>
+    <div>
+        <a href="modules-003.html">Modules 003</a>
+        Factory functions to create more complex, compound entitys
+    </div>
 
-    <div><img src="thumbs/component-004.webp" /></div>
-    <div><a href="component-004.html">Component 004</a> - Scrawl-canvas packets - save and load a range of different entitys</div>
+    <div class="no-padding"><img src="thumbs/packets-001.webp" /></div>
+    <div>
+        <a href="packets-001.html">Packets 001</a>
+        Save and load Scrawl-canvas entity using text packets
+    </div>
 
-    <div><img src="thumbs/component-005.webp" /></div>
-    <div><a href="component-005.html">Component 005</a> - Scrawl-canvas modularized code - London crime charts</div>
+    <div class="no-padding"><img src="thumbs/packets-002.webp" /></div>
+    <div>
+        <a href="packets-002.html">Packets 002</a>
+        Scrawl-canvas packets - save and load a range of different entitys
+    </div>
+  </div>
 
-    <div><img src="thumbs/component-006.webp" /></div>
-    <div><a href="component-006.html">Component 006</a> - Spiral charts</div>
+  <h2>Snippet code tests</h2>
 
-    <div><img src="thumbs/component-007.webp" /></div>
-    <div><a href="component-007.html">Component 007</a> - Factory functions to create more complex, compound entitys</div>
+  <p>Scrawl-canvas snippets are <strong>module-based functions</strong> which can be <strong>imported</strong> into any other code and <strong>applied to DOM elements</strong>. The functions add a canvas to the DOM element to act as its background, allowing complex displays and animations to be added to the element.</p>
+
+  <p>The results are similar to the <a href="https://ishoudinireadyyet.com/">Houdini</a> <a href="https://developers.google.com/web/updates/2018/01/paintapi">CSS Paint API</a>, though the path to achieving those results are different.</p>
+
+  <p><strong>Snippet canvases are responsive:</strong> a well-written snippet will be able to adapt to changes in its host element's position, dimensions and styling attributes in real time, and should be able to tidy up after itself if its host element gets removed from the web page (for instance when it is part of a component).</p>
+
+  <p>The idea behind the snippets functionality is to allow third party developers to develop code Snippets which other developers can then import and apply in their own sites. Note that there are inherent dangers in this approach: <b><i>it is always safer to host and review snippets code yourselves, to minimize the opportunities for third parties to inject malignant code into unsuspecting websites!</i></b></p>
+
+  <div class="container">
+
+    <div class="no-padding"><img src="thumbs/snippets-001.webp" /></div>
+    <div>
+        <a href="snippets-001.html">Snippets 001</a>
+        Scrawl-canvas DOM element snippets
+    </div>
+
+    <div class="no-padding"><img src="thumbs/snippets-002.webp" /></div>
+    <div>
+        <a href="snippets-002.html">Snippets 002</a>
+        Scrawl-canvas stack element snippets
+    </div>
+
+    <div class="no-padding"><img src="thumbs/snippets-003.png" /></div>
+    <div>
+        <a href="snippets-003.html">Snippets 003</a>
+        DOM element snippet - test canvas adaption to local element variations
+    </div>
+
+    <div class="no-padding"><img src="thumbs/snippets-004.png" /></div>
+    <div>
+        <a href="snippets-004.html">Snippets 004</a>
+        Snippets included in the Scrawl-canvas demo/snippets folder
+    </div>
   </div>
 
   <h2>DOM and Stack tests</h2>
 
+  <p>Scrawl-canvas &lt;canvas> elements do not live in splendid isolation; the library is aware of each canvas's wider environment. Functionality is included to add and/or remove <strong>event listeners</strong> to other elements which can be used to control the canvas display. The Scrawl-canvas <strong>animation loop</strong> can also be stopped and restarted as required. <strong>New canvases</strong> can be added to the web page in real time, and removed just as easily.</p>
+
+  <p>Scrawl-canvas <strong>stacks</strong> extend the library's unique positioning, manipulation and animation functionality to <strong>DOM elements</strong>. This allows us to combine stacks and canvases so that DOM elements can be used to position canvas entitys, and give us the power to animate DOM elements along path-based entitys. It also gives users the power to <strong>interact with &lt;canvas> elements rotated in 3D space</strong>.</p>
+
   <div class="container">
 
-    <div><img src="thumbs/dom-001.webp" /></div>
-    <div><a href="dom-001.html">DOM 001</a> - Loading the scrawl-canvas library using a script tag in the HTML code</div>
+    <div class="no-padding"><img src="thumbs/dom-001.webp" /></div>
+    <div>
+        <a href="dom-001.html">DOM 001</a>
+        Loading the scrawl-canvas library using a script tag in the HTML code
+    </div>
 
-    <div><img src="thumbs/dom-002.webp" /></div>
-    <div><a href="dom-002.html">DOM 002</a> - Element mouse, pivot and mimic functionality</div>
+    <div class="no-padding"><img src="thumbs/dom-002.webp" /></div>
+    <div>
+        <a href="dom-002.html">DOM 002</a>
+        Element mouse, pivot and mimic functionality
+    </div>
 
-    <div><img src="thumbs/dom-003.webp" /></div>
-    <div><a href="dom-003.html">DOM 003</a> - Dynamically create and clone Element artefacts; drag and drop elements (including SVG elements) around a Stack</div>
+    <div class="no-padding"><img src="thumbs/dom-003.webp" /></div>
+    <div>
+        <a href="dom-003.html">DOM 003</a>
+        Dynamically create and clone Element artefacts; drag and drop elements (including SVG elements) around a Stack
+    </div>
 
-    <div><img src="thumbs/dom-004.webp" /></div>
-    <div><a href="dom-004.html">DOM 004</a> - Limitless rockets (clone and destroy elements, tweens, tickers)</div>
+    <div class="no-padding"><img src="thumbs/dom-004.webp" /></div>
+    <div>
+        <a href="dom-004.html">DOM 004</a>
+        Limitless rockets (clone and destroy elements, tweens, tickers)
+    </div>
 
-    <div><img src="thumbs/dom-005.webp" /></div>
-    <div><a href="dom-005.html">DOM 005</a> - DOM tween stress test</div>
+    <div class="no-padding"><img src="thumbs/dom-005.webp" /></div>
+    <div>
+        <a href="dom-005.html">DOM 005</a>
+        DOM tween stress test
+    </div>
 
-    <div><img src="thumbs/dom-006.webp" /></div>
-    <div><a href="dom-006.html">DOM 006</a> - Tween actions on a DOM element; tracking tween and ticker activity (analytics)</div>
+    <div class="no-padding"><img src="thumbs/dom-006.webp" /></div>
+    <div>
+        <a href="dom-006.html">DOM 006</a>
+        Tween actions on a DOM element; tracking tween and ticker activity (analytics)
+    </div>
 
-    <div><img src="thumbs/dom-007.webp" /></div>
-    <div><a href="dom-007.html">DOM 007</a> - Animate a DOM element using the delta attribute object; dynamically change classes on a DOM element</div>
+    <div class="no-padding"><img src="thumbs/dom-007.webp" /></div>
+    <div>
+        <a href="dom-007.html">DOM 007</a>
+        Animate a DOM element using the delta attribute object; dynamically change classes on a DOM element
+    </div>
 
-    <div><img src="thumbs/dom-008.webp" /></div>
-    <div><a href="dom-008.html">DOM 008</a> - 3d animated cube</div>
+    <div class="no-padding"><img src="thumbs/dom-008.webp" /></div>
+    <div>
+        <a href="dom-008.html">DOM 008</a>
+        3d animated cube
+    </div>
 
-    <div><img src="thumbs/dom-009.webp" /></div>
-    <div><a href="dom-009.html">DOM 009</a> - Stop and restart the main animation loop; add and remove event listener; retrieve all artefacts at a given coordinate</div>
+    <div class="no-padding"><img src="thumbs/dom-009.webp" /></div>
+    <div>
+        <a href="dom-009.html">DOM 009</a>
+        Stop and restart the main animation loop; add and remove event listener; retrieve all artefacts at a given coordinate
+    </div>
 
-    <div><img src="thumbs/dom-010.webp" /></div>
-    <div><a href="dom-010.html">DOM 010</a> - Add and remove (kill) Scrawl-canvas stack elements programmatically</div>
+    <div class="no-padding"><img src="thumbs/dom-010.webp" /></div>
+    <div>
+        <a href="dom-010.html">DOM 010</a>
+        Add and remove (kill) Scrawl-canvas stack elements programmatically
+    </div>
 
-    <div><img src="thumbs/dom-011.webp" /></div>
-    <div><a href="dom-011.html">DOM 011</a> - Canvas controller 'fit' attribute; Cell positioning (mouse)</div>
+    <div class="no-padding"><img src="thumbs/dom-011.webp" /></div>
+    <div>
+        <a href="dom-011.html">DOM 011</a>
+        Canvas controller 'fit' attribute; Cell positioning (mouse)
+    </div>
 
-    <div><img src="thumbs/dom-012.webp" /></div>
-    <div><a href="dom-012.html">DOM 012</a> - Add and remove (kill) Scrawl-canvas canvas elements programmatically</div>
+    <div class="no-padding"><img src="thumbs/dom-012.webp" /></div>
+    <div>
+        <a href="dom-012.html">DOM 012</a>
+        Add and remove (kill) Scrawl-canvas canvas elements programmatically
+    </div>
 
-    <div><img src="thumbs/dom-013.webp" /></div>
-    <div><a href="dom-013.html">DOM 013</a> - Track mouse movements over a 3d rotated and scaled canvas element</div>
+    <div class="no-padding"><img src="thumbs/dom-013.webp" /></div>
+    <div>
+        <a href="dom-013.html">DOM 013</a>
+        Track mouse movements over a 3d rotated and scaled canvas element
+    </div>
 
-    <div><img src="thumbs/dom-015.webp" /></div>
-    <div><a href="dom-015.html">DOM-015</a> - Use stacked DOM artefact corners as pivot points</div>
+    <div class="no-padding"><img src="thumbs/dom-015.webp" /></div>
+    <div>
+        <a href="dom-015.html">DOM-015</a>
+        Use stacked DOM artefact corners as pivot points
+    </div>
 
-    <div><img src="thumbs/dom-016.webp" /></div>
-    <div><a href="dom-016.html">DOM-016</a> - Determine the displayed shape of the visible stack; react to changes in the displayed shape</div>
+    <div class="no-padding"><img src="thumbs/dom-016.webp" /></div>
+    <div>
+        <a href="dom-016.html">DOM-016</a>
+        Determine the displayed shape of the visible stack; react to changes in the displayed shape
+    </div>
   </div>
 
 </body>
