@@ -17,7 +17,6 @@
     body {
         background-color: aliceblue;
         font-size: 1rem;
-        line-height: 1.3;
     }
 
     h1 {
@@ -33,6 +32,14 @@
       padding-top: 0.5rem;
     }
     
+    p {
+        line-height: 1.5;
+    }
+    li {
+        margin-bottom: 1rem;
+        line-height: 1.5;
+    }
+
     a {
       text-decoration: none;
       transition: color 0.5s;
@@ -114,7 +121,7 @@
   <ul>
     <li>Basic shapes such as rectangles (<strong>Block</strong>), circles (<strong>Wheel</strong>) and text (<strong>Phrase</strong>).</li>
     <li>Text can be automatically broken over multiple lines, and different styling applied to words and individual letters; text can be animated along paths. CSS font strings are supported as far as possible, including font-sizes declared using suffixes such as 'em', 'rem', 'vw', 'pt', etc.</li>
-    <li>SVG path-defined entitys (<strong>Shape</strong>), and a range of pre-defined, path-based entitys (<strong>Oval, Rectangle, Line, Quadratic, Bezier, Tetragon, Polygon, Star, Spiral, Cog, Line, Quadratic, Bezier, Polyline</strong>).</li>
+    <li>SVG path-defined entitys (<strong>Shape</strong>), and a range of pre-defined, path-based entitys (<strong>Oval, Rectangle, Tetragon, Polygon, Star, Spiral, Cog, Line, Quadratic, Bezier, Polyline</strong>).</li>
     <li>Line, Quadratic, Bezier and Polyline entitys can have their start, end and control coordinates positioned absolutely, relatively, or by reference to other entitys (including along paths).</li>
     <li>Images, video and related pixel-based image streams (<strong>Picture</strong>), both in whole and in part; the proportion of the image displayed can be controlled and animated. Spritesheet animation is also supported.</li>
     <li>Compound entitys built on top of other entitys which can be used to combine the output of images in various ways (<strong>Grid</strong>) or distort the output (<strong>Loom, Mesh</strong>).</li>
