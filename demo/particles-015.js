@@ -1,5 +1,5 @@
 // # Demo Particles 015
-// Hearts and stars
+// Emitter functionality: generate from existing particle histories
 
 // [Run code](../../demo/particles-015.html)
 import scrawl from '../source/scrawl.js';

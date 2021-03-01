@@ -270,9 +270,11 @@ scrawl.makeFilter({
     name: 'offsetChannels',
     method: 'offsetChannels',
     offsetRedX: -12,
-    offsetGreenY: 12,
-    offsetBlueX: 3,
-    offsetBlueY: -3,
+    offsetRedY: -8,
+    offsetGreenX: 12,
+    offsetGreenY: 16,
+    offsetBlueX: 5,
+    offsetBlueY: -15,
 });
 
 // __Pixellate__ filter

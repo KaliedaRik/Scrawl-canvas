@@ -43,7 +43,7 @@ const Tracer = function (items = {}) {
     this.onDown = λnull;
     this.onUp = λnull;
 
-    // As part of its `stamp` functionality the Net entity will invoke the `stampAction` function. If not supplied, the entity will not display anything on the canvas.
+    // As part of its `stamp` functionality the Tracer entity will invoke the `stampAction` function. If not supplied, the entity will not display anything on the canvas.
     this.stampAction = λnull;
 
     // Tracer entitys use just one Particle, which gets initialized here and stored in the `trace` attribute
