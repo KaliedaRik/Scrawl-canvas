@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 048</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    canvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    .canvas-container {
+      overflow: hidden;
+      resize: both;
+      border: 1px solid black;
+      width: 600px;
+      height: 400px;
+      min-height: 200px;
+      min-width: 200px;
+      max-height: 600px;
+      max-width: 800px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 048</h1>
+  <h2>Display a filtered media stream</h2>
+
+  <div class="canvas-container">
+    <canvas id="mycanvas"></canvas>
+  </div>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Check that the media stream loads (if browser/device supports it)</li>
+      <li>In cases where browser/device doesn't support media streams, check that the failure is captured and handled gracefully (TODO)</li>
+      <li>Apply a complex filter to the media-stream Picture entitys displaying the stream</li>
+    </ul>
+    <p><a href="../docs/demo/canvas-048.html">Annotated code</a></p>
+  </div>
+
+  <script src="canvas-048.js" type="module"></script>
+
+</body>
+
+</html>

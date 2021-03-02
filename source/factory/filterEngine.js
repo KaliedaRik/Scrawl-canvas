@@ -1899,6 +1899,89 @@ P.theBigActionsObject = {
         else this.processResults(work, output, opacity);
     },
 
+// __corrode__ - Performs a special form of matrix operation on each pixel's color and alpha channels, calculating the new value using neighbouring pixel values. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the "width" and "height" arguments, while setting the home pixel's position within the matrix can be set using the "offsetX" and "offsetY" arguments. The operation will set the pixel's channel value to match either the lowest, highest, mean or median values as dictated by its neighbours - this value is set in the "level" attribute. Channels can be selected by setting the "includeRed", "includeGreen", "includeBlue" (all false by default) and "includeAlpha" (default: true) flags.
+    'corrode': function (requirements) {
+
+        const doCalculations = function (data, matrix, offset) {
+
+            let vals = [];
+
+            for (let m = 0, mz = matrix.length; m < mz; m++) {
+
+                vals.push(data[matrix[m] + offset]);
+
+                // need to remove the pixel's own value?
+            }
+
+            if (!vals.length) return 0;
+
+            switch (operation) {
+
+                case 'lowest' :
+
+                    return Math.min(...vals);
+                
+                case 'highest' :
+
+                    return Math.max(...vals);
+                
+                case 'median' :
+
+                    let max = Math.max(...vals),
+                        min = Math.min(...vals);
+
+                    return Math.floor(min + ((max - min) / 2));
+
+                default :
+
+                    let total = vals.reduce((a, v) => a + v, 0);
+                    return Math.floor(total / vals.length);
+            }
+        };
+
+        let [input, output] = this.getInputAndOutputLines(requirements);
+
+        let iData = input.data,
+            oData = output.data,
+            len = iData.length;
+
+        let {opacity, includeRed, includeGreen, includeBlue, includeAlpha, width, height, offsetX, offsetY, operation, lineOut} = requirements;
+
+        if (null == opacity) opacity = 1;
+        if (null == includeRed) includeRed = false;
+        if (null == includeGreen) includeGreen = false;
+        if (null == includeBlue) includeBlue = false;
+        if (null == includeAlpha) includeAlpha = true;
+        if (null == width || width < 1) width = 3;
+        if (null == height || height < 1) height = 3;
+        if (null == offsetX) offsetX = 1;
+        if (null == offsetY) offsetY = 1;
+        if (null == operation) operation = 'mean';
+
+        let grid = this.buildMatrixGrid(width, height, offsetX, offsetY, input);
+
+        let m = Math.floor(len / 4);
+
+        for (let i = 0; i < m; i++) {
+
+            let c = i * 4;
+            oData[c] = (includeRed) ? doCalculations(iData, grid[i], 0) : iData[c];
+
+            c++;
+            oData[c] = (includeGreen) ? doCalculations(iData, grid[i], 1) : iData[c];
+
+            c++;
+            oData[c] = (includeBlue) ? doCalculations(iData, grid[i], 2) : iData[c];
+
+            c++;
+            oData[c] = (includeAlpha) ? doCalculations(iData, grid[i], 3) : iData[c];
+        }
+
+        let work = this.cache.work;
+        if (lineOut) this.processResults(output, work, 1 - opacity);
+        else this.processResults(work, output, opacity);
+    },
+
 // __displace__ - Shift pixels around the image, based on the values supplied in a displacement image
     'displace': function (requirements) {
 

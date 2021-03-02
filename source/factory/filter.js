@@ -257,6 +257,7 @@ let defaultAttributes = {
     offsetX: 0,
     offsetY: 0,
     opaqueAt: 1,
+    operation: 'mean',
     passes: 1,
     postProcessResults: true,
     processHorizontal: true,
@@ -629,6 +630,25 @@ const setActionsArray = {
             compose: (f.compose != null) ? f.compose : 'source-over',
             offsetX: (f.offsetX != null) ? f.offsetX : 0,
             offsetY: (f.offsetY != null) ? f.offsetY : 0,
+            opacity: (f.opacity != null) ? f.opacity : 1,
+        }];
+    },
+
+// __corrode__ (new in v8.5.2) - Performs a special form of matrix operation on each pixel's color and alpha channels, calculating the new value using neighbouring pixel values
+    corrode: function (f) {
+        f.actions = [{
+            action: 'corrode',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            width: (f.width != null) ? f.width : 3,
+            height: (f.height != null) ? f.height : 3,
+            offsetX: (f.offsetX != null) ? f.offsetX : 1,
+            offsetY: (f.offsetY != null) ? f.offsetY : 1,
+            includeRed: (f.includeRed != null) ? f.includeRed : false,
+            includeGreen: (f.includeGreen != null) ? f.includeGreen : false,
+            includeBlue: (f.includeBlue != null) ? f.includeBlue : false,
+            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : true,
+            operation: (f.operation != null) ? f.operation : 'mean',
             opacity: (f.opacity != null) ? f.opacity : 1,
         }];
     },
