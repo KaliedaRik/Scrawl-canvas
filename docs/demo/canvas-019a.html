@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Demo DOM 014 - third scene</title>
+  <title>Demo Canvas 019a</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../docco.css" />
@@ -639,8 +639,8 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
-              <h1 id="demo-dom-014---third-scene">Demo DOM 014 - third scene</h1>
-<p>Load and run multiple scripts on same page</p>
+              <h1 id="demo-canvas-019a">Demo Canvas 019a</h1>
+<p>Gradient and Color factories - transparency - alternative approach using Cells instead of images</p>
 
             </div>
             
@@ -653,190 +653,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
-              <p><a href="../../demo/dom-014.html">Run code</a></p>
+              <p><a href="../../demo/canvas-019a.html">Run code</a></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>
-
-<span class="hljs-keyword">let</span> artefact = scrawl.library.artefact,
-    stack = artefact.mystack,
-    element = artefact.myelement,
-    canvas = artefact.mycanvas3,
-    cell = canvas.base;
-
-canvas.setAsCurrentCanvas();
-
-stack.set({
-    <span class="hljs-attr">width</span>: <span class="hljs-number">600</span>,
-    <span class="hljs-attr">height</span>:<span class="hljs-number">400</span>,
-    <span class="hljs-attr">perspectiveZ</span>: <span class="hljs-number">1200</span>,
-});
-
-
-canvas.set({
-    <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-    <span class="hljs-attr">height</span>:<span class="hljs-string">&#x27;100%&#x27;</span>,
-    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;black&#x27;</span>,
-});
-
-cell.set({
-    <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-    <span class="hljs-attr">height</span>:<span class="hljs-string">&#x27;100%&#x27;</span>,
-});
-
-<span class="hljs-keyword">let</span> testers = scrawl.makeGroup({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;testers&#x27;</span>,
-    <span class="hljs-attr">host</span>: <span class="hljs-string">&#x27;mystack&#x27;</span>,
-});
-
-element.set({
-
-    <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;testers&#x27;</span>,
-
-    <span class="hljs-attr">startX</span>: <span class="hljs-number">300</span>,
-    <span class="hljs-attr">startY</span>: <span class="hljs-number">200</span>,
-    <span class="hljs-attr">handleX</span>: <span class="hljs-number">100</span>,
-    <span class="hljs-attr">handleY</span>: <span class="hljs-number">100</span>,
-
-    <span class="hljs-attr">width</span>: <span class="hljs-number">200</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-number">200</span>,
-
-    <span class="hljs-attr">roll</span>: <span class="hljs-number">10</span>,
-    <span class="hljs-attr">pitch</span>: <span class="hljs-number">20</span>,
-    <span class="hljs-attr">yaw</span>: <span class="hljs-number">30</span>,
-
-    <span class="hljs-attr">css</span>: {
-        <span class="hljs-attr">borderWidth</span>: <span class="hljs-string">&#x27;6px&#x27;</span>,
-    },
-
-    <span class="hljs-attr">collides</span>: <span class="hljs-literal">true</span>,
-});
-
-<span class="hljs-keyword">let</span> baseColor = <span class="hljs-string">&#x27;aliceblue&#x27;</span>,
-    highlightColor = <span class="hljs-string">&#x27;red&#x27;</span>,
-    gridSize = <span class="hljs-number">40</span>;
-
-<span class="hljs-keyword">let</span> grid = scrawl.makeGroup({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;grid&#x27;</span>,
-    <span class="hljs-attr">host</span>: cell.name,
-});
-
-<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> y = <span class="hljs-number">0</span>; y &lt; <span class="hljs-number">400</span>; y += gridSize) {
-
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> x = <span class="hljs-number">0</span>; x &lt; <span class="hljs-number">600</span>; x += gridSize) {
-
-        scrawl.makeBlock({
-
-            <span class="hljs-attr">name</span>: <span class="hljs-string">`grid-<span class="hljs-subst">${x <span class="hljs-regexp">/ gridSize}-${y /</span> gridSize}</span>`</span>,
-            <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;grid&#x27;</span>,
-
-            <span class="hljs-attr">width</span>: gridSize - <span class="hljs-number">0.5</span>,
-            <span class="hljs-attr">height</span>: gridSize - <span class="hljs-number">0.5</span>,
-            <span class="hljs-attr">startX</span>: x,
-            <span class="hljs-attr">startY</span>: y,
-
-            <span class="hljs-attr">fillStyle</span>: baseColor,
-
-            <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
-        });
-    }
-}
-
-scrawl.makeDragZone({
-
-    <span class="hljs-attr">zone</span>: stack,
-    <span class="hljs-attr">collisionGroup</span>: testers,
-    <span class="hljs-attr">endOn</span>: [<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-string">&#x27;leave&#x27;</span>],
-});
-
-<span class="hljs-keyword">let</span> checkHits = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">let</span> hits = [];
-
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-        hits.forEach(<span class="hljs-function"><span class="hljs-params">hit</span> =&gt;</span> hit.artefact.set({
-            <span class="hljs-attr">fillStyle</span>: baseColor
-        }));
-
-        hits = grid.getArtefactCollisions(element);
-
-        hits.forEach(<span class="hljs-function"><span class="hljs-params">hit</span> =&gt;</span> hit.artefact.set({
-            <span class="hljs-attr">fillStyle</span>: highlightColor
-        }));
-    };
-}();
-
-<span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
-        testTime, testNow,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage3&#x27;</span>);
-
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-        testNow = <span class="hljs-built_in">Date</span>.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = <span class="hljs-string">`Animation threshhold set to 0.0
-- at least 1px of the stack must be visible for the animation to run
-Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
-    };
-}();
-
-<span class="hljs-keyword">let</span> animations = scrawl.makeRender({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation3&#x27;</span>,
-    <span class="hljs-attr">target</span>: [stack, canvas],
-    <span class="hljs-attr">afterCreated</span>: <span class="hljs-function">() =&gt;</span> element.set({ <span class="hljs-attr">roll</span>: <span class="hljs-number">10.001</span> }),
-    <span class="hljs-attr">commence</span>: checkHits,
-    <span class="hljs-attr">afterShow</span>: report,
-});
-
-scrawl.observeAndUpdate({
-
-    <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
-    <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,
-
-    <span class="hljs-attr">target</span>: element,
-
-    <span class="hljs-attr">useNativeListener</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">preventDefault</span>: <span class="hljs-literal">true</span>,
-
-    <span class="hljs-attr">updates</span>: {
-        <span class="hljs-attr">handle_xAbsolute</span>: [<span class="hljs-string">&#x27;handleX&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
-        <span class="hljs-attr">handle_yAbsolute</span>: [<span class="hljs-string">&#x27;handleY&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
-
-        <span class="hljs-attr">offset_xAbsolute</span>: [<span class="hljs-string">&#x27;offsetX&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
-        <span class="hljs-attr">offset_yAbsolute</span>: [<span class="hljs-string">&#x27;offsetY&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
-
-        <span class="hljs-attr">roll</span>: [<span class="hljs-string">&#x27;roll&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
-        <span class="hljs-attr">pitch</span>: [<span class="hljs-string">&#x27;pitch&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
-        <span class="hljs-attr">yaw</span>: [<span class="hljs-string">&#x27;yaw&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
-        <span class="hljs-attr">scale</span>: [<span class="hljs-string">&#x27;scale&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
-
-        <span class="hljs-attr">sensitivity</span>: [<span class="hljs-string">&#x27;sensorSpacing&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
-    },
-});
-
-scrawl.observeAndUpdate({
-
-    <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
-    <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,
-
-    <span class="hljs-attr">target</span>: stack,
-
-    <span class="hljs-attr">useNativeListener</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">preventDefault</span>: <span class="hljs-literal">true</span>,
-
-    <span class="hljs-attr">updates</span>: {
-        <span class="hljs-attr">perspective</span>: [<span class="hljs-string">&#x27;perspectiveZ&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
-    },
-});</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -847,20 +668,11 @@ scrawl.observeAndUpdate({
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <p>Setup form</p>
+              <h4 id="scene-setup">Scene setup</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#sensitivity&#x27;</span>).value = <span class="hljs-number">50</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#handle_xAbsolute&#x27;</span>).value = <span class="hljs-number">100</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#handle_yAbsolute&#x27;</span>).value = <span class="hljs-number">100</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#offset_xAbsolute&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#offset_yAbsolute&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#roll&#x27;</span>).value = <span class="hljs-number">10</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#pitch&#x27;</span>).value = <span class="hljs-number">20</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#yaw&#x27;</span>).value = <span class="hljs-number">30</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#scale&#x27;</span>).value = <span class="hljs-number">1</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#perspective&#x27;</span>).value = <span class="hljs-number">1200</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvases = scrawl.library.canvas;</pre></div></div>
             
         </li>
         
@@ -871,13 +683,11 @@ scrawl.observeAndUpdate({
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p>Switch animation on/off when at least 1px of stack is showing - this is standard ES16 Javascript, not part of Scrawl-canvas</p>
+              <p>Import the images we defined in the DOM (in &lt;img&gt; elements)</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> observer = <span class="hljs-keyword">new</span> IntersectionObserver(<span class="hljs-function">(<span class="hljs-params">entries, observer</span>) =&gt;</span> {
-
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;observer C starts&#x27;</span>, animations[<span class="hljs-number">0</span>].name, animations[<span class="hljs-number">0</span>].isRunning());</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.importDomImage(<span class="hljs-string">&#x27;.places&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -888,17 +698,32 @@ scrawl.observeAndUpdate({
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <p>We’re only observing the stack’s DOM element here, but we need to switch both the stack and the canvas animation renders on or off</p>
+              <p>For this scene, we’ll build a data structure which we can iterate over, to build the entitys, assets and gradients required by the scene</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    entries.forEach(<span class="hljs-function"><span class="hljs-params">entry</span> =&gt;</span> {
-
-        <span class="hljs-keyword">if</span> (entry.isIntersecting) animations.forEach(<span class="hljs-function"><span class="hljs-params">anim</span> =&gt;</span> !anim.isRunning() &amp;&amp; anim.run());
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!entry.isIntersecting) animations.forEach(<span class="hljs-function"><span class="hljs-params">anim</span> =&gt;</span> anim.isRunning() &amp;&amp; anim.halt());
-    });
-
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;observer C completes&#x27;</span>, animations[<span class="hljs-number">0</span>].name, animations[<span class="hljs-number">0</span>].isRunning());</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> data = [
+    {
+        <span class="hljs-attr">canvas</span>: canvases[<span class="hljs-string">&#x27;hackney&#x27;</span>],
+        <span class="hljs-attr">image</span>: <span class="hljs-string">&#x27;hackney-bg&#x27;</span>,
+        <span class="hljs-attr">transparency</span>: <span class="hljs-string">&#x27;transparent&#x27;</span>,
+    },
+    {
+        <span class="hljs-attr">canvas</span>: canvases[<span class="hljs-string">&#x27;heathrow&#x27;</span>],
+        <span class="hljs-attr">image</span>: <span class="hljs-string">&#x27;heathrow-bg&#x27;</span>,
+        <span class="hljs-attr">transparency</span>: <span class="hljs-string">&#x27;rgba(0,0,0,0)&#x27;</span>,
+    },
+    {
+        <span class="hljs-attr">canvas</span>: canvases[<span class="hljs-string">&#x27;kingston&#x27;</span>],
+        <span class="hljs-attr">image</span>: <span class="hljs-string">&#x27;kingston-bg&#x27;</span>,
+        <span class="hljs-attr">transparency</span>: <span class="hljs-string">&#x27;#00000000&#x27;</span>,
+    },
+    {
+        <span class="hljs-attr">canvas</span>: canvases[<span class="hljs-string">&#x27;burglary&#x27;</span>],
+        <span class="hljs-attr">image</span>: <span class="hljs-string">&#x27;burglary-bg&#x27;</span>,
+        <span class="hljs-attr">transparency</span>: <span class="hljs-string">&#x27;#0000&#x27;</span>,
+    },
+];</pre></div></div>
             
         </li>
         
@@ -909,18 +734,311 @@ scrawl.observeAndUpdate({
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <p>The second IntersectionObserver argument is the options object</p>
+              <p>This array will hold a set of functions which we will invoke in turn at the start of each Display cycle</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> checkFunctions = [];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
+              </div>
+              <p>The blur filter is temporary - we use it once on each image to generate a blurred version of that image</p>
 <ul>
-<li>passing an empty object will set the threshold value to 0.0</li>
-<li>which means if &gt; 0px of the stack DOM element is visible, the animations will run </li>
+<li>We do it this way because the blur filter is computationally very expensive - capturing a blurred version of the image is a lot better for end user power consumption</li>
 </ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>}, {});
-observer.observe(stack.domElement);
+            <div class="content"><div class='highlight'><pre>scrawl.makeFilter({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;blur&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;blur&#x27;</span>,
+    <span class="hljs-attr">radius</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">passes</span>: <span class="hljs-number">2</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
+              </div>
+              <p>Iterate through our data array to create Scrawl-canvas objects</p>
 
-<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;#014c&#x27;</span>, scrawl.library);</pre></div></div>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>data.forEach(<span class="hljs-function"><span class="hljs-params">scene</span> =&gt;</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
+              </div>
+              <p>Firstly, build the blurred image in its own cell</p>
+<ul>
+<li>We only need to compile this once, thus don’t include the cell in any part of the Display cycle</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> mycell = scene.canvas.buildCell({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>-blurred-cell`</span>,
+        <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+        <span class="hljs-attr">cleared</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">compiled</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span>,
+    });
+
+    scrawl.makePicture({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>-blurred-image`</span>,
+        <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>-blurred-cell`</span>,
+
+        <span class="hljs-attr">asset</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>`</span>,
+
+        <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+        <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+
+        <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;blur&#x27;</span>],
+        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
+              </div>
+              <p>The new Cell’s compile action is blocking, because the blur filter takes a long time to complete. To get something up on the screen we can defer the compile action until after the current RAF completes by putting it in a setTimeout invocation.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> mycell.compile(), <span class="hljs-number">0</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
+              <p>Next, build a gradient using transparency and apply it in a second Block which displays in the original canvas</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    scrawl.makeRadialGradient({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>-gradient`</span>,
+        <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;50%&#x27;</span>, <span class="hljs-string">&#x27;50%&#x27;</span>],
+        <span class="hljs-attr">end</span>: [<span class="hljs-string">&#x27;50%&#x27;</span>, <span class="hljs-string">&#x27;50%&#x27;</span>],
+        <span class="hljs-attr">startRadius</span>: <span class="hljs-string">&#x27;5%&#x27;</span>,
+        <span class="hljs-attr">endRadius</span>: <span class="hljs-string">&#x27;20%&#x27;</span>,
+    })
+    .updateColor(<span class="hljs-number">0</span>, <span class="hljs-string">`<span class="hljs-subst">${scene.transparency}</span>`</span>)
+    .updateColor(<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;lightgray&#x27;</span>);
+
+    <span class="hljs-keyword">const</span> gradientBlock = scrawl.makeBlock({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>-gradient-block`</span>,
+        <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.canvas.base.name}</span>`</span>,
+
+        <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+        <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+        <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;200%&#x27;</span>, <span class="hljs-string">&#x27;200%&#x27;</span>],
+
+        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>-gradient`</span>,
+        <span class="hljs-attr">lockFillStyleToEntity</span>: <span class="hljs-literal">true</span>,
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
+              </div>
+              <p>Now we can draw our blurred image into the scene </p>
+<ul>
+<li>We use some compositing magic so it only appears where the gradient is not transparent</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    scrawl.makePicture({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>-blurred-block`</span>,
+        <span class="hljs-attr">group</span>: scene.canvas.base.name,
+
+        <span class="hljs-attr">asset</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>-blurred-cell`</span>,
+
+        <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+        <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+
+        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
+        <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;source-atop&#x27;</span>,
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
+              <p>Lastly, display the original image in the canvas</p>
+<ul>
+<li>Again, we use compositing magic to draw on the bits missed by the blurred image</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    scrawl.makePicture({
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>-original-image`</span>,
+        <span class="hljs-attr">group</span>: scene.canvas.base.name,
+
+        <span class="hljs-attr">asset</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>`</span>,
+
+        <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+        <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+
+        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
+        <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;destination-over&#x27;</span>,
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
+              </div>
+              <p>Check whether the mouse cursor is hovering over this canvas, and update the filter Block entity’s positioning accordingly</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> f = <span class="hljs-function">() =&gt;</span> {
+
+        <span class="hljs-keyword">const</span> here = scene.canvas.here;
+
+        <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+            gradientBlock.set({
+                <span class="hljs-attr">lockTo</span>: (here.active) ? <span class="hljs-string">&#x27;mouse&#x27;</span> : <span class="hljs-string">&#x27;start&#x27;</span>,
+            });
+        }
+    };
+    checkFunctions.push(f());
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
+              </div>
+              <h4 id="scene-animation">Scene animation</h4>
+<p>Function to display frames-per-second data, and other information relevant to the demo</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+        testTime, testNow, dragging,
+        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+        testNow = <span class="hljs-built_in">Date</span>.now();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <p>Because we are using the same render object to animate all four canvases, this report function gets run four times for each Display cycle (once each time each canvas is rendered). The fix is to choke the functionality so it actions only after a given number of milliseconds since it was last run - typically 2 milliseconds is enough to ensure the action only runs once per cycle.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (testNow - testTicker &gt; <span class="hljs-number">2</span>) {
+
+            testTime = testNow - testTicker;
+            testTicker = testNow;
+
+            testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
+        }
+    };
+}();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
+              </div>
+              <p>Create the Display cycle animation</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.makeRender({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
+    <span class="hljs-attr">target</span>: [canvases[<span class="hljs-string">&#x27;hackney&#x27;</span>], canvases[<span class="hljs-string">&#x27;heathrow&#x27;</span>], canvases[<span class="hljs-string">&#x27;kingston&#x27;</span>], canvases[<span class="hljs-string">&#x27;burglary&#x27;</span>]],
+
+    <span class="hljs-attr">commence</span>: <span class="hljs-function">() =&gt;</span> checkFunctions.forEach(<span class="hljs-function"><span class="hljs-params">f</span> =&gt;</span> f()),
+    <span class="hljs-attr">afterShow</span>: report,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
+              </div>
+              <h4 id="development-and-testing">Development and testing</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
             
         </li>
         
