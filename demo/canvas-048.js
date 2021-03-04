@@ -25,44 +25,76 @@ canvas.set({
 
 // #### Create filters
 scrawl.makeFilter({
-    name: "top-filter",
+    name: 'my-complex-filter',
 
     actions: [
         {
-            action: "grayscale"
+            action: 'grayscale',
+            lineOut: 'top-filter-1',
         },
         {
-            action: "matrix",
-            width: 3,
-            height: 3,
-            offsetX: 1,
-            offsetY: 1,
-            weights: [1, 1, 1, 1, -8, 1, 1, 1, 1]
+            lineIn: 'top-filter-1',
+            action: 'blur',
+            radius: 1,
+            lineOut: 'top-filter-1',
         },
         {
-            action: "blur",
-            radius: 2,
+            lineIn: 'top-filter-1',
+            action: 'matrix',
+            weights: [1, 1, 1, 1, -8, 1, 1, 1, 1],
+            lineOut: 'top-filter-2',
         },
         {
-            action: "channels-to-alpha"
+            lineIn: 'top-filter-2',
+            action: 'channels-to-alpha',
+            lineOut: 'top-filter-2',
         },
         {
-            action: "invert-channels"
+            lineIn: 'top-filter-2',
+            action: 'threshold',
+            low: [0, 0, 0, 0],
+            high: [0, 0, 0, 255],
+            includeAlpha: true,
+            level: 20,
+            lineOut: 'top-filter-2',
+        },
+        {
+            lineIn: 'source',
+            action: 'step-channels',
+            red: 15,
+            green: 60,
+            blue: 60,
+            lineOut: 'bottom-filter',
+        },
+        {
+            lineIn: 'bottom-filter',
+            action: 'modulate-channels',
+            red: 2,
+            green: 2,
+            blue: 2,
+            alpha: 0.5,
+            lineOut: 'bottom-filter',
+        },
+        {
+            lineIn: 'top-filter-2',
+            lineMix: 'bottom-filter',
+            action: 'compose',
+            compose: 'source-over',
         }
     ],
 
-}).clone({
+// }).clone({
 
-    name: "bottom-filter",
+//     name: "bottom-filter",
 
-    actions: [
-        {
-            action: "step-channels",
-            red: 63,
-            green: 63,
-            blue: 63
-        }
-    ],
+//     actions: [
+//         {
+//             action: 'step-channels',
+//             red: 15,
+//             green: 60,
+//             blue: 60,
+//         }
+//     ],
 });
 
 
@@ -77,7 +109,7 @@ scrawl.importMediaStream({
 
     scrawl.makePicture({
 
-        name: "camera-picture-1",
+        name: 'camera-picture',
         asset: myface.name,
 
         width: '100%',
@@ -88,15 +120,15 @@ scrawl.importMediaStream({
 
         method: 'fill',
 
-        globalAlpha: 0.5,
+        // globalAlpha: 0,
 
-        filters: ["bottom-filter"],
+        // filters: ["bottom-filter"],
 
-    }).clone({
+    // }).clone({
 
-        name: "camera-picture-2",
-        globalAlpha: 1,
-        filters: ["top-filter"]
+    //     name: "camera-picture-2",
+    //     globalAlpha: 1,
+        filters: ['my-complex-filter']
     });
 })
 .catch(err => console.log(err.message));

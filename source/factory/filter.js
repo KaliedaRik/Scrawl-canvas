@@ -227,6 +227,7 @@ let defaultAttributes = {
     excludeBlue: false,
     excludeGreen: false,
     excludeRed: false,
+    excludeTransparentPixels: true,
     green: 0,
     greenInBlue: 0,
     greenInGreen: 0,
@@ -501,6 +502,7 @@ const setActionsArray = {
             includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
             includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
             includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
+            excludeTransparentPixels: (f.excludeTransparentPixels != null) ? f.excludeTransparentPixels : false,
             processHorizontal: (f.processHorizontal != null) ? f.processHorizontal : true,
             processVertical: (f.processVertical != null) ? f.processVertical : true,
             radius: (f.radius != null) ? f.radius : 1,
@@ -1049,12 +1051,15 @@ const setActionsArray = {
         let lowRed = (f.lowRed != null) ? f.lowRed : 0,
             lowGreen = (f.lowGreen != null) ? f.lowGreen : 0,
             lowBlue = (f.lowBlue != null) ? f.lowBlue : 0,
+            lowAlpha = (f.lowAlpha != null) ? f.lowAlpha : 255,
             highRed = (f.highRed != null) ? f.highRed : 255,
             highGreen = (f.highGreen != null) ? f.highGreen : 255,
-            highBlue = (f.highBlue != null) ? f.highBlue : 255;
+            highBlue = (f.highBlue != null) ? f.highBlue : 255,
+            highAlpha = (f.highAlpha != null) ? f.highAlpha : 255;
+            
 
-        let low = (f.low != null) ? f.low : [lowRed, lowGreen, lowBlue],
-            high = (f.high != null) ? f.high : [highRed, highGreen, highBlue];
+        let low = (f.low != null) ? f.low : [lowRed, lowGreen, lowBlue, lowAlpha],
+            high = (f.high != null) ? f.high : [highRed, highGreen, highBlue, highAlpha];
 
         f.actions = [{
             action: 'threshold',
@@ -1062,8 +1067,9 @@ const setActionsArray = {
             lineOut: (f.lineOut != null) ? f.lineOut : '',
             opacity: (f.opacity != null) ? f.opacity : 1,
             level: (f.level != null) ? f.level : 128,
-            low: low,
-            high: high,
+            low,
+            high,
+            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
         }];
     },
 

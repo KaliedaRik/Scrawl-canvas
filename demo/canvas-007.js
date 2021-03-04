@@ -291,8 +291,9 @@ scrawl.makeFilter({
 scrawl.makeFilter({
     name: 'blur',
     method: 'blur',
-    radius: 6,
-    passes: 2,
+    radius: 8,
+    passes: 1,
+    excludeTransparentPixels: true,
 });
 
 // __AreaAlpha__ filter

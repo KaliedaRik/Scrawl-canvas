@@ -107,6 +107,7 @@ scrawl.observeAndUpdate({
 
         processHorizontal: ['processHorizontal', 'boolean'],
         processVertical: ['processVertical', 'boolean'],
+        excludeTransparentPixels: ['excludeTransparentPixels', 'boolean'],
 
         opacity: ['opacity', 'float'],
     },
@@ -122,6 +123,7 @@ document.querySelector('#includeBlue').options.selectedIndex = 1;
 document.querySelector('#includeAlpha').options.selectedIndex = 0;
 document.querySelector('#processHorizontal').options.selectedIndex = 1;
 document.querySelector('#processVertical').options.selectedIndex = 1;
+document.querySelector('#excludeTransparentPixels').options.selectedIndex = 1;
 document.querySelector('#opacity').value = 1;
 
 
