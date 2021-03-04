@@ -860,8 +860,7 @@ P.simpleStamp = function (host, changes = {}) {
             this.set(changes);
             this.prepareStamp();
         }
-
-        this.regularStampSynchronousActions();
+        this.regularStamp();
     }
 };
 
@@ -1133,13 +1132,6 @@ P.cleanOutput = function () {
 
 // `regularStamp` - internal function called by `stamp`
 P.regularStamp = function () {
-
-        if (this.currentHost) this.regularStampSynchronousActions();
-        // else return new Error(`${this.name} has no current host`);
-};
-
-// `regularStampSynchronousActions` - internal function called by `regularStamp`
-P.regularStampSynchronousActions = function () {
 
     let dest = this.currentHost;
 

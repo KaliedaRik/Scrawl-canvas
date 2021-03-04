@@ -3135,7 +3135,12 @@ const makeFilterEngine = function (items = {}) {
 constructors.FilterEngine = FilterEngine;
 
 
+// Create a singleton filter engine, for export and use within this code base
+const filterEngine = new FilterEngine();
+
+
 // #### Exports
 export {
     makeFilterEngine,
+    filterEngine,
 };

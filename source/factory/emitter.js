@@ -810,8 +810,8 @@ P.addParticles = function (req) {
     }
 };
 
-// `regularStampSynchronousActions` - overwriters the functionality defined in the entity.js mixin
-P.regularStampSynchronousActions = function () {
+// `regularStamp` - overwriters the functionality defined in the entity.js mixin
+P.regularStamp = function () {
 
     let {world, artefact, particleStore, preAction, stampAction, postAction, lastUpdated, resetAfterBlur, showHitRadius, hitRadius, hitRadiusColor, currentStampPosition} = this;
 

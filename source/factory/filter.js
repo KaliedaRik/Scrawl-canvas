@@ -118,8 +118,6 @@
 import { constructors, cell, group, entity, asset } from '../core/library.js';
 import { mergeOver, removeItem, λnull } from '../core/utilities.js';
 
-import { makeFilterEngine } from './filterEngine.js';
-
 import baseMix from '../mixin/base.js';
 
 
@@ -1121,24 +1119,6 @@ const setActionsArray = {
 // No additional prototype functions defined
 
 
-// #### Filter engine pool
-// For now, we use one filter engine
-// + This used to be a pool of web workers which loaded up filter functionality
-// + Now it is just another module call in the main thread
-const filterPool = makeFilterEngine();
-
-const requestFilterWorker = function () {
-    return filterPool;
-};
-
-const releaseFilterWorker = function (f) {};
-
-const actionFilterWorker = function (ignore, items) {
-
-	return filterPool.action(items);
-};
-
-
 // #### Factory
 const makeFilter = function (items) {
 
@@ -1151,7 +1131,4 @@ constructors.Filter = Filter;
 // #### Exports
 export {
     makeFilter,
-    requestFilterWorker,
-    releaseFilterWorker,
-    actionFilterWorker,
 };

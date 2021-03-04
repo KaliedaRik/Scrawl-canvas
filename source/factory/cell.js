@@ -50,7 +50,7 @@ import { scrawlCanvasHold } from '../core/document.js';
 import { makeGroup } from './group.js';
 import { makeState } from './state.js';
 import { makeCoordinate, requestCoordinate, releaseCoordinate } from './coordinate.js';
-import { requestFilterWorker, releaseFilterWorker, actionFilterWorker } from './filter.js';
+import { filterEngine } from './filterEngine.js';
 import { importDomImage } from './imageAsset.js';
 
 import baseMix from '../mixin/base.js';
@@ -1053,16 +1053,13 @@ P.show = function () {
 // `applyFilters` - Internal function - add filters to the Cell's current output.
 P.applyFilters = function () {
 
-    let engine = this.engine,
-        image, worker;
+    let engine = this.engine;
 
-    image = engine.getImageData(0, 0, this.currentDimensions[0], this.currentDimensions[1]);
-    worker = requestFilterWorker();
+    let image = engine.getImageData(0, 0, this.currentDimensions[0], this.currentDimensions[1]);
 
-    // NEED TO POPULATE IMAGE FILTER ACTION OBJECTS WITH THEIR ASSET'S IMAGEDATA AT THIS POINT
     this.preprocessFilters(this.currentFilters);
 
-    let img = actionFilterWorker(worker, {
+    let img = filterEngine.action({
         image: image,
         filters: this.currentFilters
     });

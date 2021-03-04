@@ -1303,8 +1303,8 @@ P.calculateTextPositions = function (mytext) {
 
 // ##### Stamping the entity onto a Cell wrapper &lt;canvas> element
 
-// `regularStampSynchronousActions` - overwrites the mixin/entity.js function
-P.regularStampSynchronousActions = function () {
+// `regularStamp` - overwrites the mixin/entity.js function
+P.regularStamp = function () {
 
     let dest = this.currentHost, 
         method = this.method,
@@ -1383,7 +1383,7 @@ P.regularStampSynchronousActions = function () {
     }
 };
 
-// `calculateGlyphPathPositions` - internal helper function called by `regularStampSynchronousActions`
+// `calculateGlyphPathPositions` - internal helper function called by `regularStamp`
 P.calculateGlyphPathPositions = function () {
 
     let path = this.getTextPath(),
@@ -1452,7 +1452,7 @@ P.calculateGlyphPathPositions = function () {
     }
 };
 
-// `preStamper` - internal helper function called by `regularStampSynchronousActions`
+// `preStamper` - internal helper function called by `regularStamp`
 P.preStamper = function (dest, engine, entity, args) {
 
     const makeStyle = function (item) {
@@ -1507,7 +1507,7 @@ P.preStamper = function (dest, engine, entity, args) {
     return data;
 };
 
-// `stamper` - object holding stamp method functions - functions called by `regularStampSynchronousActions`
+// `stamper` - object holding stamp method functions - functions called by `regularStamp`
 P.stamper = {
 
     // `stamper.draw`
@@ -1565,7 +1565,7 @@ P.stamper = {
     },    
 };
 
-// `drawBoundingBox` - internal helper function called by `regularStampSynchronousActions`
+// `drawBoundingBox` - internal helper function called by `regularStamp`
 P.drawBoundingBox = function (engine) {
 
     engine.save();
@@ -1580,7 +1580,7 @@ P.drawBoundingBox = function (engine) {
     engine.restore();
 };
 
-// `performRotation` - internal helper function called by `regularStampSynchronousActions`
+// `performRotation` - internal helper function called by `regularStamp`
 // + When doing text along a path, we have to perform a rendering context transformation for every glyph
 // + In other cases, we perform the action on a per-line basis
 P.performRotation = function (engine) {

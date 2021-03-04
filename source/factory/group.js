@@ -26,7 +26,7 @@ import { constructors, cell, artefact, group, entity, asset } from '../core/libr
 import { mergeOver, pushUnique, removeItem } from '../core/utilities.js';
 import { scrawlCanvasHold } from '../core/document.js';
 
-import { requestFilterWorker, releaseFilterWorker, actionFilterWorker } from './filter.js';
+import { filterEngine } from './filterEngine.js';
 import { requestCell, releaseCell } from './cell.js';
 import { importDomImage } from './imageAsset.js';
 
@@ -396,44 +396,43 @@ P.applyFilters = function (myCell) {
     let currentElement = currentHost.element,
         currentEngine = currentHost.engine;
 
-    let filterElement = filterHost.element,
-        filterEngine = filterHost.engine;
+    let filterCellElement = filterHost.element,
+        filterCellEngine = filterHost.engine;
 
     // Action a request to use the filtered artefacts as a stencil - as determined by the Group's `isStencil` flag
     if (this.isStencil) {
         
-        filterEngine.save();
-        filterEngine.globalCompositeOperation = 'source-in';
-        filterEngine.globalAlpha = 1;
-        filterEngine.setTransform(1, 0, 0, 1, 0, 0);
-        filterEngine.drawImage(currentElement, 0, 0);
-        filterEngine.restore();
+        filterCellEngine.save();
+        filterCellEngine.globalCompositeOperation = 'source-in';
+        filterCellEngine.globalAlpha = 1;
+        filterCellEngine.setTransform(1, 0, 0, 1, 0, 0);
+        filterCellEngine.drawImage(currentElement, 0, 0);
+        filterCellEngine.restore();
     } 
 
     // At this point we will send the contents of the filterHost canvas over to the filter engine
-    filterEngine.setTransform(1, 0, 0, 1, 0, 0);
+    filterCellEngine.setTransform(1, 0, 0, 1, 0, 0);
 
-    let myimage = filterEngine.getImageData(0, 0, filterElement.width, filterElement.height),
-        worker = requestFilterWorker();
+    let myimage = filterCellEngine.getImageData(0, 0, filterCellElement.width, filterCellElement.height);
 
-    // NEED TO POPULATE IMAGE FILTER ACTION OBJECTS WITH THEIR ASSET'S IMAGEDATA AT THIS POINT
     this.preprocessFilters(this.currentFilters);
 
-    let img = actionFilterWorker(worker, {
+    let img = filterEngine.action({
         image: myimage,
         filters: this.currentFilters,
     })
 
     if (img) {
 
-        filterEngine.globalCompositeOperation = 'source-over';
-        filterEngine.globalAlpha = 1;
-        filterEngine.setTransform(1, 0, 0, 1, 0, 0);
-        filterEngine.putImageData(img, 0, 0);
+        filterCellEngine.globalCompositeOperation = 'source-over';
+        filterCellEngine.globalAlpha = 1;
+        filterCellEngine.setTransform(1, 0, 0, 1, 0, 0);
+        filterCellEngine.putImageData(img, 0, 0);
     }
+    
     currentEngine.save();
     currentEngine.setTransform(1, 0, 0, 1, 0, 0);
-    currentEngine.drawImage(filterElement, 0, 0);
+    currentEngine.drawImage(filterCellElement, 0, 0);
     currentEngine.restore();
 
     return img;

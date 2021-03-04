@@ -164,8 +164,8 @@ S.artefact = function (item) {
 
 // #### Prototype functions
 
-// `regularStampSynchronousActions` - overwriters the functionality defined in the entity.js mixin
-P.regularStampSynchronousActions = function () {
+// `regularStamp` - overwriters the functionality defined in the entity.js mixin
+P.regularStamp = function () {
 
     let {artefact, trace, stampAction, showHitRadius, hitRadius, hitRadiusColor, currentStampPosition} = this;
 

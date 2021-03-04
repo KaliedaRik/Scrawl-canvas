@@ -314,8 +314,8 @@ S.shapeTemplate = function (item) {
 
 // #### Prototype functions
 
-// `regularStampSynchronousActions` - overwriters the functionality defined in the entity.js mixin
-P.regularStampSynchronousActions = function () {
+// `regularStamp` - overwriters the functionality defined in the entity.js mixin
+P.regularStamp = function () {
 
     let {world, artefact:art, particleStore, springs, generate, postGenerate, stampAction, lastUpdated, resetAfterBlur, showSprings, showSpringsColor, showHitRadius, hitRadius, hitRadiusColor} = this;
 
