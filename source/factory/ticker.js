@@ -811,8 +811,6 @@ const coreTickersAnimation = makeAnimation({
     order: 0,
     fn: function () {
 
-        let i, iz, t;
-
         // We only sort active Ticker objects when absolutely necessary.
         // + Sorted using a bucket sort algorithm.
         if (tickerAnimationsFlag) {
@@ -841,13 +839,13 @@ const coreTickersAnimation = makeAnimation({
 
         // Invoke each Ticker's `fn` function.
         // + It's up to the Ticker object to decide whether it's active
-        // + Ticker `fn` functions are (currently) synchronous functions; they do not return Promises.
-        tickerAnimations.forEach(name => {
+        for (let i = 0, iz = tickerAnimations.length, n, t; i < iz; i++) {
 
-            let obj = animationtickers[name];
+            n = tickerAnimations[i];
+            t = animationtickers[n];
 
-            if (obj && obj.fn) obj.fn();
-        });
+            if (t && t.fn) t.fn();
+        }
     }
 });
 

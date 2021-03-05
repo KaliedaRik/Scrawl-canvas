@@ -92,14 +92,6 @@ export default function (P = Ωempty) {
 
             temp[key] = val;
         }
-        // Object.entries(this.delta).forEach(([key, val]) => {
-
-        //     if (val.substring) val = -(parseFloat(val)) + '%';
-        //     else val = -val;
-
-        //     temp[key] = val;
-        // });
-
         this.setDelta(temp);
 
         return this;

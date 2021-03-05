@@ -191,28 +191,32 @@ P.get = function (item) {
 // `set` - overrides function in mixin/base.js - see above for the additional attributes the set object argument can use.
 P.set = function (items = Ωempty) {
 
-    if (Object.keys(items).length) {
+    const keys = Object.keys(items),
+        keysLen = keys.length;
 
-        let setters = this.setters,
-            defs = this.defs,
-            predefined;
+    if (keysLen) {
 
-        Object.entries(items).forEach(([key, value]) => {
+        const setters = this.setters,
+            defs = this.defs;
+        
+        let predefined, i, iz, key, value;
 
-            if (key !== 'name') {
+        for (i = 0; i < keysLen; i++) {
+
+            key = keys[i];
+            value = items[key];
+
+            if (key && key !== 'name' && value != null) {
 
                 predefined = setters[key];
 
                 if (predefined) predefined.call(this, value);
                 else if (typeof defs[key] !== 'undefined') this[key] = value;
             }
-        }, this);
+        }
+        if (items.random) this.generateRandomColor(items);
+        else this.checkValues();
     }
-
-    if (items.random) this.generateRandomColor(items);
-    // else if (items.color) this.convert(items.color);
-    else this.checkValues();
-
     return this;
 };
 

@@ -197,6 +197,7 @@ export default function (P = Ωempty) {
 
     P.finalizePacketOut = function (copy, items) {
 
+        
         let stateCopy = JSON.parse(this.state.saveAsPacket(items))[3];
         copy = mergeOver(copy, stateCopy);
 
@@ -389,9 +390,9 @@ export default function (P = Ωempty) {
         this.register();
         this.initializePositions();
 
-        this.set(this.defs);
+        this.state = makeState(Ωempty);
 
-        this.state = makeState();
+        this.set(this.defs);
 
         if (!items.group) items.group = currentGroup;
 

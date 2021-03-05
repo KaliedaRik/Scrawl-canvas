@@ -38,22 +38,38 @@ P.action = function (packet) {
     let workstoreKeys = Object.keys(workstore), 
         workstoreChoke = Date.now() - choke;
 
-    workstoreKeys.forEach(k => {
+    for (let k = 0, kz = workstoreKeys.length, s; k < kz; k++) {
 
-        if (workstoreLastAccessed[k] < workstoreChoke) {
+        s = workstoreKeys[k];
 
-            delete workstore[k];
-            delete workstoreLastAccessed[k];
+        if (workstoreLastAccessed[s] < workstoreChoke) {
+
+            delete workstore[s];
+            delete workstoreLastAccessed[s];
         }
-    });
+    }
 
     actions.length = 0;
-    filters.forEach(f => actions.push(...f.actions));
 
-    if (actions.length) {
+    for (let f = 0, fz = filters.length; f < fz; f++) {
+
+        actions.push(...filters[f].actions)
+    }
+
+    let actionsLen = actions.length;
+
+    if (actionsLen) {
 
         this.unknit(image);
-        actions.forEach(a => theBigActionsObject[a.action] && theBigActionsObject[a.action].call(this, a));
+
+        for (let i = 0, actData, a; i < actionsLen; i++) {
+
+            actData = actions[i];
+            a = theBigActionsObject[actData.action];
+
+            if (a) a.call(this, actData);
+        }
+
         return this.cache.work;
     }
     return image;
