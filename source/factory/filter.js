@@ -116,13 +116,13 @@
 
 // #### Imports
 import { constructors, cell, group, entity, asset } from '../core/library.js';
-import { mergeOver, removeItem, λnull } from '../core/utilities.js';
+import { mergeOver, removeItem, λnull, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 
 
 // #### Filter constructor
-const Filter = function (items = {}) {
+const Filter = function (items = Ωempty) {
 
     this.makeName(items.name);
     this.register();
@@ -332,7 +332,7 @@ let S = P.setters,
 
 
 // `set` - Overwrites mixin/base.js function
-P.set = function (items = {}) {
+P.set = function (items = Ωempty) {
 
     if (Object.keys(items).length) {
 
@@ -360,7 +360,7 @@ P.set = function (items = {}) {
 
 
 // `setDelta` - Overwrites mixin/base.js function
-P.setDelta = function (items = {}) {
+P.setDelta = function (items = Ωempty) {
 
     if (Object.keys(items).length) {
 
@@ -1122,6 +1122,7 @@ const setActionsArray = {
 // #### Factory
 const makeFilter = function (items) {
 
+    if (!items) return false;
     return new Filter(items);
 };
 

@@ -40,7 +40,7 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver } from '../core/utilities.js';
+import { mergeOver, Ωempty } from '../core/utilities.js';
 
 import { requestVector, releaseVector } from './vector.js';
 
@@ -49,7 +49,7 @@ import shapeMix from '../mixin/shapeBasic.js';
 
 
 // #### Star constructor
-const Star = function (items = {}) {
+const Star = function (items = Ωempty) {
 
     this.shapeInit(items);
     return this;
@@ -277,8 +277,9 @@ P.makeStarPath = function () {
 //     method: 'fillAndDraw',
 // });
 // ```
-const makeStar = function (items = {}) {
+const makeStar = function (items) {
 
+    if (!items) return false;
     items.species = 'star';
     return new Star(items);
 };

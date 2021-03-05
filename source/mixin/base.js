@@ -15,10 +15,12 @@
 
 // #### Imports
 import * as library from '../core/library.js';
-import { mergeOver, pushUnique, removeItem, generateUniqueString, isa_boolean, isa_obj, addStrings, xt, xta, λnull } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, 
+    generateUniqueString, isa_boolean, isa_obj, addStrings, 
+    xt, xta, λnull, Ωempty } from '../core/utilities.js';
 
 // #### Export function
-export default function (P = {}) {
+export default function (P = Ωempty) {
 
 
 // #### Get, Set, deltaSet
@@ -73,15 +75,22 @@ export default function (P = {}) {
 //     roll: 90,
 // });
 // ```
-    P.set = function (items = {}) {
+    P.set = function (items = Ωempty) {
 
-        if (Object.keys(items).length) {
+        const keys = Object.keys(items),
+            keysLen = keys.length;
 
-            let setters = this.setters,
-                defs = this.defs,
-                predefined;
+        if (keysLen) {
 
-            Object.entries(items).forEach(([key, value]) => {
+            const setters = this.setters,
+                defs = this.defs;
+            
+            let predefined, i, iz, key, value;
+
+            for (i = 0; i < keysLen; i++) {
+
+                key = keys[i];
+                value = items[key];
 
                 if (key && key !== 'name' && value != null) {
 
@@ -90,7 +99,7 @@ export default function (P = {}) {
                     if (predefined) predefined.call(this, value);
                     else if (typeof defs[key] !== 'undefined') this[key] = value;
                 }
-            }, this);
+            }
         }
         return this;
     };
@@ -105,24 +114,31 @@ export default function (P = {}) {
 //     roll: 5,
 // });
 // ```
-    P.setDelta = function (items = {}) {
+    P.setDelta = function (items = Ωempty) {
 
-        if (Object.keys(items).length) {
+        const keys = Object.keys(items),
+            keysLen = keys.length;
 
-            let setters = this.deltaSetters,
-                defs = this.defs,
-                predefined;
+        if (keysLen) {
 
-            Object.entries(items).forEach(([key, value]) => {
+            const setters = this.deltaSetters,
+                defs = this.defs;
+            
+            let predefined, i, iz, key, value;
+
+            for (i = 0; i < keysLen; i++) {
+
+                key = keys[i];
+                value = items[key];
 
                 if (key && key !== 'name' && value != null) {
 
                     predefined = setters[key];
 
                     if (predefined) predefined.call(this, value);
-                    else if (typeof defs[key] != 'undefined') this[key] = addStrings(this[key], value);
+                    else if (typeof defs[key] !== 'undefined') this[key] = addStrings(this[key], value);
                 }
-            }, this);
+            }
         }
         return this;
     };
@@ -220,7 +236,7 @@ export default function (P = {}) {
 // + __includeDefaults__ - either a boolean (default: false), or an array of attribute strings listing those attributes whose values should be included in the packet even if those values are the default values; setting this attribute to boolean true will include all of the Scrawl-canvas object's attribute values in the (much larger) packet.
 //
 // Note: if the argument is supplied as a boolean 'true', code will create an items object with an attribute 'includeDefaults' set to true.
-    P.saveAsPacket = function (items = {}) {
+    P.saveAsPacket = function (items = Ωempty) {
 
         if (isa_boolean(items) && items) items = {
             includeDefaults: true,
@@ -536,7 +552,7 @@ export default function (P = {}) {
 // ```
 
 // `clone`
-    P.clone = function (items = {}) {
+    P.clone = function (items = Ωempty) {
 
         let myName = this.name,
             myPacket, myTicker, myAnchor;

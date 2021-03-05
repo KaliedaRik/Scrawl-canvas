@@ -19,7 +19,7 @@
 
 // #### Imports
 import { constructors, tween, artefact, group } from '../core/library.js';
-import { pushUnique, mergeOver, λnull, isa_fn, isa_obj, xta } from '../core/utilities.js';
+import { pushUnique, mergeOver, λnull, isa_fn, isa_obj, xta, Ωempty } from '../core/utilities.js';
 import { currentGroup } from '../core/document.js';
 
 import { makeParticle } from './particle.js';
@@ -30,7 +30,7 @@ import entityMix from '../mixin/entity.js';
 
 
 // #### Tracer constructor
-const Tracer = function (items = {}) {
+const Tracer = function (items = Ωempty) {
 
     this.makeName(items.name);
     this.register();
@@ -246,6 +246,8 @@ P.checkHit = function (items = [], mycell) {
 // ```
 // ```
 const makeTracer = function (items) {
+
+    if (!items) return false;
     return new Tracer(items);
 };
 

@@ -40,7 +40,7 @@
 
 // #### Imports
 import { constructors, artefact } from '../core/library.js';
-import { mergeOver, addStrings, pushUnique } from '../core/utilities.js';
+import { mergeOver, addStrings, pushUnique, Ωempty } from '../core/utilities.js';
 
 import { makeCoordinate } from './coordinate.js';
 
@@ -50,7 +50,7 @@ import curveMix from '../mixin/shapeCurve.js';
 
 
 // #### Quadratic constructor
-const Quadratic = function (items = {}) {
+const Quadratic = function (items = Ωempty) {
 
     this.control = makeCoordinate();
     this.currentControl = makeCoordinate();
@@ -293,26 +293,29 @@ P.cleanDimensions = function () {
 
 P.preparePinsForStamp = function () {
 
-    let ePivot = this.endPivot,
+    const dirtyPins = this.dirtyPins,
+        ePivot = this.endPivot,
         ePath = this.endPath,
         cPivot = this.controlPivot,
         cPath = this.controlPath;
 
-    this.dirtyPins.forEach(name => {
+    for (let i = 0, iz = dirtyPins.length, name; i < iz; i++) {
 
-        if ((cPivot && cPivot.name === name) || (cPath && cPath.name === name)) {
+        name = dirtyPins[i];
+
+        if ((cPivot && cPivot.name === name) || (cPath && cPath.name == name)) {
 
             this.dirtyControl = true;
             if (this.controlLockTo.includes('path')) this.currentControlPathData = false;
         }
 
-        if ((ePivot && ePivot.name === name) || (ePath && ePath.name === name)) {
+        if ((ePivot && ePivot.name === name) || (ePath && ePath.name == name)) {
 
             this.dirtyEnd = true;
             if (this.endLockTo.includes('path')) this.currentEndPathData = false;
         }
-    });
-    this.dirtyPins.length = 0;
+    };
+    dirtyPins.length = 0;
 };
 
 // #### Factories
@@ -349,8 +352,9 @@ P.preparePinsForStamp = function () {
 //     method: 'draw',
 // });
 // ```
-const makeQuadratic = function (items = {}) {
+const makeQuadratic = function (items = Ωempty) {
 
+    if (!items) return false;
     items.species = 'quadratic';
     return new Quadratic(items);
 };

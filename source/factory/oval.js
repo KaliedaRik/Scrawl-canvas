@@ -40,14 +40,14 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver } from '../core/utilities.js';
+import { mergeOver, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shapeBasic.js';
 
 
 // #### Oval constructor
-const Oval = function (items = {}) {
+const Oval = function (items = Ωempty) {
 
     this.shapeInit(items);
     return this;
@@ -320,8 +320,9 @@ P.calculateLocalPathAdditionalActions = function () {
 //     intersectY: 0.6,
 // });
 // ```
-const makeOval = function (items = {}) {
+const makeOval = function (items) {
 
+    if (!items) return false;
     items.species = 'oval';
     return new Oval(items);
 };

@@ -31,7 +31,7 @@
 // #### Imports
 import { cell, constructors, artefact, group } from '../core/library.js';
 import { rootElements, setRootElementsSort, setCurrentCanvas, domShow, scrawlCanvasHold } from '../core/document.js';
-import { mergeOver, pushUnique, removeItem, xt, λthis, λnull } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, xt, λthis, λnull, Ωempty } from '../core/utilities.js';
 import { uiSubscribedElements } from '../core/userInteraction.js';
 
 import { makeState } from './state.js';
@@ -44,7 +44,7 @@ import displayMix from '../mixin/displayShape.js';
 
 
 // #### Canvas constructor
-const Canvas = function (items = {}) {
+const Canvas = function (items = Ωempty) {
 
     let g, el;
 
@@ -438,7 +438,7 @@ P.setBaseHelper = function () {
 };
 
 // `updateCells` - internal function. Iterate through all Cells registered in the wrapper's __cells__ Array and set a range of dirty flags on them, for future processing by each Cell.
-P.updateCells = function (items = {}) {
+P.updateCells = function (items = Ωempty) {
 
     this.cells.forEach(name => {
 
@@ -458,7 +458,7 @@ P.updateCells = function (items = {}) {
 };
 
 // `buildCell` - internal helper function, called by the Canvas constructor
-P.buildCell = function (items = {}) {
+P.buildCell = function (items = Ωempty) {
 
     let host = items.host || false;
 
@@ -742,6 +742,8 @@ P.cleanAria = function () {
 
 // #### Factory
 const makeCanvas = function (items) {
+
+    if (!items) return false;
     return new Canvas(items);
 };
 

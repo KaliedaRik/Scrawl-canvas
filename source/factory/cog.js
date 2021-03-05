@@ -40,7 +40,7 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver } from '../core/utilities.js';
+import { mergeOver, Ωempty } from '../core/utilities.js';
 
 import { requestVector, releaseVector } from './vector.js';
 
@@ -49,7 +49,7 @@ import shapeMix from '../mixin/shapeBasic.js';
 
 
 // #### Cog constructor
-const Cog = function (items = {}) {
+const Cog = function (items = Ωempty) {
 
     this.shapeInit(items);
     return this;
@@ -452,8 +452,9 @@ P.makeCogPath = function () {
 //   method: 'fillAndDraw',
 // });
 // ```
-const makeCog = function (items = {}) {
+const makeCog = function (items) {
 
+    if (!items) return false;
     items.species = 'cog';
     return new Cog(items);
 };

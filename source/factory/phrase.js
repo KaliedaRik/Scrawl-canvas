@@ -42,7 +42,7 @@
 // #### Imports
 import { constructors, cell, cellnames, styles, stylesnames, artefact } from '../core/library.js';
 import { scrawlCanvasHold } from '../core/document.js';
-import { mergeOver, pushUnique, xt, xta, isa_obj, isa_number } from '../core/utilities.js';
+import { mergeOver, pushUnique, xt, xta, isa_obj, isa_number, Ωempty } from '../core/utilities.js';
 
 import { requestCell, releaseCell } from './cell.js';
 
@@ -99,7 +99,7 @@ const ensureString = (val) => {
 
 
 // #### Phrase constructor
-const Phrase = function (items = {}) {
+const Phrase = function (items = Ωempty) {
 
     this.fontAttributes = makeFontAttributes(items);
 
@@ -1634,6 +1634,8 @@ P.performRotation = function (engine) {
 // });
 // ```
 const makePhrase = function (items) {
+
+    if (!items) return false;
     return new Phrase(items);
 };
 

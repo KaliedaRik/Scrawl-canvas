@@ -3127,9 +3127,9 @@ P.theBigActionsObject = {
 
 
 // #### Factory
-const makeFilterEngine = function (items = {}) {
+const makeFilterEngine = function () {
 
-    return new FilterEngine(items);
+    return new FilterEngine();
 };
 
 constructors.FilterEngine = FilterEngine;

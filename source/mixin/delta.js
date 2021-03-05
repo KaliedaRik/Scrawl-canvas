@@ -3,11 +3,11 @@
 
 
 // #### Imports
-import { mergeOver, mergeDiscard, xt } from '../core/utilities.js';
+import { mergeOver, mergeDiscard, xt, Ωempty } from '../core/utilities.js';
 
 
 // #### Export function
-export default function (P = {}) {
+export default function (P = Ωempty) {
 
 
 // #### Shared attributes
@@ -56,7 +56,7 @@ export default function (P = {}) {
         D = P.deltaSetters;
 
 // __delta__
-    S.delta = function (items = {}) {
+    S.delta = function (items = Ωempty) {
 
         if (items) this.delta = mergeDiscard(this.delta, items);
     };
@@ -67,7 +67,6 @@ export default function (P = {}) {
  // `updateByDelta` - this function gets called as part of every display cycle iteration, meaning that if an attribute is set to a non-zero value in the __delta__ attribute object then those __delta animations__ will start playing immediately.
     P.updateByDelta = function () {
 
-if (this.name == 'kaliedoscope-clock-background') console.log(this.name, 'updateByDelta')
         this.setDelta(this.delta);
 
         return this;
@@ -79,13 +78,27 @@ if (this.name == 'kaliedoscope-clock-background') console.log(this.name, 'update
 
         let temp = {};
         
-        Object.entries(this.delta).forEach(([key, val]) => {
+        const delta = this.delta,
+            deltaKeys = Object.keys(delta),
+            deltaLen = deltaKeys.length;
+
+        for (let i = 0, key, val; i < deltaLen; i++) {
+
+            key = deltaKeys[i];
+            val = delta[key];
 
             if (val.substring) val = -(parseFloat(val)) + '%';
             else val = -val;
 
             temp[key] = val;
-        });
+        }
+        // Object.entries(this.delta).forEach(([key, val]) => {
+
+        //     if (val.substring) val = -(parseFloat(val)) + '%';
+        //     else val = -val;
+
+        //     temp[key] = val;
+        // });
 
         this.setDelta(temp);
 
@@ -93,48 +106,87 @@ if (this.name == 'kaliedoscope-clock-background') console.log(this.name, 'update
     };
 
 // `setDeltaValues`
-// + TODO - the idea is that we can do things like 'add:1', 'subtract:5', 'multiply:6', 'divide:3.4', etc
-// + for this to work, we need to do do work here to split the val string on the ':'
-// + for now, just do reverse and zero numbers
-    P.setDeltaValues = function (items = {}) {
+// Update the artefact's `delta` object in a more intelligent way. The function accepts an object argument containing a set of instructions which will be interpreted and applied to the delat object.
+// ```
+// // Original delta object:
+// artefact.delta: {
+//     width: 50,
+//     height: '20%',
+//     scale: 2,
+// }
+//
+// // Function argument object to be applied to the delta object:
+// {
+//     width: 'add:20',
+//     height: 'multiply:0.8',
+//     scale: 'remove',
+//     roll: 'newNumber:45',
+// }
+//
+// // Result of applying the argument to the delta object:
+// artefact.delta: {
+//     width: 70,
+//     height: '16%',
+//     roll: 45,
+// }
+// ```
+    P.setDeltaValues = function (items = Ωempty) {
 
-        let delta = this.delta, 
-            oldVal, action;
+        const delta = this.delta,
+            keys = Object.keys(items),
+            keysLen = keys.length;
 
-        Object.entries(items).forEach(([key, requirement]) => {
+        for (let i = 0, key, item, action, val, old; i < keysLen; i++) {
 
-            if (xt(delta[key])) {
+            key = keys[i];
+            item = items[key];
+            old = delta[key];
 
-                action = requirement;
-
-                oldVal = delta[key];
-
-                switch (action) {
-
-                    case 'reverse' :
-                        if (oldVal.toFixed) delta[key] = -oldVal;
-                        // TODO: reverse String% (and em, etc) values
-                        break;
-
-                    case 'zero' :
-                        if (oldVal.toFixed) delta[key] = 0;
-                        // TODO: zero String% (and em, etc) values
-                        break;
-
-                    case 'add' :
-                        break;
-
-                    case 'subtract' :
-                        break;
-
-                    case 'multiply' :
-                        break;
-
-                    case 'divide' :
-                        break;
-                }
+            if (item.indexOf(':') < 0) {
+                action = item;
+                val = false;
             }
-        })
+            else {
+                [action, val] = item.split(':');
+            }
+
+            switch (action) {
+
+                case 'newString' :
+                    if (val != null) delta[key] = val;
+                    break;
+
+                case 'newNumber' :
+                    if (val != null) delta[key] = parseFloat(val);
+                    break;
+
+                case 'remove' :
+                    delete delta[key];
+                    break;
+
+                case 'update' :
+                    if (val != null) delta[key] = (old.substring) ? val : parseFloat(val);
+                    break;
+
+                case 'reverse' :
+                    if (old.substring) val = -(parseFloat(old)) + '%';
+                    else val = -old;
+                    delta[key] = val;
+                    break;
+
+                case 'add' :
+                    if (old.substring) val = (parseFloat(old) + parseFloat(val)) + '%';
+                    else val += old;
+                    delta[key] = val;
+                    break;
+
+                case 'multiply' :
+                    if (old.substring) val = (parseFloat(old) * parseFloat(val)) + '%';
+                    else val *= old;
+                    delta[key] = val;
+                    break;
+            }
+        }
         return this;
     };
 

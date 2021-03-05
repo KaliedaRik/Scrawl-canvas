@@ -40,7 +40,7 @@
 // #### Imports
 import { constructors, asset, artefact } from '../core/library.js';
 
-import { mergeOver, xta, addStrings, pushUnique, removeItem, isa_obj } from '../core/utilities.js';
+import { mergeOver, xta, addStrings, pushUnique, removeItem, isa_obj, Ωempty } from '../core/utilities.js';
 
 import { gettableVideoAssetAtributes, settableVideoAssetAtributes } from './videoAsset.js';
 import { gettableImageAssetAtributes, settableImageAssetAtributes } from './imageAsset.js';
@@ -53,7 +53,7 @@ import assetConsumerMix from '../mixin/assetConsumer.js';
 
 
 // #### Picture constructor
-const Picture = function (items = {}) {
+const Picture = function (items = Ωempty) {
 
     this.copyStart = makeCoordinate();
     this.currentCopyStart = makeCoordinate();
@@ -331,7 +331,7 @@ P.get = function (item) {
 };
 
 // `set`
-P.set = function (items = {}) {
+P.set = function (items = Ωempty) {
 
     if (Object.keys(items).length) {
 
@@ -745,6 +745,8 @@ P.checkHitReturn = function (x, y, cell) {
 // });
 // ```
 const makePicture = function (items) {
+
+    if (!items) return false;
     return new Picture(items);
 };
 

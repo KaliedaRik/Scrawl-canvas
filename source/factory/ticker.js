@@ -52,7 +52,7 @@
 
 // #### Imports
 import { constructors, animationtickers, tween } from '../core/library.js';
-import { mergeOver, pushUnique, removeItem, xt, xtGet, isa_obj, convertTime } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, xt, xtGet, isa_obj, convertTime, Ωempty } from '../core/utilities.js';
 
 import { makeAnimation } from './animation.js';
 
@@ -60,7 +60,7 @@ import baseMix from '../mixin/base.js';
 
 
 // #### Ticker constructor
-const Ticker = function (items = {}) {
+const Ticker = function (items = Ωempty) {
 
     this.makeName(items.name);
     this.register();
@@ -890,6 +890,8 @@ const releaseResultObject = function (r) {
 
 // #### Factory
 const makeTicker = function (items) {
+
+    if (!items) return false;
     return new Ticker(items);
 };
 

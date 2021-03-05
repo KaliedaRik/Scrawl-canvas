@@ -17,14 +17,14 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { pushUnique } from '../core/utilities.js';
+import { pushUnique, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
 
 
 // #### Gradient constructor
-const Gradient = function (items = {}) {
+const Gradient = function (items = Ωempty) {
 
     this.stylesInit(items);
     return this;
@@ -71,7 +71,7 @@ P.packetObjects = pushUnique(P.packetObjects, ['palette']);
 // #### Prototype functions
 
 // `buildStyle` - internal function: creates the linear gradient on the Cell's CanvasRenderingContext2D engine, and then adds the color stops to it.
-P.buildStyle = function (cell = {}) {
+P.buildStyle = function (cell) {
     
     if (cell) {
 
@@ -158,6 +158,8 @@ P.updateGradientArgs = function (x, y) {
 // });
 // ```
 const makeGradient = function (items) {
+
+    if (!items) return false;
     return new Gradient(items);
 };
 

@@ -20,7 +20,7 @@
 
 // #### Imports
 import { constructors, entity } from '../core/library.js';
-import { mergeOver, pushUnique, isa_number, isa_obj, λnull, xt, xta } from '../core/utilities.js';
+import { mergeOver, pushUnique, isa_number, isa_obj, λnull, xt, xta, Ωempty } from '../core/utilities.js';
 
 import { requestCell, releaseCell } from './cell.js';
 
@@ -29,7 +29,7 @@ import entityMix from '../mixin/entity.js';
 
 
 // #### Grid constructor
-const Grid = function (items = {}) {
+const Grid = function (items = Ωempty) {
 
     this.tileFill = [];
     this.tileSources = [];
@@ -805,6 +805,8 @@ P.checkHit = function (items = [], mycell) {
 // });
 // ```
 const makeGrid = function (items) {
+
+    if (!items) return false;
     return new Grid(items);
 };
 

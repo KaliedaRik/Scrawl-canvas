@@ -40,6 +40,7 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
+import { Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shapeBasic.js';
@@ -47,7 +48,7 @@ import curveMix from '../mixin/shapeCurve.js';
 
 
 // #### Line constructor
-const Line = function (items = {}) {
+const Line = function (items = Ωempty) {
 
     this.curveInit(items);
     this.shapeInit(items);
@@ -146,18 +147,21 @@ P.cleanDimensions = function () {
 
 P.preparePinsForStamp = function () {
 
-    let ePivot = this.endPivot,
+    const dirtyPins = this.dirtyPins,
+        ePivot = this.endPivot,
         ePath = this.endPath;
 
-    this.dirtyPins.forEach(name => {
+    for (let i = 0, iz = dirtyPins.length, name; i < iz; i++) {
 
-        if ((ePivot && ePivot.name === name) || (ePath && ePath.name === name)) {
+        name = dirtyPins[i];
+
+        if ((ePivot && ePivot.name == name) || (ePath && ePath.name == name)) {
 
             this.dirtyEnd = true;
             if (this.endLockTo.includes('path')) this.currentEndPathData = false;
         }
-    });
-    this.dirtyPins.length = 0;
+    };
+    dirtyPins.length = 0;
 };
 
 // #### Factories
@@ -187,8 +191,9 @@ P.preparePinsForStamp = function () {
 //     method: 'draw',
 // });
 // ```
-const makeLine = function (items = {}) {
+const makeLine = function (items) {
 
+    if (!items) return false;
     items.species = 'line';
     return new Line(items);
 };

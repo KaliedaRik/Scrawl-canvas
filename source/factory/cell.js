@@ -43,7 +43,7 @@
 // #### Imports
 import { artefact, asset, tween, radian, constructors, styles, stylesnames, cell, cellnames, group, canvas } from '../core/library.js';
 
-import { generateUniqueString, isa_canvas, mergeOver, λthis, λnull } from '../core/utilities.js';
+import { generateUniqueString, isa_canvas, mergeOver, λthis, λnull, Ωempty } from '../core/utilities.js';
 
 import { scrawlCanvasHold } from '../core/document.js';
 
@@ -67,7 +67,7 @@ import filterMix from '../mixin/filter.js';
 
 
 // #### Cell constructor
-const Cell = function (items = {}) {
+const Cell = function (items = Ωempty) {
 
     this.makeName(items.name);
 
@@ -487,7 +487,7 @@ P.getData = function (entity, cell) {
 };
 
 // `updateArtefacts` - passes the __items__ argument object through to each of the Cell's Groups for forwarding to their artefacts' `setDelta` function
-P.updateArtefacts = function (items = {}) {
+P.updateArtefacts = function (items = Ωempty) {
 
     this.groupBuckets.forEach(grp => {
 
@@ -651,21 +651,25 @@ P.setToDefaults = function () {
 P.stylesArray = ['Gradient', 'RadialGradient', 'Pattern'];
 P.setEngine = function (entity) {
 
-    let state = this.state,
-        entityState = entity.state,
-        engine, item,
-        changes = entityState.getChanges(entity, state),
-        action = this.setEngineActions,
-        stylesArray = this.stylesArray;
+    const state = this.state,
+        entityState = entity.state;
 
-    if (Object.keys(changes).length) {
+    if (entityState) {
 
-        engine = this.engine;
+        let engine, item,
+            changes = entityState.getChanges(entity, state),
+            action = this.setEngineActions,
+            stylesArray = this.stylesArray;
 
-        for (item in changes) {
+        if (Object.keys(changes).length) {
 
-            action[item](changes[item], engine, stylesArray, entity, this);
-            state[item] = changes[item];
+            engine = this.engine;
+
+            for (item in changes) {
+
+                action[item](changes[item], engine, stylesArray, entity, this);
+                state[item] = changes[item];
+            }
         }
     }
     return entity;
@@ -1524,6 +1528,7 @@ const releaseCell = function (c) {
 // #### Factory
 const makeCell = function (items) {
 
+    if (!items) return false;
     return new Cell(items);
 };
 

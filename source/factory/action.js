@@ -13,14 +13,14 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, pushUnique, xt, λnull } from '../core/utilities.js';
+import { mergeOver, pushUnique, xt, λnull, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import tweenMix from '../mixin/tween.js';
 
 
 // #### Action constructor
-const Action = function (items = {}) {
+const Action = function (items = Ωempty) {
 
     this.makeName(items.name);
     this.register();
@@ -105,7 +105,7 @@ S.triggered = function (item) {
 // `set` - we perform some additional functionality in the Action `set` function
 // + updating the Action's Ticker object happens here
 // + recalculating effectiveDuration happens here if the __time__ value change
-P.set = function (items = {}) {
+P.set = function (items = Ωempty) {
 
     if (Object.keys(items).length) {
 
@@ -238,6 +238,8 @@ P.update = function (items) {
 // });
 // ```
 const makeAction = function (items) {
+
+    if (!items) return false;
     return new Action(items);
 };
 

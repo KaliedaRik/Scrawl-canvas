@@ -13,7 +13,7 @@
 
 // #### Imports
 import { constructors, artefact } from '../core/library.js';
-import { mergeOver, pushUnique, removeItem, isa_obj, isa_dom, isa_quaternion, xt, xta, λnull } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, isa_obj, isa_dom, isa_quaternion, xt, xta, λnull, Ωempty } from '../core/utilities.js';
 import { uiSubscribedElements, currentCorePosition, applyCoreResizeListener, addLocalMouseMoveListener, removeLocalMouseMoveListener } from '../core/userInteraction.js';
 import { addDomShowElement, setDomShowRequired, domShow } from '../core/document.js';
 
@@ -28,7 +28,7 @@ import anchorMix from '../mixin/anchor.js';
 
 
 // #### Export function
-export default function (P = {}) {
+export default function (P = Ωempty) {
 
 
 // #### Mixins

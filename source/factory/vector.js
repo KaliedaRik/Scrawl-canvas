@@ -4,7 +4,7 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { xt, xta, isa_obj, isa_number } from '../core/utilities.js';
+import { xt, xta, isa_obj, isa_number, Ωempty } from '../core/utilities.js';
 
 
 // #### Vector constructor
@@ -139,7 +139,7 @@ P.zero = function () {
 };
 
 // Add a Vector, or an Array of Number values, to this Vector
-P.vectorAdd = function (item = {}) {
+P.vectorAdd = function (item = Ωempty) {
 
     if (Array.isArray(item)) return this.vectorAddArray(item);
 
@@ -164,7 +164,7 @@ P.vectorAddArray = function (item = []) {
 };
 
 // Subtract a Vector, or an Array of Number values, from this Vector
-P.vectorSubtract = function (item = {}) {
+P.vectorSubtract = function (item = Ωempty) {
 
     if (Array.isArray(item)) return this.vectorSubtractArray(item);
 
@@ -200,7 +200,7 @@ P.scalarMultiply = function (item) {
     return this;
 };
 
-P.vectorMultiply = function (item = {}) {
+P.vectorMultiply = function (item = Ωempty) {
 
     if (Array.isArray(item)) return this.vectorMultiplyArray(item);
 

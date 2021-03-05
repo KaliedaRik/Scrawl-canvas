@@ -6,12 +6,12 @@
 
 
 // #### Imports
-import { mergeOver, isa_number } from '../core/utilities.js';
+import { mergeOver, isa_number, Ωempty } from '../core/utilities.js';
 import { cell } from '../core/library.js';
 
 
 // #### Export function
-export default function (P = {}) {
+export default function (P = Ωempty) {
 
 
 // #### Shared attributes
@@ -99,7 +99,7 @@ export default function (P = {}) {
 // #### Prototype functions
 
 // `buildStyle` - internal function: creates the pattern on the Cell's CanvasRenderingContext2D engine.
-    P.buildStyle = function (mycell = {}) {
+    P.buildStyle = function (mycell) {
 
         if (mycell) {
 

@@ -24,11 +24,11 @@
 
 
 // #### Imports
-import { mergeOver, pushUnique, λnull } from '../core/utilities.js';
+import { mergeOver, pushUnique, λnull, Ωempty } from '../core/utilities.js';
 
 
 // #### Export function
-export default function (P = {}) {
+export default function (P = Ωempty) {
 
 
 // #### Shared attributes
@@ -89,7 +89,7 @@ export default function (P = {}) {
 
 
 // __source__ - imageAsset.js and videoAsset.js overwrite this function, thus only put here so cell.js also gains the function - which I don't think it will ever need as cells ARE their own source.
-    S.source = function (item = {}) {
+    S.source = function (item) {
 
         if (item) {
 
@@ -105,7 +105,7 @@ export default function (P = {}) {
 // #### Prototype functions
 
 // `assetConstructor` - Common actions required by __imageAsset__, __spriteAsset__, and __videoAsset__ factories as part if their instance constructor work.
-    P.assetConstructor = function (items = {}) {
+    P.assetConstructor = function (items) {
 
         this.makeName(items.name);
         this.register();
@@ -121,7 +121,7 @@ export default function (P = {}) {
 
 // ##### Subscribe and unsubscribe to an asset
 // `subscribe`
-    P.subscribe = function (sub = {}) {
+    P.subscribe = function (sub) {
 
         if (sub && sub.name) {
 
@@ -133,18 +133,21 @@ export default function (P = {}) {
 
 
 // `subscribeAction` - separated out because cells handle things differently (they ARE the source)
-    P.subscribeAction = function (sub = {}) {
+    P.subscribeAction = function (sub) {
 
-        this.subscribers.push(sub);
-        sub.asset = this;
-        sub.source = this.source;
-        this.notifySubscriber(sub);
+        if (sub) {
+
+            this.subscribers.push(sub);
+            sub.asset = this;
+            sub.source = this.source;
+            this.notifySubscriber(sub);
+        }
     };
 
 // `unsubscribe`
-    P.unsubscribe = function (sub = {}) {
+    P.unsubscribe = function (sub) {
 
-        if (sub.name) {
+        if (sub && sub.name) {
 
             let name = sub.name,
                 index = this.subscribers.findIndex(item => item.name === name);

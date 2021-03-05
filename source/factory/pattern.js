@@ -14,7 +14,7 @@
 
 // #### Imports
 import { constructors, cell, entity } from '../core/library.js';
-import { mergeOver, pushUnique, isa_obj } from '../core/utilities.js';
+import { mergeOver, pushUnique, isa_obj, Ωempty } from '../core/utilities.js';
 import { gettableVideoAssetAtributes, settableVideoAssetAtributes } from './videoAsset.js';
 import { gettableImageAssetAtributes, settableImageAssetAtributes } from './imageAsset.js';
 
@@ -25,7 +25,7 @@ import assetConsumerMix from '../mixin/assetConsumer.js';
 
 
 // #### Pattern constructor
-const Pattern = function (items = {}) {
+const Pattern = function (items = Ωempty) {
 
     this.makeName(items.name);
     this.register();
@@ -150,7 +150,7 @@ P.get = function (item) {
 };
 
 // `set`
-P.set = function (items = {}) {
+P.set = function (items = Ωempty) {
 
     if (Object.keys(items).length) {
 
@@ -231,6 +231,8 @@ P.getData = function (entity, cell) {
 // });
 // ```
 const makePattern = function (items) {
+
+    if (!items) return false;
     return new Pattern(items);
 };
 

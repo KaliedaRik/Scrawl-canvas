@@ -125,7 +125,7 @@
 
 // #### Imports
 import { artefact, group, tween, particle } from '../core/library.js';
-import { λnull, mergeOver, isa_obj, xt, xta, xto, xtGet, addStrings, pushUnique, isa_boolean } from '../core/utilities.js';
+import { λnull, mergeOver, isa_obj, xt, xta, xto, xtGet, addStrings, pushUnique, isa_boolean, Ωempty } from '../core/utilities.js';
 import { currentCorePosition } from '../core/userInteraction.js';
 
 import { makeCoordinate, requestCoordinate, releaseCoordinate } from '../factory/coordinate.js';
@@ -133,7 +133,7 @@ import { requestCell, releaseCell } from '../factory/cell.js';
 
 
 // #### Export function
-export default function (P = {}) {
+export default function (P = Ωempty) {
 
 
 // #### Shared attributes
@@ -1721,7 +1721,7 @@ export default function (P = {}) {
     };
 
 // `pickupArtefact`
-    P.pickupArtefact = function (items = {}) {
+    P.pickupArtefact = function (items = Ωempty) {
 
         let {x, y} = items;
 

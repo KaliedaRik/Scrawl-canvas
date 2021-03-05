@@ -107,6 +107,7 @@ const λnull = () => {};
 const λfirstArg = function (a) { return a; };
 const λthis = function () { return this; };
 const λpromise = () => Promise.resolve(true);
+const Ωempty = {};
 
 
 // __generateUuid__ is a simple (crude) uuid generator 
@@ -709,6 +710,7 @@ export {
     λfirstArg,
     λthis,
     λpromise,
+    Ωempty,
     generateUuid,
     generateUniqueString,
     interpolate,

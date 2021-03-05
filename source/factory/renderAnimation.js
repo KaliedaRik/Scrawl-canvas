@@ -27,14 +27,14 @@
 import { animation, artefact, constructors } from '../core/library.js';
 import { clear, compile, show } from '../core/document.js';
 import { makeAnimationObserver } from '../core/events.js';
-import { mergeOver, pushUnique, removeItem, xt, λnull, λthis } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, xt, λnull, λthis, Ωempty } from '../core/utilities.js';
 import { animate, resortAnimations } from '../core/animationloop.js';
 
 import baseMix from '../mixin/base.js';
 
 
 // #### RenderAnimation constructor
-const RenderAnimation = function (items = {}) {
+const RenderAnimation = function (items = Ωempty) {
 
     let target;
 
@@ -265,6 +265,7 @@ P.halt = function () {
 // ```
 const makeRender = function (items) {
     
+    if (!items) return false;
     return new RenderAnimation(items);
 };
 

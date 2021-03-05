@@ -23,7 +23,7 @@
 
 // #### Imports
 import { constructors, cell, artefact, group, entity, asset } from '../core/library.js';
-import { mergeOver, pushUnique, removeItem } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, Ωempty } from '../core/utilities.js';
 import { scrawlCanvasHold } from '../core/document.js';
 
 import { filterEngine } from './filterEngine.js';
@@ -35,7 +35,7 @@ import filterMix from '../mixin/filter.js';
 
 
 // #### Group constructor
-const Group = function (items = {}) {
+const Group = function (items = Ωempty) {
 
     this.makeName(items.name);
     this.register();
@@ -658,7 +658,7 @@ P.cascadeAction = function (items, action) {
 
 
 // `setDeltaValues` - passes the __items__ argument object through to each of the Group's artefact's `setDeltaValues` function
-P.setDeltaValues = function (items = {}) {
+P.setDeltaValues = function (items = Ωempty) {
 
     this.artefactBuckets.forEach(art => art.setDeltaValues(items));
 
@@ -865,6 +865,7 @@ P.getArtefactCollisions = function (art) {
 // ```
 const makeGroup = function (items) {
 
+    if (!items) return false;
     return new Group(items);
 };
 

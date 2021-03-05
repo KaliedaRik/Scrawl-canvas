@@ -25,7 +25,7 @@
 
 // #### Imports
 import { constructors, tween, artefact, group, world } from '../core/library.js';
-import { pushUnique, mergeOver, λnull, isa_fn, isa_obj, xt, xta } from '../core/utilities.js';
+import { pushUnique, mergeOver, λnull, isa_fn, isa_obj, xt, xta, Ωempty } from '../core/utilities.js';
 import { currentGroup } from '../core/document.js';
 
 import { requestParticle, releaseParticle } from './particle.js';
@@ -39,7 +39,7 @@ import entityMix from '../mixin/entity.js';
 
 
 // #### Emitter constructor
-const Emitter = function (items = {}) {
+const Emitter = function (items = Ωempty) {
 
     this.makeName(items.name);
     this.register();
@@ -974,6 +974,8 @@ P.checkHit = function (items = [], mycell) {
 // });
 // ```
 const makeEmitter = function (items) {
+
+    if (!items) return false;
     return new Emitter(items);
 };
 

@@ -38,6 +38,8 @@ scrawl.makeFilter({
             radius: 1,
             lineOut: 'top-filter-1',
         },
+
+        // Known issue: if we set lineOut to the same String as lineIn at this point in the filter then it produces incorrect output. Changing (and continuing with) a new lineOut String fixes the bug.
         {
             lineIn: 'top-filter-1',
             action: 'matrix',

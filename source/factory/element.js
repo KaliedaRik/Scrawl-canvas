@@ -34,7 +34,7 @@
 
 // #### Imports
 import { element, elementnames, artefact, artefactnames, constructors } from '../core/library.js';
-import { pushUnique, removeItem, isa_dom } from '../core/utilities.js';
+import { pushUnique, removeItem, isa_dom, Ωempty } from '../core/utilities.js';
 import { uiSubscribedElements } from '../core/userInteraction.js';
 
 import { makeCanvas } from './canvas.js';
@@ -44,7 +44,7 @@ import domMix from '../mixin/dom.js';
 
 
 // #### Element constructor
-const Element = function (items = {}) {
+const Element = function (items = Ωempty) {
     
     let el = items.domElement;
 
@@ -182,7 +182,7 @@ P.cleanDimensionsAdditionalActions = function () {
 // + The function can accept a Javascript object argument containing key:value pairs which will be used to set up the new canvas's attributes after it has been created.
 // + To make the canvas look as if it is in front of the element, set the element's opacity CSS attribute to 0
 // + This function is used when adding a Scrawl-canvas component to a stacked element.
-P.addCanvas = function (items = {}) {
+P.addCanvas = function (items = Ωempty) {
 
     if (!this.canvas) {
 
@@ -281,6 +281,7 @@ P.addCanvas = function (items = {}) {
 // ```
 const makeElement = function (items) {
     
+    if (!items) return false;
     return new Element(items);
 };
 

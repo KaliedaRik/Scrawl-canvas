@@ -24,7 +24,7 @@
 // #### Imports
 import { constructors, artefact } from '../core/library.js';
 import { currentGroup } from '../core/document.js';
-import { mergeOver, mergeDiscard, pushUnique, λnull, λthis, xta } from '../core/utilities.js';
+import { mergeOver, mergeDiscard, pushUnique, λnull, λthis, xta, Ωempty } from '../core/utilities.js';
 
 import { makeState } from '../factory/state.js';
 import { requestCell, releaseCell } from '../factory/cell.js';
@@ -34,7 +34,7 @@ import anchorMix from '../mixin/anchor.js';
 
 
 // #### Mesh constructor
-const Mesh = function (items = {}) {
+const Mesh = function (items = Ωempty) {
 
     this.makeName(items.name);
     this.register();
@@ -279,7 +279,7 @@ P.get = function (item) {
 };
 
 // __set__ - copied over from the entity mixin.
-P.set = function (items = {}) {
+P.set = function (items = Ωempty) {
 
     if (Object.keys(items).length) {
 
@@ -313,7 +313,7 @@ P.set = function (items = {}) {
 };
 
 // __setDelta__ - copied over from the entity mixin.
-P.setDelta = function (items = {}) {
+P.setDelta = function (items = Ωempty) {
 
     if (Object.keys(items).length) {
 
@@ -392,7 +392,7 @@ P.getHere = function () {
 };
 
 // __delta__ - copied over from the position mixin.
-S.delta = function (items = {}) {
+S.delta = function (items = Ωempty) {
 
     if (items) this.delta = mergeDiscard(this.delta, items);
 };
@@ -484,7 +484,7 @@ P.reverseByDelta = function () {
 };
 
 // `setDeltaValues` - copied over from the position mixin.
-P.setDeltaValues = function (items = {}) {
+P.setDeltaValues = function (items = Ωempty) {
 
     let delta = this.delta, 
         oldVal, action;
@@ -734,7 +734,7 @@ P.setSourceDimension = function () {
 
 // `simpleStamp` - Simple stamping is entirely synchronous
 // + TODO: we may have to disable this functionality for the Mesh entity, if we use a Web Assembly module for either the prepareStamp calculations, or to build the output image itself
-P.simpleStamp = function (host, changes = {}) {
+P.simpleStamp = function (host, changes) {
 
     if (host && host.type === 'Cell') {
 
@@ -1165,6 +1165,8 @@ P.checkHit = function (items = [], mycell) {
 // });
 // ```
 const makeMesh = function (items) {
+
+    if (!items) return false;
     return new Mesh(items);
 };
 

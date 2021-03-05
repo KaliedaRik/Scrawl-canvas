@@ -103,6 +103,7 @@ const releaseParticleHistoryObject = function (h) {
 // #### Factory
 const makeParticleHistory = function (items) {
 
+    if (!items) return false;
     return new ParticleHistory(items);
 };
 

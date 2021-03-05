@@ -9,12 +9,12 @@
 
 // #### Imports
 import { filter, asset } from '../core/library.js';
-import { mergeOver, pushUnique, removeItem } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, Ωempty } from '../core/utilities.js';
 import { requestCell, releaseCell } from '../factory/cell.js';
 
 
 // #### Export function
-export default function (P = {}) {
+export default function (P = Ωempty) {
 
 
 // #### Filter-related attributes
@@ -162,9 +162,13 @@ export default function (P = {}) {
 // `preprocessFilters` - internal function called as part of the Display cycle. The __process-image__ filter action loads a Scrawl-canvas asset into the filters engine, where it can be used as a lineIn or lineMix argument for other filter actions.
     P.preprocessFilters = function (filters) {
 
-        filters.forEach(filter => {
+        for (let i = 0, iz = filters.length, filter; i < iz; i++) {
 
-            filter.actions.forEach(obj => {
+            filter = filters[i];
+
+            for (let j = 0, jz = filter.actions.length, obj; j < jz; j++) {
+
+                obj = filter.actions[j];
 
                 if (obj.action == 'process-image') {
 
@@ -262,8 +266,8 @@ export default function (P = {}) {
                         }
                     }
                 }
-            });
-        });
+            }
+        }
     };
 
 // Return the prototype

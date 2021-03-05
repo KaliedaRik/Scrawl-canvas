@@ -3,7 +3,7 @@
 
 // #### Imports
 import { radian, artefact } from '../core/library.js';
-import { mergeOver, xt, λnull, pushUnique } from '../core/utilities.js';
+import { mergeOver, xt, λnull, pushUnique, Ωempty } from '../core/utilities.js';
 
 import { requestVector, releaseVector } from '../factory/vector.js';
 
@@ -13,7 +13,7 @@ import entityMix from './entity.js';
 
 
 // #### Export function
-export default function (P = {}) {
+export default function (P = Ωempty) {
 
 
 // #### Mixins

@@ -11,11 +11,11 @@
 
 
 // #### Imports
-import { λnull, mergeOver, pushUnique, xt, addStrings, isa_obj } from '../core/utilities.js';
+import { λnull, mergeOver, pushUnique, xt, addStrings, isa_obj, Ωempty } from '../core/utilities.js';
 import { currentGroup, scrawlCanvasHold } from '../core/document.js';
 import { asset } from '../core/library.js';
 
-import { makeState } from '../factory/state.js';
+import { makeState, stateKeys } from '../factory/state.js';
 import { requestCell, releaseCell } from '../factory/cell.js';
 import { filterEngine } from '../factory/filterEngine.js';
 import { importDomImage } from '../factory/imageAsset.js';
@@ -30,7 +30,7 @@ import filterMix from '../mixin/filter.js';
 
 
 // #### Export function
-export default function (P = {}) {
+export default function (P = Ωempty) {
 
 
 // #### Mixins
@@ -259,15 +259,16 @@ export default function (P = {}) {
 // Entity `get`, `set` and `deltaSet` functions need to take into account the entity State object, whose attributes can be retrieved/amended directly on the entity object
     P.get = function (item) {
 
-        let getter = this.getters[item];
+        const getter = this.getters[item];
 
         if (getter) return getter.call(this);
 
         else {
 
-            let def = this.defs[item],
-                state = this.state,
-                val;
+            const def = this.defs[item],
+                state = this.state;
+
+            let val;
 
             if (typeof def != 'undefined') {
 
@@ -286,68 +287,94 @@ export default function (P = {}) {
         }
     };
 
-    P.set = function (items = {}) {
+    P.set = function (items = Ωempty) {
 
-        if (Object.keys(items).length) {
+        const keys = Object.keys(items),
+            keysLen = keys.length;
 
-            let setters = this.setters,
+        if (keysLen) {
+
+            const setters = this.setters,
                 defs = this.defs,
-                state = this.state,
-                stateSetters = (state) ? state.setters : {},
-                stateDefs = (state) ? state.defs : {},
-                predefined, stateFlag;
+                state = this.state;
 
-            Object.entries(items).forEach(([key, value]) => {
+            let stateSetters, stateDefs, predefined, i, iz, key, value;
 
-                if (key && key !== 'name' && value != null) {
+            if (state) {
 
-                    predefined = setters[key];
-                    stateFlag = false;
+                stateSetters = state.setters || Ωempty;
+                stateDefs = state.defs || Ωempty;
+            }
 
-                    if (!predefined) {
+            for (i = 0; i < keysLen; i++) {
+
+                key = keys[i];
+                value = items[key];
+
+                if (key && key != 'name' && value != null) {
+
+                    if (stateKeys.indexOf(key) < 0) {
+
+                        predefined = setters[key];
+
+                        if (predefined) predefined.call(this, value);
+                        else if (typeof defs[key] != 'undefined') this[key] = value;
+                    }
+                    else {
 
                         predefined = stateSetters[key];
-                        stateFlag = true;
-                    }
 
-                    if (predefined) predefined.call(stateFlag ? this.state : this, value);
-                    else if (typeof defs[key] !== 'undefined') this[key] = value;
-                    else if (typeof stateDefs[key] !== 'undefined') state[key] = value;
+                        if (predefined) predefined.call(state, value);
+                        else if (typeof stateDefs[key] != 'undefined') state[key] = value;
+                    }
                 }
-            }, this);
+            }
         }
         return this;
     };
 
-    P.setDelta = function (items = {}) {
+    P.setDelta = function (items = Ωempty) {
 
-        if (Object.keys(items).length) {
+        const keys = Object.keys(items),
+            keysLen = keys.length;
 
-            let setters = this.deltaSetters,
+        if (keysLen) {
+
+            const setters = this.deltaSetters,
                 defs = this.defs,
-                state = this.state,
-                stateSetters = (state) ? state.deltaSetters : {},
-                stateDefs = (state) ? state.defs : {},
-                predefined, stateFlag;
+                state = this.state;
 
-            Object.entries(items).forEach(([key, value]) => {
+            let stateSetters, stateDefs, predefined, i, iz, key, value;
 
-                if (key && key !== 'name' && value != null) {
+            if (state) {
 
-                    predefined = setters[key];
-                    stateFlag = false;
+                stateSetters = state.deltaSetters || Ωempty;
+                stateDefs = state.defs || Ωempty;
+            }
 
-                    if (!predefined) {
+            for (i = 0; i < keysLen; i++) {
+
+                key = keys[i];
+                value = items[key];
+
+                if (key && key != 'name' && value != null) {
+
+                    if (stateKeys.indexOf(key) < 0) {
+
+                        predefined = setters[key];
+
+                        if (predefined) predefined.call(this, value);
+                        else if (typeof defs[key] != 'undefined') this[key] = addStrings(this[key], value);
+                    }
+                    else {
 
                         predefined = stateSetters[key];
-                        stateFlag = true;
-                    }
 
-                    if (predefined) predefined.call(stateFlag ? this.state : this, value);
-                    else if (typeof defs[key] !== 'undefined') this[key] = addStrings(this[key], value);
-                    else if (typeof stateDefs[key] !== 'undefined') state[key] = addStrings(state[key], value);
+                        if (predefined) predefined.call(state, value);
+                        else if (typeof stateDefs[key] != 'undefined') state[key] = addStrings(state[key], value);
+                    }
                 }
-            }, this);
+            }
         }
         return this;
     };
@@ -356,7 +383,7 @@ export default function (P = {}) {
 // #### Prototype functions
 
 // `entityInit` - internal function, called by all entity factory constructors
-    P.entityInit = function (items = {}) {
+    P.entityInit = function (items = Ωempty) {
 
         this.makeName(items.name);
         this.register();
@@ -674,7 +701,7 @@ export default function (P = {}) {
 // `simpleStamp` - an alternative to the `stamp` function, to get an entity to stamp its output onto a Cell.
 // + Note that this is a synchronous action, thus cannot be included in a Display cycle cascade.
 // + Will ignore any filters assigned to the entity (because they require asynchronous Promises for the filter engine)
-    P.simpleStamp = function (host, changes = {}) {
+    P.simpleStamp = function (host, changes = Ωempty) {
 
         if (host && host.type === 'Cell') {
 

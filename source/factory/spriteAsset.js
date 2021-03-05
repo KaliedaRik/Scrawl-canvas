@@ -14,14 +14,14 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, isa_obj, λnull, λthis } from '../core/utilities.js';
+import { mergeOver, isa_obj, λnull, λthis, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
 
 
 // #### SpriteAsset constructor
-const SpriteAsset = function (items = {}) {
+const SpriteAsset = function (items = Ωempty) {
 
     this.assetConstructor(items);
 
@@ -258,6 +258,7 @@ const importSprite = function (...args) {
 // #### Factory
 const makeSpriteAsset = function (items) {
 
+    if (!items) return false;
     return new SpriteAsset(items);
 };
 

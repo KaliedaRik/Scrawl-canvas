@@ -16,7 +16,7 @@
 
 // ## Imports
 import { unstackedelement, constructors } from '../core/library.js';
-import { xt, mergeOver } from '../core/utilities.js';
+import { xt, mergeOver, Ωempty } from '../core/utilities.js';
 
 import { makeCanvas } from './canvas.js';
 
@@ -35,7 +35,7 @@ const UnstackedElement = function (el) {
     this.domElement = el;
 
     this.elementComputedStyles = window.getComputedStyle(el);
-    this.hostStyles = {};
+    this.hostStyles = Ωempty;
 
     this.canvasStartX = 0;
     this.canvasStartY = 0;
@@ -95,7 +95,7 @@ P.demolish = function (removeFromDom = false) {
 
 
 // Adds a canvas element to sit behind the element, or in front of it, depending on the setting of the __canvasOnTop__ attribute
-P.addCanvas = function (items = {}) {
+P.addCanvas = function (items = Ωempty) {
 
     if (!this.canvas) {
 
@@ -294,6 +294,7 @@ P.updateCanvas = function () {
 // ## Exported factory function
 const makeUnstackedElement = function (items) {
     
+    if (!items) return false;
     return new UnstackedElement(items);
 };
 

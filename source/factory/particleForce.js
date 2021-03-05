@@ -38,7 +38,7 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, pushUnique, λnull, isa_fn } from '../core/utilities.js';
+import { mergeOver, pushUnique, λnull, isa_fn, Ωempty } from '../core/utilities.js';
 
 import { requestVector, releaseVector } from './vector.js';
 
@@ -46,7 +46,7 @@ import baseMix from '../mixin/base.js';
 
 
 // #### Force constructor
-const Force = function (items = {}) {
+const Force = function (items = Ωempty) {
 
     this.makeName(items.name);
     this.register();
@@ -140,6 +140,8 @@ S.action = function (item) {
 // });
 // ```
 const makeForce = function (items) {
+
+    if (!items) return false;
     return new Force(items);
 };
 

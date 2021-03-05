@@ -4,11 +4,11 @@
 
 // #### Imports
 import { artefact, asset } from '../core/library.js';
-import { mergeOver, pushUnique, removeItem, isa_boolean } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, isa_boolean, Ωempty } from '../core/utilities.js';
 
 
 // #### Export function
-export default function (P = {}) {
+export default function (P = Ωempty) {
 
 
 // #### Shared attributes
