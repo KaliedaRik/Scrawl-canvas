@@ -112,6 +112,11 @@ import {
 
 
 import { 
+    makeConicGradient,
+} from './factory/conicGradient.js';
+
+
+import { 
     requestCoordinate, 
     releaseCoordinate,
 } from './factory/coordinate.js';
@@ -384,6 +389,10 @@ export default {
 
     // factory/color.js
     makeColor,
+
+
+    // factory/conicGradient.js
+    makeConicGradient,
 
 
     // factory/coordinate.js

@@ -577,7 +577,7 @@ P.subscribeAction = function (sub = {}) {
 P.installElement = function (element) {
 
     this.element = element;
-    this.engine = this.element.getContext('2d');
+    this.engine = this.element.getContext('2d', {willReadFrequently: true});
 
     this.state = makeState({
         engine: this.engine
