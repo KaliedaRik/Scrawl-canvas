@@ -312,17 +312,6 @@ P.set = function (items = Ωempty) {
 
     if (keysLen) {
 
-        // const setters = this.setters,
-        //     defs = this.defs,
-        //     state = this.state;
-
-        // let stateSetters, stateDefs, predefined, i, iz, key, value;
-
-        // if (state) {
-
-        //     stateSetters = state.setters || Ωempty;
-        //     stateDefs = state.defs || Ωempty;
-        // }
         const setters = this.setters,
             defs = this.defs,
             state = this.state;
@@ -367,17 +356,6 @@ P.setDelta = function (items = Ωempty) {
 
     if (keysLen) {
 
-        // const setters = this.deltaSetters,
-        //     defs = this.defs,
-        //     state = this.state;
-
-        // let stateSetters, stateDefs, predefined, i, iz, key, value;
-
-        // if (state) {
-
-        //     stateSetters = state.deltaSetters || Ωempty;
-        //     stateDefs = state.defs || Ωempty;
-        // }
         const setters = this.deltaSetters,
             defs = this.defs,
             state = this.state;

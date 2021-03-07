@@ -44,6 +44,7 @@ import { mergeOver, xta, addStrings, pushUnique, removeItem, isa_obj, Ωempty } 
 
 import { gettableVideoAssetAtributes, settableVideoAssetAtributes } from './videoAsset.js';
 import { gettableImageAssetAtributes, settableImageAssetAtributes } from './imageAsset.js';
+import { stateKeys } from './state.js';
 
 import { makeCoordinate } from './coordinate.js';
 
@@ -333,17 +334,25 @@ P.get = function (item) {
 // `set`
 P.set = function (items = Ωempty) {
 
-    if (Object.keys(items).length) {
+    const keys = Object.keys(items),
+        keysLen = keys.length;
 
-        let setters = this.setters,
+    if (keysLen) {
+
+        const setters = this.setters,
             defs = this.defs,
-            state = this.state,
             source = this.source,
-            stateSetters = (state) ? state.setters : {},
-            stateDefs = (state) ? state.defs : {},
-            predefined, stateFlag;
+            state = this.state;
 
-        Object.entries(items).forEach(([key, value]) => {
+        const stateSetters = (state) ? state.setters : Ωempty;
+        const stateDefs = (state) ? state.defs : Ωempty;
+
+        let predefined, i, key, value;
+
+        for (i = 0; i < keysLen; i++) {
+
+            key = keys[i];
+            value = items[key];
 
             if ((key.indexOf('video_') === 0 || key.indexOf('image_') === 0) && source) {
 
@@ -353,20 +362,22 @@ P.set = function (items = Ωempty) {
 
             else if (key && key !== 'name' && value != null) {
 
-                predefined = setters[key];
-                stateFlag = false;
+                if (stateKeys.indexOf(key) < 0) {
 
-                if (!predefined) {
+                    predefined = setters[key];
+
+                    if (predefined) predefined.call(this, value);
+                    else if (typeof defs[key] != 'undefined') this[key] = value;
+                }
+                else {
 
                     predefined = stateSetters[key];
-                    stateFlag = true;
-                }
 
-                if (predefined) predefined.call(stateFlag ? this.state : this, value);
-                else if (typeof defs[key] !== 'undefined') this[key] = value;
-                else if (typeof stateDefs[key] !== 'undefined') state[key] = value;
+                    if (predefined) predefined.call(state, value);
+                    else if (typeof stateDefs[key] != 'undefined') state[key] = value;
+                }
             }
-        }, this);
+        }
     }
     return this;
 };

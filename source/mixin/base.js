@@ -85,7 +85,7 @@ export default function (P = Ωempty) {
             const setters = this.setters,
                 defs = this.defs;
             
-            let predefined, i, iz, key, value;
+            let predefined, i, key, value;
 
             for (i = 0; i < keysLen; i++) {
 

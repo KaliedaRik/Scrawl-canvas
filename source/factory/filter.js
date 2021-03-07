@@ -334,13 +334,42 @@ let S = P.setters,
 // `set` - Overwrites mixin/base.js function
 P.set = function (items = Ωempty) {
 
-    if (Object.keys(items).length) {
+    // if (Object.keys(items).length) {
 
-        let setters = this.setters,
-            defs = this.defs,
-            predefined;
+    //     let setters = this.setters,
+    //         defs = this.defs,
+    //         predefined;
 
-        Object.entries(items).forEach(([key, value]) => {
+    //     Object.entries(items).forEach(([key, value]) => {
+
+    //         if (key && key !== 'name' && value != null) {
+
+    //             predefined = setters[key];
+
+    //             if (predefined) predefined.call(this, value);
+    //             else if (typeof defs[key] !== 'undefined') this[key] = value;
+    //         }
+    //     }, this);
+    // }
+    // if (this.method && setActionsArray[this.method]) setActionsArray[this.method](this);
+
+    // this.dirtyFiltersCache = true;
+
+    // return this;
+    const keys = Object.keys(items),
+        keysLen = keys.length;
+
+    if (keysLen) {
+
+        const setters = this.setters,
+            defs = this.defs;
+        
+        let predefined, i, key, value;
+
+        for (i = 0; i < keysLen; i++) {
+
+            key = keys[i];
+            value = items[key];
 
             if (key && key !== 'name' && value != null) {
 
@@ -349,7 +378,7 @@ P.set = function (items = Ωempty) {
                 if (predefined) predefined.call(this, value);
                 else if (typeof defs[key] !== 'undefined') this[key] = value;
             }
-        }, this);
+        }
     }
     if (this.method && setActionsArray[this.method]) setActionsArray[this.method](this);
 
@@ -362,22 +391,51 @@ P.set = function (items = Ωempty) {
 // `setDelta` - Overwrites mixin/base.js function
 P.setDelta = function (items = Ωempty) {
 
-    if (Object.keys(items).length) {
+    // if (Object.keys(items).length) {
 
-        let setters = this.deltaSetters,
-            defs = this.defs,
-            predefined;
+    //     let setters = this.deltaSetters,
+    //         defs = this.defs,
+    //         predefined;
 
-        Object.entries(items).forEach(([key, value]) => {
+    //     Object.entries(items).forEach(([key, value]) => {
+
+    //         if (key && key !== 'name' && value != null) {
+
+    //             predefined = setters[key];
+
+    //             if (predefined) predefined.call(this, value);
+    //             else if (typeof defs[key] != 'undefined') this[key] = addStrings(this[key], value);
+    //         }
+    //     }, this);
+    // }
+    // if (this.method && setActionsArray[this.method]) setActionsArray[this.method](this);
+
+    // this.dirtyFiltersCache = true;
+    
+    // return this;
+    const keys = Object.keys(items),
+        keysLen = keys.length;
+
+    if (keysLen) {
+
+        const setters = this.deltaSetters,
+            defs = this.defs;
+        
+        let predefined, i, iz, key, value;
+
+        for (i = 0; i < keysLen; i++) {
+
+            key = keys[i];
+            value = items[key];
 
             if (key && key !== 'name' && value != null) {
 
                 predefined = setters[key];
 
                 if (predefined) predefined.call(this, value);
-                else if (typeof defs[key] != 'undefined') this[key] = addStrings(this[key], value);
+                else if (typeof defs[key] !== 'undefined') this[key] = addStrings(this[key], value);
             }
-        }, this);
+        }
     }
     if (this.method && setActionsArray[this.method]) setActionsArray[this.method](this);
 

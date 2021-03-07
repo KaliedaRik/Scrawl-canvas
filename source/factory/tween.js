@@ -276,39 +276,35 @@ S.completeAction = function (item) {
 // + recalculating effectiveDuration happens here if the __time__ or __duration__ values change
 P.set = function (items = Ωempty) {
 
-    if(Object.keys(items).length) {
+    let key, i, iz, s,
+        setters = this.setters,
+        keys = Object.keys(items),
+        d = this.defs,
+        ticker = (xt(items.ticker)) ? this.ticker : false;
+
+    for (i = 0, iz = keys.length; i < iz; i++) {
+
+        key = keys[i];
         
-        let key, i, iz, s,
-            setters = this.setters,
-            keys = Object.keys(items),
-            d = this.defs,
-            ticker = (xt(items.ticker)) ? this.ticker : false;
+        if (key !== 'name') {
 
-        for (i = 0, iz = keys.length; i < iz; i++) {
-
-            key = keys[i];
+            s = setters[key];
             
-            if (key !== 'name') {
-
-                s = setters[key];
-                
-                if (s) s.call(this, items[key]);
-                else if (typeof d[key] !== 'undefined') this[key] = items[key];
-            }
-        }
-
-        if (ticker) {
-
-            this.ticker = ticker;
-            this.addToTicker(items.ticker);
-        }
-        else if (xto(items.time, items.duration)) {
-
-            this.calculateEffectiveTime();
-            this.calculateEffectiveDuration();
+            if (s) s.call(this, items[key]);
+            else if (typeof d[key] !== 'undefined') this[key] = items[key];
         }
     }
 
+    if (ticker) {
+
+        this.ticker = ticker;
+        this.addToTicker(items.ticker);
+    }
+    else if (xto(items.time, items.duration)) {
+
+        this.calculateEffectiveTime();
+        this.calculateEffectiveDuration();
+    }
     return this;
 };
 
