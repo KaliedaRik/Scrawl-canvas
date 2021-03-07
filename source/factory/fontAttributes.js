@@ -16,7 +16,7 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, xt, Ωempty } from '../core/utilities.js';
+import { mergeOver, pushUnique, xt, Ωempty } from '../core/utilities.js';
 
 import { requestCell, releaseCell } from './cell.js';
 
@@ -127,7 +127,8 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Packet management
-// No additional packet functionality required
+// No additional clone functionality required
+// P.packetExclusions = pushUnique(P.packetExclusions, ['font']);
 
 
 // #### Clone management

@@ -402,7 +402,8 @@ const makeState = function (items) {
     return new State(items);
 };
 
-const stateKeys = ['fillStyle', 'filter', 'font', 'globalAlpha', 'globalCompositeOperation', 'lineCap', 'lineDash', 'lineDashOffset', 'lineJoin', 'lineWidth', 'miterLimit', 'shadowBlur', 'shadowColor', 'shadowOffsetX', 'shadowOffsetY', 'strokeStyle', 'textAlign', 'textBaseline'];
+// Note: does NOT include 'font', textAlign or textBaseline because we set them in the fontAttributes object and Phrase entity, not the state object
+const stateKeys = ['fillStyle', 'filter', 'globalAlpha', 'globalCompositeOperation', 'lineCap', 'lineDash', 'lineDashOffset', 'lineJoin', 'lineWidth', 'miterLimit', 'shadowBlur', 'shadowColor', 'shadowOffsetX', 'shadowOffsetY', 'strokeStyle'];
 
 
 constructors.State = State;

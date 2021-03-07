@@ -101,19 +101,33 @@ const ensureString = (val) => {
 // #### Phrase constructor
 const Phrase = function (items = Ωempty) {
 
-    this.fontAttributes = makeFontAttributes(items);
-
-    delete items.font;
-    delete items.style;
-    delete items.variant;
-    delete items.weight;
-    delete items.stretch;
-    delete items.size;
-    delete items.sizeValue;
-    delete items.sizeMetric;
-    delete items.family;
+    this.fontAttributes = makeFontAttributes(Ωempty);
 
     this.entityInit(items);
+
+    this.dirtyDimensions = true;
+    this.dirtyText = true;
+    this.dirtyFont = true;
+    this.dirtyPathObject = true;
+
+    return this;
+};
+
+// #### Phrase prototype
+let P = Phrase.prototype = Object.create(Object.prototype);
+P.type = 'Phrase';
+P.lib = 'entity';
+P.isArtefact = true;
+P.isAsset = false;
+
+
+// #### Mixins
+// + [base](../mixin/base.html)
+// + [entity](../mixin/entity.html)
+P = baseMix(P);
+P = entityMix(P);
+
+P.midInitActions = function (items) {
 
     this.sectionStyles = [];
     this.sectionClasses = {
@@ -131,29 +145,7 @@ const Phrase = function (items = Ωempty) {
         '/UNDERLINE': { underline: false },
         '/OVERLINE': { overline: false }
     };
-
-    this.dirtyDimensions = true;
-    this.dirtyText = true;
-    this.dirtyFont = true;
-    this.dirtyPathObject = true;
-
-    return this;
 };
-
-
-// #### Phrase prototype
-let P = Phrase.prototype = Object.create(Object.prototype);
-P.type = 'Phrase';
-P.lib = 'entity';
-P.isArtefact = true;
-P.isAsset = false;
-
-
-// #### Mixins
-// + [base](../mixin/base.html)
-// + [entity](../mixin/entity.html)
-P = baseMix(P);
-P = entityMix(P);
 
 
 // #### Phrase attributes
@@ -308,8 +300,6 @@ P.finalizePacketOut = function (copy, items) {
 
 
 // #### Clone management
-// No additional clone functionality required
-
 
 // #### Kill management
 P.factoryKill = function () {

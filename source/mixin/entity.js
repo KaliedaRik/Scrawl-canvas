@@ -197,7 +197,6 @@ export default function (P = Ωempty) {
 
     P.finalizePacketOut = function (copy, items) {
 
-        
         let stateCopy = JSON.parse(this.state.saveAsPacket(items))[3];
         copy = mergeOver(copy, stateCopy);
 
@@ -230,7 +229,6 @@ export default function (P = Ωempty) {
 
             if (!items.anchor.clickAction) clone.anchor.clickAction = this.anchor.clickAction;
         }
-
         return clone;
     };
 
@@ -266,7 +264,7 @@ export default function (P = Ωempty) {
 
         else {
 
-            const def = this.defs[item],
+            let def = this.defs[item],
                 state = this.state;
 
             let val;
@@ -299,13 +297,10 @@ export default function (P = Ωempty) {
                 defs = this.defs,
                 state = this.state;
 
-            let stateSetters, stateDefs, predefined, i, iz, key, value;
+            const stateSetters = (state) ? state.setters : Ωempty;
+            const stateDefs = (state) ? state.defs : Ωempty;
 
-            if (state) {
-
-                stateSetters = state.setters || Ωempty;
-                stateDefs = state.defs || Ωempty;
-            }
+            let predefined, i, key, value;
 
             for (i = 0; i < keysLen; i++) {
 
@@ -345,13 +340,10 @@ export default function (P = Ωempty) {
                 defs = this.defs,
                 state = this.state;
 
-            let stateSetters, stateDefs, predefined, i, iz, key, value;
+            const stateSetters = (state) ? state.deltaSetters : Ωempty;
+            const stateDefs = (state) ? state.defs : Ωempty;
 
-            if (state) {
-
-                stateSetters = state.deltaSetters || Ωempty;
-                stateDefs = state.defs || Ωempty;
-            }
+            let predefined, i, key, value;
 
             for (i = 0; i < keysLen; i++) {
 
@@ -506,11 +498,9 @@ export default function (P = Ωempty) {
 
             if (host && host.type === 'Cell') this.currentHost = host;
 
-            if (changes) {
+            if (changes) this.set(changes);
 
-                this.set(changes);
-                this.prepareStamp();
-            }
+            this.prepareStamp();
 
             if (filterTest) return this.filteredStamp();
             else return this.regularStamp();
