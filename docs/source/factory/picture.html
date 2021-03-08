@@ -105,6 +105,11 @@
                 </a>
               
                 
+                <a class="source" href="conicGradient.html">
+                  ./source/factory/conicGradient.js
+                </a>
+              
+                
                 <a class="source" href="coordinate.html">
                   ./source/factory/coordinate.js
                 </a>
@@ -522,10 +527,11 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">asset</span>, <span class="hljs-title">artefact</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
 
-<span class="hljs-keyword">import</span> { mergeOver, xta, addStrings, pushUnique, removeItem, isa_obj } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { mergeOver, xta, addStrings, pushUnique, removeItem, isa_obj, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { gettableVideoAssetAtributes, settableVideoAssetAtributes } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./videoAsset.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { gettableImageAssetAtributes, settableImageAssetAtributes } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./imageAsset.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { stateKeys } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./state.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./coordinate.js&#x27;</span>;
 
@@ -546,7 +552,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Picture = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Picture = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
     <span class="hljs-built_in">this</span>.copyStart = makeCoordinate();
     <span class="hljs-built_in">this</span>.currentCopyStart = makeCoordinate();
@@ -1032,19 +1038,27 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.set = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.set = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Object</span>.keys(items).length) {
+    <span class="hljs-keyword">const</span> keys = <span class="hljs-built_in">Object</span>.keys(items),
+        keysLen = keys.length;
 
-        <span class="hljs-keyword">let</span> setters = <span class="hljs-built_in">this</span>.setters,
+    <span class="hljs-keyword">if</span> (keysLen) {
+
+        <span class="hljs-keyword">const</span> setters = <span class="hljs-built_in">this</span>.setters,
             defs = <span class="hljs-built_in">this</span>.defs,
-            state = <span class="hljs-built_in">this</span>.state,
             source = <span class="hljs-built_in">this</span>.source,
-            stateSetters = (state) ? state.setters : {},
-            stateDefs = (state) ? state.defs : {},
-            predefined, stateFlag;
+            state = <span class="hljs-built_in">this</span>.state;
 
-        <span class="hljs-built_in">Object</span>.entries(items).forEach(<span class="hljs-function">(<span class="hljs-params">[key, value]</span>) =&gt;</span> {
+        <span class="hljs-keyword">const</span> stateSetters = (state) ? state.setters : Ωempty;
+        <span class="hljs-keyword">const</span> stateDefs = (state) ? state.defs : Ωempty;
+
+        <span class="hljs-keyword">let</span> predefined, i, key, value;
+
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; keysLen; i++) {
+
+            key = keys[i];
+            value = items[key];
 
             <span class="hljs-keyword">if</span> ((key.indexOf(<span class="hljs-string">&#x27;video_&#x27;</span>) === <span class="hljs-number">0</span> || key.indexOf(<span class="hljs-string">&#x27;image_&#x27;</span>) === <span class="hljs-number">0</span>) &amp;&amp; source) {
 
@@ -1054,20 +1068,22 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
 
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (key &amp;&amp; key !== <span class="hljs-string">&#x27;name&#x27;</span> &amp;&amp; value != <span class="hljs-literal">null</span>) {
 
-                predefined = setters[key];
-                stateFlag = <span class="hljs-literal">false</span>;
+                <span class="hljs-keyword">if</span> (stateKeys.indexOf(key) &lt; <span class="hljs-number">0</span>) {
 
-                <span class="hljs-keyword">if</span> (!predefined) {
+                    predefined = setters[key];
+
+                    <span class="hljs-keyword">if</span> (predefined) predefined.call(<span class="hljs-built_in">this</span>, value);
+                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] != <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-built_in">this</span>[key] = value;
+                }
+                <span class="hljs-keyword">else</span> {
 
                     predefined = stateSetters[key];
-                    stateFlag = <span class="hljs-literal">true</span>;
-                }
 
-                <span class="hljs-keyword">if</span> (predefined) predefined.call(stateFlag ? <span class="hljs-built_in">this</span>.state : <span class="hljs-built_in">this</span>, value);
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] !== <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-built_in">this</span>[key] = value;
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> stateDefs[key] !== <span class="hljs-string">&#x27;undefined&#x27;</span>) state[key] = value;
+                    <span class="hljs-keyword">if</span> (predefined) predefined.call(state, value);
+                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> stateDefs[key] != <span class="hljs-string">&#x27;undefined&#x27;</span>) state[key] = value;
+                }
             }
-        }, <span class="hljs-built_in">this</span>);
+        }
     }
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
@@ -1742,6 +1758,8 @@ scrawl.makePicture({
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makePicture = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Picture(items);
 };
 

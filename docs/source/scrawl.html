@@ -178,6 +178,11 @@ init();</pre></div></div>
 
 
 <span class="hljs-keyword">import</span> { 
+    makeConicGradient,
+} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/conicGradient.js&#x27;</span>;
+
+
+<span class="hljs-keyword">import</span> { 
     requestCoordinate, 
     releaseCoordinate,
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./factory/coordinate.js&#x27;</span>;
@@ -612,12 +617,11 @@ init();</p>
               <div class="sswrap ">
                 <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
-              <p>factory/coordinate.js</p>
+              <p>factory/conicGradient.js</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    requestCoordinate, 
-    releaseCoordinate,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    makeConicGradient,</pre></div></div>
             
         </li>
         
@@ -628,11 +632,12 @@ init();</p>
               <div class="sswrap ">
                 <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
-              <p>factory/emitter.js</p>
+              <p>factory/coordinate.js</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    makeEmitter,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    requestCoordinate, 
+    releaseCoordinate,</pre></div></div>
             
         </li>
         
@@ -643,11 +648,11 @@ init();</p>
               <div class="sswrap ">
                 <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
-              <p>factory/filter.js</p>
+              <p>factory/emitter.js</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    makeFilter,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    makeEmitter,</pre></div></div>
             
         </li>
         
@@ -658,11 +663,11 @@ init();</p>
               <div class="sswrap ">
                 <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
-              <p>factory/particleForce.js</p>
+              <p>factory/filter.js</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    makeForce,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    makeFilter,</pre></div></div>
             
         </li>
         
@@ -673,11 +678,11 @@ init();</p>
               <div class="sswrap ">
                 <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
-              <p>factory/gradient.js</p>
+              <p>factory/particleForce.js</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    makeGradient,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    makeForce,</pre></div></div>
             
         </li>
         
@@ -688,11 +693,11 @@ init();</p>
               <div class="sswrap ">
                 <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
-              <p>factory/grid.js</p>
+              <p>factory/gradient.js</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    makeGrid,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    makeGradient,</pre></div></div>
             
         </li>
         
@@ -703,11 +708,11 @@ init();</p>
               <div class="sswrap ">
                 <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
-              <p>factory/group.js</p>
+              <p>factory/grid.js</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    makeGroup,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    makeGrid,</pre></div></div>
             
         </li>
         
@@ -717,6 +722,21 @@ init();</p>
               
               <div class="sswrap ">
                 <a class="ss" href="#section-27">&#x00a7;</a>
+              </div>
+              <p>factory/group.js</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    makeGroup,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p>factory/imageAsset.js</p>
 
@@ -731,11 +751,11 @@ init();</p>
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p>factory/line.js</p>
 
@@ -746,11 +766,11 @@ init();</p>
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p>factory/loom.js</p>
 
@@ -761,11 +781,11 @@ init();</p>
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p>factory/mesh.js</p>
 
@@ -776,11 +796,11 @@ init();</p>
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p>factory/net.js</p>
 
@@ -791,11 +811,11 @@ init();</p>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p>factory/noise.js</p>
 
@@ -806,11 +826,11 @@ init();</p>
         </li>
         
         
-        <li id="section-33">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p>factory/oval.js</p>
 
@@ -821,11 +841,11 @@ init();</p>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p>factory/pattern.js</p>
 
@@ -836,11 +856,11 @@ init();</p>
         </li>
         
         
-        <li id="section-35">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p>factory/phrase.js</p>
 
@@ -851,11 +871,11 @@ init();</p>
         </li>
         
         
-        <li id="section-36">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p>factory/picture.js</p>
 
@@ -866,11 +886,11 @@ init();</p>
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p>factory/polygon.js</p>
 
@@ -881,11 +901,11 @@ init();</p>
         </li>
         
         
-        <li id="section-38">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p>factory/polyline.js</p>
 
@@ -896,11 +916,11 @@ init();</p>
         </li>
         
         
-        <li id="section-39">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p>factory/quadratic.js</p>
 
@@ -911,11 +931,11 @@ init();</p>
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p>factory/quaternion.js</p>
 
@@ -927,11 +947,11 @@ init();</p>
         </li>
         
         
-        <li id="section-41">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p>factory/radialGradient.js</p>
 
@@ -942,11 +962,11 @@ init();</p>
         </li>
         
         
-        <li id="section-42">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p>factory/rectangle.js</p>
 
@@ -957,11 +977,11 @@ init();</p>
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p>factory/renderAnimation.js</p>
 
@@ -972,11 +992,11 @@ init();</p>
         </li>
         
         
-        <li id="section-44">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p>factory/shape.js</p>
 
@@ -987,11 +1007,11 @@ init();</p>
         </li>
         
         
-        <li id="section-45">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p>factory/spiral.js</p>
 
@@ -1002,11 +1022,11 @@ init();</p>
         </li>
         
         
-        <li id="section-46">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p>factory/particleSpring.js</p>
 
@@ -1017,11 +1037,11 @@ init();</p>
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p>factory/spriteAsset.js</p>
 
@@ -1032,11 +1052,11 @@ init();</p>
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p>factory/star.js</p>
 
@@ -1047,11 +1067,11 @@ init();</p>
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p>factory/tetragon.js</p>
 
@@ -1062,11 +1082,11 @@ init();</p>
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p>factory/ticker.js</p>
 
@@ -1077,11 +1097,11 @@ init();</p>
         </li>
         
         
-        <li id="section-51">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p>factory/tracer.js</p>
 
@@ -1092,11 +1112,11 @@ init();</p>
         </li>
         
         
-        <li id="section-52">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p>factory/tween.js</p>
 
@@ -1107,11 +1127,11 @@ init();</p>
         </li>
         
         
-        <li id="section-53">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p>factory/vector.js</p>
 
@@ -1123,11 +1143,11 @@ init();</p>
         </li>
         
         
-        <li id="section-54">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p>factory/videoAsset.js</p>
 
@@ -1140,11 +1160,11 @@ init();</p>
         </li>
         
         
-        <li id="section-55">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p>factory/wheel.js</p>
 
@@ -1155,11 +1175,11 @@ init();</p>
         </li>
         
         
-        <li id="section-56">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p>factory/particleWorld.js</p>
 

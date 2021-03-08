@@ -105,6 +105,11 @@
                 </a>
               
                 
+                <a class="source" href="conicGradient.html">
+                  ./source/factory/conicGradient.js
+                </a>
+              
+                
                 <a class="source" href="coordinate.html">
                   ./source/factory/coordinate.js
                 </a>
@@ -521,7 +526,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">cell</span>, <span class="hljs-title">cellnames</span>, <span class="hljs-title">styles</span>, <span class="hljs-title">stylesnames</span>, <span class="hljs-title">artefact</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
 <span class="hljs-keyword">import</span> { scrawlCanvasHold } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/document.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { mergeOver, pushUnique, xt, xta, isa_obj, isa_number } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { mergeOver, pushUnique, xt, xta, isa_obj, isa_number, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { requestCell, releaseCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./cell.js&#x27;</span>;
 
@@ -633,38 +638,11 @@ scrawlCanvasHold.appendChild(fontHeightCalculator);
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Phrase = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Phrase = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
-    <span class="hljs-built_in">this</span>.fontAttributes = makeFontAttributes(items);
-
-    <span class="hljs-keyword">delete</span> items.font;
-    <span class="hljs-keyword">delete</span> items.style;
-    <span class="hljs-keyword">delete</span> items.variant;
-    <span class="hljs-keyword">delete</span> items.weight;
-    <span class="hljs-keyword">delete</span> items.stretch;
-    <span class="hljs-keyword">delete</span> items.size;
-    <span class="hljs-keyword">delete</span> items.sizeValue;
-    <span class="hljs-keyword">delete</span> items.sizeMetric;
-    <span class="hljs-keyword">delete</span> items.family;
+    <span class="hljs-built_in">this</span>.fontAttributes = makeFontAttributes(Ωempty);
 
     <span class="hljs-built_in">this</span>.entityInit(items);
-
-    <span class="hljs-built_in">this</span>.sectionStyles = [];
-    <span class="hljs-built_in">this</span>.sectionClasses = {
-        <span class="hljs-string">&#x27;DEFAULTS&#x27;</span>: { <span class="hljs-attr">defaults</span>: <span class="hljs-literal">true</span> },
-        <span class="hljs-string">&#x27;BOLD&#x27;</span>: { <span class="hljs-attr">weight</span>: <span class="hljs-string">&#x27;bold&#x27;</span> },
-        <span class="hljs-string">&#x27;ITALIC&#x27;</span>: { <span class="hljs-attr">style</span>: <span class="hljs-string">&#x27;italic&#x27;</span> },
-        <span class="hljs-string">&#x27;SMALL-CAPS&#x27;</span>: { <span class="hljs-attr">variant</span>: <span class="hljs-string">&#x27;small-caps&#x27;</span> },
-        <span class="hljs-string">&#x27;HIGHLIGHT&#x27;</span>: { <span class="hljs-attr">highlight</span>: <span class="hljs-literal">true</span> },
-        <span class="hljs-string">&#x27;UNDERLINE&#x27;</span>: { <span class="hljs-attr">underline</span>: <span class="hljs-literal">true</span> },
-        <span class="hljs-string">&#x27;OVERLINE&#x27;</span>: { <span class="hljs-attr">overline</span>: <span class="hljs-literal">true</span> },
-        <span class="hljs-string">&#x27;/BOLD&#x27;</span>: { <span class="hljs-attr">weight</span>: <span class="hljs-string">&#x27;normal&#x27;</span> },
-        <span class="hljs-string">&#x27;/ITALIC&#x27;</span>: { <span class="hljs-attr">style</span>: <span class="hljs-string">&#x27;normal&#x27;</span> },
-        <span class="hljs-string">&#x27;/SMALL-CAPS&#x27;</span>: { <span class="hljs-attr">variant</span>: <span class="hljs-string">&#x27;normal&#x27;</span> },
-        <span class="hljs-string">&#x27;/HIGHLIGHT&#x27;</span>: { <span class="hljs-attr">highlight</span>: <span class="hljs-literal">false</span> },
-        <span class="hljs-string">&#x27;/UNDERLINE&#x27;</span>: { <span class="hljs-attr">underline</span>: <span class="hljs-literal">false</span> },
-        <span class="hljs-string">&#x27;/OVERLINE&#x27;</span>: { <span class="hljs-attr">overline</span>: <span class="hljs-literal">false</span> }
-    };
 
     <span class="hljs-built_in">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
     <span class="hljs-built_in">this</span>.dirtyText = <span class="hljs-literal">true</span>;
@@ -711,7 +689,27 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
             </div>
             
             <div class="content"><div class='highlight'><pre>P = baseMix(P);
-P = entityMix(P);</pre></div></div>
+P = entityMix(P);
+
+P.midInitActions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.sectionStyles = [];
+    <span class="hljs-built_in">this</span>.sectionClasses = {
+        <span class="hljs-string">&#x27;DEFAULTS&#x27;</span>: { <span class="hljs-attr">defaults</span>: <span class="hljs-literal">true</span> },
+        <span class="hljs-string">&#x27;BOLD&#x27;</span>: { <span class="hljs-attr">weight</span>: <span class="hljs-string">&#x27;bold&#x27;</span> },
+        <span class="hljs-string">&#x27;ITALIC&#x27;</span>: { <span class="hljs-attr">style</span>: <span class="hljs-string">&#x27;italic&#x27;</span> },
+        <span class="hljs-string">&#x27;SMALL-CAPS&#x27;</span>: { <span class="hljs-attr">variant</span>: <span class="hljs-string">&#x27;small-caps&#x27;</span> },
+        <span class="hljs-string">&#x27;HIGHLIGHT&#x27;</span>: { <span class="hljs-attr">highlight</span>: <span class="hljs-literal">true</span> },
+        <span class="hljs-string">&#x27;UNDERLINE&#x27;</span>: { <span class="hljs-attr">underline</span>: <span class="hljs-literal">true</span> },
+        <span class="hljs-string">&#x27;OVERLINE&#x27;</span>: { <span class="hljs-attr">overline</span>: <span class="hljs-literal">true</span> },
+        <span class="hljs-string">&#x27;/BOLD&#x27;</span>: { <span class="hljs-attr">weight</span>: <span class="hljs-string">&#x27;normal&#x27;</span> },
+        <span class="hljs-string">&#x27;/ITALIC&#x27;</span>: { <span class="hljs-attr">style</span>: <span class="hljs-string">&#x27;normal&#x27;</span> },
+        <span class="hljs-string">&#x27;/SMALL-CAPS&#x27;</span>: { <span class="hljs-attr">variant</span>: <span class="hljs-string">&#x27;normal&#x27;</span> },
+        <span class="hljs-string">&#x27;/HIGHLIGHT&#x27;</span>: { <span class="hljs-attr">highlight</span>: <span class="hljs-literal">false</span> },
+        <span class="hljs-string">&#x27;/UNDERLINE&#x27;</span>: { <span class="hljs-attr">underline</span>: <span class="hljs-literal">false</span> },
+        <span class="hljs-string">&#x27;/OVERLINE&#x27;</span>: { <span class="hljs-attr">overline</span>: <span class="hljs-literal">false</span> }
+    };
+};</pre></div></div>
             
         </li>
         
@@ -1167,7 +1165,6 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
                 <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
-<p>No additional clone functionality required</p>
 
             </div>
             
@@ -2905,11 +2902,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
               <div class="sswrap ">
                 <a class="ss" href="#section-94">&#x00a7;</a>
               </div>
-              <p><code>regularStampSynchronousActions</code> - overwrites the mixin/entity.js function</p>
+              <p><code>regularStamp</code> - overwrites the mixin/entity.js function</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.regularStampSynchronousActions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.regularStamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
     <span class="hljs-keyword">let</span> dest = <span class="hljs-built_in">this</span>.currentHost, 
         method = <span class="hljs-built_in">this</span>.method,
@@ -3011,7 +3008,7 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
               <div class="sswrap ">
                 <a class="ss" href="#section-96">&#x00a7;</a>
               </div>
-              <p><code>calculateGlyphPathPositions</code> - internal helper function called by <code>regularStampSynchronousActions</code></p>
+              <p><code>calculateGlyphPathPositions</code> - internal helper function called by <code>regularStamp</code></p>
 
             </div>
             
@@ -3104,7 +3101,7 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
               <div class="sswrap ">
                 <a class="ss" href="#section-98">&#x00a7;</a>
               </div>
-              <p><code>preStamper</code> - internal helper function called by <code>regularStampSynchronousActions</code></p>
+              <p><code>preStamper</code> - internal helper function called by <code>regularStamp</code></p>
 
             </div>
             
@@ -3183,7 +3180,7 @@ data[3] - width</p>
               <div class="sswrap ">
                 <a class="ss" href="#section-100">&#x00a7;</a>
               </div>
-              <p><code>stamper</code> - object holding stamp method functions - functions called by <code>regularStampSynchronousActions</code></p>
+              <p><code>stamper</code> - object holding stamp method functions - functions called by <code>regularStamp</code></p>
 
             </div>
             
@@ -3337,7 +3334,7 @@ data[3] - width</p>
               <div class="sswrap ">
                 <a class="ss" href="#section-108">&#x00a7;</a>
               </div>
-              <p><code>drawBoundingBox</code> - internal helper function called by <code>regularStampSynchronousActions</code></p>
+              <p><code>drawBoundingBox</code> - internal helper function called by <code>regularStamp</code></p>
 
             </div>
             
@@ -3364,7 +3361,7 @@ data[3] - width</p>
               <div class="sswrap ">
                 <a class="ss" href="#section-109">&#x00a7;</a>
               </div>
-              <p><code>performRotation</code> - internal helper function called by <code>regularStampSynchronousActions</code></p>
+              <p><code>performRotation</code> - internal helper function called by <code>regularStamp</code></p>
 <ul>
 <li>When doing text along a path, we have to perform a rendering context transformation for every glyph</li>
 <li>In other cases, we perform the action on a per-line basis</li>
@@ -3433,6 +3430,8 @@ data[3] - width</p>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makePhrase = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Phrase(items);
 };
 

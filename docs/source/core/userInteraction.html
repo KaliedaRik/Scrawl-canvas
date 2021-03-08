@@ -105,6 +105,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/conicGradient.html">
+                  ./source/factory/conicGradient.js
+                </a>
+              
+                
                 <a class="source" href="../factory/coordinate.html">
                   ./source/factory/coordinate.js
                 </a>
@@ -697,7 +702,10 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> updateUiSubscribedElements = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    uiSubscribedElements.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> updateUiSubscribedElement(item));
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = uiSubscribedElements.length; i &lt; iz; i++) {
+
+        updateUiSubscribedElement(uiSubscribedElements[i]);
+    }
 };
 
 <span class="hljs-keyword">const</span> updateUiSubscribedElement = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">art</span>) </span>{
@@ -1079,7 +1087,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> observeAndUpdate = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> observeAndUpdate = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
     <span class="hljs-keyword">if</span> (!xta(items.event, items.origin, items.updates)) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 
@@ -1248,7 +1256,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeDragZone = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeDragZone = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
     <span class="hljs-keyword">let</span> {zone, coordinateSource, collisionGroup, startOn, endOn, updateOnStart, updateOnEnd, exposeCurrentArtefact} = items</pre></div></div>
             

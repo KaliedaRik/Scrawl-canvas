@@ -105,6 +105,11 @@
                 </a>
               
                 
+                <a class="source" href="conicGradient.html">
+                  ./source/factory/conicGradient.js
+                </a>
+              
+                
                 <a class="source" href="coordinate.html">
                   ./source/factory/coordinate.js
                 </a>
@@ -528,7 +533,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">artefact</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
-<span class="hljs-keyword">import</span> { mergeOver, addStrings, pushUnique } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { mergeOver, addStrings, pushUnique, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./coordinate.js&#x27;</span>;
 
@@ -549,7 +554,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Quadratic = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Quadratic = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
     <span class="hljs-built_in">this</span>.control = makeCoordinate();
     <span class="hljs-built_in">this</span>.currentControl = makeCoordinate();
@@ -1061,26 +1066,29 @@ D.control = <span class="hljs-function"><span class="hljs-keyword">function</spa
 
 P.preparePinsForStamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">let</span> ePivot = <span class="hljs-built_in">this</span>.endPivot,
+    <span class="hljs-keyword">const</span> dirtyPins = <span class="hljs-built_in">this</span>.dirtyPins,
+        ePivot = <span class="hljs-built_in">this</span>.endPivot,
         ePath = <span class="hljs-built_in">this</span>.endPath,
         cPivot = <span class="hljs-built_in">this</span>.controlPivot,
         cPath = <span class="hljs-built_in">this</span>.controlPath;
 
-    <span class="hljs-built_in">this</span>.dirtyPins.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = dirtyPins.length, name; i &lt; iz; i++) {
 
-        <span class="hljs-keyword">if</span> ((cPivot &amp;&amp; cPivot.name === name) || (cPath &amp;&amp; cPath.name === name)) {
+        name = dirtyPins[i];
+
+        <span class="hljs-keyword">if</span> ((cPivot &amp;&amp; cPivot.name === name) || (cPath &amp;&amp; cPath.name == name)) {
 
             <span class="hljs-built_in">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
             <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.controlLockTo.includes(<span class="hljs-string">&#x27;path&#x27;</span>)) <span class="hljs-built_in">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
         }
 
-        <span class="hljs-keyword">if</span> ((ePivot &amp;&amp; ePivot.name === name) || (ePath &amp;&amp; ePath.name === name)) {
+        <span class="hljs-keyword">if</span> ((ePivot &amp;&amp; ePivot.name === name) || (ePath &amp;&amp; ePath.name == name)) {
 
             <span class="hljs-built_in">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
             <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.endLockTo.includes(<span class="hljs-string">&#x27;path&#x27;</span>)) <span class="hljs-built_in">this</span>.currentEndPathData = <span class="hljs-literal">false</span>;
         }
-    });
-    <span class="hljs-built_in">this</span>.dirtyPins.length = <span class="hljs-number">0</span>;
+    };
+    dirtyPins.length = <span class="hljs-number">0</span>;
 };</pre></div></div>
             
         </li>
@@ -1140,8 +1148,9 @@ P.preparePinsForStamp = <span class="hljs-function"><span class="hljs-keyword">f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeQuadratic = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeQuadratic = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
+    <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     items.species = <span class="hljs-string">&#x27;quadratic&#x27;</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Quadratic(items);
 };

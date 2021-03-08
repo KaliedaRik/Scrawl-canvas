@@ -105,6 +105,11 @@
                 </a>
               
                 
+                <a class="source" href="conicGradient.html">
+                  ./source/factory/conicGradient.js
+                </a>
+              
+                
                 <a class="source" href="coordinate.html">
                   ./source/factory/coordinate.js
                 </a>
@@ -511,7 +516,7 @@ Element  ~~&gt; Entity (eg Block)
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">group</span>, <span class="hljs-title">stack</span>, <span class="hljs-title">element</span>, <span class="hljs-title">artefact</span>, <span class="hljs-title">canvas</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
-<span class="hljs-keyword">import</span> { mergeOver, pushUnique, isa_dom, removeItem, xt, addStrings, λ<span class="hljs-built_in">this</span>, λ<span class="hljs-literal">null</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { mergeOver, pushUnique, isa_dom, removeItem, xt, addStrings, λ<span class="hljs-built_in">this</span>, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { rootElements, setRootElementsSort, domShow } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/document.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { uiSubscribedElements, currentCorePosition } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/userInteraction.js&#x27;</span>;
 
@@ -537,7 +542,7 @@ Element  ~~&gt; Entity (eg Block)
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Stack = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Stack = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
     <span class="hljs-keyword">let</span> g, el;
 
@@ -861,7 +866,7 @@ S.perspectiveZ = <span class="hljs-function"><span class="hljs-keyword">function
     <span class="hljs-built_in">this</span>.perspective.z = item;
     <span class="hljs-built_in">this</span>.dirtyPerspective = <span class="hljs-literal">true</span>;
 };
-S.perspective = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item = {}</span>) </span>{
+S.perspective = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item = Ωempty</span>) </span>{
 
     <span class="hljs-built_in">this</span>.perspective.x = (xt(item.x)) ? item.x : <span class="hljs-built_in">this</span>.perspective.x;
     <span class="hljs-built_in">this</span>.perspective.y = (xt(item.y)) ? item.y : <span class="hljs-built_in">this</span>.perspective.y;
@@ -905,7 +910,7 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.updateArtefacts = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.updateArtefacts = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
     <span class="hljs-built_in">this</span>.groupBuckets.forEach(<span class="hljs-function"><span class="hljs-params">grp</span> =&gt;</span> {
 
@@ -1228,9 +1233,9 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.addNewElement = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.addNewElement = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (items.tag) {
+    <span class="hljs-keyword">if</span> (items &amp;&amp; items.tag) {
 
         items.domElement = <span class="hljs-built_in">document</span>.createElement(items.tag);
         items.domElement.setAttribute(<span class="hljs-string">&#x27;data-group&#x27;</span>, <span class="hljs-built_in">this</span>.name);
@@ -1270,6 +1275,7 @@ D.perspectiveY = <span class="hljs-function"><span class="hljs-keyword">function
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeStack = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
 
+    <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Stack(items);
 };
 

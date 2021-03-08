@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Quaternion factory</title>
+  <title>ConicGradient factory</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
@@ -454,14 +454,23 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
-              <h1 id="quaternion-factory">Quaternion factory</h1>
-<p>Scrawl-canvas uses quaternion objects for some of its calculations - in particular for calculating DOM element 3D rotation values. These objects are not stored in the library; rather, they are kept in a <strong>quaternion pool</strong> and pulled from it when required.</p>
-<p>TODO: there’s errors in the math here! See in particular Demo <a href="../../demo/component-002.html">Component-002</a> to experiment:</p>
+              <h1 id="conicgradient-factory">ConicGradient factory</h1>
+<p>Scrawl-canvas ConicGradient objects implement the Canvas API’s <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createConicGradient">createConicGradient</a> method. The resulting <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasGradient">CanvasGradient</a> object can be used by any Scrawl-canvas entity as its <code>fillStyle</code> or <code>strokeStyle</code>.</p>
 <ul>
-<li>Pitch always appears to rotate with reference to the element. Yaw and roll, however, seem to rotate with reference to the stack frame, or the element - or possibly a combination of both - dependant on the values of the other euler attributes.</li>
-<li><code>quaternionMultiply</code> is almost certainly wrong - caused by trying to convert code meant for a y-axis-upwards frame to code that works in a y-axis-downwards frame</li>
-<li>The <code>setFromEuler</code> function is also (probably) wrong</li>
-<li>I hate quaternions!</li>
+<li>Most gradient-related functionality has been coded up in the <a href="../mixin/styles.html">styles mixin</a>, and is documented there.</li>
+<li>ConicGradients fully participate in the Scrawl-canvas packet system, thus can be saved, restored, cloned, killed, etc.</li>
+<li>ConicGradients can be animated in a variety of ways; the can act as target objects for Scrawl-canvas Tweens.</li>
+</ul>
+<p>ConicGradients can be applied to an entity in two different ways, depending on the entity’s <code>lockFillStyleToEntity</code> and <code>lockStrokeStyleToEntity</code> attribute flags:</p>
+<ul>
+<li><strong>Cell-locked</strong> ConicGradients will cover the entire Cell; an entity moved from one part of the display to another will show different parts of the gradient</li>
+<li><strong>Entity-locked</strong> ConicGradients display their entire color range on the entity, move with the entity and even rotate with the entity.</li>
+</ul>
+<p><strong>TO NOTE: <em>this is an experimental technology; most browsers do not (yet) support conic gradients for canvases, only in CSS.</em></strong> In these browsers, the gradient will return a solid, transparent color. To see the effect, enable the appropriate flags in the browser:</p>
+<ul>
+<li>Chrome browsers&lt; - from version 86: this feature is behind the #new-canvas-2d-api preferences. To change preferences in Chrome, visit chrome://flags</li>
+<li>Firefox browsers - From version 86: this feature is behind the canvas.createConicGradient.enabled preferences. To change preferences in Firefox, visit about:config</li>
+<li>Other browsers - currently no signals about support. See the MDN createConicGradient() page for further details</li>
 </ul>
 
             </div>
@@ -475,14 +484,12 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
-              <h4 id="imports">Imports</h4>
+              <h4 id="demos">Demos:</h4>
+<ul>
+<li><a href="../../demo/canvas-049.html">Canvas-049</a> - Conic gradients</li>
+</ul>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { radian, <span class="hljs-title">constructors</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
-<span class="hljs-keyword">import</span> { isa_quaternion, isa_number, xt, xto, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { requestVector, releaseVector, makeVector } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./vector.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -493,20 +500,15 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <h4 id="quaternion-constructor">Quaternion constructor</h4>
+              <h4 id="imports">Imports</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Quaternion = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+<span class="hljs-keyword">import</span> { mergeOver, addStrings, isa_number, pushUnique, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
-    <span class="hljs-built_in">this</span>.name = items.name || <span class="hljs-string">&#x27;generic&#x27;</span>;
-    <span class="hljs-built_in">this</span>.n = items.n || <span class="hljs-number">1</span>;
-    <span class="hljs-built_in">this</span>.v = makeVector();
-
-    <span class="hljs-built_in">this</span>.set(items);
-
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
-};</pre></div></div>
+<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
+<span class="hljs-keyword">import</span> stylesMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/styles.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -517,12 +519,15 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <h4 id="quaternion-prototype">Quaternion prototype</h4>
+              <h4 id="conicgradient-constructor">ConicGradient constructor</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Quaternion.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">&#x27;Quaternion&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> ConicGradient = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.stylesInit(items);
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+};</pre></div></div>
             
         </li>
         
@@ -533,10 +538,16 @@ P.type = <span class="hljs-string">&#x27;Quaternion&#x27;</span>;</pre></div></d
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <h4 id="mixins">Mixins</h4>
-<p>Quaternion objects do not use mixins - they are regular Javascript objects. As such, they do not possess packet, clone or kill functionality.</p>
+              <h4 id="conicgradient-prototype">ConicGradient prototype</h4>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = ConicGradient.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
+
+P.type = <span class="hljs-string">&#x27;ConicGradient&#x27;</span>;
+P.lib = <span class="hljs-string">&#x27;styles&#x27;</span>;
+P.isArtefact = <span class="hljs-literal">false</span>;
+P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -547,11 +558,12 @@ P.type = <span class="hljs-string">&#x27;Quaternion&#x27;</span>;</pre></div></d
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <h4 id="quaternion-attributes">Quaternion attributes</h4>
-<p>The <strong>name</strong>, <strong>n</strong> and <strong>v</strong> (Vector object) attributes are set in the Quaternion constructor - the Quaternion object does not have a <code>defs</code> object. The Vector attributes <strong>v.x</strong>, <strong>v.y</strong>, <strong>v.z</strong> can also be set directly.</p>
-<p><strong>We strongly advise against setting Quaternion object attributes directly!</strong> Quaternions are complex beasts and their <code>n</code> and <code>v</code> attributes are linked in mysterious (and possibly debauched) ways. Set and manipulate your Quaternion object’s attributes using the functions below.</p>
+              <h4 id="mixins">Mixins</h4>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>P = baseMix(P);
+P = stylesMix(P);</pre></div></div>
             
         </li>
         
@@ -562,9 +574,16 @@ P.type = <span class="hljs-string">&#x27;Quaternion&#x27;</span>;</pre></div></d
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+              <h4 id="conicgradient-attributes">ConicGradient attributes</h4>
+<ul>
+<li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/styles.html">styles mixin</a>: <strong>start, end, palette, paletteStart, paletteEnd, cyclePalette</strong>.</li>
+<li>Attributes defined in the <a href="./palette.html">Palette factory</a>: <strong>colors, cyclic</strong>.</li>
+</ul>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
             
         </li>
         
@@ -575,9 +594,16 @@ P.type = <span class="hljs-string">&#x27;Quaternion&#x27;</span>;</pre></div></d
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p>Quaternion attributes can be retrieved directly - <code>myquaternion.n</code>, <code>myquaternion.v</code>. The <strong>v</strong> attribute is a Vector object, thus its attributes can be retrieved using that object’s convenience functions <code>myquaternion.v.getXYCoordinate</code> and <code>myquaternion.v.getXYZCoordinate</code> - these functions will return Arrays.</p>
+              <p>ConicGradients calculate their gradients as a sweep of color around the <code>start</code> (<code>startX</code> and <code>startY</code>) coordinate. The <strong>startAngle</strong> attribute - measured in degrees, not radians - represents the angle at which the color stop 0 occurs.</p>
+<ul>
+<li>The sweep of colors is, by default, clockwise around the start coordinate; to reverse this, swap the gradient’s <code>paletteStart</code> and <code>paletteEnd</code> attributes.</li>
+</ul>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    startAngle: <span class="hljs-number">0</span>,
+};
+P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -588,85 +614,31 @@ P.type = <span class="hljs-string">&#x27;Quaternion&#x27;</span>;</pre></div></d
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p>The Quaternion <code>set</code> function is overloaded. It can accept the following arguments:</p>
+              <p>In addition to the attributes defined in the <strong>base</strong> and <strong>styles</strong> mixins, Gradients also pass through Palette attributes to their Palette object. </p>
+<p>Attributes from <strong>base</strong> mixin:</p>
 <ul>
-<li><code>set(Quaternion)</code> - a Quaternion object</li>
-<li><code>set(Vector)</code> - a Vector object</li>
-<li><code>set({x:Number, y:Number, z:Number})</code> - a Javascript object containing one or more attributes from: x, y, z - with values in degrees (not radians)</li>
-<li><code>set({pitch:Number, yaw:Number, roll:Number})</code> - a Javascript object containing one or more attributes: <strong>pitch</strong> (for x-axis rotations); <strong>yaw</strong> (for y-axis rotations); <strong>roll</strong> (for z-axis rotations) - with values in degrees (not radians)</li>
+<li><code>name</code></li>
+</ul>
+<p>Attributes from <strong>styles</strong> mixin:</p>
+<ul>
+<li><code>start</code></li>
+<li><code>startX</code></li>
+<li><code>startY</code></li>
+<li><code>end</code></li>
+<li><code>endX</code></li>
+<li><code>endY</code></li>
+<li><code>palette</code></li>
+<li><code>paletteStart</code></li>
+<li><code>paletteEnd</code></li>
+<li><code>cyclePalette</code></li>
+</ul>
+<p>Attributes from the <strong>palette</strong> factory:</p>
+<ul>
+<li><code>colors</code> </li>
+<li><code>cyclic</code></li>
 </ul>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>P.set = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">obj = Ωempty</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (isa_quaternion(obj)) <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.setFromQuaternion(obj);
-
-    <span class="hljs-keyword">if</span> ((obj &amp;&amp; obj.type &amp;&amp; obj.type === <span class="hljs-string">&#x27;Vector&#x27;</span>)) <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.setFromVector(obj);
-
-    <span class="hljs-keyword">if</span> (xto(obj.pitch, obj.yaw, obj.roll)) <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.setFromEuler(obj);
-
-    <span class="hljs-keyword">let</span> x, y, z, n, v,
-        tv = <span class="hljs-built_in">this</span>.v;
-
-    v = (xt(obj.vector) || xt(obj.v)) ? (obj.vector || obj.v) : <span class="hljs-literal">false</span>;
-    n = (xt(obj.scalar) || xt(obj.n)) ? (obj.scalar || obj.n || <span class="hljs-number">0</span>) : <span class="hljs-literal">false</span>;
-
-    x = (v) ? (v.x || <span class="hljs-number">0</span>) : obj.x || <span class="hljs-literal">false</span>;
-    y = (v) ? (v.y || <span class="hljs-number">0</span>) : obj.y || <span class="hljs-literal">false</span>;
-    z = (v) ? (v.z || <span class="hljs-number">0</span>) : obj.z || <span class="hljs-literal">false</span>;
-
-    <span class="hljs-built_in">this</span>.n = (isa_number(n)) ? n : <span class="hljs-built_in">this</span>.n;
-
-    tv.x = (isa_number(x)) ? x : tv.x;
-    tv.y = (isa_number(y)) ? y : tv.y;
-    tv.z = (isa_number(z)) ? z : tv.z;
-    
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
-};
-
-P.setFromQuaternion = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (!isa_quaternion(item)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> Quaternion error - setFromQuaternion() bad argument: <span class="hljs-subst">${item}</span>`</span>);
-
-    <span class="hljs-keyword">let</span> tv = <span class="hljs-built_in">this</span>.v,
-        iv = item.v;
-
-    <span class="hljs-built_in">this</span>.n = item.n;
-    tv.x = iv.x;
-    tv.y = iv.y;
-    tv.z = iv.z;
-    
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
-};
-
-P.setFromEuler = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
-
-    <span class="hljs-keyword">let</span> pitch, yaw, roll, c1, c2, c3, s1, s2, s3,
-        cos = <span class="hljs-built_in">Math</span>.cos,
-        sin = <span class="hljs-built_in">Math</span>.sin,
-        tv = <span class="hljs-built_in">this</span>.v;
-
-    pitch = (items.pitch || items.x || <span class="hljs-number">0</span>) * radian;
-    yaw = (items.yaw || items.y || <span class="hljs-number">0</span>) * radian;
-    roll = (items.roll || items.z || <span class="hljs-number">0</span>) * radian;
-
-    c1 = cos( pitch / <span class="hljs-number">2</span> );
-    c2 = cos( yaw / <span class="hljs-number">2</span> );
-    c3 = cos( roll / <span class="hljs-number">2</span> );
-
-    s1 = sin( pitch / <span class="hljs-number">2</span> );
-    s2 = sin( yaw / <span class="hljs-number">2</span> );
-    s3 = sin( roll / <span class="hljs-number">2</span> );
-
-    tv.x = s1 * c2 * c3 + c1 * s2 * s3;
-    tv.y = c1 * s2 * c3 + s1 * c2 * s3;
-    tv.z = c1 * c2 * s3 - s1 * s2 * c3;
-
-    <span class="hljs-built_in">this</span>.n = c1 * c2 * c3 - s1 * s2 * s3;
-
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
-};</pre></div></div>
             
         </li>
         
@@ -677,9 +649,11 @@ P.setFromEuler = <span class="hljs-function"><span class="hljs-keyword">function
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <h4 id="prototype-functions">Prototype functions</h4>
+              <h4 id="packet-management">Packet management</h4>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">&#x27;palette&#x27;</span>]);</pre></div></div>
             
         </li>
         
@@ -690,21 +664,10 @@ P.setFromEuler = <span class="hljs-function"><span class="hljs-keyword">function
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <p>Set the Quaternion attributes to their default values</p>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality required</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>P.zero = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">let</span> v = <span class="hljs-built_in">this</span>.v;
-
-    <span class="hljs-built_in">this</span>.n = <span class="hljs-number">1</span>;
-    v.x = <span class="hljs-number">0</span>;
-    v.y = <span class="hljs-number">0</span>;
-    v.z = <span class="hljs-number">0</span>;
-
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
-};</pre></div></div>
             
         </li>
         
@@ -715,16 +678,10 @@ P.setFromEuler = <span class="hljs-function"><span class="hljs-keyword">function
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <p>Get the Quaternion’s <strong>magnitude</strong> value</p>
+              <h4 id="kill-management">Kill management</h4>
+<p>No additional kill functionality required</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>P.getMagnitude = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">let</span> v = <span class="hljs-built_in">this</span>.v;
-
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.sqrt((<span class="hljs-built_in">this</span>.n * <span class="hljs-built_in">this</span>.n) + (v.x * v.x) + (v.y * v.y) + (v.z * v.z));
-};</pre></div></div>
             
         </li>
         
@@ -735,31 +692,10 @@ P.setFromEuler = <span class="hljs-function"><span class="hljs-keyword">function
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
-              <p>Normalize the Quaternion</p>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+<p>No additional getter/setter functionality required</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>P.normalize = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">let</span> mag = <span class="hljs-built_in">this</span>.getMagnitude(),
-        v = <span class="hljs-built_in">this</span>.v;
-
-    <span class="hljs-keyword">if</span> (!mag) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> Quaternion error - normalize() division by zero: <span class="hljs-subst">${mag}</span>`</span>);
-
-    <span class="hljs-built_in">this</span>.n /= mag;
-    <span class="hljs-built_in">this</span>.n = (<span class="hljs-built_in">this</span>.n &gt; -<span class="hljs-number">0.000001</span> &amp;&amp; <span class="hljs-built_in">this</span>.n &lt; <span class="hljs-number">0.000001</span>) ? <span class="hljs-number">0</span> : <span class="hljs-built_in">this</span>.n;
-
-    v.x /= mag;
-    v.x = (v.x &gt; -<span class="hljs-number">0.000001</span> &amp;&amp; v.x &lt; <span class="hljs-number">0.000001</span>) ? <span class="hljs-number">0</span> : v.x;
-
-    v.y /= mag;
-    v.y = (v.y &gt; -<span class="hljs-number">0.000001</span> &amp;&amp; v.y &lt; <span class="hljs-number">0.000001</span>) ? <span class="hljs-number">0</span> : v.y;
-
-    v.z /= mag;
-    v.z = (v.z &gt; -<span class="hljs-number">0.000001</span> &amp;&amp; v.z &lt; <span class="hljs-number">0.000001</span>) ? <span class="hljs-number">0</span> : v.z;
-
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
-};</pre></div></div>
             
         </li>
         
@@ -770,35 +706,9 @@ P.setFromEuler = <span class="hljs-function"><span class="hljs-keyword">function
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
-              <p>Multiply the Quaternion by another Quaternion</p>
+              <h4 id="prototype-functions">Prototype functions</h4>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>P.quaternionMultiply = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (!isa_quaternion(item)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> Quaternion error - quaternionMultiply() bad argument: <span class="hljs-subst">${item}</span>`</span>);
-
-    <span class="hljs-keyword">let</span> tv = <span class="hljs-built_in">this</span>.v,
-        iv = item.v,
-
-        n1 = <span class="hljs-built_in">this</span>.n,
-        x1 = tv.x,
-        y1 = tv.y,
-        z1 = tv.z,
-
-        n2 = item.n,
-        x2 = iv.x,
-        y2 = iv.y,
-        z2 = iv.z;
-
-    <span class="hljs-built_in">this</span>.n = (n1 * n2) - (x1 * x2) - (y1 * y2) - (z1 * z2);
-
-    tv.x = (n1 * x2) + (x1 * n2) + (y1 * z2) - (z1 * y2);
-    tv.y = (n1 * y2) + (y1 * n2) + (z1 * x2) - (x1 * z2);
-    tv.z = (n1 * z2) + (z1 * n2) + (x1 * y2) - (y1 * x2);
-
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
-};</pre></div></div>
             
         </li>
         
@@ -809,24 +719,26 @@ P.setFromEuler = <span class="hljs-function"><span class="hljs-keyword">function
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
-              <p>Retrieve the Quaternion’s current angle (returns a Number representing degrees, not radians)</p>
+              <p><code>buildStyle</code> - internal function: creates the radial gradient on the Cell’s CanvasRenderingContext2D engine, and then adds the color stops to it.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.getAngle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">degree</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.buildStyle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">cell</span>) </span>{
+    
+    <span class="hljs-keyword">if</span> (cell) {
 
-    <span class="hljs-keyword">let</span> result;
+        <span class="hljs-keyword">let</span> engine = cell.engine;
 
-    degree = (xt(degree)) ? degree : <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">if</span> (engine) {
 
-    result = <span class="hljs-number">2</span> * <span class="hljs-built_in">Math</span>.acos(<span class="hljs-built_in">this</span>.n);
+            <span class="hljs-keyword">if</span> (!engine.createConicGradient) <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;rgba(0,0,0,0)&#x27;</span>;
 
-    <span class="hljs-keyword">if</span>(degree){
-
-        result *= (<span class="hljs-number">1</span> / radian);
+            <span class="hljs-keyword">let</span> gradient = engine.createConicGradient(...this.gradientArgs);
+            
+            <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.addStopsToGradient(gradient, <span class="hljs-built_in">this</span>.paletteStart, <span class="hljs-built_in">this</span>.paletteEnd, <span class="hljs-built_in">this</span>.cyclePalette);
+        }
     }
-
-    <span class="hljs-keyword">return</span> (result &gt; -<span class="hljs-number">0.000001</span> &amp;&amp; result &lt; <span class="hljs-number">0.000001</span>) ? <span class="hljs-number">0</span> : result;
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;rgba(0,0,0,0)&#x27;</span>;
 };</pre></div></div>
             
         </li>
@@ -838,23 +750,21 @@ P.setFromEuler = <span class="hljs-function"><span class="hljs-keyword">function
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
-              <p>Rotate the Quaternion using another Quaternion’s values</p>
+              <p><code>updateGradientArgs</code> - internal function</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.quaternionRotate = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.updateGradientArgs = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (!isa_quaternion(item)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> Quaternion error - quaternionRotate() bad argument: <span class="hljs-subst">${item}</span>`</span>);
+    <span class="hljs-keyword">let</span> gradientArgs = <span class="hljs-built_in">this</span>.gradientArgs,
+        currentStart = <span class="hljs-built_in">this</span>.currentStart,
+        startAngle = <span class="hljs-built_in">this</span>.startAngle;
 
-    <span class="hljs-keyword">let</span> q4 = requestQuaternion(item),
-        q5 = requestQuaternion(<span class="hljs-built_in">this</span>);
+    <span class="hljs-keyword">let</span> sx = currentStart[<span class="hljs-number">0</span>] + x,
+        sy = currentStart[<span class="hljs-number">1</span>] + y;
 
-    <span class="hljs-built_in">this</span>.setFromQuaternion(q4.quaternionMultiply(q5));
-
-    releaseQuaternion(q4);
-    releaseQuaternion(q5);
-    
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>
+    gradientArgs.length = <span class="hljs-number">0</span>;
+    gradientArgs.push(startAngle, sx, sy);
 };</pre></div></div>
             
         </li>
@@ -866,12 +776,42 @@ P.setFromEuler = <span class="hljs-function"><span class="hljs-keyword">function
               <div class="sswrap ">
                 <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
-              <h4 id="quaternion-pool">Quaternion pool</h4>
-<p>An attempt to reuse quaternions rather than constantly creating and deleting them</p>
+              <h4 id="factory">Factory</h4>
+<pre><code><span class="hljs-keyword">let</span> graddy = scrawl.makeConicGradient({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;mygradient&#x27;</span>,
+
+    <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+    <span class="hljs-attr">startAngle</span>: <span class="hljs-number">90</span>,
+});
+
+scrawl.makeBlock({
+   
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myblock&#x27;</span>,
+   
+    <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;90%&#x27;</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;90%&#x27;</span>,
+    <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;5%&#x27;</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;5%&#x27;</span>,
+
+    <span class="hljs-attr">fillStyle</span>: graddy,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;coral&#x27;</span>,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
+   
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillAndDraw&#x27;</span>,
+});
+</code></pre>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> quaternionPool = [];</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeConicGradient = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> ConicGradient(items);
+};
+
+<span class="hljs-title">constructors</span>.<span class="hljs-title">ConicGradient</span> = <span class="hljs-title">ConicGradient</span>;</pre></div></div>
             
         </li>
         
@@ -882,84 +822,12 @@ P.setFromEuler = <span class="hljs-function"><span class="hljs-keyword">function
               <div class="sswrap ">
                 <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
-              <p><code>exported function</code> - retrieve a Quaternion from the quaternion pool</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> requestQuaternion = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (!quaternionPool.length) {
-
-        quaternionPool.push(makeQuaternion({
-            <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pool&#x27;</span>
-        }));
-    }
-
-    <span class="hljs-keyword">let</span> q = quaternionPool.shift();
-
-    q.set(items);
-    
-    <span class="hljs-keyword">return</span> q
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
-              </div>
-              <p><code>exported function</code> - return a Quaternion to the quaternion pool. Failing to return Quaternion to the pool may lead to more inefficient code and possible memory leaks.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> releaseQuaternion = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">q</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (q &amp;&amp; q.type === <span class="hljs-string">&#x27;Quaternion&#x27;</span>) {
-
-        quaternionPool.push(q.zero());
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
-              </div>
-              <h4 id="factory">Factory</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeQuaternion = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
-
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Quaternion(items);
-};
-
-<span class="hljs-title">constructors</span>.<span class="hljs-title">Quaternion</span> = <span class="hljs-title">Quaternion</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
-              </div>
               <h4 id="exports">Exports</h4>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
-    makeQuaternion,
-    requestQuaternion,
-    releaseQuaternion,
+    makeConicGradient,
 };</pre></div></div>
             
         </li>

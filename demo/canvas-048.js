@@ -84,19 +84,6 @@ scrawl.makeFilter({
             compose: 'source-over',
         }
     ],
-
-// }).clone({
-
-//     name: "bottom-filter",
-
-//     actions: [
-//         {
-//             action: 'step-channels',
-//             red: 15,
-//             green: 60,
-//             blue: 60,
-//         }
-//     ],
 });
 
 
@@ -122,14 +109,6 @@ scrawl.importMediaStream({
 
         method: 'fill',
 
-        // globalAlpha: 0,
-
-        // filters: ["bottom-filter"],
-
-    // }).clone({
-
-    //     name: "camera-picture-2",
-    //     globalAlpha: 1,
         filters: ['my-complex-filter']
     });
 })

@@ -105,6 +105,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/conicGradient.html">
+                  ./source/factory/conicGradient.js
+                </a>
+              
+                
                 <a class="source" href="../factory/coordinate.html">
                   ./source/factory/coordinate.js
                 </a>
@@ -480,7 +485,9 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> library <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { mergeOver, pushUnique, removeItem, generateUniqueString, isa_boolean, isa_obj, addStrings, xt, xta, λ<span class="hljs-literal">null</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { mergeOver, pushUnique, removeItem, 
+    generateUniqueString, isa_boolean, isa_obj, addStrings, 
+    xt, xta, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -495,7 +502,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">P = {}</span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">P = Ωempty</span>) </span>{</pre></div></div>
             
         </li>
         
@@ -616,15 +623,22 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.set = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.set = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Object</span>.keys(items).length) {
+        <span class="hljs-keyword">const</span> keys = <span class="hljs-built_in">Object</span>.keys(items),
+            keysLen = keys.length;
 
-            <span class="hljs-keyword">let</span> setters = <span class="hljs-built_in">this</span>.setters,
-                defs = <span class="hljs-built_in">this</span>.defs,
-                predefined;
+        <span class="hljs-keyword">if</span> (keysLen) {
 
-            <span class="hljs-built_in">Object</span>.entries(items).forEach(<span class="hljs-function">(<span class="hljs-params">[key, value]</span>) =&gt;</span> {
+            <span class="hljs-keyword">const</span> setters = <span class="hljs-built_in">this</span>.setters,
+                defs = <span class="hljs-built_in">this</span>.defs;
+            
+            <span class="hljs-keyword">let</span> predefined, i, key, value;
+
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; keysLen; i++) {
+
+                key = keys[i];
+                value = items[key];
 
                 <span class="hljs-keyword">if</span> (key &amp;&amp; key !== <span class="hljs-string">&#x27;name&#x27;</span> &amp;&amp; value != <span class="hljs-literal">null</span>) {
 
@@ -633,7 +647,7 @@
                     <span class="hljs-keyword">if</span> (predefined) predefined.call(<span class="hljs-built_in">this</span>, value);
                     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] !== <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-built_in">this</span>[key] = value;
                 }
-            }, <span class="hljs-built_in">this</span>);
+            }
         }
         <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
     };</pre></div></div>
@@ -658,24 +672,31 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.setDelta = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.setDelta = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Object</span>.keys(items).length) {
+        <span class="hljs-keyword">const</span> keys = <span class="hljs-built_in">Object</span>.keys(items),
+            keysLen = keys.length;
 
-            <span class="hljs-keyword">let</span> setters = <span class="hljs-built_in">this</span>.deltaSetters,
-                defs = <span class="hljs-built_in">this</span>.defs,
-                predefined;
+        <span class="hljs-keyword">if</span> (keysLen) {
 
-            <span class="hljs-built_in">Object</span>.entries(items).forEach(<span class="hljs-function">(<span class="hljs-params">[key, value]</span>) =&gt;</span> {
+            <span class="hljs-keyword">const</span> setters = <span class="hljs-built_in">this</span>.deltaSetters,
+                defs = <span class="hljs-built_in">this</span>.defs;
+            
+            <span class="hljs-keyword">let</span> predefined, i, iz, key, value;
+
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; keysLen; i++) {
+
+                key = keys[i];
+                value = items[key];
 
                 <span class="hljs-keyword">if</span> (key &amp;&amp; key !== <span class="hljs-string">&#x27;name&#x27;</span> &amp;&amp; value != <span class="hljs-literal">null</span>) {
 
                     predefined = setters[key];
 
                     <span class="hljs-keyword">if</span> (predefined) predefined.call(<span class="hljs-built_in">this</span>, value);
-                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] != <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-built_in">this</span>[key] = addStrings(<span class="hljs-built_in">this</span>[key], value);
+                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] !== <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-built_in">this</span>[key] = addStrings(<span class="hljs-built_in">this</span>[key], value);
                 }
-            }, <span class="hljs-built_in">this</span>);
+            }
         }
         <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
     };</pre></div></div>
@@ -828,7 +849,7 @@ box.kill()
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.saveAsPacket = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.saveAsPacket = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
         <span class="hljs-keyword">if</span> (isa_boolean(items) &amp;&amp; items) items = {
             <span class="hljs-attr">includeDefaults</span>: <span class="hljs-literal">true</span>,
@@ -1431,7 +1452,7 @@ let matches = val.toString().match(/((.<em>?)).</em>?{(.*)}/s);</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.clone = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.clone = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
         <span class="hljs-keyword">let</span> myName = <span class="hljs-built_in">this</span>.name,
             myPacket, myTicker, myAnchor;

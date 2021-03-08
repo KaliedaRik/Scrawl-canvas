@@ -105,6 +105,11 @@
                 </a>
               
                 
+                <a class="source" href="conicGradient.html">
+                  ./source/factory/conicGradient.js
+                </a>
+              
+                
                 <a class="source" href="coordinate.html">
                   ./source/factory/coordinate.js
                 </a>
@@ -528,7 +533,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">artefact</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
-<span class="hljs-keyword">import</span> { mergeOver, addStrings, pushUnique } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { mergeOver, addStrings, pushUnique, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./coordinate.js&#x27;</span>;
 
@@ -549,7 +554,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Bezier = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Bezier = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
     <span class="hljs-built_in">this</span>.startControl = makeCoordinate();
     <span class="hljs-built_in">this</span>.endControl = makeCoordinate();
@@ -1321,34 +1326,37 @@ D.endControl = <span class="hljs-function"><span class="hljs-keyword">function</
 
 P.preparePinsForStamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">let</span> ePivot = <span class="hljs-built_in">this</span>.endPivot,
+    <span class="hljs-keyword">const</span> dirtyPins = <span class="hljs-built_in">this</span>.dirtyPins,
+        ePivot = <span class="hljs-built_in">this</span>.endPivot,
         ePath = <span class="hljs-built_in">this</span>.endPath,
         scPivot = <span class="hljs-built_in">this</span>.startControlPivot,
         scPath = <span class="hljs-built_in">this</span>.startControlPath,
         ecPivot = <span class="hljs-built_in">this</span>.endControlPivot,
         ecPath = <span class="hljs-built_in">this</span>.endControlPath;
 
-    <span class="hljs-built_in">this</span>.dirtyPins.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = dirtyPins.length, name; i &lt; iz; i++) {
 
-        <span class="hljs-keyword">if</span> ((scPivot &amp;&amp; scPivot.name === name) || (scPath &amp;&amp; scPath.name === name)) {
+        name = dirtyPins[i];
+
+        <span class="hljs-keyword">if</span> ((scPivot &amp;&amp; scPivot.name == name) || (scPath &amp;&amp; scPath.name == name)) {
 
             <span class="hljs-built_in">this</span>.dirtyStartControl = <span class="hljs-literal">true</span>;
             <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.startControlLockTo.includes(<span class="hljs-string">&#x27;path&#x27;</span>)) <span class="hljs-built_in">this</span>.currentStartControlPathData = <span class="hljs-literal">false</span>;
         }
 
-        <span class="hljs-keyword">if</span> ((ecPivot &amp;&amp; ecPivot.name === name) || (ecPath &amp;&amp; ecPath.name === name)) {
+        <span class="hljs-keyword">if</span> ((ecPivot &amp;&amp; ecPivot.name == name) || (ecPath &amp;&amp; ecPath.name == name)) {
 
             <span class="hljs-built_in">this</span>.dirtyEndControl = <span class="hljs-literal">true</span>;
             <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.endControlLockTo.includes(<span class="hljs-string">&#x27;path&#x27;</span>)) <span class="hljs-built_in">this</span>.currentEndControlPathData = <span class="hljs-literal">false</span>;
         }
 
-        <span class="hljs-keyword">if</span> ((ePivot &amp;&amp; ePivot.name === name) || (ePath &amp;&amp; ePath.name === name)) {
+        <span class="hljs-keyword">if</span> ((ePivot &amp;&amp; ePivot.name == name) || (ePath &amp;&amp; ePath.name == name)) {
 
             <span class="hljs-built_in">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
             <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.endLockTo.includes(<span class="hljs-string">&#x27;path&#x27;</span>)) <span class="hljs-built_in">this</span>.currentEndPathData = <span class="hljs-literal">false</span>;
         }
-    });
-    <span class="hljs-built_in">this</span>.dirtyPins.length = <span class="hljs-number">0</span>;
+    }
+    dirtyPins.length = <span class="hljs-number">0</span>;
 };</pre></div></div>
             
         </li>
@@ -1413,8 +1421,9 @@ P.preparePinsForStamp = <span class="hljs-function"><span class="hljs-keyword">f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeBezier = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeBezier = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
+    <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     items.species = <span class="hljs-string">&#x27;bezier&#x27;</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Bezier(items);
 };

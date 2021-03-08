@@ -105,6 +105,11 @@
                 </a>
               
                 
+                <a class="source" href="conicGradient.html">
+                  ./source/factory/conicGradient.js
+                </a>
+              
+                
                 <a class="source" href="coordinate.html">
                   ./source/factory/coordinate.js
                 </a>
@@ -497,10 +502,10 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">cell</span>, <span class="hljs-title">artefact</span>, <span class="hljs-title">group</span>, <span class="hljs-title">entity</span>, <span class="hljs-title">asset</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
-<span class="hljs-keyword">import</span> { mergeOver, pushUnique, removeItem } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { mergeOver, pushUnique, removeItem, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { scrawlCanvasHold } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/document.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { requestFilterWorker, releaseFilterWorker, actionFilterWorker } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./filter.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { filterEngine } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./filterEngine.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { requestCell, releaseCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./cell.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { importDomImage } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./imageAsset.js&#x27;</span>;
 
@@ -520,7 +525,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Group = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Group = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
     <span class="hljs-built_in">this</span>.makeName(items.name);
     <span class="hljs-built_in">this</span>.register();
@@ -1294,8 +1299,8 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> currentElement = currentHost.element,
         currentEngine = currentHost.engine;
 
-    <span class="hljs-keyword">let</span> filterElement = filterHost.element,
-        filterEngine = filterHost.engine;</pre></div></div>
+    <span class="hljs-keyword">let</span> filterCellElement = filterHost.element,
+        filterCellEngine = filterHost.engine;</pre></div></div>
             
         </li>
         
@@ -1312,12 +1317,12 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.isStencil) {
         
-        filterEngine.save();
-        filterEngine.globalCompositeOperation = <span class="hljs-string">&#x27;source-in&#x27;</span>;
-        filterEngine.globalAlpha = <span class="hljs-number">1</span>;
-        filterEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-        filterEngine.drawImage(currentElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-        filterEngine.restore();
+        filterCellEngine.save();
+        filterCellEngine.globalCompositeOperation = <span class="hljs-string">&#x27;source-in&#x27;</span>;
+        filterCellEngine.globalAlpha = <span class="hljs-number">1</span>;
+        filterCellEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+        filterCellEngine.drawImage(currentElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+        filterCellEngine.restore();
     }</pre></div></div>
             
         </li>
@@ -1333,10 +1338,32 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    filterEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+            <div class="content"><div class='highlight'><pre>    filterCellEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
 
-    <span class="hljs-keyword">let</span> myimage = filterEngine.getImageData(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, filterElement.width, filterElement.height),
-        worker = requestFilterWorker();</pre></div></div>
+    <span class="hljs-keyword">let</span> myimage = filterCellEngine.getImageData(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, filterCellElement.width, filterCellElement.height);
+
+    <span class="hljs-built_in">this</span>.preprocessFilters(<span class="hljs-built_in">this</span>.currentFilters);
+
+    <span class="hljs-keyword">let</span> img = filterEngine.action({
+        <span class="hljs-attr">image</span>: myimage,
+        <span class="hljs-attr">filters</span>: <span class="hljs-built_in">this</span>.currentFilters,
+    })
+
+    <span class="hljs-keyword">if</span> (img) {
+
+        filterCellEngine.globalCompositeOperation = <span class="hljs-string">&#x27;source-over&#x27;</span>;
+        filterCellEngine.globalAlpha = <span class="hljs-number">1</span>;
+        filterCellEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+        filterCellEngine.putImageData(img, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+    }
+    
+    currentEngine.save();
+    currentEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+    currentEngine.drawImage(filterCellElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+    currentEngine.restore();
+
+    <span class="hljs-keyword">return</span> img;
+};</pre></div></div>
             
         </li>
         
@@ -1346,41 +1373,6 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
               
               <div class="sswrap ">
                 <a class="ss" href="#section-42">&#x00a7;</a>
-              </div>
-              <p>NEED TO POPULATE IMAGE FILTER ACTION OBJECTS WITH THEIR ASSET’S IMAGEDATA AT THIS POINT</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.preprocessFilters(<span class="hljs-built_in">this</span>.currentFilters);
-
-    <span class="hljs-keyword">let</span> img = actionFilterWorker(worker, {
-        <span class="hljs-attr">image</span>: myimage,
-        <span class="hljs-attr">filters</span>: <span class="hljs-built_in">this</span>.currentFilters,
-    })
-
-    <span class="hljs-keyword">if</span> (img) {
-
-        filterEngine.globalCompositeOperation = <span class="hljs-string">&#x27;source-over&#x27;</span>;
-        filterEngine.globalAlpha = <span class="hljs-number">1</span>;
-        filterEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-        filterEngine.putImageData(img, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-    }
-    currentEngine.save();
-    currentEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-    currentEngine.drawImage(filterElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-    currentEngine.restore();
-
-    <span class="hljs-keyword">return</span> img;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-43">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p><code>stashAction</code> - internal function which creates an ImageAsset object (and, as determined by the setting of the Group’s <code>stashOutputAsAsset</code> flag, an &lt;img&gt; element which gets attached to the DOM document in the <code>scrawlCanvasHold</code> hidden &lt;div&gt; element) from the Group’s entity’s output.</p>
 <p>NOTE: the <code>stashOutput</code> and <code>stashOutputAsAsset</code> flags are not Group object attributes. They are set on the group as a result of invoking the <code>scrawl.createImageFromGroup</code> function, and will be set to false as soon as the <code>Group.stashAction</code> function runs (in other words, stashing a Group’s output is a one-off operation).</p>
@@ -1435,11 +1427,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-44">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p><code>getCellCoverage</code> - internal function which calculates the cumulative coverage of the Group’s artefacts. Used as part of the <code>stashAction</code> functionality</p>
 
@@ -1479,11 +1471,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-45">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <h4 id="artefact-management">Artefact management</h4>
 <p>Artefacts should be added to, and removed from, the Group object using the functions detailed below.</p>
@@ -1494,11 +1486,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-46">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p><code>addArtefacts</code> - an artefact can belong to more than one Group</p>
 
@@ -1524,11 +1516,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-47">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p><code>removeArtefacts</code> - remove an artefact from this Group</p>
 
@@ -1552,11 +1544,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-48">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p><code>moveArtefactsIntoGroup</code> - remove the artefact from their current Group (which is generally their Display cycle group, as set in their <code>group</code> and/or <code>host</code> attribute) and add them to this Group</p>
 
@@ -1595,11 +1587,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-49">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p><code>clearArtefacts</code> - remove all artefacts from this Group</p>
 
@@ -1616,11 +1608,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-50">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p><code>updateArtefacts</code> - passes the <strong>items</strong> argument object through to each of the Group’s artefact’s <code>setDelta</code> function</p>
 
@@ -1635,11 +1627,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-51">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p><code>setArtefacts</code> - passes the <strong>items</strong> argument object through to each of the Group’s artefact’s <code>set</code> function</p>
 
@@ -1654,11 +1646,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-52">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p><code>updateByDelta</code> - passes the <strong>items</strong> argument object through to each of the Group’s artefact’s <code>updateByDelta</code> function</p>
 
@@ -1673,11 +1665,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-53">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p><code>reverseByDelta</code> - passes the <strong>items</strong> argument object through to each of the Group’s artefact’s <code>reverseByDelta</code> function</p>
 
@@ -1692,11 +1684,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-54">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p><code>addArtefactClasses</code> - specifically for non-entity artefacts. Passes the <strong>items</strong> argument String through to each of the Group’s artefact’s <code>addClasses</code> function</p>
 
@@ -1711,11 +1703,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-55">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p><code>removeArtefactClasses</code> - specifically for non-entity artefacts. Passes the <strong>items</strong> argument String through to each of the Group’s artefact’s <code>removeClasses</code> function</p>
 
@@ -1730,11 +1722,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-56">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p><code>cascadeAction</code> - internal helper function for the above artefact manipulation functionality</p>
 
@@ -1754,17 +1746,17 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-57">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p><code>setDeltaValues</code> - passes the <strong>items</strong> argument object through to each of the Group’s artefact’s <code>setDeltaValues</code> function</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.setDeltaValues = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.setDeltaValues = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
     <span class="hljs-built_in">this</span>.artefactBuckets.forEach(<span class="hljs-function"><span class="hljs-params">art</span> =&gt;</span> art.setDeltaValues(items));
 
@@ -1774,11 +1766,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-58">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p>We can add and remove filters to each of the Group’s entity artefacts using the following functions. The argument for each function can be one or more Filter name-Strings, or the Filter objects themselves, separated by commas.</p>
 
@@ -1787,11 +1779,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-59">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p><code>addFiltersToEntitys</code></p>
 
@@ -1811,11 +1803,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-60">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p><code>removeFiltersFromEntitys</code></p>
 
@@ -1835,11 +1827,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-61">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <p><code>clearFiltersFromEntitys</code> - clears all filters from all the Group’s entity artefacts.</p>
 
@@ -1859,11 +1851,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-62">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <h4 id="collision-functionality">Collision functionality</h4>
 <p>The <code>getArtefactAt</code> function checks to see if any of the Group object’s artefacts are located at the supplied coordinates in the argument object. </p>
@@ -1909,11 +1901,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-63">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p>The <code>getAllArtefactsAt</code> function returns an array of hit reports from all of the Group object’s artefacts located at the supplied coordinates in the argument object. The artefact with the highest order attribute value will be returned first in the response array.</p>
 <p>The function will always return an array of hit reports, or an empty array if no hits are reported.</p>
@@ -1957,11 +1949,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-64">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p>The <code>getArtefactCollisions</code> function returns an array of hit reports from all of the Group object’s artefacts which are currently in collision with the <strong>sensor</strong> coordinates supplied by the artefact argument. The function will always return an array of hit reports, or an empty array if no hits are reported.</p>
 <p>The argument must be either the artefact object itself, or its String name.</p>
@@ -1973,11 +1965,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-65">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <p>return empty array if no argument, or the argument is not an artefact, or the Group is empty</p>
 
@@ -1990,11 +1982,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-66">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <p>Return empty array if the artefact argument has not been setup to check for collisions</p>
 
@@ -2009,11 +2001,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-67">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <p>Get entity collision data</p>
 
@@ -2024,11 +2016,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-68">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <p>Winnow step 1: don’t check the entity itself, or any missing or malformed artefacts in the Group</p>
 
@@ -2045,11 +2037,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-69">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <p>Winnow step 2: exclude all targets outside the artefact/target collision radius</p>
 
@@ -2081,11 +2073,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-70">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <p>Winnow step 3: perform hit checks on remaining targets - this will not retrieve targets entirely inside the artefact</p>
 
@@ -2103,11 +2095,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-71">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <p>return filtered results</p>
 
@@ -2121,11 +2113,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-72">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-72">&#x00a7;</a>
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code><span class="hljs-keyword">let</span> faces = scrawl.makeGroup({
@@ -2142,6 +2134,7 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeGroup = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
 
+    <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Group(items);
 };
 
@@ -2150,11 +2143,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-73">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-73">&#x00a7;</a>
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

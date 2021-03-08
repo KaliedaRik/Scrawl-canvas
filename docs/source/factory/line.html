@@ -105,6 +105,11 @@
                 </a>
               
                 
+                <a class="source" href="conicGradient.html">
+                  ./source/factory/conicGradient.js
+                </a>
+              
+                
                 <a class="source" href="coordinate.html">
                   ./source/factory/coordinate.js
                 </a>
@@ -528,6 +533,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+<span class="hljs-keyword">import</span> { Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 <span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shapeBasic.js&#x27;</span>;
@@ -546,7 +552,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Line = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Line = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
     <span class="hljs-built_in">this</span>.curveInit(items);
     <span class="hljs-built_in">this</span>.shapeInit(items);
@@ -768,18 +774,21 @@ P = curveMix(P);</pre></div></div>
 
 P.preparePinsForStamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">let</span> ePivot = <span class="hljs-built_in">this</span>.endPivot,
+    <span class="hljs-keyword">const</span> dirtyPins = <span class="hljs-built_in">this</span>.dirtyPins,
+        ePivot = <span class="hljs-built_in">this</span>.endPivot,
         ePath = <span class="hljs-built_in">this</span>.endPath;
 
-    <span class="hljs-built_in">this</span>.dirtyPins.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = dirtyPins.length, name; i &lt; iz; i++) {
 
-        <span class="hljs-keyword">if</span> ((ePivot &amp;&amp; ePivot.name === name) || (ePath &amp;&amp; ePath.name === name)) {
+        name = dirtyPins[i];
+
+        <span class="hljs-keyword">if</span> ((ePivot &amp;&amp; ePivot.name == name) || (ePath &amp;&amp; ePath.name == name)) {
 
             <span class="hljs-built_in">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
             <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.endLockTo.includes(<span class="hljs-string">&#x27;path&#x27;</span>)) <span class="hljs-built_in">this</span>.currentEndPathData = <span class="hljs-literal">false</span>;
         }
-    });
-    <span class="hljs-built_in">this</span>.dirtyPins.length = <span class="hljs-number">0</span>;
+    };
+    dirtyPins.length = <span class="hljs-number">0</span>;
 };</pre></div></div>
             
         </li>
@@ -832,8 +841,9 @@ P.preparePinsForStamp = <span class="hljs-function"><span class="hljs-keyword">f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeLine = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeLine = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
 
+    <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     items.species = <span class="hljs-string">&#x27;line&#x27;</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Line(items);
 };

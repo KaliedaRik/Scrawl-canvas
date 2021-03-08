@@ -105,6 +105,11 @@
                 </a>
               
                 
+                <a class="source" href="conicGradient.html">
+                  ./source/factory/conicGradient.js
+                </a>
+              
+                
                 <a class="source" href="coordinate.html">
                   ./source/factory/coordinate.js
                 </a>
@@ -492,7 +497,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">entity</span>, <span class="hljs-title">styles</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
-<span class="hljs-keyword">import</span> { isa_obj, xt, xtGet } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { isa_obj, xt, xtGet, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;</pre></div></div>
             
@@ -509,12 +514,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> State = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> State = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
     <span class="hljs-built_in">this</span>.set(<span class="hljs-built_in">this</span>.defs);
     <span class="hljs-built_in">this</span>.lineDash = [];
-    <span class="hljs-built_in">this</span>.set(items);
-
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
@@ -928,22 +931,20 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.set = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.set = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
-    <span class="hljs-keyword">if</span>(<span class="hljs-built_in">Object</span>.keys(items).length) {
-        
-        <span class="hljs-keyword">let</span> key, i, iz,
-            keys = <span class="hljs-built_in">Object</span>.keys(items),
-            d = <span class="hljs-built_in">this</span>.defs;
+    <span class="hljs-keyword">let</span> keys = <span class="hljs-built_in">Object</span>.keys(items),
+        keysLen = keys.length,
+        key, i,
+        d = <span class="hljs-built_in">this</span>.defs;
 
-        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = keys.length; i &lt; iz; i++) {
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; keysLen; i++) {
 
-            key = keys[i];
+        key = keys[i];
 
-            <span class="hljs-keyword">if</span> (key !== <span class="hljs-string">&#x27;name&#x27;</span>) {
+        <span class="hljs-keyword">if</span> (key != <span class="hljs-string">&#x27;name&#x27;</span>) {
 
-                <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> d[key] !== <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-built_in">this</span>[key] = items[key];
-            }
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> d[key] != <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-built_in">this</span>[key] = items[key];
         }
     }
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
@@ -1285,10 +1286,9 @@ P.textKeys = [<span class="hljs-string">&#x27;font&#x27;</span>];</pre></div></d
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeState = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
 
+    <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> State(items);
-};
-
-<span class="hljs-title">constructors</span>.<span class="hljs-title">State</span> = <span class="hljs-title">State</span>;</pre></div></div>
+};</pre></div></div>
             
         </li>
         
@@ -1299,12 +1299,31 @@ P.textKeys = [<span class="hljs-string">&#x27;font&#x27;</span>];</pre></div></d
               <div class="sswrap ">
                 <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
+              <p>Note: does NOT include ‘font’, textAlign or textBaseline because we set them in the fontAttributes object and Phrase entity, not the state object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> stateKeys = [<span class="hljs-string">&#x27;fillStyle&#x27;</span>, <span class="hljs-string">&#x27;filter&#x27;</span>, <span class="hljs-string">&#x27;globalAlpha&#x27;</span>, <span class="hljs-string">&#x27;globalCompositeOperation&#x27;</span>, <span class="hljs-string">&#x27;lineCap&#x27;</span>, <span class="hljs-string">&#x27;lineDash&#x27;</span>, <span class="hljs-string">&#x27;lineDashOffset&#x27;</span>, <span class="hljs-string">&#x27;lineJoin&#x27;</span>, <span class="hljs-string">&#x27;lineWidth&#x27;</span>, <span class="hljs-string">&#x27;miterLimit&#x27;</span>, <span class="hljs-string">&#x27;shadowBlur&#x27;</span>, <span class="hljs-string">&#x27;shadowColor&#x27;</span>, <span class="hljs-string">&#x27;shadowOffsetX&#x27;</span>, <span class="hljs-string">&#x27;shadowOffsetY&#x27;</span>, <span class="hljs-string">&#x27;strokeStyle&#x27;</span>];
+
+
+<span class="hljs-title">constructors</span>.<span class="hljs-title">State</span> = <span class="hljs-title">State</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-40">&#x00a7;</a>
+              </div>
               <h4 id="exports">Exports</h4>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
     makeState,
+    stateKeys,
 };</pre></div></div>
             
         </li>

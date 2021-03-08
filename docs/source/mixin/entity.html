@@ -105,6 +105,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/conicGradient.html">
+                  ./source/factory/conicGradient.js
+                </a>
+              
+                
                 <a class="source" href="../factory/coordinate.html">
                   ./source/factory/coordinate.js
                 </a>
@@ -474,13 +479,13 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { λ<span class="hljs-literal">null</span>, mergeOver, pushUnique, xt, addStrings, isa_obj } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { λ<span class="hljs-literal">null</span>, mergeOver, pushUnique, xt, addStrings, isa_obj, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { currentGroup, scrawlCanvasHold } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/document.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { asset } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { makeState } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/state.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { makeState, stateKeys } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/state.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { requestCell, releaseCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/cell.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { requestFilterWorker, releaseFilterWorker, actionFilterWorker } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/filter.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { filterEngine } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/filterEngine.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { importDomImage } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/imageAsset.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> positionMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/position.js&#x27;</span>;
@@ -504,7 +509,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">P = {}</span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">P = Ωempty</span>) </span>{</pre></div></div>
             
         </li>
         
@@ -925,7 +930,6 @@
 
             <span class="hljs-keyword">if</span> (!items.anchor.clickAction) clone.anchor.clickAction = <span class="hljs-built_in">this</span>.anchor.clickAction;
         }
-
         <span class="hljs-keyword">return</span> clone;
     };</pre></div></div>
             
@@ -1012,15 +1016,16 @@
             
             <div class="content"><div class='highlight'><pre>    P.get = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-        <span class="hljs-keyword">let</span> getter = <span class="hljs-built_in">this</span>.getters[item];
+        <span class="hljs-keyword">const</span> getter = <span class="hljs-built_in">this</span>.getters[item];
 
         <span class="hljs-keyword">if</span> (getter) <span class="hljs-keyword">return</span> getter.call(<span class="hljs-built_in">this</span>);
 
         <span class="hljs-keyword">else</span> {
 
             <span class="hljs-keyword">let</span> def = <span class="hljs-built_in">this</span>.defs[item],
-                state = <span class="hljs-built_in">this</span>.state,
-                val;
+                state = <span class="hljs-built_in">this</span>.state;
+
+            <span class="hljs-keyword">let</span> val;
 
             <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> def != <span class="hljs-string">&#x27;undefined&#x27;</span>) {
 
@@ -1039,68 +1044,88 @@
         }
     };
 
-    P.set = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+    P.set = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Object</span>.keys(items).length) {
+        <span class="hljs-keyword">const</span> keys = <span class="hljs-built_in">Object</span>.keys(items),
+            keysLen = keys.length;
 
-            <span class="hljs-keyword">let</span> setters = <span class="hljs-built_in">this</span>.setters,
+        <span class="hljs-keyword">if</span> (keysLen) {
+
+            <span class="hljs-keyword">const</span> setters = <span class="hljs-built_in">this</span>.setters,
                 defs = <span class="hljs-built_in">this</span>.defs,
-                state = <span class="hljs-built_in">this</span>.state,
-                stateSetters = (state) ? state.setters : {},
-                stateDefs = (state) ? state.defs : {},
-                predefined, stateFlag;
+                state = <span class="hljs-built_in">this</span>.state;
 
-            <span class="hljs-built_in">Object</span>.entries(items).forEach(<span class="hljs-function">(<span class="hljs-params">[key, value]</span>) =&gt;</span> {
+            <span class="hljs-keyword">const</span> stateSetters = (state) ? state.setters : Ωempty;
+            <span class="hljs-keyword">const</span> stateDefs = (state) ? state.defs : Ωempty;
 
-                <span class="hljs-keyword">if</span> (key &amp;&amp; key !== <span class="hljs-string">&#x27;name&#x27;</span> &amp;&amp; value != <span class="hljs-literal">null</span>) {
+            <span class="hljs-keyword">let</span> predefined, i, key, value;
 
-                    predefined = setters[key];
-                    stateFlag = <span class="hljs-literal">false</span>;
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; keysLen; i++) {
 
-                    <span class="hljs-keyword">if</span> (!predefined) {
+                key = keys[i];
+                value = items[key];
+
+                <span class="hljs-keyword">if</span> (key &amp;&amp; key != <span class="hljs-string">&#x27;name&#x27;</span> &amp;&amp; value != <span class="hljs-literal">null</span>) {
+
+                    <span class="hljs-keyword">if</span> (stateKeys.indexOf(key) &lt; <span class="hljs-number">0</span>) {
+
+                        predefined = setters[key];
+
+                        <span class="hljs-keyword">if</span> (predefined) predefined.call(<span class="hljs-built_in">this</span>, value);
+                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] != <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-built_in">this</span>[key] = value;
+                    }
+                    <span class="hljs-keyword">else</span> {
 
                         predefined = stateSetters[key];
-                        stateFlag = <span class="hljs-literal">true</span>;
-                    }
 
-                    <span class="hljs-keyword">if</span> (predefined) predefined.call(stateFlag ? <span class="hljs-built_in">this</span>.state : <span class="hljs-built_in">this</span>, value);
-                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] !== <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-built_in">this</span>[key] = value;
-                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> stateDefs[key] !== <span class="hljs-string">&#x27;undefined&#x27;</span>) state[key] = value;
+                        <span class="hljs-keyword">if</span> (predefined) predefined.call(state, value);
+                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> stateDefs[key] != <span class="hljs-string">&#x27;undefined&#x27;</span>) state[key] = value;
+                    }
                 }
-            }, <span class="hljs-built_in">this</span>);
+            }
         }
         <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
     };
 
-    P.setDelta = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+    P.setDelta = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Object</span>.keys(items).length) {
+        <span class="hljs-keyword">const</span> keys = <span class="hljs-built_in">Object</span>.keys(items),
+            keysLen = keys.length;
 
-            <span class="hljs-keyword">let</span> setters = <span class="hljs-built_in">this</span>.deltaSetters,
+        <span class="hljs-keyword">if</span> (keysLen) {
+
+            <span class="hljs-keyword">const</span> setters = <span class="hljs-built_in">this</span>.deltaSetters,
                 defs = <span class="hljs-built_in">this</span>.defs,
-                state = <span class="hljs-built_in">this</span>.state,
-                stateSetters = (state) ? state.deltaSetters : {},
-                stateDefs = (state) ? state.defs : {},
-                predefined, stateFlag;
+                state = <span class="hljs-built_in">this</span>.state;
 
-            <span class="hljs-built_in">Object</span>.entries(items).forEach(<span class="hljs-function">(<span class="hljs-params">[key, value]</span>) =&gt;</span> {
+            <span class="hljs-keyword">const</span> stateSetters = (state) ? state.deltaSetters : Ωempty;
+            <span class="hljs-keyword">const</span> stateDefs = (state) ? state.defs : Ωempty;
 
-                <span class="hljs-keyword">if</span> (key &amp;&amp; key !== <span class="hljs-string">&#x27;name&#x27;</span> &amp;&amp; value != <span class="hljs-literal">null</span>) {
+            <span class="hljs-keyword">let</span> predefined, i, key, value;
 
-                    predefined = setters[key];
-                    stateFlag = <span class="hljs-literal">false</span>;
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; keysLen; i++) {
 
-                    <span class="hljs-keyword">if</span> (!predefined) {
+                key = keys[i];
+                value = items[key];
+
+                <span class="hljs-keyword">if</span> (key &amp;&amp; key != <span class="hljs-string">&#x27;name&#x27;</span> &amp;&amp; value != <span class="hljs-literal">null</span>) {
+
+                    <span class="hljs-keyword">if</span> (stateKeys.indexOf(key) &lt; <span class="hljs-number">0</span>) {
+
+                        predefined = setters[key];
+
+                        <span class="hljs-keyword">if</span> (predefined) predefined.call(<span class="hljs-built_in">this</span>, value);
+                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] != <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-built_in">this</span>[key] = addStrings(<span class="hljs-built_in">this</span>[key], value);
+                    }
+                    <span class="hljs-keyword">else</span> {
 
                         predefined = stateSetters[key];
-                        stateFlag = <span class="hljs-literal">true</span>;
-                    }
 
-                    <span class="hljs-keyword">if</span> (predefined) predefined.call(stateFlag ? <span class="hljs-built_in">this</span>.state : <span class="hljs-built_in">this</span>, value);
-                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] !== <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-built_in">this</span>[key] = addStrings(<span class="hljs-built_in">this</span>[key], value);
-                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> stateDefs[key] !== <span class="hljs-string">&#x27;undefined&#x27;</span>) state[key] = addStrings(state[key], value);
+                        <span class="hljs-keyword">if</span> (predefined) predefined.call(state, value);
+                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> stateDefs[key] != <span class="hljs-string">&#x27;undefined&#x27;</span>) state[key] = addStrings(state[key], value);
+                    }
                 }
-            }, <span class="hljs-built_in">this</span>);
+            }
         }
         <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
     };</pre></div></div>
@@ -1131,15 +1156,15 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.entityInit = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.entityInit = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
         <span class="hljs-built_in">this</span>.makeName(items.name);
         <span class="hljs-built_in">this</span>.register();
         <span class="hljs-built_in">this</span>.initializePositions();
 
-        <span class="hljs-built_in">this</span>.set(<span class="hljs-built_in">this</span>.defs);
+        <span class="hljs-built_in">this</span>.state = makeState(Ωempty);
 
-        <span class="hljs-built_in">this</span>.state = makeState();
+        <span class="hljs-built_in">this</span>.set(<span class="hljs-built_in">this</span>.defs);
 
         <span class="hljs-keyword">if</span> (!items.group) items.group = currentGroup;
 
@@ -1481,11 +1506,9 @@
 
             <span class="hljs-keyword">if</span> (host &amp;&amp; host.type === <span class="hljs-string">&#x27;Cell&#x27;</span>) <span class="hljs-built_in">this</span>.currentHost = host;
 
-            <span class="hljs-keyword">if</span> (changes) {
+            <span class="hljs-keyword">if</span> (changes) <span class="hljs-built_in">this</span>.set(changes);
 
-                <span class="hljs-built_in">this</span>.set(changes);
-                <span class="hljs-built_in">this</span>.prepareStamp();
-            }
+            <span class="hljs-built_in">this</span>.prepareStamp();
 
             <span class="hljs-keyword">if</span> (filterTest) <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.filteredStamp();
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.regularStamp();
@@ -1507,14 +1530,28 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
-              <p><code>regularStamp</code> - handles stamping functionality for all entitys that do not have any filter functions associated with them.</p>
+              <p><code>regularStamp</code> - this function <em><strong>coordinates the actions required</strong></em> for an entity to display its output on a Cell wrapper’s &lt;canvas&gt; element.</p>
+<p>Scrawl-canvas stamps an entity onto a Cell by moving and rotating the Cell engine’s <code>transformation</code> (its coordinate grid) to match the entity’s <strong>start</strong> and <strong>offset</strong> coordinates, alongside any requirements to rotate (<strong>roll</strong>) and flip (<strong>flipReverse</strong>, <strong>flipUpend</strong>) the transformation as set out by the entity object.</p>
+<ul>
+<li>We use the Web API CanvasRenderingContext2D engine’s <code>setTransform</code> method to perform these actions when we invoke the Cell wrapper’s <strong>rotateDestination</strong> function.</li>
+<li><em><strong>We never invoke the engine’s <code>translate</code>, <code>rotate</code> or <code>scale</code> methods</strong></em> on the transformation. All positional, rotational and scaling data is kept in the entity object, and calculated as part of its <strong>prepareStamp</strong> step. This means we don’t need to keep track of the transformation’s current state, and makes the entity stamping operation more efficient.</li>
+<li>Scrawl-canvas <strong>does not support skew operations</strong> on the transformation - use a more appropriately shaped entity instead.</li>
+<li>Scrawl-canvas <strong>does not support non-isometric scaling</strong> (applying different scaling factors along the x and y axes) - most entitys include width and height attributes: use those instead.</li>
+<li>We only use the transformation’s <code>save</code> and <code>restore</code> methods where it makes sense to do so - for instance in very limited actions where the save and restore invocations are close enough in the code base that we don’t lose sight of them (and remember to restore after the action completes). They are <em><strong>not</strong></em> used when updating the engine’s attributes to match an entity’s stamping requirements!</li>
+</ul>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    P.regularStamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.currentHost) <span class="hljs-built_in">this</span>.regularStampSynchronousActions();
-    };</pre></div></div>
+        <span class="hljs-keyword">let</span> dest = <span class="hljs-built_in">this</span>.currentHost;
+
+        <span class="hljs-keyword">if</span> (dest) {
+
+            <span class="hljs-keyword">let</span> engine = dest.engine,
+                stamp = <span class="hljs-built_in">this</span>.currentStampPosition,
+                x = stamp[<span class="hljs-number">0</span>],
+                y = stamp[<span class="hljs-number">1</span>];</pre></div></div>
             
         </li>
         
@@ -1525,11 +1562,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
-              <p><code>filteredStamp</code> - handles stamping functionality for all <strong>entitys that have filter functions</strong> associated with them.</p>
+              <p>Get the Cell wrapper to perform required transformations on its &lt;canvas&gt; element’s 2D engine</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.filteredStamp = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            dest.rotateDestination(engine, x, y, <span class="hljs-built_in">this</span>);</pre></div></div>
             
         </li>
         
@@ -1540,11 +1577,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
-              <p>Clean and sort the Entity-level filters before sending them to the filter engine for application</p>
+              <p>Get the Cell wrapper to update its 2D engine’s attributes to match the entity’s requirements</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyFilters || !<span class="hljs-built_in">this</span>.currentFilters) <span class="hljs-built_in">this</span>.cleanFilters();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.noCanvasEngineUpdates) dest.setEngine(<span class="hljs-built_in">this</span>);</pre></div></div>
             
         </li>
         
@@ -1554,6 +1591,53 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-51">&#x00a7;</a>
+              </div>
+              <p>Invoke the appropriate <strong>stamping method</strong> (below)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-built_in">this</span>[<span class="hljs-built_in">this</span>.method](engine);
+        }
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-52">&#x00a7;</a>
+              </div>
+              <p><code>filteredStamp</code> - handles stamping functionality for all <strong>entitys that have filter functions</strong> associated with them.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.filteredStamp = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-53">&#x00a7;</a>
+              </div>
+              <p>Clean and sort the Entity-level filters before sending them to the filter engine for application</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyFilters || !<span class="hljs-built_in">this</span>.currentFilters) <span class="hljs-built_in">this</span>.cleanFilters();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-54">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p>Save current host data into a set of vars, ready for restoration after web engine completes or fails</p>
 
@@ -1567,33 +1651,33 @@
         </li>
         
         
-        <li id="section-52">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p>Get and prepare a pool Cell for the filter operations</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> filterHost = requestCell(),
-            filterElement = filterHost.element,
-            filterEngine = filterHost.engine;
+            filterCellElement = filterHost.element,
+            filterCellEngine = filterHost.engine;
 
         <span class="hljs-built_in">this</span>.currentHost = filterHost;
         
-        <span class="hljs-keyword">let</span> w = filterElement.width = currentDimensions[<span class="hljs-number">0</span>] || currentElement.width,
-            h = filterElement.height = currentDimensions[<span class="hljs-number">1</span>] || currentElement.height;</pre></div></div>
+        <span class="hljs-keyword">let</span> w = filterCellElement.width = currentDimensions[<span class="hljs-number">0</span>] || currentElement.width,
+            h = filterCellElement.height = currentDimensions[<span class="hljs-number">1</span>] || currentElement.height;</pre></div></div>
             
         </li>
         
         
-        <li id="section-53">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p>Switch off fast stamp</p>
 
@@ -1605,101 +1689,19 @@
         </li>
         
         
-        <li id="section-54">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
-              </div>
-              <p>Stamp the entity onto the pool Cell</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-built_in">this</span>.regularStampSynchronousActions();
-
-        <span class="hljs-keyword">let</span> worker, myimage;
-
-        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.noFilters &amp;&amp; <span class="hljs-built_in">this</span>.filters &amp;&amp; <span class="hljs-built_in">this</span>.filters.length) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-55">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
-              </div>
-              <p>If we’re using the entity as a stencil, copy the entity cell’s current display over the entity in the pool Cell</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.isStencil) {
-
-                filterEngine.save();
-                filterEngine.globalCompositeOperation = <span class="hljs-string">&#x27;source-in&#x27;</span>;
-                filterEngine.globalAlpha = <span class="hljs-number">1</span>;
-                filterEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-                filterEngine.drawImage(currentElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-                filterEngine.restore();
-            } 
-
-            filterEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-
-            myimage = filterEngine.getImageData(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, w, h);
-            worker = requestFilterWorker();</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-56">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
-              </div>
-              <p>NEED TO POPULATE IMAGE FILTER ACTION OBJECTS WITH THEIR ASSET’S IMAGEDATA AT THIS POINT</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-built_in">this</span>.preprocessFilters(<span class="hljs-built_in">this</span>.currentFilters);</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
-              <p>Pass control over to the filter engine</p>
+              <p>Stamp the entity onto the pool Cell</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">let</span> img = actionFilterWorker(worker, {
-                <span class="hljs-attr">image</span>: myimage,
-                <span class="hljs-attr">filters</span>: <span class="hljs-built_in">this</span>.currentFilters
-            })
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-built_in">this</span>.regularStamp();
 
-            <span class="hljs-keyword">if</span> (img) {
-
-                filterEngine.globalCompositeOperation = <span class="hljs-string">&#x27;source-over&#x27;</span>;
-                filterEngine.globalAlpha = <span class="hljs-number">1</span>;
-                filterEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-                filterEngine.putImageData(img, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-            }
-        }
-        <span class="hljs-keyword">if</span> (worker) releaseFilterWorker(worker);
-
-        currentEngine.save();
-
-        currentEngine.globalAlpha = (<span class="hljs-built_in">this</span>.state &amp;&amp; <span class="hljs-built_in">this</span>.state.globalAlpha) ? <span class="hljs-built_in">this</span>.state.globalAlpha : <span class="hljs-number">1</span>;
-        currentEngine.globalCompositeOperation = (<span class="hljs-built_in">this</span>.state &amp;&amp; <span class="hljs-built_in">this</span>.state.globalCompositeOperation) ? <span class="hljs-built_in">this</span>.state.globalCompositeOperation : <span class="hljs-string">&#x27;source-over&#x27;</span>;
-        
-        currentEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-
-        currentEngine.drawImage(filterElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);</pre></div></div>
+        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.noFilters &amp;&amp; <span class="hljs-built_in">this</span>.filters &amp;&amp; <span class="hljs-built_in">this</span>.filters.length) {</pre></div></div>
             
         </li>
         
@@ -1710,19 +1712,47 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
-              <p>This is also the point at which we action any requests to stash the Cell output and (optionally) create/update imageAsset objects and associated &lt;img&gt; elements for use elsewhere in the Scrawl-canvas ecosystem.</p>
+              <p>If we’re using the entity as a stencil, copy the entity cell’s current display over the entity in the pool Cell</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.stashOutput) {
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.isStencil) {
 
-            <span class="hljs-built_in">this</span>.stashOutput = <span class="hljs-literal">false</span>;
+                filterCellEngine.save();
+                filterCellEngine.globalCompositeOperation = <span class="hljs-string">&#x27;source-in&#x27;</span>;
+                filterCellEngine.globalAlpha = <span class="hljs-number">1</span>;
+                filterCellEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+                filterCellEngine.drawImage(currentElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+                filterCellEngine.restore();
+            } 
 
-            <span class="hljs-keyword">let</span> [stashX, stashY, stashWidth, stashHeight] = <span class="hljs-built_in">this</span>.getCellCoverage(filterEngine.getImageData(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, filterElement.width, filterElement.height));
+            filterCellEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
 
-            <span class="hljs-built_in">this</span>.stashedImageData = filterEngine.getImageData(stashX, stashY, stashWidth, stashHeight);
+            <span class="hljs-keyword">let</span> myimage = filterCellEngine.getImageData(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, w, h);
 
-            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.stashOutputAsAsset) {</pre></div></div>
+            <span class="hljs-built_in">this</span>.preprocessFilters(<span class="hljs-built_in">this</span>.currentFilters);
+
+            <span class="hljs-keyword">let</span> img = filterEngine.action({
+                <span class="hljs-attr">image</span>: myimage,
+                <span class="hljs-attr">filters</span>: <span class="hljs-built_in">this</span>.currentFilters
+            });
+
+            <span class="hljs-keyword">if</span> (img) {
+
+                filterCellEngine.globalCompositeOperation = <span class="hljs-string">&#x27;source-over&#x27;</span>;
+                filterCellEngine.globalAlpha = <span class="hljs-number">1</span>;
+                filterCellEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+                filterCellEngine.putImageData(img, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+            }
+        }
+        currentEngine.save();
+
+        currentEngine.globalAlpha = (<span class="hljs-built_in">this</span>.state &amp;&amp; <span class="hljs-built_in">this</span>.state.globalAlpha) ? <span class="hljs-built_in">this</span>.state.globalAlpha : <span class="hljs-number">1</span>;
+        currentEngine.globalCompositeOperation = (<span class="hljs-built_in">this</span>.state &amp;&amp; <span class="hljs-built_in">this</span>.state.globalCompositeOperation) ? <span class="hljs-built_in">this</span>.state.globalCompositeOperation : <span class="hljs-string">&#x27;source-over&#x27;</span>;
+        
+        currentEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+
+        currentEngine.drawImage(filterCellElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);</pre></div></div>
             
         </li>
         
@@ -1733,15 +1763,38 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
+              <p>This is also the point at which we action any requests to stash the Cell output and (optionally) create/update imageAsset objects and associated &lt;img&gt; elements for use elsewhere in the Scrawl-canvas ecosystem.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.stashOutput) {
+
+            <span class="hljs-built_in">this</span>.stashOutput = <span class="hljs-literal">false</span>;
+
+            <span class="hljs-keyword">let</span> [stashX, stashY, stashWidth, stashHeight] = <span class="hljs-built_in">this</span>.getCellCoverage(filterCellEngine.getImageData(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, filterCellElement.width, filterCellElement.height));
+
+            <span class="hljs-built_in">this</span>.stashedImageData = filterCellEngine.getImageData(stashX, stashY, stashWidth, stashHeight);
+
+            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.stashOutputAsAsset) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-60">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-60">&#x00a7;</a>
+              </div>
               <p>KNOWN ISSUE - it takes time for the images to load the new dataURLs generated from canvas elements. See demo <a href="../../demo/canvas-020.html">Canvas-020</a> for a workaround.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>                <span class="hljs-built_in">this</span>.stashOutputAsAsset = <span class="hljs-literal">false</span>;
 
-                filterElement.width = stashWidth;
-                filterElement.height = stashHeight;
-                filterEngine.putImageData(<span class="hljs-built_in">this</span>.stashedImageData, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+                filterCellElement.width = stashWidth;
+                filterCellElement.height = stashHeight;
+                filterCellEngine.putImageData(<span class="hljs-built_in">this</span>.stashedImageData, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
 
                 <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.stashedImage) {
 
@@ -1755,9 +1808,9 @@
                         importDomImage(<span class="hljs-string">`#<span class="hljs-subst">${newimg.id}</span>`</span>);
                     };
 
-                    newimg.src = filterElement.toDataURL();
+                    newimg.src = filterCellElement.toDataURL();
                 }
-                <span class="hljs-keyword">else</span> <span class="hljs-built_in">this</span>.stashedImage.src = filterElement.toDataURL();
+                <span class="hljs-keyword">else</span> <span class="hljs-built_in">this</span>.stashedImage.src = filterCellElement.toDataURL();
             }
         }
 
@@ -1772,11 +1825,11 @@
         </li>
         
         
-        <li id="section-60">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p><code>getCellCoverage</code> - internal helper function - calculates the box start and dimensions values for the entity on its current Cell host, to help minimize work required when applying filters to the entity output. Also used when building an image when the <code>scrawl.createImageFromEntity</code> function is invoked.</p>
 
@@ -1816,11 +1869,11 @@
         </li>
         
         
-        <li id="section-61">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p><code>simpleStamp</code> - an alternative to the <code>stamp</code> function, to get an entity to stamp its output onto a Cell.</p>
 <ul>
@@ -1830,7 +1883,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.simpleStamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">host, changes = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.simpleStamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">host, changes = Ωempty</span>) </span>{
 
         <span class="hljs-keyword">if</span> (host &amp;&amp; host.type === <span class="hljs-string">&#x27;Cell&#x27;</span>) {
 
@@ -1839,33 +1892,9 @@
             <span class="hljs-built_in">this</span>.set(changes);
             <span class="hljs-built_in">this</span>.prepareStamp();
 
-            <span class="hljs-built_in">this</span>.regularStampSynchronousActions();
+            <span class="hljs-built_in">this</span>.regularStamp();
         }
     };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-62">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
-              </div>
-              <h5 id="stamping-the-entity-onto-a-cell-wrapper-canvas-element">Stamping the entity onto a Cell wrapper &lt;canvas&gt; element</h5>
-<p><code>regularStampSynchronousActions</code> - this function <em><strong>coordinates the actions required</strong></em> for an entity to display its output on a Cell wrapper’s &lt;canvas&gt; element.</p>
-<p>Scrawl-canvas stamps an entity onto a Cell by moving and rotating the Cell engine’s <code>transformation</code> (its coordinate grid) to match the entity’s <strong>start</strong> and <strong>offset</strong> coordinates, alongside any requirements to rotate (<strong>roll</strong>) and flip (<strong>flipReverse</strong>, <strong>flipUpend</strong>) the transformation as set out by the entity object.</p>
-<ul>
-<li>We use the Web API CanvasRenderingContext2D engine’s <code>setTransform</code> method to perform these actions when we invoke the Cell wrapper’s <strong>rotateDestination</strong> function.</li>
-<li><em><strong>We never invoke the engine’s <code>translate</code>, <code>rotate</code> or <code>scale</code> methods</strong></em> on the transformation. All positional, rotational and scaling data is kept in the entity object, and calculated as part of its <strong>prepareStamp</strong> step. This means we don’t need to keep track of the transformation’s current state, and makes the entity stamping operation more efficient.</li>
-<li>Scrawl-canvas <strong>does not support skew operations</strong> on the transformation - use a more appropriately shaped entity instead.</li>
-<li>Scrawl-canvas <strong>does not support non-isometric scaling</strong> (applying different scaling factors along the x and y axes) - most entitys include width and height attributes: use those instead.</li>
-<li>We only use the transformation’s <code>save</code> and <code>restore</code> methods where it makes sense to do so - for instance in very limited actions where the save and restore invocations are close enough in the code base that we don’t lose sight of them (and remember to restore after the action completes). They are <em><strong>not</strong></em> used when updating the engine’s attributes to match an entity’s stamping requirements!</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    P.regularStampSynchronousActions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
             
         </li>
         
@@ -1876,18 +1905,10 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
-              <p>Get a handle to the Cell wrapper - which needs to be assigned and checked prior to calling this function</p>
+              <h5 id="stamp-methods">Stamp methods</h5>
+<p>All actual drawing is achieved using the entity’s pre-calculated <a href="https://developer.mozilla.org/en-US/docs/Web/API/Path2D">Path2D object</a>.</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> dest = <span class="hljs-built_in">this</span>.currentHost;
-
-        <span class="hljs-keyword">if</span> (dest) {
-
-            <span class="hljs-keyword">let</span> engine = dest.engine,
-                stamp = <span class="hljs-built_in">this</span>.currentStampPosition,
-                x = stamp[<span class="hljs-number">0</span>],
-                y = stamp[<span class="hljs-number">1</span>];</pre></div></div>
             
         </li>
         
@@ -1897,67 +1918,6 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-64">&#x00a7;</a>
-              </div>
-              <p>Get the Cell wrapper to perform required transformations on its &lt;canvas&gt; element’s 2D engine</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            dest.rotateDestination(engine, x, y, <span class="hljs-built_in">this</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-65">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
-              </div>
-              <p>Get the Cell wrapper to update its 2D engine’s attributes to match the entity’s requirements</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.noCanvasEngineUpdates) dest.setEngine(<span class="hljs-built_in">this</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-66">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
-              </div>
-              <p>Invoke the appropriate <strong>stamping method</strong> (below)</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-built_in">this</span>[<span class="hljs-built_in">this</span>.method](engine);
-        }
-    };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-67">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
-              </div>
-              <h5 id="stamp-methods">Stamp methods</h5>
-<p>All actual drawing is achieved using the entity’s pre-calculated <a href="https://developer.mozilla.org/en-US/docs/Web/API/Path2D">Path2D object</a>.</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-68">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <p><code>draw</code> - stroke the entity outline with the entity’s <code>strokeStyle</code> color, gradient or pattern - including shadow</p>
 
@@ -1971,11 +1931,11 @@
         </li>
         
         
-        <li id="section-69">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <p><code>fill</code> - fill the entity with the entity’s <code>fillStyle</code> color, gradient or pattern - including shadow</p>
 
@@ -1989,11 +1949,11 @@
         </li>
         
         
-        <li id="section-70">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <p><code>drawAndFill</code> - stroke the entity’s outline, remove shadow, then fill it</p>
 
@@ -2011,11 +1971,11 @@
         </li>
         
         
-        <li id="section-71">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <p><code>fillAndDraw</code> - fill the entity’s outline, remove shadow, then stroke it</p>
 
@@ -2034,11 +1994,11 @@
         </li>
         
         
-        <li id="section-72">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-72">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <p><code>drawThenFill</code> - stroke the entity’s outline, then fill it (shadow applied twice)</p>
 
@@ -2055,11 +2015,11 @@
         </li>
         
         
-        <li id="section-73">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-73">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <p><code>fillThenDraw</code> - fill the entity’s outline, then stroke it (shadow applied twice)</p>
 
@@ -2076,11 +2036,11 @@
         </li>
         
         
-        <li id="section-74">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-74">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <p><code>clip</code> - restrict drawing activities to the entity’s enclosed area</p>
 
@@ -2094,11 +2054,11 @@
         </li>
         
         
-        <li id="section-75">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-75">&#x00a7;</a>
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <p><code>clear</code> - remove everything that would have been covered if the entity had performed fill (including shadow)</p>
 
@@ -2117,11 +2077,11 @@
         </li>
         
         
-        <li id="section-76">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-76">&#x00a7;</a>
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <p><code>none</code> - perform all the calculations required, but don’t perform the final stamping</p>
 
@@ -2132,11 +2092,11 @@
         </li>
         
         
-        <li id="section-77">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-77">&#x00a7;</a>
+                <a class="ss" href="#section-73">&#x00a7;</a>
               </div>
               <p>Return the prototype</p>
 

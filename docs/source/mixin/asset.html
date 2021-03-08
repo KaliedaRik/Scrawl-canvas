@@ -105,6 +105,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/conicGradient.html">
+                  ./source/factory/conicGradient.js
+                </a>
+              
+                
                 <a class="source" href="../factory/coordinate.html">
                   ./source/factory/coordinate.js
                 </a>
@@ -503,7 +508,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { mergeOver, pushUnique, λ<span class="hljs-literal">null</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { mergeOver, pushUnique, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -518,7 +523,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">P = {}</span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">P = Ωempty</span>) </span>{</pre></div></div>
             
         </li>
         
@@ -686,7 +691,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    S.source = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    S.source = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
         <span class="hljs-keyword">if</span> (item) {</pre></div></div>
             
@@ -748,7 +753,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.assetConstructor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.assetConstructor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
 
         <span class="hljs-built_in">this</span>.makeName(items.name);
         <span class="hljs-built_in">this</span>.register();
@@ -775,7 +780,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.subscribe = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">sub = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.subscribe = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">sub</span>) </span>{
 
         <span class="hljs-keyword">if</span> (sub &amp;&amp; sub.name) {
 
@@ -798,12 +803,15 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.subscribeAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">sub = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.subscribeAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">sub</span>) </span>{
 
-        <span class="hljs-built_in">this</span>.subscribers.push(sub);
-        sub.asset = <span class="hljs-built_in">this</span>;
-        sub.source = <span class="hljs-built_in">this</span>.source;
-        <span class="hljs-built_in">this</span>.notifySubscriber(sub);
+        <span class="hljs-keyword">if</span> (sub) {
+
+            <span class="hljs-built_in">this</span>.subscribers.push(sub);
+            sub.asset = <span class="hljs-built_in">this</span>;
+            sub.source = <span class="hljs-built_in">this</span>.source;
+            <span class="hljs-built_in">this</span>.notifySubscriber(sub);
+        }
     };</pre></div></div>
             
         </li>
@@ -819,9 +827,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.unsubscribe = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">sub = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.unsubscribe = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">sub</span>) </span>{
 
-        <span class="hljs-keyword">if</span> (sub.name) {
+        <span class="hljs-keyword">if</span> (sub &amp;&amp; sub.name) {
 
             <span class="hljs-keyword">let</span> name = sub.name,
                 index = <span class="hljs-built_in">this</span>.subscribers.findIndex(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.name === name);

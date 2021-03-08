@@ -105,6 +105,11 @@
                 </a>
               
                 
+                <a class="source" href="conicGradient.html">
+                  ./source/factory/conicGradient.js
+                </a>
+              
+                
                 <a class="source" href="coordinate.html">
                   ./source/factory/coordinate.js
                 </a>
@@ -562,9 +567,7 @@ scrawl.makeFilter({
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">cell</span>, <span class="hljs-title">group</span>, <span class="hljs-title">entity</span>, <span class="hljs-title">asset</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
-<span class="hljs-keyword">import</span> { mergeOver, removeItem, λ<span class="hljs-literal">null</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
-
-<span class="hljs-keyword">import</span> { makeFilterEngine } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./filterEngine.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { mergeOver, removeItem, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;</pre></div></div>
             
@@ -581,7 +584,7 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Filter = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Filter = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
     <span class="hljs-built_in">this</span>.makeName(items.name);
     <span class="hljs-built_in">this</span>.register();
@@ -786,6 +789,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
     <span class="hljs-attr">excludeBlue</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">excludeGreen</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">excludeRed</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">excludeTransparentPixels</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">green</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">greenInBlue</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">greenInGreen</span>: <span class="hljs-number">0</span>,
@@ -816,6 +820,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
     <span class="hljs-attr">offsetX</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">offsetY</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">opaqueAt</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">operation</span>: <span class="hljs-string">&#x27;mean&#x27;</span>,
     <span class="hljs-attr">passes</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">postProcessResults</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">processHorizontal</span>: <span class="hljs-literal">true</span>,
@@ -992,15 +997,138 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.set = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.set = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
+              </div>
+              <p>if (Object.keys(items).length) {</p>
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Object</span>.keys(items).length) {
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-23">&#x00a7;</a>
+              </div>
+              <pre><code><span class="hljs-keyword">let</span> setters = <span class="hljs-built_in">this</span>.setters,
+    defs = <span class="hljs-built_in">this</span>.defs,
+    predefined;
+</code></pre>
 
-        <span class="hljs-keyword">let</span> setters = <span class="hljs-built_in">this</span>.setters,
-            defs = <span class="hljs-built_in">this</span>.defs,
-            predefined;
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-24">&#x00a7;</a>
+              </div>
+              <pre><code><span class="hljs-built_in">Object</span>.entries(items).forEach(<span class="hljs-function">(<span class="hljs-params">[key, value]</span>) =&gt;</span> {
+</code></pre>
 
-        <span class="hljs-built_in">Object</span>.entries(items).forEach(<span class="hljs-function">(<span class="hljs-params">[key, value]</span>) =&gt;</span> {
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-25">&#x00a7;</a>
+              </div>
+              <pre><code>    <span class="hljs-keyword">if</span> (key &amp;&amp; key !== <span class="hljs-string">&#x27;name&#x27;</span> &amp;&amp; value != <span class="hljs-literal">null</span>) {
+</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-26">&#x00a7;</a>
+              </div>
+              <pre><code>        predefined = setters[key];
+</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-27">&#x00a7;</a>
+              </div>
+              <pre><code>        <span class="hljs-keyword">if</span> (predefined) predefined.call(<span class="hljs-built_in">this</span>, value);
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] !== <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-built_in">this</span>[key] = value;
+    }
+}, <span class="hljs-built_in">this</span>);
+</code></pre>
+<p>}
+if (this.method &amp;&amp; setActionsArray[this.method]) setActionsArray<a href="this">this.method</a>;</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-28">&#x00a7;</a>
+              </div>
+              <p>this.dirtyFiltersCache = true;</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-29">&#x00a7;</a>
+              </div>
+              <p>return this;</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> keys = <span class="hljs-built_in">Object</span>.keys(items),
+        keysLen = keys.length;
+
+    <span class="hljs-keyword">if</span> (keysLen) {
+
+        <span class="hljs-keyword">const</span> setters = <span class="hljs-built_in">this</span>.setters,
+            defs = <span class="hljs-built_in">this</span>.defs;
+        
+        <span class="hljs-keyword">let</span> predefined, i, key, value;
+
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; keysLen; i++) {
+
+            key = keys[i];
+            value = items[key];
 
             <span class="hljs-keyword">if</span> (key &amp;&amp; key !== <span class="hljs-string">&#x27;name&#x27;</span> &amp;&amp; value != <span class="hljs-literal">null</span>) {
 
@@ -1009,7 +1137,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
                 <span class="hljs-keyword">if</span> (predefined) predefined.call(<span class="hljs-built_in">this</span>, value);
                 <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] !== <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-built_in">this</span>[key] = value;
             }
-        }, <span class="hljs-built_in">this</span>);
+        }
     }
     <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.method &amp;&amp; setActionsArray[<span class="hljs-built_in">this</span>.method]) setActionsArray[<span class="hljs-built_in">this</span>.method](<span class="hljs-built_in">this</span>);
 
@@ -1021,34 +1149,157 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p><code>setDelta</code> - Overwrites mixin/base.js function</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.setDelta = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.setDelta = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-31">&#x00a7;</a>
+              </div>
+              <p>if (Object.keys(items).length) {</p>
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Object</span>.keys(items).length) {
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-32">&#x00a7;</a>
+              </div>
+              <pre><code><span class="hljs-keyword">let</span> setters = <span class="hljs-built_in">this</span>.deltaSetters,
+    defs = <span class="hljs-built_in">this</span>.defs,
+    predefined;
+</code></pre>
 
-        <span class="hljs-keyword">let</span> setters = <span class="hljs-built_in">this</span>.deltaSetters,
-            defs = <span class="hljs-built_in">this</span>.defs,
-            predefined;
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-33">&#x00a7;</a>
+              </div>
+              <pre><code><span class="hljs-built_in">Object</span>.entries(items).forEach(<span class="hljs-function">(<span class="hljs-params">[key, value]</span>) =&gt;</span> {
+</code></pre>
 
-        <span class="hljs-built_in">Object</span>.entries(items).forEach(<span class="hljs-function">(<span class="hljs-params">[key, value]</span>) =&gt;</span> {
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-34">&#x00a7;</a>
+              </div>
+              <pre><code>    <span class="hljs-keyword">if</span> (key &amp;&amp; key !== <span class="hljs-string">&#x27;name&#x27;</span> &amp;&amp; value != <span class="hljs-literal">null</span>) {
+</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-35">&#x00a7;</a>
+              </div>
+              <pre><code>        predefined = setters[key];
+</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-36">&#x00a7;</a>
+              </div>
+              <pre><code>        <span class="hljs-keyword">if</span> (predefined) predefined.call(<span class="hljs-built_in">this</span>, value);
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] != <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-built_in">this</span>[key] = addStrings(<span class="hljs-built_in">this</span>[key], value);
+    }
+}, <span class="hljs-built_in">this</span>);
+</code></pre>
+<p>}
+if (this.method &amp;&amp; setActionsArray[this.method]) setActionsArray<a href="this">this.method</a>;</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-37">&#x00a7;</a>
+              </div>
+              <p>this.dirtyFiltersCache = true;</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-38">&#x00a7;</a>
+              </div>
+              <p>return this;</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> keys = <span class="hljs-built_in">Object</span>.keys(items),
+        keysLen = keys.length;
+
+    <span class="hljs-keyword">if</span> (keysLen) {
+
+        <span class="hljs-keyword">const</span> setters = <span class="hljs-built_in">this</span>.deltaSetters,
+            defs = <span class="hljs-built_in">this</span>.defs;
+        
+        <span class="hljs-keyword">let</span> predefined, i, iz, key, value;
+
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; keysLen; i++) {
+
+            key = keys[i];
+            value = items[key];
 
             <span class="hljs-keyword">if</span> (key &amp;&amp; key !== <span class="hljs-string">&#x27;name&#x27;</span> &amp;&amp; value != <span class="hljs-literal">null</span>) {
 
                 predefined = setters[key];
 
                 <span class="hljs-keyword">if</span> (predefined) predefined.call(<span class="hljs-built_in">this</span>, value);
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] != <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-built_in">this</span>[key] = addStrings(<span class="hljs-built_in">this</span>[key], value);
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] !== <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-built_in">this</span>[key] = addStrings(<span class="hljs-built_in">this</span>[key], value);
             }
-        }, <span class="hljs-built_in">this</span>);
+        }
     }
     <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.method &amp;&amp; setActionsArray[<span class="hljs-built_in">this</span>.method]) setActionsArray[<span class="hljs-built_in">this</span>.method](<span class="hljs-built_in">this</span>);
 
@@ -1060,11 +1311,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-23">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <h4 id="compatibility-with-scrawl-canvas-legacy-filters-functionality">Compatibility with Scrawl-canvas legacy filters functionality</h4>
 <p>The Scrawl-canvas filters code was rewritten from scratch for version 8.4.0. The new functionality introduced the concept of “line processing” - <em><strong>lineIn, lineMix, lineOut</strong></em> (analagous to SVG in, in2 and result attributes) - alongside the addition of more sophisticated image processing tools such as blend modes, compositing, more adaptable matrices, image loading, displacement mapping, etc.</p>
@@ -1082,11 +1333,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-24">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p>// <strong>Threshhold</strong> filter
 }).clone({
@@ -1108,11 +1359,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-25">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p><code>setActionsArray</code> - an object containing a large number of functions which will convert legacy factory function invocations (using <strong>method</strong> strings) into modern Filter objects (using <strong>actions</strong> arrays):</p>
 
@@ -1123,11 +1374,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-26">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p><strong>alphaToChannels</strong> (new in v8.4.0) - copies the alpha channel value over to the selected value or, alternatively, sets that channels value to zero, or leaves the channel’s value unchanged. Setting the appropriate “includeChannel” flags will copy the alpha channel value to that channel; when that flag is false, setting the appropriate “excludeChannel” flag will set that channel’s value to zero.</p>
 
@@ -1151,11 +1402,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-27">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p><strong>areaAlpha</strong> (new in v8.4.0) - places a tile schema across the input, quarters each tile and then sets the alpha channels of the pixels in selected quarters of each tile to zero. Can be used to create horizontal or vertical bars, or chequerboard effects.</p>
 
@@ -1180,11 +1431,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-28">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p><strong>binary</strong> (new in v8.4.0) - set the channel to either 0 or 255, depending on whether the channel value is below or above a given level. Level values are set using the “red”, “green”, “blue” and “alpha” arguments. Setting these values to 0 disables the action for that channel</p>
 
@@ -1206,11 +1457,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-29">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p><strong>blend</strong> (new in v8.4.0) - perform a blend operation on two images; available blend options include: ‘color-burn’, ‘color-dodge’, ‘darken’, ‘difference’, ‘exclusion’, ‘hard-light’, ‘lighten’, ‘lighter’, ‘multiply’, ‘overlay’, ‘screen’, ‘soft-light’, ‘color’, ‘hue’, ‘luminosity’, and ‘saturation’ - see <a href="https://www.w3.org/TR/compositing-1/#blending">W3C Compositing and Blending recommendations</a></p>
 
@@ -1232,11 +1483,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-30">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p><strong>blue</strong> - removes red and green channel color from the image</p>
 
@@ -1256,11 +1507,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-31">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p><strong>blur</strong> - blurs the image</p>
 
@@ -1276,6 +1527,7 @@ scrawl.makeFilter({
             <span class="hljs-attr">includeGreen</span>: (f.includeGreen != <span class="hljs-literal">null</span>) ? f.includeGreen : <span class="hljs-literal">true</span>,
             <span class="hljs-attr">includeBlue</span>: (f.includeBlue != <span class="hljs-literal">null</span>) ? f.includeBlue : <span class="hljs-literal">true</span>,
             <span class="hljs-attr">includeAlpha</span>: (f.includeAlpha != <span class="hljs-literal">null</span>) ? f.includeAlpha : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">excludeTransparentPixels</span>: (f.excludeTransparentPixels != <span class="hljs-literal">null</span>) ? f.excludeTransparentPixels : <span class="hljs-literal">false</span>,
             <span class="hljs-attr">processHorizontal</span>: (f.processHorizontal != <span class="hljs-literal">null</span>) ? f.processHorizontal : <span class="hljs-literal">true</span>,
             <span class="hljs-attr">processVertical</span>: (f.processVertical != <span class="hljs-literal">null</span>) ? f.processVertical : <span class="hljs-literal">true</span>,
             <span class="hljs-attr">radius</span>: (f.radius != <span class="hljs-literal">null</span>) ? f.radius : <span class="hljs-number">1</span>,
@@ -1287,11 +1539,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-32">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p><strong>brightness</strong> - adjusts the brightness of the image</p>
 
@@ -1314,11 +1566,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-33">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p><strong>channelLevels</strong> (new in v8.4.0) - produces a posterize effect. Takes in four arguments - “red”, “green”, “blue” and “alpha” - each of which is an Array of zero or more integer Numbers (between 0 and 255). The filter works by looking at each pixel’s channel value and determines which of the corresponding Array’s Number values it is closest to; it then sets the channel value to that Number value</p>
 
@@ -1340,11 +1592,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-34">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p><strong>thiskey</strong> - </p>
 
@@ -1366,11 +1618,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-35">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p><strong>thiskey</strong> - </p>
 
@@ -1391,11 +1643,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-36">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p><strong>thiskey</strong> (new in v8.4.0) - </p>
 
@@ -1416,11 +1668,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-37">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p><strong>thiskey</strong> - </p>
 
@@ -1439,11 +1691,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-38">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p><strong>thiskey</strong> (new in v8.4.0) - </p>
 
@@ -1466,11 +1718,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-39">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p><strong>thiskey</strong> (new in v8.4.0) - </p>
 
@@ -1494,11 +1746,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-40">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p><strong>compose</strong> (new in v8.4.0) - perform a composite operation on two images; available compose options include: ‘destination-only’, ‘destination-over’, ‘destination-in’, ‘destination-out’, ‘destination-atop’, ‘source-only’, ‘source-over’ (default), ‘source-in’, ‘source-out’, ‘source-atop’, ‘clear’, and ‘xor’ - see <a href="https://www.w3.org/TR/compositing-1/#porterduffcompositingoperators">W3C Compositing and Blending recommendations</a></p>
 
@@ -1520,11 +1772,42 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-41">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
+              </div>
+              <p><strong>corrode</strong> (new in v8.5.2) - Performs a special form of matrix operation on each pixel’s color and alpha channels, calculating the new value using neighbouring pixel values</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    corrode: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
+        f.actions = [{
+            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;corrode&#x27;</span>,
+            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">width</span>: (f.width != <span class="hljs-literal">null</span>) ? f.width : <span class="hljs-number">3</span>,
+            <span class="hljs-attr">height</span>: (f.height != <span class="hljs-literal">null</span>) ? f.height : <span class="hljs-number">3</span>,
+            <span class="hljs-attr">offsetX</span>: (f.offsetX != <span class="hljs-literal">null</span>) ? f.offsetX : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">offsetY</span>: (f.offsetY != <span class="hljs-literal">null</span>) ? f.offsetY : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">includeRed</span>: (f.includeRed != <span class="hljs-literal">null</span>) ? f.includeRed : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">includeGreen</span>: (f.includeGreen != <span class="hljs-literal">null</span>) ? f.includeGreen : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">includeBlue</span>: (f.includeBlue != <span class="hljs-literal">null</span>) ? f.includeBlue : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">includeAlpha</span>: (f.includeAlpha != <span class="hljs-literal">null</span>) ? f.includeAlpha : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">operation</span>: (f.operation != <span class="hljs-literal">null</span>) ? f.operation : <span class="hljs-string">&#x27;mean&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
+        }];
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-58">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p><strong>cyan</strong> - removes red channel color from the image, and averages the remaining channel colors</p>
 
@@ -1545,11 +1828,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-42">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p><strong>displace</strong> (new in v8.4.0) - moves pixels around the image, based on the color channel values supplied by a displacement map image</p>
 
@@ -1575,11 +1858,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-43">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <p><strong>edgeDetect</strong> (new in v8.4.0) - applies a preset 3x3 edge-detect matrix to the image</p>
 
@@ -1606,11 +1889,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-44">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p><strong>emboss</strong> (new in v8.4.0) - outputs a black-gray-red emboss effect</p>
 
@@ -1674,11 +1957,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-45">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p><strong>flood</strong> (new in v8.4.0) - creates a uniform sheet of the required color, which can then be used by other filter actions</p>
 
@@ -1700,11 +1983,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-46">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p><strong>gray</strong> (new in v8.4.0) - averages the three color channel colors</p>
 
@@ -1725,11 +2008,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-47">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <p><strong>grayscale</strong> - produces a more realistic black-and-white photograph effect</p>
 
@@ -1747,11 +2030,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-48">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <p><strong>green</strong> - removes red and blue channel color from the image</p>
 
@@ -1771,11 +2054,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-49">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <p><strong>image</strong> (new in v8.4.0) - load an image into the filter engine, where it can then be used by other filter actions - useful for effects such as watermarking an image</p>
 
@@ -1799,11 +2082,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-50">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <p><strong>invert</strong> - inverts the colors in the image, producing an effect similar to a photograph negative</p>
 
@@ -1824,11 +2107,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-51">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <p><strong>magenta</strong> - removes green channel color from the image, and averages the remaining channel colors</p>
 
@@ -1849,11 +2132,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-52">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <p><strong>matrix</strong> - applies a 3x3 convolution matrix, kernel or mask operation to the image</p>
 
@@ -1880,11 +2163,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-53">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <p><strong>matrix5</strong> - applies a 5x5 convolution matrix, kernel or mask operation to the image</p>
 
@@ -1911,11 +2194,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-54">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <p><strong>notblue</strong> - zeroes the blue channel values (not the same effect as the yellow filter)</p>
 
@@ -1935,11 +2218,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-55">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <p><strong>notgreen</strong> - zeroes the green channel values (not the same effect as the magenta filter)</p>
 
@@ -1959,11 +2242,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-56">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-73">&#x00a7;</a>
               </div>
               <p><strong>notred</strong> - zeroes the red channel values (not the same effect as the cyan filter)</p>
 
@@ -1983,11 +2266,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-57">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-74">&#x00a7;</a>
               </div>
               <p><strong>offset</strong> (new in v8.4.0) - moves the image in its entirety by the given offset</p>
 
@@ -2013,11 +2296,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-58">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-75">&#x00a7;</a>
               </div>
               <p><strong>offsetChannels</strong> (new in v8.4.0) - moves each channel  by an offset set for that channel. Can create a crude stereoscopic output</p>
 
@@ -2043,11 +2326,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-59">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-76">&#x00a7;</a>
               </div>
               <p><strong>pixelate</strong> - averages the colors in a block to produce a series of obscuring tiles</p>
 
@@ -2073,11 +2356,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-60">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-77">&#x00a7;</a>
               </div>
               <p><strong>red</strong> - removes blue and green channel color from the image</p>
 
@@ -2097,11 +2380,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-61">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-78">&#x00a7;</a>
               </div>
               <p><strong>saturation</strong> - alters the saturation level of the image</p>
 
@@ -2125,11 +2408,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-62">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-79">&#x00a7;</a>
               </div>
               <p><strong>sepia</strong> - recalculates the values of each color channel (a tint action) to create a more ‘antique’ version of the image</p>
 
@@ -2156,11 +2439,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-63">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-80">&#x00a7;</a>
               </div>
               <p><strong>sharpen</strong> (new in v8.4.0) - applies a preset 3x3 sharpen matrix to the image</p>
 
@@ -2187,11 +2470,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-64">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-81">&#x00a7;</a>
               </div>
               <p><strong>threshold</strong> - creates a duotone effect - grayscales the input then, for each pixel, checks the color channel values against a “level” argument: pixels with channel values above the level value are assigned to the ‘high’ color; otherwise they are updated to the ‘low’ color.</p>
 
@@ -2201,12 +2484,15 @@ scrawl.makeFilter({
         <span class="hljs-keyword">let</span> lowRed = (f.lowRed != <span class="hljs-literal">null</span>) ? f.lowRed : <span class="hljs-number">0</span>,
             lowGreen = (f.lowGreen != <span class="hljs-literal">null</span>) ? f.lowGreen : <span class="hljs-number">0</span>,
             lowBlue = (f.lowBlue != <span class="hljs-literal">null</span>) ? f.lowBlue : <span class="hljs-number">0</span>,
+            lowAlpha = (f.lowAlpha != <span class="hljs-literal">null</span>) ? f.lowAlpha : <span class="hljs-number">255</span>,
             highRed = (f.highRed != <span class="hljs-literal">null</span>) ? f.highRed : <span class="hljs-number">255</span>,
             highGreen = (f.highGreen != <span class="hljs-literal">null</span>) ? f.highGreen : <span class="hljs-number">255</span>,
-            highBlue = (f.highBlue != <span class="hljs-literal">null</span>) ? f.highBlue : <span class="hljs-number">255</span>;
+            highBlue = (f.highBlue != <span class="hljs-literal">null</span>) ? f.highBlue : <span class="hljs-number">255</span>,
+            highAlpha = (f.highAlpha != <span class="hljs-literal">null</span>) ? f.highAlpha : <span class="hljs-number">255</span>;
+            
 
-        <span class="hljs-keyword">let</span> low = (f.low != <span class="hljs-literal">null</span>) ? f.low : [lowRed, lowGreen, lowBlue],
-            high = (f.high != <span class="hljs-literal">null</span>) ? f.high : [highRed, highGreen, highBlue];
+        <span class="hljs-keyword">let</span> low = (f.low != <span class="hljs-literal">null</span>) ? f.low : [lowRed, lowGreen, lowBlue, lowAlpha],
+            high = (f.high != <span class="hljs-literal">null</span>) ? f.high : [highRed, highGreen, highBlue, highAlpha];
 
         f.actions = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;threshold&#x27;</span>,
@@ -2214,19 +2500,20 @@ scrawl.makeFilter({
             <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
             <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
             <span class="hljs-attr">level</span>: (f.level != <span class="hljs-literal">null</span>) ? f.level : <span class="hljs-number">128</span>,
-            <span class="hljs-attr">low</span>: low,
-            <span class="hljs-attr">high</span>: high,
+            low,
+            high,
+            <span class="hljs-attr">includeAlpha</span>: (f.includeAlpha != <span class="hljs-literal">null</span>) ? f.includeAlpha : <span class="hljs-literal">false</span>,
         }];
     },</pre></div></div>
             
         </li>
         
         
-        <li id="section-65">
+        <li id="section-82">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-82">&#x00a7;</a>
               </div>
               <p><strong>tint</strong> - has similarities to the SVG &lt;feColorMatrix&gt; filter element, but excludes the alpha channel from calculations. Rather than set a matrix, we set nine arguments to determine how the value of each color channel in a pixel will affect both itself and its fellow color channels.</p>
 
@@ -2253,11 +2540,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-66">
+        <li id="section-83">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-83">&#x00a7;</a>
               </div>
               <p><strong>userDefined</strong> - DEPRECATED - this filter method no longer has any effect, returning an unchanged image</p>
 
@@ -2275,11 +2562,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-67">
+        <li id="section-84">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-84">&#x00a7;</a>
               </div>
               <p><strong>yellow</strong> - removes blue channel color from the image, and averages the remaining channel colors</p>
 
@@ -2301,11 +2588,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-68">
+        <li id="section-85">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-85">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 <p>No additional prototype functions defined</p>
@@ -2315,42 +2602,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-69">
+        <li id="section-86">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
-              </div>
-              <h4 id="filter-engine-pool">Filter engine pool</h4>
-<p>For now, we use one filter engine</p>
-<ul>
-<li>This used to be a pool of web workers which loaded up filter functionality</li>
-<li>Now it is just another module call in the main thread</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> filterPool = makeFilterEngine();
-
-<span class="hljs-keyword">const</span> requestFilterWorker = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">return</span> filterPool;
-};
-
-<span class="hljs-keyword">const</span> releaseFilterWorker = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{};
-
-<span class="hljs-keyword">const</span> actionFilterWorker = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">ignore, items</span>) </span>{
-
-	<span class="hljs-keyword">return</span> filterPool.action(items);
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-70">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
+                <a class="ss" href="#section-86">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
@@ -2358,6 +2614,7 @@ scrawl.makeFilter({
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeFilter = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
 
+    <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Filter(items);
 };
 
@@ -2366,11 +2623,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-71">
+        <li id="section-87">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
+                <a class="ss" href="#section-87">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 
@@ -2378,9 +2635,6 @@ scrawl.makeFilter({
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
     makeFilter,
-    requestFilterWorker,
-    releaseFilterWorker,
-    actionFilterWorker,
 };</pre></div></div>
             
         </li>

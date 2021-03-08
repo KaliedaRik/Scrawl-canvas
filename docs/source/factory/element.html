@@ -105,6 +105,11 @@
                 </a>
               
                 
+                <a class="source" href="conicGradient.html">
+                  ./source/factory/conicGradient.js
+                </a>
+              
+                
                 <a class="source" href="coordinate.html">
                   ./source/factory/coordinate.js
                 </a>
@@ -509,7 +514,7 @@ Element  ~~&gt; Entity (eg Block)
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { element, elementnames, artefact, artefactnames, <span class="hljs-title">constructors</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
-<span class="hljs-keyword">import</span> { pushUnique, removeItem, isa_dom } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { pushUnique, removeItem, isa_dom, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { uiSubscribedElements } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/userInteraction.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeCanvas } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./canvas.js&#x27;</span>;
@@ -530,7 +535,7 @@ Element  ~~&gt; Entity (eg Block)
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Element = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Element = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
     
     <span class="hljs-keyword">let</span> el = items.domElement;
 
@@ -823,7 +828,7 @@ P = domMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.addCanvas = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.addCanvas = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.canvas) {
 
@@ -932,6 +937,7 @@ stack.addNewElement({
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeElement = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
     
+    <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Element(items);
 };
 

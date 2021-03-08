@@ -105,6 +105,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/conicGradient.html">
+                  ./source/factory/conicGradient.js
+                </a>
+              
+                
                 <a class="source" href="../factory/coordinate.html">
                   ./source/factory/coordinate.js
                 </a>
@@ -480,7 +485,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { isa_fn, isa_dom, λ<span class="hljs-literal">null</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./utilities.js&quot;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { isa_fn, isa_dom, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./utilities.js&quot;</span>;</pre></div></div>
             
         </li>
         
@@ -502,17 +507,20 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeAnimationObserver = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">anim, wrapper, specs = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeAnimationObserver = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">anim, wrapper, specs = Ωempty</span>) </span>{
 
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-built_in">window</span>.IntersectionObserver === <span class="hljs-string">&#x27;function&#x27;</span> &amp;&amp; anim &amp;&amp; anim.run) {
 
         <span class="hljs-keyword">let</span> observer = <span class="hljs-keyword">new</span> IntersectionObserver(<span class="hljs-function">(<span class="hljs-params">entries, observer</span>) =&gt;</span> {
 
-            entries.forEach(<span class="hljs-function"><span class="hljs-params">entry</span> =&gt;</span> {
+            <span class="hljs-keyword">let</span> i, iz, entry;
 
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = entries.length; i &lt; iz; i++) {
+
+                entry = entries[i];
                 <span class="hljs-keyword">if</span> (entry.isIntersecting) !anim.isRunning() &amp;&amp; anim.run();
                 <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!entry.isIntersecting) anim.isRunning() &amp;&amp; anim.halt();
-            });
+            }
         }, specs);
 
         <span class="hljs-keyword">if</span> (wrapper &amp;&amp; wrapper.domElement) {
@@ -615,9 +623,15 @@
 
 <span class="hljs-keyword">const</span> actionMouseListener = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">events, fn, targets, action</span>) </span>{
 
-    events.forEach(<span class="hljs-function"><span class="hljs-params">myevent</span> =&gt;</span> {
+    <span class="hljs-keyword">let</span> i, iz, j, jz, myevent, target;
 
-        targets.forEach(<span class="hljs-function"><span class="hljs-params">target</span> =&gt;</span> {
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = events.length; i &lt; iz; i++) {
+
+        myevent = events[i]; 
+
+        <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = targets.length; j &lt; jz; j++) {
+
+            target = targets[j];
 
             <span class="hljs-keyword">if</span> (isa_dom(target) || target.document || target.characterSet) {
                 
@@ -651,15 +665,21 @@
                 }
             }
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/document actionMouseListener() error - bad target: <span class="hljs-subst">${myevent}</span>, <span class="hljs-subst">${target}</span>`</span>);
-        });
-    });
+        }
+    }
 };
 
 <span class="hljs-keyword">const</span> actionPointerListener = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">events, fn, targets, action</span>) </span>{
 
-    events.forEach(<span class="hljs-function"><span class="hljs-params">myevent</span> =&gt;</span> {
+    <span class="hljs-keyword">let</span> i, iz, j, jz, myevent, target;
 
-        targets.forEach(<span class="hljs-function"><span class="hljs-params">target</span> =&gt;</span> {
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = events.length; i &lt; iz; i++) {
+
+        myevent = events[i]; 
+
+        <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = targets.length; j &lt; jz; j++) {
+
+            target = targets[j];
 
             <span class="hljs-keyword">if</span> (isa_dom(target) || target.document || target.characterSet) {
 
@@ -686,9 +706,8 @@
                         <span class="hljs-keyword">break</span>;
                 }
             }
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/document actionPointerListener() error - bad target: <span class="hljs-subst">${myevent}</span>, <span class="hljs-subst">${target}</span>`</span>);
-        });
-    });
+        }
+    }
 };</pre></div></div>
             
         </li>
@@ -760,21 +779,23 @@
 <span class="hljs-keyword">const</span> actionNativeListener = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">evt, fn, targ, action</span>) </span>{
 
     <span class="hljs-keyword">let</span> events = [].concat(evt),
-        targets;
+        targets, i, iz, j, jz, myevent, target;
 
     <span class="hljs-keyword">if</span> (targ.substring) targets = <span class="hljs-built_in">document</span>.body.querySelectorAll(targ);
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(targ)) targets = targ;
     <span class="hljs-keyword">else</span> targets = [targ];
 
-    events.forEach(<span class="hljs-function"><span class="hljs-params">myevent</span> =&gt;</span> {
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = events.length; i &lt; iz; i++) {
 
-        targets.forEach(<span class="hljs-function"><span class="hljs-params">target</span> =&gt;</span> {
+        myevent = events[i];
 
+        <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = targets.length; j &lt; jz; j++) {
+
+            target = targets[j];
             <span class="hljs-keyword">if</span> (isa_dom(target) || target.document || target.characterSet) target[action](myevent, fn, <span class="hljs-literal">false</span>);
-
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/document actionNativeListener() error - bad target: <span class="hljs-subst">${myevent}</span>, <span class="hljs-subst">${target}</span>`</span>);
-        });
-    });
+        }
+    }
 };</pre></div></div>
             
         </li>
