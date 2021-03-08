@@ -489,9 +489,17 @@ P.getData = function (entity, cell) {
 // `updateArtefacts` - passes the __items__ argument object through to each of the Cell's Groups for forwarding to their artefacts' `setDelta` function
 P.updateArtefacts = function (items = Ωempty) {
 
-    this.groupBuckets.forEach(grp => {
+    const gb = this.groupBuckets;
 
-        grp.artefactBuckets.forEach(art => {
+    let art, ab, i, iz, j, jz;
+
+    for (i = 0, iz = gb.length; i < iz; i++) {
+
+        ab = gb[i].artefactBuckets;
+
+        for (j = 0, jz = ab.length; j < jz; j++) {
+
+            art = ab[i];
 
             if (items.dirtyScale) art.dirtyScale = true;
             if (items.dirtyDimensions) art.dirtyDimensions = true;
@@ -501,8 +509,8 @@ P.updateArtefacts = function (items = Ωempty) {
             if (items.dirtyHandle) art.dirtyHandle = true;
             if (items.dirtyRotation) art.dirtyRotation = true;
             if (items.dirtyPathObject) art.dirtyPathObject = true;
-        })
-    });
+        }
+    }
 };
 
 // `cleanDimensionsAdditionalActions` - overwrites mixin/position function:
@@ -597,19 +605,28 @@ P.updateControllerCells = function () {
 // `setEngineFromState` - internal function: set engine to match this Cell's State object's attribute values
 P.setEngineFromState = function (engine) {
 
-    let state = this.state;
+    const state = this.state,
+        stateKeys = state.allKeys,
+        stateKeysLen = stateKeys.length;
 
-    state.allKeys.forEach(key => {
+    let i, iz, key, eVal, sVal;
 
-        if (key === 'lineDash') {
+    for (i = 0; i < stateKeysLen; i++) {
 
-            engine.lineDash = state.lineDash;
-            engine.setLineDash(engine.lineDash);
+        key = stateKeys[i];
+        eVal = engine[key];
+        sVal = state[key];
+
+        if (eVal !== sVal) {
+
+            if (key === 'lineDash') {
+
+                engine.lineDash = sVal;
+                engine.setLineDash(engine.lineDash);
+            }
+            else engine[key] = sVal;
         }
-        else engine[key] = state[key];
-
-    }, state);
-
+    }
     engine.textAlign = state.textAlign;
     engine.textBaseline = state.textBaseline;
 
@@ -910,10 +927,14 @@ P.compile = function(){
 
     if(this.dirtyFilters || !this.currentFilters) this.cleanFilters();
 
-    this.groupBuckets.forEach(grp => {
+    const gb = this.groupBuckets,
+        gbLen = gb.length;
 
+    for (let i = 0, grp; i < gbLen; i++) {
+
+        grp = gb[i];
         if (grp && grp.stamp) grp.stamp();
-    });
+    }
 
     if (!this.noFilters && this.filters && this.filters.length) this.applyFilters();
     this.stashOutputAction();
@@ -1511,7 +1532,9 @@ const requestCell = function () {
         }));
     }
 
-    return cellPool.shift();
+    let c = cellPool.shift();
+    c.engine.save();
+    return c;
 };
 
 // `Exported function` - __releaseCell__
@@ -1519,8 +1542,8 @@ const releaseCell = function (c) {
 
     if (c && c.type === 'Cell') {
 
-        c.engine.setTransform(1,0,0,1,0,0);
-        cellPool.push(c.setToDefaults());
+        c.engine.restore();
+        cellPool.push(c);
     }
 };
 

@@ -15,7 +15,9 @@ export default function (P = Ωempty) {
 
 // __delta__ - a Javascript object containing `{key:value, key:value, etc}` attributes. 
 // + As part of the Display cycle, delta values get added to artefact attribute values - this is a very simple form of animation.
+// + __deltaConstraints__ - Object mirroring the `delta` object which we use to set bounds on the delta values, and instructions on what to do when those bounds are crossed.
 // + __noDeltaUpdates__ - Boolean flag to switch off the automatic application of delta attribute values as part of each iteration of the Display cycle.
+// + __checkDeltaConstraints__ - Boolean flag to switch ON automatic constraint checks.
 // + Delta updates can be invoked independently from the Display cycle by invoking `artefact.updateByDelta`, `artefact.reverseByDelta`.
 // + In addition to using `artefact.set`, we can also update the delta object values using `artefact.setDeltaValues`.
 //
@@ -32,8 +34,12 @@ export default function (P = Ωempty) {
 //     noDeltaUpdates: false,
 // });
 // ```
+// 
+// Note that the `delta` and `deltaConstraints` objects are set up in the mixin/position.js module, not here
         delta: null,
         noDeltaUpdates: false,
+        deltaConstraints: null,
+        checkDeltaConstraints: false,
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
     mergeOver(P, defaultAttributes);
@@ -62,12 +68,20 @@ export default function (P = Ωempty) {
     };
 
 
+    S.deltaConstraints = function (items = Ωempty) {
+
+        if (items) this.deltaConstraints = mergeDiscard(this.deltaConstraints, items);
+    };
+
+
 // #### Prototype functions
 
  // `updateByDelta` - this function gets called as part of every display cycle iteration, meaning that if an attribute is set to a non-zero value in the __delta__ attribute object then those __delta animations__ will start playing immediately.
     P.updateByDelta = function () {
 
         this.setDelta(this.delta);
+
+        if (this.checkDeltaConstraints) this.performDeltaConstraintsChecks();
 
         return this;
     };
@@ -94,7 +108,145 @@ export default function (P = Ωempty) {
         }
         this.setDelta(temp);
 
+        if (this.checkDeltaConstraints) this.performDeltaConstraintsChecks();
+
         return this;
+    };
+
+    P.performDeltaConstraintsChecks = function () {
+
+        const {delta, deltaConstraints} = this;
+
+        const keys = Object.keys(deltaConstraints),
+            keysLen = keys.length;
+
+        let key, keyIndex, item, min, max, action, performAction, performActionBecause, valArray, valIndex, val, i, isString, fMin, fMax, fVal;
+
+        for (i = 0; i < keysLen; i++) {
+
+            key = keys[i];
+            item = deltaConstraints[key];
+
+            if (Array.isArray(item) && item.length === 3) {
+
+                [min, max, action] = deltaConstraints[key];
+                isString = (min.substring) ? true : false;
+
+                if (isString) {
+
+                    keyIndex = ['startX', 'startY', 'handleX', 'handleY', 'offsetX', 'offsetY'].indexOf(key);
+                    valArray = false;
+                    valIndex = 0;
+
+                    if (keyIndex >= 0) {
+
+                        if (keyIndex < 2) valArray = this.start;
+                        else if (keyIndex < 4) valArray = this.handle;
+                        else if (keyIndex < 2) valArray = this.offset;
+
+                        if (['startY', 'handleY', 'offsetY'].indexOf(key) >= 0) valIndex = 1;
+
+                        val = valArray[valIndex];
+                    }
+                    else val = this.get(key);
+
+                    fMin = parseFloat(min);
+                    fMax = parseFloat(max);
+                    fVal = parseFloat(val);
+                    performAction = '';
+
+                    if (fVal < fMin) {
+
+                        performAction = action;
+                        performActionBecause = 0;
+                    }
+                    else if (fVal > fMax) {
+
+                        performAction = action;
+                        performActionBecause = 1;
+                    }
+
+                    if (performAction) {
+
+                        switch (performAction) {
+
+                            case 'reverse' :
+
+                                delta[key] = -parseFloat(delta[key]) + '%';
+
+                                this.set({
+                                    [key]: fVal + parseFloat(delta[key]) + '%',
+                                });
+                                break; 
+
+                            case 'loop' :
+
+                                if (performActionBecause) {
+
+                                    this.set({
+                                        [key]: fVal - (fMax - fMin) + '%',
+                                    });
+                                }
+                                else {
+
+                                    this.set({
+                                        [key]: fVal + (fMax - fMin) + '%',
+                                    });
+                                }
+                                break; 
+                        }
+                    }
+                }
+                else {
+
+                    val = this.get(key);
+
+                    performAction = '';
+
+                    if (val < min) {
+
+                        performAction = action;
+                        performActionBecause = 0;
+                    }
+                    else if (val > max) {
+
+                        performAction = action;
+                        performActionBecause = 1;
+                    }
+
+                    if (performAction) {
+
+                        switch (performAction) {
+
+                            case 'reverse' :
+
+                                delta[key] = -delta[key];
+
+                                this.set({
+                                    [key]: val + delta[key],
+                                });
+                                break; 
+
+                            case 'loop' :
+
+                                if (performActionBecause) {
+
+                                    this.set({
+                                        [key]: val - (max - min),
+                                    });
+                                }
+                                else {
+
+                                    this.set({
+                                        [key]: val + (max - min),
+                                    });
+                                }
+                                break; 
+                        }
+                    }
+                }
+            }
+        }
     };
 
 // `setDeltaValues`

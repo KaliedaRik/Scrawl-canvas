@@ -440,9 +440,10 @@ P.setBaseHelper = function () {
 // `updateCells` - internal function. Iterate through all Cells registered in the wrapper's __cells__ Array and set a range of dirty flags on them, for future processing by each Cell.
 P.updateCells = function (items = Ωempty) {
 
-    this.cells.forEach(name => {
+    const c = this.cells;
+    for (let i = 0, iz = c.length, mycell; i < iz; i++) {
 
-        let mycell = cell[name];
+        mycell = cell[c[i]];
 
         if (mycell) {
 
@@ -454,7 +455,7 @@ P.updateCells = function (items = Ωempty) {
             if (items.dirtyHandle) mycell.dirtyHandle = true;
             if (items.dirtyRotation) mycell.dirtyRotation = true;
         }
-    });
+    }
 };
 
 // `buildCell` - internal helper function, called by the Canvas constructor
@@ -534,7 +535,12 @@ P.killCell = function (item) {
 P.clear = function () {
 
     if (this.dirtyCells) this.cleanCells();
-    this.cellBatchesClear.forEach(myCell => myCell.clear());
+
+    const c = this.cellBatchesClear;
+    for (let i = 0, iz = c.length; i < iz; i++) {
+
+        c[i].clear();
+    }
 };
 
 // `compile` - For Cell objects in the wrapper's __cells__ (and associated) Arrays:
@@ -544,7 +550,12 @@ P.compile = function () {
 
     // Handle constituent cells
     if (this.dirtyCells) this.cleanCells();
-    this.cellBatchesCompile.forEach(myCell => myCell.compile());
+
+    const c = this.cellBatchesCompile;
+    for (let i = 0, iz = c.length; i < iz; i++) {
+
+        c[i].compile();
+    }
 
     // Handle display canvas
     this.prepareStamp();
@@ -562,7 +573,12 @@ P.show = function(){
 
     // Handle constituent cells
     if (this.dirtyCells) this.cleanCells();
-    this.cellBatchesShow.forEach(myCell => myCell.show());
+
+    const c = this.cellBatchesShow;
+    for (let i = 0, iz = c.length; i < iz; i++) {
+
+        c[i].show();
+    }
 
     // Clear Display canvas, and get the base cell to stamp itself onto it
     this.engine.clearRect(0, 0, this.localWidth, this.localHeight);
@@ -598,9 +614,9 @@ P.cleanCells = function () {
         cells = this.cells,
         order;
 
-    cells.forEach(item => {
+    for (let i = 0, iz = cells.length, mycell; i < iz; i++) {
 
-        let mycell = cell[item];
+        mycell = cell[cells[i]];
 
         if (mycell) {
 
@@ -623,7 +639,7 @@ P.cleanCells = function () {
                 tempShow[order].push(mycell);
             }
         }
-    });
+    };
 
     this.cellBatchesClear = [].concat(tempClear);
     this.cellBatchesCompile = tempCompile.reduce((a, v) => a.concat(v), []);
@@ -647,22 +663,25 @@ P.cascadeEventAction = function (action) {
         newActiveEntityObjects = [],
         newActiveEntityNames = [],
         knownActiveEntityObjects = [],
-        knownActiveEntityNames = [];
+        knownActiveEntityNames = [],
+        i, iz, myCell, item, name, myArt;
 
     // 1. Find all entitys currently colliding with the mouse/touch coordinate over the canvas
-    this.cells.forEach(name => {
+    const c = this.cells;
+    for (i = 0, iz = c.length; i < iz; i++) {
 
-        let myCell = cell[name];
+        myCell = cell[c[i]];
 
         if (myCell && (myCell.shown || myCell.isBase)) testActiveEntityObjects.push(myCell.getEntityHits());
-    });
+    };
 
     testActiveEntityObjects = testActiveEntityObjects.reduce((a, v) => a.concat(v), []);
 
     // 2. Process the returned test results
-    testActiveEntityObjects.forEach(item => {
+    for (i = 0, iz = testActiveEntityObjects.length; i < iz; i++) {
 
-        let name = item.name;
+        item = testActiveEntityObjects[i];
+        name = item.name;
 
         if (testActiveEntityNames.indexOf(name) < 0) {
 
@@ -679,7 +698,7 @@ P.cascadeEventAction = function (action) {
                 knownActiveEntityNames.push(name);
             }
         }
-    });
+    }
 
     let currentActiveEntityObjects = newActiveEntityObjects.concat(knownActiveEntityObjects);
 
@@ -688,30 +707,44 @@ P.cascadeEventAction = function (action) {
 
         if (currentActiveEntityNames.length) {
 
-            newActiveEntityNames.forEach(name => removeItem(currentActiveEntityNames, name));
-            knownActiveEntityNames.forEach(name => removeItem(currentActiveEntityNames, name));
+            for (i = 0, iz = newActiveEntityNames.length; i < iz; i++) {
 
-            currentActiveEntityNames.forEach(name => {
+                removeItem(currentActiveEntityNames, newActiveEntityNames[i]);
+            }
+            for (i = 0, iz = knownActiveEntityNames.length; i < iz; i++) {
 
-                let myArt = artefact[name];
+                removeItem(currentActiveEntityNames, knownActiveEntityNames[i]);
+            }
+            for (i = 0, iz = currentActiveEntityNames.length, myArt; i < iz; i++) {
+
+                myArt = artefact[currentActiveEntityNames[i]];
 
                 if (myArt) myArt.onLeave();
-            });
+            }
         }
     };
+
+    const currentActiveLen = currentActiveEntityObjects.length,
+        newActiveLen = newActiveEntityObjects.length;
 
     switch (action) {
 
         case 'down' :
-            currentActiveEntityObjects.forEach(art => art.onDown());
+            for (i = 0; i < currentActiveLen; i++) {
+                currentActiveEntityObjects[i].onDown();
+            }
             break;
 
         case 'up' :
-            currentActiveEntityObjects.forEach(art => art.onUp());
+            for (i = 0; i < currentActiveLen; i++) {
+                currentActiveEntityObjects[i].onUp();
+            }
             break;
 
         case 'enter' :
-            newActiveEntityObjects.forEach(art => art.onEnter());
+            for (i = 0; i < newActiveLen; i++) {
+                newActiveEntityObjects[i].onEnter();
+            }
             break;
 
         case 'leave' :
@@ -720,7 +753,9 @@ P.cascadeEventAction = function (action) {
 
         case 'move' :
             doLeave();
-            newActiveEntityObjects.forEach(art => art.onEnter());
+            for (i = 0; i < newActiveLen; i++) {
+                newActiveEntityObjects[i].onEnter();
+            }
             break;
     }
 

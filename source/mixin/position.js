@@ -830,6 +830,7 @@ export default function (P = Ωempty) {
         this.currentStampHandlePosition = makeCoordinate();
 
         this.delta = {};
+        this.deltaConstraints = {};
 
         this.lockTo = ['start', 'start'];
 

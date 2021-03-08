@@ -258,7 +258,6 @@ P.stamp = function () {
                     filterCell.element.width = dims[0];
                     filterCell.element.height = dims[1];
                 }
-                filterCell.engine.save();
             }
 
             // We save/restore the canvas engine at this point because some entitys may have their `method` attribute set to `clip` and the only way to get rid of a clip region from an engine is to save the engine before applying the clip, then restoring the engine afterwards
@@ -271,11 +270,7 @@ P.stamp = function () {
             // Get the Group's artefacts to stamp themselves on the current host or pool Cell
             this.stampAction(filterCell);
 
-            if (filterCell) {
-
-                filterCell.engine.restore();
-                releaseCell(filterCell);
-            }
+            if (filterCell) releaseCell(filterCell);
             else {
 
                 if (currentHost.engine) {
