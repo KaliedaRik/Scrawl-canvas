@@ -1051,7 +1051,6 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
                     filterCell.element.width = dims[<span class="hljs-number">0</span>];
                     filterCell.element.height = dims[<span class="hljs-number">1</span>];
                 }
-                filterCell.engine.save();
             }</pre></div></div>
             
         </li>
@@ -1102,11 +1101,7 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
             
             <div class="content"><div class='highlight'><pre>            <span class="hljs-built_in">this</span>.stampAction(filterCell);
 
-            <span class="hljs-keyword">if</span> (filterCell) {
-
-                filterCell.engine.restore();
-                releaseCell(filterCell);
-            }
+            <span class="hljs-keyword">if</span> (filterCell) releaseCell(filterCell);
             <span class="hljs-keyword">else</span> {
 
                 <span class="hljs-keyword">if</span> (currentHost.engine) {

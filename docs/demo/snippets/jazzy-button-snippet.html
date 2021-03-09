@@ -269,11 +269,16 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>The snippet will take details of its font family, size and color from the DOM element’s computed styles</p>
+<ul>
+<li>Note that Firefox does not supply a font string; font details are broken up into their constituent parts and need to be reconstructed. The code below will not pick up bold fonts:</li>
+</ul>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> color = styles.color || <span class="hljs-string">&#x27;black&#x27;</span>,
-            font = styles.font || <span class="hljs-string">&#x27;20px sans-serif&#x27;</span>;
+            font = styles.font || <span class="hljs-string">`<span class="hljs-subst">${(styles.fontStyle != <span class="hljs-string">&#x27;normal&#x27;</span>) ? styles.fontStyle + <span class="hljs-string">&#x27; &#x27;</span> : <span class="hljs-string">&#x27;&#x27;</span>}</span><span class="hljs-subst">${(styles.fontVariant != <span class="hljs-string">&#x27;normal&#x27;</span>) ? styles.fontVariant + <span class="hljs-string">&#x27; &#x27;</span> : <span class="hljs-string">&#x27;&#x27;</span>}</span><span class="hljs-subst">${styles.fontSize}</span> <span class="hljs-subst">${styles.fontFamily}</span>`</span> || <span class="hljs-string">&#x27;20px sans-serif&#x27;</span>;
+
+<span class="hljs-built_in">console</span>.log(font);
 
         canvas.set({
             <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;#f2f2f2&#x27;</span>,

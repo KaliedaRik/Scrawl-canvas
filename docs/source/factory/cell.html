@@ -1414,9 +1414,17 @@ D.clearAlpha = <span class="hljs-function"><span class="hljs-keyword">function</
             
             <div class="content"><div class='highlight'><pre>P.updateArtefacts = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
-    <span class="hljs-built_in">this</span>.groupBuckets.forEach(<span class="hljs-function"><span class="hljs-params">grp</span> =&gt;</span> {
+    <span class="hljs-keyword">const</span> gb = <span class="hljs-built_in">this</span>.groupBuckets;
 
-        grp.artefactBuckets.forEach(<span class="hljs-function"><span class="hljs-params">art</span> =&gt;</span> {
+    <span class="hljs-keyword">let</span> art, ab, i, iz, j, jz;
+
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = gb.length; i &lt; iz; i++) {
+
+        ab = gb[i].artefactBuckets;
+
+        <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = ab.length; j &lt; jz; j++) {
+
+            art = ab[i];
 
             <span class="hljs-keyword">if</span> (items.dirtyScale) art.dirtyScale = <span class="hljs-literal">true</span>;
             <span class="hljs-keyword">if</span> (items.dirtyDimensions) art.dirtyDimensions = <span class="hljs-literal">true</span>;
@@ -1426,8 +1434,8 @@ D.clearAlpha = <span class="hljs-function"><span class="hljs-keyword">function</
             <span class="hljs-keyword">if</span> (items.dirtyHandle) art.dirtyHandle = <span class="hljs-literal">true</span>;
             <span class="hljs-keyword">if</span> (items.dirtyRotation) art.dirtyRotation = <span class="hljs-literal">true</span>;
             <span class="hljs-keyword">if</span> (items.dirtyPathObject) art.dirtyPathObject = <span class="hljs-literal">true</span>;
-        })
-    });
+        }
+    }
 };</pre></div></div>
             
         </li>
@@ -1605,19 +1613,28 @@ D.clearAlpha = <span class="hljs-function"><span class="hljs-keyword">function</
             
             <div class="content"><div class='highlight'><pre>P.setEngineFromState = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
 
-    <span class="hljs-keyword">let</span> state = <span class="hljs-built_in">this</span>.state;
+    <span class="hljs-keyword">const</span> state = <span class="hljs-built_in">this</span>.state,
+        stateKeys = state.allKeys,
+        stateKeysLen = stateKeys.length;
 
-    state.allKeys.forEach(<span class="hljs-function"><span class="hljs-params">key</span> =&gt;</span> {
+    <span class="hljs-keyword">let</span> i, iz, key, eVal, sVal;
 
-        <span class="hljs-keyword">if</span> (key === <span class="hljs-string">&#x27;lineDash&#x27;</span>) {
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; stateKeysLen; i++) {
 
-            engine.lineDash = state.lineDash;
-            engine.setLineDash(engine.lineDash);
+        key = stateKeys[i];
+        eVal = engine[key];
+        sVal = state[key];
+
+        <span class="hljs-keyword">if</span> (eVal !== sVal) {
+
+            <span class="hljs-keyword">if</span> (key === <span class="hljs-string">&#x27;lineDash&#x27;</span>) {
+
+                engine.lineDash = sVal;
+                engine.setLineDash(engine.lineDash);
+            }
+            <span class="hljs-keyword">else</span> engine[key] = sVal;
         }
-        <span class="hljs-keyword">else</span> engine[key] = state[key];
-
-    }, state);
-
+    }
     engine.textAlign = state.textAlign;
     engine.textBaseline = state.textBaseline;
 
@@ -2061,10 +2078,14 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
 
     <span class="hljs-keyword">if</span>(<span class="hljs-built_in">this</span>.dirtyFilters || !<span class="hljs-built_in">this</span>.currentFilters) <span class="hljs-built_in">this</span>.cleanFilters();
 
-    <span class="hljs-built_in">this</span>.groupBuckets.forEach(<span class="hljs-function"><span class="hljs-params">grp</span> =&gt;</span> {
+    <span class="hljs-keyword">const</span> gb = <span class="hljs-built_in">this</span>.groupBuckets,
+        gbLen = gb.length;
 
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, grp; i &lt; gbLen; i++) {
+
+        grp = gb[i];
         <span class="hljs-keyword">if</span> (grp &amp;&amp; grp.stamp) grp.stamp();
-    });
+    }
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.noFilters &amp;&amp; <span class="hljs-built_in">this</span>.filters &amp;&amp; <span class="hljs-built_in">this</span>.filters.length) <span class="hljs-built_in">this</span>.applyFilters();
     <span class="hljs-built_in">this</span>.stashOutputAction();
@@ -2941,7 +2962,9 @@ P.poolDefs = {
         }));
     }
 
-    <span class="hljs-keyword">return</span> cellPool.shift();
+    <span class="hljs-keyword">let</span> c = cellPool.shift();
+    c.engine.save();
+    <span class="hljs-keyword">return</span> c;
 };</pre></div></div>
             
         </li>
@@ -2961,8 +2984,8 @@ P.poolDefs = {
 
     <span class="hljs-keyword">if</span> (c &amp;&amp; c.type === <span class="hljs-string">&#x27;Cell&#x27;</span>) {
 
-        c.engine.setTransform(<span class="hljs-number">1</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>);
-        cellPool.push(c.setToDefaults());
+        c.engine.restore();
+        cellPool.push(c);
     }
 };</pre></div></div>
             

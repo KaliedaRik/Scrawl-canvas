@@ -90,7 +90,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
             myWheel.set({
                 deltaConstraints: {
                     startX: [50, 550, 'reverse'],
-                    startY: [0.5, 2, 'reverse'],
+                    startY: ['10%', '90%', 'reverse'],
                     scale: [0.5, 2, 'reverse'],
                 },
             });
