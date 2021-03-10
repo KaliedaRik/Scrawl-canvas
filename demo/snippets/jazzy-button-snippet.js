@@ -74,8 +74,6 @@ export default function (el) {
         let color = styles.color || 'black',
             font = styles.font || `${(styles.fontStyle != 'normal') ? styles.fontStyle + ' ' : ''}${(styles.fontVariant != 'normal') ? styles.fontVariant + ' ' : ''}${styles.fontSize} ${styles.fontFamily}` || '20px sans-serif';
 
-console.log(font);
-
         canvas.set({
             backgroundColor: '#f2f2f2',
         })

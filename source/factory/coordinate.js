@@ -177,25 +177,21 @@ P.scalarDivide = function (item) {
 // Get the Array's __magnitude__ value (treating the Coordinate as if it was a 2D vector)
 P.getMagnitude = function () {
 
-    let x = this[0],
-        y = this[1];
+console.log('hi2')
 
-    return Math.sqrt((x * x) + (y * y));
+    return Math.hypot(...this);
 };
 
 // Rotate the Coordinate by the argument number (treating the Coordinate as if it was a 2D vector) - the argument represents degrees, not radians
 P.rotate = function (angle) {
 
-    // if (!isa_number(item)) throw new Error(`Coordinate error - rotate() argument not a number: ${angle}`);
-
     let stat_vr = [0, 0];
 
-    let x = this[0],
-        y = this[1];
+    let [x, y] = this;
 
     stat_vr[0] = Math.atan2(y, x);
     stat_vr[0] += (angle * 0.01745329251);
-    stat_vr[1] = Math.sqrt((x * x) + (y * y));
+    stat_vr[1] = Math.hypot(x, y);
 
     this[0] = stat_vr[1] * Math.cos(stat_vr[0]);
     this[1] = stat_vr[1] * Math.sin(stat_vr[0]);

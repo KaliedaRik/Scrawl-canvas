@@ -7,6 +7,8 @@ import scrawl from '../source/scrawl.js';
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
 
+const balancePoint = 2500;
+
 canvas.setBase({
     backgroundColor: 'aliceblue',
 });
@@ -34,8 +36,8 @@ const arrow = scrawl.makeShape({
 
     // We create this effect using a dashed line with very large dash/nodash values
     // + We can then set the offset to the point where the displayed dash ends, so it looks like the arrow doesn't have a stroke
-    lineDash: [10000, 10000],
-    lineDashOffset: 10000,
+    lineDash: [balancePoint, balancePoint],
+    lineDashOffset: balancePoint,
 
     // To retrieve the Shape's length, we need to tell it that it is being used as a path
     useAsPath: true,
@@ -390,17 +392,20 @@ const myWorld = scrawl.makeWorld({
 
                 this.progress = item;
 
-                arrow.set({
-                    lineDashOffset: 10000 - Math.round(arrow.length * (item / 100)),
-                });
+                if (arrow.length != null) {
 
-                // The japanb entity has several paths, all of them shorter than the arrow entity's path
-                // + Most of the paths (around small islands) will be shown relatively quickly - a quirk of  using a dashed line to show the tracing effect
-                japan.set({
-                    lineDashOffset: 10000 - Math.round(japan.length * (item / 270)),
-                });
+                    arrow.set({
+                        lineDashOffset: balancePoint - Math.round(arrow.length * (item / 100)),
+                    });
 
-                progressElement.value = item;
+                    // The japan entity has several paths, all of them shorter than the arrow entity's path
+                    // + Most of the paths (around small islands) will be shown relatively quickly - a quirk of  using a dashed line to show the tracing effect
+                    japan.set({
+                        lineDashOffset: balancePoint - Math.round(japan.length * (item / 270)),
+                    });
+
+                    progressElement.value = item;
+                }
             },
         }
     ],

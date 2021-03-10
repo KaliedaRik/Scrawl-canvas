@@ -617,18 +617,15 @@ P.setEngineFromState = function (engine) {
         eVal = engine[key];
         sVal = state[key];
 
-        if (eVal !== sVal) {
+        if (key === 'lineDash') {
 
-            if (key === 'lineDash') {
-
-                engine.lineDash = sVal;
-                engine.setLineDash(engine.lineDash);
-            }
-            else engine[key] = sVal;
+            engine.lineDash = sVal;
+            engine.setLineDash(engine.lineDash);
         }
+        else if (eVal !== sVal) engine[key] = sVal;
     }
-    engine.textAlign = state.textAlign;
-    engine.textBaseline = state.textBaseline;
+    if (engine.textAlign !== 'left') engine.textAlign = 'left';
+    if (engine.textBaseline !== 'top') engine.textBaseline = 'top';
 
     return this;
 };
@@ -735,9 +732,7 @@ P.setEngineActions = {
     },
 
     lineDash: function (item, engine) {
-
         engine.lineDash = item;
-
         if (engine.setLineDash) engine.setLineDash(item);
     },
 
