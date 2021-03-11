@@ -499,7 +499,7 @@ P.updateArtefacts = function (items = Ωempty) {
 
         for (j = 0, jz = ab.length; j < jz; j++) {
 
-            art = ab[i];
+            art = ab[j];
 
             if (items.dirtyScale) art.dirtyScale = true;
             if (items.dirtyDimensions) art.dirtyDimensions = true;

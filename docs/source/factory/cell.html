@@ -1424,7 +1424,7 @@ D.clearAlpha = <span class="hljs-function"><span class="hljs-keyword">function</
 
         <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = ab.length; j &lt; jz; j++) {
 
-            art = ab[i];
+            art = ab[j];
 
             <span class="hljs-keyword">if</span> (items.dirtyScale) art.dirtyScale = <span class="hljs-literal">true</span>;
             <span class="hljs-keyword">if</span> (items.dirtyDimensions) art.dirtyDimensions = <span class="hljs-literal">true</span>;
@@ -1625,18 +1625,15 @@ D.clearAlpha = <span class="hljs-function"><span class="hljs-keyword">function</
         eVal = engine[key];
         sVal = state[key];
 
-        <span class="hljs-keyword">if</span> (eVal !== sVal) {
+        <span class="hljs-keyword">if</span> (key === <span class="hljs-string">&#x27;lineDash&#x27;</span>) {
 
-            <span class="hljs-keyword">if</span> (key === <span class="hljs-string">&#x27;lineDash&#x27;</span>) {
-
-                engine.lineDash = sVal;
-                engine.setLineDash(engine.lineDash);
-            }
-            <span class="hljs-keyword">else</span> engine[key] = sVal;
+            engine.lineDash = sVal;
+            engine.setLineDash(engine.lineDash);
         }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (eVal !== sVal) engine[key] = sVal;
     }
-    engine.textAlign = state.textAlign;
-    engine.textBaseline = state.textBaseline;
+    <span class="hljs-keyword">if</span> (engine.textAlign !== <span class="hljs-string">&#x27;left&#x27;</span>) engine.textAlign = <span class="hljs-string">&#x27;left&#x27;</span>;
+    <span class="hljs-keyword">if</span> (engine.textBaseline !== <span class="hljs-string">&#x27;top&#x27;</span>) engine.textBaseline = <span class="hljs-string">&#x27;top&#x27;</span>;
 
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
@@ -1779,9 +1776,7 @@ P.setEngine = <span class="hljs-function"><span class="hljs-keyword">function</s
     },
 
     <span class="hljs-attr">lineDash</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item, engine</span>) </span>{
-
         engine.lineDash = item;
-
         <span class="hljs-keyword">if</span> (engine.setLineDash) engine.setLineDash(item);
     },
 

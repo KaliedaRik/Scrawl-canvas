@@ -1071,6 +1071,8 @@ D.rectangleHeight = <span class="hljs-function"><span class="hljs-keyword">funct
             
             <div class="content"><div class='highlight'><pre>P.cleanDimensions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
+    <span class="hljs-built_in">this</span>.dirtyDimensions = <span class="hljs-literal">false</span>;
+
     <span class="hljs-keyword">let</span> host = <span class="hljs-built_in">this</span>.getHost();
 
     <span class="hljs-keyword">if</span> (host) {
