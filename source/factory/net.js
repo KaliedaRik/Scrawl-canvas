@@ -21,7 +21,7 @@
 
 // #### Imports
 import { constructors, artefact, artefactnames, entity, world, particle } from '../core/library.js';
-import { pushUnique, mergeOver, λnull, isa_fn, isa_obj, xt, xta } from '../core/utilities.js';
+import { pushUnique, mergeOver, λnull, isa_fn, isa_obj, xt, xta, Ωempty } from '../core/utilities.js';
 import { currentGroup } from '../core/document.js';
 
 import { makeParticle } from './particle.js';
@@ -33,7 +33,7 @@ import entityMix from '../mixin/entity.js';
 
 
 // #### Net constructor
-const Net = function (items = {}) {
+const Net = function (items = Ωempty) {
 
     this.makeName(items.name);
     this.register();
@@ -314,8 +314,8 @@ S.shapeTemplate = function (item) {
 
 // #### Prototype functions
 
-// `regularStampSynchronousActions` - overwriters the functionality defined in the entity.js mixin
-P.regularStampSynchronousActions = function () {
+// `regularStamp` - overwriters the functionality defined in the entity.js mixin
+P.regularStamp = function () {
 
     let {world, artefact:art, particleStore, springs, generate, postGenerate, stampAction, lastUpdated, resetAfterBlur, showSprings, showSpringsColor, showHitRadius, hitRadius, hitRadiusColor} = this;
 
@@ -511,7 +511,7 @@ P.checkHitReturn = function (x, y, cell, particle) {
 
 // `pickupArtefact` - overwrites the function defined in mixin/position.js
 // + One of the entity's Particle objects is being dragged, not the entity itself
-P.pickupArtefact = function (items = {}) {
+P.pickupArtefact = function (items) {
 
     let particle = this.lastHitParticle;
 
@@ -1159,6 +1159,8 @@ const generators = {
 
 // #### Factory
 const makeNet = function (items) {
+
+    if (!items) return false;
     return new Net(items);
 };
 

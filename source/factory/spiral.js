@@ -40,14 +40,14 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver } from '../core/utilities.js';
+import { mergeOver, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shapeBasic.js';
 
 
 // #### Spiral constructor
-const Spiral = function (items = {}) {
+const Spiral = function (items = Ωempty) {
 
     this.shapeInit(items);
     return this;
@@ -255,8 +255,9 @@ P.calculateLocalPathAdditionalActions = function () {
 //     drawFromLoop: 1,
 // });
 // ```
-const makeSpiral = function (items = {}) {
+const makeSpiral = function (items) {
 
+    if (!items) return false;
     items.species = 'spiral';
     return new Spiral(items);
 };

@@ -120,6 +120,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-019a.html">
+                  ./demo/canvas-019a.js
+                </a>
+              
+                
                 <a class="source" href="canvas-020.html">
                   ./demo/canvas-020.js
                 </a>
@@ -257,6 +262,21 @@
                 
                 <a class="source" href="canvas-047.html">
                   ./demo/canvas-047.js
+                </a>
+              
+                
+                <a class="source" href="canvas-048.html">
+                  ./demo/canvas-048.js
+                </a>
+              
+                
+                <a class="source" href="canvas-049.html">
+                  ./demo/canvas-049.js
+                </a>
+              
+                
+                <a class="source" href="canvas-050.html">
+                  ./demo/canvas-050.js
                 </a>
               
                 
@@ -457,6 +477,11 @@
                 
                 <a class="source" href="filters-020.html">
                   ./demo/filters-020.js
+                </a>
+              
+                
+                <a class="source" href="filters-021.html">
+                  ./demo/filters-021.js
                 </a>
               
                 
@@ -702,6 +727,8 @@ canvas.setBase({
             </div>
             
             <div class="content"><div class='highlight'><pre>scrawl.makeLine({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;flagpole&#x27;</span>,
 
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-number">30</span>,
@@ -1090,31 +1117,6 @@ scrawl.makePicture({
               <div class="sswrap ">
                 <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
-              <p><em><strong>The Loom entity definition</strong></em></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myMesh = scrawl.makeMesh({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;display-mesh&#x27;</span>,
-
-    <span class="hljs-attr">net</span>: <span class="hljs-string">&#x27;test-net&#x27;</span>,
-    <span class="hljs-attr">source</span>: <span class="hljs-string">&#x27;my-flower&#x27;</span>,
-
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
-
-    <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
-              </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
 
@@ -1151,11 +1153,11 @@ scrawl.makePicture({
         </li>
         
         
-        <li id="section-25">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1172,11 +1174,11 @@ scrawl.makePicture({
         </li>
         
         
-        <li id="section-26">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <h4 id="user-interaction">User interaction</h4>
 <p>Setup form observer functionality</p>
@@ -1194,30 +1196,6 @@ scrawl.makePicture({
         <span class="hljs-keyword">if</span> (e.target.id === <span class="hljs-string">&#x27;engine&#x27;</span>) myNet.set({ <span class="hljs-attr">engine</span>: e.target.value});
         <span class="hljs-keyword">if</span> (e.target.id === <span class="hljs-string">&#x27;mass&#x27;</span>) myNet.set({ <span class="hljs-attr">mass</span>: <span class="hljs-built_in">parseFloat</span>(e.target.value)});
         <span class="hljs-keyword">if</span> (e.target.id === <span class="hljs-string">&#x27;tickMultiplier&#x27;</span>) myWorld.set({ <span class="hljs-attr">tickMultiplier</span>: <span class="hljs-built_in">parseFloat</span>(e.target.value)});
-        <span class="hljs-keyword">if</span> (e.target.id === <span class="hljs-string">&#x27;mesh&#x27;</span>) {
-            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">parseInt</span>(e.target.value, <span class="hljs-number">10</span>)) {
-                myNet.set({
-                    <span class="hljs-attr">showSprings</span>: <span class="hljs-literal">false</span>,
-                });
-                myNet.artefact.set({
-                    <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0</span>,
-                });
-                myMesh.set({
-                    <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span>,
-                });
-            }
-            <span class="hljs-keyword">else</span> {
-                myNet.set({
-                    <span class="hljs-attr">showSprings</span>: <span class="hljs-literal">true</span>,
-                });
-                myNet.artefact.set({
-                    <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">1</span>,
-                });
-                myMesh.set({
-                    <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
-                });
-            }
-        }
 
         myNet.restart();
     }
@@ -1230,17 +1208,16 @@ scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <s
 <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#restLength&#x27;</span>).value = <span class="hljs-number">1</span>;
 <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#mass&#x27;</span>).value = <span class="hljs-number">1</span>;
 <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#engine&#x27;</span>).value = <span class="hljs-string">&#x27;runge-kutta&#x27;</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#tickMultiplier&#x27;</span>).value = <span class="hljs-number">2</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#mesh&#x27;</span>).value = <span class="hljs-string">&#x27;0&#x27;</span>;</pre></div></div>
+<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#tickMultiplier&#x27;</span>).value = <span class="hljs-number">2</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-27">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

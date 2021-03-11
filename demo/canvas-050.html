@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 050</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    .controls {
+      grid-template-columns: 1fr 2fr 1fr 2fr;
+    }
+    canvas {
+      border: 1px solid black;
+    }
+  </style>
+
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 050</h1>
+  <h2>Manipulate artefact delta animation values</h2>
+
+  <div class="controls">
+    <div class="yellow label">Constraint action</div>
+    <div class="yellow">
+      <select class="controlItem" id="constraintAction">
+        <option value="reverse">reverse</option>
+        <option value="loop">loop</option>
+      </select>
+    </div>
+
+    <div id="scaling-label" class="pink label">Scaling</div>
+    <button class="pink controlItem" id="scaling" value="0">Add scaling</button>
+
+<!--     <div class="pink label">clearAlpha</div>
+    <div class="pink"><input class="controlItem" id="clearAlpha" type="range" value="0.9" min="0.8" max="1" step="0.005" /></div>
+ -->  </div>
+
+  <canvas id="mycanvas" width="600" height="400"></canvas>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Create and animate a Wheel entity, using delta and deltaConstraint objects</li>
+      <li>Check that reverse and loop actions work as expected</li>
+      <li>Check that scaling animation can be added to and deleted from the delta object</li>
+    </ul>
+    <p>setDeltaValues() actions not yet tested: 'newString', 'update', 'reverse', 'add', 'multiply'</p>
+    <p><a href="../docs/demo/canvas-050.html">Annotated code</a></p>
+  </div>
+
+  <script src="canvas-050.js" type="module"></script>
+
+</body>
+
+</html>

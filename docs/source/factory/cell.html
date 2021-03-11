@@ -105,6 +105,11 @@
                 </a>
               
                 
+                <a class="source" href="conicGradient.html">
+                  ./source/factory/conicGradient.js
+                </a>
+              
+                
                 <a class="source" href="coordinate.html">
                   ./source/factory/coordinate.js
                 </a>
@@ -522,14 +527,14 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact, asset, tween, radian, <span class="hljs-title">constructors</span>, <span class="hljs-title">styles</span>, <span class="hljs-title">stylesnames</span>, <span class="hljs-title">cell</span>, <span class="hljs-title">cellnames</span>, <span class="hljs-title">group</span>, <span class="hljs-title">canvas</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
 
-<span class="hljs-keyword">import</span> { generateUniqueString, isa_canvas, mergeOver, λ<span class="hljs-built_in">this</span>, λ<span class="hljs-literal">null</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { generateUniqueString, isa_canvas, mergeOver, λ<span class="hljs-built_in">this</span>, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { scrawlCanvasHold } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/document.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeGroup } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./group.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { makeState } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./state.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { makeCoordinate, requestCoordinate, releaseCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./coordinate.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { requestFilterWorker, releaseFilterWorker, actionFilterWorker } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./filter.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { filterEngine } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./filterEngine.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { importDomImage } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./imageAsset.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
@@ -557,7 +562,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Cell = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Cell = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
     <span class="hljs-built_in">this</span>.makeName(items.name);
 
@@ -1407,11 +1412,19 @@ D.clearAlpha = <span class="hljs-function"><span class="hljs-keyword">function</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.updateArtefacts = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.updateArtefacts = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
-    <span class="hljs-built_in">this</span>.groupBuckets.forEach(<span class="hljs-function"><span class="hljs-params">grp</span> =&gt;</span> {
+    <span class="hljs-keyword">const</span> gb = <span class="hljs-built_in">this</span>.groupBuckets;
 
-        grp.artefactBuckets.forEach(<span class="hljs-function"><span class="hljs-params">art</span> =&gt;</span> {
+    <span class="hljs-keyword">let</span> art, ab, i, iz, j, jz;
+
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = gb.length; i &lt; iz; i++) {
+
+        ab = gb[i].artefactBuckets;
+
+        <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>, jz = ab.length; j &lt; jz; j++) {
+
+            art = ab[j];
 
             <span class="hljs-keyword">if</span> (items.dirtyScale) art.dirtyScale = <span class="hljs-literal">true</span>;
             <span class="hljs-keyword">if</span> (items.dirtyDimensions) art.dirtyDimensions = <span class="hljs-literal">true</span>;
@@ -1421,8 +1434,8 @@ D.clearAlpha = <span class="hljs-function"><span class="hljs-keyword">function</
             <span class="hljs-keyword">if</span> (items.dirtyHandle) art.dirtyHandle = <span class="hljs-literal">true</span>;
             <span class="hljs-keyword">if</span> (items.dirtyRotation) art.dirtyRotation = <span class="hljs-literal">true</span>;
             <span class="hljs-keyword">if</span> (items.dirtyPathObject) art.dirtyPathObject = <span class="hljs-literal">true</span>;
-        })
-    });
+        }
+    }
 };</pre></div></div>
             
         </li>
@@ -1545,7 +1558,7 @@ D.clearAlpha = <span class="hljs-function"><span class="hljs-keyword">function</
             <div class="content"><div class='highlight'><pre>P.installElement = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">element</span>) </span>{
 
     <span class="hljs-built_in">this</span>.element = element;
-    <span class="hljs-built_in">this</span>.engine = <span class="hljs-built_in">this</span>.element.getContext(<span class="hljs-string">&#x27;2d&#x27;</span>);
+    <span class="hljs-built_in">this</span>.engine = <span class="hljs-built_in">this</span>.element.getContext(<span class="hljs-string">&#x27;2d&#x27;</span>, {<span class="hljs-attr">willReadFrequently</span>: <span class="hljs-literal">true</span>});
 
     <span class="hljs-built_in">this</span>.state = makeState({
         <span class="hljs-attr">engine</span>: <span class="hljs-built_in">this</span>.engine
@@ -1600,21 +1613,27 @@ D.clearAlpha = <span class="hljs-function"><span class="hljs-keyword">function</
             
             <div class="content"><div class='highlight'><pre>P.setEngineFromState = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
 
-    <span class="hljs-keyword">let</span> state = <span class="hljs-built_in">this</span>.state;
+    <span class="hljs-keyword">const</span> state = <span class="hljs-built_in">this</span>.state,
+        stateKeys = state.allKeys,
+        stateKeysLen = stateKeys.length;
 
-    state.allKeys.forEach(<span class="hljs-function"><span class="hljs-params">key</span> =&gt;</span> {
+    <span class="hljs-keyword">let</span> i, iz, key, eVal, sVal;
+
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; stateKeysLen; i++) {
+
+        key = stateKeys[i];
+        eVal = engine[key];
+        sVal = state[key];
 
         <span class="hljs-keyword">if</span> (key === <span class="hljs-string">&#x27;lineDash&#x27;</span>) {
 
-            engine.lineDash = state.lineDash;
+            engine.lineDash = sVal;
             engine.setLineDash(engine.lineDash);
         }
-        <span class="hljs-keyword">else</span> engine[key] = state[key];
-
-    }, state);
-
-    engine.textAlign = state.textAlign;
-    engine.textBaseline = state.textBaseline;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (eVal !== sVal) engine[key] = sVal;
+    }
+    <span class="hljs-keyword">if</span> (engine.textAlign !== <span class="hljs-string">&#x27;left&#x27;</span>) engine.textAlign = <span class="hljs-string">&#x27;left&#x27;</span>;
+    <span class="hljs-keyword">if</span> (engine.textBaseline !== <span class="hljs-string">&#x27;top&#x27;</span>) engine.textBaseline = <span class="hljs-string">&#x27;top&#x27;</span>;
 
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
@@ -1678,21 +1697,25 @@ D.clearAlpha = <span class="hljs-function"><span class="hljs-keyword">function</
             <div class="content"><div class='highlight'><pre>P.stylesArray = [<span class="hljs-string">&#x27;Gradient&#x27;</span>, <span class="hljs-string">&#x27;RadialGradient&#x27;</span>, <span class="hljs-string">&#x27;Pattern&#x27;</span>];
 P.setEngine = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">entity</span>) </span>{
 
-    <span class="hljs-keyword">let</span> state = <span class="hljs-built_in">this</span>.state,
-        entityState = entity.state,
-        engine, item,
-        changes = entityState.getChanges(entity, state),
-        action = <span class="hljs-built_in">this</span>.setEngineActions,
-        stylesArray = <span class="hljs-built_in">this</span>.stylesArray;
+    <span class="hljs-keyword">const</span> state = <span class="hljs-built_in">this</span>.state,
+        entityState = entity.state;
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Object</span>.keys(changes).length) {
+    <span class="hljs-keyword">if</span> (entityState) {
 
-        engine = <span class="hljs-built_in">this</span>.engine;
+        <span class="hljs-keyword">let</span> engine, item,
+            changes = entityState.getChanges(entity, state),
+            action = <span class="hljs-built_in">this</span>.setEngineActions,
+            stylesArray = <span class="hljs-built_in">this</span>.stylesArray;
 
-        <span class="hljs-keyword">for</span> (item <span class="hljs-keyword">in</span> changes) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Object</span>.keys(changes).length) {
 
-            action[item](changes[item], engine, stylesArray, entity, <span class="hljs-built_in">this</span>);
-            state[item] = changes[item];
+            engine = <span class="hljs-built_in">this</span>.engine;
+
+            <span class="hljs-keyword">for</span> (item <span class="hljs-keyword">in</span> changes) {
+
+                action[item](changes[item], engine, stylesArray, entity, <span class="hljs-built_in">this</span>);
+                state[item] = changes[item];
+            }
         }
     }
     <span class="hljs-keyword">return</span> entity;
@@ -1753,9 +1776,7 @@ P.setEngine = <span class="hljs-function"><span class="hljs-keyword">function</s
     },
 
     <span class="hljs-attr">lineDash</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item, engine</span>) </span>{
-
         engine.lineDash = item;
-
         <span class="hljs-keyword">if</span> (engine.setLineDash) engine.setLineDash(item);
     },
 
@@ -2052,10 +2073,14 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
 
     <span class="hljs-keyword">if</span>(<span class="hljs-built_in">this</span>.dirtyFilters || !<span class="hljs-built_in">this</span>.currentFilters) <span class="hljs-built_in">this</span>.cleanFilters();
 
-    <span class="hljs-built_in">this</span>.groupBuckets.forEach(<span class="hljs-function"><span class="hljs-params">grp</span> =&gt;</span> {
+    <span class="hljs-keyword">const</span> gb = <span class="hljs-built_in">this</span>.groupBuckets,
+        gbLen = gb.length;
 
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, grp; i &lt; gbLen; i++) {
+
+        grp = gb[i];
         <span class="hljs-keyword">if</span> (grp &amp;&amp; grp.stamp) grp.stamp();
-    });
+    }
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.noFilters &amp;&amp; <span class="hljs-built_in">this</span>.filters &amp;&amp; <span class="hljs-built_in">this</span>.filters.length) <span class="hljs-built_in">this</span>.applyFilters();
     <span class="hljs-built_in">this</span>.stashOutputAction();
@@ -2324,28 +2349,13 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
             
             <div class="content"><div class='highlight'><pre>P.applyFilters = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">let</span> engine = <span class="hljs-built_in">this</span>.engine,
-        image, worker;
+    <span class="hljs-keyword">let</span> engine = <span class="hljs-built_in">this</span>.engine;
 
-    image = engine.getImageData(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-built_in">this</span>.currentDimensions[<span class="hljs-number">0</span>], <span class="hljs-built_in">this</span>.currentDimensions[<span class="hljs-number">1</span>]);
-    worker = requestFilterWorker();</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-70">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
-              </div>
-              <p>NEED TO POPULATE IMAGE FILTER ACTION OBJECTS WITH THEIR ASSET’S IMAGEDATA AT THIS POINT</p>
+    <span class="hljs-keyword">let</span> image = engine.getImageData(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-built_in">this</span>.currentDimensions[<span class="hljs-number">0</span>], <span class="hljs-built_in">this</span>.currentDimensions[<span class="hljs-number">1</span>]);
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.preprocessFilters(<span class="hljs-built_in">this</span>.currentFilters);
+    <span class="hljs-built_in">this</span>.preprocessFilters(<span class="hljs-built_in">this</span>.currentFilters);
 
-    <span class="hljs-keyword">let</span> img = actionFilterWorker(worker, {
+    <span class="hljs-keyword">let</span> img = filterEngine.action({
         <span class="hljs-attr">image</span>: image,
         <span class="hljs-attr">filters</span>: <span class="hljs-built_in">this</span>.currentFilters
     });
@@ -2356,11 +2366,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-71">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <p><code>stashOutputAction</code> - Internal function - stash the Cell’s current output. While this function can be called at any time, the simplest way to invoke it is to set the Cell’s <strong>stashOutput</strong> flag to true, which will then invoke this function at the end of the compile step of the Display cycle (after any filters have been applied to the cell display).</p>
 <ul>
@@ -2390,11 +2400,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-72">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-72">&#x00a7;</a>
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <p>Keep the stashed image within bounds of the Cell’s dimensions.</p>
 
@@ -2422,11 +2432,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-73">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-73">&#x00a7;</a>
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <p>Get the imageData object, and stash it</p>
 
@@ -2440,11 +2450,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-74">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-74">&#x00a7;</a>
+                <a class="ss" href="#section-73">&#x00a7;</a>
               </div>
               <p>Get the dataUrl String, updating the stashed &lt;img&gt; element with it</p>
 
@@ -2488,11 +2498,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-75">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-75">&#x00a7;</a>
+                <a class="ss" href="#section-74">&#x00a7;</a>
               </div>
               <p><code>getHost</code> - Internal function - get a reference to the Cell’s current host (where it will be stamping itself as part of the Display cycle).</p>
 <ul>
@@ -2518,11 +2528,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-76">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-76">&#x00a7;</a>
+                <a class="ss" href="#section-75">&#x00a7;</a>
               </div>
               <p><code>updateBaseHere</code> - Internal function - keeping the Canvas object’s ‘base’ Cell’s <code>.here</code> attribute up-to-date with accurate mouse/pointer/touch cursor data</p>
 
@@ -2617,11 +2627,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-77">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-77">&#x00a7;</a>
+                <a class="ss" href="#section-76">&#x00a7;</a>
               </div>
               <p><code>prepareStamp</code> - Internal function - steps to be performed before the Cell stamps its visual contents onto a Canvas object’s base cell’s canvas. Will be invoked as part of the Display cycle ‘show’ functionality.</p>
 <ul>
@@ -2673,11 +2683,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-78">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-78">&#x00a7;</a>
+                <a class="ss" href="#section-77">&#x00a7;</a>
               </div>
               <p><code>cleanPathObject</code> - Calculate the Cell’s <strong>Path2D object</strong></p>
 
@@ -2707,11 +2717,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-79">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-79">&#x00a7;</a>
+                <a class="ss" href="#section-78">&#x00a7;</a>
               </div>
               <p><code>updateHere</code> - Internal function - get the Cell to update its .here information</p>
 
@@ -2796,11 +2806,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-80">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-80">&#x00a7;</a>
+                <a class="ss" href="#section-79">&#x00a7;</a>
               </div>
               <p><code>getEntityHits</code> - Returns an array of entity Objects responding ‘true’ to a checkHit call on them, for the Cell’s current <code>.here</code> attribute coordinates. Used in particular with <code>Canvas.cascadeEventAction()</code> function</p>
 
@@ -2840,11 +2850,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-81">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-81">&#x00a7;</a>
+                <a class="ss" href="#section-80">&#x00a7;</a>
               </div>
               <p><code>rotateDestination</code> - internal function, called by entity objects about to stamp themselves onto the Cell.</p>
 <ul>
@@ -2899,11 +2909,11 @@ P.restoreEngine = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-82">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-82">&#x00a7;</a>
+                <a class="ss" href="#section-81">&#x00a7;</a>
               </div>
               <h4 id="cell-pool">Cell pool</h4>
 <p>A number of processes - for instance collision functionality, and applying filters to entitys and groups - require the use of a &lt;canvas&gt; element and its CanvasRenderingContext2D engine. Rather than generate these canvas elements on the fly, we store them in a pool, to help make the code more efficiant.</p>
@@ -2927,11 +2937,11 @@ P.poolDefs = {
         </li>
         
         
-        <li id="section-83">
+        <li id="section-82">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-83">&#x00a7;</a>
+                <a class="ss" href="#section-82">&#x00a7;</a>
               </div>
               <p><code>Exported function</code> - <strong>requestCell</strong></p>
 
@@ -2947,7 +2957,31 @@ P.poolDefs = {
         }));
     }
 
-    <span class="hljs-keyword">return</span> cellPool.shift();
+    <span class="hljs-keyword">let</span> c = cellPool.shift();
+    c.engine.save();
+    <span class="hljs-keyword">return</span> c;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-83">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-83">&#x00a7;</a>
+              </div>
+              <p><code>Exported function</code> - <strong>releaseCell</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> releaseCell = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">c</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (c &amp;&amp; c.type === <span class="hljs-string">&#x27;Cell&#x27;</span>) {
+
+        c.engine.restore();
+        cellPool.push(c);
+    }
 };</pre></div></div>
             
         </li>
@@ -2959,18 +2993,17 @@ P.poolDefs = {
               <div class="sswrap ">
                 <a class="ss" href="#section-84">&#x00a7;</a>
               </div>
-              <p><code>Exported function</code> - <strong>releaseCell</strong></p>
+              <h4 id="factory">Factory</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> releaseCell = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">c</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeCell = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (c &amp;&amp; c.type === <span class="hljs-string">&#x27;Cell&#x27;</span>) {
+    <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Cell(items);
+};
 
-        c.engine.setTransform(<span class="hljs-number">1</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>);
-        cellPool.push(c.setToDefaults());
-    }
-};</pre></div></div>
+<span class="hljs-title">constructors</span>.<span class="hljs-title">Cell</span> = <span class="hljs-title">Cell</span>;</pre></div></div>
             
         </li>
         
@@ -2980,26 +3013,6 @@ P.poolDefs = {
               
               <div class="sswrap ">
                 <a class="ss" href="#section-85">&#x00a7;</a>
-              </div>
-              <h4 id="factory">Factory</h4>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeCell = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
-
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Cell(items);
-};
-
-<span class="hljs-title">constructors</span>.<span class="hljs-title">Cell</span> = <span class="hljs-title">Cell</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-86">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-86">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

@@ -113,7 +113,10 @@ const touchAction = function (e) {
 // Functions to update uiSubscribedElements attached to specified DOM elements. Each stack or canvas element tracked by Scrawl-canvas will include a local __here__ object which includes details of the element's current dimensions, relative position, and the position of the mouse cursor in relation to its top-left corner. These all need to be updated whenever there's a resize, scroll or cursor movement.
 const updateUiSubscribedElements = function () {
 
-    uiSubscribedElements.forEach(item => updateUiSubscribedElement(item));
+    for (let i = 0, iz = uiSubscribedElements.length; i < iz; i++) {
+
+        updateUiSubscribedElement(uiSubscribedElements[i]);
+    }
 };
 
 const updateUiSubscribedElement = function (art) {
@@ -361,7 +364,7 @@ const applyCoreScrollListener = function () {
 // Note: observeAndUpdate() returns a function that will (in theory) remove all the bundled event listeners from their DOM elements when it is invoked. Not yet tested.
 
 // `Exported function` (to modules and the scrawl object). Capture changes in a form and apply them to a target Scrawl-canvas artefact, asset, style, group, etc object
-const observeAndUpdate = function (items = {}) {
+const observeAndUpdate = function (items = Ωempty) {
 
     if (!xta(items.event, items.origin, items.updates)) return false;
 
@@ -511,7 +514,7 @@ const observeAndUpdate = function (items = {}) {
 // NOTE: drag-and-drop functionality using this factory function __is not guaranteed__ for artefacts referencing a path, or for artefacts whose reference artefact in turn references another artefact in any way.
 
 // `Exported function` (to modules and the scrawl object). Add drag-and-drop functionality to a canvas or stack.
-const makeDragZone = function (items = {}) {
+const makeDragZone = function (items = Ωempty) {
 
     let {zone, coordinateSource, collisionGroup, startOn, endOn, updateOnStart, updateOnEnd, exposeCurrentArtefact} = items
 

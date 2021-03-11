@@ -18,7 +18,7 @@
 
 // #### Imports
 import { constructors, radian } from '../core/library.js';
-import { mergeOver, xt, xto, isa_number } from '../core/utilities.js';
+import { mergeOver, xt, xto, isa_number, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
@@ -37,7 +37,7 @@ const ensureFloat = (val, precision) => {
 
 
 // #### Wheel constructor
-const Wheel = function (items = {}) {
+const Wheel = function (items = Ωempty) {
 
     if (!xto(items.dimensions, items.width, items.height, items.radius)) items.radius = 5;
 
@@ -324,6 +324,8 @@ P.cleanPathObject = function () {
 // });
 // ```
 const makeWheel = function (items) {
+
+    if (!items) return false;
     return new Wheel(items);
 };
 

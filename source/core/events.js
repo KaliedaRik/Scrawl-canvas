@@ -14,7 +14,7 @@
 
 
 // #### Imports
-import { isa_fn, isa_dom, λnull } from "./utilities.js";
+import { isa_fn, isa_dom, λnull, Ωempty } from "./utilities.js";
 
 // `Exported function` (to modules and scrawl object) - __scrawl.makeAnimationObserver__ - function to create and start a [DOM IntersectionObserver](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) object.
 //
@@ -24,17 +24,20 @@ import { isa_fn, isa_dom, λnull } from "./utilities.js";
 // + A Javascript object (optional) containing options to be applied to the observer - `root`, `rootMargin`, `threshold`
 //
 // The function returns a function which, when invoked, will disconnect the observer from the DOM.
-const makeAnimationObserver = function (anim, wrapper, specs = {}) {
+const makeAnimationObserver = function (anim, wrapper, specs = Ωempty) {
 
     if (typeof window.IntersectionObserver === 'function' && anim && anim.run) {
 
         let observer = new IntersectionObserver((entries, observer) => {
 
-            entries.forEach(entry => {
+            let i, iz, entry;
 
+            for (i = 0, iz = entries.length; i < iz; i++) {
+
+                entry = entries[i];
                 if (entry.isIntersecting) !anim.isRunning() && anim.run();
                 else if (!entry.isIntersecting) anim.isRunning() && anim.halt();
-            });
+            }
         }, specs);
 
         if (wrapper && wrapper.domElement) {
@@ -90,9 +93,15 @@ const actionListener = function (evt, fn, targ, action) {
 
 const actionMouseListener = function (events, fn, targets, action) {
 
-    events.forEach(myevent => {
+    let i, iz, j, jz, myevent, target;
 
-        targets.forEach(target => {
+    for (i = 0, iz = events.length; i < iz; i++) {
+
+        myevent = events[i]; 
+
+        for (j = 0, jz = targets.length; j < jz; j++) {
+
+            target = targets[j];
 
             if (isa_dom(target) || target.document || target.characterSet) {
                 
@@ -126,15 +135,21 @@ const actionMouseListener = function (events, fn, targets, action) {
                 }
             }
             else throw new Error(`core/document actionMouseListener() error - bad target: ${myevent}, ${target}`);
-        });
-    });
+        }
+    }
 };
 
 const actionPointerListener = function (events, fn, targets, action) {
 
-    events.forEach(myevent => {
+    let i, iz, j, jz, myevent, target;
 
-        targets.forEach(target => {
+    for (i = 0, iz = events.length; i < iz; i++) {
+
+        myevent = events[i]; 
+
+        for (j = 0, jz = targets.length; j < jz; j++) {
+
+            target = targets[j];
 
             if (isa_dom(target) || target.document || target.characterSet) {
 
@@ -161,9 +176,8 @@ const actionPointerListener = function (events, fn, targets, action) {
                         break;
                 }
             }
-            else throw new Error(`core/document actionPointerListener() error - bad target: ${myevent}, ${target}`);
-        });
-    });
+        }
+    }
 };
 
 // __Any event listener__ can be added to a Scrawl-canvas stack or canvas DOM element. 
@@ -200,21 +214,23 @@ const removeNativeListener = function (evt, fn, targ) {
 const actionNativeListener = function (evt, fn, targ, action) {
 
     let events = [].concat(evt),
-        targets;
+        targets, i, iz, j, jz, myevent, target;
 
     if (targ.substring) targets = document.body.querySelectorAll(targ);
     else if (Array.isArray(targ)) targets = targ;
     else targets = [targ];
 
-    events.forEach(myevent => {
+    for (i = 0, iz = events.length; i < iz; i++) {
 
-        targets.forEach(target => {
+        myevent = events[i];
 
+        for (j = 0, jz = targets.length; j < jz; j++) {
+
+            target = targets[j];
             if (isa_dom(target) || target.document || target.characterSet) target[action](myevent, fn, false);
-
             else throw new Error(`core/document actionNativeListener() error - bad target: ${myevent}, ${target}`);
-        });
-    });
+        }
+    }
 };
 
 // ## Accessibility, and user-defined, preferences

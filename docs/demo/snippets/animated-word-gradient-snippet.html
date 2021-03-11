@@ -266,10 +266,26 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
             animation = snippet.animation,
             wrapper = snippet.element,
             compStyles = wrapper.elementComputedStyles,
-            name = wrapper.name;
+            name = wrapper.name;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
+              </div>
+              <p>The snippet will take details of its font family and size from the DOM element’s computed styles</p>
+<ul>
+<li>Note that Firefox does not supply a font string; font details are broken up into their constituent parts and need to be reconstructed. The code below will not pick up bold fonts:</li>
+</ul>
 
-        <span class="hljs-keyword">let</span> backgroundColor = compStyles.backgroundColor || <span class="hljs-string">&#x27;#f2f2f2&#x27;</span>,
-            font = compStyles.font || <span class="hljs-string">&#x27;20px sans-serif&#x27;</span>;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> backgroundColor = compStyles.backgroundColor || <span class="hljs-string">&#x27;#f2f2f2&#x27;</span>,
+            font = compStyles.font || <span class="hljs-string">`<span class="hljs-subst">${(compStyles.fontStyle != <span class="hljs-string">&#x27;normal&#x27;</span>) ? compStyles.fontStyle + <span class="hljs-string">&#x27; &#x27;</span> : <span class="hljs-string">&#x27;&#x27;</span>}</span><span class="hljs-subst">${(compStyles.fontVariant != <span class="hljs-string">&#x27;normal&#x27;</span>) ? compStyles.fontVariant + <span class="hljs-string">&#x27; &#x27;</span> : <span class="hljs-string">&#x27;&#x27;</span>}</span><span class="hljs-subst">${compStyles.fontSize}</span> <span class="hljs-subst">${compStyles.fontFamily}</span>`</span> || <span class="hljs-string">&#x27;20px sans-serif&#x27;</span>;
 
         <span class="hljs-keyword">let</span> text = el.innerText;
 
@@ -314,11 +330,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>This is a bad fix for mis-aligned text - a better solution would be to expose startX and startY so coder could set them individually for each instance where this snippet is used, so the replacement canvas text can line up exactly with its surrounding text</p>
 
@@ -330,11 +346,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>We do not want to expose this canvas text in the DOM as it already exists in the DOM (this snippet just makes it invisible by setting its color to ‘transparent’). The last thing non-visual users need is repeated text.</p>
 
@@ -351,11 +367,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>Return the snippet, so coders can access the snippet’s parts - in case they need to tweak the output to meet the web page’s specific requirements</p>
 

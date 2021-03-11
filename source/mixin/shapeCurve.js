@@ -5,7 +5,7 @@
 
 // #### Imports
 import { artefact, particle } from '../core/library.js';
-import { mergeOver, isa_boolean, xt, xta, addStrings, removeItem, pushUnique } from '../core/utilities.js';
+import { mergeOver, isa_boolean, xt, xta, addStrings, removeItem, pushUnique, Ωempty } from '../core/utilities.js';
 
 import { makeCoordinate } from '../factory/coordinate.js';
 
@@ -18,7 +18,7 @@ const capitalize = (s) => {
 
 
 // #### Export function
-export default function (P = {}) {
+export default function (P = Ωempty) {
 
 
 // #### Shared attributes

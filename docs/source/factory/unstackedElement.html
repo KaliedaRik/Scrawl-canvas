@@ -105,6 +105,11 @@
                 </a>
               
                 
+                <a class="source" href="conicGradient.html">
+                  ./source/factory/conicGradient.js
+                </a>
+              
+                
                 <a class="source" href="coordinate.html">
                   ./source/factory/coordinate.js
                 </a>
@@ -557,7 +562,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { unstackedelement, <span class="hljs-title">constructors</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
-<span class="hljs-keyword">import</span> { xt, mergeOver } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { xt, mergeOver, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeCanvas } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./canvas.js&#x27;</span>;
 
@@ -587,7 +592,7 @@
     <span class="hljs-built_in">this</span>.domElement = el;
 
     <span class="hljs-built_in">this</span>.elementComputedStyles = <span class="hljs-built_in">window</span>.getComputedStyle(el);
-    <span class="hljs-built_in">this</span>.hostStyles = {};
+    <span class="hljs-built_in">this</span>.hostStyles = Ωempty;
 
     <span class="hljs-built_in">this</span>.canvasStartX = <span class="hljs-number">0</span>;
     <span class="hljs-built_in">this</span>.canvasStartY = <span class="hljs-number">0</span>;
@@ -765,7 +770,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.addCanvas = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.addCanvas = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
     <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.canvas) {
 
@@ -1043,6 +1048,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeUnstackedElement = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
     
+    <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> UnstackedElement(items);
 };
 

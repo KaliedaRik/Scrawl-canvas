@@ -11,13 +11,13 @@
 
 
 // #### Imports
-import { λnull, mergeOver, pushUnique, xt, addStrings, isa_obj } from '../core/utilities.js';
+import { λnull, mergeOver, pushUnique, xt, addStrings, isa_obj, Ωempty } from '../core/utilities.js';
 import { currentGroup, scrawlCanvasHold } from '../core/document.js';
 import { asset } from '../core/library.js';
 
-import { makeState } from '../factory/state.js';
+import { makeState, stateKeys } from '../factory/state.js';
 import { requestCell, releaseCell } from '../factory/cell.js';
-import { requestFilterWorker, releaseFilterWorker, actionFilterWorker } from '../factory/filter.js';
+import { filterEngine } from '../factory/filterEngine.js';
 import { importDomImage } from '../factory/imageAsset.js';
 
 import positionMix from '../mixin/position.js';
@@ -30,7 +30,7 @@ import filterMix from '../mixin/filter.js';
 
 
 // #### Export function
-export default function (P = {}) {
+export default function (P = Ωempty) {
 
 
 // #### Mixins
@@ -229,7 +229,6 @@ export default function (P = {}) {
 
             if (!items.anchor.clickAction) clone.anchor.clickAction = this.anchor.clickAction;
         }
-
         return clone;
     };
 
@@ -259,15 +258,16 @@ export default function (P = {}) {
 // Entity `get`, `set` and `deltaSet` functions need to take into account the entity State object, whose attributes can be retrieved/amended directly on the entity object
     P.get = function (item) {
 
-        let getter = this.getters[item];
+        const getter = this.getters[item];
 
         if (getter) return getter.call(this);
 
         else {
 
             let def = this.defs[item],
-                state = this.state,
-                val;
+                state = this.state;
+
+            let val;
 
             if (typeof def != 'undefined') {
 
@@ -286,68 +286,88 @@ export default function (P = {}) {
         }
     };
 
-    P.set = function (items = {}) {
+    P.set = function (items = Ωempty) {
 
-        if (Object.keys(items).length) {
+        const keys = Object.keys(items),
+            keysLen = keys.length;
 
-            let setters = this.setters,
+        if (keysLen) {
+
+            const setters = this.setters,
                 defs = this.defs,
-                state = this.state,
-                stateSetters = (state) ? state.setters : {},
-                stateDefs = (state) ? state.defs : {},
-                predefined, stateFlag;
+                state = this.state;
 
-            Object.entries(items).forEach(([key, value]) => {
+            const stateSetters = (state) ? state.setters : Ωempty;
+            const stateDefs = (state) ? state.defs : Ωempty;
 
-                if (key && key !== 'name' && value != null) {
+            let predefined, i, key, value;
 
-                    predefined = setters[key];
-                    stateFlag = false;
+            for (i = 0; i < keysLen; i++) {
 
-                    if (!predefined) {
+                key = keys[i];
+                value = items[key];
+
+                if (key && key != 'name' && value != null) {
+
+                    if (stateKeys.indexOf(key) < 0) {
+
+                        predefined = setters[key];
+
+                        if (predefined) predefined.call(this, value);
+                        else if (typeof defs[key] != 'undefined') this[key] = value;
+                    }
+                    else {
 
                         predefined = stateSetters[key];
-                        stateFlag = true;
-                    }
 
-                    if (predefined) predefined.call(stateFlag ? this.state : this, value);
-                    else if (typeof defs[key] !== 'undefined') this[key] = value;
-                    else if (typeof stateDefs[key] !== 'undefined') state[key] = value;
+                        if (predefined) predefined.call(state, value);
+                        else if (typeof stateDefs[key] != 'undefined') state[key] = value;
+                    }
                 }
-            }, this);
+            }
         }
         return this;
     };
 
-    P.setDelta = function (items = {}) {
+    P.setDelta = function (items = Ωempty) {
 
-        if (Object.keys(items).length) {
+        const keys = Object.keys(items),
+            keysLen = keys.length;
 
-            let setters = this.deltaSetters,
+        if (keysLen) {
+
+            const setters = this.deltaSetters,
                 defs = this.defs,
-                state = this.state,
-                stateSetters = (state) ? state.deltaSetters : {},
-                stateDefs = (state) ? state.defs : {},
-                predefined, stateFlag;
+                state = this.state;
 
-            Object.entries(items).forEach(([key, value]) => {
+            const stateSetters = (state) ? state.deltaSetters : Ωempty;
+            const stateDefs = (state) ? state.defs : Ωempty;
 
-                if (key && key !== 'name' && value != null) {
+            let predefined, i, key, value;
 
-                    predefined = setters[key];
-                    stateFlag = false;
+            for (i = 0; i < keysLen; i++) {
 
-                    if (!predefined) {
+                key = keys[i];
+                value = items[key];
+
+                if (key && key != 'name' && value != null) {
+
+                    if (stateKeys.indexOf(key) < 0) {
+
+                        predefined = setters[key];
+
+                        if (predefined) predefined.call(this, value);
+                        else if (typeof defs[key] != 'undefined') this[key] = addStrings(this[key], value);
+                    }
+                    else {
 
                         predefined = stateSetters[key];
-                        stateFlag = true;
-                    }
 
-                    if (predefined) predefined.call(stateFlag ? this.state : this, value);
-                    else if (typeof defs[key] !== 'undefined') this[key] = addStrings(this[key], value);
-                    else if (typeof stateDefs[key] !== 'undefined') state[key] = addStrings(state[key], value);
+                        if (predefined) predefined.call(state, value);
+                        else if (typeof stateDefs[key] != 'undefined') state[key] = addStrings(state[key], value);
+                    }
                 }
-            }, this);
+            }
         }
         return this;
     };
@@ -356,15 +376,15 @@ export default function (P = {}) {
 // #### Prototype functions
 
 // `entityInit` - internal function, called by all entity factory constructors
-    P.entityInit = function (items = {}) {
+    P.entityInit = function (items = Ωempty) {
 
         this.makeName(items.name);
         this.register();
         this.initializePositions();
 
-        this.set(this.defs);
+        this.state = makeState(Ωempty);
 
-        this.state = makeState();
+        this.set(this.defs);
 
         if (!items.group) items.group = currentGroup;
 
@@ -478,11 +498,9 @@ export default function (P = {}) {
 
             if (host && host.type === 'Cell') this.currentHost = host;
 
-            if (changes) {
+            if (changes) this.set(changes);
 
-                this.set(changes);
-                this.prepareStamp();
-            }
+            this.prepareStamp();
 
             if (filterTest) return this.filteredStamp();
             else return this.regularStamp();
@@ -495,10 +513,34 @@ export default function (P = {}) {
         }
     };
 
-// `regularStamp` - handles stamping functionality for all entitys that do not have any filter functions associated with them.
+// `regularStamp` - this function ___coordinates the actions required___ for an entity to display its output on a Cell wrapper's &lt;canvas> element.
+//
+// Scrawl-canvas stamps an entity onto a Cell by moving and rotating the Cell engine's `transformation` (its coordinate grid) to match the entity's __start__ and __offset__ coordinates, alongside any requirements to rotate (__roll__) and flip (__flipReverse__, __flipUpend__) the transformation as set out by the entity object.
+// + We use the Web API CanvasRenderingContext2D engine's `setTransform` method to perform these actions when we invoke the Cell wrapper's __rotateDestination__ function.
+// + ___We never invoke the engine's `translate`, `rotate` or `scale` methods___ on the transformation. All positional, rotational and scaling data is kept in the entity object, and calculated as part of its __prepareStamp__ step. This means we don't need to keep track of the transformation's current state, and makes the entity stamping operation more efficient.
+// + Scrawl-canvas __does not support skew operations__ on the transformation - use a more appropriately shaped entity instead.
+// + Scrawl-canvas __does not support non-isometric scaling__ (applying different scaling factors along the x and y axes) - most entitys include width and height attributes: use those instead.
+// + We only use the transformation's `save` and `restore` methods where it makes sense to do so - for instance in very limited actions where the save and restore invocations are close enough in the code base that we don't lose sight of them (and remember to restore after the action completes). They are ___not___ used when updating the engine's attributes to match an entity's stamping requirements!
     P.regularStamp = function () {
 
-        if (this.currentHost) this.regularStampSynchronousActions();
+        let dest = this.currentHost;
+
+        if (dest) {
+
+            let engine = dest.engine,
+                stamp = this.currentStampPosition,
+                x = stamp[0],
+                y = stamp[1];
+
+            // Get the Cell wrapper to perform required transformations on its &lt;canvas> element's 2D engine
+            dest.rotateDestination(engine, x, y, this);
+
+            // Get the Cell wrapper to update its 2D engine's attributes to match the entity's requirements
+            if (!this.noCanvasEngineUpdates) dest.setEngine(this);
+
+            // Invoke the appropriate __stamping method__ (below)
+            this[this.method](engine);
+        }
     };
 
 // `filteredStamp` - handles stamping functionality for all __entitys that have filter functions__ associated with them.
@@ -515,60 +557,53 @@ export default function (P = {}) {
 
         // Get and prepare a pool Cell for the filter operations
         let filterHost = requestCell(),
-            filterElement = filterHost.element,
-            filterEngine = filterHost.engine;
+            filterCellElement = filterHost.element,
+            filterCellEngine = filterHost.engine;
 
         this.currentHost = filterHost;
         
-        let w = filterElement.width = currentDimensions[0] || currentElement.width,
-            h = filterElement.height = currentDimensions[1] || currentElement.height;
+        let w = filterCellElement.width = currentDimensions[0] || currentElement.width,
+            h = filterCellElement.height = currentDimensions[1] || currentElement.height;
 
         // Switch off fast stamp
         let oldNoCanvasEngineUpdates = this.noCanvasEngineUpdates;
         this.noCanvasEngineUpdates = false;
 
-         // Stamp the entity onto the pool Cell
-        this.regularStampSynchronousActions();
-
-        let worker, myimage;
+        // Stamp the entity onto the pool Cell
+        this.regularStamp();
 
         if (!this.noFilters && this.filters && this.filters.length) {
 
             // If we're using the entity as a stencil, copy the entity cell's current display over the entity in the pool Cell
             if (this.isStencil) {
 
-                filterEngine.save();
-                filterEngine.globalCompositeOperation = 'source-in';
-                filterEngine.globalAlpha = 1;
-                filterEngine.setTransform(1, 0, 0, 1, 0, 0);
-                filterEngine.drawImage(currentElement, 0, 0);
-                filterEngine.restore();
+                filterCellEngine.save();
+                filterCellEngine.globalCompositeOperation = 'source-in';
+                filterCellEngine.globalAlpha = 1;
+                filterCellEngine.setTransform(1, 0, 0, 1, 0, 0);
+                filterCellEngine.drawImage(currentElement, 0, 0);
+                filterCellEngine.restore();
             } 
 
-            filterEngine.setTransform(1, 0, 0, 1, 0, 0);
+            filterCellEngine.setTransform(1, 0, 0, 1, 0, 0);
 
-            myimage = filterEngine.getImageData(0, 0, w, h);
-            worker = requestFilterWorker();
+            let myimage = filterCellEngine.getImageData(0, 0, w, h);
 
-            // NEED TO POPULATE IMAGE FILTER ACTION OBJECTS WITH THEIR ASSET'S IMAGEDATA AT THIS POINT
             this.preprocessFilters(this.currentFilters);
 
-            // Pass control over to the filter engine
-            let img = actionFilterWorker(worker, {
+            let img = filterEngine.action({
                 image: myimage,
                 filters: this.currentFilters
-            })
+            });
 
             if (img) {
 
-                filterEngine.globalCompositeOperation = 'source-over';
-                filterEngine.globalAlpha = 1;
-                filterEngine.setTransform(1, 0, 0, 1, 0, 0);
-                filterEngine.putImageData(img, 0, 0);
+                filterCellEngine.globalCompositeOperation = 'source-over';
+                filterCellEngine.globalAlpha = 1;
+                filterCellEngine.setTransform(1, 0, 0, 1, 0, 0);
+                filterCellEngine.putImageData(img, 0, 0);
             }
         }
-        if (worker) releaseFilterWorker(worker);
-
         currentEngine.save();
 
         currentEngine.globalAlpha = (this.state && this.state.globalAlpha) ? this.state.globalAlpha : 1;
@@ -576,25 +611,25 @@ export default function (P = {}) {
         
         currentEngine.setTransform(1, 0, 0, 1, 0, 0);
 
-        currentEngine.drawImage(filterElement, 0, 0);
+        currentEngine.drawImage(filterCellElement, 0, 0);
 
         // This is also the point at which we action any requests to stash the Cell output and (optionally) create/update imageAsset objects and associated &lt;img> elements for use elsewhere in the Scrawl-canvas ecosystem.
         if (this.stashOutput) {
 
             this.stashOutput = false;
 
-            let [stashX, stashY, stashWidth, stashHeight] = this.getCellCoverage(filterEngine.getImageData(0, 0, filterElement.width, filterElement.height));
+            let [stashX, stashY, stashWidth, stashHeight] = this.getCellCoverage(filterCellEngine.getImageData(0, 0, filterCellElement.width, filterCellElement.height));
 
-            this.stashedImageData = filterEngine.getImageData(stashX, stashY, stashWidth, stashHeight);
+            this.stashedImageData = filterCellEngine.getImageData(stashX, stashY, stashWidth, stashHeight);
 
             if (this.stashOutputAsAsset) {
 
                 // KNOWN ISSUE - it takes time for the images to load the new dataURLs generated from canvas elements. See demo [Canvas-020](../../demo/canvas-020.html) for a workaround.
                 this.stashOutputAsAsset = false;
 
-                filterElement.width = stashWidth;
-                filterElement.height = stashHeight;
-                filterEngine.putImageData(this.stashedImageData, 0, 0);
+                filterCellElement.width = stashWidth;
+                filterCellElement.height = stashHeight;
+                filterCellEngine.putImageData(this.stashedImageData, 0, 0);
 
                 if (!this.stashedImage) {
 
@@ -608,9 +643,9 @@ export default function (P = {}) {
                         importDomImage(`#${newimg.id}`);
                     };
 
-                    newimg.src = filterElement.toDataURL();
+                    newimg.src = filterCellElement.toDataURL();
                 }
-                else this.stashedImage.src = filterElement.toDataURL();
+                else this.stashedImage.src = filterCellElement.toDataURL();
             }
         }
 
@@ -657,7 +692,7 @@ export default function (P = {}) {
 // `simpleStamp` - an alternative to the `stamp` function, to get an entity to stamp its output onto a Cell.
 // + Note that this is a synchronous action, thus cannot be included in a Display cycle cascade.
 // + Will ignore any filters assigned to the entity (because they require asynchronous Promises for the filter engine)
-    P.simpleStamp = function (host, changes = {}) {
+    P.simpleStamp = function (host, changes = Ωempty) {
 
         if (host && host.type === 'Cell') {
 
@@ -666,41 +701,10 @@ export default function (P = {}) {
             this.set(changes);
             this.prepareStamp();
 
-            this.regularStampSynchronousActions();
+            this.regularStamp();
         }
     };
 
-// ##### Stamping the entity onto a Cell wrapper &lt;canvas> element
-// `regularStampSynchronousActions` - this function ___coordinates the actions required___ for an entity to display its output on a Cell wrapper's &lt;canvas> element.
-//
-// Scrawl-canvas stamps an entity onto a Cell by moving and rotating the Cell engine's `transformation` (its coordinate grid) to match the entity's __start__ and __offset__ coordinates, alongside any requirements to rotate (__roll__) and flip (__flipReverse__, __flipUpend__) the transformation as set out by the entity object.
-// + We use the Web API CanvasRenderingContext2D engine's `setTransform` method to perform these actions when we invoke the Cell wrapper's __rotateDestination__ function.
-// + ___We never invoke the engine's `translate`, `rotate` or `scale` methods___ on the transformation. All positional, rotational and scaling data is kept in the entity object, and calculated as part of its __prepareStamp__ step. This means we don't need to keep track of the transformation's current state, and makes the entity stamping operation more efficient.
-// + Scrawl-canvas __does not support skew operations__ on the transformation - use a more appropriately shaped entity instead.
-// + Scrawl-canvas __does not support non-isometric scaling__ (applying different scaling factors along the x and y axes) - most entitys include width and height attributes: use those instead.
-// + We only use the transformation's `save` and `restore` methods where it makes sense to do so - for instance in very limited actions where the save and restore invocations are close enough in the code base that we don't lose sight of them (and remember to restore after the action completes). They are ___not___ used when updating the engine's attributes to match an entity's stamping requirements!
-    P.regularStampSynchronousActions = function () {
-
-        // Get a handle to the Cell wrapper - which needs to be assigned and checked prior to calling this function
-        let dest = this.currentHost;
-
-        if (dest) {
-
-            let engine = dest.engine,
-                stamp = this.currentStampPosition,
-                x = stamp[0],
-                y = stamp[1];
-
-            // Get the Cell wrapper to perform required transformations on its &lt;canvas> element's 2D engine
-            dest.rotateDestination(engine, x, y, this);
-
-            // Get the Cell wrapper to update its 2D engine's attributes to match the entity's requirements
-            if (!this.noCanvasEngineUpdates) dest.setEngine(this);
-
-            // Invoke the appropriate __stamping method__ (below)
-            this[this.method](engine);
-        }
-    };
 
 // ##### Stamp methods
 // All actual drawing is achieved using the entity's pre-calculated [Path2D object](https://developer.mozilla.org/en-US/docs/Web/API/Path2D).

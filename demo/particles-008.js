@@ -19,6 +19,8 @@ canvas.setBase({
 // For this Demo, we are creating a flag and pinning it to a pole. This is the pole.
 scrawl.makeLine({
 
+    name: 'flagpole',
+
     startX: 'center',
     startY: 30,
     endX: 'center',
@@ -193,21 +195,6 @@ scrawl.makePicture({
 });
 
 
-// ___The Loom entity definition___
-let myMesh = scrawl.makeMesh({
-
-    name: 'display-mesh',
-
-    net: 'test-net',
-    source: 'my-flower',
-
-    method: 'fillThenDraw',
-
-    visibility: false,
-});
-
-
-
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
 let report = function () {
@@ -261,30 +248,6 @@ const updateSprings = function (e) {
         if (e.target.id === 'engine') myNet.set({ engine: e.target.value});
         if (e.target.id === 'mass') myNet.set({ mass: parseFloat(e.target.value)});
         if (e.target.id === 'tickMultiplier') myWorld.set({ tickMultiplier: parseFloat(e.target.value)});
-        if (e.target.id === 'mesh') {
-            if (parseInt(e.target.value, 10)) {
-                myNet.set({
-                    showSprings: false,
-                });
-                myNet.artefact.set({
-                    globalAlpha: 0,
-                });
-                myMesh.set({
-                    visibility: true,
-                });
-            }
-            else {
-                myNet.set({
-                    showSprings: true,
-                });
-                myNet.artefact.set({
-                    globalAlpha: 1,
-                });
-                myMesh.set({
-                    visibility: false,
-                });
-            }
-        }
 
         myNet.restart();
     }
@@ -298,7 +261,6 @@ document.querySelector('#restLength').value = 1;
 document.querySelector('#mass').value = 1;
 document.querySelector('#engine').value = 'runge-kutta';
 document.querySelector('#tickMultiplier').value = 2;
-document.querySelector('#mesh').value = '0';
 
 
 // #### Development and testing

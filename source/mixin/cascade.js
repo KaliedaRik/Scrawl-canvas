@@ -8,11 +8,11 @@
 
 // #### Imports
 import { group } from '../core/library.js';
-import { mergeOver, pushUnique, removeItem, xtGet } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, xtGet, Ωempty } from '../core/utilities.js';
 
 
 // #### Export function
-export default function (P = {}) {
+export default function (P = Ωempty) {
 
 
 // #### Shared attributes

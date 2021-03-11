@@ -1,5 +1,5 @@
 // # Demo Particles 014
-// Hearts and stars
+// Emitter functionality: generate from existing particles
 
 // [Run code](../../demo/particles-014.html)
 import scrawl from '../source/scrawl.js';

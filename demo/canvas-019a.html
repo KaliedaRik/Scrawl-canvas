@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 019a</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    img {
+      display: none;
+    }
+    canvas {
+      display: block;
+      margin: 0 auto 1em;
+      border: 1px solid red;
+    }
+    .controls {
+      grid-template-columns: 1fr 1fr;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 019a</h1>
+  <h2>Gradient and Color factories - transparency - alternative approach using Cells instead of images</h2>
+
+  <div class="controls">
+    <canvas id="hackney" width="400" height="400"></canvas>
+    <canvas id="heathrow" width="400" height="400"></canvas>
+    <canvas id="kingston" width="400" height="400"></canvas>
+    <canvas id="burglary" width="400" height="400"></canvas>
+  </div>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Use the four canvases to display a separate image, defined in the DOM.</li>
+      <li>Check that the `scrawl.createImageFromEntity` functionality works, and that we can capture and use blurred images created dynamically from the originals.</li>
+      <li>Create four (radial) gradients, each with a transparent hole in the middle. We are testing the following values for CSS transparency:</li>
+      <ul>
+        <li>"transparent"</li>
+        <li>"rgba(0,0,0,0)"</li>
+        <li>"#00000000"</li>
+        <li>"#0000"</li>
+      </ul>
+      <li>Check that all canvases display as expected, with in-focus areas of the image centred either on the mouse cursor, or in the middle of the canvas.</li>
+    </ul>
+    <p><b>Known issue</b>: generating the blurred images from the originals takes a very long time in some browsers (for example: Safari). once the images are generated, then the Demo should be performant across all browsers.</p>
+    <p><a href="../docs/demo/canvas-019a.html">Annotated code</a></p>
+  </div>
+
+  <img id="hackney-bg" src="img/hackney-grey.jpg" class="places" />
+  <img id="heathrow-bg" src="img/heathrow-grey.jpg" class="places" />
+  <img id="kingston-bg" src="img/kingston-grey.jpg" class="places" />
+  <img id="burglary-bg" src="img/burglary-grey.jpg" class="places" />
+
+  <script src="canvas-019a.js" type="module"></script>
+
+</body>
+
+</html>

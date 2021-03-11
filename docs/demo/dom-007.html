@@ -120,6 +120,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-019a.html">
+                  ./demo/canvas-019a.js
+                </a>
+              
+                
                 <a class="source" href="canvas-020.html">
                   ./demo/canvas-020.js
                 </a>
@@ -257,6 +262,21 @@
                 
                 <a class="source" href="canvas-047.html">
                   ./demo/canvas-047.js
+                </a>
+              
+                
+                <a class="source" href="canvas-048.html">
+                  ./demo/canvas-048.js
+                </a>
+              
+                
+                <a class="source" href="canvas-049.html">
+                  ./demo/canvas-049.js
+                </a>
+              
+                
+                <a class="source" href="canvas-050.html">
+                  ./demo/canvas-050.js
                 </a>
               
                 
@@ -457,6 +477,11 @@
                 
                 <a class="source" href="filters-020.html">
                   ./demo/filters-020.js
+                </a>
+              
+                
+                <a class="source" href="filters-021.html">
+                  ./demo/filters-021.js
                 </a>
               
                 
@@ -670,10 +695,6 @@
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> artefact = scrawl.library.artefact,
     stack = artefact.mystack,
     flower = artefact.flower,
-    leftbox = artefact.leftbox,
-    rightbox = artefact.rightbox,
-    deltaX = <span class="hljs-number">0.4</span>,
-    deltaY = -<span class="hljs-number">0.3</span>,
     currentClass = <span class="hljs-string">&#x27;&#x27;</span>;</pre></div></div>
             
         </li>
@@ -761,7 +782,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>rightbox.set({
+            <div class="content"><div class='highlight'><pre>artefact.rightbox.set({
     <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;hitareas&#x27;</span>,
 
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;55%&#x27;</span>,
@@ -771,7 +792,7 @@
     <span class="hljs-attr">css</span>: { <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;red&#x27;</span> },
 });
 
-leftbox.set({
+artefact.leftbox.set({
     <span class="hljs-attr">group</span>: hitgroup.name,
 
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;10%&#x27;</span>,
@@ -822,11 +843,10 @@ leftbox.set({
     <span class="hljs-attr">handleY</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
     <span class="hljs-attr">classes</span>: <span class="hljs-string">&#x27;make_round&#x27;</span>,
     <span class="hljs-attr">delta</span>: {
-        <span class="hljs-attr">startX</span>: <span class="hljs-string">`<span class="hljs-subst">${deltaX}</span>%`</span>,
-        <span class="hljs-attr">startY</span>: <span class="hljs-string">`<span class="hljs-subst">${deltaY}</span>%`</span>,
+        <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;0.4%&#x27;</span>,
+        <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;-0.3%&#x27;</span>,
         <span class="hljs-attr">roll</span>: <span class="hljs-number">0.5</span>,
-    },
-});</pre></div></div>
+    },</pre></div></div>
             
         </li>
         
@@ -837,18 +857,23 @@ leftbox.set({
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <h4 id="scene-animation">Scene animation</h4>
-<p>Boundary checking can get very messy very quickly, particularly when using delta animation. The following boilerplate will work in many situations:</p>
-<ol>
-<li>check to see if the artefact has crossed the boundary. If it has, then…</li>
-<li>reverse the artefact away from the boundary along the path it has just travelled along</li>
-<li>check to see which of the delta values needs to be updated - for bouncing an artefact around an enclosed box, reversing the sign on the appropriate delta value is often enough</li>
-<li>move the artefact forward using its new delta values</li>
-</ol>
+              <p>We will check for <strong>boundary collisions</strong> using Scrawl-canvas delta checking functionality</p>
+<ul>
+<li>We supply an array for each delta attribute we want to check in the deltaConstraints Object</li>
+<li>The Array holds three items: <code>[minimum-value, maximum-value, action-to-take]</code></li>
+<li>When the attribute updated by the delta value falls outside our boundaries, Scrawl-canvas takes the appropriate action</li>
+<li>The <strong>reverse</strong> action will reverse the numerical sign of the affected delta object attribute value</li>
+<li>The <strong>loop</strong> action will loop the artefact’s attribute value from the maximum to the minimum value, or vice-versa as appropriate</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> checkForFlowerBoundaryCollisions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    deltaConstraints: {
+        <span class="hljs-attr">startX</span>: [<span class="hljs-string">&#x27;10%&#x27;</span>, <span class="hljs-string">&#x27;90%&#x27;</span>, <span class="hljs-string">&#x27;reverse&#x27;</span>],
+        <span class="hljs-attr">startY</span>: [<span class="hljs-string">&#x27;10%&#x27;</span>, <span class="hljs-string">&#x27;90%&#x27;</span>, <span class="hljs-string">&#x27;reverse&#x27;</span>],
+    },
+    <span class="hljs-attr">checkDeltaConstraints</span>: <span class="hljs-literal">true</span>,
+});</pre></div></div>
             
         </li>
         
@@ -859,18 +884,9 @@ leftbox.set({
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <p><strong>Step 0</strong> - determine the current boundary values (in this case they are dynamic, relative to the current dimensions of the Stack) and the current position of the flower element (again, a dynamic coordinate relative to Stack dimensions)</p>
+              <h4 id="scene-animation">Scene animation</h4>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> [x, y] = flower.get(<span class="hljs-string">&#x27;start&#x27;</span>),
-        [minX, minY] = stack.get(<span class="hljs-string">&#x27;dimensions&#x27;</span>);
-
-    minX /= <span class="hljs-number">10</span>;
-    minY /= <span class="hljs-number">10</span>;
-
-    <span class="hljs-keyword">let</span> maxX = minX * <span class="hljs-number">9</span>,
-        maxY = minY * <span class="hljs-number">9</span>;</pre></div></div>
             
         </li>
         
@@ -880,83 +896,6 @@ leftbox.set({
               
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
-              </div>
-              <p><strong>Step 1</strong> - check for boundary crossings</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (x &lt; minX || x &gt; maxX || y &lt; minY || y &gt; maxY) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
-              </div>
-              <p><strong>Step 2</strong> - reverse out of danger</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        flower.reverseByDelta();</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
-              </div>
-              <p><strong>Step 3</strong> - update the appropriate delta values for the flower</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> changes = {};
-
-        <span class="hljs-keyword">if</span> (x &lt; minX || x &gt; maxX) {
-
-            deltaX = -deltaX;
-            changes.startX = <span class="hljs-string">`<span class="hljs-subst">${deltaX}</span>%`</span>;
-        }
-        <span class="hljs-keyword">if</span> (y &lt; minY || y &gt; maxY) {
-
-            deltaY = -deltaY;
-            changes.startY = <span class="hljs-string">`<span class="hljs-subst">${deltaY}</span>%`</span>;
-        }
-
-        flower.set({
-            <span class="hljs-attr">delta</span>: changes
-        });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
-              </div>
-              <p><strong>Step 4</strong> - move forward away from the boundary</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        flower.updateByDelta();
-    }
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>Updating the flower’s DOM element’s class attribute</p>
 
@@ -981,30 +920,42 @@ leftbox.set({
         </li>
         
         
-        <li id="section-18">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Combining the two check functions above into a single function</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> commenceActions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> commenceActions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
+              </div>
+              <p>checkForFlowerBoundaryCollisions();</p>
 
-    checkForFlowerBoundaryCollisions();
-    checkForFlowerClassUpdates();
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    checkForFlowerClassUpdates();
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-19">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>Function to display frames-per-second data, and other information relevant to the demo</p>
 
@@ -1030,11 +981,11 @@ Current classes: &quot;<span class="hljs-subst">${flower.get(<span class="hljs-s
         </li>
         
         
-        <li id="section-20">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1050,11 +1001,11 @@ Current classes: &quot;<span class="hljs-subst">${flower.get(<span class="hljs-s
         </li>
         
         
-        <li id="section-21">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>We need to finalize the stack’s display after the first Display cycle completes</p>
 <ul>

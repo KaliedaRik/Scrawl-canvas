@@ -105,6 +105,11 @@
                 </a>
               
                 
+                <a class="source" href="conicGradient.html">
+                  ./source/factory/conicGradient.js
+                </a>
+              
+                
                 <a class="source" href="coordinate.html">
                   ./source/factory/coordinate.js
                 </a>
@@ -508,7 +513,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
-<span class="hljs-keyword">import</span> { mergeOver, isa_fn, xt } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { mergeOver, isa_fn, xt, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeQuaternion } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./quaternion.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { makeVector } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./vector.js&#x27;</span>;
@@ -529,7 +534,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> World = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> World = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
     <span class="hljs-built_in">this</span>.makeName(items.name);
     <span class="hljs-built_in">this</span>.register();
@@ -773,7 +778,7 @@ S.gravity = <span class="hljs-function"><span class="hljs-keyword">function</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.addAttribute = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.addAttribute = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
     <span class="hljs-keyword">let</span> {key, defaultValue, setter, deltaSetter, getter} = items;
 
@@ -871,6 +876,8 @@ P.removeAttribute = <span class="hljs-function"><span class="hljs-keyword">funct
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeWorld = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> World(items);
 };
 

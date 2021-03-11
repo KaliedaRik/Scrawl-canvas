@@ -14,7 +14,9 @@
 
 // #### Imports
 import { constructors, cell, entity } from '../core/library.js';
-import { mergeOver, pushUnique, isa_obj } from '../core/utilities.js';
+import { mergeOver, pushUnique, isa_obj, Ωempty } from '../core/utilities.js';
+
+import { stateKeys } from './state.js';
 import { gettableVideoAssetAtributes, settableVideoAssetAtributes } from './videoAsset.js';
 import { gettableImageAssetAtributes, settableImageAssetAtributes } from './imageAsset.js';
 
@@ -25,7 +27,7 @@ import assetConsumerMix from '../mixin/assetConsumer.js';
 
 
 // #### Pattern constructor
-const Pattern = function (items = {}) {
+const Pattern = function (items = Ωempty) {
 
     this.makeName(items.name);
     this.register();
@@ -150,16 +152,23 @@ P.get = function (item) {
 };
 
 // `set`
-P.set = function (items = {}) {
+P.set = function (items = Ωempty) {
 
-    if (Object.keys(items).length) {
+    const keys = Object.keys(items),
+        keysLen = keys.length;
 
-        let setters = this.setters,
-            defs = this.defs,
+    if (keysLen) {
+
+        const setters = this.setters,
             source = this.source,
-            predefined;
+            defs = this.defs;
+        
+        let predefined, i, key, value;
 
-        Object.entries(items).forEach(([key, value]) => {
+        for (i = 0; i < keysLen; i++) {
+
+            key = keys[i];
+            value = items[key];
 
             if ((key.indexOf('video_') === 0 || key.indexOf('image_') === 0) && source) {
 
@@ -169,12 +178,12 @@ P.set = function (items = {}) {
 
             else if (key && key !== 'name' && value != null) {
 
-               predefined = setters[key];
+                predefined = setters[key];
 
                 if (predefined) predefined.call(this, value);
                 else if (typeof defs[key] !== 'undefined') this[key] = value;
             }
-        }, this);
+        }
     }
     return this;
 };
@@ -231,6 +240,8 @@ P.getData = function (entity, cell) {
 // });
 // ```
 const makePattern = function (items) {
+
+    if (!items) return false;
     return new Pattern(items);
 };
 

@@ -125,7 +125,7 @@
 
 // #### Imports
 import { artefact, group, tween, particle } from '../core/library.js';
-import { λnull, mergeOver, isa_obj, xt, xta, xto, xtGet, addStrings, pushUnique, isa_boolean } from '../core/utilities.js';
+import { λnull, mergeOver, isa_obj, xt, xta, xto, xtGet, addStrings, pushUnique, isa_boolean, Ωempty } from '../core/utilities.js';
 import { currentCorePosition } from '../core/userInteraction.js';
 
 import { makeCoordinate, requestCoordinate, releaseCoordinate } from '../factory/coordinate.js';
@@ -133,7 +133,7 @@ import { requestCell, releaseCell } from '../factory/cell.js';
 
 
 // #### Export function
-export default function (P = {}) {
+export default function (P = Ωempty) {
 
 
 // #### Shared attributes
@@ -830,6 +830,7 @@ export default function (P = {}) {
         this.currentStampHandlePosition = makeCoordinate();
 
         this.delta = {};
+        this.deltaConstraints = {};
 
         this.lockTo = ['start', 'start'];
 
@@ -1245,9 +1246,7 @@ export default function (P = {}) {
                 if (xt(pivot.currentRotation)) roll += pivot.currentRotation;
                 else this.dirtyPivotRotation = true;
             }
-            
         }
-
         this.currentRotation = roll;
 
         if (roll !== oldRoll) this.dirtyPositionSubscribers = true;
@@ -1266,169 +1265,6 @@ export default function (P = {}) {
 // + Rotation and flip attributes are handled separately, alongside handle values, as part of the actual stamp operation.
 // + If either __currentStampPosition__ coordinate changes as a result of this function, the `dirtyPositionSubscribers` flag will be set so that the change can be cascaded to any artefacts using this one as a `pivot` or `mimic` for their start or offset values.
     P.cleanStampPositions = function () {
-
-        // this.dirtyStampPositions = false;
-
-        // let stamp = this.currentStampPosition,
-        //     start = this.currentStart,
-        //     oldX = stamp[0],
-        //     oldY = stamp[1];
-
-        // if (this.noPositionDependencies) {
-
-        //     stamp[0] = start[0];
-        //     stamp[1] = start[1];
-        // }
-        // else {
-
-        //     let lockArray = this.lockTo,
-        //         localLockArray = [],
-        //         lock, i, coord, here, pathData,
-        //         hereFlag = false,
-        //         offset = this.currentOffset,
-        //         isBeingDragged = this.isBeingDragged,
-        //         drag = this.currentDragOffset,
-        //         cache = this.currentStartCache,
-        //         pivot = this.pivot,
-        //         path = this.path,
-        //         mimic = this.mimic,
-        //         part = this.particle;
-
-        //     if (isBeingDragged) {
-
-        //         localLockArray = ['mouse', 'mouse'];
-        //         hereFlag = true;
-
-        //         if (this.getCornerCoordinate) this.cleanPathObject();
-        //     }
-        //     else {
-                
-        //         // `x` and `y` coordinates can have different lockTo values
-        //         for (i = 0; i < 2; i++) {
-
-        //             lock = lockArray[i];
-
-        //             if (lock === 'pivot' && !pivot) lock = 'start';
-        //             else if (lock === 'path' && !path) lock = 'start';
-        //             else if (lock === 'mimic' && !mimic) lock = 'start';
-        //             else if (lock === 'particle' && !part) lock = 'start';
-
-        //             if (lock === 'mouse') hereFlag = true;
-
-        //             localLockArray[i] = lock;
-        //         }
-        //     }
-
-        //     if (hereFlag) here = this.getHere();
-
-        //     // We loop twice - once for each coordinate: `x` is calculated on the first loop (`i === 0`); `y` on the second (`i === 1`)
-        //     for (i = 0; i < 2; i++) {
-
-        //         lock = localLockArray[i];
-
-        //         switch (lock) {
-
-        //             case 'start' :
-                    
-        //                 coord = start[i] + offset[i];
-        //                 break;
-
-        //             case 'pivot' :
-
-        //             	// When the pivot is an Element artefact, can use its corner values as pivots
-        //                 if (this.pivotCorner && pivot.getCornerCoordinate) {
-
-        //                     coord = pivot.getCornerCoordinate(this.pivotCorner, (i) ? 'y' : 'x');
-        //                 }
-
-        //                 // When the pivot is a Polyline entity, need also to confirm which pin to use (default 0)
-        //                 else if (pivot.type === 'Polyline') {
-
-        //                 	coord = pivot.getPinAt(this.pivotPin, (i) ? 'y' : 'x');
-        //                 }
-
-        //                 // Everything else
-        //                 else coord = pivot.currentStampPosition[i];
-
-        //                 if (!this.addPivotOffset) coord -= pivot.currentOffset[i];
-
-        //                 coord += offset[i];
-
-        //                 break;
-
-        //             case 'path' :
-        //                 pathData = this.getPathData();
-
-        //                 if (pathData) {
-
-        //                     coord = (i) ? pathData.y : pathData.x;
-
-        //                     if (!this.addPathOffset) coord -= path.currentOffset[i];
-        //                 }
-        //                 else coord = start[i] + offset[i];
-
-        //                 break;
-
-        //             case 'mimic' :
-        //                 if (this.useMimicStart || this.useMimicOffset) {
-
-        //                     coord = mimic.currentStampPosition[i];
-
-        //                     if (this.useMimicStart && this.addOwnStartToMimic) coord += start[i];
-        //                     if (this.useMimicOffset && this.addOwnOffsetToMimic) coord += offset[i];
-
-        //                     if (!this.useMimicStart) coord = coord - mimic.currentStart[i] + start[i];
-        //                     if (!this.useMimicOffset) coord = coord - mimic.currentOffset[i] + offset[i];
-        //                 }
-        //                 else coord = start[i] + offset[i];
-
-        //                 break;
-
-        //             case 'particle' :
-
-        //                 let tempPart = part;
-
-        //             	if (part.substring) {
-
-        //                     tempPart = part;
-        //             		this.particle = part = particle[part];
-        //             	}
-
-        //             	if (!part) {
-
-        //             		this.particle = part = tempPart;
-        //             		coord = start[i] + offset[i];
-        //             	}
-        //             	else {
-
-	       //              	if (i) coord = part.position.y + offset[i];
-	       //              	else coord = part.position.x + offset[i];
-        //             	}
-        //                 break;
-
-        //             case 'mouse' :
-        //                 coord = (i === 0) ? here.x : here.y;
-
-        //                 if (isBeingDragged) {
-
-        //                     cache[i] = coord;
-        //                     coord += drag[i];
-        //                 }
-        //                 coord += offset[i];
-
-        //                 break;
-
-        //             default :
-        //                 coord = start[i] + offset[i];
-        //         }
-        //         stamp[i] = coord;
-        //     }
-        // }
-        // if (oldX !== stamp[0] || oldY !== stamp[1]) this.dirtyPositionSubscribers = true;
-
-
-
-
 
         this.dirtyStampPositions = false;
 
@@ -1721,7 +1557,7 @@ export default function (P = {}) {
     };
 
 // `pickupArtefact`
-    P.pickupArtefact = function (items = {}) {
+    P.pickupArtefact = function (items = Ωempty) {
 
         let {x, y} = items;
 

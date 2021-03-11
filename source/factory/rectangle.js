@@ -40,14 +40,14 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, addStrings } from '../core/utilities.js';
+import { mergeOver, addStrings, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shapeBasic.js';
 
 
 // #### Rectangle constructor
-const Rectangle = function (items = {}) {
+const Rectangle = function (items = Ωempty) {
 
     this.shapeInit(items);
 
@@ -429,6 +429,8 @@ P.cleanSpecies = function () {
 // + Unlike other Shape entitys, Rectangles have settable dimensions `rectangleWidth` and `rectangleWidth`.
 P.cleanDimensions = function () {
 
+    this.dirtyDimensions = false;
+
     let host = this.getHost();
 
     if (host) {
@@ -602,8 +604,9 @@ P.calculateLocalPathAdditionalActions = function () {
 //     method: 'fillAndDraw',
 // });
 // ```
-const makeRectangle = function (items = {}) {
+const makeRectangle = function (items) {
 
+    if (!items) return false;
     items.species = 'rectangle';
     return new Rectangle(items);
 };

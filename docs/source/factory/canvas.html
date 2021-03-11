@@ -105,6 +105,11 @@
                 </a>
               
                 
+                <a class="source" href="conicGradient.html">
+                  ./source/factory/conicGradient.js
+                </a>
+              
+                
                 <a class="source" href="coordinate.html">
                   ./source/factory/coordinate.js
                 </a>
@@ -501,7 +506,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { cell, <span class="hljs-title">constructors</span>, <span class="hljs-title">artefact</span>, <span class="hljs-title">group</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
 <span class="hljs-keyword">import</span> { rootElements, setRootElementsSort, setCurrentCanvas, domShow, scrawlCanvasHold } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/document.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { mergeOver, pushUnique, removeItem, xt, λ<span class="hljs-built_in">this</span>, λ<span class="hljs-literal">null</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { mergeOver, pushUnique, removeItem, xt, λ<span class="hljs-built_in">this</span>, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { uiSubscribedElements } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/userInteraction.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeState } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./state.js&#x27;</span>;
@@ -525,7 +530,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Canvas = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Canvas = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
     <span class="hljs-keyword">let</span> g, el;
 
@@ -1342,11 +1347,12 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.updateCells = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.updateCells = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
-    <span class="hljs-built_in">this</span>.cells.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
+    <span class="hljs-keyword">const</span> c = <span class="hljs-built_in">this</span>.cells;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = c.length, mycell; i &lt; iz; i++) {
 
-        <span class="hljs-keyword">let</span> mycell = cell[name];
+        mycell = cell[c[i]];
 
         <span class="hljs-keyword">if</span> (mycell) {
 
@@ -1358,7 +1364,7 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
             <span class="hljs-keyword">if</span> (items.dirtyHandle) mycell.dirtyHandle = <span class="hljs-literal">true</span>;
             <span class="hljs-keyword">if</span> (items.dirtyRotation) mycell.dirtyRotation = <span class="hljs-literal">true</span>;
         }
-    });
+    }
 };</pre></div></div>
             
         </li>
@@ -1374,7 +1380,7 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.buildCell = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.buildCell = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
     <span class="hljs-keyword">let</span> host = items.host || <span class="hljs-literal">false</span>;
 
@@ -1521,7 +1527,12 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
             <div class="content"><div class='highlight'><pre>P.clear = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
     <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyCells) <span class="hljs-built_in">this</span>.cleanCells();
-    <span class="hljs-built_in">this</span>.cellBatchesClear.forEach(<span class="hljs-function"><span class="hljs-params">myCell</span> =&gt;</span> myCell.clear());
+
+    <span class="hljs-keyword">const</span> c = <span class="hljs-built_in">this</span>.cellBatchesClear;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = c.length; i &lt; iz; i++) {
+
+        c[i].clear();
+    }
 };</pre></div></div>
             
         </li>
@@ -1557,7 +1568,12 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyCells) <span class="hljs-built_in">this</span>.cleanCells();
-    <span class="hljs-built_in">this</span>.cellBatchesCompile.forEach(<span class="hljs-function"><span class="hljs-params">myCell</span> =&gt;</span> myCell.compile());</pre></div></div>
+
+    <span class="hljs-keyword">const</span> c = <span class="hljs-built_in">this</span>.cellBatchesCompile;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = c.length; i &lt; iz; i++) {
+
+        c[i].compile();
+    }</pre></div></div>
             
         </li>
         
@@ -1614,7 +1630,12 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyCells) <span class="hljs-built_in">this</span>.cleanCells();
-    <span class="hljs-built_in">this</span>.cellBatchesShow.forEach(<span class="hljs-function"><span class="hljs-params">myCell</span> =&gt;</span> myCell.show());</pre></div></div>
+
+    <span class="hljs-keyword">const</span> c = <span class="hljs-built_in">this</span>.cellBatchesShow;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = c.length; i &lt; iz; i++) {
+
+        c[i].show();
+    }</pre></div></div>
             
         </li>
         
@@ -1699,9 +1720,9 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
         cells = <span class="hljs-built_in">this</span>.cells,
         order;
 
-    cells.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = cells.length, mycell; i &lt; iz; i++) {
 
-        <span class="hljs-keyword">let</span> mycell = cell[item];
+        mycell = cell[cells[i]];
 
         <span class="hljs-keyword">if</span> (mycell) {
 
@@ -1724,7 +1745,7 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
                 tempShow[order].push(mycell);
             }
         }
-    });
+    };
 
     <span class="hljs-built_in">this</span>.cellBatchesClear = [].concat(tempClear);
     <span class="hljs-built_in">this</span>.cellBatchesCompile = tempCompile.reduce(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a.concat(v), []);
@@ -1760,7 +1781,8 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
         newActiveEntityObjects = [],
         newActiveEntityNames = [],
         knownActiveEntityObjects = [],
-        knownActiveEntityNames = [];</pre></div></div>
+        knownActiveEntityNames = [],
+        i, iz, myCell, item, name, myArt;</pre></div></div>
             
         </li>
         
@@ -1777,12 +1799,13 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.cells.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> c = <span class="hljs-built_in">this</span>.cells;
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = c.length; i &lt; iz; i++) {
 
-        <span class="hljs-keyword">let</span> myCell = cell[name];
+        myCell = cell[c[i]];
 
         <span class="hljs-keyword">if</span> (myCell &amp;&amp; (myCell.shown || myCell.isBase)) testActiveEntityObjects.push(myCell.getEntityHits());
-    });
+    };
 
     testActiveEntityObjects = testActiveEntityObjects.reduce(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a.concat(v), []);</pre></div></div>
             
@@ -1801,9 +1824,10 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    testActiveEntityObjects.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = testActiveEntityObjects.length; i &lt; iz; i++) {
 
-        <span class="hljs-keyword">let</span> name = item.name;
+        item = testActiveEntityObjects[i];
+        name = item.name;
 
         <span class="hljs-keyword">if</span> (testActiveEntityNames.indexOf(name) &lt; <span class="hljs-number">0</span>) {
 
@@ -1820,7 +1844,7 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
                 knownActiveEntityNames.push(name);
             }
         }
-    });
+    }
 
     <span class="hljs-keyword">let</span> currentActiveEntityObjects = newActiveEntityObjects.concat(knownActiveEntityObjects);</pre></div></div>
             
@@ -1843,30 +1867,44 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
 
         <span class="hljs-keyword">if</span> (currentActiveEntityNames.length) {
 
-            newActiveEntityNames.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> removeItem(currentActiveEntityNames, name));
-            knownActiveEntityNames.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> removeItem(currentActiveEntityNames, name));
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = newActiveEntityNames.length; i &lt; iz; i++) {
 
-            currentActiveEntityNames.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
+                removeItem(currentActiveEntityNames, newActiveEntityNames[i]);
+            }
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = knownActiveEntityNames.length; i &lt; iz; i++) {
 
-                <span class="hljs-keyword">let</span> myArt = artefact[name];
+                removeItem(currentActiveEntityNames, knownActiveEntityNames[i]);
+            }
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = currentActiveEntityNames.length, myArt; i &lt; iz; i++) {
+
+                myArt = artefact[currentActiveEntityNames[i]];
 
                 <span class="hljs-keyword">if</span> (myArt) myArt.onLeave();
-            });
+            }
         }
     };
+
+    <span class="hljs-keyword">const</span> currentActiveLen = currentActiveEntityObjects.length,
+        newActiveLen = newActiveEntityObjects.length;
 
     <span class="hljs-keyword">switch</span> (action) {
 
         <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;down&#x27;</span> :
-            currentActiveEntityObjects.forEach(<span class="hljs-function"><span class="hljs-params">art</span> =&gt;</span> art.onDown());
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; currentActiveLen; i++) {
+                currentActiveEntityObjects[i].onDown();
+            }
             <span class="hljs-keyword">break</span>;
 
         <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;up&#x27;</span> :
-            currentActiveEntityObjects.forEach(<span class="hljs-function"><span class="hljs-params">art</span> =&gt;</span> art.onUp());
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; currentActiveLen; i++) {
+                currentActiveEntityObjects[i].onUp();
+            }
             <span class="hljs-keyword">break</span>;
 
         <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;enter&#x27;</span> :
-            newActiveEntityObjects.forEach(<span class="hljs-function"><span class="hljs-params">art</span> =&gt;</span> art.onEnter());
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; newActiveLen; i++) {
+                newActiveEntityObjects[i].onEnter();
+            }
             <span class="hljs-keyword">break</span>;
 
         <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;leave&#x27;</span> :
@@ -1875,7 +1913,9 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
 
         <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;move&#x27;</span> :
             doLeave();
-            newActiveEntityObjects.forEach(<span class="hljs-function"><span class="hljs-params">art</span> =&gt;</span> art.onEnter());
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; newActiveLen; i++) {
+                newActiveEntityObjects[i].onEnter();
+            }
             <span class="hljs-keyword">break</span>;
     }</pre></div></div>
             
@@ -1934,6 +1974,8 @@ S.composite = <span class="hljs-function"><span class="hljs-keyword">function</s
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeCanvas = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Canvas(items);
 };
 

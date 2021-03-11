@@ -42,7 +42,7 @@
 // #### Imports
 import { constructors, cell, cellnames, styles, stylesnames, artefact } from '../core/library.js';
 import { scrawlCanvasHold } from '../core/document.js';
-import { mergeOver, pushUnique, xt, xta, isa_obj, isa_number } from '../core/utilities.js';
+import { mergeOver, pushUnique, xt, xta, isa_obj, isa_number, Ωempty } from '../core/utilities.js';
 
 import { requestCell, releaseCell } from './cell.js';
 
@@ -99,21 +99,35 @@ const ensureString = (val) => {
 
 
 // #### Phrase constructor
-const Phrase = function (items = {}) {
+const Phrase = function (items = Ωempty) {
 
-    this.fontAttributes = makeFontAttributes(items);
-
-    delete items.font;
-    delete items.style;
-    delete items.variant;
-    delete items.weight;
-    delete items.stretch;
-    delete items.size;
-    delete items.sizeValue;
-    delete items.sizeMetric;
-    delete items.family;
+    this.fontAttributes = makeFontAttributes(Ωempty);
 
     this.entityInit(items);
+
+    this.dirtyDimensions = true;
+    this.dirtyText = true;
+    this.dirtyFont = true;
+    this.dirtyPathObject = true;
+
+    return this;
+};
+
+// #### Phrase prototype
+let P = Phrase.prototype = Object.create(Object.prototype);
+P.type = 'Phrase';
+P.lib = 'entity';
+P.isArtefact = true;
+P.isAsset = false;
+
+
+// #### Mixins
+// + [base](../mixin/base.html)
+// + [entity](../mixin/entity.html)
+P = baseMix(P);
+P = entityMix(P);
+
+P.midInitActions = function (items) {
 
     this.sectionStyles = [];
     this.sectionClasses = {
@@ -131,29 +145,7 @@ const Phrase = function (items = {}) {
         '/UNDERLINE': { underline: false },
         '/OVERLINE': { overline: false }
     };
-
-    this.dirtyDimensions = true;
-    this.dirtyText = true;
-    this.dirtyFont = true;
-    this.dirtyPathObject = true;
-
-    return this;
 };
-
-
-// #### Phrase prototype
-let P = Phrase.prototype = Object.create(Object.prototype);
-P.type = 'Phrase';
-P.lib = 'entity';
-P.isArtefact = true;
-P.isAsset = false;
-
-
-// #### Mixins
-// + [base](../mixin/base.html)
-// + [entity](../mixin/entity.html)
-P = baseMix(P);
-P = entityMix(P);
 
 
 // #### Phrase attributes
@@ -308,8 +300,6 @@ P.finalizePacketOut = function (copy, items) {
 
 
 // #### Clone management
-// No additional clone functionality required
-
 
 // #### Kill management
 P.factoryKill = function () {
@@ -1303,8 +1293,8 @@ P.calculateTextPositions = function (mytext) {
 
 // ##### Stamping the entity onto a Cell wrapper &lt;canvas> element
 
-// `regularStampSynchronousActions` - overwrites the mixin/entity.js function
-P.regularStampSynchronousActions = function () {
+// `regularStamp` - overwrites the mixin/entity.js function
+P.regularStamp = function () {
 
     let dest = this.currentHost, 
         method = this.method,
@@ -1383,7 +1373,7 @@ P.regularStampSynchronousActions = function () {
     }
 };
 
-// `calculateGlyphPathPositions` - internal helper function called by `regularStampSynchronousActions`
+// `calculateGlyphPathPositions` - internal helper function called by `regularStamp`
 P.calculateGlyphPathPositions = function () {
 
     let path = this.getTextPath(),
@@ -1452,7 +1442,7 @@ P.calculateGlyphPathPositions = function () {
     }
 };
 
-// `preStamper` - internal helper function called by `regularStampSynchronousActions`
+// `preStamper` - internal helper function called by `regularStamp`
 P.preStamper = function (dest, engine, entity, args) {
 
     const makeStyle = function (item) {
@@ -1507,7 +1497,7 @@ P.preStamper = function (dest, engine, entity, args) {
     return data;
 };
 
-// `stamper` - object holding stamp method functions - functions called by `regularStampSynchronousActions`
+// `stamper` - object holding stamp method functions - functions called by `regularStamp`
 P.stamper = {
 
     // `stamper.draw`
@@ -1565,7 +1555,7 @@ P.stamper = {
     },    
 };
 
-// `drawBoundingBox` - internal helper function called by `regularStampSynchronousActions`
+// `drawBoundingBox` - internal helper function called by `regularStamp`
 P.drawBoundingBox = function (engine) {
 
     engine.save();
@@ -1580,7 +1570,7 @@ P.drawBoundingBox = function (engine) {
     engine.restore();
 };
 
-// `performRotation` - internal helper function called by `regularStampSynchronousActions`
+// `performRotation` - internal helper function called by `regularStamp`
 // + When doing text along a path, we have to perform a rendering context transformation for every glyph
 // + In other cases, we perform the action on a per-line basis
 P.performRotation = function (engine) {
@@ -1634,6 +1624,8 @@ P.performRotation = function (engine) {
 // });
 // ```
 const makePhrase = function (items) {
+
+    if (!items) return false;
     return new Phrase(items);
 };
 

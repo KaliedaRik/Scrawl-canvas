@@ -14,18 +14,16 @@
 
 // #### Imports
 import { constructors, entity, styles } from '../core/library.js';
-import { isa_obj, xt, xtGet } from '../core/utilities.js';
+import { isa_obj, xt, xtGet, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 
 
 // #### State constructor
-const State = function (items = {}) {
+const State = function (items = Ωempty) {
 
     this.set(this.defs);
     this.lineDash = [];
-    this.set(items);
-
     return this;
 };
 
@@ -186,22 +184,20 @@ P.finalizePacketOut = function (copy, items) {
 
 
 // #### Get, Set, deltaSet
-P.set = function (items = {}) {
+P.set = function (items = Ωempty) {
 
-    if(Object.keys(items).length) {
-        
-        let key, i, iz,
-            keys = Object.keys(items),
-            d = this.defs;
+    let keys = Object.keys(items),
+        keysLen = keys.length,
+        key, i,
+        d = this.defs;
 
-        for (i = 0, iz = keys.length; i < iz; i++) {
+    for (i = 0; i < keysLen; i++) {
 
-            key = keys[i];
+        key = keys[i];
 
-            if (key !== 'name') {
+        if (key != 'name') {
 
-                if (typeof d[key] !== 'undefined') this[key] = items[key];
-            }
+            if (typeof d[key] != 'undefined') this[key] = items[key];
         }
     }
     return this;
@@ -402,12 +398,18 @@ P.setStateFromEngine = function (engine) {
 // Only used internally by Cell and entity factory functions
 const makeState = function (items) {
 
+    if (!items) return false;
     return new State(items);
 };
+
+// Note: does NOT include 'font', textAlign or textBaseline because we set them in the fontAttributes object and Phrase entity, not the state object
+const stateKeys = ['fillStyle', 'filter', 'globalAlpha', 'globalCompositeOperation', 'lineCap', 'lineDash', 'lineDashOffset', 'lineJoin', 'lineWidth', 'miterLimit', 'shadowBlur', 'shadowColor', 'shadowOffsetX', 'shadowOffsetY', 'strokeStyle'];
+
 
 constructors.State = State;
 
 // #### Exports
 export {
     makeState,
+    stateKeys,
 };

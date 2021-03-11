@@ -43,14 +43,14 @@
 // #### Imports
 import { artefact, asset, tween, radian, constructors, styles, stylesnames, cell, cellnames, group, canvas } from '../core/library.js';
 
-import { generateUniqueString, isa_canvas, mergeOver, λthis, λnull } from '../core/utilities.js';
+import { generateUniqueString, isa_canvas, mergeOver, λthis, λnull, Ωempty } from '../core/utilities.js';
 
 import { scrawlCanvasHold } from '../core/document.js';
 
 import { makeGroup } from './group.js';
 import { makeState } from './state.js';
 import { makeCoordinate, requestCoordinate, releaseCoordinate } from './coordinate.js';
-import { requestFilterWorker, releaseFilterWorker, actionFilterWorker } from './filter.js';
+import { filterEngine } from './filterEngine.js';
 import { importDomImage } from './imageAsset.js';
 
 import baseMix from '../mixin/base.js';
@@ -67,7 +67,7 @@ import filterMix from '../mixin/filter.js';
 
 
 // #### Cell constructor
-const Cell = function (items = {}) {
+const Cell = function (items = Ωempty) {
 
     this.makeName(items.name);
 
@@ -487,11 +487,19 @@ P.getData = function (entity, cell) {
 };
 
 // `updateArtefacts` - passes the __items__ argument object through to each of the Cell's Groups for forwarding to their artefacts' `setDelta` function
-P.updateArtefacts = function (items = {}) {
+P.updateArtefacts = function (items = Ωempty) {
 
-    this.groupBuckets.forEach(grp => {
+    const gb = this.groupBuckets;
 
-        grp.artefactBuckets.forEach(art => {
+    let art, ab, i, iz, j, jz;
+
+    for (i = 0, iz = gb.length; i < iz; i++) {
+
+        ab = gb[i].artefactBuckets;
+
+        for (j = 0, jz = ab.length; j < jz; j++) {
+
+            art = ab[j];
 
             if (items.dirtyScale) art.dirtyScale = true;
             if (items.dirtyDimensions) art.dirtyDimensions = true;
@@ -501,8 +509,8 @@ P.updateArtefacts = function (items = {}) {
             if (items.dirtyHandle) art.dirtyHandle = true;
             if (items.dirtyRotation) art.dirtyRotation = true;
             if (items.dirtyPathObject) art.dirtyPathObject = true;
-        })
-    });
+        }
+    }
 };
 
 // `cleanDimensionsAdditionalActions` - overwrites mixin/position function:
@@ -577,7 +585,7 @@ P.subscribeAction = function (sub = {}) {
 P.installElement = function (element) {
 
     this.element = element;
-    this.engine = this.element.getContext('2d');
+    this.engine = this.element.getContext('2d', {willReadFrequently: true});
 
     this.state = makeState({
         engine: this.engine
@@ -597,21 +605,27 @@ P.updateControllerCells = function () {
 // `setEngineFromState` - internal function: set engine to match this Cell's State object's attribute values
 P.setEngineFromState = function (engine) {
 
-    let state = this.state;
+    const state = this.state,
+        stateKeys = state.allKeys,
+        stateKeysLen = stateKeys.length;
 
-    state.allKeys.forEach(key => {
+    let i, iz, key, eVal, sVal;
+
+    for (i = 0; i < stateKeysLen; i++) {
+
+        key = stateKeys[i];
+        eVal = engine[key];
+        sVal = state[key];
 
         if (key === 'lineDash') {
 
-            engine.lineDash = state.lineDash;
+            engine.lineDash = sVal;
             engine.setLineDash(engine.lineDash);
         }
-        else engine[key] = state[key];
-
-    }, state);
-
-    engine.textAlign = state.textAlign;
-    engine.textBaseline = state.textBaseline;
+        else if (eVal !== sVal) engine[key] = sVal;
+    }
+    if (engine.textAlign !== 'left') engine.textAlign = 'left';
+    if (engine.textBaseline !== 'top') engine.textBaseline = 'top';
 
     return this;
 };
@@ -651,21 +665,25 @@ P.setToDefaults = function () {
 P.stylesArray = ['Gradient', 'RadialGradient', 'Pattern'];
 P.setEngine = function (entity) {
 
-    let state = this.state,
-        entityState = entity.state,
-        engine, item,
-        changes = entityState.getChanges(entity, state),
-        action = this.setEngineActions,
-        stylesArray = this.stylesArray;
+    const state = this.state,
+        entityState = entity.state;
 
-    if (Object.keys(changes).length) {
+    if (entityState) {
 
-        engine = this.engine;
+        let engine, item,
+            changes = entityState.getChanges(entity, state),
+            action = this.setEngineActions,
+            stylesArray = this.stylesArray;
 
-        for (item in changes) {
+        if (Object.keys(changes).length) {
 
-            action[item](changes[item], engine, stylesArray, entity, this);
-            state[item] = changes[item];
+            engine = this.engine;
+
+            for (item in changes) {
+
+                action[item](changes[item], engine, stylesArray, entity, this);
+                state[item] = changes[item];
+            }
         }
     }
     return entity;
@@ -714,9 +732,7 @@ P.setEngineActions = {
     },
 
     lineDash: function (item, engine) {
-
         engine.lineDash = item;
-
         if (engine.setLineDash) engine.setLineDash(item);
     },
 
@@ -906,10 +922,14 @@ P.compile = function(){
 
     if(this.dirtyFilters || !this.currentFilters) this.cleanFilters();
 
-    this.groupBuckets.forEach(grp => {
+    const gb = this.groupBuckets,
+        gbLen = gb.length;
 
+    for (let i = 0, grp; i < gbLen; i++) {
+
+        grp = gb[i];
         if (grp && grp.stamp) grp.stamp();
-    });
+    }
 
     if (!this.noFilters && this.filters && this.filters.length) this.applyFilters();
     this.stashOutputAction();
@@ -1053,16 +1073,13 @@ P.show = function () {
 // `applyFilters` - Internal function - add filters to the Cell's current output.
 P.applyFilters = function () {
 
-    let engine = this.engine,
-        image, worker;
+    let engine = this.engine;
 
-    image = engine.getImageData(0, 0, this.currentDimensions[0], this.currentDimensions[1]);
-    worker = requestFilterWorker();
+    let image = engine.getImageData(0, 0, this.currentDimensions[0], this.currentDimensions[1]);
 
-    // NEED TO POPULATE IMAGE FILTER ACTION OBJECTS WITH THEIR ASSET'S IMAGEDATA AT THIS POINT
     this.preprocessFilters(this.currentFilters);
 
-    let img = actionFilterWorker(worker, {
+    let img = filterEngine.action({
         image: image,
         filters: this.currentFilters
     });
@@ -1510,7 +1527,9 @@ const requestCell = function () {
         }));
     }
 
-    return cellPool.shift();
+    let c = cellPool.shift();
+    c.engine.save();
+    return c;
 };
 
 // `Exported function` - __releaseCell__
@@ -1518,8 +1537,8 @@ const releaseCell = function (c) {
 
     if (c && c.type === 'Cell') {
 
-        c.engine.setTransform(1,0,0,1,0,0);
-        cellPool.push(c.setToDefaults());
+        c.engine.restore();
+        cellPool.push(c);
     }
 };
 
@@ -1527,6 +1546,7 @@ const releaseCell = function (c) {
 // #### Factory
 const makeCell = function (items) {
 
+    if (!items) return false;
     return new Cell(items);
 };
 

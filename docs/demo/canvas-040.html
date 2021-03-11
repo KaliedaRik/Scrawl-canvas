@@ -120,6 +120,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-019a.html">
+                  ./demo/canvas-019a.js
+                </a>
+              
+                
                 <a class="source" href="canvas-020.html">
                   ./demo/canvas-020.js
                 </a>
@@ -257,6 +262,21 @@
                 
                 <a class="source" href="canvas-047.html">
                   ./demo/canvas-047.js
+                </a>
+              
+                
+                <a class="source" href="canvas-048.html">
+                  ./demo/canvas-048.js
+                </a>
+              
+                
+                <a class="source" href="canvas-049.html">
+                  ./demo/canvas-049.js
+                </a>
+              
+                
+                <a class="source" href="canvas-050.html">
+                  ./demo/canvas-050.js
                 </a>
               
                 
@@ -457,6 +477,11 @@
                 
                 <a class="source" href="filters-020.html">
                   ./demo/filters-020.js
+                </a>
+              
+                
+                <a class="source" href="filters-021.html">
+                  ./demo/filters-021.js
                 </a>
               
                 
@@ -669,6 +694,8 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.library.canvas.mycanvas;
 
+<span class="hljs-keyword">const</span> balancePoint = <span class="hljs-number">2500</span>;
+
 canvas.setBase({
     <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;aliceblue&#x27;</span>,
 });</pre></div></div>
@@ -721,8 +748,8 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    lineDash: [<span class="hljs-number">10000</span>, <span class="hljs-number">10000</span>],
-    <span class="hljs-attr">lineDashOffset</span>: <span class="hljs-number">10000</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    lineDash: [balancePoint, balancePoint],
+    <span class="hljs-attr">lineDashOffset</span>: balancePoint,</pre></div></div>
             
         </li>
         
@@ -1112,9 +1139,11 @@ canvas.setBase({
 
                 <span class="hljs-built_in">this</span>.progress = item;
 
-                arrow.set({
-                    <span class="hljs-attr">lineDashOffset</span>: <span class="hljs-number">10000</span> - <span class="hljs-built_in">Math</span>.round(arrow.length * (item / <span class="hljs-number">100</span>)),
-                });</pre></div></div>
+                <span class="hljs-keyword">if</span> (arrow.length != <span class="hljs-literal">null</span>) {
+
+                    arrow.set({
+                        <span class="hljs-attr">lineDashOffset</span>: balancePoint - <span class="hljs-built_in">Math</span>.round(arrow.length * (item / <span class="hljs-number">100</span>)),
+                    });</pre></div></div>
             
         </li>
         
@@ -1125,18 +1154,19 @@ canvas.setBase({
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p>The japanb entity has several paths, all of them shorter than the arrow entity’s path</p>
+              <p>The japan entity has several paths, all of them shorter than the arrow entity’s path</p>
 <ul>
 <li>Most of the paths (around small islands) will be shown relatively quickly - a quirk of  using a dashed line to show the tracing effect</li>
 </ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                japan.set({
-                    <span class="hljs-attr">lineDashOffset</span>: <span class="hljs-number">10000</span> - <span class="hljs-built_in">Math</span>.round(japan.length * (item / <span class="hljs-number">270</span>)),
-                });
+            <div class="content"><div class='highlight'><pre>                    japan.set({
+                        <span class="hljs-attr">lineDashOffset</span>: balancePoint - <span class="hljs-built_in">Math</span>.round(japan.length * (item / <span class="hljs-number">270</span>)),
+                    });
 
-                progressElement.value = item;
+                    progressElement.value = item;
+                }
             },
         }
     ],

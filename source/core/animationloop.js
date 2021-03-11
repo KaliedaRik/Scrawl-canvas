@@ -57,10 +57,11 @@ const sortAnimations = function () {
 
         let floor = Math.floor,
             buckets = [],
-            obj, order;
+            obj, order, i, iz, name;
 
-        animate.forEach(name => {
+        for (i = 0, iz = animate.length; i < iz; i++) {
 
+            name = animate[i];
             obj = animation[name];
 
             if (obj) {
@@ -71,8 +72,7 @@ const sortAnimations = function () {
 
                 buckets[order].push(obj);
             }
-        });
-
+        }
         animate_sorted = buckets.reduce((a, v) => a.concat(v), []);
     }
 };
@@ -82,8 +82,13 @@ const animationLoop = function () {
 
     if (resortBatchAnimations) sortAnimations();
 
-    animate_sorted.forEach(item => item.fn());
+    let i, iz;
 
+    for (i = 0, iz = animate_sorted.length; i < iz; i++) {
+
+        animate_sorted[i].fn();
+    }
+    
     if (doAnimation) window.requestAnimationFrame(() => animationLoop());
 };
 

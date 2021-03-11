@@ -116,15 +116,13 @@
 
 // #### Imports
 import { constructors, cell, group, entity, asset } from '../core/library.js';
-import { mergeOver, removeItem, λnull } from '../core/utilities.js';
-
-import { makeFilterEngine } from './filterEngine.js';
+import { mergeOver, removeItem, λnull, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 
 
 // #### Filter constructor
-const Filter = function (items = {}) {
+const Filter = function (items = Ωempty) {
 
     this.makeName(items.name);
     this.register();
@@ -227,6 +225,7 @@ let defaultAttributes = {
     excludeBlue: false,
     excludeGreen: false,
     excludeRed: false,
+    excludeTransparentPixels: true,
     green: 0,
     greenInBlue: 0,
     greenInGreen: 0,
@@ -257,6 +256,7 @@ let defaultAttributes = {
     offsetX: 0,
     offsetY: 0,
     opaqueAt: 1,
+    operation: 'mean',
     passes: 1,
     postProcessResults: true,
     processHorizontal: true,
@@ -332,15 +332,44 @@ let S = P.setters,
 
 
 // `set` - Overwrites mixin/base.js function
-P.set = function (items = {}) {
+P.set = function (items = Ωempty) {
 
-    if (Object.keys(items).length) {
+    // if (Object.keys(items).length) {
 
-        let setters = this.setters,
-            defs = this.defs,
-            predefined;
+    //     let setters = this.setters,
+    //         defs = this.defs,
+    //         predefined;
 
-        Object.entries(items).forEach(([key, value]) => {
+    //     Object.entries(items).forEach(([key, value]) => {
+
+    //         if (key && key !== 'name' && value != null) {
+
+    //             predefined = setters[key];
+
+    //             if (predefined) predefined.call(this, value);
+    //             else if (typeof defs[key] !== 'undefined') this[key] = value;
+    //         }
+    //     }, this);
+    // }
+    // if (this.method && setActionsArray[this.method]) setActionsArray[this.method](this);
+
+    // this.dirtyFiltersCache = true;
+
+    // return this;
+    const keys = Object.keys(items),
+        keysLen = keys.length;
+
+    if (keysLen) {
+
+        const setters = this.setters,
+            defs = this.defs;
+        
+        let predefined, i, key, value;
+
+        for (i = 0; i < keysLen; i++) {
+
+            key = keys[i];
+            value = items[key];
 
             if (key && key !== 'name' && value != null) {
 
@@ -349,7 +378,7 @@ P.set = function (items = {}) {
                 if (predefined) predefined.call(this, value);
                 else if (typeof defs[key] !== 'undefined') this[key] = value;
             }
-        }, this);
+        }
     }
     if (this.method && setActionsArray[this.method]) setActionsArray[this.method](this);
 
@@ -360,24 +389,53 @@ P.set = function (items = {}) {
 
 
 // `setDelta` - Overwrites mixin/base.js function
-P.setDelta = function (items = {}) {
+P.setDelta = function (items = Ωempty) {
 
-    if (Object.keys(items).length) {
+    // if (Object.keys(items).length) {
 
-        let setters = this.deltaSetters,
-            defs = this.defs,
-            predefined;
+    //     let setters = this.deltaSetters,
+    //         defs = this.defs,
+    //         predefined;
 
-        Object.entries(items).forEach(([key, value]) => {
+    //     Object.entries(items).forEach(([key, value]) => {
+
+    //         if (key && key !== 'name' && value != null) {
+
+    //             predefined = setters[key];
+
+    //             if (predefined) predefined.call(this, value);
+    //             else if (typeof defs[key] != 'undefined') this[key] = addStrings(this[key], value);
+    //         }
+    //     }, this);
+    // }
+    // if (this.method && setActionsArray[this.method]) setActionsArray[this.method](this);
+
+    // this.dirtyFiltersCache = true;
+    
+    // return this;
+    const keys = Object.keys(items),
+        keysLen = keys.length;
+
+    if (keysLen) {
+
+        const setters = this.deltaSetters,
+            defs = this.defs;
+        
+        let predefined, i, iz, key, value;
+
+        for (i = 0; i < keysLen; i++) {
+
+            key = keys[i];
+            value = items[key];
 
             if (key && key !== 'name' && value != null) {
 
                 predefined = setters[key];
 
                 if (predefined) predefined.call(this, value);
-                else if (typeof defs[key] != 'undefined') this[key] = addStrings(this[key], value);
+                else if (typeof defs[key] !== 'undefined') this[key] = addStrings(this[key], value);
             }
-        }, this);
+        }
     }
     if (this.method && setActionsArray[this.method]) setActionsArray[this.method](this);
 
@@ -500,6 +558,7 @@ const setActionsArray = {
             includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
             includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
             includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
+            excludeTransparentPixels: (f.excludeTransparentPixels != null) ? f.excludeTransparentPixels : false,
             processHorizontal: (f.processHorizontal != null) ? f.processHorizontal : true,
             processVertical: (f.processVertical != null) ? f.processVertical : true,
             radius: (f.radius != null) ? f.radius : 1,
@@ -629,6 +688,25 @@ const setActionsArray = {
             compose: (f.compose != null) ? f.compose : 'source-over',
             offsetX: (f.offsetX != null) ? f.offsetX : 0,
             offsetY: (f.offsetY != null) ? f.offsetY : 0,
+            opacity: (f.opacity != null) ? f.opacity : 1,
+        }];
+    },
+
+// __corrode__ (new in v8.5.2) - Performs a special form of matrix operation on each pixel's color and alpha channels, calculating the new value using neighbouring pixel values
+    corrode: function (f) {
+        f.actions = [{
+            action: 'corrode',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            width: (f.width != null) ? f.width : 3,
+            height: (f.height != null) ? f.height : 3,
+            offsetX: (f.offsetX != null) ? f.offsetX : 1,
+            offsetY: (f.offsetY != null) ? f.offsetY : 1,
+            includeRed: (f.includeRed != null) ? f.includeRed : false,
+            includeGreen: (f.includeGreen != null) ? f.includeGreen : false,
+            includeBlue: (f.includeBlue != null) ? f.includeBlue : false,
+            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : true,
+            operation: (f.operation != null) ? f.operation : 'mean',
             opacity: (f.opacity != null) ? f.opacity : 1,
         }];
     },
@@ -1029,12 +1107,15 @@ const setActionsArray = {
         let lowRed = (f.lowRed != null) ? f.lowRed : 0,
             lowGreen = (f.lowGreen != null) ? f.lowGreen : 0,
             lowBlue = (f.lowBlue != null) ? f.lowBlue : 0,
+            lowAlpha = (f.lowAlpha != null) ? f.lowAlpha : 255,
             highRed = (f.highRed != null) ? f.highRed : 255,
             highGreen = (f.highGreen != null) ? f.highGreen : 255,
-            highBlue = (f.highBlue != null) ? f.highBlue : 255;
+            highBlue = (f.highBlue != null) ? f.highBlue : 255,
+            highAlpha = (f.highAlpha != null) ? f.highAlpha : 255;
+            
 
-        let low = (f.low != null) ? f.low : [lowRed, lowGreen, lowBlue],
-            high = (f.high != null) ? f.high : [highRed, highGreen, highBlue];
+        let low = (f.low != null) ? f.low : [lowRed, lowGreen, lowBlue, lowAlpha],
+            high = (f.high != null) ? f.high : [highRed, highGreen, highBlue, highAlpha];
 
         f.actions = [{
             action: 'threshold',
@@ -1042,8 +1123,9 @@ const setActionsArray = {
             lineOut: (f.lineOut != null) ? f.lineOut : '',
             opacity: (f.opacity != null) ? f.opacity : 1,
             level: (f.level != null) ? f.level : 128,
-            low: low,
-            high: high,
+            low,
+            high,
+            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
         }];
     },
 
@@ -1095,27 +1177,10 @@ const setActionsArray = {
 // No additional prototype functions defined
 
 
-// #### Filter engine pool
-// For now, we use one filter engine
-// + This used to be a pool of web workers which loaded up filter functionality
-// + Now it is just another module call in the main thread
-const filterPool = makeFilterEngine();
-
-const requestFilterWorker = function () {
-    return filterPool;
-};
-
-const releaseFilterWorker = function (f) {};
-
-const actionFilterWorker = function (ignore, items) {
-
-	return filterPool.action(items);
-};
-
-
 // #### Factory
 const makeFilter = function (items) {
 
+    if (!items) return false;
     return new Filter(items);
 };
 
@@ -1125,7 +1190,4 @@ constructors.Filter = Filter;
 // #### Exports
 export {
     makeFilter,
-    requestFilterWorker,
-    releaseFilterWorker,
-    actionFilterWorker,
 };

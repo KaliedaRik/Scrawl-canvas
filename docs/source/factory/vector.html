@@ -105,6 +105,11 @@
                 </a>
               
                 
+                <a class="source" href="conicGradient.html">
+                  ./source/factory/conicGradient.js
+                </a>
+              
+                
                 <a class="source" href="coordinate.html">
                   ./source/factory/coordinate.js
                 </a>
@@ -468,7 +473,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
-<span class="hljs-keyword">import</span> { xt, xta, isa_obj, isa_number } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { xt, xta, isa_obj, isa_number, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -728,7 +733,7 @@ P.setFromVector = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.vectorAdd = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.vectorAdd = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item = Ωempty</span>) </span>{
 
     <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(item)) <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.vectorAddArray(item);
 
@@ -765,7 +770,7 @@ P.vectorAddArray = <span class="hljs-function"><span class="hljs-keyword">functi
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.vectorSubtract = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.vectorSubtract = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item = Ωempty</span>) </span>{
 
     <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(item)) <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.vectorSubtractArray(item);
 
@@ -813,7 +818,7 @@ P.vectorSubtractArray = <span class="hljs-function"><span class="hljs-keyword">f
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };
 
-P.vectorMultiply = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item = {}</span>) </span>{
+P.vectorMultiply = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item = Ωempty</span>) </span>{
 
     <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(item)) <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.vectorMultiplyArray(item);
 

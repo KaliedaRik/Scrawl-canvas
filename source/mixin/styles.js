@@ -14,14 +14,14 @@
 
 // #### Imports
 import { entity, palette } from '../core/library.js';
-import { addStrings, λnull, mergeOver, isa_obj, mergeDiscard } from '../core/utilities.js';
+import { addStrings, λnull, mergeOver, isa_obj, mergeDiscard, Ωempty } from '../core/utilities.js';
 
 import { makeCoordinate } from '../factory/coordinate.js';
-import { makePalette } from '../factory/palette.js';
+import { makePalette, paletteKeys } from '../factory/palette.js';
 
 
 // #### Export function
-export default function (P = {}) {
+export default function (P = Ωempty) {
 
 
 // #### Shared attributes
@@ -203,7 +203,7 @@ export default function (P = {}) {
     };
 
 // `palette` - argument has to be a Palette object
-    S.palette = function (item = {}) {
+    S.palette = function (item = Ωempty) {
 
         if(item.type === 'Palette') this.palette = item;
     };
@@ -275,7 +275,7 @@ export default function (P = {}) {
     };
 
 // `delta` - Gradient-type styles objects support the delta attribute, and can be delta-animated using its attributes
-    S.delta = function (items = {}) {
+    S.delta = function (items = Ωempty) {
 
         if (items) this.delta = mergeDiscard(this.delta, items);
     };
@@ -314,68 +314,96 @@ export default function (P = {}) {
 
 
 // `set` - Overwrites function defined in mixin/base.js - takes into account Palette object attributes
-    P.set = function (items = {}) {
+    P.set = function (items = Ωempty) {
 
-        if (Object.keys(items).length) {
+        let keys = Object.keys(items),
+            keysLen = keys.length;
 
-            let setters = this.setters,
+        if (keysLen) {
+
+            const setters = this.setters,
                 defs = this.defs,
-                palette = this.palette,
-                paletteSetters = (palette) ? palette.setters : {},
-                paletteDefs = (palette) ? palette.defs : {};
+                palette = this.palette;
 
-            Object.entries(items).forEach(([key, value]) => {
+            let paletteSetters, paletteDefs, predefined, i, iz, key, value;
 
-                if (key && key !== 'name' && value != null) {
+            if (palette) {
 
-                    let predefined = setters[key],
-                        paletteFlag = false;
+                paletteSetters = palette.setters || Ωempty;
+                paletteDefs = palette.defs || Ωempty;
+            }
 
-                    if (!predefined) {
+            for (i = 0; i < keysLen; i++) {
+
+                key = keys[i];
+                value = items[key];
+
+                if (key && key != 'name' && value != null) {
+
+                    if (paletteKeys.indexOf(key) < 0) {
+
+                        predefined = setters[key];
+
+                        if (predefined) predefined.call(this, value);
+                        else if (typeof defs[key] != 'undefined') this[key] = value;
+                    }
+                    else {
 
                         predefined = paletteSetters[key];
-                        paletteFlag = true;
-                    }
 
-                    if (predefined) predefined.call(paletteFlag ? this.palette : this, value);
-                    else if (typeof defs[key] !== 'undefined') this[key] = value;
-                    else if (typeof paletteDefs[key] !== 'undefined') palette[key] = value;
+                        if (predefined) predefined.call(palette, value);
+                        else if (typeof paletteDefs[key] != 'undefined') palette[key] = value;
+                    }
                 }
-            }, this);
+            }
         }
         return this;
     };
 
 
 // `setDelta` - Overwrites function defined in mixin/base.js - takes into account Palette object attributes
-    P.setDelta = function (items = {}) {
+    P.setDelta = function (items = Ωempty) {
 
-        if (Object.keys(items).length) {
+        let keys = Object.keys(items),
+            keysLen = keys.length;
+
+        if (keysLen) {
 
             let setters = this.deltaSetters,
                 defs = this.defs,
-                palette = this.palette,
-                paletteSetters = (palette) ? palette.deltaSetters : {},
-                paletteDefs = (palette) ? palette.defs : {};
+                palette = this.palette;
 
-            Object.entries(items).forEach(([key, value]) => {
+            let paletteSetters, paletteDefs, predefined, i, iz, key, value;
 
-                if (key && key !== 'name' && value != null) {
+            if (palette) {
 
-                    let predefined = setters[key],
-                        paletteFlag = false;
+                paletteSetters = palette.deltaSetters || Ωempty;
+                paletteDefs = palette.defs || Ωempty;
+            }
 
-                    if (!predefined) {
+            for (i = 0; i < keysLen; i++) {
+
+                key = keys[i];
+                value = items[key];
+
+                if (key && key != 'name' && value != null) {
+
+                    if (paletteKeys.indexOf(key) < 0) {
+
+                        predefined = setters[key];
+
+                        if (predefined) predefined.call(this, value);
+                        else if (typeof defs[key] != 'undefined') this[key] = addStrings(this[key], value);
+                    }
+                    else {
 
                         predefined = paletteSetters[key];
-                        paletteFlag = true;
-                    }
 
-                    if (predefined) predefined.call(paletteFlag ? this.palette : this, value);
-                    else if (typeof defs[key] != 'undefined') this[key] = addStrings(this[key], value);
-                    else if (typeof paletteDefs[key] !== 'undefined') palette[key] = addStrings(this[key], value);
+                        if (predefined) predefined.call(palette, value);
+                        else if (typeof paletteDefs[key] != 'undefined') palette[key] = addStrings(this[key], value);
+                    }
                 }
-            }, this);
+            }
         }
         return this;
     };
@@ -425,7 +453,7 @@ export default function (P = {}) {
     };
 
 // `stylesInit` - common functionality invoked by gradient-type factory constructors
-    P.stylesInit = function (items = {}) {
+    P.stylesInit = function (items = Ωempty) {
 
         this.makeName(items.name);
         this.register();
@@ -476,7 +504,7 @@ export default function (P = {}) {
     };
 
 // `cleanStyle` - internal function invoked as part of the gradient-type object's `getData` function. The style has to be cleaned every time it is applied to a Cell's engine because it can never know which Cell is invoking it, or for which entity it is to be used.
-    P.cleanStyle = function (entity = {}, cell = {}) {
+    P.cleanStyle = function (entity = Ωempty, cell = Ωempty) {
 
         let dims, w, h, scale;
 
@@ -519,7 +547,7 @@ export default function (P = {}) {
     };
 
 // `finalizeCoordinates` - internal function invoked as part of the gradient-type object's `getData` function.
-    P.finalizeCoordinates = function (entity = {}) {
+    P.finalizeCoordinates = function (entity = Ωempty) {
 
         let currentStart = this.currentStart,
             currentEnd = this.currentEnd,

@@ -6,7 +6,7 @@
 // #### Imports
 import * as library from '../core/library.js';
 import { animationtickers } from '../core/library.js';
-import { mergeOver, isa_fn, isa_obj, xt, xtGet, convertTime, λnull } from '../core/utilities.js';
+import { mergeOver, isa_fn, isa_obj, xt, xtGet, convertTime, λnull, Ωempty } from '../core/utilities.js';
 
 
 // __locateTarget__ - a private function and attribute to help retrieve data from the scrawl-canvas library
@@ -29,7 +29,7 @@ const locateTarget = (item) => {
 
 
 // #### Export function
-export default function (P = {}) {
+export default function (P = Ωempty) {
 
 
 // #### Shared attributes

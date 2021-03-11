@@ -16,14 +16,14 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, addStrings, isa_number, pushUnique } from '../core/utilities.js';
+import { mergeOver, addStrings, isa_number, pushUnique, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import stylesMix from '../mixin/styles.js';
 
 
 // #### RadialGradient constructor
-const RadialGradient = function (items = {}) {
+const RadialGradient = function (items = Ωempty) {
 
     this.stylesInit(items);
     return this;
@@ -168,7 +168,7 @@ P.cleanRadius = function (width) {
 };
 
 // `buildStyle` - internal function: creates the radial gradient on the Cell's CanvasRenderingContext2D engine, and then adds the color stops to it.
-P.buildStyle = function (cell = {}) {
+P.buildStyle = function (cell) {
     
     if (cell) {
 
@@ -237,6 +237,8 @@ P.updateGradientArgs = function (x, y) {
 // });
 // ```
 const makeRadialGradient = function (items) {
+
+    if (!items) return false;
     return new RadialGradient(items);
 };
 

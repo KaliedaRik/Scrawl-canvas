@@ -40,14 +40,14 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver } from '../core/utilities.js';
+import { mergeOver, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shapeBasic.js';
 
 
 // #### Tetragon constructor
-const Tetragon = function (items = {}) {
+const Tetragon = function (items = Ωempty) {
 
     this.shapeInit(items);
     return this;
@@ -282,8 +282,9 @@ P.calculateLocalPathAdditionalActions = function () {
 //     radiusY: 60,
 // });
 // ```
-const makeTetragon = function (items = {}) {
+const makeTetragon = function (items) {
 
+    if (!items) return false;
     items.species = 'tetragon';
     return new Tetragon(items);
 };

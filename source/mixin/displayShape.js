@@ -7,11 +7,11 @@
 
 
 // #### Imports
-import { mergeOver, pushUnique, λnull, isa_obj, isa_number, isa_fn } from '../core/utilities.js';
+import { mergeOver, pushUnique, λnull, isa_obj, isa_number, isa_fn, Ωempty } from '../core/utilities.js';
 
 
 // #### Export function
-export default function (P = {}) {
+export default function (P = Ωempty) {
 
 
 // #### Shared attributes
@@ -101,7 +101,7 @@ export default function (P = {}) {
     };
 
 // Set __displayShapeBreakpoints__ - breakpoints can be set individually, or alternatively they can be supplied in an object keyed to this attribute
-    S.displayShapeBreakpoints = function (items = {}) {
+    S.displayShapeBreakpoints = function (items = Ωempty) {
 
         for (let [key, val] of Object.entries(items)) {
 

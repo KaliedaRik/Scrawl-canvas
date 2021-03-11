@@ -16,7 +16,7 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, xt } from '../core/utilities.js';
+import { mergeOver, pushUnique, xt, Ωempty } from '../core/utilities.js';
 
 import { requestCell, releaseCell } from './cell.js';
 
@@ -24,7 +24,7 @@ import baseMix from '../mixin/base.js';
 
 
 // #### FontAttributes constructor
-const FontAttributes = function (items = {}) {
+const FontAttributes = function (items = Ωempty) {
 
     this.makeName(items.name);
     this.set(this.defs);
@@ -127,7 +127,8 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 
 
 // #### Packet management
-// No additional packet functionality required
+// No additional clone functionality required
+// P.packetExclusions = pushUnique(P.packetExclusions, ['font']);
 
 
 // #### Clone management
@@ -611,6 +612,8 @@ P.update = function (items) {
 
 // #### Factory
 const makeFontAttributes = function (items) {
+
+    if (!items) return false;
     return new FontAttributes(items);
 };
 

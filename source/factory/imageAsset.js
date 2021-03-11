@@ -17,14 +17,14 @@
 
 // #### Imports
 import { constructors, canvas, cell, group, artefact } from '../core/library.js';
-import { mergeOver, isa_obj, λthis, λnull } from '../core/utilities.js';
+import { mergeOver, isa_obj, λthis, λnull, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
 
 
 // #### ImageAsset constructor
-const ImageAsset = function (items = {}) {
+const ImageAsset = function (items = Ωempty) {
 
     return this.assetConstructor(items);
 };
@@ -87,7 +87,7 @@ let G = P.getters,
     D = P.deltaSetters;
 
 // __source__
-S.source = function (item = {}) {
+S.source = function (item) {
 
     if (item) {
 
@@ -371,6 +371,7 @@ const createImageFromEntity = function (item, stashAsAsset = false) {
 // #### Factory
 const makeImageAsset = function (items) {
 
+    if (!items) return false;
     return new ImageAsset(items);
 };
 

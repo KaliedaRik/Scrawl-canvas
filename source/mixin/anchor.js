@@ -5,13 +5,13 @@
 
 // #### Imports
 import { canvas } from '../core/library.js';
-import { mergeOver } from '../core/utilities.js';
+import { mergeOver, isa_obj, Ωempty } from '../core/utilities.js';
 import { makeAnchor } from '../factory/anchor.js';
 import { scrawlNavigationHold } from '../core/document.js';
 
 
 // #### Export function
-export default function (P = {}) {
+export default function (P = Ωempty) {
 
 
 // #### Shared attributes
@@ -200,7 +200,7 @@ export default function (P = {}) {
 //     },
 // });
 // ```
-    S.anchor = function (items = {}) {
+    S.anchor = function (items) {
 
         if (!this.anchor) this.buildAnchor(items);
         else this.anchor.set(items);
@@ -214,17 +214,20 @@ export default function (P = {}) {
 // Scrawl-canvas generated anchor links are kept in hidden &lt;nav> elements - either the Canvas object's nav, or the Scrawl-canvas default nav (referenced by _scrawlNavigationHold_) which Scrawl-canvas automatically generates and adds to the top of the DOM &lt;body> element when it first runs. 
 //
 // This is done to give screen readers access to link URLs and descriptions associated with Canvas graphical entitys (which visually impaired users may not be able to see). It also allows links to be tabbed through and invoked in the normal way (which may vary dependent on how browsers implement tab focus functionality)
-    P.buildAnchor = function (items = {}) {
+    P.buildAnchor = function (items) {
 
-        if (this.anchor) this.anchor.demolish();
+        if (isa_obj(items)) {
 
-        if (!items.name) items.name = `${this.name}-anchor`;
-        if (!items.description) items.description = `Anchor link for ${this.name} ${this.type}`;
+            if (this.anchor) this.anchor.demolish();
 
-        items.host = this;
-        items.hold = this.getAnchorHold();
+            if (!items.name) items.name = `${this.name}-anchor`;
+            if (!items.description) items.description = `Anchor link for ${this.name} ${this.type}`;
 
-        this.anchor = makeAnchor(items);
+            items.host = this;
+            items.hold = this.getAnchorHold();
+
+            this.anchor = makeAnchor(items);
+        }
     };
 
 // `getAnchorHold` - internal function. Locate the current DOM hold element allocated for hosting &lt;a> elements.

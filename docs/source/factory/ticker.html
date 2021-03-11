@@ -105,6 +105,11 @@
                 </a>
               
                 
+                <a class="source" href="conicGradient.html">
+                  ./source/factory/conicGradient.js
+                </a>
+              
+                
                 <a class="source" href="coordinate.html">
                   ./source/factory/coordinate.js
                 </a>
@@ -545,7 +550,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">animationtickers</span>, <span class="hljs-title">tween</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
-<span class="hljs-keyword">import</span> { mergeOver, pushUnique, removeItem, xt, xtGet, isa_obj, convertTime } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { mergeOver, pushUnique, removeItem, xt, xtGet, isa_obj, convertTime, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeAnimation } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./animation.js&#x27;</span>;
 
@@ -564,7 +569,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Ticker = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Ticker = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
     <span class="hljs-built_in">this</span>.makeName(items.name);
     <span class="hljs-built_in">this</span>.register();
@@ -2036,9 +2041,7 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;coreTickersAnimation&#x27;</span>,
     <span class="hljs-attr">order</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">fn</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-        <span class="hljs-keyword">let</span> i, iz, t;</pre></div></div>
+    <span class="hljs-attr">fn</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
             
         </li>
         
@@ -2092,17 +2095,17 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
               <p>Invoke each Ticker’s <code>fn</code> function.</p>
 <ul>
 <li>It’s up to the Ticker object to decide whether it’s active</li>
-<li>Ticker <code>fn</code> functions are (currently) synchronous functions; they do not return Promises.</li>
 </ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        tickerAnimations.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = tickerAnimations.length, n, t; i &lt; iz; i++) {
 
-            <span class="hljs-keyword">let</span> obj = animationtickers[name];
+            n = tickerAnimations[i];
+            t = animationtickers[n];
 
-            <span class="hljs-keyword">if</span> (obj &amp;&amp; obj.fn) obj.fn();
-        });
+            <span class="hljs-keyword">if</span> (t &amp;&amp; t.fn) t.fn();
+        }
     }
 });</pre></div></div>
             
@@ -2193,6 +2196,8 @@ S.subscribers = <span class="hljs-function"><span class="hljs-keyword">function<
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeTicker = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Ticker(items);
 };
 

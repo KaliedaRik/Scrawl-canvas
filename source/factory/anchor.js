@@ -21,13 +21,13 @@
 
 // #### Imports
 import { constructors, artefact } from '../core/library.js';
-import { mergeOver, pushUnique, isa_fn, isa_dom } from '../core/utilities.js';
+import { mergeOver, pushUnique, isa_fn, isa_dom, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 
 
 // #### Anchor constructor
-const Anchor = function (items = {}) {
+const Anchor = function (items = Ωempty) {
 
     this.makeName(items.name);
     this.register();
@@ -354,6 +354,7 @@ P.click = function () {
 // ```
 const makeAnchor = function (items) {
     
+    if (!items) return false;
     return new Anchor(items);
 };
 

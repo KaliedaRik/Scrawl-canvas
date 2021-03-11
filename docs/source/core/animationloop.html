@@ -105,6 +105,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/conicGradient.html">
+                  ./source/factory/conicGradient.js
+                </a>
+              
+                
                 <a class="source" href="../factory/coordinate.html">
                   ./source/factory/coordinate.js
                 </a>
@@ -561,10 +566,11 @@
 
         <span class="hljs-keyword">let</span> floor = <span class="hljs-built_in">Math</span>.floor,
             buckets = [],
-            obj, order;
+            obj, order, i, iz, name;
 
-        animate.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = animate.length; i &lt; iz; i++) {
 
+            name = animate[i];
             obj = animation[name];
 
             <span class="hljs-keyword">if</span> (obj) {
@@ -575,8 +581,7 @@
 
                 buckets[order].push(obj);
             }
-        });
-
+        }
         animate_sorted = buckets.reduce(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a.concat(v), []);
     }
 };</pre></div></div>
@@ -598,8 +603,13 @@
 
     <span class="hljs-keyword">if</span> (resortBatchAnimations) sortAnimations();
 
-    animate_sorted.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.fn());
+    <span class="hljs-keyword">let</span> i, iz;
 
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = animate_sorted.length; i &lt; iz; i++) {
+
+        animate_sorted[i].fn();
+    }
+    
     <span class="hljs-keyword">if</span> (doAnimation) <span class="hljs-built_in">window</span>.requestAnimationFrame(<span class="hljs-function">() =&gt;</span> animationLoop());
 };</pre></div></div>
             

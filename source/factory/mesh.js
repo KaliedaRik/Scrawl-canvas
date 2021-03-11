@@ -24,17 +24,18 @@
 // #### Imports
 import { constructors, artefact } from '../core/library.js';
 import { currentGroup } from '../core/document.js';
-import { mergeOver, mergeDiscard, pushUnique, λnull, λthis, xta } from '../core/utilities.js';
+import { mergeOver, mergeDiscard, pushUnique, λnull, λthis, xta, Ωempty } from '../core/utilities.js';
 
-import { makeState } from '../factory/state.js';
+import { makeState, stateKeys } from '../factory/state.js';
 import { requestCell, releaseCell } from '../factory/cell.js';
 
 import baseMix from '../mixin/base.js';
+import deltaMix from '../mixin/delta.js';
 import anchorMix from '../mixin/anchor.js';
 
 
 // #### Mesh constructor
-const Mesh = function (items = {}) {
+const Mesh = function (items = Ωempty) {
 
     this.makeName(items.name);
     this.register();
@@ -76,6 +77,7 @@ P.isAsset = false;
 
 // #### Mixins
 P = baseMix(P);
+P = deltaMix(P);
 P = anchorMix(P);
 
 
@@ -251,15 +253,16 @@ let G = P.getters,
 // __get__ - copied over from the entity mixin
 P.get = function (item) {
 
-    let getter = this.getters[item];
+    const getter = this.getters[item];
 
     if (getter) return getter.call(this);
 
     else {
 
         let def = this.defs[item],
-            state = this.state,
-            val;
+            state = this.state;
+
+        let val;
 
         if (typeof def != 'undefined') {
 
@@ -274,74 +277,94 @@ P.get = function (item) {
             val = state[item];
             return (typeof val != 'undefined') ? val : def;
         }
-        return undef;
+        return null;
     }
 };
 
 // __set__ - copied over from the entity mixin.
-P.set = function (items = {}) {
+P.set = function (items = Ωempty) {
 
-    if (Object.keys(items).length) {
+    const keys = Object.keys(items),
+        keysLen = keys.length;
 
-        let setters = this.setters,
+    if (keysLen) {
+
+        const setters = this.setters,
             defs = this.defs,
-            state = this.state,
-            stateSetters = (state) ? state.setters : {},
-            stateDefs = (state) ? state.defs : {},
-            predefined, stateFlag;
+            state = this.state;
 
-        Object.entries(items).forEach(([key, value]) => {
+        const stateSetters = (state) ? state.setters : Ωempty;
+        const stateDefs = (state) ? state.defs : Ωempty;
 
-            if (key && key !== 'name' && value != null) {
+        let predefined, i, key, value;
 
-                predefined = setters[key];
-                stateFlag = false;
+        for (i = 0; i < keysLen; i++) {
 
-                if (!predefined) {
+            key = keys[i];
+            value = items[key];
+
+            if (key && key != 'name' && value != null) {
+
+                if (stateKeys.indexOf(key) < 0) {
+
+                    predefined = setters[key];
+
+                    if (predefined) predefined.call(this, value);
+                    else if (typeof defs[key] != 'undefined') this[key] = value;
+                }
+                else {
 
                     predefined = stateSetters[key];
-                    stateFlag = true;
-                }
 
-                if (predefined) predefined.call(stateFlag ? this.state : this, value);
-                else if (typeof defs[key] !== 'undefined') this[key] = value;
-                else if (typeof stateDefs[key] !== 'undefined') state[key] = value;
+                    if (predefined) predefined.call(state, value);
+                    else if (typeof stateDefs[key] != 'undefined') state[key] = value;
+                }
             }
-        }, this);
+        }
     }
     return this;
 };
 
 // __setDelta__ - copied over from the entity mixin.
-P.setDelta = function (items = {}) {
+P.setDelta = function (items = Ωempty) {
 
-    if (Object.keys(items).length) {
+    const keys = Object.keys(items),
+        keysLen = keys.length;
 
-        let setters = this.deltaSetters,
+    if (keysLen) {
+
+        const setters = this.deltaSetters,
             defs = this.defs,
-            state = this.state,
-            stateSetters = (state) ? state.deltaSetters : {},
-            stateDefs = (state) ? state.defs : {},
-            predefined, stateFlag;
+            state = this.state;
 
-        Object.entries(items).forEach(([key, value]) => {
+        const stateSetters = (state) ? state.deltaSetters : Ωempty;
+        const stateDefs = (state) ? state.defs : Ωempty;
 
-            if (key && key !== 'name' && value != null) {
+        let predefined, i, key, value;
 
-                predefined = setters[key];
-                stateFlag = false;
+        for (i = 0; i < keysLen; i++) {
 
-                if (!predefined) {
+            key = keys[i];
+            value = items[key];
+
+            if (key && key != 'name' && value != null) {
+
+                if (stateKeys.indexOf(key) < 0) {
+
+                    predefined = setters[key];
+
+                    if (predefined) predefined.call(this, value);
+                    else if (typeof defs[key] != 'undefined') this[key] = addStrings(this[key], value);
+                }
+                else {
 
                     predefined = stateSetters[key];
-                    stateFlag = true;
-                }
 
-                if (predefined) predefined.call(stateFlag ? this.state : this, value);
-                else if (typeof defs[key] !== 'undefined') this[key] = addStrings(this[key], value);
-                else if (typeof stateDefs[key] !== 'undefined') state[key] = addStrings(state[key], value);
+                    if (predefined) predefined.call(state, value);
+                    else if (typeof stateDefs[key] != 'undefined') state[key] = addStrings(state[key], value);
+                }
             }
-        }, this);
+        }
     }
     return this;
 };
@@ -390,13 +413,6 @@ P.getHere = function () {
 
     return currentCorePosition;
 };
-
-// __delta__ - copied over from the position mixin.
-S.delta = function (items = {}) {
-
-    if (items) this.delta = mergeDiscard(this.delta, items);
-};
-
 
 // __net__
 S.net = function (item) {
@@ -456,74 +472,6 @@ P.getHost = function () {
         }
     }
     return currentCorePosition;
-};
-
-// `updateByDelta`, `reverseByDelta` - copied over from the position mixin.
-P.updateByDelta = function () {
-
-    this.setDelta(this.delta);
-
-    return this;
-};
-
-P.reverseByDelta = function () {
-
-    let temp = {};
-    
-    Object.entries(this.delta).forEach(([key, val]) => {
-
-        if (val.substring) val = -(parseFloat(val)) + '%';
-        else val = -val;
-
-        temp[key] = val;
-    });
-
-    this.setDelta(temp);
-
-    return this;
-};
-
-// `setDeltaValues` - copied over from the position mixin.
-P.setDeltaValues = function (items = {}) {
-
-    let delta = this.delta, 
-        oldVal, action;
-
-    Object.entries(items).forEach(([key, requirement]) => {
-
-        if (xt(delta[key])) {
-
-            action = requirement;
-
-            oldVal = delta[key];
-
-            switch (action) {
-
-                case 'reverse' :
-                    if (oldVal.toFixed) delta[key] = -oldVal;
-                    // TODO: reverse String% (and em, etc) values
-                    break;
-
-                case 'zero' :
-                    if (oldVal.toFixed) delta[key] = 0;
-                    // TODO: zero String% (and em, etc) values
-                    break;
-
-                case 'add' :
-                    break;
-
-                case 'subtract' :
-                    break;
-
-                case 'multiply' :
-                    break;
-
-                case 'divide' :
-                    break;
-            }
-        }
-    })
-    return this;
 };
 
 // Invalidate mid-init functionality
@@ -734,7 +682,7 @@ P.setSourceDimension = function () {
 
 // `simpleStamp` - Simple stamping is entirely synchronous
 // + TODO: we may have to disable this functionality for the Mesh entity, if we use a Web Assembly module for either the prepareStamp calculations, or to build the output image itself
-P.simpleStamp = function (host, changes = {}) {
+P.simpleStamp = function (host, changes) {
 
     if (host && host.type === 'Cell') {
 
@@ -746,7 +694,7 @@ P.simpleStamp = function (host, changes = {}) {
             this.prepareStamp();
         }
 
-        this.regularStampSynchronousActions();
+        this.regularStamp();
     }
 };
 
@@ -957,12 +905,6 @@ P.cleanOutput = function () {
 // `regularStamp` - internal function called by `stamp`
 P.regularStamp = function () {
 
-        if (this.currentHost) this.regularStampSynchronousActions();
-};
-
-// `regularStampSynchronousActions` - internal function called by `regularStamp`
-P.regularStampSynchronousActions = function () {
-
     let dest = this.currentHost;
 
     if (dest) {
@@ -1171,6 +1113,8 @@ P.checkHit = function (items = [], mycell) {
 // });
 // ```
 const makeMesh = function (items) {
+
+    if (!items) return false;
     return new Mesh(items);
 };
 

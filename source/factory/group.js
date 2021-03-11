@@ -23,10 +23,10 @@
 
 // #### Imports
 import { constructors, cell, artefact, group, entity, asset } from '../core/library.js';
-import { mergeOver, pushUnique, removeItem } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, Ωempty } from '../core/utilities.js';
 import { scrawlCanvasHold } from '../core/document.js';
 
-import { requestFilterWorker, releaseFilterWorker, actionFilterWorker } from './filter.js';
+import { filterEngine } from './filterEngine.js';
 import { requestCell, releaseCell } from './cell.js';
 import { importDomImage } from './imageAsset.js';
 
@@ -35,7 +35,7 @@ import filterMix from '../mixin/filter.js';
 
 
 // #### Group constructor
-const Group = function (items = {}) {
+const Group = function (items = Ωempty) {
 
     this.makeName(items.name);
     this.register();
@@ -258,7 +258,6 @@ P.stamp = function () {
                     filterCell.element.width = dims[0];
                     filterCell.element.height = dims[1];
                 }
-                filterCell.engine.save();
             }
 
             // We save/restore the canvas engine at this point because some entitys may have their `method` attribute set to `clip` and the only way to get rid of a clip region from an engine is to save the engine before applying the clip, then restoring the engine afterwards
@@ -271,11 +270,7 @@ P.stamp = function () {
             // Get the Group's artefacts to stamp themselves on the current host or pool Cell
             this.stampAction(filterCell);
 
-            if (filterCell) {
-
-                filterCell.engine.restore();
-                releaseCell(filterCell);
-            }
+            if (filterCell) releaseCell(filterCell);
             else {
 
                 if (currentHost.engine) {
@@ -396,44 +391,43 @@ P.applyFilters = function (myCell) {
     let currentElement = currentHost.element,
         currentEngine = currentHost.engine;
 
-    let filterElement = filterHost.element,
-        filterEngine = filterHost.engine;
+    let filterCellElement = filterHost.element,
+        filterCellEngine = filterHost.engine;
 
     // Action a request to use the filtered artefacts as a stencil - as determined by the Group's `isStencil` flag
     if (this.isStencil) {
         
-        filterEngine.save();
-        filterEngine.globalCompositeOperation = 'source-in';
-        filterEngine.globalAlpha = 1;
-        filterEngine.setTransform(1, 0, 0, 1, 0, 0);
-        filterEngine.drawImage(currentElement, 0, 0);
-        filterEngine.restore();
+        filterCellEngine.save();
+        filterCellEngine.globalCompositeOperation = 'source-in';
+        filterCellEngine.globalAlpha = 1;
+        filterCellEngine.setTransform(1, 0, 0, 1, 0, 0);
+        filterCellEngine.drawImage(currentElement, 0, 0);
+        filterCellEngine.restore();
     } 
 
     // At this point we will send the contents of the filterHost canvas over to the filter engine
-    filterEngine.setTransform(1, 0, 0, 1, 0, 0);
+    filterCellEngine.setTransform(1, 0, 0, 1, 0, 0);
 
-    let myimage = filterEngine.getImageData(0, 0, filterElement.width, filterElement.height),
-        worker = requestFilterWorker();
+    let myimage = filterCellEngine.getImageData(0, 0, filterCellElement.width, filterCellElement.height);
 
-    // NEED TO POPULATE IMAGE FILTER ACTION OBJECTS WITH THEIR ASSET'S IMAGEDATA AT THIS POINT
     this.preprocessFilters(this.currentFilters);
 
-    let img = actionFilterWorker(worker, {
+    let img = filterEngine.action({
         image: myimage,
         filters: this.currentFilters,
     })
 
     if (img) {
 
-        filterEngine.globalCompositeOperation = 'source-over';
-        filterEngine.globalAlpha = 1;
-        filterEngine.setTransform(1, 0, 0, 1, 0, 0);
-        filterEngine.putImageData(img, 0, 0);
+        filterCellEngine.globalCompositeOperation = 'source-over';
+        filterCellEngine.globalAlpha = 1;
+        filterCellEngine.setTransform(1, 0, 0, 1, 0, 0);
+        filterCellEngine.putImageData(img, 0, 0);
     }
+    
     currentEngine.save();
     currentEngine.setTransform(1, 0, 0, 1, 0, 0);
-    currentEngine.drawImage(filterElement, 0, 0);
+    currentEngine.drawImage(filterCellElement, 0, 0);
     currentEngine.restore();
 
     return img;
@@ -659,7 +653,7 @@ P.cascadeAction = function (items, action) {
 
 
 // `setDeltaValues` - passes the __items__ argument object through to each of the Group's artefact's `setDeltaValues` function
-P.setDeltaValues = function (items = {}) {
+P.setDeltaValues = function (items = Ωempty) {
 
     this.artefactBuckets.forEach(art => art.setDeltaValues(items));
 
@@ -866,6 +860,7 @@ P.getArtefactCollisions = function (art) {
 // ```
 const makeGroup = function (items) {
 
+    if (!items) return false;
     return new Group(items);
 };
 

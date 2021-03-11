@@ -105,6 +105,11 @@
                 </a>
               
                 
+                <a class="source" href="conicGradient.html">
+                  ./source/factory/conicGradient.js
+                </a>
+              
+                
                 <a class="source" href="coordinate.html">
                   ./source/factory/coordinate.js
                 </a>
@@ -513,7 +518,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">entity</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
-<span class="hljs-keyword">import</span> { mergeOver, xt, xtGet, isa_obj, easeOutSine, easeInSine, easeOutInSine, easeOutQuad, easeInQuad, easeOutInQuad, easeOutCubic, easeInCubic, easeOutInCubic, easeOutQuart, easeInQuart, easeOutInQuart, easeOutQuint, easeInQuint, easeOutInQuint, easeOutExpo, easeInExpo, easeOutInExpo, easeOutCirc, easeInCirc, easeOutInCirc, easeOutBack, easeInBack, easeOutInBack, easeOutElastic, easeInElastic, easeOutInElastic, easeOutBounce, easeInBounce, easeOutInBounce } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { mergeOver, xt, xtGet, isa_obj, easeOutSine, easeInSine, easeOutInSine, easeOutQuad, easeInQuad, easeOutInQuad, easeOutCubic, easeInCubic, easeOutInCubic, easeOutQuart, easeInQuart, easeOutInQuart, easeOutQuint, easeInQuint, easeOutInQuint, easeOutExpo, easeInExpo, easeOutInExpo, easeOutCirc, easeInCirc, easeOutInCirc, easeOutBack, easeInBack, easeOutInBack, easeOutElastic, easeInElastic, easeOutInElastic, easeOutBounce, easeInBounce, easeOutInBounce, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;</pre></div></div>
             
@@ -530,7 +535,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Color = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Color = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
     <span class="hljs-built_in">this</span>.makeName(items.name);
     <span class="hljs-built_in">this</span>.register();
@@ -944,27 +949,36 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.set = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.set = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Object</span>.keys(items).length) {
+    <span class="hljs-keyword">const</span> keys = <span class="hljs-built_in">Object</span>.keys(items),
+        keysLen = keys.length;
 
-        <span class="hljs-keyword">let</span> setters = <span class="hljs-built_in">this</span>.setters,
-            defs = <span class="hljs-built_in">this</span>.defs,
-            predefined;
+    <span class="hljs-keyword">if</span> (keysLen) {
 
-        <span class="hljs-built_in">Object</span>.entries(items).forEach(<span class="hljs-function">(<span class="hljs-params">[key, value]</span>) =&gt;</span> {
+        <span class="hljs-keyword">const</span> setters = <span class="hljs-built_in">this</span>.setters,
+            defs = <span class="hljs-built_in">this</span>.defs;
+        
+        <span class="hljs-keyword">let</span> predefined, i, iz, key, value;
 
-            <span class="hljs-keyword">if</span> (key !== <span class="hljs-string">&#x27;name&#x27;</span>) {
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; keysLen; i++) {
+
+            key = keys[i];
+            value = items[key];
+
+            <span class="hljs-keyword">if</span> (key &amp;&amp; key !== <span class="hljs-string">&#x27;name&#x27;</span> &amp;&amp; value != <span class="hljs-literal">null</span>) {
 
                 predefined = setters[key];
 
                 <span class="hljs-keyword">if</span> (predefined) predefined.call(<span class="hljs-built_in">this</span>, value);
                 <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] !== <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-built_in">this</span>[key] = value;
             }
-        }, <span class="hljs-built_in">this</span>);
+        }
+        <span class="hljs-keyword">if</span> (items.random) <span class="hljs-built_in">this</span>.generateRandomColor(items);
+        <span class="hljs-keyword">else</span> <span class="hljs-built_in">this</span>.checkValues();
     }
-
-    <span class="hljs-keyword">if</span> (items.random) <span class="hljs-built_in">this</span>.generateRandomColor(items);</pre></div></div>
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+};</pre></div></div>
             
         </li>
         
@@ -974,24 +988,6 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               
               <div class="sswrap ">
                 <a class="ss" href="#section-28">&#x00a7;</a>
-              </div>
-              <p>else if (items.color) this.convert(items.color);</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-built_in">this</span>.checkValues();
-
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -1082,11 +1078,11 @@ P.setMaximumColor = <span class="hljs-function"><span class="hljs-keyword">funct
         </li>
         
         
-        <li id="section-30">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -1095,11 +1091,11 @@ P.setMaximumColor = <span class="hljs-function"><span class="hljs-keyword">funct
         </li>
         
         
-        <li id="section-31">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p><code>getData</code> function called by Cell objects when calculating required updates to its CanvasRenderingContext2D engine, specifically for an entity’s <strong>fillStyle</strong>, <strong>strokeStyle</strong> and <strong>shadowColor</strong> attributes.</p>
 
@@ -1117,17 +1113,17 @@ P.setMaximumColor = <span class="hljs-function"><span class="hljs-keyword">funct
         </li>
         
         
-        <li id="section-32">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p><code>generateRandomColor</code> function asks the Color object to supply a random color, as restricted by its channel minimum and maximum attributes</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.generateRandomColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.generateRandomColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
     <span class="hljs-keyword">let</span> round = <span class="hljs-built_in">Math</span>.round,
         rnd = <span class="hljs-built_in">Math</span>.random;
@@ -1159,11 +1155,11 @@ P.setMaximumColor = <span class="hljs-function"><span class="hljs-keyword">funct
         </li>
         
         
-        <li id="section-33">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p><code>getRangeColor</code> - function which generates a color in the range between the minimum and maximum colors. </p>
 <ul>
@@ -1304,11 +1300,11 @@ P.setMaximumColor = <span class="hljs-function"><span class="hljs-keyword">funct
         </li>
         
         
-        <li id="section-34">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p>Internal function to make sure channel attribute values are in their correct format and ranges</p>
 
@@ -1333,11 +1329,11 @@ P.setMaximumColor = <span class="hljs-function"><span class="hljs-keyword">funct
         </li>
         
         
-        <li id="section-35">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p><code>update</code> function - adds the channel <strong>shift</strong> attributes to the r, g, b and a attributes. This functionality can be automated by setting the <strong>autoUpdate</strong> Boolean flag to true</p>
 
@@ -1355,7 +1351,9 @@ P.update = <span class="hljs-function"><span class="hljs-keyword">function</span
 
     <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.rShift || <span class="hljs-built_in">this</span>.gShift || <span class="hljs-built_in">this</span>.bShift || <span class="hljs-built_in">this</span>.aShift) {
 
-        list.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, item; i &lt; <span class="hljs-number">4</span>; i++) {
+
+            item = list[i];
 
             <span class="hljs-keyword">let</span> shift = <span class="hljs-built_in">this</span>[item + <span class="hljs-string">&#x27;Shift&#x27;</span>];
         
@@ -1384,7 +1382,7 @@ P.update = <span class="hljs-function"><span class="hljs-keyword">function</span
                 <span class="hljs-built_in">this</span>[item] = temp;
                 <span class="hljs-built_in">this</span>[<span class="hljs-string">`<span class="hljs-subst">${item}</span>Shift`</span>] = shift;
             }
-        }, <span class="hljs-built_in">this</span>);
+        }
     }
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
@@ -1392,11 +1390,11 @@ P.update = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-36">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p><code>updateByDelta</code> - alias for the <strong>update</strong> function</p>
 
@@ -1407,11 +1405,11 @@ P.update = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-37">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p>We can also set a Color object to a new color value by invoking its <code>convert</code> function. Any CSS color string can be used as an argument (with exceptions - see above)</p>
 
@@ -1679,11 +1677,11 @@ P.setFromHSL = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-38">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p>Color keywords harvested from <a href="https://developer.mozilla.org/en/docs/Web/CSS/color_value">https://developer.mozilla.org/en/docs/Web/CSS/color_value</a></p>
 
@@ -1841,11 +1839,11 @@ P.setFromHSL = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-39">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.makeColor({
@@ -1890,6 +1888,7 @@ scrawl.makeBlock({
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
 
+    <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Color(items);
 };
 
@@ -1898,11 +1897,11 @@ scrawl.makeBlock({
         </li>
         
         
-        <li id="section-40">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

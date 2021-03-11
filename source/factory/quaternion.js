@@ -10,13 +10,13 @@
 
 // #### Imports
 import { radian, constructors } from '../core/library.js';
-import { isa_quaternion, isa_number, xt, xto } from '../core/utilities.js';
+import { isa_quaternion, isa_number, xt, xto, Ωempty } from '../core/utilities.js';
 
 import { requestVector, releaseVector, makeVector } from './vector.js';
 
 
 // #### Quaternion constructor
-const Quaternion = function (items = {}) {
+const Quaternion = function (items = Ωempty) {
 
     this.name = items.name || 'generic';
     this.n = items.n || 1;
@@ -52,7 +52,7 @@ P.type = 'Quaternion';
 // + `set(Vector)` - a Vector object
 // + `set({x:Number, y:Number, z:Number})` - a Javascript object containing one or more attributes from: x, y, z - with values in degrees (not radians)
 // + `set({pitch:Number, yaw:Number, roll:Number})` - a Javascript object containing one or more attributes: __pitch__ (for x-axis rotations); __yaw__ (for y-axis rotations); __roll__ (for z-axis rotations) - with values in degrees (not radians)
-P.set = function (obj = {}) {
+P.set = function (obj = Ωempty) {
 
     if (isa_quaternion(obj)) return this.setFromQuaternion(obj);
 
@@ -94,7 +94,7 @@ P.setFromQuaternion = function (item) {
     return this;
 };
 
-P.setFromEuler = function (items = {}) {
+P.setFromEuler = function (items = Ωempty) {
 
     let pitch, yaw, roll, c1, c2, c3, s1, s2, s3,
         cos = Math.cos,
@@ -262,11 +262,9 @@ const releaseQuaternion = function (q) {
 
 
 // #### Factory
-const makeQuaternion = function (items = {}) {
+const makeQuaternion = function (items) {
 
-    let q = new Quaternion(items);
-
-    return q;
+    return new Quaternion(items);
 };
 
 constructors.Quaternion = Quaternion;

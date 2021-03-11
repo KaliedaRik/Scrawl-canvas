@@ -105,6 +105,11 @@
                 </a>
               
                 
+                <a class="source" href="conicGradient.html">
+                  ./source/factory/conicGradient.js
+                </a>
+              
+                
                 <a class="source" href="coordinate.html">
                   ./source/factory/coordinate.js
                 </a>
@@ -528,7 +533,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
-<span class="hljs-keyword">import</span> { mergeOver, addStrings } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { mergeOver, addStrings, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 <span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shapeBasic.js&#x27;</span>;</pre></div></div>
@@ -546,7 +551,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Rectangle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Rectangle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
     <span class="hljs-built_in">this</span>.shapeInit(items);
 
@@ -1066,6 +1071,8 @@ D.rectangleHeight = <span class="hljs-function"><span class="hljs-keyword">funct
             
             <div class="content"><div class='highlight'><pre>P.cleanDimensions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
+    <span class="hljs-built_in">this</span>.dirtyDimensions = <span class="hljs-literal">false</span>;
+
     <span class="hljs-keyword">let</span> host = <span class="hljs-built_in">this</span>.getHost();
 
     <span class="hljs-keyword">if</span> (host) {
@@ -1284,8 +1291,9 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeRectangle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeRectangle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
 
+    <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     items.species = <span class="hljs-string">&#x27;rectangle&#x27;</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Rectangle(items);
 };

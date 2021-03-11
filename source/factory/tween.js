@@ -38,7 +38,7 @@
 
 // #### Imports
 import { constructors, animationtickers, radian } from '../core/library.js';
-import { mergeOver, pushUnique, xt, xtGet, xto, convertTime, λnull, easeOutSine, easeInSine, easeOutInSine, easeOutQuad, easeInQuad, easeOutInQuad, easeOutCubic, easeInCubic, easeOutInCubic, easeOutQuart, easeInQuart, easeOutInQuart, easeOutQuint, easeInQuint, easeOutInQuint, easeOutExpo, easeInExpo, easeOutInExpo, easeOutCirc, easeInCirc, easeOutInCirc, easeOutBack, easeInBack, easeOutInBack, easeOutElastic, easeInElastic, easeOutInElastic, easeOutBounce, easeInBounce, easeOutInBounce } from '../core/utilities.js';
+import { mergeOver, pushUnique, xt, xtGet, xto, convertTime, λnull, easeOutSine, easeInSine, easeOutInSine, easeOutQuad, easeInQuad, easeOutInQuad, easeOutCubic, easeInCubic, easeOutInCubic, easeOutQuart, easeInQuart, easeOutInQuart, easeOutQuint, easeInQuint, easeOutInQuint, easeOutExpo, easeInExpo, easeOutInExpo, easeOutCirc, easeInCirc, easeOutInCirc, easeOutBack, easeInBack, easeOutInBack, easeOutElastic, easeInElastic, easeOutInElastic, easeOutBounce, easeInBounce, easeOutInBounce, Ωempty } from '../core/utilities.js';
 
 import { makeTicker } from './ticker.js';
 
@@ -47,7 +47,7 @@ import tweenMix from '../mixin/tween.js';
 
 
 // #### Tween constructor
-const Tween = function (items = {}) {
+const Tween = function (items = Ωempty) {
 
     let tn;
 
@@ -274,41 +274,37 @@ S.completeAction = function (item) {
 // `set` - we perform some additional functionality in the Tween `set` function
 // + updating the Tween's Ticker object happens here
 // + recalculating effectiveDuration happens here if the __time__ or __duration__ values change
-P.set = function (items = {}) {
+P.set = function (items = Ωempty) {
 
-    if(Object.keys(items).length) {
+    let key, i, iz, s,
+        setters = this.setters,
+        keys = Object.keys(items),
+        d = this.defs,
+        ticker = (xt(items.ticker)) ? this.ticker : false;
+
+    for (i = 0, iz = keys.length; i < iz; i++) {
+
+        key = keys[i];
         
-        let key, i, iz, s,
-            setters = this.setters,
-            keys = Object.keys(items),
-            d = this.defs,
-            ticker = (xt(items.ticker)) ? this.ticker : false;
+        if (key !== 'name') {
 
-        for (i = 0, iz = keys.length; i < iz; i++) {
-
-            key = keys[i];
+            s = setters[key];
             
-            if (key !== 'name') {
-
-                s = setters[key];
-                
-                if (s) s.call(this, items[key]);
-                else if (typeof d[key] !== 'undefined') this[key] = items[key];
-            }
-        }
-
-        if (ticker) {
-
-            this.ticker = ticker;
-            this.addToTicker(items.ticker);
-        }
-        else if (xto(items.time, items.duration)) {
-
-            this.calculateEffectiveTime();
-            this.calculateEffectiveDuration();
+            if (s) s.call(this, items[key]);
+            else if (typeof d[key] !== 'undefined') this[key] = items[key];
         }
     }
 
+    if (ticker) {
+
+        this.ticker = ticker;
+        this.addToTicker(items.ticker);
+    }
+    else if (xto(items.time, items.duration)) {
+
+        this.calculateEffectiveTime();
+        this.calculateEffectiveDuration();
+    }
     return this;
 };
 
@@ -355,7 +351,7 @@ P.calculateEffectiveDuration = function (item) {
 // `update` - ___main animation function___, invoked by the Ticker that this Tween subscribes to; runs once per RequestAnimationFrame while the Ticker is running.
 // + `items` argument is a Ticker ResultObject - Ticker handles all the request and release functionality for this pool object. Treat the `items` object as ___read-only___.
 // + `status` magic numbers: `-1` = "before"; `0` = "running"; `1` = "after".
-P.update = function (items = {}) {
+P.update = function (items = Ωempty) {
 
     let starts, ends,
         tick = items.tick || 0,
@@ -414,7 +410,7 @@ P.update = function (items = {}) {
 };
 
 // `doSimpleUpdate` - internal function called by `update` function.
-P.doSimpleUpdate = function (items = {}) {
+P.doSimpleUpdate = function (items = Ωempty) {
 
     // We create handles to a bunch of attributes so that we only need to look them up once each time the function runs
     let starts = this.effectiveTime,
@@ -938,6 +934,8 @@ P.seekFor = function(milliseconds) {
 // });
 // ```
 const makeTween = function (items) {
+
+    if (!items) return false;
     return new Tween(items);
 };
 

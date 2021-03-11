@@ -19,7 +19,7 @@
 
 // #### Imports
 import { constructors, tween, artefact, group } from '../core/library.js';
-import { pushUnique, mergeOver, λnull, isa_fn, isa_obj, xta } from '../core/utilities.js';
+import { pushUnique, mergeOver, λnull, isa_fn, isa_obj, xta, Ωempty } from '../core/utilities.js';
 import { currentGroup } from '../core/document.js';
 
 import { makeParticle } from './particle.js';
@@ -30,7 +30,7 @@ import entityMix from '../mixin/entity.js';
 
 
 // #### Tracer constructor
-const Tracer = function (items = {}) {
+const Tracer = function (items = Ωempty) {
 
     this.makeName(items.name);
     this.register();
@@ -43,7 +43,7 @@ const Tracer = function (items = {}) {
     this.onDown = λnull;
     this.onUp = λnull;
 
-    // As part of its `stamp` functionality the Net entity will invoke the `stampAction` function. If not supplied, the entity will not display anything on the canvas.
+    // As part of its `stamp` functionality the Tracer entity will invoke the `stampAction` function. If not supplied, the entity will not display anything on the canvas.
     this.stampAction = λnull;
 
     // Tracer entitys use just one Particle, which gets initialized here and stored in the `trace` attribute
@@ -164,8 +164,8 @@ S.artefact = function (item) {
 
 // #### Prototype functions
 
-// `regularStampSynchronousActions` - overwriters the functionality defined in the entity.js mixin
-P.regularStampSynchronousActions = function () {
+// `regularStamp` - overwriters the functionality defined in the entity.js mixin
+P.regularStamp = function () {
 
     let {artefact, trace, stampAction, showHitRadius, hitRadius, hitRadiusColor, currentStampPosition} = this;
 
@@ -246,6 +246,8 @@ P.checkHit = function (items = [], mycell) {
 // ```
 // ```
 const makeTracer = function (items) {
+
+    if (!items) return false;
     return new Tracer(items);
 };
 

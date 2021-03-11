@@ -1,6 +1,6 @@
 // # Scrawl-canvas
 //
-// #### Version 8.5.1 - 26 Feb 2021
+// #### Version 8.5.2 - 11 Mar 2021
 //
 // ---------------------------------------------------------------------------------
 // The MIT License (MIT)
@@ -109,6 +109,11 @@ import {
 import { 
     makeColor,
 } from './factory/color.js';
+
+
+import { 
+    makeConicGradient,
+} from './factory/conicGradient.js';
 
 
 import { 
@@ -384,6 +389,10 @@ export default {
 
     // factory/color.js
     makeColor,
+
+
+    // factory/conicGradient.js
+    makeConicGradient,
 
 
     // factory/coordinate.js

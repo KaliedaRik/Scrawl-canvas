@@ -13,14 +13,14 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, pushUnique, xt, λnull } from '../core/utilities.js';
+import { mergeOver, pushUnique, xt, λnull, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import tweenMix from '../mixin/tween.js';
 
 
 // #### Action constructor
-const Action = function (items = {}) {
+const Action = function (items = Ωempty) {
 
     this.makeName(items.name);
     this.register();
@@ -105,25 +105,33 @@ S.triggered = function (item) {
 // `set` - we perform some additional functionality in the Action `set` function
 // + updating the Action's Ticker object happens here
 // + recalculating effectiveDuration happens here if the __time__ value change
-P.set = function (items = {}) {
+P.set = function (items = Ωempty) {
 
-    if (Object.keys(items).length) {
+    const keys = Object.keys(items),
+        keysLen = keys.length;
 
-        let setters = this.setters,
-            defs = this.defs,
-            ticker = (xt(items.ticker)) ? this.ticker : false,
-            predefined;
+    if (keysLen) {
 
-        Object.entries(items).forEach(([key, value]) => {
+        const setters = this.setters,
+            defs = this.defs;
+        
+        let predefined, i, iz, key, value;
 
-            if (key !== 'name') {
+        for (i = 0; i < keysLen; i++) {
+
+            key = keys[i];
+            value = items[key];
+
+            if (key && key !== 'name' && value != null) {
 
                 predefined = setters[key];
 
                 if (predefined) predefined.call(this, value);
                 else if (typeof defs[key] !== 'undefined') this[key] = value;
             }
-        }, this);
+        }
+
+        let ticker = (xt(items.ticker)) ? this.ticker : false;
 
         if (ticker) {
 
@@ -238,6 +246,8 @@ P.update = function (items) {
 // });
 // ```
 const makeAction = function (items) {
+
+    if (!items) return false;
     return new Action(items);
 };
 

@@ -22,14 +22,14 @@
 
 // #### Imports
 import { animation, constructors } from '../core/library.js';
-import { mergeOver, pushUnique, removeItem, xt, λnull, λpromise, λthis } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, xt, λnull, λpromise, λthis, Ωempty } from '../core/utilities.js';
 import { animate, resortAnimations } from '../core/animationloop.js';
 
 import baseMix from '../mixin/base.js';
 
 
 // #### Animation constructor
-const Animation = function (items = {}) {
+const Animation = function (items = Ωempty) {
 
     this.makeName(items.name);
     this.order = (xt(items.order)) ? items.order : this.defs.order;
@@ -171,6 +171,7 @@ P.kill = function () {
 // ```
 const makeAnimation = function (items) {
     
+    if (!items) return false;
     return new Animation(items);
 };
 

@@ -13,14 +13,14 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { generateUniqueString, xt, λthis, λnull } from '../core/utilities.js';
+import { generateUniqueString, xt, λthis, λnull, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
 
 
 // #### VideoAsset constructor
-const VideoAsset = function (items = {}) {
+const VideoAsset = function (items = Ωempty) {
 
     return this.assetConstructor(items);
 };
@@ -73,7 +73,7 @@ let G = P.getters,
 
 
 // __source__
-S.source = function (item = {}) {
+S.source = function (item) {
 
     if (item) {
 
@@ -312,7 +312,7 @@ const importDomVideo = function (query) {
 // `importMediaStream` - __Warning: experimental!__
 // + This function will attempt to link a mediaStream - for instance from a device's camera - to an offscreen &lt;video> element, which then gets wrapped in a videoAsset instance which can be displayed in a canvas via a Picture entity (or even a Pattern style).
 // + TODO - extend functionality so users can manipulate the mediaStream via the Picture entity using it as its asset
-const importMediaStream = function (items = {}) {
+const importMediaStream = function (items = Ωempty) {
 
     // Setup the constraints object with user-supplied data in the items argument
     let constraints = {};
@@ -499,6 +499,7 @@ const importVideo = function (...args) {
 // #### Factory
 const makeVideoAsset = function (items) {
 
+    if (!items) return false;
     return new VideoAsset(items);
 };
 

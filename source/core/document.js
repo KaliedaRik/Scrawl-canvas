@@ -7,7 +7,7 @@
 
 
 // #### Imports
-import { isa_canvas, generateUniqueString, isa_dom, pushUnique, removeItem, xt } from "./utilities.js";
+import { isa_canvas, generateUniqueString, isa_dom, pushUnique, removeItem, xt, Ωempty } from "./utilities.js";
 import { artefact, canvas, group, stack, css, xcss } from "./library.js";
 
 import { makeStack } from "../factory/stack.js";
@@ -41,10 +41,11 @@ const sortRootElements = function () {
         rootElementsSort = false;
 
         let buckets = [],
-            art, order;
+            art, order, i, iz, item;
 
-        rootElements.forEach((item) => {
+        for (i = 0, iz = rootElements.length; i < iz; i++) {
 
+            item = rootElements[i];
             art = artefact[item];
 
             if (art) {
@@ -55,8 +56,7 @@ const sortRootElements = function () {
                 
                 buckets[order].push(art.name);
             }
-        });
-
+        }
         rootElements_sorted = buckets.reduce((a, v) => a.concat(v), []);
     }
 };
@@ -150,7 +150,7 @@ const processNewStackChildren = function (el, name) {
 // + __host__ - the host element, either as the DOM element itself, or some sort of CSS search string; if not present, will create the stack at the stack element's current place or, failing all else, add the stack to the end of the document body
 // + __name__ - String identifier for the stack; if not included the function will attempt to use the element's existing id or name attribute or, failing that, generate a random name for the stack.
 // + any other regular stack attribute
-const addStack = function (items = {}) {
+const addStack = function (items = Ωempty) {
 
     // define variables
     let el, host, hostinscrawl, mystack, mygroup, name,
@@ -346,7 +346,7 @@ const setCurrentCanvas = function (item) {
 // + any other regular Scrawl-canvas Canvas artefact attribute
 //
 // By default, Scrawl-canvas will setup the new Canvas as the 'current canvas', and will add mouse/pointer tracking functionality to it. If no dimensions are supplied then the Canvas will default to 300px wide and 150px high.
-const addCanvas = function (items = {}) {
+const addCanvas = function (items = Ωempty) {
 
     let el = document.createElement('canvas'),
         myname = (items.name) ? items.name : generateUniqueString(),
@@ -480,12 +480,15 @@ const displayCycleHelper = function (items) {
 
 const displayCycleBatchProcess = function (method) {
 
-    rootElements_sorted.forEach(name => {
+    let i, iz, name, item;
 
-        let item = artefact[name];
+    for (i = 0, iz = rootElements_sorted.length; i < iz; i++) {
+
+        name = rootElements_sorted[i];
+        item = artefact[name];
 
         if (item && item[method]) item[method]();
-    });
+    }
 };
 
 
@@ -533,7 +536,6 @@ const domShow = function (singleArtefact = '') {
             domShowElements.length = 0;
         }
 
-        // given the critical nature of these loops, using 'for' instead of 'forEach'
         let i, iz, name, art, el, style,
             p, dims, w, h,
             j, jz, items, keys, key, keyName, value;

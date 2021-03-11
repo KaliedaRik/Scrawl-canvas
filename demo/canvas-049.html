@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 049</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    .controls {
+      grid-template-columns: 1fr 2fr 1fr 2fr;
+    }
+  </style>
+
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 049</h1>
+  <h2>Conic gradients</h2>
+  <p>Note that, currently, this functionality is experimental and hidden behind flags by browsers. See notes in Test Purpose box on how to enable the flags.</p>
+
+  <div class="controls">
+
+    <div class="pink label">paletteStart</div>
+    <div class="pink"><input class="controlItem" id="paletteStart" type="range" value="0" min="0" max="999" step="1" /></div>
+
+    <div class="pink label">paletteEnd</div>
+    <div class="pink"><input class="controlItem" id="paletteEnd" type="range" value="0" min="0" max="999" step="1" /></div>
+
+    <div class="green label">startX</div>
+    <div class="green"><input class="controlItem" id="startX" type="range" value="0" min="0" max="100" step="1" /></div>
+
+    <div class="green label">startY</div>
+    <div class="green"><input class="controlItem" id="startY" type="range" value="0" min="0" max="100" step="1" /></div>
+
+    <div class="green label">startAngle</div>
+    <div class="green"><input class="controlItem" id="startAngle" type="range" value="0" min="0" max="360" step="0.5" /></div>
+
+    <div class="green label">&nbsp;</div>
+    <div class="green">&nbsp;</div>
+
+    <div class="yellow label">Include red</div>
+    <div class="yellow">
+      <select class="controlItem" id="red">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+    <div class="yellow label">Include blue</div>
+    <div class="yellow">
+        <select class="controlItem" id="blue">
+          <option value="0">false</option>
+          <option value="1">true</option>
+      </select>
+    </div>
+
+  </div>
+
+  <canvas id="mycanvas" width="600" height="400"></canvas>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Setup a conic gradient, and a block entity which uses the gradient for its fillStyle value</li>
+      <li>Check that we can successfully manipulate the gradient's start and end coordinates, and its start angle</li>
+      <li>Check that we can successfully manipulate the palettes's start and end cursors</li>
+      <li>Check that we can dynamically add and remove color stops</li>
+    </ul>
+    <p><b>Note that this is experimental technology!</b> No browser currently supports conic gradients in the canvas engine, though most support them as a CSS gradient:</p>
+    <ul>
+      <li><b>Chrome browsers</b> - from version 86: this feature is behind the #new-canvas-2d-api preferences. To change preferences in Chrome, visit <a href="chrome://flags">chrome://flags</a>.</li>
+      <li><b>Firefox browsers</b> - From version 86: this feature is behind the canvas.createConicGradient.enabled preferences. To change preferences in Firefox, visit <a href="about:config">about:config</a>.</li>
+      <li>Other browsers - currently no signals about support. See the <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createConicGradient">MDN createConicGradient()</a> page for further details.</li>
+    </ul>
+    <p><b>Known issue</b> - it looks like Chrome expects the angle value to be a float Number measuring degrees, whereas Firefox interprets the float number differently (possibly radians). The CSS version accepts a string argument in the form `45deg` etc, which breaks the Javascript code when used for the canvas version. Current Scrawl-canvas functionality is to create the conic gradient using an angle measuring degrees (as Chrome has the larger share of browser usage).</p>
+    <p>For browsers that do not support conic gradients in the canvas (currently: all browsers, except where flags have been set to allow their use) this gradient will return a solid, transparent color for fill and stroke styles using it.</p>
+    <p><a href="../docs/demo/canvas-049.html">Annotated code</a></p>
+  </div>
+
+  <script src="canvas-049.js" type="module"></script>
+
+</body>
+
+</html>

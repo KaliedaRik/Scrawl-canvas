@@ -21,13 +21,13 @@
 
 // #### Imports
 import { constructors, entity } from '../core/library.js';
-import { mergeOver, xt, xtGet, isa_obj, easeOutSine, easeInSine, easeOutInSine, easeOutQuad, easeInQuad, easeOutInQuad, easeOutCubic, easeInCubic, easeOutInCubic, easeOutQuart, easeInQuart, easeOutInQuart, easeOutQuint, easeInQuint, easeOutInQuint, easeOutExpo, easeInExpo, easeOutInExpo, easeOutCirc, easeInCirc, easeOutInCirc, easeOutBack, easeInBack, easeOutInBack, easeOutElastic, easeInElastic, easeOutInElastic, easeOutBounce, easeInBounce, easeOutInBounce } from '../core/utilities.js';
+import { mergeOver, xt, xtGet, isa_obj, easeOutSine, easeInSine, easeOutInSine, easeOutQuad, easeInQuad, easeOutInQuad, easeOutCubic, easeInCubic, easeOutInCubic, easeOutQuart, easeInQuart, easeOutInQuart, easeOutQuint, easeInQuint, easeOutInQuint, easeOutExpo, easeInExpo, easeOutInExpo, easeOutCirc, easeInCirc, easeOutInCirc, easeOutBack, easeInBack, easeOutInBack, easeOutElastic, easeInElastic, easeOutInElastic, easeOutBounce, easeInBounce, easeOutInBounce, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 
 
 // #### Color constructor
-const Color = function (items = {}) {
+const Color = function (items = Ωempty) {
 
     this.makeName(items.name);
     this.register();
@@ -189,30 +189,34 @@ P.get = function (item) {
 
 
 // `set` - overrides function in mixin/base.js - see above for the additional attributes the set object argument can use.
-P.set = function (items = {}) {
+P.set = function (items = Ωempty) {
 
-    if (Object.keys(items).length) {
+    const keys = Object.keys(items),
+        keysLen = keys.length;
 
-        let setters = this.setters,
-            defs = this.defs,
-            predefined;
+    if (keysLen) {
 
-        Object.entries(items).forEach(([key, value]) => {
+        const setters = this.setters,
+            defs = this.defs;
+        
+        let predefined, i, iz, key, value;
 
-            if (key !== 'name') {
+        for (i = 0; i < keysLen; i++) {
+
+            key = keys[i];
+            value = items[key];
+
+            if (key && key !== 'name' && value != null) {
 
                 predefined = setters[key];
 
                 if (predefined) predefined.call(this, value);
                 else if (typeof defs[key] !== 'undefined') this[key] = value;
             }
-        }, this);
+        }
+        if (items.random) this.generateRandomColor(items);
+        else this.checkValues();
     }
-
-    if (items.random) this.generateRandomColor(items);
-    // else if (items.color) this.convert(items.color);
-    else this.checkValues();
-
     return this;
 };
 
@@ -312,7 +316,7 @@ P.getData = function () {
 };
 
 // `generateRandomColor` function asks the Color object to supply a random color, as restricted by its channel minimum and maximum attributes
-P.generateRandomColor = function (items = {}) {
+P.generateRandomColor = function (items = Ωempty) {
 
     let round = Math.round,
         rnd = Math.random;
@@ -502,7 +506,9 @@ P.update = function () {
 
     if (this.rShift || this.gShift || this.bShift || this.aShift) {
 
-        list.forEach(item => {
+        for (let i = 0, item; i < 4; i++) {
+
+            item = list[i];
 
             let shift = this[item + 'Shift'];
         
@@ -531,7 +537,7 @@ P.update = function () {
                 this[item] = temp;
                 this[`${item}Shift`] = shift;
             }
-        }, this);
+        }
     }
     return this;
 };
@@ -992,6 +998,7 @@ P.colorLibrary = {
 // ```
 const makeColor = function (items) {
 
+    if (!items) return false;
     return new Color(items);
 };
 

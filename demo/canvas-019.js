@@ -1,7 +1,7 @@
 // # Demo Canvas 019 
 // Gradient and Color factories - transparency
 
-// [Run code](../../demo/canvas-018.html)
+// [Run code](../../demo/canvas-019.html)
 import scrawl from '../source/scrawl.js';
 
 

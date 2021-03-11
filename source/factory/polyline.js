@@ -34,7 +34,7 @@
 
 // #### Imports
 import { constructors, artefact, particle } from '../core/library.js';
-import { mergeOver, isa_obj, isa_boolean, pushUnique, xt, xta, removeItem, correctForZero } from '../core/utilities.js';
+import { mergeOver, isa_obj, isa_boolean, pushUnique, xt, xta, removeItem, correctForZero, Ωempty } from '../core/utilities.js';
 
 import { makeCoordinate } from '../factory/coordinate.js';
 
@@ -43,7 +43,7 @@ import shapeMix from '../mixin/shapeBasic.js';
 
 
 // #### Polyline constructor
-const Polyline = function (items = {}) {
+const Polyline = function (items = Ωempty) {
 
     this.pins = [];
     this.currentPins = [];
@@ -703,8 +703,9 @@ P.updatePathSubscribers = function () {
 //     method: 'draw',
 // });
 // ```
-const makePolyline = function (items = {}) {
+const makePolyline = function (items) {
 
+    if (!items) return false;
     items.species = 'polyline';
     return new Polyline(items);
 };

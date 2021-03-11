@@ -105,6 +105,11 @@
                 </a>
               
                 
+                <a class="source" href="conicGradient.html">
+                  ./source/factory/conicGradient.js
+                </a>
+              
+                
                 <a class="source" href="coordinate.html">
                   ./source/factory/coordinate.js
                 </a>
@@ -502,12 +507,13 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">artefact</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
 <span class="hljs-keyword">import</span> { currentGroup } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/document.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { mergeOver, mergeDiscard, pushUnique, λ<span class="hljs-literal">null</span>, λ<span class="hljs-built_in">this</span>, xta } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { mergeOver, mergeDiscard, pushUnique, λ<span class="hljs-literal">null</span>, λ<span class="hljs-built_in">this</span>, xta, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { makeState } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/state.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { makeState, stateKeys } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/state.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { requestCell, releaseCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/cell.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
+<span class="hljs-keyword">import</span> deltaMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/delta.js&#x27;</span>;
 <span class="hljs-keyword">import</span> anchorMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/anchor.js&#x27;</span>;</pre></div></div>
             
         </li>
@@ -523,7 +529,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Mesh = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Mesh = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
     <span class="hljs-built_in">this</span>.makeName(items.name);
     <span class="hljs-built_in">this</span>.register();
@@ -587,6 +593,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
             </div>
             
             <div class="content"><div class='highlight'><pre>P = baseMix(P);
+P = deltaMix(P);
 P = anchorMix(P);</pre></div></div>
             
         </li>
@@ -979,15 +986,16 @@ P.handlePacketAnchor = <span class="hljs-function"><span class="hljs-keyword">fu
             
             <div class="content"><div class='highlight'><pre>P.get = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">let</span> getter = <span class="hljs-built_in">this</span>.getters[item];
+    <span class="hljs-keyword">const</span> getter = <span class="hljs-built_in">this</span>.getters[item];
 
     <span class="hljs-keyword">if</span> (getter) <span class="hljs-keyword">return</span> getter.call(<span class="hljs-built_in">this</span>);
 
     <span class="hljs-keyword">else</span> {
 
         <span class="hljs-keyword">let</span> def = <span class="hljs-built_in">this</span>.defs[item],
-            state = <span class="hljs-built_in">this</span>.state,
-            val;
+            state = <span class="hljs-built_in">this</span>.state;
+
+        <span class="hljs-keyword">let</span> val;
 
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> def != <span class="hljs-string">&#x27;undefined&#x27;</span>) {
 
@@ -1002,7 +1010,7 @@ P.handlePacketAnchor = <span class="hljs-function"><span class="hljs-keyword">fu
             val = state[item];
             <span class="hljs-keyword">return</span> (<span class="hljs-keyword">typeof</span> val != <span class="hljs-string">&#x27;undefined&#x27;</span>) ? val : def;
         }
-        <span class="hljs-keyword">return</span> undef;
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
     }
 };</pre></div></div>
             
@@ -1019,35 +1027,45 @@ P.handlePacketAnchor = <span class="hljs-function"><span class="hljs-keyword">fu
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.set = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.set = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Object</span>.keys(items).length) {
+    <span class="hljs-keyword">const</span> keys = <span class="hljs-built_in">Object</span>.keys(items),
+        keysLen = keys.length;
 
-        <span class="hljs-keyword">let</span> setters = <span class="hljs-built_in">this</span>.setters,
+    <span class="hljs-keyword">if</span> (keysLen) {
+
+        <span class="hljs-keyword">const</span> setters = <span class="hljs-built_in">this</span>.setters,
             defs = <span class="hljs-built_in">this</span>.defs,
-            state = <span class="hljs-built_in">this</span>.state,
-            stateSetters = (state) ? state.setters : {},
-            stateDefs = (state) ? state.defs : {},
-            predefined, stateFlag;
+            state = <span class="hljs-built_in">this</span>.state;
 
-        <span class="hljs-built_in">Object</span>.entries(items).forEach(<span class="hljs-function">(<span class="hljs-params">[key, value]</span>) =&gt;</span> {
+        <span class="hljs-keyword">const</span> stateSetters = (state) ? state.setters : Ωempty;
+        <span class="hljs-keyword">const</span> stateDefs = (state) ? state.defs : Ωempty;
 
-            <span class="hljs-keyword">if</span> (key &amp;&amp; key !== <span class="hljs-string">&#x27;name&#x27;</span> &amp;&amp; value != <span class="hljs-literal">null</span>) {
+        <span class="hljs-keyword">let</span> predefined, i, key, value;
 
-                predefined = setters[key];
-                stateFlag = <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; keysLen; i++) {
 
-                <span class="hljs-keyword">if</span> (!predefined) {
+            key = keys[i];
+            value = items[key];
+
+            <span class="hljs-keyword">if</span> (key &amp;&amp; key != <span class="hljs-string">&#x27;name&#x27;</span> &amp;&amp; value != <span class="hljs-literal">null</span>) {
+
+                <span class="hljs-keyword">if</span> (stateKeys.indexOf(key) &lt; <span class="hljs-number">0</span>) {
+
+                    predefined = setters[key];
+
+                    <span class="hljs-keyword">if</span> (predefined) predefined.call(<span class="hljs-built_in">this</span>, value);
+                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] != <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-built_in">this</span>[key] = value;
+                }
+                <span class="hljs-keyword">else</span> {
 
                     predefined = stateSetters[key];
-                    stateFlag = <span class="hljs-literal">true</span>;
-                }
 
-                <span class="hljs-keyword">if</span> (predefined) predefined.call(stateFlag ? <span class="hljs-built_in">this</span>.state : <span class="hljs-built_in">this</span>, value);
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] !== <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-built_in">this</span>[key] = value;
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> stateDefs[key] !== <span class="hljs-string">&#x27;undefined&#x27;</span>) state[key] = value;
+                    <span class="hljs-keyword">if</span> (predefined) predefined.call(state, value);
+                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> stateDefs[key] != <span class="hljs-string">&#x27;undefined&#x27;</span>) state[key] = value;
+                }
             }
-        }, <span class="hljs-built_in">this</span>);
+        }
     }
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
@@ -1065,35 +1083,45 @@ P.handlePacketAnchor = <span class="hljs-function"><span class="hljs-keyword">fu
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.setDelta = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.setDelta = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Object</span>.keys(items).length) {
+    <span class="hljs-keyword">const</span> keys = <span class="hljs-built_in">Object</span>.keys(items),
+        keysLen = keys.length;
 
-        <span class="hljs-keyword">let</span> setters = <span class="hljs-built_in">this</span>.deltaSetters,
+    <span class="hljs-keyword">if</span> (keysLen) {
+
+        <span class="hljs-keyword">const</span> setters = <span class="hljs-built_in">this</span>.deltaSetters,
             defs = <span class="hljs-built_in">this</span>.defs,
-            state = <span class="hljs-built_in">this</span>.state,
-            stateSetters = (state) ? state.deltaSetters : {},
-            stateDefs = (state) ? state.defs : {},
-            predefined, stateFlag;
+            state = <span class="hljs-built_in">this</span>.state;
 
-        <span class="hljs-built_in">Object</span>.entries(items).forEach(<span class="hljs-function">(<span class="hljs-params">[key, value]</span>) =&gt;</span> {
+        <span class="hljs-keyword">const</span> stateSetters = (state) ? state.deltaSetters : Ωempty;
+        <span class="hljs-keyword">const</span> stateDefs = (state) ? state.defs : Ωempty;
 
-            <span class="hljs-keyword">if</span> (key &amp;&amp; key !== <span class="hljs-string">&#x27;name&#x27;</span> &amp;&amp; value != <span class="hljs-literal">null</span>) {
+        <span class="hljs-keyword">let</span> predefined, i, key, value;
 
-                predefined = setters[key];
-                stateFlag = <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; keysLen; i++) {
 
-                <span class="hljs-keyword">if</span> (!predefined) {
+            key = keys[i];
+            value = items[key];
+
+            <span class="hljs-keyword">if</span> (key &amp;&amp; key != <span class="hljs-string">&#x27;name&#x27;</span> &amp;&amp; value != <span class="hljs-literal">null</span>) {
+
+                <span class="hljs-keyword">if</span> (stateKeys.indexOf(key) &lt; <span class="hljs-number">0</span>) {
+
+                    predefined = setters[key];
+
+                    <span class="hljs-keyword">if</span> (predefined) predefined.call(<span class="hljs-built_in">this</span>, value);
+                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] != <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-built_in">this</span>[key] = addStrings(<span class="hljs-built_in">this</span>[key], value);
+                }
+                <span class="hljs-keyword">else</span> {
 
                     predefined = stateSetters[key];
-                    stateFlag = <span class="hljs-literal">true</span>;
-                }
 
-                <span class="hljs-keyword">if</span> (predefined) predefined.call(stateFlag ? <span class="hljs-built_in">this</span>.state : <span class="hljs-built_in">this</span>, value);
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] !== <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-built_in">this</span>[key] = addStrings(<span class="hljs-built_in">this</span>[key], value);
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> stateDefs[key] !== <span class="hljs-string">&#x27;undefined&#x27;</span>) state[key] = addStrings(state[key], value);
+                    <span class="hljs-keyword">if</span> (predefined) predefined.call(state, value);
+                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> stateDefs[key] != <span class="hljs-string">&#x27;undefined&#x27;</span>) state[key] = addStrings(state[key], value);
+                }
             }
-        }, <span class="hljs-built_in">this</span>);
+        }
     }
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
@@ -1188,24 +1216,6 @@ S.group = <span class="hljs-function"><span class="hljs-keyword">function</span>
               <div class="sswrap ">
                 <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
-              <p><strong>delta</strong> - copied over from the position mixin.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>S.delta = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (items) <span class="hljs-built_in">this</span>.delta = mergeDiscard(<span class="hljs-built_in">this</span>.delta, items);
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-31">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
-              </div>
               <p><strong>net</strong></p>
 
             </div>
@@ -1227,11 +1237,11 @@ S.group = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-32">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p><strong>source</strong></p>
 
@@ -1256,11 +1266,11 @@ S.group = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-33">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p><strong>isHorizontalCopy</strong></p>
 
@@ -1275,11 +1285,11 @@ S.group = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -1288,11 +1298,11 @@ S.group = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-35">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p><code>getHost</code> - copied over from the position mixin.</p>
 
@@ -1318,129 +1328,11 @@ S.group = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-36">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
-              </div>
-              <p><code>updateByDelta</code>, <code>reverseByDelta</code> - copied over from the position mixin.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.updateByDelta = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-built_in">this</span>.setDelta(<span class="hljs-built_in">this</span>.delta);
-
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
-};
-
-P.reverseByDelta = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">let</span> temp = {};
-    
-    <span class="hljs-built_in">Object</span>.entries(<span class="hljs-built_in">this</span>.delta).forEach(<span class="hljs-function">(<span class="hljs-params">[key, val]</span>) =&gt;</span> {
-
-        <span class="hljs-keyword">if</span> (val.substring) val = -(<span class="hljs-built_in">parseFloat</span>(val)) + <span class="hljs-string">&#x27;%&#x27;</span>;
-        <span class="hljs-keyword">else</span> val = -val;
-
-        temp[key] = val;
-    });
-
-    <span class="hljs-built_in">this</span>.setDelta(temp);
-
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-37">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
-              </div>
-              <p><code>setDeltaValues</code> - copied over from the position mixin.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.setDeltaValues = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
-
-    <span class="hljs-keyword">let</span> delta = <span class="hljs-built_in">this</span>.delta, 
-        oldVal, action;
-
-    <span class="hljs-built_in">Object</span>.entries(items).forEach(<span class="hljs-function">(<span class="hljs-params">[key, requirement]</span>) =&gt;</span> {
-
-        <span class="hljs-keyword">if</span> (xt(delta[key])) {
-
-            action = requirement;
-
-            oldVal = delta[key];
-
-            <span class="hljs-keyword">switch</span> (action) {
-
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;reverse&#x27;</span> :
-                    <span class="hljs-keyword">if</span> (oldVal.toFixed) delta[key] = -oldVal;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-38">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
-              </div>
-              <p>TODO: reverse String% (and em, etc) values</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">break</span>;
-
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;zero&#x27;</span> :
-                    <span class="hljs-keyword">if</span> (oldVal.toFixed) delta[key] = <span class="hljs-number">0</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-39">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
-              </div>
-              <p>TODO: zero String% (and em, etc) values</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">break</span>;
-
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;add&#x27;</span> :
-                    <span class="hljs-keyword">break</span>;
-
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;subtract&#x27;</span> :
-                    <span class="hljs-keyword">break</span>;
-
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;multiply&#x27;</span> :
-                    <span class="hljs-keyword">break</span>;
-
-                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;divide&#x27;</span> :
-                    <span class="hljs-keyword">break</span>;
-            }
-        }
-    })
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-40">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p>Invalidate mid-init functionality</p>
 
@@ -1451,11 +1343,11 @@ P.reverseByDelta = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-41">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p>Invalidating sensor functionality</p>
 
@@ -1473,11 +1365,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-42">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <h4 id="display-cycle-functionality">Display cycle functionality</h4>
 
@@ -1486,11 +1378,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-43">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p><code>prepareStamp</code> - function called as part of the Display cycle <code>compile</code> step.</p>
 <ul>
@@ -1523,11 +1415,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-44">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p>Sanity check</p>
 <ul>
@@ -1563,11 +1455,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-45">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p><code>setSourceDimension</code> - internal function called by <code>prepareStamp</code>.</p>
 <ul>
@@ -1659,11 +1551,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-46">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p>Sanity check - the particle system, when it breaks down, can create some massive dimension values!</p>
 
@@ -1733,11 +1625,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-47">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p><code>simpleStamp</code> - Simple stamping is entirely synchronous</p>
 <ul>
@@ -1746,7 +1638,7 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.simpleStamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">host, changes = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.simpleStamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">host, changes</span>) </span>{
 
     <span class="hljs-keyword">if</span> (host &amp;&amp; host.type === <span class="hljs-string">&#x27;Cell&#x27;</span>) {
 
@@ -1758,18 +1650,18 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
             <span class="hljs-built_in">this</span>.prepareStamp();
         }
 
-        <span class="hljs-built_in">this</span>.regularStampSynchronousActions();
+        <span class="hljs-built_in">this</span>.regularStamp();
     }
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-48">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p><code>stamp</code> - All entity stamping, except for simple stamps, goes through this function, which needs to return a Promise which will resolve in due course.</p>
 <ul>
@@ -1813,11 +1705,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-49">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <h4 id="clean-functions">Clean functions</h4>
 
@@ -1826,11 +1718,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-50">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p><code>cleanInput</code> - internal function called by <code>stamp</code></p>
 
@@ -1882,11 +1774,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-51">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p><code>cleanOutput</code> - internal function called by <code>stamp</code></p>
 <ul>
@@ -1982,11 +1874,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-52">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p>Safari bugfix because we fall foul of of the Safari source-out-of-bounds bug</p>
 <ul>
@@ -2035,35 +1927,17 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-53">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p><code>regularStamp</code> - internal function called by <code>stamp</code></p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>P.regularStamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.currentHost) <span class="hljs-built_in">this</span>.regularStampSynchronousActions();
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-54">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
-              </div>
-              <p><code>regularStampSynchronousActions</code> - internal function called by <code>regularStamp</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.regularStampSynchronousActions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
     <span class="hljs-keyword">let</span> dest = <span class="hljs-built_in">this</span>.currentHost;
 
@@ -2080,11 +1954,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-55">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <h5 id="stamp-methods">Stamp methods</h5>
 <p>These ‘method’ functions stamp the Mesh entity onto the canvas context supplied to them in the <code>engine</code> argument.</p>
@@ -2094,11 +1968,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-56">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p><code>fill</code></p>
 
@@ -2112,11 +1986,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-57">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p><code>draw</code></p>
 
@@ -2130,11 +2004,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-58">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p><code>drawAndFill</code></p>
 
@@ -2150,11 +2024,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-59">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p><code>fillAndDraw</code></p>
 
@@ -2170,11 +2044,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-60">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p><code>drawThenFill</code></p>
 
@@ -2189,11 +2063,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-61">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p><code>fillThenDraw</code></p>
 
@@ -2208,11 +2082,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-62">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p><code>clear</code></p>
 
@@ -2249,11 +2123,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-63">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p><code>none</code></p>
 
@@ -2264,11 +2138,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-64">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p>These <strong>stroke</strong> and <strong>fill</strong> functions handle most of the stuff that the method functions require to stamp the Mesh entity onto a canvas cell.</p>
 
@@ -2277,11 +2151,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-65">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p><code>doStroke</code></p>
 
@@ -2296,11 +2170,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-66">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <p><code>doFill</code></p>
 <ul>
@@ -2338,11 +2212,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-67">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <h4 id="collision-functionality">Collision functionality</h4>
 
@@ -2351,11 +2225,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-68">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p><code>checkHit</code></p>
 <ul>
@@ -2421,11 +2295,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-69">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code><span class="hljs-keyword">let</span> myMesh = scrawl.makeMesh({
@@ -2436,11 +2310,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-70">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <pre><code>name: <span class="hljs-string">&#x27;display-mesh&#x27;</span>,
 </code></pre>
@@ -2450,11 +2324,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-71">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <pre><code>net: <span class="hljs-string">&#x27;test-net&#x27;</span>,
 <span class="hljs-attr">source</span>: <span class="hljs-string">&#x27;my-flower&#x27;</span>,
@@ -2465,11 +2339,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-72">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-72">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <pre><code>lineWidth: <span class="hljs-number">2</span>,
 <span class="hljs-attr">lineJoin</span>: <span class="hljs-string">&#x27;round&#x27;</span>,
@@ -2481,11 +2355,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-73">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-73">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <pre><code>method: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
 </code></pre>
@@ -2495,11 +2369,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-74">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-74">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <pre><code>onEnter: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-built_in">this</span>.set({ <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">6</span> }) },
 <span class="hljs-attr">onLeave</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-built_in">this</span>.set({ <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span> }) },
@@ -2511,6 +2385,8 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeMesh = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Mesh(items);
 };
 
@@ -2519,11 +2395,11 @@ P.getSensors = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-75">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-75">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

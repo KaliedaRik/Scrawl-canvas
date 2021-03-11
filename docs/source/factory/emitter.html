@@ -105,6 +105,11 @@
                 </a>
               
                 
+                <a class="source" href="conicGradient.html">
+                  ./source/factory/conicGradient.js
+                </a>
+              
+                
                 <a class="source" href="coordinate.html">
                   ./source/factory/coordinate.js
                 </a>
@@ -504,7 +509,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">tween</span>, <span class="hljs-title">artefact</span>, <span class="hljs-title">group</span>, <span class="hljs-title">world</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
-<span class="hljs-keyword">import</span> { pushUnique, mergeOver, λ<span class="hljs-literal">null</span>, isa_fn, isa_obj, xt, xta } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { pushUnique, mergeOver, λ<span class="hljs-literal">null</span>, isa_fn, isa_obj, xt, xta, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { currentGroup } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/document.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { requestParticle, releaseParticle } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./particle.js&#x27;</span>;
@@ -529,7 +534,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Emitter = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Emitter = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
     <span class="hljs-built_in">this</span>.makeName(items.name);
     <span class="hljs-built_in">this</span>.register();
@@ -1914,11 +1919,11 @@ D.height = D.width;</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
-              <p><code>regularStampSynchronousActions</code> - overwriters the functionality defined in the entity.js mixin</p>
+              <p><code>regularStamp</code> - overwriters the functionality defined in the entity.js mixin</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.regularStampSynchronousActions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.regularStamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
     <span class="hljs-keyword">let</span> {world, artefact, particleStore, preAction, stampAction, postAction, lastUpdated, resetAfterBlur, showHitRadius, hitRadius, hitRadiusColor, currentStampPosition} = <span class="hljs-built_in">this</span>;
 
@@ -2140,6 +2145,8 @@ scrawl.makeEmitter({
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeEmitter = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Emitter(items);
 };
 

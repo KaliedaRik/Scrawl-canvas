@@ -36,7 +36,7 @@
 
 // #### Imports
 import { constructors, group, stack, element, artefact, canvas } from '../core/library.js';
-import { mergeOver, pushUnique, isa_dom, removeItem, xt, addStrings, λthis, λnull } from '../core/utilities.js';
+import { mergeOver, pushUnique, isa_dom, removeItem, xt, addStrings, λthis, λnull, Ωempty } from '../core/utilities.js';
 import { rootElements, setRootElementsSort, domShow } from '../core/document.js';
 import { uiSubscribedElements, currentCorePosition } from '../core/userInteraction.js';
 
@@ -51,7 +51,7 @@ import displayMix from '../mixin/displayShape.js';
 
 
 // #### Stack constructor
-const Stack = function (items = {}) {
+const Stack = function (items = Ωempty) {
 
     let g, el;
 
@@ -219,7 +219,7 @@ S.perspectiveZ = function (item) {
     this.perspective.z = item;
     this.dirtyPerspective = true;
 };
-S.perspective = function (item = {}) {
+S.perspective = function (item = Ωempty) {
 
     this.perspective.x = (xt(item.x)) ? item.x : this.perspective.x;
     this.perspective.y = (xt(item.y)) ? item.y : this.perspective.y;
@@ -241,7 +241,7 @@ D.perspectiveY = function (item) {
 // #### Prototype functions
 
 // `updateArtefacts` - internal function. Iterate through all Element and Canvas wrappers associated with the Stack wrapper's Group object and set a range of dirty flags on them, for future processing by each as appropriate.
-P.updateArtefacts = function (items = {}) {
+P.updateArtefacts = function (items = Ωempty) {
 
     this.groupBuckets.forEach(grp => {
 
@@ -410,9 +410,9 @@ P.addExistingDomElements = function (search) {
 // + Any other Element artefact attribute can also be included in the argument object, including __text__ and __content__ attributes to set the new DOM Element's textContent and innerHTML attributes.
 // + If position and dimension values are not included in the argument, the element will be given default values of [0,0] for start, offset and handle; and dimensions of 100px width and height.
 // + The new element will also default to a CSS box-sizing style value of 'border-box', unless the argument's __boxSizing__ attribute has been set to 'content-box' - this will override any 'borderBox' attribute value in the argument's __.css__ object (if one has been included)
-P.addNewElement = function (items = {}) {
+P.addNewElement = function (items) {
 
-    if (items.tag) {
+    if (items && items.tag) {
 
         items.domElement = document.createElement(items.tag);
         items.domElement.setAttribute('data-group', this.name);
@@ -441,6 +441,7 @@ P.addNewElement = function (items = {}) {
 // #### Factory
 const makeStack = function (items) {
 
+    if (!items) return false;
     return new Stack(items);
 };
 

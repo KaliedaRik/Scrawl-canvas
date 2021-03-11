@@ -57,7 +57,7 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { λnull, isa_obj, mergeOver, xt, xta, pushUnique } from '../core/utilities.js';
+import { λnull, isa_obj, mergeOver, xt, xta, pushUnique, Ωempty } from '../core/utilities.js';
 
 import { makeColor } from './color.js';
 
@@ -65,7 +65,7 @@ import baseMix from '../mixin/base.js';
 
 
 // #### Palette constructor
-const Palette = function (items = {}) {
+const Palette = function (items = Ωempty) {
 
 
     this.makeName(items.name);
@@ -421,13 +421,18 @@ P.factory = makeColor({
 
 // #### Factory
 const makePalette = function (items) {
+
+    if (!items) return false;
     return new Palette(items);
 };
 
 constructors.Palette = Palette;
 
+const paletteKeys = ['colors', 'cyclic', 'stops'];
+
 
 // #### Exports
 export {
     makePalette,
+    paletteKeys,
 };

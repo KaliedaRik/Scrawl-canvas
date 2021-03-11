@@ -29,7 +29,7 @@
 
 // #### Imports
 import { constructors, particle } from '../core/library.js';
-import { mergeOver, pushUnique, λnull } from '../core/utilities.js';
+import { mergeOver, pushUnique, λnull, Ωempty } from '../core/utilities.js';
 
 import { requestVector, releaseVector } from './vector.js';
 
@@ -37,7 +37,7 @@ import baseMix from '../mixin/base.js';
 
 
 // #### Spring constructor
-const Spring = function (items = {}) {
+const Spring = function (items = Ωempty) {
 
     this.makeName(items.name);
     this.register();
@@ -206,6 +206,8 @@ P.applySpring = function () {
 // }).run();
 // ```
 const makeSpring = function (items) {
+
+    if (!items) return false;
     return new Spring(items);
 };
 

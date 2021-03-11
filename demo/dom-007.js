@@ -9,10 +9,6 @@ import scrawl from '../source/scrawl.js'
 let artefact = scrawl.library.artefact,
     stack = artefact.mystack,
     flower = artefact.flower,
-    leftbox = artefact.leftbox,
-    rightbox = artefact.rightbox,
-    deltaX = 0.4,
-    deltaY = -0.3,
     currentClass = '';
 
 
@@ -41,7 +37,7 @@ stack.set({
 
 
 // Update the boxes
-rightbox.set({
+artefact.rightbox.set({
     group: 'hitareas',
 
     startX: '55%',
@@ -51,7 +47,7 @@ rightbox.set({
     css: { backgroundColor: 'red' },
 });
 
-leftbox.set({
+artefact.leftbox.set({
     group: hitgroup.name,
 
     startX: '10%',
@@ -80,60 +76,26 @@ flower.set({
     handleY: 'center',
     classes: 'make_round',
     delta: {
-        startX: `${deltaX}%`,
-        startY: `${deltaY}%`,
+        startX: '0.4%',
+        startY: '-0.3%',
         roll: 0.5,
     },
+
+    // We will check for __boundary collisions__ using Scrawl-canvas delta checking functionality
+    // + We supply an array for each delta attribute we want to check in the deltaConstraints Object
+    // + The Array holds three items: `[minimum-value, maximum-value, action-to-take]`
+    // + When the attribute updated by the delta value falls outside our boundaries, Scrawl-canvas takes the appropriate action
+    // + The __reverse__ action will reverse the numerical sign of the affected delta object attribute value
+    // + The __loop__ action will loop the artefact's attribute value from the maximum to the minimum value, or vice-versa as appropriate
+    deltaConstraints: {
+        startX: ['10%', '90%', 'reverse'],
+        startY: ['10%', '90%', 'reverse'],
+    },
+    checkDeltaConstraints: true,
 });
 
 
 // #### Scene animation
-// Boundary checking can get very messy very quickly, particularly when using delta animation. The following boilerplate will work in many situations:
-// 1. check to see if the artefact has crossed the boundary. If it has, then...
-// 2. reverse the artefact away from the boundary along the path it has just travelled along
-// 3. check to see which of the delta values needs to be updated - for bouncing an artefact around an enclosed box, reversing the sign on the appropriate delta value is often enough
-// 4. move the artefact forward using its new delta values
-let checkForFlowerBoundaryCollisions = function () {
-
-    // __Step 0__ - determine the current boundary values (in this case they are dynamic, relative to the current dimensions of the Stack) and the current position of the flower element (again, a dynamic coordinate relative to Stack dimensions)
-    let [x, y] = flower.get('start'),
-        [minX, minY] = stack.get('dimensions');
-
-    minX /= 10;
-    minY /= 10;
-
-    let maxX = minX * 9,
-        maxY = minY * 9;
-
-    // __Step 1__ - check for boundary crossings
-    if (x < minX || x > maxX || y < minY || y > maxY) {
-
-        // __Step 2__ - reverse out of danger
-        flower.reverseByDelta();
-
-        // __Step 3__ - update the appropriate delta values for the flower
-        let changes = {};
-
-        if (x < minX || x > maxX) {
-
-            deltaX = -deltaX;
-            changes.startX = `${deltaX}%`;
-        }
-        if (y < minY || y > maxY) {
-
-            deltaY = -deltaY;
-            changes.startY = `${deltaY}%`;
-        }
-
-        flower.set({
-            delta: changes
-        });
-
-        // __Step 4__ - move forward away from the boundary
-        flower.updateByDelta();
-    }
-};
-
 
 // Updating the flower's DOM element's class attribute
 let checkForFlowerClassUpdates = function () {
@@ -156,7 +118,7 @@ let checkForFlowerClassUpdates = function () {
 // Combining the two check functions above into a single function
 let commenceActions = function () {
 
-    checkForFlowerBoundaryCollisions();
+    // checkForFlowerBoundaryCollisions();
     checkForFlowerClassUpdates();
 };
 

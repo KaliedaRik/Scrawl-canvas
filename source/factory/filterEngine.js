@@ -5,15 +5,13 @@
 
 
 import { constructors } from '../core/library.js';
+import {requestCell, releaseCell} from './cell.js';
 
 
 // #### FilterEngine constructor
 const FilterEngine = function () {
 
     // ### Transactional variables
-
-    // __image__ - the original imageData `{width, height, data}` object supplied in the message
-    this.image = null; 
 
     // __cache__ - an Object consisting of `key:Object` pairs where the key is the named input of a `process-image` action or the output of any action object. This object is cleared and re-initialized each time the `engine.action` function is invoked
     this.cache = null; 
@@ -33,38 +31,48 @@ P.type = 'FilterEngine';
 
 P.action = function (packet) {
 
-    // logMessage('actioning some filters');
-
     let { filters, image } = packet;
-
-    this.image = image;
 
     let { workstoreLastAccessed, workstore, actions, choke, theBigActionsObject } = this;
 
     let workstoreKeys = Object.keys(workstore), 
         workstoreChoke = Date.now() - choke;
 
-    workstoreKeys.forEach(k => {
+    for (let k = 0, kz = workstoreKeys.length, s; k < kz; k++) {
 
-        if (workstoreLastAccessed[k] < workstoreChoke) {
+        s = workstoreKeys[k];
 
-            delete workstore[k];
-            delete workstoreLastAccessed[k];
+        if (workstoreLastAccessed[s] < workstoreChoke) {
+
+            delete workstore[s];
+            delete workstoreLastAccessed[s];
         }
-    });
-
-    this.cache = {};
+    }
 
     actions.length = 0;
-    filters.forEach(f => actions.push(...f.actions));
 
-    if (actions.length) {
+    for (let f = 0, fz = filters.length; f < fz; f++) {
+
+        actions.push(...filters[f].actions)
+    }
+
+    let actionsLen = actions.length;
+
+    if (actionsLen) {
 
         this.unknit(image);
-        actions.forEach(a => theBigActionsObject[a.action] && theBigActionsObject[a.action].call(this, a));
-        this.knit();
+
+        for (let i = 0, actData, a; i < actionsLen; i++) {
+
+            actData = actions[i];
+            a = theBigActionsObject[actData.action];
+
+            if (a) a.call(this, actData);
+        }
+
+        return this.cache.work;
     }
-    return(this.image);
+    return image;
 }
 
 
@@ -75,94 +83,41 @@ P.workstore = {},
 P.workstoreLastAccessed = {};
 
 
-// ### Result objects
-
-// `createResultObject` - to make the following code easier to maintain, the filter emngine will create result objects for all source image data it receives, and for each action object output. These result objects contain four arrays - one for each color channle, and one for the alpha channel.
-P.createResultObject = function (len) {
-
-    return {
-        r: new Uint8ClampedArray(len),
-        g: new Uint8ClampedArray(len),
-        b: new Uint8ClampedArray(len),
-        a: new Uint8ClampedArray(len),
-    };
-};
-
-// `copyOver` - copy the values from one results object to another
-P.copyOver = function (f, t) {
-
-    if (f && f.channels) f = f.channels;
-    if (t && t.channels) t = t.channels;
-
-    let {r:fromR, g:fromG, b:fromB, a:fromA } = f;
-    let {r:toR, g:toG, b:toB, a:toA } = t;
-
-    for (let i = 0; i < fromR.length; i++) {
-
-        toR[i] = fromR[i];
-        toG[i] = fromG[i];
-        toB[i] = fromB[i];
-        toA[i] = fromA[i];
-    }
-};
-
 // `unknit` - called at the start of each new message action chain. Creates and populates the __source__ and __work__ objects from the image data supplied in the message
-P.unknit = function () {
+P.unknit = function (image) {
 
-    let { cache, image } = this;
+    this.cache = {};
+
+    let cache = this.cache;
 
     let { width, height, data } = image;
 
-    let len = Math.floor(data.length / 4);
+    let len = data.length;
 
-    let source = this.createResultObject(len);
-    let { r:sourceRed, g:sourceGreen, b:sourceBlue, a:sourceAlpha } = source;
-
-    for (let i = 0, iz = data.length, counter = 0; i < iz; i += 4) {
-
-        sourceRed[counter] = data[i];
-        sourceGreen[counter] = data[i + 1];
-        sourceBlue[counter] = data[i + 2];
-        sourceAlpha[counter] = data[i + 3];
-
-        counter++;
-    }
-
-    let work = this.createResultObject(len);
-    this.copyOver(source, work);
-
-    cache.source = {
-        width,
-        height,
-        channels: source,
-    };
-
-    cache.work = {
-        width,
-        height,
-        channels: work,
-    };
+    cache.source = new ImageData(data, width, height)
+    cache.work = new ImageData(data, width, height)
 };
 
-// `knit` - called at the end of each message action chain. Recreates the message image data in the correct format so it can be used by the main thread
-P.knit = function () {
+// `getAlphaData` - extract alpha channel data from (usually the source) ImageData object and populate the color channels of a new ImageData object with that data
+P.getAlphaData = function (image) {
 
-    let { image, cache } = this;
+    let {width, height, data:iData} = image;
 
-    let { data } = image;
-    let { work } = cache;
+    let len = iData.length;
 
-    let { r:workRed, g:workGreen, b:workBlue, a:workAlpha } = work.channels;
+    let sourceAlpha = new ImageData(width, height),
+        aData = sourceAlpha.data;
 
-    for (let i = 0, iz = data.length, counter = 0; i < iz; i += 4) {
+    for (let i = 0; i < len; i += 4) {
 
-        data[i] = workRed[counter];
-        data[i + 1] = workGreen[counter];
-        data[i + 2] = workBlue[counter];
-        data[i + 3] = workAlpha[counter];
-
-        counter++;
+        let a = iData[i + 3];
+        aData[i] = 0;
+        aData[i + 1] = 0;
+        aData[i + 2] = 0;
+        aData[i + 3] = (a > 0) ? 255 : 0;
     }
+
+    return sourceAlpha;
 };
 
 
@@ -259,7 +214,7 @@ P.buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeigh
                 for (y = j, yz = j + tileHeight; y < yz; y++) {
                     if (y >= 0 && y < iHeight) {
                         for (let x = i, xz = i + tileWidth; x < xz; x++) {
-                            if (x >= 0 && x < iWidth) hold.push((y * iWidth) + x);
+                            if (x >= 0 && x < iWidth) hold.push((((y * iWidth) + x) * 4) + 3);
                         }
                     }
                 }
@@ -269,7 +224,7 @@ P.buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeigh
                 for (y =  j + tileHeight, yz = j + tileHeight + gutterHeight; y < yz; y++) {
                     if (y >= 0 && y < iHeight) {
                         for (let x = i, xz = i + tileWidth; x < xz; x++) {
-                            if (x >= 0 && x < iWidth) hold.push((y * iWidth) + x);
+                            if (x >= 0 && x < iWidth) hold.push((((y * iWidth) + x) * 4) + 3);
                         }
                     }
                 }
@@ -279,7 +234,7 @@ P.buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeigh
                 for (y = j, yz = j + tileHeight; y < yz; y++) {
                     if (y >= 0 && y < iHeight) {
                         for (let x = i + tileWidth, xz = i + tileWidth + gutterWidth; x < xz; x++) {
-                            if (x >= 0 && x < iWidth) hold.push((y * iWidth) + x);
+                            if (x >= 0 && x < iWidth) hold.push((((y * iWidth) + x) * 4) + 3);
                         }
                     }
                 }
@@ -289,7 +244,7 @@ P.buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeigh
                 for (y =  j + tileHeight, yz = j + tileHeight + gutterHeight; y < yz; y++) {
                     if (y >= 0 && y < iHeight) {
                         for (let x = i + tileWidth, xz = i + tileWidth + gutterWidth; x < xz; x++) {
-                            if (x >= 0 && x < iWidth) hold.push((y * iWidth) + x);
+                            if (x >= 0 && x < iWidth) hold.push((((y * iWidth) + x) * 4) + 3);
                         }
                     }
                 }
@@ -301,7 +256,6 @@ P.buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeigh
         return tiles;
     }
     return false;
-
 };
 
 // `buildImageTileSets` - creates a record of which pixels belong to which tile - used for manipulating color channels values. Resulting object will be cached in the store
@@ -349,7 +303,7 @@ P.buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY, image)
 
                         for (let x = i, xz = i + tileWidth; x < xz; x++) {
 
-                            if (x >= 0 && x < iWidth) hold.push((y * iWidth) + x);
+                            if (x >= 0 && x < iWidth) hold.push(((y * iWidth) + x) * 4);
                         }
                     }
                 }
@@ -390,7 +344,7 @@ P.buildHorizontalBlur = function (grid, radius) {
 
             for (let c = x - radius, cz = x + radius + 1; c < cz; c++) {
 
-                if (c >= 0 && c < gridWidth) cellsToProcess.push(grid[y][c]);
+                if (c >= 0 && c < gridWidth) cellsToProcess.push(grid[y][c] * 4);
             }
             horizontalBlur[(y * gridWidth) + x] = cellsToProcess;
         }
@@ -427,7 +381,7 @@ P.buildVerticalBlur = function (grid, radius) {
 
             for (let c = y - radius, cz = y + radius + 1; c < cz; c++) {
 
-                if (c >= 0 && c < gridHeight) cellsToProcess.push(grid[c][x]);
+                if (c >= 0 && c < gridHeight) cellsToProcess.push(grid[c][x] * 4);
             }
             verticalBlur[(y * gridWidth) + x] = cellsToProcess;
         }
@@ -438,13 +392,13 @@ P.buildVerticalBlur = function (grid, radius) {
 };
 
 // `buildMatrixGrid` - creates an Array of Arrays detailing which pixels contribute to each pixel's matrix calculation. Resulting object will be cached in the store
-P.buildMatrixGrid = function (mWidth, mHeight, mX, mY, alpha, image) {
+P.buildMatrixGrid = function (mWidth, mHeight, mX, mY, image) {
 
     let { cache, workstore, workstoreLastAccessed } = this;
 
     if (!image) image = cache.source;
 
-    let { width:iWidth, height:iHeight, channels } = image;
+    let { width:iWidth, height:iHeight, data } = image;
 
     if (mWidth == null || mWidth < 1) mWidth = 1;
     if (mHeight == null || mHeight < 1) mHeight = 1;
@@ -461,8 +415,8 @@ P.buildMatrixGrid = function (mWidth, mHeight, mX, mY, alpha, image) {
         return workstore[name];
     }
 
-    let dataLength = channels.r.length,
-        x, xz, y, yz, i, iz,
+    let dataLength = data.length,
+        x, xz, y, yz, i, iz, pos, cell, val,
         cellsTemplate = [],
         grid = [];
 
@@ -470,7 +424,7 @@ P.buildMatrixGrid = function (mWidth, mHeight, mX, mY, alpha, image) {
 
         for (x = -mX, xz = mWidth - mX; x < xz; x++) {
 
-            cellsTemplate.push((y * iWidth) + x);
+            cellsTemplate.push(((y * iWidth) + x) * 4);
         }
     }
 
@@ -478,12 +432,12 @@ P.buildMatrixGrid = function (mWidth, mHeight, mX, mY, alpha, image) {
 
         for (x = 0; x < iWidth; x++) {
             
-            let pos = (y * iWidth) + x;
-            let cell = [];
+            pos = ((y * iWidth) + x) * 4;
+            cell = [];
 
             for (i = 0, iz = cellsTemplate.length; i < iz; i++) {
 
-                let val = pos + cellsTemplate[i];
+                val = pos + cellsTemplate[i];
 
                 if (val < 0) val += dataLength;
                 else if (val >= dataLength) val -= dataLength;
@@ -552,104 +506,40 @@ P.cacheOutput = function (name, obj, caller) {
     cache[name] = obj;
 };
 
-// `getInputAndOutputDimensions` - determine, and return, the dimensions (width, height) for the appropriate results object for the lineIn, lineMix and lineOut values supplied to each action function when it gets invoked
-P.getInputAndOutputDimensions = function (requirements) {
+// `getInputAndOutputLines` - determine, and return, the appropriate results object for the lineIn, lineMix and lineOut values supplied to each action function when it gets invoked
+P.getInputAndOutputLines = function (requirements) {
 
     let { cache } = this;
 
-    let data = cache.source,
-        results = [];
+    let lineIn = cache.work,
+        lineMix = false,
+        sourceData = cache.source,
+        alphaData = false;
 
-    if (requirements.lineIn && requirements.lineIn != 'source' && requirements.lineIn != 'source-alpha' && cache[requirements.lineIn]) {
-
-        data = cache[requirements.lineIn];
-    }
-    results.push(data.width, data.height);
-
-    if (requirements.lineOut && cache[requirements.lineOut]) {
-
-        data = cache[requirements.lineOut];
-    }
-    results.push(data.width, data.height);
-
-    data = cache.source;
-
-    if (requirements.lineMix && requirements.lineMix != 'source' && requirements.lineMix != 'source-alpha' && cache[requirements.lineMix]) {
-
-        data = cache[requirements.lineMix];
-    }
-    results.push(data.width, data.height);
-
-    return results;
-};
-
-// `getInputAndOutputChannels` - determine, and return, the appropriate results object for the lineIn, lineMix and lineOut values supplied to each action function when it gets invoked
-P.getInputAndOutputChannels = function (requirements) {
-
-    let { cache } = this;
-
-    let lineIn = cache.work.channels;
-    let len = lineIn.r.length;
-    let data = cache.source;
+    if (requirements.lineIn === 'source-alpha' || requirements.lineMix === 'source-alpha') alphaData = this.getAlphaData(sourceData);
 
     if (requirements.lineIn) {
 
-        if (requirements.lineIn == 'source') lineIn = data.channels;
-        else if (requirements.lineIn == 'source-alpha') {
-
-            lineIn = this.createResultObject(len);
-
-            let destAlpha = lineIn.a,
-                sourceAlpha = data.channels.a;
-
-            for (let i = 0; i < len; i++) {
-
-                destAlpha[i] = sourceAlpha[i];
-            }
-        }
-        else if (cache[requirements.lineIn]) {
-
-            data = cache[requirements.lineIn];
-            lineIn = data.channels;
-        }
+        if (requirements.lineIn == 'source') lineIn = sourceData;
+        else if (requirements.lineIn == 'source-alpha') lineIn = alphaData;
+        else if (cache[requirements.lineIn]) lineIn = cache[requirements.lineIn];
     }
-
-    let lineMix = false;
 
     if (requirements.lineMix) {
 
-        if (requirements.lineMix == 'source') lineMix = cache.source.channels;
-        else if (requirements.lineMix == 'source-alpha') {
-
-            lineMix = this.createResultObject(len);
-
-            let destAlpha = lineMix.a,
-                sourceAlpha = cache.source.channels.a;
-
-            for (let i = 0; i < len; i++) {
-
-                destAlpha[i] = sourceAlpha[i];
-            }
-        }
-        else if (cache[requirements.lineMix]) lineMix = cache[requirements.lineMix].channels;
+        if (requirements.lineMix == 'source') lineMix = sourceData;
+        else if (requirements.lineMix == 'source-alpha') lineMix = alphaData;
+        else if (cache[requirements.lineMix]) lineMix = cache[requirements.lineMix];
     }
 
     let lineOut;
+    if (!requirements.lineOut || !cache[requirements.lineOut]) {
 
-    if (requirements.lineOut) {
+        lineOut = new ImageData(lineIn.width, lineIn.height);
 
-        if (cache[requirements.lineOut]) lineOut = cache[requirements.lineOut].channels;
-        else {
-
-            lineOut = this.createResultObject(len);
-            cache[requirements.lineOut] = {
-                width: data.width,
-                height: data.height,
-                channels: lineOut,
-            };
-        }
+        if (requirements.lineOut) cache[requirements.lineOut] = lineOut;
     }
-    else lineOut = this.createResultObject(len);
+    else lineOut = cache[requirements.lineOut];
 
     return [lineIn, lineOut, lineMix];
 };
@@ -657,27 +547,23 @@ P.getInputAndOutputChannels = function (requirements) {
 // `processResults` - at the conclusion of each action function, combine the results of the function's manipulations back into the data supplied for manipulation, in line with the value of the action object's `opacity` attribute
 P.processResults = function (store, incoming, ratio) {
 
-    let sR = store.r,
-        sG = store.g,
-        sB = store.b,
-        sA = store.a;
+    let sData = store.data,
+        iData = incoming.data,
+        antiRatio;
 
-    let iR = incoming.r,
-        iG = incoming.g,
-        iB = incoming.b,
-        iA = incoming.a;
+    if (ratio === 1) {
+        for (let i = 0, iz = sData.length; i < iz; i++) {
 
-    if (ratio === 1) this.copyOver(incoming, store);
+            sData[i] = iData[i];
+        }
+    }
     else if (ratio > 0) {
 
-        let antiRatio = 1 - ratio;
+        antiRatio = 1 - ratio;
 
-        for (let i = 0, iz = sR.length; i < iz; i++) {
+        for (let i = 0, iz = sData.length; i < iz; i++) {
 
-            sR[i] = Math.floor((sR[i] * antiRatio) + (iR[i] * ratio));
-            sG[i] = Math.floor((sG[i] * antiRatio) + (iG[i] * ratio));
-            sB[i] = Math.floor((sB[i] * antiRatio) + (iB[i] * ratio));
-            sA[i] = Math.floor((sA[i] * antiRatio) + (iA[i] * ratio));
+            sData[i] = (sData[i] * antiRatio) + (iData[i] * ratio);
         }
     }
 };
@@ -756,12 +642,15 @@ P.getRGBfromHSL = function (h, s, l) {
 // Each function is held in the `theBigActionsObject` object, for convenience
 P.theBigActionsObject = {
 
-// __alpha-to-channels__ - Copies the alpha channel value over to the selected value or, alternatively, sets that channels value to zero, or leaves the channel's value unchanged. Setting the appropriate "includeChannel" flags will copy the alpha channel value to that channel; when that flag is false, setting the appropriate "excludeChannel" flag will set that channel's value to zero.
+// __alpha-to-channels__ - Copies the alpha channel value over to the selected value or, alternatively, sets that channel's value to zero, or leaves the channel's value unchanged. Setting the appropriate "includeChannel" flags will copy the alpha channel value to that channel; when that flag is false, setting the appropriate "excludeChannel" flag will set that channel's value to zero.
     'alpha-to-channels': function (requirements) {
 
-        let [input, output] = this.getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputLines(requirements);
 
-        let len = input.r.length;
+        let iData = input.data,
+            oData = output.data,
+            len = iData.length,
+            r, g, b, a, aVal, i;
 
         let {opacity, includeRed, includeGreen, includeBlue, excludeRed, excludeGreen, excludeBlue, lineOut} = requirements;
 
@@ -773,28 +662,33 @@ P.theBigActionsObject = {
         if (null == excludeGreen) excludeGreen = true;
         if (null == excludeBlue) excludeBlue = true;
 
-        const {r:inR, g:inG, b:inB, a:inA} = input;
-        const {r:outR, g:outG, b:outB, a:outA} = output;
+        for (i = 0; i < len; i += 4) {
 
-        for (let i = 0; i < len; i++) {
+            r = i;
+            g = r + 1;
+            b = g + 1;
+            a = b + 1;
+            aVal = iData[a];
 
-            outR[i] = (includeRed) ? inA[i] : ((excludeRed) ? 0 : inR[i]);
-            outG[i] = (includeGreen) ? inA[i] : ((excludeGreen) ? 0 : inG[i]);
-            outB[i] = (includeBlue) ? inA[i] : ((excludeBlue) ? 0 : inB[i]);
+            oData[r] = (includeRed) ? aVal : ((excludeRed) ? 0 : iData[r]);
+            oData[g] = (includeGreen) ? aVal : ((excludeGreen) ? 0 : iData[g]);
+            oData[b] = (includeBlue) ? aVal : ((excludeBlue) ? 0 : iData[b]);
+            oData[a] = 255;
         }
-        outA.fill(255, 0, outA.length - 1);
 
-        let work = this.cache.work.channels;
-        if (lineOut) this.processResults(output, work, 1 - opacity);
-        else this.processResults(work, output, opacity);
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
     },
 
 // __area-alpha__ - Places a tile schema across the input, quarters each tile and then sets the alpha channels of the pixels in selected quarters of each tile to zero. Can be used to create horizontal or vertical bars, or chequerboard effects.
     'area-alpha': function (requirements) {
 
-        let [input, output] = this.getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputLines(requirements);
 
-        let len = input.r.length;
+        let iData = input.data,
+            oData = output.data,
+            len = iData.length,
+            r, g, b, a, i, j, jz, tVal;
 
         let {opacity, tileWidth, tileHeight, offsetX, offsetY, gutterWidth, gutterHeight, areaAlphaLevels, lineOut} = requirements;
 
@@ -809,35 +703,41 @@ P.theBigActionsObject = {
 
         let tiles = this.buildAlphaTileSets(tileWidth, tileHeight, gutterWidth, gutterHeight, offsetX, offsetY, areaAlphaLevels);
 
-        if (!Array.isArray(areaAlphaLevels)) areaAlphaLevels = [255,0,0,0];
+        for (i = 0; i < len; i += 4) {
 
-        const {r:inR, g:inG, b:inB, a:inA} = input;
-        const {r:outR, g:outG, b:outB, a:outA} = output;
+            r = i;
+            g = r + 1;
+            b = g + 1;
 
-        for (let i = 0; i < len; i++) {
-            outR[i] = inR[i];
-            outG[i] = inG[i];
-            outB[i] = inB[i];
+            oData[r] = iData[r];
+            oData[g] = iData[g];
+            oData[b] = iData[b];
         }
         tiles.forEach((t, index) => {
 
-            for (let j = 0, jz = t.length; j < jz; j++) {
+            a = areaAlphaLevels[index % 4];
 
-                if (inA[t[j]]) outA[t[j]] = areaAlphaLevels[index % 4];
+            for (j = 0, jz = t.length; j < jz; j++) {
+
+                tVal = t[j];
+
+                if (iData[tVal]) oData[tVal] = a;
             }
         });
 
-        let work = this.cache.work.channels;
-        if (lineOut) this.processResults(output, work, 1 - opacity);
-        else this.processResults(work, output, opacity);
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
     },
 
 // __average-channels__ - Calculates an average value from each pixel's included channels and applies that value to all channels that have not been specifically excluded; excluded channels have their values set to 0.
     'average-channels': function (requirements) {
 
-        let [input, output] = this.getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputLines(requirements);
 
-        let len = input.r.length;
+        let iData = input.data,
+            oData = output.data,
+            len = iData.length,
+            i, avg, r, g, b, a;
 
         let {opacity, includeRed, includeGreen, includeBlue, excludeRed, excludeGreen, excludeBlue, lineOut} = requirements;
 
@@ -854,56 +754,60 @@ P.theBigActionsObject = {
         if (includeGreen) divisor++;
         if (includeBlue) divisor++;
 
-        const {r:inR, g:inG, b:inB, a:inA} = input;
-        const {r:outR, g:outG, b:outB, a:outA} = output;
+        for (i = 0; i < len; i += 4) {
 
-        for (let i = 0; i < len; i++) {
+            r = i;
+            g = r + 1;
+            b = g + 1;
+            a = b + 1;
 
-            if (inA[i]) {
+            if (iData[a]) {
 
                 if (divisor) {
 
-                    let avg = 0;
+                    avg = 0;
 
-                    if (includeRed) avg += inR[i];
-                    if (includeGreen) avg += inG[i];
-                    if (includeBlue) avg += inB[i];
+                    if (includeRed) avg += iData[r];
+                    if (includeGreen) avg += iData[g];
+                    if (includeBlue) avg += iData[b];
 
                     avg = Math.floor(avg / divisor);
 
-                    outR[i] = (excludeRed) ? 0 : avg;
-                    outG[i] = (excludeGreen) ? 0 : avg;
-                    outB[i] = (excludeBlue) ? 0 : avg;
-                    outA[i] = inA[i];
+                    oData[r] = (excludeRed) ? 0 : avg;
+                    oData[g] = (excludeGreen) ? 0 : avg;
+                    oData[b] = (excludeBlue) ? 0 : avg;
+                    oData[a] = iData[a];
                 }
                 else {
     
-                    outR[i] = (excludeRed) ? 0 : inR[i];
-                    outG[i] = (excludeGreen) ? 0 : inG[i];
-                    outB[i] = (excludeBlue) ? 0 : inB[i];
-                    outA[i] = inA[i];
+                    oData[r] = (excludeRed) ? 0 : iData[r];
+                    oData[g] = (excludeGreen) ? 0 : iData[g];
+                    oData[b] = (excludeBlue) ? 0 : iData[b];
+                    oData[a] = iData[a];
                 }
             }
             else {
 
-                outR[i] = inR[i];
-                outG[i] = inG[i];
-                outB[i] = inB[i];
-                outA[i] = inA[i];
+                oData[r] = iData[r];
+                oData[g] = iData[g];
+                oData[b] = iData[b];
+                oData[a] = iData[a];
             }
         }
-
-        let work = this.cache.work.channels;
-        if (lineOut) this.processResults(output, work, 1 - opacity);
-        else this.processResults(work, output, opacity);
+        
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
     },
 
 // __binary__ - Set the channel to either 0 or 255, depending on whether the channel value is below or above a given level. Level values are set using the "red", "green", "blue" and "alpha" arguments. Setting these values to 0 disables the action for that channel.
     'binary': function (requirements) {
 
-        let [input, output] = this.getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputLines(requirements);
 
-        let len = input.r.length;
+        let iData = input.data,
+            oData = output.data,
+            len = iData.length,
+            r, g, b, a, i;
 
         let {opacity, red, green, blue, alpha, lineOut} = requirements;
 
@@ -913,55 +817,46 @@ P.theBigActionsObject = {
         if (null == blue) blue = 0;
         if (null == alpha) alpha = 0;
 
-        const {r:inR, g:inG, b:inB, a:inA} = input;
-        const {r:outR, g:outG, b:outB, a:outA} = output;
+        for (i = 0; i < len; i += 4) {
 
-        for (let i = 0; i < len; i++) {
+            r = i;
+            g = r + 1;
+            b = g + 1;
+            a = b + 1;
 
-            if (red) outR[i] = (inR[i] > red) ? 255 : 0;
-            else outR[i] = inR[i];
+            if (red) oData[r] = (iData[r] > red) ? 255 : 0;
+            else oData[r] = iData[r];
 
-            if (green) outG[i] = (inG[i] > green) ? 255 : 0;
-            else outG[i] = inG[i];
+            if (green) oData[g] = (iData[g] > green) ? 255 : 0;
+            else oData[g] = iData[g];
 
-            if (blue) outB[i] = (inB[i] > blue) ? 255 : 0;
-            else outB[i] = inB[i];
+            if (blue) oData[b] = (iData[b] > blue) ? 255 : 0;
+            else oData[b] = iData[b];
 
-            if (alpha) outA[i] = (inA[i] > alpha) ? 255 : 0;
-            else outA[i] = inA[i];
+            if (alpha) oData[a] = (iData[a] > alpha) ? 255 : 0;
+            else oData[a] = iData[a];
         }
 
-        let work = this.cache.work.channels;
-        if (lineOut) this.processResults(output, work, 1 - opacity);
-        else this.processResults(work, output, opacity);
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
     },
 
 // __blend__ - Using two source images (from the "lineIn" and "lineMix" arguments), combine their color information using various separable and non-separable blend modes (as defined by the W3C Compositing and Blending Level 1 recommendations. The blending method is determined by the String value supplied in the "blend" argument; permitted values are: 'color-burn', 'color-dodge', 'darken', 'difference', 'exclusion', 'hard-light', 'lighten', 'lighter', 'multiply', 'overlay', 'screen', 'soft-light', 'color', 'hue', 'luminosity', and 'saturation'. Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the "offsetX" and "offsetY" arguments.
     'blend': function (requirements) {
 
-        let [input, output, mix] = this.getInputAndOutputChannels(requirements);
+        const copyPixel = function (fr, tr, data) {
 
-        let len = output.r.length;
+            let fg = fr + 1,
+                fb = fg + 1,
+                fa = fb + 1,
+                tg = tr + 1,
+                tb = tg + 1,
+                ta = tb + 1;
 
-        let {opacity, blend, offsetX, offsetY, lineOut} = requirements;
-
-        if (null == opacity) opacity = 1;
-        if (null == blend) blend = '';
-        if (null == offsetX) offsetX = 0;
-        if (null == offsetY) offsetY = 0;
-
-        const {r:inR, g:inG, b:inB, a:inA} = input;
-        const {r:outR, g:outG, b:outB, a:outA} = output;
-        const {r:mixR, g:mixG, b:mixB, a:mixA} = mix;
-
-        let [iWidth, iHeight, oWidth, oHeight, mWidth, mHeight] = this.getInputAndOutputDimensions(requirements);
-
-        const copyPixel = function (fromPos, toPos, channel) {
-
-            outR[toPos] = channel.r[fromPos];
-            outG[toPos] = channel.g[fromPos];
-            outB[toPos] = channel.b[fromPos];
-            outA[toPos] = channel.a[fromPos];
+            oData[tr] = data[fr];
+            oData[tg] = data[fg];
+            oData[tb] = data[fb];
+            oData[ta] = data[fa];
         };
 
         const getLinePositions = function (x, y) {
@@ -972,282 +867,392 @@ P.theBigActionsObject = {
                 my = y - offsetY;
 
             let mPos = -1,
-                iPos = (iy * iWidth) + ix;
+                iPos = ((iy * iWidth) + ix) * 4;
 
-            if (mx >= 0 && mx < mWidth && my >= 0 && my < mHeight) mPos = (my * mWidth) + mx;
+            if (mx >= 0 && mx < mWidth && my >= 0 && my < mHeight) mPos = ((my * mWidth) + mx) * 4;
 
             return [iPos, mPos];
         };
 
-        const getChannelNormals = function (i, m) {
+        const getChannelNormals = function (irn, mrn) {
+
+            let ign = irn + 1,
+                ibn = ign + 1,
+                ian = ibn + 1,
+                mgn = mrn + 1,
+                mbn = mgn + 1,
+                man = mbn + 1;
 
             return [
-                input.r[i] / 255,
-                input.g[i] / 255,
-                input.b[i] / 255,
-                input.a[i] / 255,
-                mix.r[m] / 255,
-                mix.g[m] / 255,
-                mix.b[m] / 255,
-                mix.a[m] / 255
+                iData[irn] / 255,
+                iData[ign] / 255,
+                iData[ibn] / 255,
+                iData[ian] / 255,
+                mData[mrn] / 255,
+                mData[mgn] / 255,
+                mData[mbn] / 255,
+                mData[man] / 255
             ];
         };
 
-        const alphaCalc = (dinA, dmixA) => (dinA + (dmixA * (1 - dinA))) * 255;
+        const alphaCalc = (dA, mA) => (dA + (mA * (1 - dA))) * 255;
+
+        let [input, output, mix] = this.getInputAndOutputLines(requirements);
+
+        let {width:iWidth, height:iHeight, data:iData} = input;
+        let {width:oWidth, height:oHeight, data:oData} = output;
+        let {width:mWidth, height:mHeight, data:mData} = mix;
+        let len = iData.length;
+
+        let {opacity, blend, offsetX, offsetY, lineOut} = requirements;
+
+        if (null == opacity) opacity = 1;
+        if (null == blend) blend = '';
+        if (null == offsetX) offsetX = 0;
+        if (null == offsetY) offsetY = 0;
+
+        let x, y, dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA, ir, ig, ib, ia, mr, mg, mb, ma, cr, cg, cb;
 
         switch (blend) {
 
             case 'color-burn' :
+
                 const colorburnCalc = (din, dmix) => {
                     if (dmix == 1) return 255;
                     else if (din == 0) return 0;
                     return (1 - Math.min(1, ((1 - dmix) / din ))) * 255;
                 };
-                for (let y = 0; y < iHeight; y++) {
-                    for (let x = 0; x < iWidth; x++) {
 
-                        let [iPos, mPos] = getLinePositions(x, y);
+                for (y = 0; y < iHeight; y++) {
+                    for (x = 0; x < iWidth; x++) {
 
-                        if (mPos < 0) copyPixel(iPos, iPos, input);
-                        else if (!inA[iPos]) copyPixel(mPos, iPos, mix);
-                        else if (!mixA[mPos]) copyPixel(iPos, iPos, input);
+                        [ir, mr] = getLinePositions(x, y);
+
+                        ia = ir + 3;
+                        ma = mr + 3;
+
+                        if (mr < 0) copyPixel(ir, ir, iData);
+                        else if (!iData[ia]) copyPixel(mr, ir, mData);
+                        else if (!mData[ma]) copyPixel(ir, ir, iData);
                         else {
 
-                            let [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(iPos, mPos);
+                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
 
-                            outR[iPos] = colorburnCalc(dinR, dmixR);
-                            outG[iPos] = colorburnCalc(dinG, dmixG);
-                            outB[iPos] = colorburnCalc(dinB, dmixB);
-                            outA[iPos] = alphaCalc(dinA, dmixA);
+                            ig = ir + 1;
+                            ib = ig + 1;
+
+                            oData[ir] = colorburnCalc(dinR, dmixR);
+                            oData[ig] = colorburnCalc(dinG, dmixG);
+                            oData[ib] = colorburnCalc(dinB, dmixB);
+                            oData[ia] = alphaCalc(dinA, dmixA);
                         }
                     }
                 }
                 break;
 
             case 'color-dodge' :
+
                 const colordodgeCalc = (din, dmix) => {
                     if (dmix == 0) return 0;
                     else if (din == 1) return 255;
                     return Math.min(1, (dmix / (1 - din))) * 255;
                 };
-                for (let y = 0; y < iHeight; y++) {
-                    for (let x = 0; x < iWidth; x++) {
 
-                        let [iPos, mPos] = getLinePositions(x, y);
+                for (y = 0; y < iHeight; y++) {
+                    for (x = 0; x < iWidth; x++) {
 
-                        if (mPos < 0) copyPixel(iPos, iPos, input);
-                        else if (!inA[iPos]) copyPixel(mPos, iPos, mix);
-                        else if (!mixA[mPos]) copyPixel(iPos, iPos, input);
+                        [ir, mr] = getLinePositions(x, y);
+
+                        ia = ir + 3;
+                        ma = mr + 3;
+
+                        if (mr < 0) copyPixel(ir, ir, iData);
+                        else if (!iData[ia]) copyPixel(mr, ir, mData);
+                        else if (!mData[ma]) copyPixel(ir, ir, iData);
                         else {
 
-                            let [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(iPos, mPos);
+                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
 
-                            outR[iPos] = colordodgeCalc(dinR, dmixR);
-                            outG[iPos] = colordodgeCalc(dinG, dmixG);
-                            outB[iPos] = colordodgeCalc(dinB, dmixB);
-                            outA[iPos] = alphaCalc(dinA, dmixA);
+                            ig = ir + 1;
+                            ib = ig + 1;
+
+                            oData[ir] = colordodgeCalc(dinR, dmixR);
+                            oData[ig] = colordodgeCalc(dinG, dmixG);
+                            oData[ib] = colordodgeCalc(dinB, dmixB);
+                            oData[ia] = alphaCalc(dinA, dmixA);
                         }
                     }
                 }
                 break;
 
             case 'darken' :
+
                 const darkenCalc = (din, dmix) => (din < dmix) ? din : dmix;
-                for (let y = 0; y < iHeight; y++) {
-                    for (let x = 0; x < iWidth; x++) {
 
-                        let [iPos, mPos] = getLinePositions(x, y);
+                for (y = 0; y < iHeight; y++) {
+                    for (x = 0; x < iWidth; x++) {
 
-                        if (mPos < 0) copyPixel(iPos, iPos, input);
-                        else if (!inA[iPos]) copyPixel(mPos, iPos, mix);
-                        else if (!mixA[mPos]) copyPixel(iPos, iPos, input);
+                        [ir, mr] = getLinePositions(x, y);
+
+                        ia = ir + 3;
+                        ma = mr + 3;
+
+                        if (mr < 0) copyPixel(ir, ir, iData);
+                        else if (!iData[ia]) copyPixel(mr, ir, mData);
+                        else if (!mData[ma]) copyPixel(ir, ir, iData);
                         else {
 
-                            outR[iPos] = darkenCalc(inR[iPos], mixR[mPos]);
-                            outG[iPos] = darkenCalc(inG[iPos], mixG[mPos]);
-                            outB[iPos] = darkenCalc(inB[iPos], mixB[mPos]);
-                            outA[iPos] = alphaCalc(inA[iPos] / 255, mixA[mPos] / 255);
+                            ig = ir + 1;
+                            ib = ig + 1;
+                            mg = mr + 1;
+                            mb = mg + 1;
+
+                            oData[ir] = darkenCalc(iData[ir], mData[mr]);
+                            oData[ig] = darkenCalc(iData[ig], mData[mg]);
+                            oData[ib] = darkenCalc(iData[ib], mData[mb]);
+                            oData[ia] = alphaCalc(iData[ia] / 255, mData[ma] / 255);
                         }
                     }
                 }
                 break;
 
             case 'difference' :
+
                 const differenceCalc = (din, dmix) => Math.abs(din - dmix) * 255;
-                for (let y = 0; y < iHeight; y++) {
-                    for (let x = 0; x < iWidth; x++) {
 
-                        let [iPos, mPos] = getLinePositions(x, y);
+                for (y = 0; y < iHeight; y++) {
+                    for (x = 0; x < iWidth; x++) {
 
-                        if (mPos < 0) copyPixel(iPos, iPos, input);
-                        else if (!inA[iPos]) copyPixel(mPos, iPos, mix);
+                        [ir, mr] = getLinePositions(x, y);
+
+                        ia = ir + 3;
+
+                        if (mr < 0) copyPixel(ir, ir, iData);
+                        else if (!iData[ia]) copyPixel(mr, ir, mData);
                         else {
 
-                            let [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(iPos, mPos);
+                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
 
-                            outR[iPos] = differenceCalc(dinR, dmixR);
-                            outG[iPos] = differenceCalc(dinG, dmixG);
-                            outB[iPos] = differenceCalc(dinB, dmixB);
-                            outA[iPos] = alphaCalc(dinA, dmixA);
+                            ig = ir + 1;
+                            ib = ig + 1;
+
+                            oData[ir] = differenceCalc(dinR, dmixR);
+                            oData[ig] = differenceCalc(dinG, dmixG);
+                            oData[ib] = differenceCalc(dinB, dmixB);
+                            oData[ia] = alphaCalc(dinA, dmixA);
                         }
                     }
                 }
                 break;
 
             case 'exclusion' :
+
                 const exclusionCalc = (din, dmix) => (din + dmix - (2 * dmix * din)) * 255;
-                for (let y = 0; y < iHeight; y++) {
-                    for (let x = 0; x < iWidth; x++) {
 
-                        let [iPos, mPos] = getLinePositions(x, y);
+                for (y = 0; y < iHeight; y++) {
+                    for (x = 0; x < iWidth; x++) {
 
-                        if (mPos < 0) copyPixel(iPos, iPos, input);
-                        else if (!inA[iPos]) copyPixel(mPos, iPos, mix);
+                        [ir, mr] = getLinePositions(x, y);
+
+                        ia = ir + 3;
+
+                        if (mr < 0) copyPixel(ir, ir, iData);
+                        else if (!iData[ia]) copyPixel(mr, ir, mData);
                         else {
 
-                            let [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(iPos, mPos);
+                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
 
-                            outR[iPos] = exclusionCalc(dinR, dmixR);
-                            outG[iPos] = exclusionCalc(dinG, dmixG);
-                            outB[iPos] = exclusionCalc(dinB, dmixB);
-                            outA[iPos] = alphaCalc(dinA, dmixA);
+                            ig = ir + 1;
+                            ib = ig + 1;
+
+                            oData[ir] = exclusionCalc(dinR, dmixR);
+                            oData[ig] = exclusionCalc(dinG, dmixG);
+                            oData[ib] = exclusionCalc(dinB, dmixB);
+                            oData[ia] = alphaCalc(dinA, dmixA);
                         }
                     }
                 }
                 break;
 
             case 'hard-light' :
+
                 const hardlightCalc = (din, dmix) => (din <= 0.5) ? (din * dmix) * 255 : (dmix + (din - (dmix * din))) * 255;
-                for (let y = 0; y < iHeight; y++) {
-                    for (let x = 0; x < iWidth; x++) {
 
-                        let [iPos, mPos] = getLinePositions(x, y);
+                for (y = 0; y < iHeight; y++) {
+                    for (x = 0; x < iWidth; x++) {
 
-                        if (mPos < 0) copyPixel(iPos, iPos, input);
-                        else if (!inA[iPos]) copyPixel(mPos, iPos, mix);
+                        [ir, mr] = getLinePositions(x, y);
+
+                        ia = ir + 3;
+
+                        if (mr < 0) copyPixel(ir, ir, iData);
+                        else if (!iData[ia]) copyPixel(mr, ir, mData);
                         else {
 
-                            let [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(iPos, mPos);
+                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
 
-                            outR[iPos] = hardlightCalc(dinR, dmixR);
-                            outG[iPos] = hardlightCalc(dinG, dmixG);
-                            outB[iPos] = hardlightCalc(dinB, dmixB);
-                            outA[iPos] = alphaCalc(dinA, dmixA);
+                            ig = ir + 1;
+                            ib = ig + 1;
+
+                            oData[ir] = hardlightCalc(dinR, dmixR);
+                            oData[ig] = hardlightCalc(dinG, dmixG);
+                            oData[ib] = hardlightCalc(dinB, dmixB);
+                            oData[ia] = alphaCalc(dinA, dmixA);
                         }
                     }
                 }
                 break;
 
             case 'lighten' :
+
                 const lightenCalc = (din, dmix) => (din > dmix) ? din : dmix;
-                for (let y = 0; y < iHeight; y++) {
-                    for (let x = 0; x < iWidth; x++) {
 
-                        let [iPos, mPos] = getLinePositions(x, y);
+                for (y = 0; y < iHeight; y++) {
+                    for (x = 0; x < iWidth; x++) {
 
-                        if (mPos < 0) copyPixel(iPos, iPos, input);
-                        else if (!inA[iPos]) copyPixel(mPos, iPos, mix);
+                        [ir, mr] = getLinePositions(x, y);
+
+                        ia = ir + 3;
+
+                        if (mr < 0) copyPixel(ir, ir, iData);
+                        else if (!iData[ir]) copyPixel(mr, ir, mData);
                         else {
 
-                            outR[iPos] = lightenCalc(inR[iPos], mixR[mPos]);
-                            outG[iPos] = lightenCalc(inG[iPos], mixG[mPos]);
-                            outB[iPos] = lightenCalc(inB[iPos], mixB[mPos]);
-                            outA[iPos] = alphaCalc(inA[iPos] / 255, mixA[mPos] / 255);
+                            ig = ir + 1;
+                            ib = ig + 1;
+                            mg = mr + 1;
+                            mb = mg + 1;
+                            ma = mb + 1;
+
+                            oData[ir] = lightenCalc(iData[ir], mData[mr]);
+                            oData[ig] = lightenCalc(iData[ig], mData[mg]);
+                            oData[ib] = lightenCalc(iData[ib], mData[mb]);
+                            oData[ia] = alphaCalc(iData[ia] / 255, mData[ma] / 255);
                         }
                     }
                 }
                 break;
 
             case 'lighter' :
+
                 const lighterCalc = (din, dmix) => (din + dmix) * 255;
-                for (let y = 0; y < iHeight; y++) {
-                    for (let x = 0; x < iWidth; x++) {
 
-                        let [iPos, mPos] = getLinePositions(x, y);
+                for (y = 0; y < iHeight; y++) {
+                    for (x = 0; x < iWidth; x++) {
 
-                        if (mPos < 0) copyPixel(iPos, iPos, input);
-                        else if (!inA[iPos]) copyPixel(mPos, iPos, mix);
+                        [ir, mr] = getLinePositions(x, y);
+
+                        ia = ir + 3;
+
+                        if (mr < 0) copyPixel(ir, ir, iData);
+                        else if (!iData[ia]) copyPixel(mr, ir, mData);
                         else {
 
-                            let [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(iPos, mPos);
+                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
 
-                            outR[iPos] = lighterCalc(dinR, dmixR);
-                            outG[iPos] = lighterCalc(dinG, dmixG);
-                            outB[iPos] = lighterCalc(dinB, dmixB);
-                            outA[iPos] = alphaCalc(dinA, dmixA);
+                            ig = ir + 1;
+                            ib = ig + 1;
+
+                            oData[ir] = lighterCalc(dinR, dmixR);
+                            oData[ig] = lighterCalc(dinG, dmixG);
+                            oData[ib] = lighterCalc(dinB, dmixB);
+                            oData[ia] = alphaCalc(dinA, dmixA);
                         }
                     }
                 }
                 break;
 
             case 'multiply' :
+
                 const multiplyCalc = (din, dmix) => din * dmix * 255;
-                for (let y = 0; y < iHeight; y++) {
-                    for (let x = 0; x < iWidth; x++) {
 
-                        let [iPos, mPos] = getLinePositions(x, y);
+                for (y = 0; y < iHeight; y++) {
+                    for (x = 0; x < iWidth; x++) {
 
-                        if (mPos < 0) copyPixel(iPos, iPos, input);
-                        else if (!inA[iPos]) copyPixel(mPos, iPos, mix);
-                        else if (!mixA[mPos]) copyPixel(iPos, iPos, input);
+                        [ir, mr] = getLinePositions(x, y);
+
+                        ia = ir + 3;
+                        ma = mr + 3;
+
+                        if (mr < 0) copyPixel(ir, ir, iData);
+                        else if (!iData[ia]) copyPixel(mr, ir, mData);
+                        else if (!mData[ma]) copyPixel(ir, ir, iData);
                         else {
 
-                            let [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(iPos, mPos);
+                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
 
-                            outR[iPos] = multiplyCalc(dinR, dmixR);
-                            outG[iPos] = multiplyCalc(dinG, dmixG);
-                            outB[iPos] = multiplyCalc(dinB, dmixB);
-                            outA[iPos] = alphaCalc(dinA, dmixA);
+                            ig = ir + 1;
+                            ib = ig + 1;
+
+                            oData[ir] = multiplyCalc(dinR, dmixR);
+                            oData[ig] = multiplyCalc(dinG, dmixG);
+                            oData[ib] = multiplyCalc(dinB, dmixB);
+                            oData[ia] = alphaCalc(dinA, dmixA);
                         }
                     }
                 }
                 break;
 
             case 'overlay' :
+
                 const overlayCalc = (din, dmix) => (din >= 0.5) ? (din * dmix) * 255 : (dmix + (din - (dmix * din))) * 255;
-                for (let y = 0; y < iHeight; y++) {
-                    for (let x = 0; x < iWidth; x++) {
 
-                        let [iPos, mPos] = getLinePositions(x, y);
+                for (y = 0; y < iHeight; y++) {
+                    for (x = 0; x < iWidth; x++) {
 
-                        if (mPos < 0) copyPixel(iPos, iPos, input);
-                        else if (!inA[iPos]) copyPixel(mPos, iPos, mix);
+                        [ir, mr] = getLinePositions(x, y);
+
+                        ia = ir + 3;
+
+                        if (mr < 0) copyPixel(ir, ir, iData);
+                        else if (!iData[ia]) copyPixel(mr, ir, mData);
                         else {
 
-                            let [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(iPos, mPos);
+                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
 
-                            outR[iPos] = overlayCalc(dinR, dmixR);
-                            outG[iPos] = overlayCalc(dinG, dmixG);
-                            outB[iPos] = overlayCalc(dinB, dmixB);
-                            outA[iPos] = alphaCalc(dinA, dmixA);
+                            ig = ir + 1;
+                            ib = ig + 1;
+
+                            oData[ir] = overlayCalc(dinR, dmixR);
+                            oData[ig] = overlayCalc(dinG, dmixG);
+                            oData[ib] = overlayCalc(dinB, dmixB);
+                            oData[ia] = alphaCalc(dinA, dmixA);
                         }
                     }
                 }
                 break;
 
             case 'screen' :
+
                 const screenCalc = (din, dmix) => (dmix + (din - (dmix * din))) * 255;
-                for (let y = 0; y < iHeight; y++) {
-                    for (let x = 0; x < iWidth; x++) {
 
-                        let [iPos, mPos] = getLinePositions(x, y);
+                for (y = 0; y < iHeight; y++) {
+                    for (x = 0; x < iWidth; x++) {
 
-                        if (mPos < 0) copyPixel(iPos, iPos, input);
-                        else if (!inA[iPos]) copyPixel(mPos, iPos, mix);
+                        [ir, mr] = getLinePositions(x, y);
+
+                        ia = ir + 3;
+
+                        if (mr < 0) copyPixel(ir, ir, iData);
+                        else if (!iData[ia]) copyPixel(mr, ir, mData);
                         else {
 
-                            let [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(iPos, mPos);
+                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
 
-                            outR[iPos] = screenCalc(dinR, dmixR);
-                            outG[iPos] = screenCalc(dinG, dmixG);
-                            outB[iPos] = screenCalc(dinB, dmixB);
-                            outA[iPos] = alphaCalc(dinA, dmixA);
+                            ig = ir + 1;
+                            ib = ig + 1;
+
+                            oData[ir] = screenCalc(dinR, dmixR);
+                            oData[ig] = screenCalc(dinG, dmixG);
+                            oData[ib] = screenCalc(dinB, dmixB);
+                            oData[ia] = alphaCalc(dinA, dmixA);
                         }
                     }
                 }
                 break;
 
             case 'soft-light' :
+
                 const softlightCalc = (din, dmix) => {
 
                     let d = (dmix <= 0.25) ?
@@ -1257,142 +1262,185 @@ P.theBigActionsObject = {
                     if (din <= 0.5) return (dmix - ((1 - (2 * din)) * dmix * (1 - dmix))) * 255;
                     return (dmix + (((2 * din) - 1) * (d - dmix))) * 255;
                 };
-                for (let y = 0; y < iHeight; y++) {
-                    for (let x = 0; x < iWidth; x++) {
 
-                        let [iPos, mPos] = getLinePositions(x, y);
+                for (y = 0; y < iHeight; y++) {
+                    for (x = 0; x < iWidth; x++) {
 
-                        if (mPos < 0) copyPixel(iPos, iPos, input);
-                        else if (!inA[iPos]) copyPixel(mPos, iPos, mix);
-                        else if (!mixA[mPos]) copyPixel(iPos, iPos, input);
+                        [ir, mr] = getLinePositions(x, y);
+
+                        ia = ir + 3;
+                        ma = mr + 3;
+
+                        if (mr < 0) copyPixel(ir, ir, iData);
+                        else if (!iData[ia]) copyPixel(mr, ir, mData);
+                        else if (!mData[ma]) copyPixel(ir, ir, iData);
                         else {
 
-                            let [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(iPos, mPos);
+                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
 
-                            outR[iPos] = softlightCalc(dinR, dmixR);
-                            outG[iPos] = softlightCalc(dinG, dmixG);
-                            outB[iPos] = softlightCalc(dinB, dmixB);
-                            outA[iPos] = alphaCalc(dinA, dmixA);
+                            ig = ir + 1;
+                            ib = ig + 1;
+
+                            oData[ir] = softlightCalc(dinR, dmixR);
+                            oData[ig] = softlightCalc(dinG, dmixG);
+                            oData[ib] = softlightCalc(dinB, dmixB);
+                            oData[ia] = alphaCalc(dinA, dmixA);
                         }
                     }
                 }
                 break;
 
             case 'color' :
+
                 const colorCalc = (iR, iG, iB, mR, mG, mB) => {
 
                     let [iH, iS, iL] = this.getHSLfromRGB(iR, iG, iB);
                     let [mH, mS, mL] = this.getHSLfromRGB(mR, mG, mB);
 
                     return this.getRGBfromHSL(iH, iS, mL);
-                }
-                for (let y = 0; y < iHeight; y++) {
-                    for (let x = 0; x < iWidth; x++) {
+                };
 
-                        let [iPos, mPos] = getLinePositions(x, y);
+                for (y = 0; y < iHeight; y++) {
+                    for (x = 0; x < iWidth; x++) {
 
-                        if (mPos < 0) copyPixel(iPos, iPos, input);
-                        else if (!inA[iPos]) copyPixel(mPos, iPos, mix);
-                        else if (!mixA[mPos]) copyPixel(iPos, iPos, input);
+                        [ir, mr] = getLinePositions(x, y);
+
+                        ia = ir + 3;
+                        ma = mr + 3;
+
+                        if (mr < 0) copyPixel(ir, ir, iData);
+                        else if (!iData[ia]) copyPixel(mr, ir, mData);
+                        else if (!mData[ma]) copyPixel(ir, ir, iData);
                         else {
 
-                            let [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(iPos, mPos);
+                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
 
-                            let [cr, cg, cb] = colorCalc(dinR, dinG, dinB, dmixR, dmixG, dmixB);
-                            outR[iPos] = cr;
-                            outG[iPos] = cg;
-                            outB[iPos] = cb;
-                            outA[iPos] = alphaCalc(dinA, dmixA);
+                            [cr, cg, cb] = colorCalc(dinR, dinG, dinB, dmixR, dmixG, dmixB);
+
+                            ig = ir + 1;
+                            ib = ig + 1;
+
+                            oData[ir] = cr;
+                            oData[ig] = cg;
+                            oData[ib] = cb;
+                            oData[ia] = alphaCalc(dinA, dmixA);
                         }
                     }
                 }
                 break;
 
             case 'hue' :
+
                 const hueCalc = (iR, iG, iB, mR, mG, mB) => {
 
                     let [iH, iS, iL] = this.getHSLfromRGB(iR, iG, iB);
                     let [mH, mS, mL] = this.getHSLfromRGB(mR, mG, mB);
 
                     return this.getRGBfromHSL(iH, mS, mL);
-                }
-                for (let y = 0; y < iHeight; y++) {
-                    for (let x = 0; x < iWidth; x++) {
+                };
 
-                        let [iPos, mPos] = getLinePositions(x, y);
+                for (y = 0; y < iHeight; y++) {
+                    for (x = 0; x < iWidth; x++) {
 
-                        if (mPos < 0) copyPixel(iPos, iPos, input);
-                        else if (!inA[iPos]) copyPixel(mPos, iPos, mix);
-                        else if (!mixA[mPos]) copyPixel(iPos, iPos, input);
+                        [ir, mr] = getLinePositions(x, y);
+
+                        ia = ir + 3;
+                        ma = mr + 3;
+
+                        if (mr < 0) copyPixel(ir, ir, iData);
+                        else if (!iData[ia]) copyPixel(mr, ir, mData);
+                        else if (!mData[ma]) copyPixel(ir, ir, iData);
                         else {
 
-                            let [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(iPos, mPos);
+                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
 
-                            let [cr, cg, cb] = hueCalc(dinR, dinG, dinB, dmixR, dmixG, dmixB);
-                            outR[iPos] = cr;
-                            outG[iPos] = cg;
-                            outB[iPos] = cb;
-                            outA[iPos] = alphaCalc(dinA, dmixA);
+                            [cr, cg, cb] = hueCalc(dinR, dinG, dinB, dmixR, dmixG, dmixB);
+
+                            ig = ir + 1;
+                            ib = ig + 1;
+
+                            oData[ir] = cr;
+                            oData[ig] = cg;
+                            oData[ib] = cb;
+                            oData[ia] = alphaCalc(dinA, dmixA);
                         }
                     }
                 }
                 break;
 
             case 'luminosity' :
+
                 const luminosityCalc = (iR, iG, iB, mR, mG, mB) => {
 
                     let [iH, iS, iL] = this.getHSLfromRGB(iR, iG, iB);
                     let [mH, mS, mL] = this.getHSLfromRGB(mR, mG, mB);
 
                     return this.getRGBfromHSL(mH, mS, iL);
-                }
-                for (let y = 0; y < iHeight; y++) {
-                    for (let x = 0; x < iWidth; x++) {
+                };
 
-                        let [iPos, mPos] = getLinePositions(x, y);
+                for (y = 0; y < iHeight; y++) {
+                    for (x = 0; x < iWidth; x++) {
 
-                        if (mPos < 0) copyPixel(iPos, iPos, input);
-                        else if (!inA[iPos]) copyPixel(mPos, iPos, mix);
-                        else if (!mixA[mPos]) copyPixel(iPos, iPos, input);
+                        [ir, mr] = getLinePositions(x, y);
+
+                        ia = ir + 3;
+                        ma = mr + 3;
+
+                        if (mr < 0) copyPixel(ir, ir, iData);
+                        else if (!iData[ia]) copyPixel(mr, ir, mData);
+                        else if (!mData[ma]) copyPixel(ir, ir, iData);
                         else {
 
-                            let [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(iPos, mPos);
+                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
 
-                            let [cr, cg, cb] = luminosityCalc(dinR, dinG, dinB, dmixR, dmixG, dmixB);
-                            outR[iPos] = cr;
-                            outG[iPos] = cg;
-                            outB[iPos] = cb;
-                            outA[iPos] = alphaCalc(dinA, dmixA);
+                            [cr, cg, cb] = luminosityCalc(dinR, dinG, dinB, dmixR, dmixG, dmixB);
+
+                            ig = ir + 1;
+                            ib = ig + 1;
+
+                            oData[ir] = cr;
+                            oData[ig] = cg;
+                            oData[ib] = cb;
+                            oData[ia] = alphaCalc(dinA, dmixA);
                         }
                     }
                 }
                 break;
 
             case 'saturation' :
+
                 const saturationCalc = (iR, iG, iB, mR, mG, mB) => {
 
                     let [iH, iS, iL] = this.getHSLfromRGB(iR, iG, iB);
                     let [mH, mS, mL] = this.getHSLfromRGB(mR, mG, mB);
 
                     return this.getRGBfromHSL(mH, iS, mL);
-                }
-                for (let y = 0; y < iHeight; y++) {
-                    for (let x = 0; x < iWidth; x++) {
+                };
 
-                        let [iPos, mPos] = getLinePositions(x, y);
+                for (y = 0; y < iHeight; y++) {
+                    for (x = 0; x < iWidth; x++) {
 
-                        if (mPos < 0) copyPixel(iPos, iPos, input);
-                        else if (!inA[iPos]) copyPixel(mPos, iPos, mix);
-                        else if (!mixA[mPos]) copyPixel(iPos, iPos, input);
+                        [ir, mr] = getLinePositions(x, y);
+
+                        ia = ir + 3;
+                        ma = mr + 3;
+
+                        if (mr < 0) copyPixel(ir, ir, iData);
+                        else if (!iData[ia]) copyPixel(mr, ir, mData);
+                        else if (!mData[ma]) copyPixel(ir, ir, iData);
                         else {
 
-                            let [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(iPos, mPos);
+                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
 
-                            let [cr, cg, cb] = saturationCalc(dinR, dinG, dinB, dmixR, dmixG, dmixB);
-                            outR[iPos] = cr;
-                            outG[iPos] = cg;
-                            outB[iPos] = cb;
-                            outA[iPos] = alphaCalc(dinA, dmixA);
+                            [cr, cg, cb] = saturationCalc(dinR, dinG, dinB, dmixR, dmixG, dmixB);
+
+                            ig = ir + 1;
+                            ib = ig + 1;
+
+                            oData[ir] = cr;
+                            oData[ig] = cg;
+                            oData[ib] = cb;
+                            oData[ia] = alphaCalc(dinA, dmixA);
                         }
                     }
                 }
@@ -1400,40 +1448,112 @@ P.theBigActionsObject = {
 
             default:
                 const normalCalc = (Cs, As, Cb, Ab) => (As * Cs) + (Ab * Cb * (1 - As));
-                for (let y = 0; y < iHeight; y++) {
-                    for (let x = 0; x < iWidth; x++) {
 
-                        let [iPos, mPos] = getLinePositions(x, y);
+                for (y = 0; y < iHeight; y++) {
+                    for (x = 0; x < iWidth; x++) {
 
-                        if (mPos < 0) copyPixel(iPos, iPos, input);
-                        else if (!inA[iPos]) copyPixel(mPos, iPos, mix);
+                        [ir, mr] = getLinePositions(x, y);
+
+                        ia = ir + 3;
+
+                        if (mr < 0) copyPixel(ir, ir, iData);
+                        else if (!iData[ia]) copyPixel(mr, ir, mData);
                         else {
 
-                            let dinA = inA[iPos] / 255,
-                                dmixA = mixA[mPos] / 255;
+                            ig = ir + 1;
+                            ib = ig + 1;
+                            mg = mr + 1;
+                            mb = mg + 1;
+                            ma = mb + 1;
 
-                            outR[iPos] = normalCalc(inR[iPos], dinA, mixR[mPos], dmixA);
-                            outG[iPos] = normalCalc(inG[iPos], dinA, mixG[mPos], dmixA);
-                            outB[iPos] = normalCalc(inB[iPos], dinA, mixB[mPos], dmixA);
-                            outA[iPos] = alphaCalc(dinA, dmixA)
+                            dinA = iData[ia] / 255;
+                            dmixA = mData[ma] / 255;
+
+                            oData[ir] = normalCalc(iData[ir], dinA, mData[mr], dmixA);
+                            oData[ig] = normalCalc(iData[ig], dinA, mData[mg], dmixA);
+                            oData[ib] = normalCalc(iData[ib], dinA, mData[mb], dmixA);
+                            oData[ia] = alphaCalc(dinA, dmixA)
                         }
                     }
                 }
         }
 
-        let work = this.cache.work.channels;
-        if (lineOut) this.processResults(output, work, 1 - opacity);
-        else this.processResults(work, output, opacity);
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
     },
 
 // __blur__ - Performs a multi-loop, two-step 'horizontal-then-vertical averaging sweep' calculation across all pixels to create a blur effect. Note that this filter is expensive, thus much slower to complete compared to other filter effects.
     'blur': function (requirements) {
 
-        let [input, output] = this.getInputAndOutputChannels(requirements);
+        const getValue = function (flag, gridStore, pos, data, offset) {
 
-        let len = input.r.length;
+            if (flag) {
 
-        let {opacity, radius, passes, processVertical, processHorizontal, includeRed, includeGreen, includeBlue, includeAlpha, step, lineOut} = requirements;
+                let h = gridStore[pos];
+
+                if (h != null) {
+
+                    let l = h.length,
+                        valCounter = 0,
+                        total = 0,
+                        index, t;
+
+                    for (t = 0; t < l; t += step) {
+
+                        index = h[t] + offset;
+
+                        total += data[index];
+                        valCounter++
+                    }
+                    return total / valCounter;
+                }
+            }
+            return data[(pos * 4) + offset];
+        };
+
+        const getCheckedValue = function (flag, gridStore, pos, data, offset) {
+
+            if (flag) {
+
+                let h = gridStore[pos];
+
+                if (h != null) {
+
+                    let l = h.length,
+                        valCounter = 0,
+                        total = 0,
+                        index, t, a, hVal;
+
+                    for (t = 0; t < l; t += step) {
+
+                        hVal = h[t];
+                        a = hVal + 3;
+
+                        if (data[a]) {
+
+                            index = hVal + offset;
+
+                            total += data[index];
+                            valCounter++
+                        }
+                    }
+                    if (valCounter) return total / valCounter;
+                }
+            }
+            return data[(pos * 4) + offset];
+        };
+
+        let [input, output] = this.getInputAndOutputLines(requirements);
+
+        let iData = input.data,
+            oData = output.data,
+            len = iData.length,
+            pixelLen = Math.floor(len / 4),
+            counter, r, g, b, a, pass;
+
+        let {width, height} = input;
+
+        let {opacity, radius, passes, processVertical, processHorizontal, includeRed, includeGreen, includeBlue, includeAlpha, excludeTransparentPixels, step, lineOut} = requirements;
 
         if (null == opacity) opacity = 1;
         if (null == radius) radius = 0;
@@ -1444,107 +1564,83 @@ P.theBigActionsObject = {
         if (null == includeGreen) includeGreen = true;
         if (null == includeBlue) includeBlue = true;
         if (null == includeAlpha) includeAlpha = false;
+        if (null == excludeTransparentPixels) excludeTransparentPixels = false;
         if (null == step) step = 1;
 
         let horizontalBlurGrid, verticalBlurGrid;
 
         if (processHorizontal || processVertical) {
 
-            let grid = this.buildImageGrid();
+            let grid = this.buildImageGrid(input);
 
             if (processHorizontal)  horizontalBlurGrid = this.buildHorizontalBlur(grid, radius);
 
             if (processVertical) verticalBlurGrid = this.buildVerticalBlur(grid, radius);
         }
 
-        const {r:inR, g:inG, b:inB, a:inA} = input;
-        const {r:outR, g:outG, b:outB, a:outA} = output;
+        oData.set(iData);
 
-        const getValue = function (flag, gridStore, pos, holdChannel, alpha) {
+        const hold = new Uint8ClampedArray(iData);
 
-            if (flag) {
+        const selectedMethod = (excludeTransparentPixels) ? getCheckedValue : getValue;
 
-                let h = gridStore[pos];
+        for (pass = 0; pass < passes; pass++) {
 
-                if (h != null) {
+            if (processHorizontal) {
 
-                    let l = h.length,
-                        counter = 0,
-                        total = 0;
+                for (counter = 0; counter < pixelLen; counter++) {
 
-                    if (alpha) {
+                    r = counter * 4;
+                    g = r + 1;
+                    b = g + 1;
+                    a = b + 1;
 
-                        for (let t = 0; t < l; t += step) {
+                    if (includeAlpha || hold[a]) {
 
-                            if (alpha[h[t]]) {
-
-                                total += holdChannel[h[t]];
-                                counter++;
-                            }
-                        }
-                        return total / counter;
+                        oData[r] = selectedMethod(includeRed, horizontalBlurGrid, counter, hold, 0);
+                        oData[g] = selectedMethod(includeGreen, horizontalBlurGrid, counter, hold, 1);
+                        oData[b] = selectedMethod(includeBlue, horizontalBlurGrid, counter, hold, 2);
+                        oData[a] = getValue(includeAlpha, horizontalBlurGrid, counter, hold, 3);
                     }
-                    for (let t = 0; t < l; t++) {
-                        total += holdChannel[h[t]];
-                    }
-                    return total / l;
                 }
+
+                if (processVertical || pass < passes - 1) hold.set(oData);
             }
-            return holdChannel[pos];
-        }
 
-        if (!passes || (!processHorizontal && !processVertical)) this.copyOver(input, output);
-        else {
+            if (processVertical) {
 
-            const hold = this.createResultObject(len);
-            const {r:holdR, g:holdG, b:holdB, a:holdA} = hold;
+                for (counter = 0; counter < pixelLen; counter++) {
 
-            this.copyOver(input, hold);
+                    r = counter * 4;
+                    g = r + 1;
+                    b = g + 1;
+                    a = b + 1;
 
-            for (let pass = 0; pass < passes; pass++) {
+                    if (includeAlpha || hold[a]) {
 
-                if (processHorizontal) {
-
-                    for (let k = 0; k < len; k++) {
-
-                        if (includeAlpha || holdA[k]) {
-
-                            outR[k] = getValue(includeRed, horizontalBlurGrid, k, holdR, holdA);
-                            outG[k] = getValue(includeGreen, horizontalBlurGrid, k, holdG, holdA);
-                            outB[k] = getValue(includeBlue, horizontalBlurGrid, k, holdB, holdA);
-                            outA[k] = getValue(includeAlpha, horizontalBlurGrid, k, holdA, false);
-                        }
+                        oData[r] = selectedMethod(includeRed, verticalBlurGrid, counter, hold, 0);
+                        oData[g] = selectedMethod(includeGreen, verticalBlurGrid, counter, hold, 1);
+                        oData[b] = selectedMethod(includeBlue, verticalBlurGrid, counter, hold, 2);
+                        oData[a] = getValue(includeAlpha, verticalBlurGrid, counter, hold, 3);
                     }
-                    if (processVertical || pass < passes - 1) this.copyOver(output, hold);
                 }
-
-                if (processVertical) {
-
-                    for (let k = 0; k < len; k++) {
-
-                        if (includeAlpha || holdA[k]) {
-
-                            outR[k] = getValue(includeRed, verticalBlurGrid, k, holdR, holdA);
-                            outG[k] = getValue(includeGreen, verticalBlurGrid, k, holdG, holdA);
-                            outB[k] = getValue(includeBlue, verticalBlurGrid, k, holdB, holdA);
-                            outA[k] = getValue(includeAlpha, verticalBlurGrid, k, holdA, false);
-                        }
-                    }
-                    if (pass < passes - 1) this.copyOver(output, hold);
-                }
+                if (pass < passes - 1) hold.set(oData);
             }
         }
-        let work = this.cache.work.channels;
-        if (lineOut) this.processResults(output, work, 1 - opacity);
-        else this.processResults(work, output, opacity);
+
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
     },
 
 // __channels-to-alpha__ - Calculates an average value from each pixel's included channels and applies that value to the alpha channel.
     'channels-to-alpha': function (requirements) {
 
-        let [input, output] = this.getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputLines(requirements);
 
-        let len = input.r.length;
+        let iData = input.data,
+            oData = output.data,
+            len = iData.length,
+            r, g, b, a, vr, vg, vb, i, sum;
 
         let {opacity, includeRed, includeGreen, includeBlue, lineOut} = requirements;
 
@@ -1558,86 +1654,96 @@ P.theBigActionsObject = {
         if (includeGreen) divisor++;
         if (includeBlue) divisor++;
 
-        const {r:inR, g:inG, b:inB, a:inA} = input;
-        const {r:outR, g:outG, b:outB, a:outA} = output;
+        for (i = 0; i < len; i += 4) {
 
-        for (let i = 0; i < len; i++) {
+            r = i;
+            g = r + 1;
+            b = g + 1;
+            a = b + 1;
 
-            outR[i] = inR[i];
-            outG[i] = inG[i];
-            outB[i] = inB[i];
+            vr = iData[r];
+            vg = iData[g];
+            vb = iData[b];
+
+            oData[r] = vr;
+            oData[g] = vg;
+            oData[b] = vb;
 
             if (divisor) {
 
-                let avg = 0;
+                sum = 0;
 
-                if (includeRed) avg += inR[i];
-                if (includeGreen) avg += inG[i];
-                if (includeBlue) avg += inB[i];
+                if (includeRed) sum += vr;
+                if (includeGreen) sum += vg;
+                if (includeBlue) sum += vb;
 
-                avg = Math.floor(avg / divisor);
-
-                outA[i] = avg;
+                oData[a] = Math.floor(sum / divisor);
             }
-            else outA[i] = inA[i];
+            else oData[a] = iData[a];
         }
-        let work = this.cache.work.channels;
-        if (lineOut) this.processResults(output, work, 1 - opacity);
-        else this.processResults(work, output, opacity);
+
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
     },
 
 // __chroma__ - Using an array of 'range' arrays, determine whether a pixel's values lie entirely within a range's values and, if true, sets that pixel's alpha channel value to zero. Each 'range' array comprises six Numbers representing [minimum-red, minimum-green, minimum-blue, maximum-red, maximum-green, maximum-blue] values.
     'chroma': function (requirements) {
 
-        let [input, output] = this.getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputLines(requirements);
 
-        let len = input.r.length;
+        let iData = input.data,
+            oData = output.data,
+            len = iData.length,
+            r, g, b, a, vr, vg, vb, i, iz, j, flag;
 
         let {opacity, ranges, lineOut} = requirements;
 
         if (null == opacity) opacity = 1;
         if (null == ranges) ranges = [];
 
-        const {r:inR, g:inG, b:inB, a:inA} = input;
-        const {r:outR, g:outG, b:outB, a:outA} = output;
+        for (let j = 0; j < len; j += 4) {
 
-        for (let j = 0; j < len; j++) {
+            flag = false;
 
-            let flag = false;
+            r = j;
+            g = r + 1;
+            b = g + 1;
+            a = b + 1;
 
-            let r = inR[j],
-                g = inG[j],
-                b = inB[j];
+            vr = iData[r];
+            vg = iData[g];
+            vb = iData[b];
 
-            for (let i = 0, iz = ranges.length; i < iz; i++) {
-
-                let range = ranges[i];
+            for (i = 0, iz = ranges.length; i < iz; i++) {
 
                 let [minR, minG, minB, maxR, maxG, maxB] = ranges[i];
 
-                if (r >= minR && r <= maxR && g >= minG && g <= maxG && b >= minB && b <= maxB) {
+                if (vr >= minR && vr <= maxR && vg >= minG && vg <= maxG && vb >= minB && vb <= maxB) {
                     flag = true;
                     break;
                 }
 
             }
-            outR[j] = inR[j];
-            outG[j] = inG[j];
-            outB[j] = inB[j];
-            outA[j] = (flag) ? 0 : inA[j];
+            oData[r] = vr;
+            oData[g] = vg;
+            oData[b] = vb;
+            oData[a] = (flag) ? 0 : iData[a];
         }
 
-        let work = this.cache.work.channels;
-        if (lineOut) this.processResults(output, work, 1 - opacity);
-        else this.processResults(work, output, opacity);
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
     },
 
 // __clamp-channels__ - Clamp each color channel to a range set by lowColor and highColor values
     'clamp-channels': function (requirements) {
 
-        let [input, output] = this.getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputLines(requirements);
 
-        let len = input.r.length;
+        let iData = input.data,
+            oData = output.data,
+            len = iData.length,
+            floor = Math.floor,
+            r, g, b, a, vr, vg, vb, va, i;
 
         let {opacity, lowRed, lowGreen, lowBlue, highRed, highGreen, highBlue, lineOut} = requirements;
 
@@ -1653,40 +1759,58 @@ P.theBigActionsObject = {
             dG = highGreen - lowGreen,
             dB = highBlue - lowBlue;
 
-        const {r:inR, g:inG, b:inB, a:inA} = input;
-        const {r:outR, g:outG, b:outB, a:outA} = output;
+        for (i = 0; i < len; i += 4) {
 
-        for (let i = 0; i < len; i++) {
+            r = i;
+            g = r + 1;
+            b = g + 1;
+            a = b + 1;
 
-            if (inA[i]) {
+            vr = iData[r];
+            vg = iData[g];
+            vb = iData[b];
+            va = iData[a];
 
-                let r = inR[i] / 255,
-                    g = inG[i] / 255,
-                    b = inB[i] / 255;
+            if (va) {
 
-                outR[i] = lowRed + (r * dR);
-                outG[i] = lowGreen + (g * dG);
-                outB[i] = lowBlue + (b * dB);
-                outA[i] = inA[i];
+                vr /= 255;
+                vg /= 255;
+                vb /= 255;
+
+                oData[r] = lowRed + (vr * dR);
+                oData[g] = lowGreen + (vg * dG);
+                oData[b] = lowBlue + (vb * dB);
             }
             else {
-                outR[i] = inR[i];
-                outG[i] = inG[i];
-                outB[i] = inB[i];
-                outA[i] = inA[i];
+                oData[r] = vr;
+                oData[g] = vg;
+                oData[b] = vb;
             }
+            oData[a] = va;
         }
-        let work = this.cache.work.channels;
-        if (lineOut) this.processResults(output, work, 1 - opacity);
-        else this.processResults(work, output, opacity);
+
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
     },
 
 // __colors-to-alpha__ - Determine the alpha channel value for each pixel depending on the closeness to that pixel's color channel values to a reference color supplied in the "red", "green" and "blue" arguments. The sensitivity of the effect can be manipulated using the "transparentAt" and "opaqueAt" values, both of which lie in the range 0-1.
     'colors-to-alpha': function (requirements) {
 
-        let [input, output] = this.getInputAndOutputChannels(requirements);
+        const getValue = function (dr, dg, db) {
 
-        let len = input.r.length;
+            let diff = (Math.abs(red - dr) + Math.abs(green - dg) + Math.abs(blue - db)) / 3;
+
+            if (diff < transparent) return 0;
+            if (diff > opaque) return 255;
+            return ((diff - transparent) / range) * 255;
+        };
+
+        let [input, output] = this.getInputAndOutputLines(requirements);
+
+        let iData = input.data,
+            oData = output.data,
+            len = iData.length,
+            r, g, b, a, vr, vg, vb, i;
 
         let {opacity, red, green, blue, opaqueAt, transparentAt, lineOut} = requirements;
 
@@ -1702,56 +1826,43 @@ P.theBigActionsObject = {
             opaque = opaqueAt * maxDiff,
             range = opaque - transparent;
 
-        const getValue = function (r, g, b) {
+        for (let i = 0; i < len; i += 4) {
 
-            let diff = (Math.abs(red - r) + Math.abs(green - g) + Math.abs(blue - b)) / 3;
+            r = i;
+            g = r + 1;
+            b = g + 1;
+            a = b + 1;
 
-            if (diff < transparent) return 0;
-            if (diff > opaque) return 255;
-            return ((diff - transparent) / range) * 255;
-        };
+            vr = iData[r];
+            vg = iData[g];
+            vb = iData[b];
 
-        const {r:inR, g:inG, b:inB, a:inA} = input;
-        const {r:outR, g:outG, b:outB, a:outA} = output;
-
-        for (let i = 0; i < len; i++) {
-            outR[i] = inR[i];
-            outG[i] = inG[i];
-            outB[i] = inB[i];
-            outA[i] = getValue(inR[i], inG[i], inB[i]);
+            oData[r] = vr;
+            oData[g] = vg;
+            oData[b] = vb;
+            oData[a] = getValue(vr, vg, vb);
         }
 
-        let work = this.cache.work.channels;
-        if (lineOut) this.processResults(output, work, 1 - opacity);
-        else this.processResults(work, output, opacity);
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
     },
 
 // __compose__ - Using two source images (from the "lineIn" and "lineMix" arguments), combine their color information using alpha compositing rules (as defined by Porter/Duff). The compositing method is determined by the String value supplied in the "compose" argument; permitted values are: 'destination-only', 'destination-over', 'destination-in', 'destination-out', 'destination-atop', 'source-only', 'source-over' (default), 'source-in', 'source-out', 'source-atop', 'clear', 'xor', or 'lighter'. Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the "offsetX" and "offsetY" arguments.
     'compose': function (requirements) {
 
-        let [input, output, mix] = this.getInputAndOutputChannels(requirements);
+        const copyPixel = function (fr, tr, data) {
 
-        let len = output.r.length;
+            let fg = fr + 1,
+                fb = fg + 1,
+                fa = fb + 1,
+                tg = tr + 1,
+                tb = tg + 1,
+                ta = tb + 1;
 
-        let {opacity, compose, offsetX, offsetY, lineOut} = requirements;
-
-        if (null == opacity) opacity = 1;
-        if (null == compose) compose = '';
-        if (null == offsetX) offsetX = 0;
-        if (null == offsetY) offsetY = 0;
-
-        const {r:inR, g:inG, b:inB, a:inA} = input;
-        const {r:outR, g:outG, b:outB, a:outA} = output;
-        const {r:mixR, g:mixG, b:mixB, a:mixA} = mix;
-
-        let [iWidth, iHeight, oWidth, oHeight, mWidth, mHeight] = this.getInputAndOutputDimensions(requirements);
-
-        const copyPixel = function (fromPos, toPos, channel) {
-
-            outR[toPos] = channel.r[fromPos];
-            outG[toPos] = channel.g[fromPos];
-            outB[toPos] = channel.b[fromPos];
-            outA[toPos] = channel.a[fromPos];
+            oData[tr] = data[fr];
+            oData[tg] = data[fg];
+            oData[tb] = data[fb];
+            oData[ta] = data[fa];
         };
 
         const getLinePositions = function (x, y) {
@@ -1761,36 +1872,60 @@ P.theBigActionsObject = {
                 mx = x - offsetX,
                 my = y - offsetY;
 
-            let mPos = -1,
-                iPos = (iy * iWidth) + ix;
+            let mp = -1,
+                ip = ((iy * iWidth) + ix) * 4;
 
-            if (mx >= 0 && mx < mWidth && my >= 0 && my < mHeight) mPos = (my * mWidth) + mx;
+            if (mx >= 0 && mx < mWidth && my >= 0 && my < mHeight) mp = ((my * mWidth) + mx) * 4;
 
-            return [iPos, mPos];
+            return [ip, mp];
         };
+
+        let [input, output, mix] = this.getInputAndOutputLines(requirements);
+
+        let {width:iWidth, height:iHeight, data:iData} = input;
+        let {width:oWidth, height:oHeight, data:oData} = output;
+        let {width:mWidth, height:mHeight, data:mData} = mix;
+        let len = iData.length;
+
+        let {opacity, compose, offsetX, offsetY, lineOut} = requirements;
+
+        if (null == opacity) opacity = 1;
+        if (null == compose) compose = '';
+        if (null == offsetX) offsetX = 0;
+        if (null == offsetY) offsetY = 0;
+
+        let ir, ig, ib, ia, mr, mg, mb, ma, x, y, dinA, dmixA;
 
         switch (compose) {
 
             case 'source-only' :
-                this.copyOver(input, output);
+                output.data.set(iData);
                 break;
 
             case 'source-atop' :
                 const sAtopCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor * mAlpha) + (mAlpha * mColor * (1 - iAlpha));
-                for (let y = 0; y < iHeight; y++) {
-                    for (let x = 0; x < iWidth; x++) {
 
-                        let [iPos, mPos] = getLinePositions(x, y);
+                for (y = 0; y < iHeight; y++) {
+                    for (x = 0; x < iWidth; x++) {
 
-                        if (mPos >= 0) {
+                        [ir, mr] = getLinePositions(x, y);
 
-                            let dinA = inA[iPos] / 255,
-                                dmixA = mixA[mPos] / 255;
+                        if (mr >= 0) {
 
-                            outR[iPos] = sAtopCalc(inR[iPos], dinA, mixR[mPos], dmixA);
-                            outG[iPos] = sAtopCalc(inG[iPos], dinA, mixG[mPos], dmixA);
-                            outB[iPos] = sAtopCalc(inB[iPos], dinA, mixB[mPos], dmixA);
-                            outA[iPos] = ((dinA * dmixA) + (dmixA * (1 - dinA))) * 255;
+                            ig = ir + 1;
+                            ib = ig + 1;
+                            ia = ib + 1;
+                            mg = mr + 1;
+                            mb = mg + 1;
+                            ma = mb + 1;
+
+                            dinA = iData[ia] / 255;
+                            dmixA = mData[ma] / 255;
+
+                            oData[ir] = sAtopCalc(iData[ir], dinA, mData[mr], dmixA);
+                            oData[ig] = sAtopCalc(iData[ig], dinA, mData[mg], dmixA);
+                            oData[ib] = sAtopCalc(iData[ib], dinA, mData[mb], dmixA);
+                            oData[ia] = ((dinA * dmixA) + (dmixA * (1 - dinA))) * 255;
                         }
                     }
                 }
@@ -1798,20 +1933,26 @@ P.theBigActionsObject = {
 
             case 'source-in' :
                 const sInCalc = (iColor, iAlpha, mAlpha) => iAlpha * iColor * mAlpha;
-                for (let y = 0; y < iHeight; y++) {
-                    for (let x = 0; x < iWidth; x++) {
 
-                        let [iPos, mPos] = getLinePositions(x, y);
+                for (y = 0; y < iHeight; y++) {
+                    for (x = 0; x < iWidth; x++) {
 
-                        if (mPos >= 0) {
+                        [ir, mr] = getLinePositions(x, y);
 
-                            let dinA = inA[iPos] / 255,
-                                dmixA = mixA[mPos] / 255;
+                        if (mr >= 0) {
 
-                            outR[iPos] = sInCalc(inR[iPos], dinA, dmixA);
-                            outG[iPos] = sInCalc(inG[iPos], dinA, dmixA);
-                            outB[iPos] = sInCalc(inB[iPos], dinA, dmixA);
-                            outA[iPos] = dinA * dmixA * 255;
+                            ig = ir + 1;
+                            ib = ig + 1;
+                            ia = ib + 1;
+                            ma = mr + 3;
+
+                            dinA = iData[ia] / 255;
+                            dmixA = mData[ma] / 255;
+
+                            oData[ir] = sInCalc(iData[ir], dinA, dmixA);
+                            oData[ig] = sInCalc(iData[ig], dinA, dmixA);
+                            oData[ib] = sInCalc(iData[ib], dinA, dmixA);
+                            oData[ia] = dinA * dmixA * 255;
                         }
                     }
                 }
@@ -1819,54 +1960,68 @@ P.theBigActionsObject = {
 
             case 'source-out' :
                 const sOutCalc = (iColor, iAlpha, mAlpha) => iAlpha * iColor * (1 - mAlpha);
-                for (let y = 0; y < iHeight; y++) {
-                    for (let x = 0; x < iWidth; x++) {
 
-                        let [iPos, mPos] = getLinePositions(x, y);
+                for (y = 0; y < iHeight; y++) {
+                    for (x = 0; x < iWidth; x++) {
 
-                        if (mPos < 0) copyPixel(iPos, iPos, input);
+                        [ir, mr] = getLinePositions(x, y);
+
+                        if (mr < 0) copyPixel(ir, ir, iData);
                         else {
 
-                            let dinA = inA[iPos] / 255,
-                                dmixA = mixA[mPos] / 255;
+                            ig = ir + 1;
+                            ib = ig + 1;
+                            ia = ib + 1;
+                            ma = mr + 3;
 
-                            outR[iPos] = sOutCalc(inR[iPos], dinA, dmixA);
-                            outG[iPos] = sOutCalc(inG[iPos], dinA, dmixA);
-                            outB[iPos] = sOutCalc(inB[iPos], dinA, dmixA);
-                            outA[iPos] = dinA * (1 - dmixA) * 255;
+                            dinA = iData[ia] / 255;
+                            dmixA = mData[ma] / 255;
+
+                            oData[ir] = sOutCalc(iData[ir], dinA, dmixA);
+                            oData[ig] = sOutCalc(iData[ig], dinA, dmixA);
+                            oData[ib] = sOutCalc(iData[ib], dinA, dmixA);
+                            oData[ia] = dinA * (1 - dmixA) * 255;
                         }
                     }
                 }
                 break;
 
             case 'destination-only' :
-                for (let y = 0; y < iHeight; y++) {
-                    for (let x = 0; x < iWidth; x++) {
+                for (y = 0; y < iHeight; y++) {
+                    for (x = 0; x < iWidth; x++) {
 
-                        let [iPos, mPos] = getLinePositions(x, y);
+                        [ir, mr] = getLinePositions(x, y);
 
-                        if (mPos >= 0) copyPixel(mPos, iPos, mix);
+                        if (mr >= 0) copyPixel(mr, ir, mData);
                     }
                 }
                 break;
 
             case 'destination-atop' :
                 const dAtopCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor * (1 - mAlpha)) + (mAlpha * mColor * iAlpha);
-                for (let y = 0; y < iHeight; y++) {
-                    for (let x = 0; x < iWidth; x++) {
 
-                        let [iPos, mPos] = getLinePositions(x, y);
+                for (y = 0; y < iHeight; y++) {
+                    for (x = 0; x < iWidth; x++) {
 
-                        if (mPos < 0) copyPixel(iPos, iPos, input);
+                        [ir, mr] = getLinePositions(x, y);
+
+                        if (mr < 0) copyPixel(ir, ir, iData);
                         else {
 
-                            let dinA = inA[iPos] / 255,
-                                dmixA = mixA[mPos] / 255;
+                            ig = ir + 1;
+                            ib = ig + 1;
+                            ia = ib + 1;
+                            mg = mr + 1;
+                            mb = mg + 1;
+                            ma = mb + 1;
 
-                            outR[iPos] = dAtopCalc(inR[iPos], dinA, mixR[mPos], dmixA);
-                            outG[iPos] = dAtopCalc(inG[iPos], dinA, mixG[mPos], dmixA);
-                            outB[iPos] = dAtopCalc(inB[iPos], dinA, mixB[mPos], dmixA);
-                            outA[iPos] = ((dinA * (1 - dmixA)) + (dmixA * dinA)) * 255;
+                            dinA = iData[ia] / 255;
+                            dmixA = mData[ma] / 255;
+
+                            oData[ir] = dAtopCalc(iData[ir], dinA, mData[mr], dmixA);
+                            oData[ig] = dAtopCalc(iData[ig], dinA, mData[mg], dmixA);
+                            oData[ib] = dAtopCalc(iData[ib], dinA, mData[mb], dmixA);
+                            oData[ia] = ((dinA * (1 - dmixA)) + (dmixA * dinA)) * 255;
                         }
                     }
                 }
@@ -1874,21 +2029,29 @@ P.theBigActionsObject = {
 
             case 'destination-over' :
                 const dOverCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor * (1 - mAlpha)) + (mAlpha * mColor);
-                for (let y = 0; y < iHeight; y++) {
-                    for (let x = 0; x < iWidth; x++) {
 
-                        let [iPos, mPos] = getLinePositions(x, y);
+                for (y = 0; y < iHeight; y++) {
+                    for (x = 0; x < iWidth; x++) {
 
-                        if (mPos < 0) copyPixel(iPos, iPos, input);
+                        [ir, mr] = getLinePositions(x, y);
+
+                        if (mr < 0) copyPixel(ir, ir, iData);
                         else {
 
-                            let dinA = inA[iPos] / 255,
-                                dmixA = mixA[mPos] / 255;
+                            ig = ir + 1;
+                            ib = ig + 1;
+                            ia = ib + 1;
+                            mg = mr + 1;
+                            mb = mg + 1;
+                            ma = mb + 1;
 
-                            outR[iPos] = dOverCalc(inR[iPos], dinA, mixR[mPos], dmixA);
-                            outG[iPos] = dOverCalc(inG[iPos], dinA, mixG[mPos], dmixA);
-                            outB[iPos] = dOverCalc(inB[iPos], dinA, mixB[mPos], dmixA);
-                            outA[iPos] = ((dinA * (1 - dmixA)) + dmixA) * 255;
+                            dinA = iData[ia] / 255;
+                            dmixA = mData[ma] / 255;
+
+                            oData[ir] = dOverCalc(iData[ir], dinA, mData[mr], dmixA);
+                            oData[ig] = dOverCalc(iData[ig], dinA, mData[mg], dmixA);
+                            oData[ib] = dOverCalc(iData[ib], dinA, mData[mb], dmixA);
+                            oData[ia] = ((dinA * (1 - dmixA)) + dmixA) * 255;
                         }
                     }
                 }
@@ -1896,20 +2059,28 @@ P.theBigActionsObject = {
 
             case 'destination-in' :
                 const dInCalc = (iColor, iAlpha, mAlpha) => iAlpha * iColor * mAlpha;
-                for (let y = 0; y < iHeight; y++) {
-                    for (let x = 0; x < iWidth; x++) {
 
-                        let [iPos, mPos] = getLinePositions(x, y);
+                for (y = 0; y < iHeight; y++) {
+                    for (x = 0; x < iWidth; x++) {
 
-                        if (mPos >= 0) {
+                        [ir, mr] = getLinePositions(x, y);
 
-                            let dinA = inA[iPos] / 255,
-                                dmixA = mixA[mPos] / 255;
+                        if (mr >= 0) {
 
-                            outR[iPos] = dInCalc(mixR[mPos], dmixA, dinA);
-                            outG[iPos] = dInCalc(mixG[mPos], dmixA, dinA);
-                            outB[iPos] = dInCalc(mixB[mPos], dmixA, dinA);
-                            outA[iPos] = dinA * dmixA * 255;
+                            ig = ir + 1;
+                            ib = ig + 1;
+                            ia = ib + 1;
+                            mg = mr + 1;
+                            mb = mg + 1;
+                            ma = mb + 1;
+
+                            dinA = iData[ia] / 255;
+                            dmixA = mData[ma] / 255;
+
+                            oData[ir] = dInCalc(mData[mr], dinA, dmixA);
+                            oData[ig] = dInCalc(mData[mg], dinA, dmixA);
+                            oData[ib] = dInCalc(mData[mb], dinA, dmixA);
+                            oData[ia] = dinA * dmixA * 255;
                         }
                     }
                 }
@@ -1917,20 +2088,28 @@ P.theBigActionsObject = {
 
             case 'destination-out' :
                 const dOutCalc = (mColor, iAlpha, mAlpha) => mAlpha * mColor * (1 - iAlpha);
-                for (let y = 0; y < iHeight; y++) {
-                    for (let x = 0; x < iWidth; x++) {
 
-                        let [iPos, mPos] = getLinePositions(x, y);
+                for (y = 0; y < iHeight; y++) {
+                    for (x = 0; x < iWidth; x++) {
 
-                        if (mPos >= 0) {
-        
-                            let dinA = inA[iPos] / 255,
-                                dmixA = mixA[mPos] / 255;
+                        [ir, mr] = getLinePositions(x, y);
 
-                            outR[iPos] = dOutCalc(mixR[mPos], dinA, dmixA);
-                            outG[iPos] = dOutCalc(mixG[mPos], dinA, dmixA);
-                            outB[iPos] = dOutCalc(mixB[mPos], dinA, dmixA);
-                            outA[iPos] = dmixA * (1 - dinA) * 255;
+                        if (mr >= 0) {
+
+                            ig = ir + 1;
+                            ib = ig + 1;
+                            ia = ib + 1;
+                            mg = mr + 1;
+                            mb = mg + 1;
+                            ma = mb + 1;
+
+                            dinA = iData[ia] / 255;
+                            dmixA = mData[ma] / 255;
+
+                            oData[ir] = dOutCalc(mData[mr], dinA, dmixA);
+                            oData[ig] = dOutCalc(mData[mg], dinA, dmixA);
+                            oData[ib] = dOutCalc(mData[mb], dinA, dmixA);
+                            oData[ia] = dmixA * (1 - dinA) * 255;
                         }
                     }
                 }
@@ -1941,21 +2120,29 @@ P.theBigActionsObject = {
 
             case 'xor' :
                 const xorCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor * (1 - mAlpha)) + (mAlpha * mColor * (1 - iAlpha));
-                for (let y = 0; y < iHeight; y++) {
-                    for (let x = 0; x < iWidth; x++) {
 
-                        let [iPos, mPos] = getLinePositions(x, y);
+                for (y = 0; y < iHeight; y++) {
+                    for (x = 0; x < iWidth; x++) {
 
-                        if (mPos < 0) copyPixel(iPos, iPos, input);
+                        [ir, mr] = getLinePositions(x, y);
+
+                        if (mr < 0) copyPixel(ir, ir, iData);
                         else {
 
-                            let dinA = inA[iPos] / 255,
-                                dmixA = mixA[mPos] / 255;
+                            ig = ir + 1;
+                            ib = ig + 1;
+                            ia = ib + 1;
+                            mg = mr + 1;
+                            mb = mg + 1;
+                            ma = mb + 1;
 
-                            outR[iPos] = xorCalc(inR[iPos], dinA, mixR[mPos], dmixA);
-                            outG[iPos] = xorCalc(inG[iPos], dinA, mixG[mPos], dmixA);
-                            outB[iPos] = xorCalc(inB[iPos], dinA, mixB[mPos], dmixA);
-                            outA[iPos] = ((dinA * (1 - dmixA)) + (dmixA * (1 - dinA))) * 255;
+                            dinA = iData[ia] / 255;
+                            dmixA = mData[ma] / 255;
+
+                            oData[ir] = xorCalc(iData[ir], dinA, mData[mr], dmixA);
+                            oData[ig] = xorCalc(iData[ig], dinA, mData[mg], dmixA);
+                            oData[ib] = xorCalc(iData[ib], dinA, mData[mb], dmixA);
+                            oData[ia] = ((dinA * (1 - dmixA)) + (dmixA * (1 - dinA))) * 255;
                         }
                     }
                 }
@@ -1963,36 +2150,163 @@ P.theBigActionsObject = {
 
             default:
                 const sOverCalc = (iColor, iAlpha, mColor, mAlpha) => (iAlpha * iColor) + (mAlpha * mColor * (1 - iAlpha));
-                for (let y = 0; y < iHeight; y++) {
-                    for (let x = 0; x < iWidth; x++) {
 
-                        let [iPos, mPos] = getLinePositions(x, y);
+                for (y = 0; y < iHeight; y++) {
+                    for (x = 0; x < iWidth; x++) {
 
-                        if (mPos < 0) copyPixel(iPos, iPos, input);
+                        [ir, mr] = getLinePositions(x, y);
+
+                        if (mr < 0) copyPixel(ir, ir, iData);
                         else {
 
-                            let dinA = inA[iPos] / 255,
-                                dmixA = mixA[mPos] / 255;
+                            ig = ir + 1;
+                            ib = ig + 1;
+                            ia = ib + 1;
+                            mg = mr + 1;
+                            mb = mg + 1;
+                            ma = mb + 1;
 
-                            outR[iPos] = sOverCalc(inR[iPos], dinA, mixR[mPos], dmixA);
-                            outG[iPos] = sOverCalc(inG[iPos], dinA, mixG[mPos], dmixA);
-                            outB[iPos] = sOverCalc(inB[iPos], dinA, mixB[mPos], dmixA);
-                            outA[iPos] = (dinA + (dmixA * (1 - dinA))) * 255;
+                            dinA = iData[ia] / 255;
+                            dmixA = mData[ma] / 255;
+
+                            oData[ir] = sOverCalc(iData[ir], dinA, mData[mr], dmixA);
+                            oData[ig] = sOverCalc(iData[ig], dinA, mData[mg], dmixA);
+                            oData[ib] = sOverCalc(iData[ib], dinA, mData[mb], dmixA);
+                            oData[ia] = (dinA + (dmixA * (1 - dinA))) * 255;
                         }
                     }
                 }
         }
-        let work = this.cache.work.channels;
-        if (lineOut) this.processResults(output, work, 1 - opacity);
-        else this.processResults(work, output, opacity);
+
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
+    },
+
+// __corrode__ - Performs a special form of matrix operation on each pixel's color and alpha channels, calculating the new value using neighbouring pixel values. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the "width" and "height" arguments, while setting the home pixel's position within the matrix can be set using the "offsetX" and "offsetY" arguments. The operation will set the pixel's channel value to match either the lowest, highest, mean or median values as dictated by its neighbours - this value is set in the "level" attribute. Channels can be selected by setting the "includeRed", "includeGreen", "includeBlue" (all false by default) and "includeAlpha" (default: true) flags.
+    'corrode': function (requirements) {
+
+        const doCalculations = function (data, matrix, offset) {
+
+            let vals = [];
+
+            for (let m = 0, mz = matrix.length; m < mz; m++) {
+
+                vals.push(data[matrix[m] + offset]);
+
+                // need to remove the pixel's own value?
+            }
+
+            if (!vals.length) return 0;
+
+            switch (operation) {
+
+                case 'lowest' :
+
+                    return Math.min(...vals);
+                
+                case 'highest' :
+
+                    return Math.max(...vals);
+                
+                case 'median' :
+
+                    let max = Math.max(...vals),
+                        min = Math.min(...vals);
+
+                    return Math.floor(min + ((max - min) / 2));
+
+                default :
+
+                    let total = vals.reduce((a, v) => a + v, 0);
+                    return Math.floor(total / vals.length);
+            }
+        };
+
+        let [input, output] = this.getInputAndOutputLines(requirements);
+
+        let iData = input.data,
+            oData = output.data,
+            len = iData.length;
+
+        let {opacity, includeRed, includeGreen, includeBlue, includeAlpha, width, height, offsetX, offsetY, operation, lineOut} = requirements;
+
+        if (null == opacity) opacity = 1;
+        if (null == includeRed) includeRed = false;
+        if (null == includeGreen) includeGreen = false;
+        if (null == includeBlue) includeBlue = false;
+        if (null == includeAlpha) includeAlpha = true;
+        if (null == width || width < 1) width = 3;
+        if (null == height || height < 1) height = 3;
+        if (null == offsetX) offsetX = 1;
+        if (null == offsetY) offsetY = 1;
+        if (null == operation) operation = 'mean';
+
+        let grid = this.buildMatrixGrid(width, height, offsetX, offsetY, input);
+
+        let m = Math.floor(len / 4),
+            r, g, b, a, i;
+
+        for (i = 0; i < m; i++) {
+
+            r = i * 4;
+            g = r + 1;
+            b = g + 1;
+            a = b + 1;
+
+            oData[r] = (includeRed) ? doCalculations(iData, grid[i], 0) : iData[r];
+            oData[g] = (includeGreen) ? doCalculations(iData, grid[i], 1) : iData[g];
+            oData[b] = (includeBlue) ? doCalculations(iData, grid[i], 2) : iData[b];
+            oData[a] = (includeAlpha) ? doCalculations(iData, grid[i], 3) : iData[a];
+        }
+
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
     },
 
 // __displace__ - Shift pixels around the image, based on the values supplied in a displacement image
     'displace': function (requirements) {
 
-        let [input, output, mix] = this.getInputAndOutputChannels(requirements);
+        const copyPixel = function (fromPos, toPos, data) {
 
-        let len = input.r.length;
+            if (fromPos < 0) oData[toPos + 3] = 0;
+            else {
+
+                oData[toPos] = data[fromPos];
+
+                fromPos++;
+                toPos++;
+                oData[toPos] = data[fromPos];
+
+                fromPos++;
+                toPos++;
+                oData[toPos] = data[fromPos];
+
+                fromPos++;
+                toPos++;
+                oData[toPos] = data[fromPos];
+            }
+        };
+
+        const getLinePositions = function (x, y) {
+
+            let ix = x,
+                iy = y,
+                mx = x + offsetX,
+                my = y + offsetY;
+
+            let mPos = -1,
+                iPos = ((iy * iWidth) + ix) * 4;
+
+            if (mx >= 0 && mx < mWidth && my >= 0 && my < mHeight) mPos = ((my * mWidth) + mx) * 4;
+
+            return [iPos, mPos];
+        };
+
+        let [input, output, mix] = this.getInputAndOutputLines(requirements);
+
+        let {width:iWidth, height:iHeight, data:iData} = input;
+        let {width:oWidth, height:oHeight, data:oData} = output;
+        let {width:mWidth, height:mHeight, data:mData} = mix;
 
         let {opacity, channelX, channelY, scaleX, scaleY, offsetX, offsetY, transparentEdges, lineOut} = requirements;
 
@@ -2005,59 +2319,27 @@ P.theBigActionsObject = {
         if (null == offsetY) offsetY = 0;
         if (null == transparentEdges) transparentEdges = false;
 
-        const {r:inR, g:inG, b:inB, a:inA} = input;
-        const {r:outR, g:outG, b:outB, a:outA} = output;
-        const {r:mixR, g:mixG, b:mixB, a:mixA} = mix;
+        let offsetForChannelX = 3;
+        if (channelX == 'red') offsetForChannelX = 0;
+        else if (channelX == 'green') offsetForChannelX = 1;
+        else if (channelX == 'blue') offsetForChannelX = 2;
 
-        if (channelX == 'red') channelX = mixR;
-        else if (channelX == 'green') channelX = mixG;
-        else if (channelX == 'blue') channelX = mixB;
-        else channelX = mixA;
+        let offsetForChannelY = 3;
+        if (channelY == 'red') offsetForChannelY = 0;
+        else if (channelY == 'green') offsetForChannelY = 1;
+        else if (channelY == 'blue') offsetForChannelY = 2;
 
-        if (channelY == 'red') channelY = mixR;
-        else if (channelY == 'green') channelY = mixG;
-        else if (channelY == 'blue') channelY = mixB;
-        else channelY = mixA;
+        let x, y, dx, dy, dPos, iPos, mPos;
 
-        let [iWidth, iHeight, oWidth, oHeight, mWidth, mHeight] = this.getInputAndOutputDimensions(requirements);
+        for (y = 0; y < iHeight; y++) {
+            for (x = 0; x < iWidth; x++) {
 
-        const copyPixel = function (fromPos, toPos, channel) {
-
-            if (fromPos < 0) outA[toPos] = 0;
-            else {
-
-                outR[toPos] = channel.r[fromPos];
-                outG[toPos] = channel.g[fromPos];
-                outB[toPos] = channel.b[fromPos];
-                outA[toPos] = channel.a[fromPos];
-            }
-        };
-
-        const getLinePositions = function (x, y) {
-
-            let ix = x,
-                iy = y,
-                mx = x + offsetX,
-                my = y + offsetY;
-
-            let mPos = -1,
-                iPos = (iy * iWidth) + ix;
-
-            if (mx >= 0 && mx < mWidth && my >= 0 && my < mHeight) mPos = (my * mWidth) + mx;
-
-            return [iPos, mPos];
-        };
-
-        for (let y = 0; y < iHeight; y++) {
-            for (let x = 0; x < iWidth; x++) {
-
-                let [iPos, mPos] = getLinePositions(x, y);
+                [iPos, mPos] = getLinePositions(x, y);
 
                 if (mPos >= 0) {
 
-                    let dx = Math.floor(x + ((127 - channelX[mPos]) / 127) * scaleX);
-                    let dy = Math.floor(y + ((127 - channelY[mPos]) / 127) * scaleY);
-                    let dPos;
+                    dx = Math.floor(x + ((127 - mData[mPos + offsetForChannelX]) / 127) * scaleX);
+                    dy = Math.floor(y + ((127 - mData[mPos + offsetForChannelY]) / 127) * scaleY);
 
                     if (!transparentEdges) {
 
@@ -2066,30 +2348,43 @@ P.theBigActionsObject = {
                         if (dy < 0) dy = 0;
                         if (dy >= iHeight) dy = iHeight - 1;
 
-                        dPos = (dy * iWidth) + dx;
+                        dPos = ((dy * iWidth) + dx) * 4;
                     }
                     else {
 
                         if (dx < 0 || dx >= iWidth || dy < 0 || dy >= iHeight) dPos = -1;
-                        else dPos = (dy * iWidth) + dx;
+                        else dPos = ((dy * iWidth) + dx) * 4;
                     }
 
-                    copyPixel(dPos, iPos, input);
+                    copyPixel(dPos, iPos, iData);
                 }
-                else copyPixel(iPos, iPos, input);
+                else copyPixel(iPos, iPos, iData);
             }
         }
-        let work = this.cache.work.channels;
-        if (lineOut) this.processResults(output, work, 1 - opacity);
-        else this.processResults(work, output, opacity);
+
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
     },
 
 // __emboss__ - A 3x3 matrix transform; the matrix weights are calculated internally from the values of two arguments: "strength", and "angle" - which is a value measured in degrees, with 0 degrees pointing to the right of the origin (along the positive x axis). Post-processing options include removing unchanged pixels, or setting then to mid-gray. The convenience method includes additional arguments which will add a choice of grayscale, then channel clamping, then blurring actions before passing the results to this emboss action
     'emboss': function (requirements) {
 
-        let [input, output] = this.getInputAndOutputChannels(requirements);
+        const doCalculations = function (data, matrix, offset) {
 
-        let len = input.r.length;
+            let val = 0;
+
+            for (let m = 0, mz = matrix.length; m < mz; m++) {
+
+                if (weights[m]) val += (data[matrix[m] + offset] * weights[m]);
+            }
+            return val;
+        }
+
+        let [input, output] = this.getInputAndOutputLines(requirements);
+
+        let iData = input.data,
+            oData = output.data,
+            len = iData.length;
 
         let {opacity, strength, angle, tolerance, keepOnlyChangedAreas, postProcessResults, lineOut} = requirements;
 
@@ -2164,59 +2459,66 @@ P.theBigActionsObject = {
             weights[3] = -weights[5];
         }
 
-        const {r:inR, g:inG, b:inB, a:inA} = input;
-        const {r:outR, g:outG, b:outB, a:outA} = output;
+        const grid = this.buildMatrixGrid(3, 3, 1, 1, input);
 
-        const grid = this.buildMatrixGrid(3, 3, 1, 1, inA);
+        let i, r, g, b, a, iR, iG, iB, iA, oR, oG, oB, oA, m;
 
-        const doCalculations = function (inChannel, matrix) {
+        for (i = 0; i < len; i += 4) {
 
-            let val = 0;
+            r = i;
+            g = r + 1;
+            b = g + 1;
+            a = b + 1;
 
-            for (let m = 0, mz = matrix.length; m < mz; m++) {
+            iR = iData[r];
+            iG = iData[g];
+            iB = iData[b];
+            iA = iData[a];
 
-                if (weights[m]) val += (inChannel[matrix[m]] * weights[m]);
-            }
-            return val;
-        }
+            if (iA) {
 
-        for (let i = 0; i < len; i++) {
+                m = Math.floor(i / 4);
 
-            if (inA[i]) {
-
-                outR[i] = doCalculations(inR, grid[i]);
-                outG[i] = doCalculations(inG, grid[i]);
-                outB[i] = doCalculations(inB, grid[i]);
-                outA[i] = inA[i];
+                oData[r] = doCalculations(iData, grid[m], 0);
+                oData[g] = doCalculations(iData, grid[m], 1);
+                oData[b] = doCalculations(iData, grid[m], 2);
+                oData[a] = iData[a];
 
                 if (postProcessResults) {
 
-                    if (outR[i] >= inR[i] - tolerance && outR[i] <= inR[i] + tolerance && 
-                        outG[i] >= inG[i] - tolerance && outG[i] <= inG[i] + tolerance && 
-                        outB[i] >= inB[i] - tolerance && outB[i] <= inB[i] + tolerance) {
+                    oR = oData[r],
+                    oG = oData[g],
+                    oB = oData[b],
+                    oA = oData[a];
 
-                        if (keepOnlyChangedAreas) outA[i] = 0;
+                    if (oR >= iR - tolerance && oR <= iR + tolerance && 
+                        oG >= iG - tolerance && oG <= iG + tolerance && 
+                        oB >= iB - tolerance && oB <= iB + tolerance) {
+
+                        if (keepOnlyChangedAreas) oData[a] = 0;
                         else {
-                            outR[i] = 127;
-                            outG[i] = 127;
-                            outB[i] = 127;
+                            oData[r] = 127;
+                            oData[g] = 127;
+                            oData[b] = 127;
                         }
                     }
                 }
             }
         }
-        let work = this.cache.work.channels;
-        if (lineOut) this.processResults(output, work, 1 - opacity);
-        else this.processResults(work, output, opacity);
+
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
     },
 
 // __flood__ - Set all pixels to the channel values supplied in the "red", "green", "blue" and "alpha" arguments
     'flood': function (requirements) {
 
-        let [input, output] = this.getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputLines(requirements);
 
-        let len = input.r.length,
-            floor = Math.floor;
+        let iData = input.data,
+            oData = output.data,
+            len = iData.length,
+            i, c;
 
         let {opacity, red, green, blue, alpha, lineOut} = requirements;
 
@@ -2226,53 +2528,67 @@ P.theBigActionsObject = {
         if (null == blue) blue = 0;
         if (null == alpha) alpha = 255;
 
-        const {r:outR, g:outG, b:outB, a:outA} = output;
+        for (i = 0; i < len; i += 4) {
 
-        outR.fill(red, 0, len - 1);
-        outG.fill(green, 0, len - 1);
-        outB.fill(blue, 0, len - 1);
-        outA.fill(alpha, 0, len - 1);
+            c = i;
+            oData[c] = red;
 
-        let work = this.cache.work.channels;
-        if (lineOut) this.processResults(output, work, 1 - opacity);
-        else this.processResults(work, output, opacity);
+            c++;
+            oData[c] = green;
+
+            c++;
+            oData[c] = blue;
+
+            c++;
+            oData[c] = alpha;
+        }
+
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
     },
 
 // __grayscale__ - For each pixel, averages the weighted color channels and applies the result across all the color channels. This gives a more realistic monochrome effect.
     'grayscale': function (requirements) {
 
-        let [input, output] = this.getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputLines(requirements);
 
-        let len = input.r.length;
+        let iData = input.data,
+            oData = output.data,
+            len = iData.length,
+            r, g, b, a, i, gray;
 
         let {opacity, lineOut} = requirements;
 
         if (null == opacity) opacity = 1;
 
-        const {r:inR, g:inG, b:inB, a:inA} = input;
-        const {r:outR, g:outG, b:outB, a:outA} = output;
+        for (i = 0; i < len; i += 4) {
 
-        for (let i = 0; i < len; i++) {
+            r = i;
+            g = r + 1;
+            b = g + 1;
+            a = b + 1;
 
-            let gray = Math.floor((0.2126 * inR[i]) + (0.7152 * inG[i]) + (0.0722 * inB[i]));
+            gray = Math.floor((0.2126 * iData[r]) + (0.7152 * iData[g]) + (0.0722 * iData[b]));
 
-            outR[i] = gray;
-            outG[i] = gray;
-            outB[i] = gray;
-            outA[i] = inA[i];
+            oData[r] = gray;
+            oData[g] = gray;
+            oData[b] = gray;
+            oData[a] = iData[a];
         }
 
-        let work = this.cache.work.channels;
-        if (lineOut) this.processResults(output, work, 1 - opacity);
-        else this.processResults(work, output, opacity);
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
     },
 
 // __invert-channels__ - For each pixel, subtracts its current channel values - when included - from 255.
     'invert-channels': function (requirements) {
 
-        let [input, output] = this.getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputLines(requirements);
 
-        let len = input.r.length;
+        let iData = input.data,
+            oData = output.data,
+            len = iData.length,
+            r, g, b, a, i;
 
         let {opacity, includeRed, includeGreen, includeBlue, includeAlpha, lineOut} = requirements;
 
@@ -2282,40 +2598,45 @@ P.theBigActionsObject = {
         if (null == includeBlue) includeBlue = true;
         if (null == includeAlpha) includeAlpha = false;
 
-        const {r:inR, g:inG, b:inB, a:inA} = input;
-        const {r:outR, g:outG, b:outB, a:outA} = output;
+        for (i = 0; i < len; i += 4) {
 
-        for (let i = 0; i < len; i++) {
+            r = i;
+            g = r + 1;
+            b = g + 1;
+            a = b + 1;
 
-            outR[i] = (includeRed) ? 255 - inR[i] : inR[i];
-            outG[i] = (includeGreen) ? 255 - inG[i] : inG[i];
-            outB[i] = (includeBlue) ? 255 - inB[i] : inB[i];
-            outA[i] = (includeAlpha) ? 255 - inA[i] : inA[i];
+            oData[r] = (includeRed) ? 255 - iData[r] : iData[r];
+            oData[g] = (includeGreen) ? 255 - iData[g] : iData[g];
+            oData[b] = (includeBlue) ? 255 - iData[b] : iData[b];
+            oData[a] = (includeAlpha) ? 255 - iData[a] : iData[a];
         }
-        let work = this.cache.work.channels;
-        if (lineOut) this.processResults(output, work, 1 - opacity);
-        else this.processResults(work, output, opacity);
+
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
     },
 
 // __lock-channels-to-levels__ - Produces a posterize effect. Takes in four arguments - "red", "green", "blue" and "alpha" - each of which is an Array of zero or more integer Numbers (between 0 and 255). The filter works by looking at each pixel's channel value and determines which of the corresponding Array's Number values it is closest to; it then sets the channel value to that Number value.
     'lock-channels-to-levels': function (requirements) {
 
-        this.checkChannelLevelsParameters(requirements)
-
         const getValue = function (val, levels) {
 
             if (!levels.length) return val;
 
-            for (let i = 0, iz = levels.length; i < iz; i++) {
+            for (let j = 0, jz = levels.length; j < jz; j++) {
 
-                let [start, end, level] = levels[i];
+                let [start, end, level] = levels[j];
                 if (val >= start && val <= end) return level;
             }
         };
 
-        let [input, output] = this.getInputAndOutputChannels(requirements);
+        this.checkChannelLevelsParameters(requirements);
 
-        let len = input.r.length;
+        let [input, output] = this.getInputAndOutputLines(requirements);
+
+        let iData = input.data,
+            oData = output.data,
+            len = iData.length,
+            r, g, b, a, i;
 
         let {opacity, red, green, blue, alpha, lineOut} = requirements;
 
@@ -2325,27 +2646,49 @@ P.theBigActionsObject = {
         if (null == blue) blue = [0];
         if (null == alpha) alpha = [255];
 
-        const {r:inR, g:inG, b:inB, a:inA} = input;
-        const {r:outR, g:outG, b:outB, a:outA} = output;
+        for (i = 0; i < len; i += 4) {
 
-        for (let i = 0; i < len; i++) {
-            outR[i] = getValue(inR[i], red);
-            outG[i] = getValue(inG[i], green);
-            outB[i] = getValue(inB[i], blue);
-            outA[i] = getValue(inA[i], alpha);
+            r = i;
+            g = r + 1;
+            b = g + 1;
+            a = b + 1;
+
+            oData[r] = getValue(iData[r], red);
+            oData[g] = getValue(iData[g], green);
+            oData[b] = getValue(iData[b], blue);
+            oData[a] = getValue(iData[a], alpha);
         }
 
-        let work = this.cache.work.channels;
-        if (lineOut) this.processResults(output, work, 1 - opacity);
-        else this.processResults(work, output, opacity);
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
     },
 
 // __matrix__ - Performs a matrix operation on each pixel's channels, calculating the new value using neighbouring pixel weighted values. Also known as a convolution matrix, kernel or mask operation. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the "width" and "height" arguments, while setting the home pixel's position within the matrix can be set using the "offsetX" and "offsetY" arguments. The weights to be applied need to be supplied in the "weights" argument - an Array listing the weights row-by-row starting from the top-left corner of the matrix. By default all color channels are included in the calculations while the alpha channel is excluded. The 'edgeDetect', 'emboss' and 'sharpen' convenience filter methods all use the matrix action, pre-setting the required weights.
     'matrix': function (requirements) {
 
-        let [input, output] = this.getInputAndOutputChannels(requirements);
+        const doCalculations = function (data, matrix, offset) {
 
-        let len = input.r.length;
+            let val = 0,
+                c;
+
+            for (let m = 0, mz = matrix.length; m < mz; m++) {
+
+
+                if (weights[m]) {
+
+                    c = matrix[m] + offset;
+                    val += (data[c] * weights[m]);
+                }
+            }
+            return val;
+        };
+
+        let [input, output] = this.getInputAndOutputLines(requirements);
+
+        let iData = input.data,
+            oData = output.data,
+            len = iData.length,
+            r, g, b, a, i, m;
 
         let {opacity, includeRed, includeGreen, includeBlue, includeAlpha, width, height, offsetX, offsetY, weights, lineOut} = requirements;
 
@@ -2363,50 +2706,39 @@ P.theBigActionsObject = {
             weights[Math.floor(weights.length / 2) + 1] = 1;
         }
 
-        let grid = this.buildMatrixGrid(width, height, offsetX, offsetY, input.a);
+        let grid = this.buildMatrixGrid(width, height, offsetX, offsetY, input);
 
-        const doCalculations = function (inChannel, matrix) {
+        for (i = 0; i < len; i += 4) {
 
-            let val = 0;
+            r = i;
+            g = r + 1;
+            b = g + 1;
+            a = b + 1;
 
-            for (let m = 0, mz = matrix.length; m < mz; m++) {
+            if (iData[a]) {
 
-                if (weights[m]) val += (inChannel[matrix[m]] * weights[m]);
-            }
-            return val;
-        }
+                m = Math.floor(i / 4);
 
-        const {r:inR, g:inG, b:inB, a:inA} = input;
-        const {r:outR, g:outG, b:outB, a:outA} = output;
-
-        for (let i = 0; i < len; i++) {
-
-            if (inA[i]) {
-
-                if (includeRed) outR[i] = doCalculations(inR, grid[i]);
-                else outR[i] = inR[i];
-
-                if (includeGreen) outG[i] = doCalculations(inG, grid[i]);
-                else outG[i] = inG[i];
-
-                if (includeBlue) outB[i] = doCalculations(inB, grid[i]);
-                else outB[i] = inB[i];
-
-                if (includeAlpha) outA[i] = doCalculations(inA, grid[i]);
-                else outA[i] = inA[i];
+                oData[r] = (includeRed) ? doCalculations(iData, grid[m], 0) : iData[r];
+                oData[g] = (includeGreen) ? doCalculations(iData, grid[m], 1) : iData[g];
+                oData[b] = (includeBlue) ? doCalculations(iData, grid[m], 2) : iData[b];
+                oData[a] = (includeAlpha) ? doCalculations(iData, grid[m], 3) : iData[a];
             }
         }
-        let work = this.cache.work.channels;
-        if (lineOut) this.processResults(output, work, 1 - opacity);
-        else this.processResults(work, output, opacity);
+
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
     },
 
 // __modulate-channels__ - Multiplies each channel's value by the supplied argument value. A channel-argument's value of '0' will set that channel's value to zero; a value of '1' will leave the channel value unchanged. If the "saturation" flag is set to 'true' the calculation changes to start at the color range mid point. The 'brightness' and 'saturation' filters are special forms of the 'channels' filter which use a single "levels" argument to set all three color channel arguments to the same value.
     'modulate-channels': function (requirements) {
 
-        let [input, output] = this.getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputLines(requirements);
 
-        let len = input.r.length;
+        let iData = input.data,
+            oData = output.data,
+            len = iData.length,
+            r, g, b, a, i;
 
         let {opacity, red, green, blue, alpha, saturation, lineOut} = requirements;
 
@@ -2417,36 +2749,49 @@ P.theBigActionsObject = {
         if (null == alpha) alpha = 1;
         if (null == saturation) saturation = false;
 
-        const {r:inR, g:inG, b:inB, a:inA} = input;
-        const {r:outR, g:outG, b:outB, a:outA} = output;
-
         if (saturation) {
 
-            for (let i = 0; i < len; i++) {
-                outR[i] = 127 + ((inR[i] - 127) * red);
-                outG[i] = 127 + ((inG[i] - 127) * green);
-                outB[i] = 127 + ((inB[i] - 127) * blue);
-                outA[i] = 127 + ((inA[i] - 127) * alpha);
+            for (i = 0; i < len; i += 4) {
+
+                r = i;
+                g = r + 1;
+                b = g + 1;
+                a = b + 1;
+
+                oData[r] = 127 + ((iData[r] - 127) * red);
+                oData[g] = 127 + ((iData[g] - 127) * green);
+                oData[b] = 127 + ((iData[b] - 127) * blue);
+                oData[a] = 127 + ((iData[a] - 127) * alpha);
             }
         }
         else {
 
-            for (let i = 0; i < len; i++) {
-                outR[i] = inR[i] * red;
-                outG[i] = inG[i] * green;
-                outB[i] = inB[i] * blue;
-                outA[i] = inA[i] * alpha;
+            for (i = 0; i < len; i += 4) {
+
+                r = i;
+                g = r + 1;
+                b = g + 1;
+                a = b + 1;
+
+                oData[r] = iData[r] * red;
+                oData[g] = iData[g] * green;
+                oData[b] = iData[b] * blue;
+                oData[a] = iData[a] * alpha;
             }
         }
-        let work = this.cache.work.channels;
-        if (lineOut) this.processResults(output, work, 1 - opacity);
-        else this.processResults(work, output, opacity);
+
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
     },
 
 // __offset__ - Offset the input image in the output image.
     'offset': function (requirements) {
 
-        let [input, output] = this.getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputLines(requirements);
+
+        let iData = input.data,
+            oData = output.data,
+            len = iData.length;
 
         let {opacity, offsetRedX, offsetRedY, offsetGreenX, offsetGreenY, offsetBlueX, offsetBlueY, offsetAlphaX, offsetAlphaY, lineOut} = requirements;
 
@@ -2460,24 +2805,21 @@ P.theBigActionsObject = {
         if (null == offsetAlphaX) offsetAlphaX = 0;
         if (null == offsetAlphaY) offsetAlphaY = 0;
 
-        let simpleoffset = false;
+        if (offsetRedX || offsetGreenX || offsetBlueX || offsetAlphaX || offsetRedY || offsetGreenY || offsetBlueY || offsetAlphaY) {
 
-        if (offsetRedX == offsetGreenX && offsetRedX == offsetBlueX && offsetRedX == offsetAlphaX && offsetRedY == offsetGreenY && offsetRedY == offsetBlueY && offsetRedY == offsetAlphaY) simpleoffset = true;
+            let simpleoffset = false;
 
-        const {r:inR, g:inG, b:inB, a:inA} = input;
-        const {r:outR, g:outG, b:outB, a:outA} = output;
+            if (offsetRedX == offsetGreenX && offsetRedX == offsetBlueX && offsetRedX == offsetAlphaX && offsetRedY == offsetGreenY && offsetRedY == offsetBlueY && offsetRedY == offsetAlphaY) simpleoffset = true;
 
-        let grid = this.buildImageGrid(),
-            gWidth = grid[0].length,
-            gHeight = grid.length,
-            drx, dry, dgx, dgy, dbx, dby, dax, day, inCell, outCell;
+            let grid = this.buildImageGrid(input),
+                gWidth = grid[0].length,
+                gHeight = grid.length,
+                drx, dry, dgx, dgy, dbx, dby, dax, day, inCell, outCell;
 
-        for (let y = 0; y < gHeight; y++) {
-            for (let x = 0; x < gWidth; x++) {
+            for (let y = 0; y < gHeight; y++) {
+                for (let x = 0; x < gWidth; x++) {
 
-                inCell = grid[y][x];
-
-                if (inA[inCell]) {
+                    inCell = grid[y][x] * 4;
 
                     if (simpleoffset) {
 
@@ -2486,11 +2828,11 @@ P.theBigActionsObject = {
 
                         if (drx >= 0 && drx < gWidth && dry >= 0 && dry < gHeight) {
 
-                            outCell = grid[dry][drx];
-                            outR[outCell] = inR[inCell];
-                            outG[outCell] = inG[inCell];
-                            outB[outCell] = inB[inCell];
-                            outA[outCell] = inA[inCell];
+                            outCell = grid[dry][drx] * 4;
+                            oData[outCell] = iData[inCell];
+                            oData[outCell + 1] = iData[inCell + 1];
+                            oData[outCell + 2] = iData[inCell + 2];
+                            oData[outCell + 3] = iData[inCell + 3];
                         }
                     }
                     else {
@@ -2506,65 +2848,67 @@ P.theBigActionsObject = {
 
                         if (drx >= 0 && drx < gWidth && dry >= 0 && dry < gHeight) {
 
-                            outCell = grid[dry][drx];
-                            outR[outCell] = inR[inCell];
+                            outCell = grid[dry][drx] * 4;
+                            oData[outCell] = iData[inCell];
                         }
 
                         if (dgx >= 0 && dgx < gWidth && dgy >= 0 && dgy < gHeight) {
 
-                            outCell = grid[dgy][dgx];
-                            outG[outCell] = inG[inCell];
+                            outCell = grid[dgy][dgx] * 4;
+                            oData[outCell + 1] = iData[inCell + 1];
                         }
 
                         if (dbx >= 0 && dbx < gWidth && dby >= 0 && dby < gHeight) {
 
-                            outCell = grid[dby][dbx];
-                            outB[outCell] = inB[inCell];
+                            outCell = grid[dby][dbx] * 4;
+                            oData[outCell + 2] = iData[inCell + 2];
                         }
 
                         if (dax >= 0 && dax < gWidth && day >= 0 && day < gHeight) {
 
-                            outCell = grid[day][dax];
-                            outA[outCell] = inA[inCell];
+                            outCell = grid[day][dax] * 4;
+                            oData[outCell + 3] = iData[inCell + 3];
                         }
                     }
                 }
             }
         }
-        let work = this.cache.work.channels;
-        if (lineOut) this.processResults(output, work, 1 - opacity);
-        else this.processResults(work, output, opacity);
+
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
     },
 
 // __pixelate__ - Pixelizes the input image by creating a grid of tiles across it and then averaging the color values of each pixel in a tile and setting its value to the average. Tile width and height, and their offset from the top left corner of the image, are set via the "tileWidth", "tileHeight", "offsetX" and "offsetY" arguments.
     'pixelate': function (requirements) {
 
-        const doCalculations = function (inChannel, outChannel, tile) {
+        const doCalculations = function (inChannel, outChannel, tile, offset) {
 
-            let avg = tile.reduce((a, v) => a + inChannel[v], 0);
+            let avg = tile.reduce((a, v) => a + inChannel[v + offset], 0);
 
             avg = Math.floor(avg / tile.length);
 
             for (let i = 0, iz = tile.length; i < iz; i++) {
 
-                outChannel[tile[i]] = avg;
+                outChannel[tile[i] + offset] = avg;
             }
         }
 
-        const setOutValueToInValue = function (inChannel, outChannel, tile) {
+        const setOutValueToInValue = function (inChannel, outChannel, tile, offset) {
 
             let cell;
 
             for (let i = 0, iz = tile.length; i < iz; i++) {
 
                 cell = tile[i];
-                outChannel[cell] = inChannel[cell];
+                outChannel[cell + offset] = inChannel[cell + offset];
             }
         };
 
-        let [input, output] = this.getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputLines(requirements);
 
-        let len = input.r.length;
+        let iData = input.data,
+            oData = output.data,
+            len = iData.length;
 
         let {opacity, tileWidth, tileHeight, offsetX, offsetY, includeRed, includeGreen, includeBlue, includeAlpha, lineOut} = requirements;
 
@@ -2580,26 +2924,22 @@ P.theBigActionsObject = {
 
         const tiles = this.buildImageTileSets(tileWidth, tileHeight, offsetX, offsetY);
 
-        const {r:inR, g:inG, b:inB, a:inA} = input;
-        const {r:outR, g:outG, b:outB, a:outA} = output;
-
         tiles.forEach(t => {
-            if (includeRed) doCalculations(inR, outR, t);
-            else setOutValueToInValue(inR, outR, t);
+            if (includeRed) doCalculations(iData, oData, t, 0);
+            else setOutValueToInValue(iData, oData, t, 0);
 
-            if (includeGreen) doCalculations(inG, outG, t);
-            else setOutValueToInValue(inG, outG, t);
+            if (includeGreen) doCalculations(iData, oData, t, 1);
+            else setOutValueToInValue(iData, oData, t, 1);
 
-            if (includeBlue) doCalculations(inB, outB, t);
-            else setOutValueToInValue(inB, outB, t);
+            if (includeBlue) doCalculations(iData, oData, t, 2);
+            else setOutValueToInValue(iData, oData, t, 2);
 
-            if (includeAlpha) doCalculations(inA, outA, t);
-            else setOutValueToInValue(inA, outA, t);
+            if (includeAlpha) doCalculations(iData, oData, t, 3);
+            else setOutValueToInValue(iData, oData, t, 3);
         })
 
-        let work = this.cache.work.channels;
-        if (lineOut) this.processResults(output, work, 1 - opacity);
-        else this.processResults(work, output, opacity);
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
     },
 
 // __Add an asset image to the filter process chain. The asset - the String name of the asset object - must be pre-loaded before it can be included in the filter. The "width" and "height" arguments are measured in integer Number pixels; the "copy" arguments can be either percentage Strings (relative to the asset's natural dimensions) or absolute Number values (in pixels). The "lineOut" argument is required - be aware that the filter action does not check for any pre-existing assets cached under this name and, if they exist, will overwrite them with this asset's data.__ - 
@@ -2607,41 +2947,26 @@ P.theBigActionsObject = {
 
         const {assetData, lineOut} = requirements;
 
-        if (lineOut && lineOut.substring && lineOut.length && assetData && assetData.width && assetData.height && assetData.data) {
+        if (lineOut && lineOut.substring && lineOut.length) {
 
-            let d = assetData.data;
-            let len = d.length;
+            const {width, height, data} = assetData;
 
-            let res = this.createResultObject(len / 4);
+            if (width && height && data) {
 
-            let r = res.r,
-                g = res.g,
-                b = res.b,
-                a = res.a;
-
-            let counter = 0;
-
-            for (let i = 0; i < len; i += 4) {
-
-                r[counter] = d[i];
-                g[counter] = d[i + 1];
-                b[counter] = d[i + 2];
-                a[counter] = d[i + 3];
-
-                counter++;
+                this.cache[lineOut] = new ImageData(data, width, height);
             }
-            assetData.channels = res;
-
-            this.cache[lineOut] = assetData;
         }
     },
 
 // __set-channel-to-level__ - Sets the value of each pixel's included channel to the value supplied in the "level" argument.
     'set-channel-to-level': function (requirements) {
 
-        let [input, output] = this.getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputLines(requirements);
 
-        let len = input.r.length;
+        let iData = input.data,
+            oData = output.data,
+            len = iData.length,
+            r, g, b, a, i;
 
         let {opacity, includeRed, includeGreen, includeBlue, includeAlpha, level, lineOut} = requirements;
 
@@ -2652,28 +2977,33 @@ P.theBigActionsObject = {
         if (null == includeAlpha) includeAlpha = false;
         if (null == level) level = 0;
 
-        const {r:inR, g:inG, b:inB, a:inA} = input;
-        const {r:outR, g:outG, b:outB, a:outA} = output;
+        for (i = 0; i < len; i += 4) {
 
-        for (let i = 0; i < len; i++) {
+            r = i;
+            g = r + 1;
+            b = g + 1;
+            a = b + 1;
 
-            outR[i] = (includeRed) ? level : inR[i];
-            outG[i] = (includeGreen) ? level : inG[i];
-            outB[i] = (includeBlue) ? level : inB[i];
-            outA[i] = (includeAlpha) ? level : inA[i];
+            oData[r] = (includeRed) ? level : iData[r];
+            oData[g] = (includeGreen) ? level : iData[g];
+            oData[b] = (includeBlue) ? level : iData[b];
+            oData[a] = (includeAlpha) ? level : iData[a];
         }
-        let work = this.cache.work.channels;
-        if (lineOut) this.processResults(output, work, 1 - opacity);
-        else this.processResults(work, output, opacity);
+
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
     },
 
 // __step-channels__ - Takes three divisor values - "red", "green", "blue". For each pixel, its color channel values are divided by the corresponding color divisor, floored to the integer value and then multiplied by the divisor. For example a divisor value of '50' applied to a channel value of '120' will give a result of '100'. The output is a form of posterization.
     'step-channels': function (requirements) {
 
-        let [input, output] = this.getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputLines(requirements);
 
-        let len = input.r.length,
-            floor = Math.floor;
+        let iData = input.data,
+            oData = output.data,
+            len = iData.length,
+            floor = Math.floor,
+            r, g, b, a, i;
 
         let {opacity, red, green, blue, lineOut} = requirements;
 
@@ -2682,75 +3012,83 @@ P.theBigActionsObject = {
         if (null == green) green = 1;
         if (null == blue) blue = 1;
 
-        if (red == null) red = 1;
-        if (green == null) green = 1;
-        if (blue == null) blue = 1;
+        for (i = 0; i < len; i += 4) {
 
-        const {r:inR, g:inG, b:inB, a:inA} = input;
-        const {r:outR, g:outG, b:outB, a:outA} = output;
+            r = i;
+            g = r + 1;
+            b = g + 1;
+            a = b + 1;
 
-        for (let i = 0; i < len; i++) {
-            outR[i] = floor(inR[i] / red) * red;
-            outG[i] = floor(inG[i] / green) * green;
-            outB[i] = floor(inB[i] / blue) * blue;
-            outA[i] = inA[i];
+            oData[r] = floor(iData[r] / red) * red;
+            oData[g] = floor(iData[g] / green) * green;
+            oData[b] = floor(iData[b] / blue) * blue;
+            oData[a] = iData[a];
         }
 
-        let work = this.cache.work.channels;
-        if (lineOut) this.processResults(output, work, 1 - opacity);
-        else this.processResults(work, output, opacity);
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
     },
 
 // __threshold__ - Grayscales the input then, for each pixel, checks the color channel values against a "level" argument: pixels with channel values above the level value are assigned to the 'high' color; otherwise they are updated to the 'low' color. The "high" and "low" arguments are [red, green, blue] integer Number Arrays. The convenience function will accept the pseudo-attributes "highRed", "lowRed" etc in place of the "high" and "low" Arrays.
     'threshold': function (requirements) {
 
-        let [input, output] = this.getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputLines(requirements);
 
-        let len = input.r.length;
+        let iData = input.data,
+            oData = output.data,
+            len = iData.length,
+            r, g, b, a, i, gray;
 
-        let {opacity, low, high, level, lineOut} = requirements;
+        let {opacity, low, high, level, includeAlpha, lineOut} = requirements;
 
         if (null == opacity) opacity = 1;
         if (null == low) low = [0,0,0];
         if (null == high) high = [255,255,255];
         if (null == level) level = 128;
+        if (null == includeAlpha) includeAlpha = false;
 
-        const {r:inR, g:inG, b:inB, a:inA} = input;
-        const {r:outR, g:outG, b:outB, a:outA} = output;
+        let [lowR, lowG, lowB, lowA] = low;
+        let [highR, highG, highB, highA] = high;
 
-        let [lowR, lowG, lowB] = low;
-        let [highR, highG, highB] = high;
+        for (i = 0; i < len; i += 4) {
 
-        for (let i = 0; i < len; i++) {
+            r = i;
+            g = r + 1;
+            b = g + 1;
+            a = b + 1;
 
-            let gray = Math.floor((0.2126 * inR[i]) + (0.7152 * inG[i]) + (0.0722 * inB[i]));
+            gray = Math.floor((0.2126 * iData[r]) + (0.7152 * iData[g]) + (0.0722 * iData[b]));
 
             if (gray < level) {
 
-                outR[i] = lowR;
-                outG[i] = lowG;
-                outB[i] = lowB;
+                oData[r] = lowR;
+                oData[g] = lowG;
+                oData[b] = lowB;
+                oData[a] = (includeAlpha) ? lowA : iData[a];
             }
             else {
 
-                outR[i] = highR;
-                outG[i] = highG;
-                outB[i] = highB;
+                oData[r] = highR;
+                oData[g] = highG;
+                oData[b] = highB;
+                oData[a] = (includeAlpha) ? highA : iData[a];
             }
-            outA[i] = inA[i];
+            
         }
 
-        let work = this.cache.work.channels;
-        if (lineOut) this.processResults(output, work, 1 - opacity);
-        else this.processResults(work, output, opacity);
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
     },
 
 // __tint-channels__ - Has similarities to the SVG &lt;feColorMatrix> filter element, but excludes the alpha channel from calculations. Rather than set a matrix, we set nine arguments to determine how the value of each color channel in a pixel will affect both itself and its fellow color channels. The 'sepia' convenience filter presets these values to create a sepia effect.
     'tint-channels': function (requirements) {
 
-        let [input, output] = this.getInputAndOutputChannels(requirements);
+        let [input, output] = this.getInputAndOutputLines(requirements);
 
-        let len = input.r.length;
+        let iData = input.data,
+            oData = output.data,
+            len = iData.length,
+            r, g, b, a, i, vr, vg, vb;
 
         let {opacity, redInRed, redInGreen, redInBlue, greenInRed, greenInGreen, greenInBlue, blueInRed, blueInGreen, blueInBlue, lineOut} = requirements;
 
@@ -2765,24 +3103,25 @@ P.theBigActionsObject = {
         if (null == blueInGreen) blueInGreen = 0;
         if (null == blueInBlue) blueInBlue = 1;
 
-        const {r:inR, g:inG, b:inB, a:inA} = input;
-        const {r:outR, g:outG, b:outB, a:outA} = output;
+        for (i = 0; i < len; i += 4) {
 
-        for (let i = 0; i < len; i++) {
+            r = i;
+            g = r + 1;
+            b = g + 1;
+            a = b + 1;
 
-            let r = inR[i],
-                g = inG[i],
-                b = inB[i];
+            vr = iData[r];
+            vg = iData[g];
+            vb = iData[b];
 
-            outR[i] = Math.floor((r * redInRed) + (g * greenInRed) + (b * blueInRed));
-            outG[i] = Math.floor((r * redInGreen) + (g * greenInGreen) + (b * blueInGreen));
-            outB[i] = Math.floor((r * redInBlue) + (g * greenInBlue) + (b * blueInBlue));
-            outA[i] = inA[i];
+            oData[r] = Math.floor((vr * redInRed) + (vg * greenInRed) + (vb * blueInRed));
+            oData[g] = Math.floor((vr * redInGreen) + (vg * greenInGreen) + (vb * blueInGreen));
+            oData[b] = Math.floor((vr * redInBlue) + (vg * greenInBlue) + (vb * blueInBlue));
+            oData[a] = iData[a];
         }
 
-        let work = this.cache.work.channels;
-        if (lineOut) this.processResults(output, work, 1 - opacity);
-        else this.processResults(work, output, opacity);
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
     },
 
 // __user-defined-legacy__ - Previous to version 8.4, filters could be defined with an argument which passed a function string to the filter engine, which the engine would then run against the source input image as-and-when required. This functionality has been removed from the new filter functionality. All such filters will now return the input image unchanged.
@@ -2797,23 +3136,27 @@ P.theBigActionsObject = {
 
         this.copyOver(input, output);
 
-        let work = this.cache.work.channels;
-        if (lineOut) this.processResults(output, work, 1 - opacity);
-        else this.processResults(work, output, opacity);
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
     },
 };
 
 
 // #### Factory
-const makeFilterEngine = function (items = {}) {
+const makeFilterEngine = function () {
 
-    return new FilterEngine(items);
+    return new FilterEngine();
 };
 
 constructors.FilterEngine = FilterEngine;
 
 
+// Create a singleton filter engine, for export and use within this code base
+const filterEngine = new FilterEngine();
+
+
 // #### Exports
 export {
     makeFilterEngine,
+    filterEngine,
 };

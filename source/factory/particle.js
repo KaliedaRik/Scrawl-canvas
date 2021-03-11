@@ -40,7 +40,7 @@
 
 // #### Imports
 import { constructors, force, spring, springnames } from '../core/library.js';
-import { mergeOver, pushUnique, λnull } from '../core/utilities.js';
+import { mergeOver, pushUnique, λnull, Ωempty } from '../core/utilities.js';
 
 import { requestParticleHistoryObject, releaseParticleHistoryObject } from './particleHistory.js';
 import { requestVector, releaseVector, makeVector } from './vector.js';
@@ -50,7 +50,7 @@ import baseMix from '../mixin/base.js';
 
 
 // #### Particle constructor
-const Particle = function (items = {}) {
+const Particle = function (items = Ωempty) {
 
     this.makeName(items.name);
     this.register();
@@ -380,6 +380,8 @@ P.run = function (timeKill, radiusKill, killBeyondCanvas) {
 // #### Factory
 // Scrawl-canvas does not expose the particle factory functions in the scrawl object. Instead, particles are consumed by the physics-based entitys: [Tracer](./tracer.html); [Emitter](./emitter.html); [Net](./net.html).
 const makeParticle = function (items) {
+
+    if (!items) return false;
     return new Particle(items);
 };
 

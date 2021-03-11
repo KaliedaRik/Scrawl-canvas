@@ -19,14 +19,14 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, xt } from '../core/utilities.js';
+import { mergeOver, xt, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 import entityMix from '../mixin/entity.js';
 
 
 // #### Block constructor
-const Block = function (items = {}) {
+const Block = function (items = Ωempty) {
 
     this.entityInit(items);
 
@@ -139,6 +139,8 @@ P.cleanPathObject = function () {
 // });
 // ```
 const makeBlock = function (items) {
+
+    if (!items) return false;
     return new Block(items);
 };
 

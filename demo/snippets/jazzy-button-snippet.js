@@ -70,8 +70,9 @@ export default function (el) {
             styles = wrapper.elementComputedStyles;
 
         // The snippet will take details of its font family, size and color from the DOM element's computed styles
+        // + Note that Firefox does not supply a font string; font details are broken up into their constituent parts and need to be reconstructed. The code below will not pick up bold fonts:
         let color = styles.color || 'black',
-            font = styles.font || '20px sans-serif';
+            font = styles.font || `${(styles.fontStyle != 'normal') ? styles.fontStyle + ' ' : ''}${(styles.fontVariant != 'normal') ? styles.fontVariant + ' ' : ''}${styles.fontSize} ${styles.fontFamily}` || '20px sans-serif';
 
         canvas.set({
             backgroundColor: '#f2f2f2',

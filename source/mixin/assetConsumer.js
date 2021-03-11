@@ -5,7 +5,7 @@
 
 
 // #### Imports
-import { mergeOver, xt } from '../core/utilities.js';
+import { mergeOver, xt, Ωempty } from '../core/utilities.js';
 import { asset } from '../core/library.js';
 
 import { importImage } from '../factory/imageAsset.js';
@@ -14,7 +14,7 @@ import { importSprite } from '../factory/spriteAsset.js';
 
 
 // #### Export function
-export default function (P = {}) {
+export default function (P = Ωempty) {
 
 
 // #### Shared attributes
