@@ -165,6 +165,11 @@
                 </a>
               
                 
+                <a class="source" href="lineSpiral.html">
+                  ./source/factory/lineSpiral.js
+                </a>
+              
+                
                 <a class="source" href="loom.html">
                   ./source/factory/loom.js
                 </a>
@@ -626,9 +631,7 @@ P = shapeMix(P);</pre></div></div>
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {
 
     <span class="hljs-attr">sides</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">radius</span>: <span class="hljs-number">0</span>,
-};
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
+    <span class="hljs-attr">sideLength</span>: <span class="hljs-number">0</span>,</pre></div></div>
             
         </li>
         
@@ -639,10 +642,13 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <h4 id="packet-management">Packet management</h4>
-<p>No additional packet functionality required</p>
+              <p>DEPRECATED - this is the (misleading) old name for the sideLength attribute</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    radius: <span class="hljs-number">0</span>,
+};
+P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -653,8 +659,8 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <h4 id="clone-management">Clone management</h4>
-<p>No additional clone functionality required</p>
+              <h4 id="packet-management">Packet management</h4>
+<p>No additional packet functionality required</p>
 
             </div>
             
@@ -667,8 +673,8 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <h4 id="kill-management">Kill management</h4>
-<p>No additional kill functionality required</p>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality required</p>
 
             </div>
             
@@ -681,6 +687,20 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
+              <h4 id="kill-management">Kill management</h4>
+<p>No additional kill functionality required</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
             </div>
@@ -691,11 +711,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p><strong>sides</strong></p>
 
@@ -715,13 +735,37 @@ D.sides = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p><strong>sideLength</strong></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.sideLength = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.sideLength = item;
+    <span class="hljs-built_in">this</span>.updateDirty();
+};
+D.sideLength = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.sideLength += item;
+    <span class="hljs-built_in">this</span>.updateDirty();
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <p>DEPRECATED - this is the (misleading) old name for the sideLength attribute</p>
 
             </div>
             
@@ -739,11 +783,11 @@ D.radius = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-15">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -752,11 +796,11 @@ D.radius = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-16">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p><code>cleanSpecies</code> - internal helper function - called by <code>prepareStamp</code></p>
 
@@ -775,19 +819,32 @@ D.radius = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-17">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p><code>makePolygonPath</code> - internal helper function - called by <code>cleanSpecies</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.makePolygonPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.makePolygonPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
+              </div>
+              <p><code>radius</code> attribute is deprecated!</p>
 
-    <span class="hljs-keyword">let</span> radius = <span class="hljs-built_in">this</span>.radius,
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> sideLength = <span class="hljs-built_in">this</span>.sideLength || <span class="hljs-built_in">this</span>.radius,
         sides = <span class="hljs-built_in">this</span>.sides,
         turn = <span class="hljs-number">360</span> / sides,
         myPath = <span class="hljs-string">``</span>,
@@ -795,7 +852,7 @@ D.radius = <span class="hljs-function"><span class="hljs-keyword">function</span
         currentY = <span class="hljs-number">0</span>,
         myMax, myMin, myYoffset;
 
-    <span class="hljs-keyword">let</span> v = requestVector({<span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: -radius});
+    <span class="hljs-keyword">let</span> v = requestVector({<span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: -sideLength});
 
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; sides; i++) {
 
@@ -809,7 +866,7 @@ D.radius = <span class="hljs-function"><span class="hljs-keyword">function</span
 
     myMin = <span class="hljs-built_in">Math</span>.min(...yPts);
     myMax = <span class="hljs-built_in">Math</span>.max(...yPts);
-    myYoffset = (((<span class="hljs-built_in">Math</span>.abs(myMin) + <span class="hljs-built_in">Math</span>.abs(myMax)) - radius) / <span class="hljs-number">2</span>).toFixed(<span class="hljs-number">1</span>);
+    myYoffset = (((<span class="hljs-built_in">Math</span>.abs(myMin) + <span class="hljs-built_in">Math</span>.abs(myMax)) - sideLength) / <span class="hljs-number">2</span>).toFixed(<span class="hljs-number">1</span>);
 
     myPath = <span class="hljs-string">`m0,<span class="hljs-subst">${myYoffset}</span>l<span class="hljs-subst">${myPath}</span>z`</span>;
 
@@ -819,11 +876,11 @@ D.radius = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-18">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <h4 id="factories">Factories</h4>
 
@@ -832,17 +889,17 @@ D.radius = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-19">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <h5 id="makepolygon">makePolygon</h5>
 <p>Accepts argument with attributes:</p>
 <ul>
 <li><strong>sides</strong> (required) - integer positive Number (greater than 2) representing the number of sides the Shape will have</li>
-<li><strong>radius</strong> (required) - float Number representing the distance (in px) from the center of the Shape to the first angle on the Shape’s circumference.</li>
+<li><strong>sideLength</strong> (required) - float Number representing the length (in px) of each of the shape’s sides.</li>
 </ul>
 <pre><code>scrawl.makePolygon({
 
@@ -851,7 +908,7 @@ D.radius = <span class="hljs-function"><span class="hljs-keyword">function</span
     <span class="hljs-attr">startX</span>: <span class="hljs-number">20</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-number">935</span>,
 
-    <span class="hljs-attr">radius</span>: <span class="hljs-number">60</span>,
+    <span class="hljs-attr">sideLength</span>: <span class="hljs-number">60</span>,
     <span class="hljs-attr">sides</span>: <span class="hljs-number">3</span>,
 
     <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;lightblue&#x27;</span>,
@@ -873,11 +930,11 @@ D.radius = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-20">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

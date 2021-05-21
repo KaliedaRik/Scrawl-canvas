@@ -165,6 +165,11 @@
                 </a>
               
                 
+                <a class="source" href="lineSpiral.html">
+                  ./source/factory/lineSpiral.js
+                </a>
+              
+                
                 <a class="source" href="loom.html">
                   ./source/factory/loom.js
                 </a>
@@ -1569,12 +1574,15 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
             
             <div class="content"><div class='highlight'><pre>P.drawAndFill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
 
-    engine.stroke(<span class="hljs-built_in">this</span>.pathObject);
-
     <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-built_in">this</span>.copyArray;
     <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.source &amp;&amp; w &amp;&amp; h) {
 
+        engine.stroke(<span class="hljs-built_in">this</span>.pathObject);
+        engine.drawImage(<span class="hljs-built_in">this</span>.source, ...this.copyArray, ...this.pasteArray);
+
         <span class="hljs-built_in">this</span>.currentHost.clearShadow();
+
+        engine.stroke(<span class="hljs-built_in">this</span>.pathObject);
         engine.drawImage(<span class="hljs-built_in">this</span>.source, ...this.copyArray, ...this.pasteArray);
     }
 };</pre></div></div>
@@ -1594,13 +1602,16 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
             
             <div class="content"><div class='highlight'><pre>P.fillAndDraw = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
 
-    engine.stroke(<span class="hljs-built_in">this</span>.pathObject);
-
     <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-built_in">this</span>.copyArray;
     <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.source &amp;&amp; w &amp;&amp; h) {
 
-        <span class="hljs-built_in">this</span>.currentHost.clearShadow();
         engine.drawImage(<span class="hljs-built_in">this</span>.source, ...this.copyArray, ...this.pasteArray);
+        engine.stroke(<span class="hljs-built_in">this</span>.pathObject);
+
+        <span class="hljs-built_in">this</span>.currentHost.clearShadow();
+
+        engine.drawImage(<span class="hljs-built_in">this</span>.source, ...this.copyArray, ...this.pasteArray);
+        engine.stroke(<span class="hljs-built_in">this</span>.pathObject);
     }
 
     engine.stroke(<span class="hljs-built_in">this</span>.pathObject);
@@ -1621,10 +1632,12 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
             
             <div class="content"><div class='highlight'><pre>P.drawThenFill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
 
-    engine.stroke(<span class="hljs-built_in">this</span>.pathObject);
-
     <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-built_in">this</span>.copyArray;
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.source &amp;&amp; w &amp;&amp; h) engine.drawImage(<span class="hljs-built_in">this</span>.source, ...this.copyArray, ...this.pasteArray);
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.source &amp;&amp; w &amp;&amp; h) {
+
+        engine.stroke(<span class="hljs-built_in">this</span>.pathObject);
+        engine.drawImage(<span class="hljs-built_in">this</span>.source, ...this.copyArray, ...this.pasteArray);
+    }
 };</pre></div></div>
             
         </li>
@@ -1643,9 +1656,11 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
             <div class="content"><div class='highlight'><pre>P.fillThenDraw = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
 
     <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-built_in">this</span>.copyArray;
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.source &amp;&amp; w &amp;&amp; h) engine.drawImage(<span class="hljs-built_in">this</span>.source, ...this.copyArray, ...this.pasteArray);
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.source &amp;&amp; w &amp;&amp; h) {
 
-    engine.stroke(<span class="hljs-built_in">this</span>.pathObject);
+        engine.drawImage(<span class="hljs-built_in">this</span>.source, ...this.copyArray, ...this.pasteArray);
+        engine.stroke(<span class="hljs-built_in">this</span>.pathObject);
+    }
 };</pre></div></div>
             
         </li>

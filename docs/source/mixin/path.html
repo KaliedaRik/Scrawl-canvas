@@ -165,6 +165,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/lineSpiral.html">
+                  ./source/factory/lineSpiral.js
+                </a>
+              
+                
                 <a class="source" href="../factory/loom.html">
                   ./source/factory/loom.js
                 </a>
@@ -550,11 +555,7 @@
             
             <div class="content"><div class='highlight'><pre>        addPathHandle: <span class="hljs-literal">false</span>,
         <span class="hljs-attr">addPathOffset</span>: <span class="hljs-literal">true</span>,
-        <span class="hljs-attr">addPathRotation</span>: <span class="hljs-literal">false</span>,
-        <span class="hljs-attr">constantPathSpeed</span>: <span class="hljs-literal">false</span>,
-    };
-    P.defs = mergeOver(P.defs, defaultAttributes);
-    mergeOver(P, defaultAttributes);</pre></div></div>
+        <span class="hljs-attr">addPathRotation</span>: <span class="hljs-literal">false</span>,</pre></div></div>
             
         </li>
         
@@ -565,11 +566,14 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <h4 id="packet-management">Packet management</h4>
+              <p>DEPRECATION WARNING: <code>constantSpeedAlongPath</code> replaces the old attribute <code>constantPathSpeed</code> which clashes with the attribute set by the ShapeBasic mixin.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">&#x27;path&#x27;</span>]);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        constantSpeedAlongPath: <span class="hljs-literal">false</span>,
+    };
+    P.defs = mergeOver(P.defs, defaultAttributes);
+    mergeOver(P, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -580,10 +584,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <h4 id="clone-management">Clone management</h4>
-<p>No additional clone functionality defined here</p>
+              <h4 id="packet-management">Packet management</h4>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">&#x27;path&#x27;</span>]);</pre></div></div>
             
         </li>
         
@@ -594,8 +599,8 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <h4 id="kill-management">Kill management</h4>
-<p>No additional kill functionality defined here</p>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality defined here</p>
 
             </div>
             
@@ -608,12 +613,10 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+              <h4 id="kill-management">Kill management</h4>
+<p>No additional kill functionality defined here</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> S = P.setters,
-        D = P.deltaSetters;</pre></div></div>
             
         </li>
         
@@ -624,9 +627,12 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <h4 id="prototype-functions">Prototype functions</h4>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> S = P.setters,
+        D = P.deltaSetters;</pre></div></div>
             
         </li>
         
@@ -636,6 +642,19 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
+              <h4 id="prototype-functions">Prototype functions</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p><strong>path</strong></p>
 
@@ -675,11 +694,11 @@
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p> <strong>pathPosition</strong></p>
 <ul>
@@ -714,11 +733,11 @@
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p><strong>addPathHandle</strong>, <strong>addPathOffset</strong>, <strong>addPathRotation</strong></p>
 
@@ -743,11 +762,11 @@
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -756,11 +775,11 @@
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p><code>getPathData</code></p>
 
@@ -774,9 +793,24 @@
             path = <span class="hljs-built_in">this</span>.path,
             currentPathData;
 
-        <span class="hljs-keyword">if</span> (path) {
+        <span class="hljs-keyword">if</span> (path) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
+              </div>
+              <p>Note: the old attribute <code>constantPathSpeed</code> has been deprecated because the ShapeBasic mixin adds that attributes to shapes where it has different functionality. This code is temporary until Scrawl-canvas v9 is released</p>
 
-            currentPathData = path.getPathPositionData(pathPos, <span class="hljs-built_in">this</span>.constantPathSpeed);
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">let</span> speed = <span class="hljs-built_in">this</span>.constantSpeedAlongPath || <span class="hljs-built_in">this</span>.constantPathSpeed || <span class="hljs-literal">false</span>;
+
+            currentPathData = path.getPathPositionData(pathPos, speed);
 
             <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.addPathRotation) <span class="hljs-built_in">this</span>.dirtyRotation = <span class="hljs-literal">true</span>;
 
@@ -790,11 +824,11 @@
         </li>
         
         
-        <li id="section-18">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p>Return the prototype</p>
 

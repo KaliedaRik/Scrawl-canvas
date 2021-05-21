@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Quadratic factory</title>
+  <title>LineSpiral factory</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
@@ -459,8 +459,8 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
-              <h1 id="quadratic-factory">Quadratic factory</h1>
-<p>A factory for generating quadratic curve shape-based entitys</p>
+              <h1 id="linespiral-factory">LineSpiral factory</h1>
+<p>A factory for generating ‘degenerate’ spiral shape-based entitys</p>
 <p>Path-defined entitys represent a diverse range of shapes rendered onto a DOM &lt;canvas&gt; element using the Canvas API’s <a href="https://developer.mozilla.org/en-US/docs/Web/API/Path2D">Path2D interface</a>. They use the <a href="../mixin/shapeBasic.html">shapeBasic</a> and <a href="../mixin/shapePathCalculation.html">shapePathCalculation</a> (some also use <a href="../mixin/shapeCurve.html">shapeCurve</a>) mixins to define much of their functionality.</p>
 <p>All path-defined entitys can be positioned, cloned, filtered etc:</p>
 <ul>
@@ -537,14 +537,13 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">artefact</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
-<span class="hljs-keyword">import</span> { mergeOver, addStrings, pushUnique, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+<span class="hljs-keyword">import</span> { mergeOver, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { makeCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./coordinate.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { requestCoordinate, releaseCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./coordinate.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
-<span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shapeBasic.js&#x27;</span>;
-<span class="hljs-keyword">import</span> curveMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shapeCurve.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shapeBasic.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -555,21 +554,13 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <h4 id="quadratic-constructor">Quadratic constructor</h4>
+              <h4 id="linespiral-constructor">LineSpiral constructor</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Quadratic = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> LineSpiral = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
-    <span class="hljs-built_in">this</span>.control = makeCoordinate();
-    <span class="hljs-built_in">this</span>.currentControl = makeCoordinate();
-    <span class="hljs-built_in">this</span>.controlLockTo = <span class="hljs-string">&#x27;coord&#x27;</span>;
-
-    <span class="hljs-built_in">this</span>.curveInit(items);
     <span class="hljs-built_in">this</span>.shapeInit(items);
-
-    <span class="hljs-built_in">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
 };</pre></div></div>
             
@@ -582,12 +573,12 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <h4 id="quadratic-prototype">Quadratic prototype</h4>
+              <h4 id="linespiral-prototype">LineSpiral prototype</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Quadratic.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">&#x27;Quadratic&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = LineSpiral.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
+P.type = <span class="hljs-string">&#x27;LineSpiral&#x27;</span>;
 P.lib = <span class="hljs-string">&#x27;entity&#x27;</span>;
 P.isArtefact = <span class="hljs-literal">true</span>;
 P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
@@ -605,14 +596,12 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 <ul>
 <li><a href="../mixin/base.html">base</a></li>
 <li><a href="../mixin/shapeBasic.html">shapeBasic</a></li>
-<li><a href="../mixin/shapeCurve.html">shapeCurve</a></li>
 </ul>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>P = baseMix(P);
-P = shapeMix(P);
-P = curveMix(P);</pre></div></div>
+P = shapeMix(P);</pre></div></div>
             
         </li>
         
@@ -623,7 +612,7 @@ P = curveMix(P);</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <h4 id="quadratic-attributes">Quadratic attributes</h4>
+              <h4 id="linespiral-attributes">LineSpiral attributes</h4>
 <ul>
 <li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/position.html">position mixin</a>: <strong>group, visibility, order, start, <em>startX</em>, <em>startY</em>, handle, <em>handleX</em>, <em>handleY</em>, offset, <em>offsetX</em>, <em>offsetY</em>, dimensions, <em>width</em>, <em>height</em>, pivoted, mimicked, lockTo, <em>lockXTo</em>, <em>lockYTo</em>, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge, bringToFrontOnDrag</strong>.</li>
@@ -635,12 +624,23 @@ P = curveMix(P);</pre></div></div>
 <li>Attributes defined in the <a href="../mixin/anchor.html">anchor mixin</a>: <strong>anchor</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/filter.html">filter mixin</a>: <strong>filters, isStencil</strong>.</li>
 <li>Attributes defined in the <a href="../mixin/shapeBasic.html">shapeBasic mixin</a>: <strong>species, useAsPath, precision, pathDefinition, showBoundingBox, boundingBoxColor, minimumBoundingBoxDimensions, constantPathSpeed</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/shapeCurve.html">shapeCurve mixin</a>: <strong>end, endPivot, endPivotCorner, addEndPivotHandle, addEndPivotOffset, endPath, endPathPosition, addEndPathHandle, addEndPathOffset, endLockTo, useStartAsControlPoint</strong>.</li>
 </ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {
+
+    <span class="hljs-attr">startRadius</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">radiusIncrement</span>: <span class="hljs-number">0.1</span>,
+    <span class="hljs-attr">radiusIncrementAdjust</span>: <span class="hljs-number">1</span>,
+
+    <span class="hljs-attr">startAngle</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">angleIncrement</span>: <span class="hljs-number">5</span>,
+    <span class="hljs-attr">angleIncrementAdjust</span>: <span class="hljs-number">1</span>,
+
+    <span class="hljs-attr">stepLimit</span>: <span class="hljs-number">1000</span>,
+};
+P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -651,14 +651,10 @@ P = curveMix(P);</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <p>The <strong>control</strong> coordinate (‘pin’) defines the quadratic curve’s control point.</p>
-<ul>
-<li>Similar to the <code>start</code> coordinate, the <code>control</code> coordinate can be updated using the pseudo-attributes <strong>controlX</strong> and <strong>controlY</strong>.</li>
-</ul>
+              <h4 id="packet-management">Packet management</h4>
+<p>No additional packet functionality required</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    control: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -669,17 +665,10 @@ P = curveMix(P);</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <p><strong>controlPivot</strong>, <strong>controlPivotCorner</strong>, <strong>addControlPivotHandle</strong>, <strong>addControlPivotOffset</strong></p>
-<ul>
-<li>Like the <code>start</code> coordinate, the <code>control</code> coordinate can be <strong>pivoted</strong> to another artefact. These attributes are used in the same way as the <code>pivot</code>, ‘pivotCorner’, <code>addPivotHandle</code> and <code>addPivotOffset</code> attributes. </li>
-</ul>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality required</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    controlPivot: <span class="hljs-string">&#x27;&#x27;</span>,
-    <span class="hljs-attr">controlPivotCorner</span>: <span class="hljs-string">&#x27;&#x27;</span>,
-    <span class="hljs-attr">addControlPivotHandle</span>: <span class="hljs-literal">false</span>,
-    <span class="hljs-attr">addControlPivotOffset</span>: <span class="hljs-literal">false</span>,</pre></div></div>
             
         </li>
         
@@ -690,17 +679,10 @@ P = curveMix(P);</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <p><strong>controlPath</strong>, <strong>controlPathPosition</strong>, <strong>addControlPathHandle</strong>, <strong>addControlPathOffset</strong></p>
-<ul>
-<li>Like the <code>start</code> coordinate, the <code>control</code> coordinate can be <strong>pathed</strong> to another artefact. These attributes are used in the same way as the <code>path</code>, ‘pathPosition’, <code>addPathHandle</code> and <code>addPathOffset</code> attributes.</li>
-</ul>
+              <h4 id="kill-management">Kill management</h4>
+<p>No additional kill functionality required</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    controlPath: <span class="hljs-string">&#x27;&#x27;</span>,
-    <span class="hljs-attr">controlPathPosition</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">addControlPathHandle</span>: <span class="hljs-literal">false</span>,
-    <span class="hljs-attr">addControlPathOffset</span>: <span class="hljs-literal">true</span>,</pre></div></div>
             
         </li>
         
@@ -711,11 +693,12 @@ P = curveMix(P);</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <p><strong>controlParticle</strong> - attribute to store any particle the artefact mey be using for its position reference</p>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    controlParticle: <span class="hljs-string">&#x27;&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> S = P.setters,
+    D = P.deltaSetters;</pre></div></div>
             
         </li>
         
@@ -726,18 +709,20 @@ P = curveMix(P);</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
-              <p><strong>controlLockTo</strong></p>
-<ul>
-<li>Like the <code>start</code> coordinate, the <code>control</code> coordinate can swap between using absolute and relative positioning by setting this attribute. Accepted values are: <code>coord</code> (default, for absolute positioning), <code>pivot</code>, <code>path</code>, <code>mouse</code>.</li>
-<li>The control coordinate does not support ‘mimic’ relative positioning.</li>
-<li>The control lock does not support setting the <code>x</code> and <code>y</code> coordinates separately - its value is a string argument, not an <code>[x, y]</code> array!</li>
-</ul>
+              <p><strong>startRadius</strong></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    controlLockTo: <span class="hljs-string">&#x27;&#x27;</span>,
+            <div class="content"><div class='highlight'><pre>S.startRadius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.startRadius = item;
+    <span class="hljs-built_in">this</span>.updateDirty();
 };
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
+D.startRadius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.startRadius += item;
+    <span class="hljs-built_in">this</span>.updateDirty();
+};</pre></div></div>
             
         </li>
         
@@ -748,15 +733,20 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
-              <h4 id="packet-management">Packet management</h4>
+              <p><strong>radiusIncrement</strong></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.packetExclusions = pushUnique(P.packetExclusions, []);
-P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-P.packetCoordinates = pushUnique(P.packetCoordinates, [<span class="hljs-string">&#x27;control&#x27;</span>]);
-P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">&#x27;controlPivot&#x27;</span>, <span class="hljs-string">&#x27;controlPath&#x27;</span>]);
-P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>S.radiusIncrement = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.radiusIncrement = item;
+    <span class="hljs-built_in">this</span>.updateDirty();
+};
+D.radiusIncrement = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.radiusIncrement += item;
+    <span class="hljs-built_in">this</span>.updateDirty();
+};</pre></div></div>
             
         </li>
         
@@ -767,10 +757,20 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
-              <h4 id="clone-management">Clone management</h4>
-<p>No additional clone functionality required</p>
+              <p><strong>radiusIncrementAdjust</strong></p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>S.radiusIncrementAdjust = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.radiusIncrementAdjust = item;
+    <span class="hljs-built_in">this</span>.updateDirty();
+};
+D.radiusIncrementAdjust = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.radiusIncrementAdjust += item;
+    <span class="hljs-built_in">this</span>.updateDirty();
+};</pre></div></div>
             
         </li>
         
@@ -781,10 +781,20 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
-              <h4 id="kill-management">Kill management</h4>
-<p>No additional kill functionality required</p>
+              <p><strong>startAngle</strong></p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>S.startAngle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.startAngle = item;
+    <span class="hljs-built_in">this</span>.updateDirty();
+};
+D.startAngle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.startAngle += item;
+    <span class="hljs-built_in">this</span>.updateDirty();
+};</pre></div></div>
             
         </li>
         
@@ -795,13 +805,20 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
-              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
+              <p><strong>angleIncrement</strong></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.getters,
-    S = P.setters,
-    D = P.deltaSetters;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>S.angleIncrement = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.angleIncrement = item;
+    <span class="hljs-built_in">this</span>.updateDirty();
+};
+D.angleIncrement = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.angleIncrement += item;
+    <span class="hljs-built_in">this</span>.updateDirty();
+};</pre></div></div>
             
         </li>
         
@@ -812,15 +829,19 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
-              <p><strong>controlPivot</strong></p>
+              <p><strong>angleIncrementAdjust</strong></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.controlPivot = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.angleIncrementAdjust = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-built_in">this</span>.setControlHelper(item, <span class="hljs-string">&#x27;controlPivot&#x27;</span>, <span class="hljs-string">&#x27;control&#x27;</span>);
+    <span class="hljs-built_in">this</span>.angleIncrementAdjust = item;
     <span class="hljs-built_in">this</span>.updateDirty();
-    <span class="hljs-built_in">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
+};
+D.angleIncrementAdjust = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.angleIncrementAdjust += item;
+    <span class="hljs-built_in">this</span>.updateDirty();
 };</pre></div></div>
             
         </li>
@@ -832,15 +853,19 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
-              <p><strong>controlParticle</strong></p>
+              <p><strong>stepLimit</strong></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.controlParticle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.stepLimit = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-built_in">this</span>.setControlHelper(item, <span class="hljs-string">&#x27;controlParticle&#x27;</span>, <span class="hljs-string">&#x27;control&#x27;</span>);
+    <span class="hljs-built_in">this</span>.stepLimit = item;
     <span class="hljs-built_in">this</span>.updateDirty();
-    <span class="hljs-built_in">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
+};
+D.stepLimit = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.stepLimit += item;
+    <span class="hljs-built_in">this</span>.updateDirty();
 };</pre></div></div>
             
         </li>
@@ -852,17 +877,9 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
-              <p><strong>controlPath</strong></p>
+              <h4 id="prototype-functions">Prototype functions</h4>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>S.controlPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-built_in">this</span>.setControlHelper(item, <span class="hljs-string">&#x27;controlPath&#x27;</span>, <span class="hljs-string">&#x27;control&#x27;</span>);
-    <span class="hljs-built_in">this</span>.updateDirty();
-    <span class="hljs-built_in">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
-};</pre></div></div>
             
         </li>
         
@@ -873,21 +890,18 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
-              <p><strong>controlPathPosition</strong></p>
+              <p><code>cleanSpecies</code> - internal helper function - called by <code>prepareStamp</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.controlPathPosition = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.cleanSpecies = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-built_in">this</span>.controlPathPosition = item;
-    <span class="hljs-built_in">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
-};
-D.controlPathPosition = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+    <span class="hljs-built_in">this</span>.dirtySpecies = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-built_in">this</span>.controlPathPosition += item;
-    <span class="hljs-built_in">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">let</span> p = <span class="hljs-string">&#x27;m0,0&#x27;</span>;
+    p = <span class="hljs-built_in">this</span>.makeLineSpiralPath();
+
+    <span class="hljs-built_in">this</span>.pathDefinition = p;
 };</pre></div></div>
             
         </li>
@@ -899,63 +913,54 @@ D.controlPathPosition = <span class="hljs-function"><span class="hljs-keyword">f
               <div class="sswrap ">
                 <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
-              <p><strong>control</strong></p>
-<ul>
-<li>pseudo-attributes <strong>controlX</strong>, <strong>controlY</strong></li>
-</ul>
+              <p><code>makeLineSpiralPath</code> - internal helper function - called by <code>cleanSpecies</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.controlX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.makeLineSpiralPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-    <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
+    <span class="hljs-keyword">let</span> path = <span class="hljs-string">&#x27;m0,0 m&#x27;</span>;
 
-        <span class="hljs-built_in">this</span>.control[<span class="hljs-number">0</span>] = coord;
-        <span class="hljs-built_in">this</span>.updateDirty();
-        <span class="hljs-built_in">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-        <span class="hljs-built_in">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">let</span> {startRadius, radiusIncrement, radiusIncrementAdjust, startAngle, angleIncrement, angleIncrementAdjust, stepLimit} = <span class="hljs-built_in">this</span>;
+
+    <span class="hljs-keyword">let</span> coord = requestCoordinate();
+
+    <span class="hljs-keyword">let</span> currentAngle = startAngle,
+        currentAngleIncrement = angleIncrement,
+        currentRadius = startRadius,
+        currentRadiusIncrement = radiusIncrement,
+        counter = <span class="hljs-number">0</span>;
+
+    coord.setFromArray([<span class="hljs-number">0</span>, currentRadius]).rotate(currentAngle);
+
+    path += <span class="hljs-string">`<span class="hljs-subst">${coord[<span class="hljs-number">0</span>]}</span>,<span class="hljs-subst">${coord[<span class="hljs-number">1</span>]}</span>l`</span>;
+
+    <span class="hljs-keyword">while</span> (counter &lt; stepLimit) {
+
+        counter ++;
+
+        currentAngleIncrement *= angleIncrementAdjust;
+        currentAngle += currentAngleIncrement;
+
+        currentRadiusIncrement *= radiusIncrementAdjust;
+        currentRadius += currentRadiusIncrement;
+
+        coord.setFromArray([<span class="hljs-number">0</span>, currentRadius]).rotate(currentAngle);
+
+        path += <span class="hljs-string">`<span class="hljs-subst">${coord[<span class="hljs-number">0</span>]}</span>,<span class="hljs-subst">${coord[<span class="hljs-number">1</span>]}</span> `</span>;
     }
+    releaseCoordinate(coord);
+    <span class="hljs-keyword">return</span> path;
 };
-S.controlY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
 
-    <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
+P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
 
-        <span class="hljs-built_in">this</span>.control[<span class="hljs-number">1</span>] = coord;
-        <span class="hljs-built_in">this</span>.updateDirty();
-        <span class="hljs-built_in">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-        <span class="hljs-built_in">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
-    }
-};
-S.control = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
+    <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-built_in">this</span>.localBox,
+        scale = <span class="hljs-built_in">this</span>.scale;
 
-    <span class="hljs-built_in">this</span>.setCoordinateHelper(<span class="hljs-string">&#x27;control&#x27;</span>, x, y);
-    <span class="hljs-built_in">this</span>.updateDirty();
-    <span class="hljs-built_in">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
-};
-D.controlX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
+    <span class="hljs-built_in">this</span>.pathDefinition = <span class="hljs-built_in">this</span>.pathDefinition.replace(<span class="hljs-string">&#x27;m0,0 &#x27;</span>, <span class="hljs-string">`m<span class="hljs-subst">${-x <span class="hljs-regexp">/ scale},${-y /</span> scale}</span>`</span>);
 
-    <span class="hljs-keyword">let</span> c = <span class="hljs-built_in">this</span>.control;
-    c[<span class="hljs-number">0</span>] = addStrings(c[<span class="hljs-number">0</span>], coord);
-    <span class="hljs-built_in">this</span>.updateDirty();
-    <span class="hljs-built_in">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
-};
-D.controlY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
-
-    <span class="hljs-keyword">let</span> c = <span class="hljs-built_in">this</span>.control;
-    c[<span class="hljs-number">1</span>] = addStrings(c[<span class="hljs-number">1</span>], coord);
-    <span class="hljs-built_in">this</span>.updateDirty();
-    <span class="hljs-built_in">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
-};
-D.control = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
-
-    <span class="hljs-built_in">this</span>.setDeltaCoordinateHelper(<span class="hljs-string">&#x27;control&#x27;</span>, x, y);
-    <span class="hljs-built_in">this</span>.updateDirty();
-    <span class="hljs-built_in">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
-};</pre></div></div>
+    <span class="hljs-built_in">this</span>.pathCalculatedOnce = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -966,16 +971,14 @@ D.control = <span class="hljs-function"><span class="hljs-keyword">function</spa
               <div class="sswrap ">
                 <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
-              <p><strong>controlLockTo</strong></p>
+              <p>ALWAYS, when invoking <code>calculateLocalPath</code> from <code>calculateLocalPathAdditionalActions</code>, include the second argument, set to <code>true</code>! Failure to do this leads to an infinite loop which will make your machine weep.</p>
+<ul>
+<li>We need to recalculate the local path to take into account the offset required to put the Spiral entity’s start coordinates at the top-left of the local box, and to recalculate the data used by other artefacts to place themselves on, or move along, its path.</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.controlLockTo = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-built_in">this</span>.controlLockTo = item;
-    <span class="hljs-built_in">this</span>.updateDirty();
-    <span class="hljs-built_in">this</span>.dirtyControlLock = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.calculateLocalPath(<span class="hljs-built_in">this</span>.pathDefinition, <span class="hljs-literal">true</span>);
 };</pre></div></div>
             
         </li>
@@ -987,7 +990,7 @@ D.control = <span class="hljs-function"><span class="hljs-keyword">function</spa
               <div class="sswrap ">
                 <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
-              <h4 id="prototype-functions">Prototype functions</h4>
+              <h4 id="factories">Factories</h4>
 
             </div>
             
@@ -1000,20 +1003,39 @@ D.control = <span class="hljs-function"><span class="hljs-keyword">function</spa
               <div class="sswrap ">
                 <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
-              <p><code>cleanSpecies</code> - internal helper function - called by <code>prepareStamp</code></p>
+              <h5 id="makespiral">makeSpiral</h5>
+<p>A spiral drawn from an inner-radius outwards by a given number of loops, with the distance between each loop determined by a given increment. Accepts argument with attributes:</p>
+<ul>
+<li><strong>loops</strong> (required) - positive float Number representing the number of times the Shape line will wind arount the Shape’s center point</li>
+<li><strong>loopIncrement</strong> - float Number representative of the distance between successive loops; negative values have the effect of rotating the spiral 180 degrees</li>
+<li><strong>drawFromLoop</strong> - positive integer Number representing the loop on which the spiral starts to be drawn</li>
+</ul>
+<pre><code>scrawl.makeLineSpiral({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myLineSpiral&#x27;</span>,
+
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;darkgreen&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
+
+    <span class="hljs-attr">startX</span>: <span class="hljs-number">50</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-number">100</span>,
+
+    <span class="hljs-attr">loops</span>: <span class="hljs-number">5</span>,
+    <span class="hljs-attr">loopIncrement</span>: <span class="hljs-number">0.8</span>,
+    <span class="hljs-attr">drawFromLoop</span>: <span class="hljs-number">1</span>,
+});
+</code></pre>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.cleanSpecies = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeLineSpiral = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
 
-    <span class="hljs-built_in">this</span>.dirtySpecies = <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    items.species = <span class="hljs-string">&#x27;linespiral&#x27;</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> LineSpiral(items);
+};
 
-    <span class="hljs-keyword">let</span> p = <span class="hljs-string">&#x27;M0,0&#x27;</span>;
-
-    p = <span class="hljs-built_in">this</span>.makeQuadraticPath();
-    
-    <span class="hljs-built_in">this</span>.pathDefinition = p;
-};</pre></div></div>
+<span class="hljs-title">constructors</span>.<span class="hljs-title">LineSpiral</span> = <span class="hljs-title">LineSpiral</span>;</pre></div></div>
             
         </li>
         
@@ -1024,159 +1046,12 @@ D.control = <span class="hljs-function"><span class="hljs-keyword">function</spa
               <div class="sswrap ">
                 <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
-              <p><code>makeQuadraticPath</code> - internal helper function - called by <code>cleanSpecies</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.makeQuadraticPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-    
-    <span class="hljs-keyword">let</span> [startX, startY] = <span class="hljs-built_in">this</span>.currentStampPosition;
-    <span class="hljs-keyword">let</span> [controlX, controlY] = <span class="hljs-built_in">this</span>.currentControl;
-    <span class="hljs-keyword">let</span> [endX, endY] = <span class="hljs-built_in">this</span>.currentEnd;
-
-    <span class="hljs-keyword">let</span> cx = (controlX - startX).toFixed(<span class="hljs-number">2</span>),
-        cy = (controlY - startY).toFixed(<span class="hljs-number">2</span>),
-        ex = (endX - startX).toFixed(<span class="hljs-number">2</span>),
-        ey = (endY - startY).toFixed(<span class="hljs-number">2</span>);
-
-    <span class="hljs-keyword">return</span> <span class="hljs-string">`m0,0q<span class="hljs-subst">${cx}</span>,<span class="hljs-subst">${cy}</span> <span class="hljs-subst">${ex}</span>,<span class="hljs-subst">${ey}</span>`</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-27">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
-              </div>
-              <p><code>cleanDimensions</code> - internal helper function called by <code>prepareStamp</code> </p>
-<ul>
-<li>Dimensional data has no meaning in the context of Shape entitys (beyond positioning handle Coordinates): width and height are emergent properties that cannot be set on the entity.</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>P.cleanDimensions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-built_in">this</span>.dirtyDimensions = <span class="hljs-literal">false</span>;
-    <span class="hljs-built_in">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.dirtyOffset = <span class="hljs-literal">true</span>;
-
-    <span class="hljs-built_in">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
-};
-
-P.preparePinsForStamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">const</span> dirtyPins = <span class="hljs-built_in">this</span>.dirtyPins,
-        ePivot = <span class="hljs-built_in">this</span>.endPivot,
-        ePath = <span class="hljs-built_in">this</span>.endPath,
-        cPivot = <span class="hljs-built_in">this</span>.controlPivot,
-        cPath = <span class="hljs-built_in">this</span>.controlPath;
-
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = dirtyPins.length, name; i &lt; iz; i++) {
-
-        name = dirtyPins[i];
-
-        <span class="hljs-keyword">if</span> ((cPivot &amp;&amp; cPivot.name === name) || (cPath &amp;&amp; cPath.name == name)) {
-
-            <span class="hljs-built_in">this</span>.dirtyControl = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.controlLockTo.includes(<span class="hljs-string">&#x27;path&#x27;</span>)) <span class="hljs-built_in">this</span>.currentControlPathData = <span class="hljs-literal">false</span>;
-        }
-
-        <span class="hljs-keyword">if</span> ((ePivot &amp;&amp; ePivot.name === name) || (ePath &amp;&amp; ePath.name == name)) {
-
-            <span class="hljs-built_in">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.endLockTo.includes(<span class="hljs-string">&#x27;path&#x27;</span>)) <span class="hljs-built_in">this</span>.currentEndPathData = <span class="hljs-literal">false</span>;
-        }
-    };
-    dirtyPins.length = <span class="hljs-number">0</span>;
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-28">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
-              </div>
-              <h4 id="factories">Factories</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-29">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
-              </div>
-              <h5 id="makequadratic">makeQuadratic</h5>
-<p>Accepts argument with attributes:</p>
-<ul>
-<li><strong>start</strong> (<em><strong>startX</strong></em>, <em><strong>startY</strong></em>) Coordinate, or <strong>pivot</strong>/<strong>mimic</strong>/<strong>path</strong> reference artefact (required)</li>
-<li><strong>control</strong> (<em><strong>controlX</strong></em>, <em><strong>controlY</strong></em>) Coordinate, or <strong>controlPivot</strong>/<strong>controlPath</strong> reference artefact (required) </li>
-<li><strong>end</strong> (<em><strong>endX</strong></em>, <em><strong>endY</strong></em>) Coordinate, or <strong>endPivot</strong>/<strong>endPath</strong> reference artefact (required) </li>
-<li>If using reference artefacts, may also need to set the <strong>lockTo</strong> (<em><strong>lockXTo</strong></em>, <em><strong>lockYTo</strong></em>), <strong>controlLockTo</strong> and <strong>endLockTo</strong> lock attributes</li>
-<li>additional reference-linked attributes for the <code>control</code> coordinate: <strong>controlPivotCorner</strong>, <strong>addControlPivotHandle</strong>, <strong>addControlPivotOffset</strong>, <strong>controlPathPosition</strong>, <strong>addControlPathHandle</strong>, <strong>addControlPathOffset</strong></li>
-<li>additional reference-linked attributes for the <code>end</code> coordinate: <strong>endPivotCorner</strong>, <strong>addEndPivotHandle</strong>, <strong>addEndPivotOffset</strong>, <strong>endPathPosition</strong>, <strong>addEndPathHandle</strong>, <strong>addEndPathOffset</strong></li>
-</ul>
-<pre><code>scrawl.makeQuadratic({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-quadratic&#x27;</span>,
-
-    <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;5%&#x27;</span>,
-    <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;26.5%&#x27;</span>,
-
-    <span class="hljs-attr">controlX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
-    <span class="hljs-attr">controlY</span>: <span class="hljs-string">&#x27;18%&#x27;</span>,
-
-    <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;95%&#x27;</span>,
-    <span class="hljs-attr">endY</span>: <span class="hljs-string">&#x27;26.5%&#x27;</span>,
-
-    <span class="hljs-attr">handleY</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
-
-    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">3</span>,
-    <span class="hljs-attr">lineCap</span>: <span class="hljs-string">&#x27;round&#x27;</span>,
-    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;darkseagreen&#x27;</span>,
-
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
-});
-</code></pre>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeQuadratic = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
-
-    <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    items.species = <span class="hljs-string">&#x27;quadratic&#x27;</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Quadratic(items);
-};
-
-<span class="hljs-title">constructors</span>.<span class="hljs-title">Quadratic</span> = <span class="hljs-title">Quadratic</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-30">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
-              </div>
               <h4 id="exports">Exports</h4>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
-    makeQuadratic,
+    makeLineSpiral,
 };</pre></div></div>
             
         </li>

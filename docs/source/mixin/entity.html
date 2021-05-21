@@ -165,6 +165,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/lineSpiral.html">
+                  ./source/factory/lineSpiral.js
+                </a>
+              
+                
                 <a class="source" href="../factory/loom.html">
                   ./source/factory/loom.js
                 </a>
@@ -573,6 +578,7 @@
 <li><code>fillAndDraw</code> - fill the entity’s outline, remove shadow, then stroke it</li>
 <li><code>drawThenFill</code> - stroke the entity’s outline, then fill it (shadow applied twice)</li>
 <li><code>fillThenDraw</code> - fill the entity’s outline, then stroke it (shadow applied twice)</li>
+<li><code>clip</code> - use shape to restrict future drawing area (best used in a separate group)</li>
 <li><code>clear</code> - remove everything that would have been covered if the entity had performed fill (including shadow)</li>
 <li><code>none</code> - perform all the calculations required, but don’t perform the final stamping</li>
 </ul>
@@ -1955,7 +1961,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
-              <p><code>drawAndFill</code> - stroke the entity’s outline, remove shadow, then fill it</p>
+              <p><code>drawAndFill</code> - stamp the entity stroke, then fill, then remove shadow and repeat</p>
 
             </div>
             
@@ -1964,7 +1970,9 @@
         <span class="hljs-keyword">let</span> p = <span class="hljs-built_in">this</span>.pathObject;
 
         engine.stroke(p);
+        engine.fill(p, <span class="hljs-built_in">this</span>.winding);
         <span class="hljs-built_in">this</span>.currentHost.clearShadow();
+        engine.stroke(p);
         engine.fill(p, <span class="hljs-built_in">this</span>.winding);
     };</pre></div></div>
             
@@ -1977,7 +1985,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
-              <p><code>fillAndDraw</code> - fill the entity’s outline, remove shadow, then stroke it</p>
+              <p><code>drawAndFill</code> - stamp the entity fill, then stroke, then remove shadow and repeat</p>
 
             </div>
             
@@ -1985,6 +1993,7 @@
 
         <span class="hljs-keyword">let</span> p = <span class="hljs-built_in">this</span>.pathObject;
 
+        engine.fill(p, <span class="hljs-built_in">this</span>.winding);
         engine.stroke(p);
         <span class="hljs-built_in">this</span>.currentHost.clearShadow();
         engine.fill(p, <span class="hljs-built_in">this</span>.winding);

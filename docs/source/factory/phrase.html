@@ -165,6 +165,11 @@
                 </a>
               
                 
+                <a class="source" href="lineSpiral.html">
+                  ./source/factory/lineSpiral.js
+                </a>
+              
+                
                 <a class="source" href="loom.html">
                   ./source/factory/loom.js
                 </a>
@@ -504,9 +509,9 @@
 <li><a href="../../demo/canvas-017.html">Canvas-017</a> - Phrase entity - test lineHeight, letterSpacing and justify attributes; setSectionStyles() functionality</li>
 <li><a href="../../demo/canvas-018.html">Canvas-018</a> - Phrase entity - text along a path</li>
 <li><a href="../../demo/canvas-029.html">Canvas-029</a> - Phrase entitys and gradients</li>
-<li><a href="../../demo/component-001.html">Component-001</a> - Scrawl-canvas DOM element components</li>
-<li><a href="../../demo/component-004.html">Component-004</a> - Scrawl-canvas packets - save and load a range of different entitys</li>
-<li><a href="../../demo/component-005.html">Component-005</a> - Scrawl-canvas modularized code - London crime charts</li>
+<li><a href="../../demo/snippets-001.html">Snippets-001</a> - Scrawl-canvas DOM element snippets</li>
+<li><a href="../../demo/packets-002.html">Packets-002</a> - Scrawl-canvas packets - save and load a range of different entitys</li>
+<li><a href="../../demo/modules-001.html">Modules-001</a> - Scrawl-canvas modularized code - London crime charts</li>
 </ul>
 
             </div>
@@ -524,7 +529,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">cell</span>, <span class="hljs-title">cellnames</span>, <span class="hljs-title">styles</span>, <span class="hljs-title">stylesnames</span>, <span class="hljs-title">artefact</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">cell</span>, <span class="hljs-title">cellnames</span>, <span class="hljs-title">styles</span>, <span class="hljs-title">stylesnames</span>, <span class="hljs-title">artefact</span>, <span class="hljs-title">sectionClasses</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
 <span class="hljs-keyword">import</span> { scrawlCanvasHold } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/document.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { mergeOver, pushUnique, xt, xta, isa_obj, isa_number, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
@@ -693,23 +698,7 @@ P = entityMix(P);
 
 P.midInitActions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
 
-    <span class="hljs-built_in">this</span>.sectionStyles = [];
-    <span class="hljs-built_in">this</span>.sectionClasses = {
-        <span class="hljs-string">&#x27;DEFAULTS&#x27;</span>: { <span class="hljs-attr">defaults</span>: <span class="hljs-literal">true</span> },
-        <span class="hljs-string">&#x27;BOLD&#x27;</span>: { <span class="hljs-attr">weight</span>: <span class="hljs-string">&#x27;bold&#x27;</span> },
-        <span class="hljs-string">&#x27;ITALIC&#x27;</span>: { <span class="hljs-attr">style</span>: <span class="hljs-string">&#x27;italic&#x27;</span> },
-        <span class="hljs-string">&#x27;SMALL-CAPS&#x27;</span>: { <span class="hljs-attr">variant</span>: <span class="hljs-string">&#x27;small-caps&#x27;</span> },
-        <span class="hljs-string">&#x27;HIGHLIGHT&#x27;</span>: { <span class="hljs-attr">highlight</span>: <span class="hljs-literal">true</span> },
-        <span class="hljs-string">&#x27;UNDERLINE&#x27;</span>: { <span class="hljs-attr">underline</span>: <span class="hljs-literal">true</span> },
-        <span class="hljs-string">&#x27;OVERLINE&#x27;</span>: { <span class="hljs-attr">overline</span>: <span class="hljs-literal">true</span> },
-        <span class="hljs-string">&#x27;/BOLD&#x27;</span>: { <span class="hljs-attr">weight</span>: <span class="hljs-string">&#x27;normal&#x27;</span> },
-        <span class="hljs-string">&#x27;/ITALIC&#x27;</span>: { <span class="hljs-attr">style</span>: <span class="hljs-string">&#x27;normal&#x27;</span> },
-        <span class="hljs-string">&#x27;/SMALL-CAPS&#x27;</span>: { <span class="hljs-attr">variant</span>: <span class="hljs-string">&#x27;normal&#x27;</span> },
-        <span class="hljs-string">&#x27;/HIGHLIGHT&#x27;</span>: { <span class="hljs-attr">highlight</span>: <span class="hljs-literal">false</span> },
-        <span class="hljs-string">&#x27;/UNDERLINE&#x27;</span>: { <span class="hljs-attr">underline</span>: <span class="hljs-literal">false</span> },
-        <span class="hljs-string">&#x27;/OVERLINE&#x27;</span>: { <span class="hljs-attr">overline</span>: <span class="hljs-literal">false</span> }
-    };
-};</pre></div></div>
+    <span class="hljs-built_in">this</span>.sectionStyles = [];</pre></div></div>
             
         </li>
         
@@ -719,6 +708,36 @@ P.midInitActions = <span class="hljs-function"><span class="hljs-keyword">functi
               
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
+              <p>this.sectionClasses = {
+    ‘DEFAULTS’: { defaults: true },
+    ‘BOLD’: { weight: ‘bold’ },
+    ‘ITALIC’: { style: ‘italic’ },
+    ‘SMALL-CAPS’: { variant: ‘small-caps’ },
+    ‘HIGHLIGHT’: { highlight: true },
+    ‘UNDERLINE’: { underline: true },
+    ‘OVERLINE’: { overline: true },
+    ‘/BOLD’: { weight: ‘normal’ },
+    ‘/ITALIC’: { style: ‘normal’ },
+    ‘/SMALL-CAPS’: { variant: ‘normal’ },
+    ‘/HIGHLIGHT’: { highlight: false },
+    ‘/UNDERLINE’: { underline: false },
+    ‘/OVERLINE’: { overline: false }
+};</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.sectionClasses = sectionClasses;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h4 id="phrase-attributes">Phrase attributes</h4>
 <ul>
@@ -740,11 +759,11 @@ P.midInitActions = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-12">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p><strong>text</strong> - the text String to be displayed by the Phrase</p>
 
@@ -755,11 +774,11 @@ P.midInitActions = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p><strong>width</strong> - Number or String</p>
 <ul>
@@ -773,11 +792,11 @@ P.midInitActions = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p><strong>exposeText</strong> - Boolean accessibility feature</p>
 <ul>
@@ -792,11 +811,11 @@ P.midInitActions = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p><strong>lineHeight</strong> - a positive float Number multiplier applied to the font height to add space between lines of text</p>
 
@@ -807,11 +826,11 @@ P.midInitActions = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p><strong>letterSpacing</strong> - a positive float Number representing a set number of pixels to place between each glyph (letter). Can be overridden for letter ranges using styling objects</p>
 
@@ -822,11 +841,11 @@ P.midInitActions = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p><strong>justify</strong> - String value to indicate how the text should justify itself within its dimensions box.</p>
 <ul>
@@ -840,11 +859,11 @@ P.midInitActions = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <h5 id="in-text-styling">In-text styling</h5>
 
@@ -853,11 +872,11 @@ P.midInitActions = <span class="hljs-function"><span class="hljs-keyword">functi
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p><strong>sectionClasses</strong> - Array of styling objects</p>
 <p>Glyphs (letters) can be individually styled by adding a <em><strong>styling object</strong></em> to the <code>sectionClasses</code> Array, and then adding <strong>section style markup</strong> to the Phrase’s text String attribute. Subsequent glyphs will inherit those styles until a second style marker updating or terminating that particular style is encountered.</p>
@@ -909,11 +928,11 @@ myPhrase.addSectionClass(<span class="hljs-string">&#x27;RED&#x27;</span>, { <sp
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <h5 id="overlines-underlines-highlighting">Overlines, underlines, highlighting</h5>
 <p>We set the position and style for overlines, underlines and background highlight on a per-Phrase entity level, then apply them to glyphs using <strong>sectionClasses</strong> styling objects.</p>
@@ -928,11 +947,11 @@ myPhrase.addSectionClass(<span class="hljs-string">&#x27;RED&#x27;</span>, { <sp
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p><strong>overlinePosition</strong>, <strong>overlineStyle</strong></p>
 
@@ -944,11 +963,11 @@ myPhrase.addSectionClass(<span class="hljs-string">&#x27;RED&#x27;</span>, { <sp
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p><strong>underlinePosition</strong>, <strong>underlineStyle</strong></p>
 
@@ -960,11 +979,11 @@ myPhrase.addSectionClass(<span class="hljs-string">&#x27;RED&#x27;</span>, { <sp
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p><strong>highlightStyle</strong></p>
 
@@ -975,31 +994,16 @@ myPhrase.addSectionClass(<span class="hljs-string">&#x27;RED&#x27;</span>, { <sp
         </li>
         
         
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
-              </div>
-              <h5 id="bounding-box">Bounding box</h5>
-<p>The bounding box represents the Phrase entity’s collision detection <em><strong>hit area</strong></em>. It contains all of the entity’s text, including line spacing.</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
-              <p><strong>boundingBoxColor</strong></p>
+              <h5 id="bounding-box">Bounding box</h5>
+<p>The bounding box represents the Phrase entity’s collision detection <em><strong>hit area</strong></em>. It contains all of the entity’s text, including line spacing.</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    boundingBoxColor: <span class="hljs-string">&#x27;rgba(0,0,0,0.5)&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -1010,11 +1014,11 @@ myPhrase.addSectionClass(<span class="hljs-string">&#x27;RED&#x27;</span>, { <sp
               <div class="sswrap ">
                 <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
-              <p><strong>showBoundingBox</strong> - Boolean flag indicating whether the Phrase entity’s bounding box should be displayed</p>
+              <p><strong>boundingBoxColor</strong></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    showBoundingBox: <span class="hljs-literal">false</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    boundingBoxColor: <span class="hljs-string">&#x27;rgba(0,0,0,0.5)&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -1024,6 +1028,21 @@ myPhrase.addSectionClass(<span class="hljs-string">&#x27;RED&#x27;</span>, { <sp
               
               <div class="sswrap ">
                 <a class="ss" href="#section-27">&#x00a7;</a>
+              </div>
+              <p><strong>showBoundingBox</strong> - Boolean flag indicating whether the Phrase entity’s bounding box should be displayed</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    showBoundingBox: <span class="hljs-literal">false</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <h5 id="text-along-a-path">Text along a path</h5>
 <p>Phrase entitys, alongside other artefacts, can use a <a href="./shape.html">Shape entity</a> as a <em><strong>reference path</strong></em> to determine its location in the canvas display - achieved by setting the <code>path</code>, <code>pathPosition</code>, etc attributes as required.</p>
@@ -1037,11 +1056,11 @@ myPhrase.addSectionClass(<span class="hljs-string">&#x27;RED&#x27;</span>, { <sp
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p><strong>textPath</strong> - Shape entity to be used as the text path; can be supplied either as the entity object itself, or as the entity’s name-String.</p>
 
@@ -1052,11 +1071,11 @@ myPhrase.addSectionClass(<span class="hljs-string">&#x27;RED&#x27;</span>, { <sp
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p><strong>textPathPosition</strong> - float Number value between <code>0.0 - 1.0</code> representing the text’s first character’s position on the path.</p>
 
@@ -1067,11 +1086,11 @@ myPhrase.addSectionClass(<span class="hljs-string">&#x27;RED&#x27;</span>, { <sp
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p><strong>textPathLoop</strong> - Boolean flag - when true (default) the first character’s position will loop back to <code>0</code> when it passes <code>1</code> (and vice versa).</p>
 
@@ -1082,11 +1101,11 @@ myPhrase.addSectionClass(<span class="hljs-string">&#x27;RED&#x27;</span>, { <sp
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p><strong>addTextPathRoll</strong> - Boolean flag - when true (default) each glyph in the text will rotate to match its position’s tangent on the path.</p>
 
@@ -1097,11 +1116,11 @@ myPhrase.addSectionClass(<span class="hljs-string">&#x27;RED&#x27;</span>, { <sp
         </li>
         
         
-        <li id="section-32">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p><strong>textPathDirection</strong> - String with values <code>ltr</code> or <code>rtl</code> - affects how the text glyphs will arrange themselves along the path.</p>
 
@@ -1112,11 +1131,11 @@ myPhrase.addSectionClass(<span class="hljs-string">&#x27;RED&#x27;</span>, { <sp
         </li>
         
         
-        <li id="section-33">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p><strong>treatWordAsGlyph</strong> - Boolean flag - when true, Scrawl-canvas will treat each word in the text as if it was a glyph/letter; default: false.</p>
 
@@ -1129,11 +1148,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
@@ -1158,11 +1177,11 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-35">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 
@@ -1171,11 +1190,11 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-36">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 
@@ -1189,11 +1208,11 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -1206,11 +1225,11 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-38">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p><strong>handle</strong></p>
 
@@ -1270,11 +1289,11 @@ D.handle = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-39">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p><strong>text</strong></p>
 
@@ -1296,11 +1315,11 @@ S.text = <span class="hljs-function"><span class="hljs-keyword">function</span> 
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p><strong>justify</strong></p>
 
@@ -1318,11 +1337,11 @@ S.justify = <span class="hljs-function"><span class="hljs-keyword">function</spa
         </li>
         
         
-        <li id="section-41">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p><strong>width</strong></p>
 
@@ -1351,11 +1370,11 @@ D.width = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-42">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p><strong>scale</strong></p>
 
@@ -1385,11 +1404,11 @@ D.scale = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p><strong>lineHeight</strong></p>
 
@@ -1402,11 +1421,11 @@ D.scale = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-44">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p>TODO: text display, entity height and pathObject fall out of sync at small/negative values</p>
 <ul>
@@ -1427,11 +1446,11 @@ D.lineHeight = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-45">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p>TODO: text display, entity height and pathObject fall out of sync at small/negative values</p>
 <ul>
@@ -1449,11 +1468,11 @@ D.lineHeight = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-46">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p><strong>letterSpacing</strong></p>
 
@@ -1478,11 +1497,11 @@ D.letterSpacing = <span class="hljs-function"><span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p><strong>overlinePosition</strong></p>
 
@@ -1506,11 +1525,11 @@ D.overlinePosition = <span class="hljs-function"><span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p><strong>underlinePosition</strong></p>
 
@@ -1534,11 +1553,11 @@ D.underlinePosition = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p><strong>textPath</strong></p>
 
@@ -1556,11 +1575,11 @@ D.underlinePosition = <span class="hljs-function"><span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p><strong>textPathPosition</strong></p>
 
@@ -1592,11 +1611,11 @@ D.textPathPosition = <span class="hljs-function"><span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-51">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <h5 id="fontattribute-attributes">FontAttribute attributes</h5>
 <p>Phrase entitys break down fonts into their constituent parts using <a href="./fontAttribute.html">FontAttribute</a> objects.</p>
@@ -1611,11 +1630,11 @@ D.textPathPosition = <span class="hljs-function"><span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-52">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p><strong>font</strong> - the desired CSS font (<code>get</code> returns the actual font String being used)</p>
 <ul>
@@ -1639,11 +1658,11 @@ S.font = <span class="hljs-function"><span class="hljs-keyword">function</span> 
         </li>
         
         
-        <li id="section-53">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p><strong>style</strong> - CSS <code>font-style</code> String</p>
 
@@ -1664,11 +1683,11 @@ S.style = <span class="hljs-function"><span class="hljs-keyword">function</span>
         </li>
         
         
-        <li id="section-54">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p><strong>variant</strong> - CSS <code>font-variant</code> String</p>
 
@@ -1689,11 +1708,11 @@ S.variant = <span class="hljs-function"><span class="hljs-keyword">function</spa
         </li>
         
         
-        <li id="section-55">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p><strong>weight</strong> - CSS <code>font-weight</code> String</p>
 
@@ -1714,11 +1733,11 @@ S.weight = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-56">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p><strong>stretch</strong> - CSS <code>font-stretch</code> String</p>
 
@@ -1739,11 +1758,11 @@ S.stretch = <span class="hljs-function"><span class="hljs-keyword">function</spa
         </li>
         
         
-        <li id="section-57">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p><strong>size</strong> - CSS <code>font-size</code> String</p>
 
@@ -1764,11 +1783,11 @@ S.size = <span class="hljs-function"><span class="hljs-keyword">function</span> 
         </li>
         
         
-        <li id="section-58">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p><strong>sizeValue</strong> - the Number part of the font’s size value</p>
 
@@ -1796,11 +1815,11 @@ D.sizeValue = <span class="hljs-function"><span class="hljs-keyword">function</s
         </li>
         
         
-        <li id="section-59">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <p><strong>sizeMetric</strong> - the String metric part of the font’s size value</p>
 
@@ -1821,11 +1840,11 @@ S.sizeMetric = <span class="hljs-function"><span class="hljs-keyword">function</
         </li>
         
         
-        <li id="section-60">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p><strong>family</strong> - CSS <code>font-family</code> String</p>
 
@@ -1846,11 +1865,11 @@ S.family = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-61">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -1859,11 +1878,11 @@ S.family = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-62">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p><code>cleanDimensionsAdditionalActions</code> - local overwrite</p>
 
@@ -1895,11 +1914,11 @@ S.family = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-63">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <p><code>setSectionStyles</code> - internal function</p>
 
@@ -1936,13 +1955,14 @@ S.family = <span class="hljs-function"><span class="hljs-keyword">function</span
         </li>
         
         
-        <li id="section-64">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <p><code>addSectionClass</code>, <code>removeSectionClass</code> - add and remove section class definitions to the entity’s <code>sectionClasses</code> object.</p>
+<p>WARNING: the SectionClass object has been moved to the library, rather than created individually on each Phrase entity. This means that changes to the object will affect all phrases that make use of that class. <strong>Namespacing new classes is strongly recommended!</strong></p>
 
             </div>
             
@@ -1971,11 +1991,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-65">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <p><code>getTextPath</code> - internal function</p>
 
@@ -2002,11 +2022,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-66">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <h4 id="display-cycle-functionality">Display cycle functionality</h4>
 <p>Phrase entitys, because they handle graphical text which has its own special requirements and methods in the Canvas API, has to overwrite a substantial portion of the Display cycle functionality defined in the entity mixin.</p>
@@ -2016,11 +2036,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-67">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <p><code>cleanPathObject</code> - overwrites mixin/entity.js functionality so that it can deal with the <code>dirtyFont</code>, <code>dirtyText</code> and <code>dirtyHandle</code> flags </p>
 <ul>
@@ -2066,11 +2086,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-68">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <p><code>buildText</code> - internal function called by <code>cleanPathObject</code></p>
 
@@ -2119,11 +2139,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-69">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <p><code>convertTextEntityCharacters</code> - internal function called by <code>buildText</code></p>
 <ul>
@@ -2146,11 +2166,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-70">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <p><code>calculateTextPositions</code> - internal function called by <code>buildText</code></p>
 <ul>
@@ -2164,11 +2184,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-71">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <ol start="0">
 <li><code>strokeStyle</code> and <code>fillStyle</code> helper function</li>
@@ -2200,11 +2220,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-72">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-72">&#x00a7;</a>
+                <a class="ss" href="#section-73">&#x00a7;</a>
               </div>
               <ol>
 <li>Setup - get values for text? arrays, current?, highlight?, ?Attributes, etc</li>
@@ -2281,11 +2301,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-73">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-73">&#x00a7;</a>
+                <a class="ss" href="#section-74">&#x00a7;</a>
               </div>
               <ol start="2">
 <li>Create <code>textGlyphs</code> array</li>
@@ -2302,11 +2322,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-74">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-74">&#x00a7;</a>
+                <a class="ss" href="#section-75">&#x00a7;</a>
               </div>
               <ol start="3">
 <li><code>textPositions</code> array will include an array of data for each glyph</li>
@@ -2330,11 +2350,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-75">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-75">&#x00a7;</a>
+                <a class="ss" href="#section-76">&#x00a7;</a>
               </div>
               <ol start="4">
 <li>Process the <code>sectionStyles</code> array to start populating the <code>textPositions</code> arrays</li>
@@ -2436,11 +2456,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-76">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-76">&#x00a7;</a>
+                <a class="ss" href="#section-77">&#x00a7;</a>
               </div>
               <p>Setup <code>textGlyphWidths</code> array, populating it with current letterSpacing values</p>
 
@@ -2452,11 +2472,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-77">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-77">&#x00a7;</a>
+                <a class="ss" href="#section-78">&#x00a7;</a>
               </div>
               <p>Finish populating <code>textGlyphWidths</code></p>
 
@@ -2472,11 +2492,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-78">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-78">&#x00a7;</a>
+                <a class="ss" href="#section-79">&#x00a7;</a>
               </div>
               <ol start="5">
 <li>Calculate the text <code>height</code> value</li>
@@ -2499,11 +2519,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-79">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-79">&#x00a7;</a>
+                <a class="ss" href="#section-80">&#x00a7;</a>
               </div>
               <ol start="6">
 <li>Calculate glyph <code>width</code> values</li>
@@ -2551,11 +2571,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-80">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-80">&#x00a7;</a>
+                <a class="ss" href="#section-81">&#x00a7;</a>
               </div>
               <p>Calculate text line arrays</p>
 
@@ -2577,11 +2597,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-81">
+        <li id="section-82">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-81">&#x00a7;</a>
+                <a class="ss" href="#section-82">&#x00a7;</a>
               </div>
               <p>Need <code>starts</code> to be less than <code>ends</code></p>
 <ul>
@@ -2607,11 +2627,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-82">
+        <li id="section-83">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-82">&#x00a7;</a>
+                <a class="ss" href="#section-83">&#x00a7;</a>
               </div>
               <p>Need to pick up the last (or only) line</p>
 
@@ -2622,11 +2642,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-83">
+        <li id="section-84">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-83">&#x00a7;</a>
+                <a class="ss" href="#section-84">&#x00a7;</a>
               </div>
               <p>Pick up single line</p>
 
@@ -2644,11 +2664,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-84">
+        <li id="section-85">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-84">&#x00a7;</a>
+                <a class="ss" href="#section-85">&#x00a7;</a>
               </div>
               <p>Final line of multiline text</p>
 
@@ -2669,11 +2689,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-85">
+        <li id="section-86">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-85">&#x00a7;</a>
+                <a class="ss" href="#section-86">&#x00a7;</a>
               </div>
               <p>… And complete the population of data for <code>highlight</code>, <code>overline</code>, <code>underline</code></p>
 
@@ -2691,11 +2711,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-86">
+        <li id="section-87">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-86">&#x00a7;</a>
+                <a class="ss" href="#section-87">&#x00a7;</a>
               </div>
               <ol start="7">
 <li>Calculate <code>localHeight</code></li>
@@ -2717,11 +2737,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-87">
+        <li id="section-88">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-87">&#x00a7;</a>
+                <a class="ss" href="#section-88">&#x00a7;</a>
               </div>
               <p>Handle path positioning (which we’ll assume will need to be done for every display cycle) separately during stamping</p>
 
@@ -2732,11 +2752,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-88">
+        <li id="section-89">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-88">&#x00a7;</a>
+                <a class="ss" href="#section-89">&#x00a7;</a>
               </div>
               <ol start="8">
 <li>We should now be in a position where we can calculate each glyph’s <code>startXY</code> values</li>
@@ -2750,11 +2770,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-89">
+        <li id="section-90">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-89">&#x00a7;</a>
+                <a class="ss" href="#section-90">&#x00a7;</a>
               </div>
               <p>Scenario 1: <code>justify === &#39;full&#39;</code></p>
 
@@ -2795,11 +2815,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-90">
+        <li id="section-91">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-90">&#x00a7;</a>
+                <a class="ss" href="#section-91">&#x00a7;</a>
               </div>
               <p>Scenario 2: regular text - <code>justify === &#39;left&#39;</code>, or <code>&#39;centre&#39;</code>, or <code>&#39;right&#39;</code></p>
 
@@ -2823,11 +2843,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-91">
+        <li id="section-92">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-91">&#x00a7;</a>
+                <a class="ss" href="#section-92">&#x00a7;</a>
               </div>
               <p>BUG: There’s an issue here which causes the function to fail when <code>treatWordAsGlyph</code> flag is set to true. Affects non-path-referencing Phrase entitys. This test to see if item exists is a temporary fix. </p>
 <ul>
@@ -2855,11 +2875,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-92">
+        <li id="section-93">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-92">&#x00a7;</a>
+                <a class="ss" href="#section-93">&#x00a7;</a>
               </div>
               <ol start="9">
 <li>Clean up and exit</li>
@@ -2883,11 +2903,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-93">
+        <li id="section-94">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-93">&#x00a7;</a>
+                <a class="ss" href="#section-94">&#x00a7;</a>
               </div>
               <h5 id="stamping-the-entity-onto-a-cell-wrapper-canvas-element">Stamping the entity onto a Cell wrapper &lt;canvas&gt; element</h5>
 
@@ -2896,11 +2916,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-94">
+        <li id="section-95">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-94">&#x00a7;</a>
+                <a class="ss" href="#section-95">&#x00a7;</a>
               </div>
               <p><code>regularStamp</code> - overwrites the mixin/entity.js function</p>
 
@@ -2923,11 +2943,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-95">
+        <li id="section-96">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-95">&#x00a7;</a>
+                <a class="ss" href="#section-96">&#x00a7;</a>
               </div>
               <p>Scrawl-canvas clips canvases to the Phrase’s hit area</p>
 <ul>
@@ -3002,11 +3022,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-96">
+        <li id="section-97">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-96">&#x00a7;</a>
+                <a class="ss" href="#section-97">&#x00a7;</a>
               </div>
               <p><code>calculateGlyphPathPositions</code> - internal helper function called by <code>regularStamp</code></p>
 
@@ -3031,11 +3051,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-97">
+        <li id="section-98">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-97">&#x00a7;</a>
+                <a class="ss" href="#section-98">&#x00a7;</a>
               </div>
               <p>textPathPosition Array indexes [
 0-font - font definition, or null
@@ -3095,11 +3115,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-98">
+        <li id="section-99">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-98">&#x00a7;</a>
+                <a class="ss" href="#section-99">&#x00a7;</a>
               </div>
               <p><code>preStamper</code> - internal helper function called by <code>regularStamp</code></p>
 
@@ -3132,11 +3152,11 @@ P.removeSectionClass = <span class="hljs-function"><span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-99">
+        <li id="section-100">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-99">&#x00a7;</a>
+                <a class="ss" href="#section-100">&#x00a7;</a>
               </div>
               <p>data[0] - glyph
 data[1] - xpos
@@ -3174,11 +3194,11 @@ data[3] - width</p>
         </li>
         
         
-        <li id="section-100">
+        <li id="section-101">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-100">&#x00a7;</a>
+                <a class="ss" href="#section-101">&#x00a7;</a>
               </div>
               <p><code>stamper</code> - object holding stamp method functions - functions called by <code>regularStamp</code></p>
 
@@ -3189,11 +3209,11 @@ data[3] - width</p>
         </li>
         
         
-        <li id="section-101">
+        <li id="section-102">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-101">&#x00a7;</a>
+                <a class="ss" href="#section-102">&#x00a7;</a>
               </div>
               <p><code>stamper.draw</code></p>
 
@@ -3207,11 +3227,11 @@ data[3] - width</p>
         </li>
         
         
-        <li id="section-102">
+        <li id="section-103">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-102">&#x00a7;</a>
+                <a class="ss" href="#section-103">&#x00a7;</a>
               </div>
               <p><code>stamper.fill</code></p>
 
@@ -3225,11 +3245,11 @@ data[3] - width</p>
         </li>
         
         
-        <li id="section-103">
+        <li id="section-104">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-103">&#x00a7;</a>
+                <a class="ss" href="#section-104">&#x00a7;</a>
               </div>
               <p><code>stamper.drawAndFill</code></p>
 
@@ -3238,30 +3258,10 @@ data[3] - width</p>
             <div class="content"><div class='highlight'><pre>    drawAndFill: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine, entity, data</span>) </span>{ 
 
         engine.strokeText(...data);
-        entity.currentHost.clearShadow();
         engine.fillText(...data);
-        entity.currentHost.restoreShadow(entity);
-    },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-104">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-104">&#x00a7;</a>
-              </div>
-              <p><code>stamper.fillAndDraw</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    fillAndDraw: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine, entity, data</span>) </span>{ 
-
-        engine.strokeText(...data);
         entity.currentHost.clearShadow();
-        engine.fillText(...data);
         engine.strokeText(...data);
+        engine.fillText(...data);
         entity.currentHost.restoreShadow(entity);
     },</pre></div></div>
             
@@ -3273,6 +3273,29 @@ data[3] - width</p>
               
               <div class="sswrap ">
                 <a class="ss" href="#section-105">&#x00a7;</a>
+              </div>
+              <p><code>stamper.fillAndDraw</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    fillAndDraw: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine, entity, data</span>) </span>{ 
+
+        engine.fillText(...data);
+        engine.strokeText(...data);
+        entity.currentHost.clearShadow();
+        engine.fillText(...data);
+        engine.strokeText(...data);
+        entity.currentHost.restoreShadow(entity);
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-106">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-106">&#x00a7;</a>
               </div>
               <p><code>stamper.drawThenFill</code></p>
 
@@ -3287,11 +3310,11 @@ data[3] - width</p>
         </li>
         
         
-        <li id="section-106">
+        <li id="section-107">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-106">&#x00a7;</a>
+                <a class="ss" href="#section-107">&#x00a7;</a>
               </div>
               <p><code>stamper.fillThenDraw</code></p>
 
@@ -3306,11 +3329,11 @@ data[3] - width</p>
         </li>
         
         
-        <li id="section-107">
+        <li id="section-108">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-107">&#x00a7;</a>
+                <a class="ss" href="#section-108">&#x00a7;</a>
               </div>
               <p><code>stamper.clear</code></p>
 
@@ -3328,11 +3351,11 @@ data[3] - width</p>
         </li>
         
         
-        <li id="section-108">
+        <li id="section-109">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-108">&#x00a7;</a>
+                <a class="ss" href="#section-109">&#x00a7;</a>
               </div>
               <p><code>drawBoundingBox</code> - internal helper function called by <code>regularStamp</code></p>
 
@@ -3355,11 +3378,11 @@ data[3] - width</p>
         </li>
         
         
-        <li id="section-109">
+        <li id="section-110">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-109">&#x00a7;</a>
+                <a class="ss" href="#section-110">&#x00a7;</a>
               </div>
               <p><code>performRotation</code> - internal helper function called by <code>regularStamp</code></p>
 <ul>
@@ -3384,11 +3407,11 @@ data[3] - width</p>
         </li>
         
         
-        <li id="section-110">
+        <li id="section-111">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-110">&#x00a7;</a>
+                <a class="ss" href="#section-111">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.makePhrase({
@@ -3440,11 +3463,11 @@ data[3] - width</p>
         </li>
         
         
-        <li id="section-111">
+        <li id="section-112">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-111">&#x00a7;</a>
+                <a class="ss" href="#section-112">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 
