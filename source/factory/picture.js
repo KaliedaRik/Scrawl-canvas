@@ -625,12 +625,15 @@ P.fill = function (engine) {
 // `drawAndFill`
 P.drawAndFill = function (engine) {
 
-    engine.stroke(this.pathObject);
-
     let [x, y, w, h] = this.copyArray;
     if (this.source && w && h) {
 
+        engine.stroke(this.pathObject);
+        engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
+
         this.currentHost.clearShadow();
+
+        engine.stroke(this.pathObject);
         engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
     }
 };
@@ -638,13 +641,16 @@ P.drawAndFill = function (engine) {
 // `fillAndDraw`
 P.fillAndDraw = function (engine) {
 
-    engine.stroke(this.pathObject);
-
     let [x, y, w, h] = this.copyArray;
     if (this.source && w && h) {
 
-        this.currentHost.clearShadow();
         engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
+        engine.stroke(this.pathObject);
+
+        this.currentHost.clearShadow();
+
+        engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
+        engine.stroke(this.pathObject);
     }
 
     engine.stroke(this.pathObject);
@@ -653,19 +659,23 @@ P.fillAndDraw = function (engine) {
 // `drawThenFill`
 P.drawThenFill = function (engine) {
 
-    engine.stroke(this.pathObject);
-
     let [x, y, w, h] = this.copyArray;
-    if (this.source && w && h) engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
+    if (this.source && w && h) {
+
+        engine.stroke(this.pathObject);
+        engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
+    }
 };
 
 // `fillThenDraw`
 P.fillThenDraw = function (engine) {
 
     let [x, y, w, h] = this.copyArray;
-    if (this.source && w && h) engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
+    if (this.source && w && h) {
 
-    engine.stroke(this.pathObject);
+        engine.drawImage(this.source, ...this.copyArray, ...this.pasteArray);
+        engine.stroke(this.pathObject);
+    }
 };
 
 // `checkHitReturn` - overwrites mixin/position.js function

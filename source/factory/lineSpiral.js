@@ -1,5 +1,5 @@
-// # Polygon factory
-// A factory for generating various straight-edged polygon shape-based entitys
+// # LineSpiral factory
+// A factory for generating 'degenerate' spiral shape-based entitys
 //
 // Path-defined entitys represent a diverse range of shapes rendered onto a DOM &lt;canvas> element using the Canvas API's [Path2D interface](https://developer.mozilla.org/en-US/docs/Web/API/Path2D). They use the [shapeBasic](../mixin/shapeBasic.html) and [shapePathCalculation](../mixin/shapePathCalculation.html) (some also use [shapeCurve](../mixin/shapeCurve.html)) mixins to define much of their functionality.
 // 
@@ -42,23 +42,23 @@
 import { constructors } from '../core/library.js';
 import { mergeOver, Ωempty } from '../core/utilities.js';
 
-import { requestVector, releaseVector } from './vector.js';
+import { requestCoordinate, releaseCoordinate } from './coordinate.js';
 
 import baseMix from '../mixin/base.js';
 import shapeMix from '../mixin/shapeBasic.js';
 
 
-// #### Polygon constructor
-const Polygon = function (items = Ωempty) {
+// #### LineSpiral constructor
+const LineSpiral = function (items = Ωempty) {
 
     this.shapeInit(items);
     return this;
 };
 
 
-// #### Polygon prototype
-let P = Polygon.prototype = Object.create(Object.prototype);
-P.type = 'Polygon';
+// #### LineSpiral prototype
+let P = LineSpiral.prototype = Object.create(Object.prototype);
+P.type = 'LineSpiral';
 P.lib = 'entity';
 P.isArtefact = true;
 P.isAsset = false;
@@ -71,7 +71,7 @@ P = baseMix(P);
 P = shapeMix(P);
 
 
-// #### Polygon attributes
+// #### LineSpiral attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 // + Attributes defined in the [position mixin](../mixin/position.html): __group, visibility, order, start, _startX_, _startY_, handle, _handleX_, _handleY_, offset, _offsetX_, _offsetY_, dimensions, _width_, _height_, pivoted, mimicked, lockTo, _lockXTo_, _lockYTo_, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge, bringToFrontOnDrag__.
 // + Attributes defined in the [delta mixin](../mixin/delta.html): __delta, noDeltaUpdates__.
@@ -84,11 +84,15 @@ P = shapeMix(P);
 // + Attributes defined in the [shapeBasic mixin](../mixin/shapeBasic.html): __species, useAsPath, precision, pathDefinition, showBoundingBox, boundingBoxColor, minimumBoundingBoxDimensions, constantPathSpeed__.
 let defaultAttributes = {
 
-    sides: 0,
-    sideLength: 0,
+    startRadius: 0,
+    radiusIncrement: 0.1,
+    radiusIncrementAdjust: 1,
 
-    // DEPRECATED - this is the (misleading) old name for the sideLength attribute
-    radius: 0,
+    startAngle: 0,
+    angleIncrement: 5,
+    angleIncrementAdjust: 1,
+
+    stepLimit: 1000,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -109,41 +113,90 @@ P.defs = mergeOver(P.defs, defaultAttributes);
 let S = P.setters,
     D = P.deltaSetters;
 
-// __sides__
-S.sides = function (item) {
+// __startRadius__
+S.startRadius = function (item) {
 
-    this.sides = item;
+    this.startRadius = item;
     this.updateDirty();
 };
-D.sides = function (item) {
+D.startRadius = function (item) {
 
-    this.sides += item;
-    this.updateDirty();
-};
-
-// __sideLength__
-S.sideLength = function (item) {
-
-    this.sideLength = item;
-    this.updateDirty();
-};
-D.sideLength = function (item) {
-
-    this.sideLength += item;
+    this.startRadius += item;
     this.updateDirty();
 };
 
-// DEPRECATED - this is the (misleading) old name for the sideLength attribute
-S.radius = function (item) {
+// __radiusIncrement__
+S.radiusIncrement = function (item) {
 
-    this.radius = item;
+    this.radiusIncrement = item;
     this.updateDirty();
 };
-D.radius = function (item) {
+D.radiusIncrement = function (item) {
 
-    this.radius += item;
+    this.radiusIncrement += item;
     this.updateDirty();
 };
+
+// __radiusIncrementAdjust__
+S.radiusIncrementAdjust = function (item) {
+
+    this.radiusIncrementAdjust = item;
+    this.updateDirty();
+};
+D.radiusIncrementAdjust = function (item) {
+
+    this.radiusIncrementAdjust += item;
+    this.updateDirty();
+};
+
+// __startAngle__
+S.startAngle = function (item) {
+
+    this.startAngle = item;
+    this.updateDirty();
+};
+D.startAngle = function (item) {
+
+    this.startAngle += item;
+    this.updateDirty();
+};
+
+// __angleIncrement__
+S.angleIncrement = function (item) {
+
+    this.angleIncrement = item;
+    this.updateDirty();
+};
+D.angleIncrement = function (item) {
+
+    this.angleIncrement += item;
+    this.updateDirty();
+};
+
+// __angleIncrementAdjust__
+S.angleIncrementAdjust = function (item) {
+
+    this.angleIncrementAdjust = item;
+    this.updateDirty();
+};
+D.angleIncrementAdjust = function (item) {
+
+    this.angleIncrementAdjust += item;
+    this.updateDirty();
+};
+
+// __stepLimit__
+S.stepLimit = function (item) {
+
+    this.stepLimit = item;
+    this.updateDirty();
+};
+D.stepLimit = function (item) {
+
+    this.stepLimit += item;
+    this.updateDirty();
+};
+
 
 
 // #### Prototype functions
@@ -153,80 +206,100 @@ P.cleanSpecies = function () {
 
     this.dirtySpecies = false;
 
-    let p = 'M0,0';
-    p = this.makePolygonPath();
+    let p = 'm0,0';
+    p = this.makeLineSpiralPath();
 
     this.pathDefinition = p;
 };
 
 
-// `makePolygonPath` - internal helper function - called by `cleanSpecies`
-P.makePolygonPath = function () {
+// `makeLineSpiralPath` - internal helper function - called by `cleanSpecies`
+P.makeLineSpiralPath = function () {
 
-    // `radius` attribute is deprecated!
-    let sideLength = this.sideLength || this.radius,
-        sides = this.sides,
-        turn = 360 / sides,
-        myPath = ``,
-        yPts = [],
-        currentY = 0,
-        myMax, myMin, myYoffset;
+    let path = 'm0,0 m';
 
-    let v = requestVector({x: 0, y: -sideLength});
+    let {startRadius, radiusIncrement, radiusIncrementAdjust, startAngle, angleIncrement, angleIncrementAdjust, stepLimit} = this;
 
-    for (let i = 0; i < sides; i++) {
+    let coord = requestCoordinate();
 
-        v.rotate(turn);
-        currentY += v.y;
-        yPts.push(currentY);
-        myPath += `${v.x.toFixed(1)},${v.y.toFixed(1)} `;
+    let currentAngle = startAngle,
+        currentAngleIncrement = angleIncrement,
+        currentRadius = startRadius,
+        currentRadiusIncrement = radiusIncrement,
+        counter = 0;
+
+    coord.setFromArray([0, currentRadius]).rotate(currentAngle);
+
+    path += `${coord[0]},${coord[1]}l`;
+
+    while (counter < stepLimit) {
+
+        counter ++;
+
+        currentAngleIncrement *= angleIncrementAdjust;
+        currentAngle += currentAngleIncrement;
+
+        currentRadiusIncrement *= radiusIncrementAdjust;
+        currentRadius += currentRadiusIncrement;
+
+        coord.setFromArray([0, currentRadius]).rotate(currentAngle);
+
+        path += `${coord[0]},${coord[1]} `;
     }
+    releaseCoordinate(coord);
+    return path;
+};
 
-    releaseVector(v);
+P.calculateLocalPathAdditionalActions = function () {
 
-    myMin = Math.min(...yPts);
-    myMax = Math.max(...yPts);
-    myYoffset = (((Math.abs(myMin) + Math.abs(myMax)) - sideLength) / 2).toFixed(1);
+    let [x, y, w, h] = this.localBox,
+        scale = this.scale;
 
-    myPath = `m0,${myYoffset}l${myPath}z`;
+    this.pathDefinition = this.pathDefinition.replace('m0,0 ', `m${-x / scale},${-y / scale}`);
 
-    return myPath;
+    this.pathCalculatedOnce = false;
+
+    // ALWAYS, when invoking `calculateLocalPath` from `calculateLocalPathAdditionalActions`, include the second argument, set to `true`! Failure to do this leads to an infinite loop which will make your machine weep.
+    // + We need to recalculate the local path to take into account the offset required to put the Spiral entity's start coordinates at the top-left of the local box, and to recalculate the data used by other artefacts to place themselves on, or move along, its path.
+    this.calculateLocalPath(this.pathDefinition, true);
 };
 
 
 // #### Factories
 
-// ##### makePolygon
-// Accepts argument with attributes:
-// + __sides__ (required) - integer positive Number (greater than 2) representing the number of sides the Shape will have
-// + __sideLength__ (required) - float Number representing the length (in px) of each of the shape's sides.
+// ##### makeSpiral
+// A spiral drawn from an inner-radius outwards by a given number of loops, with the distance between each loop determined by a given increment. Accepts argument with attributes:
+// + __loops__ (required) - positive float Number representing the number of times the Shape line will wind arount the Shape's center point
+// + __loopIncrement__ - float Number representative of the distance between successive loops; negative values have the effect of rotating the spiral 180 degrees
+// + __drawFromLoop__ - positive integer Number representing the loop on which the spiral starts to be drawn
 //
 // ```
-// scrawl.makePolygon({
+// scrawl.makeLineSpiral({
 //
-//     name: 'triangle',
+//     name: 'myLineSpiral',
 //
-//     startX: 20,
-//     startY: 935,
+//     strokeStyle: 'darkgreen',
+//     method: 'draw',
 //
-//     sideLength: 60,
-//     sides: 3,
+//     startX: 50,
+//     startY: 100,
 //
-//     fillStyle: 'lightblue',
-//     method: 'fillAndDraw',
+//     loops: 5,
+//     loopIncrement: 0.8,
+//     drawFromLoop: 1,
 // });
 // ```
-const makePolygon = function (items) {
+const makeLineSpiral = function (items) {
 
     if (!items) return false;
-    items.species = 'polygon';
-    return new Polygon(items);
+    items.species = 'linespiral';
+    return new LineSpiral(items);
 };
 
-constructors.Polygon = Polygon;
+constructors.LineSpiral = LineSpiral;
 
 
 // #### Exports
 export {
-    makePolygon,
+    makeLineSpiral,
 };

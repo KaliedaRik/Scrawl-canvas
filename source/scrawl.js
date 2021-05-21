@@ -167,6 +167,11 @@ import {
 
 
 import { 
+    makeLineSpiral,
+} from './factory/lineSpiral.js';
+
+
+import { 
     makeLoom,
 } from './factory/loom.js';
 
@@ -434,6 +439,10 @@ export default {
 
     // factory/line.js
     makeLine,
+
+
+    // factory/lineSpiral.js
+    makeLineSpiral,
 
 
     // factory/loom.js

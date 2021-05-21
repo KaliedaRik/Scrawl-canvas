@@ -34,13 +34,13 @@
 // + [Canvas-017](../../demo/canvas-017.html) - Phrase entity - test lineHeight, letterSpacing and justify attributes; setSectionStyles() functionality
 // + [Canvas-018](../../demo/canvas-018.html) - Phrase entity - text along a path
 // + [Canvas-029](../../demo/canvas-029.html) - Phrase entitys and gradients
-// + [Component-001](../../demo/component-001.html) - Scrawl-canvas DOM element components
-// + [Component-004](../../demo/component-004.html) - Scrawl-canvas packets - save and load a range of different entitys
-// + [Component-005](../../demo/component-005.html) - Scrawl-canvas modularized code - London crime charts
+// + [Snippets-001](../../demo/snippets-001.html) - Scrawl-canvas DOM element snippets
+// + [Packets-002](../../demo/packets-002.html) - Scrawl-canvas packets - save and load a range of different entitys
+// + [Modules-001](../../demo/modules-001.html) - Scrawl-canvas modularized code - London crime charts
 
 
 // #### Imports
-import { constructors, cell, cellnames, styles, stylesnames, artefact } from '../core/library.js';
+import { constructors, cell, cellnames, styles, stylesnames, artefact, sectionClasses } from '../core/library.js';
 import { scrawlCanvasHold } from '../core/document.js';
 import { mergeOver, pushUnique, xt, xta, isa_obj, isa_number, Ωempty } from '../core/utilities.js';
 
@@ -130,21 +130,22 @@ P = entityMix(P);
 P.midInitActions = function (items) {
 
     this.sectionStyles = [];
-    this.sectionClasses = {
-        'DEFAULTS': { defaults: true },
-        'BOLD': { weight: 'bold' },
-        'ITALIC': { style: 'italic' },
-        'SMALL-CAPS': { variant: 'small-caps' },
-        'HIGHLIGHT': { highlight: true },
-        'UNDERLINE': { underline: true },
-        'OVERLINE': { overline: true },
-        '/BOLD': { weight: 'normal' },
-        '/ITALIC': { style: 'normal' },
-        '/SMALL-CAPS': { variant: 'normal' },
-        '/HIGHLIGHT': { highlight: false },
-        '/UNDERLINE': { underline: false },
-        '/OVERLINE': { overline: false }
-    };
+    // this.sectionClasses = {
+    //     'DEFAULTS': { defaults: true },
+    //     'BOLD': { weight: 'bold' },
+    //     'ITALIC': { style: 'italic' },
+    //     'SMALL-CAPS': { variant: 'small-caps' },
+    //     'HIGHLIGHT': { highlight: true },
+    //     'UNDERLINE': { underline: true },
+    //     'OVERLINE': { overline: true },
+    //     '/BOLD': { weight: 'normal' },
+    //     '/ITALIC': { style: 'normal' },
+    //     '/SMALL-CAPS': { variant: 'normal' },
+    //     '/HIGHLIGHT': { highlight: false },
+    //     '/UNDERLINE': { underline: false },
+    //     '/OVERLINE': { overline: false }
+    // };
+    this.sectionClasses = sectionClasses;
 };
 
 
@@ -729,6 +730,8 @@ P.setSectionStyles = function (text) {
 };
 
 // `addSectionClass`, `removeSectionClass` - add and remove section class definitions to the entity's `sectionClasses` object.
+// 
+// WARNING: the SectionClass object has been moved to the library, rather than created individually on each Phrase entity. This means that changes to the object will affect all phrases that make use of that class. __Namespacing new classes is strongly recommended!__
 P.addSectionClass = function (label, obj) {
 
     if (xta(label, obj) && label.substring && isa_obj(obj)) {
@@ -1516,7 +1519,9 @@ P.stamper = {
     drawAndFill: function (engine, entity, data) { 
 
         engine.strokeText(...data);
+        engine.fillText(...data);
         entity.currentHost.clearShadow();
+        engine.strokeText(...data);
         engine.fillText(...data);
         entity.currentHost.restoreShadow(entity);
     },
@@ -1524,6 +1529,7 @@ P.stamper = {
     // `stamper.fillAndDraw`
     fillAndDraw: function (engine, entity, data) { 
 
+        engine.fillText(...data);
         engine.strokeText(...data);
         entity.currentHost.clearShadow();
         engine.fillText(...data);

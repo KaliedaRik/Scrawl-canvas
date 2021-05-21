@@ -60,6 +60,7 @@ export default function (P = Ωempty) {
 // + `fillAndDraw` - fill the entity's outline, remove shadow, then stroke it
 // + `drawThenFill` - stroke the entity's outline, then fill it (shadow applied twice)
 // + `fillThenDraw` - fill the entity's outline, then stroke it (shadow applied twice)
+// + `clip` - use shape to restrict future drawing area (best used in a separate group)
 // + `clear` - remove everything that would have been covered if the entity had performed fill (including shadow)
 // + `none` - perform all the calculations required, but don't perform the final stamping
         method: 'fill',
@@ -721,21 +722,24 @@ export default function (P = Ωempty) {
         engine.fill(this.pathObject, this.winding);
     };
 
-// `drawAndFill` - stroke the entity's outline, remove shadow, then fill it
+// `drawAndFill` - stamp the entity stroke, then fill, then remove shadow and repeat
     P.drawAndFill = function (engine) {
 
         let p = this.pathObject;
 
         engine.stroke(p);
+        engine.fill(p, this.winding);
         this.currentHost.clearShadow();
+        engine.stroke(p);
         engine.fill(p, this.winding);
     };
 
-// `fillAndDraw` - fill the entity's outline, remove shadow, then stroke it
+// `drawAndFill` - stamp the entity fill, then stroke, then remove shadow and repeat
     P.fillAndDraw = function (engine) {
 
         let p = this.pathObject;
 
+        engine.fill(p, this.winding);
         engine.stroke(p);
         this.currentHost.clearShadow();
         engine.fill(p, this.winding);
