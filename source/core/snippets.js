@@ -39,7 +39,8 @@ const makeStackSnippet = function (domElement, canvasSpecs, animationHooks, obse
 
     if (!myElement) return false;
 
-    canvasSpecs.isComponent = true;
+    // canvasSpecs.isComponent = true;
+    canvasSpecs.baseMatchesCanvasDimensions = true;
 
     let myCanvas = myElement.addCanvas(canvasSpecs);
     myElement.elementComputedStyles = window.getComputedStyle(domElement);
@@ -79,7 +80,8 @@ const makeUnstackedSnippet = function (domElement, canvasSpecs, animationHooks, 
     if (id && unstackedelement[id]) myElement = unstackedelement[id];
     else myElement = makeUnstackedElement(domElement);
 
-    canvasSpecs.isComponent = true;
+    // canvasSpecs.isComponent = true;
+    canvasSpecs.baseMatchesCanvasDimensions = true;
 
     let myCanvas = (includeCanvas) ? myElement.addCanvas(canvasSpecs) : false;
 

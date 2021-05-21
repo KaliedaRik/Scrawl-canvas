@@ -12,7 +12,7 @@ canvas.set({
 
     backgroundColor: 'honeydew',
     checkForResize: true,
-    isComponent: true,
+    baseMatchesCanvasDimensions: true,
 });
 
 // Create a shape track along which we can animate a Cell

@@ -528,7 +528,8 @@ P.cleanDimensionsAdditionalActions = function() {
             current = this.currentDimensions,
             base = this.isBase;
 
-        if (base && control && control.isComponent) {
+        // DEPRECATED (because it is a really bad name) __isComponent__ replaced by __baseMatchesCanvasDimensions__
+        if (base && control && (control.baseMatchesCanvasDimensions || control.isComponent)) {
 
             let controlDims = this.controller.currentDimensions,
                 dims = this.dimensions;

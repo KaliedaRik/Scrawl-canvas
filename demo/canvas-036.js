@@ -16,7 +16,7 @@ canvas.set({
     checkForResize: true,
 
     // Cascade changes in the Canvas dimensions down to its base Cell
-    isComponent: true,
+    baseMatchesCanvasDimensions: true,
 });
 
 
