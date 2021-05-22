@@ -638,7 +638,7 @@ P = shapeMix(P);</pre></div></div>
     <span class="hljs-attr">angleIncrement</span>: <span class="hljs-number">5</span>,
     <span class="hljs-attr">angleIncrementAdjust</span>: <span class="hljs-number">1</span>,
 
-    <span class="hljs-attr">stepLimit</span>: <span class="hljs-number">1000</span>,
+    <span class="hljs-attr">stepLimit</span>: <span class="hljs-number">100</span>,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
@@ -933,7 +933,7 @@ D.stepLimit = <span class="hljs-function"><span class="hljs-keyword">function</s
 
     coord.setFromArray([<span class="hljs-number">0</span>, currentRadius]).rotate(currentAngle);
 
-    path += <span class="hljs-string">`<span class="hljs-subst">${coord[<span class="hljs-number">0</span>]}</span>,<span class="hljs-subst">${coord[<span class="hljs-number">1</span>]}</span>l`</span>;
+    path += <span class="hljs-string">`<span class="hljs-subst">${coord[<span class="hljs-number">0</span>].toFixed(<span class="hljs-number">1</span>)}</span>,<span class="hljs-subst">${coord[<span class="hljs-number">1</span>].toFixed(<span class="hljs-number">1</span>)}</span>l`</span>;
 
     <span class="hljs-keyword">while</span> (counter &lt; stepLimit) {
 
@@ -947,7 +947,7 @@ D.stepLimit = <span class="hljs-function"><span class="hljs-keyword">function</s
 
         coord.setFromArray([<span class="hljs-number">0</span>, currentRadius]).rotate(currentAngle);
 
-        path += <span class="hljs-string">`<span class="hljs-subst">${coord[<span class="hljs-number">0</span>]}</span>,<span class="hljs-subst">${coord[<span class="hljs-number">1</span>]}</span> `</span>;
+        path += <span class="hljs-string">`<span class="hljs-subst">${coord[<span class="hljs-number">0</span>].toFixed(<span class="hljs-number">1</span>)}</span>,<span class="hljs-subst">${coord[<span class="hljs-number">1</span>].toFixed(<span class="hljs-number">1</span>)}</span> `</span>;
     }
     releaseCoordinate(coord);
     <span class="hljs-keyword">return</span> path;

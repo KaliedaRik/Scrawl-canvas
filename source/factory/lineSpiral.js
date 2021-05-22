@@ -92,7 +92,7 @@ let defaultAttributes = {
     angleIncrement: 5,
     angleIncrementAdjust: 1,
 
-    stepLimit: 1000,
+    stepLimit: 100,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -230,7 +230,7 @@ P.makeLineSpiralPath = function () {
 
     coord.setFromArray([0, currentRadius]).rotate(currentAngle);
 
-    path += `${coord[0]},${coord[1]}l`;
+    path += `${coord[0].toFixed(1)},${coord[1].toFixed(1)}l`;
 
     while (counter < stepLimit) {
 
@@ -244,7 +244,7 @@ P.makeLineSpiralPath = function () {
 
         coord.setFromArray([0, currentRadius]).rotate(currentAngle);
 
-        path += `${coord[0]},${coord[1]} `;
+        path += `${coord[0].toFixed(1)},${coord[1].toFixed(1)} `;
     }
     releaseCoordinate(coord);
     return path;

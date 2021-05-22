@@ -16,9 +16,6 @@ let mySpiral = scrawl.makeLineSpiral({
     start: ['center', 'center'],
     handle: ['center', 'center'],
 
-    // KNOWN ISSUE: Setting the angle to 0 or multiples of 360 causes the spiral to truncate itself
-    startAngle: 0.1,
-
     method: 'draw',
 });
 
@@ -81,10 +78,10 @@ scrawl.observeAndUpdate({
 document.querySelector('#startRadius').value = 0;
 document.querySelector('#radiusIncrement').value = 0.1;
 document.querySelector('#radiusIncrementAdjust').value = 1;
-document.querySelector('#startAngle').value = 0.1;
+document.querySelector('#startAngle').value = 0;
 document.querySelector('#angleIncrement').value = 5;
 document.querySelector('#angleIncrementAdjust').value = 1;
-document.querySelector('#stepLimit').value = 1000;
+document.querySelector('#stepLimit').value = 100;
 
 
 // #### Development and testing
