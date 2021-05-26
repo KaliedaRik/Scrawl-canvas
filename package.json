@@ -5,7 +5,7 @@
   "main": "min/scrawl.js",
   "scripts": {
     "build": "rollup -c && docco ./demo/**/*.js && docco ./demo/*.js && docco ./source/**/*.js && docco ./source/scrawl.js",
-    "dev": "light-server --serve . --open"
+    "dev": "light-server -p 8000 --serve . --open"
   },
   "keywords": [
     "html5",
