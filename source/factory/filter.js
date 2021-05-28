@@ -158,7 +158,7 @@ let defaultAttributes = {
     // The __method__ attribute is a String which, in legacy filters, determines the actions which that filter will take on the image. An entity, Group or Cell can include more than one filter object in its `filters` Array. 
     // + Filter factory invocations which include the method attribute in their argument object do not need to include an actions attribute; the factory will build the action objects for us.
     // + When using the method attribute, other attributes can be included alongside it. The filter factory will automatically transpose these attributes to the action object.
-    // + The following Strings are valid methods: 'areaAlpha', 'binary', 'blend', 'blue', 'blur', 'brightness', 'channelLevels', 'channels', 'channelstep', 'channelsToAlpha', 'chroma', 'chromakey', 'clampChannels', 'compose', 'cyan', 'displace', 'edgeDetect',  'emboss', 'flood', 'gray', 'grayscale', 'green', 'image', 'invert', 'magenta', 'matrix', 'matrix5', 'notblue', 'notgreen', 'notred', 'offset', 'offsetChannels', 'pixelate', 'red', 'saturation', 'sepia', 'sharpen', 'threshold', 'tint', 'userDefined', 'yellow',
+    // + The following Strings are valid methods: `'areaAlpha', 'binary', 'blend', 'blue', 'blur', 'brightness', 'channelLevels', 'channels', 'channelstep', 'channelsToAlpha', 'chroma', 'chromakey', 'clampChannels', 'compose', 'cyan', 'displace', 'edgeDetect',  'emboss', 'flood', 'gray', 'grayscale', 'green', 'image', 'invert', 'magenta', 'matrix', 'matrix5', 'notblue', 'notgreen', 'notred', 'offset', 'offsetChannels', 'pixelate', 'red', 'saturation', 'sepia', 'sharpen', 'threshold', 'tint', 'userDefined', 'yellow'`
     method: '',
 
     // ##### How filters process data
@@ -204,6 +204,7 @@ let defaultAttributes = {
 // + [Filters-017](../../demo/filters-017.html) - Parameters for: displace filter
 // + [Filters-018](../../demo/filters-018.html) - Parameters for: emboss filter
 // + [Filters-020](../../demo/filters-020.html) - Parameters for: clampChannels filter
+// + [Filters-021](../../demo/filters-021.html) - Parameters for: corrode filter
     alpha: 255,
     angle: 0,
     areaAlphaLevels: null,
@@ -410,7 +411,7 @@ P.setDelta = function (items = Ωempty) {
 //     name: 'my-bright-filter',
 //     method: 'brightness',
 //     level: 0.5,
-
+//
 // // __Threshhold__ filter
 // }).clone({
 //     name: 'my-duotone-filter',
@@ -428,7 +429,7 @@ P.setDelta = function (items = Ωempty) {
 // `setActionsArray` - an object containing a large number of functions which will convert legacy factory function invocations (using __method__ strings) into modern Filter objects (using __actions__ arrays):
 const setActionsArray = {
 
-// __alphaToChannels__ (new in v8.4.0) - copies the alpha channel value over to the selected value or, alternatively, sets that channels value to zero, or leaves the channel's value unchanged. Setting the appropriate "includeChannel" flags will copy the alpha channel value to that channel; when that flag is false, setting the appropriate "excludeChannel" flag will set that channel's value to zero.
+// __alphaToChannels__ (new in v8.4.0) - copies the alpha channel value over to the selected value or, alternatively, sets that channels value to zero, or leaves the channel's value unchanged. Setting the appropriate `includeChannel` flags will copy the alpha channel value to that channel; when that flag is false, setting the appropriate `excludeChannel` flag will set that channel's value to zero.
     alphaToChannels: function (f) {
         f.actions = [{
             action: 'alpha-to-channels',
@@ -461,7 +462,7 @@ const setActionsArray = {
         }];
     },
 
-// __binary__ (new in v8.4.0) - set the channel to either 0 or 255, depending on whether the channel value is below or above a given level. Level values are set using the "red", "green", "blue" and "alpha" arguments. Setting these values to 0 disables the action for that channel
+// __binary__ (new in v8.4.0) - set the channel to either 0 or 255, depending on whether the channel value is below or above a given level. Level values are set using the `red`, `green`, `blue` and `alpha` arguments. Setting these values to 0 disables the action for that channel
     binary: function (f) {
         f.actions = [{
             action: 'binary',
@@ -475,7 +476,7 @@ const setActionsArray = {
         }];
     },
 
-// __blend__ (new in v8.4.0) - perform a blend operation on two images; available blend options include: 'color-burn', 'color-dodge', 'darken', 'difference', 'exclusion', 'hard-light', 'lighten', 'lighter', 'multiply', 'overlay', 'screen', 'soft-light', 'color', 'hue', 'luminosity', and 'saturation' - see [W3C Compositing and Blending recommendations](https://www.w3.org/TR/compositing-1/#blending)
+// __blend__ (new in v8.4.0) - perform a blend operation on two images; available blend options include: `'color-burn', 'color-dodge', 'darken', 'difference', 'exclusion', 'hard-light', 'lighten', 'lighter', 'multiply', 'overlay', 'screen', 'soft-light', 'color', 'hue', 'luminosity', and 'saturation'` - see [W3C Compositing and Blending recommendations](https://www.w3.org/TR/compositing-1/#blending)
     blend: function (f) {
         f.actions = [{
             action: 'blend',
@@ -536,7 +537,7 @@ const setActionsArray = {
         }];
     },
 
-// __channelLevels__ (new in v8.4.0) - produces a posterize effect. Takes in four arguments - "red", "green", "blue" and "alpha" - each of which is an Array of zero or more integer Numbers (between 0 and 255). The filter works by looking at each pixel's channel value and determines which of the corresponding Array's Number values it is closest to; it then sets the channel value to that Number value
+// __channelLevels__ (new in v8.4.0) - produces a posterize effect. Takes in four arguments - `red`, `green`, `blue` and `alpha` - each of which is an Array of zero or more integer Numbers (between 0 and 255). The filter works by looking at each pixel's channel value and determines which of the corresponding Array's Number values it is closest to; it then sets the channel value to that Number value
     channelLevels: function (f) {
         f.actions = [{
             action: 'lock-channels-to-levels',
@@ -550,7 +551,7 @@ const setActionsArray = {
         }];
     },
 
-// __thiskey__ - 
+// __channels__ - adjust the value of each channel by a specified multiplier
     channels: function (f) {
         f.actions = [{
             action: 'modulate-channels',
@@ -564,7 +565,7 @@ const setActionsArray = {
         }];
     },
 
-// __thiskey__ - 
+// __channelstep__ - restrict the number of color values that each channel can set by imposing regular bands on each channel
     channelstep: function (f) {
         f.actions = [{
             action: 'step-channels',
@@ -577,7 +578,7 @@ const setActionsArray = {
         }];
     },
 
-// __thiskey__ (new in v8.4.0) - 
+// __channelsToAlpha__ (new in v8.4.0) - calculates an average value from each pixel's included channels and applies that value to the alpha channel.
     channelsToAlpha: function (f) {
         f.actions = [{
             action: 'channels-to-alpha',
@@ -590,7 +591,7 @@ const setActionsArray = {
         }];
     },
 
-// __thiskey__ - 
+// __chroma__ - using an array of `range` arrays, determine whether a pixel's values lie entirely within a range's values and, if true, sets that pixel's alpha channel value to zero. Each range array comprises six Numbers representing `[minimum-red, minimum-green, minimum-blue, maximum-red, maximum-green, maximum-blue]` values.
     chroma: function (f) {
         f.actions = [{
             action: 'chroma',
@@ -601,7 +602,7 @@ const setActionsArray = {
         }];
     },
 
-// __thiskey__ (new in v8.4.0) - 
+// __chromakey__ (new in v8.4.0) - determine the alpha channel value for each pixel depending on the closeness to that pixel's color channel values to a reference color supplied in the `red`, `green` and `blue` arguments. The sensitivity of the effect can be manipulated using the `transparentAt` and `opaqueAt` values, both of which lie in the range 0-1.
     chromakey: function (f) {
         f.actions = [{
             action: 'colors-to-alpha',
@@ -616,7 +617,7 @@ const setActionsArray = {
         }];
     },
 
-// __thiskey__ (new in v8.4.0) - 
+// __clampChannels__ (new in v8.4.0) - clamp each color channel to a range set by `lowColor` and `highColor` values
     clampChannels: function (f) {
         f.actions = [{
             action: 'clamp-channels',
@@ -632,7 +633,7 @@ const setActionsArray = {
         }];
     },
 
-// __compose__ (new in v8.4.0) - perform a composite operation on two images; available compose options include: 'destination-only', 'destination-over', 'destination-in', 'destination-out', 'destination-atop', 'source-only', 'source-over' (default), 'source-in', 'source-out', 'source-atop', 'clear', and 'xor' - see [W3C Compositing and Blending recommendations](https://www.w3.org/TR/compositing-1/#porterduffcompositingoperators)
+// __compose__ (new in v8.4.0) - perform a composite operation on two images; available `compose` options include: `'destination-only', 'destination-over', 'destination-in', 'destination-out', 'destination-atop', 'source-only', 'source-over' (default), 'source-in', 'source-out', 'source-atop', 'clear', and 'xor'` - see [W3C Compositing and Blending recommendations](https://www.w3.org/TR/compositing-1/#porterduffcompositingoperators)
     compose: function (f) {
         f.actions = [{
             action: 'compose',
@@ -646,7 +647,7 @@ const setActionsArray = {
         }];
     },
 
-// __corrode__ (new in v8.5.2) - Performs a special form of matrix operation on each pixel's color and alpha channels, calculating the new value using neighbouring pixel values
+// __corrode__ (new in v8.5.2) - performs a special form of matrix operation on each pixel's color and alpha channels, calculating the new value using neighbouring pixel values. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the `width` and `height` arguments, while setting the home pixel's position within the matrix can be set using the `offsetX` and `offsetY` arguments. The operation will set the pixel's channel value to match either the lowest, highest, mean or median values as dictated by its neighbours - this value is set in the `level` attribute. Channels can be selected by setting the `includeRed`, `includeGreen`, `includeBlue` (all false by default) and `includeAlpha` (default: true) flags.
     corrode: function (f) {
         f.actions = [{
             action: 'corrode',

@@ -682,7 +682,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 <ul>
 <li>Filter factory invocations which include the method attribute in their argument object do not need to include an actions attribute; the factory will build the action objects for us.</li>
 <li>When using the method attribute, other attributes can be included alongside it. The filter factory will automatically transpose these attributes to the action object.</li>
-<li>The following Strings are valid methods: ‘areaAlpha’, ‘binary’, ‘blend’, ‘blue’, ‘blur’, ‘brightness’, ‘channelLevels’, ‘channels’, ‘channelstep’, ‘channelsToAlpha’, ‘chroma’, ‘chromakey’, ‘clampChannels’, ‘compose’, ‘cyan’, ‘displace’, ‘edgeDetect’,  ‘emboss’, ‘flood’, ‘gray’, ‘grayscale’, ‘green’, ‘image’, ‘invert’, ‘magenta’, ‘matrix’, ‘matrix5’, ‘notblue’, ‘notgreen’, ‘notred’, ‘offset’, ‘offsetChannels’, ‘pixelate’, ‘red’, ‘saturation’, ‘sepia’, ‘sharpen’, ‘threshold’, ‘tint’, ‘userDefined’, ‘yellow’,</li>
+<li>The following Strings are valid methods: <code>&#39;areaAlpha&#39;, &#39;binary&#39;, &#39;blend&#39;, &#39;blue&#39;, &#39;blur&#39;, &#39;brightness&#39;, &#39;channelLevels&#39;, &#39;channels&#39;, &#39;channelstep&#39;, &#39;channelsToAlpha&#39;, &#39;chroma&#39;, &#39;chromakey&#39;, &#39;clampChannels&#39;, &#39;compose&#39;, &#39;cyan&#39;, &#39;displace&#39;, &#39;edgeDetect&#39;,  &#39;emboss&#39;, &#39;flood&#39;, &#39;gray&#39;, &#39;grayscale&#39;, &#39;green&#39;, &#39;image&#39;, &#39;invert&#39;, &#39;magenta&#39;, &#39;matrix&#39;, &#39;matrix5&#39;, &#39;notblue&#39;, &#39;notgreen&#39;, &#39;notred&#39;, &#39;offset&#39;, &#39;offsetChannels&#39;, &#39;pixelate&#39;, &#39;red&#39;, &#39;saturation&#39;, &#39;sepia&#39;, &#39;sharpen&#39;, &#39;threshold&#39;, &#39;tint&#39;, &#39;userDefined&#39;, &#39;yellow&#39;</code></li>
 </ul>
 
             </div>
@@ -769,6 +769,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 <li><a href="../../demo/filters-017.html">Filters-017</a> - Parameters for: displace filter</li>
 <li><a href="../../demo/filters-018.html">Filters-018</a> - Parameters for: emboss filter</li>
 <li><a href="../../demo/filters-020.html">Filters-020</a> - Parameters for: clampChannels filter</li>
+<li><a href="../../demo/filters-021.html">Filters-021</a> - Parameters for: corrode filter</li>
 </ul>
 
             </div>
@@ -1075,6 +1076,19 @@ scrawl.makeFilter({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-bright-filter&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;brightness&#x27;</span>,
     <span class="hljs-attr">level</span>: <span class="hljs-number">0.5</span>,
+
+<span class="hljs-comment">// __Threshhold__ filter</span>
+}).clone({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-duotone-filter&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;threshold&#x27;</span>,
+    <span class="hljs-attr">level</span>: <span class="hljs-number">127</span>,
+    <span class="hljs-attr">lowRed</span>: <span class="hljs-number">100</span>,
+    <span class="hljs-attr">lowGreen</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">lowBlue</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">highRed</span>: <span class="hljs-number">220</span>,
+    <span class="hljs-attr">highGreen</span>: <span class="hljs-number">60</span>,
+    <span class="hljs-attr">highBlue</span>: <span class="hljs-number">60</span>,
+});
 </code></pre>
 
             </div>
@@ -1088,22 +1102,11 @@ scrawl.makeFilter({
               <div class="sswrap ">
                 <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
-              <p>// <strong>Threshhold</strong> filter
-}).clone({
-    name: ‘my-duotone-filter’,
-    method: ‘threshold’,
-    level: 127,
-    lowRed: 100,
-    lowGreen: 0,
-    lowBlue: 0,
-    highRed: 220,
-    highGreen: 60,
-    highBlue: 60,
-});</p>
-<pre><code>
-</code></pre>
+              <p><code>setActionsArray</code> - an object containing a large number of functions which will convert legacy factory function invocations (using <strong>method</strong> strings) into modern Filter objects (using <strong>actions</strong> arrays):</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> setActionsArray = {</pre></div></div>
             
         </li>
         
@@ -1114,22 +1117,7 @@ scrawl.makeFilter({
               <div class="sswrap ">
                 <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
-              <p><code>setActionsArray</code> - an object containing a large number of functions which will convert legacy factory function invocations (using <strong>method</strong> strings) into modern Filter objects (using <strong>actions</strong> arrays):</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> setActionsArray = {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
-              </div>
-              <p><strong>alphaToChannels</strong> (new in v8.4.0) - copies the alpha channel value over to the selected value or, alternatively, sets that channels value to zero, or leaves the channel’s value unchanged. Setting the appropriate “includeChannel” flags will copy the alpha channel value to that channel; when that flag is false, setting the appropriate “excludeChannel” flag will set that channel’s value to zero.</p>
+              <p><strong>alphaToChannels</strong> (new in v8.4.0) - copies the alpha channel value over to the selected value or, alternatively, sets that channels value to zero, or leaves the channel’s value unchanged. Setting the appropriate <code>includeChannel</code> flags will copy the alpha channel value to that channel; when that flag is false, setting the appropriate <code>excludeChannel</code> flag will set that channel’s value to zero.</p>
 
             </div>
             
@@ -1151,11 +1139,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-25">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p><strong>areaAlpha</strong> (new in v8.4.0) - places a tile schema across the input, quarters each tile and then sets the alpha channels of the pixels in selected quarters of each tile to zero. Can be used to create horizontal or vertical bars, or chequerboard effects.</p>
 
@@ -1180,13 +1168,13 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-26">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
-              <p><strong>binary</strong> (new in v8.4.0) - set the channel to either 0 or 255, depending on whether the channel value is below or above a given level. Level values are set using the “red”, “green”, “blue” and “alpha” arguments. Setting these values to 0 disables the action for that channel</p>
+              <p><strong>binary</strong> (new in v8.4.0) - set the channel to either 0 or 255, depending on whether the channel value is below or above a given level. Level values are set using the <code>red</code>, <code>green</code>, <code>blue</code> and <code>alpha</code> arguments. Setting these values to 0 disables the action for that channel</p>
 
             </div>
             
@@ -1206,13 +1194,13 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-27">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
-              <p><strong>blend</strong> (new in v8.4.0) - perform a blend operation on two images; available blend options include: ‘color-burn’, ‘color-dodge’, ‘darken’, ‘difference’, ‘exclusion’, ‘hard-light’, ‘lighten’, ‘lighter’, ‘multiply’, ‘overlay’, ‘screen’, ‘soft-light’, ‘color’, ‘hue’, ‘luminosity’, and ‘saturation’ - see <a href="https://www.w3.org/TR/compositing-1/#blending">W3C Compositing and Blending recommendations</a></p>
+              <p><strong>blend</strong> (new in v8.4.0) - perform a blend operation on two images; available blend options include: <code>&#39;color-burn&#39;, &#39;color-dodge&#39;, &#39;darken&#39;, &#39;difference&#39;, &#39;exclusion&#39;, &#39;hard-light&#39;, &#39;lighten&#39;, &#39;lighter&#39;, &#39;multiply&#39;, &#39;overlay&#39;, &#39;screen&#39;, &#39;soft-light&#39;, &#39;color&#39;, &#39;hue&#39;, &#39;luminosity&#39;, and &#39;saturation&#39;</code> - see <a href="https://www.w3.org/TR/compositing-1/#blending">W3C Compositing and Blending recommendations</a></p>
 
             </div>
             
@@ -1232,11 +1220,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-28">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p><strong>blue</strong> - removes red and green channel color from the image</p>
 
@@ -1256,11 +1244,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-29">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p><strong>blur</strong> - blurs the image</p>
 
@@ -1288,11 +1276,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-30">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p><strong>brightness</strong> - adjusts the brightness of the image</p>
 
@@ -1315,13 +1303,13 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-31">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
-              <p><strong>channelLevels</strong> (new in v8.4.0) - produces a posterize effect. Takes in four arguments - “red”, “green”, “blue” and “alpha” - each of which is an Array of zero or more integer Numbers (between 0 and 255). The filter works by looking at each pixel’s channel value and determines which of the corresponding Array’s Number values it is closest to; it then sets the channel value to that Number value</p>
+              <p><strong>channelLevels</strong> (new in v8.4.0) - produces a posterize effect. Takes in four arguments - <code>red</code>, <code>green</code>, <code>blue</code> and <code>alpha</code> - each of which is an Array of zero or more integer Numbers (between 0 and 255). The filter works by looking at each pixel’s channel value and determines which of the corresponding Array’s Number values it is closest to; it then sets the channel value to that Number value</p>
 
             </div>
             
@@ -1341,13 +1329,13 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-32">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
-              <p><strong>thiskey</strong> - </p>
+              <p><strong>channels</strong> - adjust the value of each channel by a specified multiplier</p>
 
             </div>
             
@@ -1367,13 +1355,13 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-33">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
-              <p><strong>thiskey</strong> - </p>
+              <p><strong>channelstep</strong> - restrict the number of color values that each channel can set by imposing regular bands on each channel</p>
 
             </div>
             
@@ -1392,13 +1380,13 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-34">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
-              <p><strong>thiskey</strong> (new in v8.4.0) - </p>
+              <p><strong>channelsToAlpha</strong> (new in v8.4.0) - calculates an average value from each pixel’s included channels and applies that value to the alpha channel.</p>
 
             </div>
             
@@ -1417,13 +1405,13 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-35">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
-              <p><strong>thiskey</strong> - </p>
+              <p><strong>chroma</strong> - using an array of <code>range</code> arrays, determine whether a pixel’s values lie entirely within a range’s values and, if true, sets that pixel’s alpha channel value to zero. Each range array comprises six Numbers representing <code>[minimum-red, minimum-green, minimum-blue, maximum-red, maximum-green, maximum-blue]</code> values.</p>
 
             </div>
             
@@ -1440,13 +1428,13 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-36">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
-              <p><strong>thiskey</strong> (new in v8.4.0) - </p>
+              <p><strong>chromakey</strong> (new in v8.4.0) - determine the alpha channel value for each pixel depending on the closeness to that pixel’s color channel values to a reference color supplied in the <code>red</code>, <code>green</code> and <code>blue</code> arguments. The sensitivity of the effect can be manipulated using the <code>transparentAt</code> and <code>opaqueAt</code> values, both of which lie in the range 0-1.</p>
 
             </div>
             
@@ -1467,13 +1455,13 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-37">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
-              <p><strong>thiskey</strong> (new in v8.4.0) - </p>
+              <p><strong>clampChannels</strong> (new in v8.4.0) - clamp each color channel to a range set by <code>lowColor</code> and <code>highColor</code> values</p>
 
             </div>
             
@@ -1495,13 +1483,13 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-38">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
-              <p><strong>compose</strong> (new in v8.4.0) - perform a composite operation on two images; available compose options include: ‘destination-only’, ‘destination-over’, ‘destination-in’, ‘destination-out’, ‘destination-atop’, ‘source-only’, ‘source-over’ (default), ‘source-in’, ‘source-out’, ‘source-atop’, ‘clear’, and ‘xor’ - see <a href="https://www.w3.org/TR/compositing-1/#porterduffcompositingoperators">W3C Compositing and Blending recommendations</a></p>
+              <p><strong>compose</strong> (new in v8.4.0) - perform a composite operation on two images; available <code>compose</code> options include: <code>&#39;destination-only&#39;, &#39;destination-over&#39;, &#39;destination-in&#39;, &#39;destination-out&#39;, &#39;destination-atop&#39;, &#39;source-only&#39;, &#39;source-over&#39; (default), &#39;source-in&#39;, &#39;source-out&#39;, &#39;source-atop&#39;, &#39;clear&#39;, and &#39;xor&#39;</code> - see <a href="https://www.w3.org/TR/compositing-1/#porterduffcompositingoperators">W3C Compositing and Blending recommendations</a></p>
 
             </div>
             
@@ -1521,13 +1509,13 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-39">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
-              <p><strong>corrode</strong> (new in v8.5.2) - Performs a special form of matrix operation on each pixel’s color and alpha channels, calculating the new value using neighbouring pixel values</p>
+              <p><strong>corrode</strong> (new in v8.5.2) - performs a special form of matrix operation on each pixel’s color and alpha channels, calculating the new value using neighbouring pixel values. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the <code>width</code> and <code>height</code> arguments, while setting the home pixel’s position within the matrix can be set using the <code>offsetX</code> and <code>offsetY</code> arguments. The operation will set the pixel’s channel value to match either the lowest, highest, mean or median values as dictated by its neighbours - this value is set in the <code>level</code> attribute. Channels can be selected by setting the <code>includeRed</code>, <code>includeGreen</code>, <code>includeBlue</code> (all false by default) and <code>includeAlpha</code> (default: true) flags.</p>
 
             </div>
             
@@ -1552,11 +1540,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-40">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p><strong>cyan</strong> - removes red channel color from the image, and averages the remaining channel colors</p>
 
@@ -1577,11 +1565,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-41">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p><strong>displace</strong> (new in v8.4.0) - moves pixels around the image, based on the color channel values supplied by a displacement map image</p>
 
@@ -1607,11 +1595,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-42">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p><strong>edgeDetect</strong> (new in v8.4.0) - applies a preset 3x3 edge-detect matrix to the image</p>
 
@@ -1638,11 +1626,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-43">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p><strong>emboss</strong> (new in v8.4.0) - outputs a black-gray-red emboss effect</p>
 
@@ -1706,11 +1694,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-44">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p><strong>flood</strong> (new in v8.4.0) - creates a uniform sheet of the required color, which can then be used by other filter actions</p>
 
@@ -1732,11 +1720,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-45">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p><strong>gray</strong> (new in v8.4.0) - averages the three color channel colors</p>
 
@@ -1757,11 +1745,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-46">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p><strong>grayscale</strong> - produces a more realistic black-and-white photograph effect</p>
 
@@ -1779,11 +1767,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-47">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p><strong>green</strong> - removes red and blue channel color from the image</p>
 
@@ -1803,11 +1791,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-48">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p><strong>image</strong> (new in v8.4.0) - load an image into the filter engine, where it can then be used by other filter actions - useful for effects such as watermarking an image</p>
 
@@ -1831,11 +1819,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-49">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p><strong>invert</strong> - inverts the colors in the image, producing an effect similar to a photograph negative</p>
 
@@ -1856,11 +1844,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-50">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p><strong>magenta</strong> - removes green channel color from the image, and averages the remaining channel colors</p>
 
@@ -1881,11 +1869,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-51">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p><strong>matrix</strong> - applies a 3x3 convolution matrix, kernel or mask operation to the image</p>
 
@@ -1912,11 +1900,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-52">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p><strong>matrix5</strong> - applies a 5x5 convolution matrix, kernel or mask operation to the image</p>
 
@@ -1943,11 +1931,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-53">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p><strong>notblue</strong> - zeroes the blue channel values (not the same effect as the yellow filter)</p>
 
@@ -1967,11 +1955,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-54">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p><strong>notgreen</strong> - zeroes the green channel values (not the same effect as the magenta filter)</p>
 
@@ -1991,11 +1979,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-55">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p><strong>notred</strong> - zeroes the red channel values (not the same effect as the cyan filter)</p>
 
@@ -2015,11 +2003,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-56">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p><strong>offset</strong> (new in v8.4.0) - moves the image in its entirety by the given offset</p>
 
@@ -2045,11 +2033,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-57">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p><strong>offsetChannels</strong> (new in v8.4.0) - moves each channel  by an offset set for that channel. Can create a crude stereoscopic output</p>
 
@@ -2075,11 +2063,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-58">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p><strong>pixelate</strong> - averages the colors in a block to produce a series of obscuring tiles</p>
 
@@ -2105,11 +2093,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-59">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p><strong>red</strong> - removes blue and green channel color from the image</p>
 
@@ -2129,11 +2117,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-60">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p><strong>saturation</strong> - alters the saturation level of the image</p>
 
@@ -2157,11 +2145,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-61">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <p><strong>sepia</strong> - recalculates the values of each color channel (a tint action) to create a more ‘antique’ version of the image</p>
 
@@ -2188,11 +2176,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-62">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p><strong>sharpen</strong> (new in v8.4.0) - applies a preset 3x3 sharpen matrix to the image</p>
 
@@ -2219,11 +2207,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-63">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p><strong>threshold</strong> - creates a duotone effect - grayscales the input then, for each pixel, checks the color channel values against a “level” argument: pixels with channel values above the level value are assigned to the ‘high’ color; otherwise they are updated to the ‘low’ color.</p>
 
@@ -2258,11 +2246,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-64">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p><strong>tint</strong> - has similarities to the SVG &lt;feColorMatrix&gt; filter element, but excludes the alpha channel from calculations. Rather than set a matrix, we set nine arguments to determine how the value of each color channel in a pixel will affect both itself and its fellow color channels.</p>
 
@@ -2289,11 +2277,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-65">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <p><strong>userDefined</strong> - DEPRECATED - this filter method no longer has any effect, returning an unchanged image</p>
 
@@ -2311,11 +2299,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-66">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <p><strong>yellow</strong> - removes blue channel color from the image, and averages the remaining channel colors</p>
 
@@ -2337,11 +2325,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-67">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 <p>No additional prototype functions defined</p>
@@ -2351,11 +2339,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-68">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
@@ -2372,11 +2360,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-69">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 
