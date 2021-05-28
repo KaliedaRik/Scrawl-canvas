@@ -461,7 +461,7 @@
               </div>
               <h1 id="quaternion-factory">Quaternion factory</h1>
 <p>Scrawl-canvas uses quaternion objects for some of its calculations - in particular for calculating DOM element 3D rotation values. These objects are not stored in the library; rather, they are kept in a <strong>quaternion pool</strong> and pulled from it when required.</p>
-<p>TODO: there’s errors in the math here! See in particular Demo <a href="../../demo/component-002.html">Component-002</a> to experiment:</p>
+<p>TODO: there’s errors in the math here! See in particular Demo <a href="../../demo/snippets-003.html">Snippets-003</a> to experiment:</p>
 <ul>
 <li>Pitch always appears to rotate with reference to the element. Yaw and roll, however, seem to rotate with reference to the stack frame, or the element - or possibly a combination of both - dependant on the values of the other euler attributes.</li>
 <li><code>quaternionMultiply</code> is almost certainly wrong - caused by trying to convert code meant for a y-axis-upwards frame to code that works in a y-axis-downwards frame</li>

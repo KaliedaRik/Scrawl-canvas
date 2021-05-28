@@ -152,10 +152,10 @@
 <p>Snippet definitions are functions that take a DOM element and manipulate it to supply it with additional functionality, including the ability to add Scrawl-canvas displays and animations to the DOM element</p>
 <p>Example of how a Javascript module can import and use a snippet definition:</p>
 <pre><code><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../relative/or/absolute/path/to/scrawl.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { myScrawlComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./relative/or/absolute/path/to/snippet/definition/file.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { mySnippet } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./relative/or/absolute/path/to/snippet/definition/file.js&#x27;</span>;
 
 <span class="hljs-keyword">let</span> myElements = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">&#x27;.some-class&#x27;</span>);
-myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> myScrawlComponent(el));
+myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> mySnippet(el));
 </code></pre>
 <p>Snippet definition functions can be written in any way the developer sees fit - a developer could write a snippet definition so that it:</p>
 <ul>
@@ -177,7 +177,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 <p>For the sake of fellow developers, each snippet definition function should come with some documentation to explain:</p>
 <ul>
 <li>the purpose and usage of the snippet that the definition function will deliver/render</li>
-<li>any effects (beyond those explained above) that componentization will have on the DOM element and any child elements it may contain</li>
+<li>any effects (beyond those explained above) that snippetization will have on the DOM element and any child elements it may contain</li>
 <li>what input the function requires, and in what format and argument order</li>
 <li>what - if anything - the definition function will return</li>
 </ul>
@@ -276,7 +276,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <p>(<strong>required</strong>) The DOM element we are about to componentize</p>
+              <p>(<strong>required</strong>) The DOM element we are about to snippetize</p>
 
             </div>
             

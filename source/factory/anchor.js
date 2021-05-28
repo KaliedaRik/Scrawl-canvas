@@ -16,7 +16,7 @@
 
 // #### Demos:
 // + [Canvas-009](../../demo/canvas-009.html) - Pattern styles; Entity web link anchors; Dynamic accessibility
-// + [Component-003](../../demo/component-003.html) - Save and load Scrawl-canvas entity using text packets
+// + [Packets-001](../../demo/packets-001.html) - Save and load Scrawl-canvas entity using text packets
 
 
 // #### Imports

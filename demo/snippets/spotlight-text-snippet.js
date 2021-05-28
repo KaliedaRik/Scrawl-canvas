@@ -13,10 +13,10 @@
 // Example of how a Javascript module can import and use a snippet definition:
 // ```
 // import scrawl from '../relative/or/absolute/path/to/scrawl.js';
-// import { myScrawlComponent } from './relative/or/absolute/path/to/snippet/definition/file.js';
+// import { mySnippet } from './relative/or/absolute/path/to/snippet/definition/file.js';
 //
 // let myElements = document.querySelectorAll('.some-class');
-// myElements.forEach(el => myScrawlComponent(el));
+// myElements.forEach(el => mySnippet(el));
 // ```
 //
 // Snippet definition functions can be written in any way the developer sees fit - a developer could write a snippet definition so that it:
@@ -36,7 +36,7 @@
 //
 // For the sake of fellow developers, each snippet definition function should come with some documentation to explain:
 // + the purpose and usage of the snippet that the definition function will deliver/render
-// + any effects (beyond those explained above) that componentization will have on the DOM element and any child elements it may contain
+// + any effects (beyond those explained above) that snippetization will have on the DOM element and any child elements it may contain
 // + what input the function requires, and in what format and argument order
 // + what - if anything - the definition function will return
 //
@@ -87,7 +87,7 @@ export default function (el, args = {}) {
     // Apply the snippet to the DOM element
     let snippet = scrawl.makeSnippet({
 
-        // (__required__) The DOM element we are about to componentize
+        // (__required__) The DOM element we are about to snippetize
         domElement: el,
 
         // (__optional__) An array of animation hook functions with the following attributes

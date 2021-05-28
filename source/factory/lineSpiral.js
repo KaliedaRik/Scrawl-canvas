@@ -35,7 +35,7 @@
 // + [Canvas-030](../../demo/canvas-030.html) - Polyline entity functionality
 // + [Canvas-038](../../demo/canvas-038.html) - Responsive Shape-based entitys
 // + [DOM-015](../../demo/dom-015.html) - Use stacked DOM artefact corners as pivot points
-// + [Component-004](../../demo/component-004.html) - Scrawl-canvas packets - save and load a range of different entitys
+// + [Packets-002](../../demo/packets-002.html) - Scrawl-canvas packets - save and load a range of different entitys
 
 
 // #### Imports

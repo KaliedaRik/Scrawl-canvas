@@ -29,7 +29,7 @@
 // + [DOM-004](../../demo/dom-004.html) - Limitless rockets (clone and destroy elements, tweens, tickers)
 // + [DOM-006](../../demo/dom-006.html) - Tween actions on a DOM element; tracking tween and ticker activity (analytics)
 // + [DOM-015](../../demo/dom-015.html) - Use stacked DOM artefact corners as pivot points
-// + [Component-002](../../demo/component-002.html) - Scrawl-canvas stack element components
+// + [Snippets-002](../../demo/snippets-002.html) - Scrawl-canvas stack element snippets
 
 
 // #### Imports
@@ -176,12 +176,12 @@ P.cleanDimensionsAdditionalActions = function () {
 };
 
 
-// #### Component-related functions
+// #### Snippet-related functions
 
 // `addCanvas` - adds a new &lt;canvas> element to Scrawl-canvas stack immediately before this element, and sets up the canvas to mimic the element (meaning it will mimic changes to the element's dimensions, positioning, scale and 3D rotational values)
 // + The function can accept a Javascript object argument containing key:value pairs which will be used to set up the new canvas's attributes after it has been created.
 // + To make the canvas look as if it is in front of the element, set the element's opacity CSS attribute to 0
-// + This function is used when adding a Scrawl-canvas component to a stacked element.
+// + This function is used when adding a Scrawl-canvas snippet to a stacked element.
 P.addCanvas = function (items = Ωempty) {
 
     if (!this.canvas) {

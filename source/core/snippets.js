@@ -1,6 +1,6 @@
 // # Scrawl-canvas snippets
 
-// ___To be aware - this functionality is HIGHLY EXPERIMENTAL; it will be subject to short-notice breaking changes as we amend and inprove the concept of Scrawl-canvas components___
+// ___To be aware - this functionality is HIGHLY EXPERIMENTAL; it will be subject to short-notice breaking changes as we amend and inprove the concept of Scrawl-canvas snippets___
 
 // TODO - documentation
 
@@ -39,7 +39,6 @@ const makeStackSnippet = function (domElement, canvasSpecs, animationHooks, obse
 
     if (!myElement) return false;
 
-    // canvasSpecs.isComponent = true;
     canvasSpecs.baseMatchesCanvasDimensions = true;
 
     let myCanvas = myElement.addCanvas(canvasSpecs);
@@ -80,7 +79,6 @@ const makeUnstackedSnippet = function (domElement, canvasSpecs, animationHooks, 
     if (id && unstackedelement[id]) myElement = unstackedelement[id];
     else myElement = makeUnstackedElement(domElement);
 
-    // canvasSpecs.isComponent = true;
     canvasSpecs.baseMatchesCanvasDimensions = true;
 
     let myCanvas = (includeCanvas) ? myElement.addCanvas(canvasSpecs) : false;

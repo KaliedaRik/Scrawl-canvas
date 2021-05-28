@@ -13,7 +13,7 @@
 // + [Canvas-001](../../demo/canvas-001.html) - Block and Wheel entitys (make, clone, method); drag and drop block and wheel entitys
 // + [Canvas-005](../../demo/canvas-005.html) - Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween
 // + [Canvas-007](../../demo/canvas-007.html) - Apply filters at the entity, group and cell level
-// + [Component-004](../../demo/component-004.html) - Scrawl-canvas packets; save and load a range of different entitys
+// + [Packets-002](../../demo/packets-002.html) - Scrawl-canvas packets; save and load a range of different entitys
 
 
 // #### Imports

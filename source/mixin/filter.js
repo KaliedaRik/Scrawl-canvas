@@ -4,7 +4,7 @@
 
 // #### Demos:
 // + [Canvas-007](../../demo/canvas-007.html) - Apply filters at the entity, group and cell level
-// + [Component-004](../../demo/component-004.html) - Scrawl-canvas packets; save and load a range of different entitys
+// + [Packets-002](../../demo/packets-002.html) - Scrawl-canvas packets; save and load a range of different entitys
 
 
 // #### Imports

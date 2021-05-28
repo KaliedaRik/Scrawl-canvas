@@ -472,7 +472,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
-              <p><em><strong>To be aware - this functionality is HIGHLY EXPERIMENTAL; it will be subject to short-notice breaking changes as we amend and inprove the concept of Scrawl-canvas components</strong></em></p>
+              <p><em><strong>To be aware - this functionality is HIGHLY EXPERIMENTAL; it will be subject to short-notice breaking changes as we amend and inprove the concept of Scrawl-canvas snippets</strong></em></p>
 
             </div>
             
@@ -554,22 +554,9 @@
 
     <span class="hljs-keyword">let</span> myElement = artefact[domElement.id];
 
-    <span class="hljs-keyword">if</span> (!myElement) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
-              </div>
-              <p>canvasSpecs.isComponent = true;</p>
+    <span class="hljs-keyword">if</span> (!myElement) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    canvasSpecs.baseMatchesCanvasDimensions = <span class="hljs-literal">true</span>;
+    canvasSpecs.baseMatchesCanvasDimensions = <span class="hljs-literal">true</span>;
 
     <span class="hljs-keyword">let</span> myCanvas = myElement.addCanvas(canvasSpecs);
     myElement.elementComputedStyles = <span class="hljs-built_in">window</span>.getComputedStyle(domElement);
@@ -599,11 +586,11 @@
         </li>
         
         
-        <li id="section-8">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>TODO - documentation</p>
 
@@ -619,22 +606,9 @@
         id = domElement.id;
 
     <span class="hljs-keyword">if</span> (id &amp;&amp; unstackedelement[id]) myElement = unstackedelement[id];
-    <span class="hljs-keyword">else</span> myElement = makeUnstackedElement(domElement);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
-              </div>
-              <p>canvasSpecs.isComponent = true;</p>
+    <span class="hljs-keyword">else</span> myElement = makeUnstackedElement(domElement);
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    canvasSpecs.baseMatchesCanvasDimensions = <span class="hljs-literal">true</span>;
+    canvasSpecs.baseMatchesCanvasDimensions = <span class="hljs-literal">true</span>;
 
     <span class="hljs-keyword">let</span> myCanvas = (includeCanvas) ? myElement.addCanvas(canvasSpecs) : <span class="hljs-literal">false</span>;
 
@@ -667,11 +641,11 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>TODO - documentation</p>
 
