@@ -9,20 +9,33 @@
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
 
-  <!-- Examples all show the files being loaded in the head, not at the end of the body -->
-  <!-- Load TensorFlow.js - example uses v1.2, not v2 -->
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.2"></script>
-  <!-- Load BodyPix -->
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/body-pix@2.0"></script>
+  <style>
+    .controls {
+      grid-template-columns: 1fr 2fr 1fr 2fr;
+    }
+  </style>
 </head>
 
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Tensorflow test 002</h1>
   <h2>Tensorflow tfjs-models / body-pix experiment - model image output</h2>
-  <h3>Click on the canvas to see output; click again to halt.</h3>
+
+  <div class="controls">
+    <div class="yellow label">Background filter</div>
+    <div class="yellow">
+      <select class="controlItem" id="backgroundFilter">
+        <option value="">None</option>
+        <option value="grayscale">Grayscale</option>
+        <option value="sepia">Sepia</option>
+        <option value="invert">Invert</option>
+        <option value="red">Red</option>
+        <option value="blur">Blur</option>
+        <option value="pixelate">Pixelate</option>
+      </select>
+    </div>
+  </div>
 
   <canvas id="mycanvas" width="600" height="400"></canvas>
-  <canvas id="outputcanvas" width="600" height="400"></canvas>
 
   <p id="reportmessage"></p>
 
@@ -37,6 +50,8 @@
     <p><a href="../docs/demo/tensorflow-002.html">Annotated code</a></p>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/body-pix@2.0"></script>
   <script src="tensorflow-002.js" type="module"></script>
 
 </body>

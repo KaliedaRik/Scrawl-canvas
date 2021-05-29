@@ -265,6 +265,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/rawAsset.html">
+                  ./source/factory/rawAsset.js
+                </a>
+              
+                
                 <a class="source" href="../factory/rectangle.html">
                   ./source/factory/rectangle.js
                 </a>
@@ -579,6 +584,7 @@
 <li>Asset wrappers will detect, and handle actions required, if/when a browser decides to download a new image file, to update the &lt;img&gt; element with a more detailed image, for instance when the browser viewport changes its dimensions, or a device is rotated from portrait to landscape viewing.</li>
 <li>The web Canvas API claims that <strong>SVG</strong> images can be used as legitimate image sources for the canvas element. To make this happen, the SVG file needs to be set as the src attribute of an &lt;img&gt; element, and the resulting image will be entirely static, and rasterized! </li>
 <li>For this reason, we don’t recommend trying to use SVG files for canvas image sources; instead, the SVG can be included in a Scrawl-canvas display by adding it - as an &lt;svg&gt; element - to a Scrawl-canvas stack (see Demo DOM-003 for an example of this approach).</li>
+<li>&lt;img&gt; elements using an animated GIF as their src are not supported.</li>
 <li><em><strong>Be aware that this attribute cannot be directly or indirectly set.</strong></em> Scrawl-canvas will update it as part of its asset loading and wrapper creation functionality.</li>
 </ul>
 

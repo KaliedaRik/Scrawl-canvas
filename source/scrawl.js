@@ -238,6 +238,11 @@ import {
 
 
 import { 
+    makeRawAsset,
+} from './factory/rawAsset.js';
+
+
+import { 
     makeRectangle,
 } from './factory/rectangle.js';
 
@@ -496,6 +501,10 @@ export default {
 
     // factory/radialGradient.js
     makeRadialGradient,
+
+
+    // factory/rawAsset.js
+    makeRawAsset,
 
 
     // factory/rectangle.js

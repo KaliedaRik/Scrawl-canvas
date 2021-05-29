@@ -19,7 +19,6 @@
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Tensorflow test 001</h1>
   <h2>Tensorflow tfjs-models / body-pix experiment - follow my eyes</h2>
-  <h3>Click on the canvas to start tracking eyes; click again to halt.</h3>
 
   <canvas id="mycanvas" width="600" height="400"></canvas>
 
@@ -31,7 +30,12 @@
       <li>Check that the media stream loads (if browser/device supports it)</li>
       <li>Check that we can load and use both Tensorflow (from a CDN) and its body-pix model</li>
       <li>Apply the model to a live camera feed</li>
-      <li>Update Wheel entity positioning so they cover the eyes of the first identified body</li>
+      <li>Create a RawAsset object to handle the model's output. In particular</li>
+      <ul>
+        <li>Parse the output's metadata to identify the left and right eyes</li>
+        <li>Calculate the position of each eye, averaged over several iterations</li>
+        <li>Update the RawAsset's canvas with two transluscent circles covering over the eyes</li>
+      </ul>
     </ul>
     <p><a href="../docs/demo/tensorflow-001.html">Annotated code</a></p>
   </div>

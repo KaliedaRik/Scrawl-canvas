@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Line factory</title>
+  <title>RawAsset factory</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
@@ -464,20 +464,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
-              <h1 id="line-factory">Line factory</h1>
-<p>A factory for generating straight linbe shape-based entitys</p>
-<p>Path-defined entitys represent a diverse range of shapes rendered onto a DOM &lt;canvas&gt; element using the Canvas API’s <a href="https://developer.mozilla.org/en-US/docs/Web/API/Path2D">Path2D interface</a>. They use the <a href="../mixin/shapeBasic.html">shapeBasic</a> and <a href="../mixin/shapePathCalculation.html">shapePathCalculation</a> (some also use <a href="../mixin/shapeCurve.html">shapeCurve</a>) mixins to define much of their functionality.</p>
-<p>All path-defined entitys can be positioned, cloned, filtered etc:</p>
-<ul>
-<li>Positioning functionality for the entity is supplied by the <strong>position</strong> mixin, while rendering functionality comes from the <strong>entity</strong> mixin. </li>
-<li>Dimensions, however, have little meaning for path-defined entitys - their width and height are determined by their SVG path data Strings; use <code>scale</code> instead.</li>
-<li>Path-defined entitys can use CSS color Strings for their fillStyle and strokeStyle values, alongside <strong>Gradient</strong>, <strong>RadialGradient</strong>, <strong>Color</strong> and <strong>Pattern</strong> objects. </li>
-<li>They will also accept <strong>Filter</strong> objects.</li>
-<li>They can use <strong>Anchor</strong> objects for user navigation. </li>
-<li>They can be rendered to the canvas by including them in a <strong>Cell</strong> object’s <strong>Group</strong>. </li>
-<li>They can be <strong>animated</strong> directly, or using delta animation, or act as the target for <strong>Tween</strong> animations.</li>
-<li>Path-defined entitys can be cloned, and killed.</li>
-</ul>
+              <h1 id="rawasset-factory">RawAsset factory</h1>
 
             </div>
             
@@ -490,16 +477,10 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
-              <h4 id="using-path-defined-entitys-as-scrawl-canvas-paths">Using path-defined entitys as Scrawl-canvas paths</h4>
-<p>A path is a track - straight, or curved, or as complex as required - placed across a container which artefacts can use as a source of their positioning data. We can animate an artifact to move along the path:</p>
+              <h4 id="demos">Demos:</h4>
 <ul>
-<li>To enable a path-defined entity to be used as a path by other artefacts, set its <code>useAsPath</code> flag to <code>true</code>.</li>
-<li>The artefact can then set its <code>path</code> attribute to the path-defined entity’s name-String (or the entity itself), and set its <code>lockTo</code> Array values to <code>&quot;path&quot;</code>.</li>
-<li>We position the artefact by setting its <code>pathPosition</code> attribute to a float Number value between <code>0.0 - 1.0</code>, with <code>0</code> being the start of the path, and <code>1</code> being its end.</li>
-<li>Path-defined entitys can use other path-defined entitys as a path.</li>
-<li>Phrase entitys can use a path to position their text block; they can also use a path to position each letter individually along the path.</li>
-<li>Artefacts (and letters) can be rotated so that they match the rotation at that point along the path - <em><strong>tangential rotation</strong></em> by setting their <code>addPathRotation</code> flag to <code>true</code>.</li>
-<li>Animate an artefact along the path by either using the artefact’s <code>delta</code> object, or triggering a Tween to perform the movement.</li>
+<li><a href="../../demo/tensorflow-001.html">TensorFlow-001</a> - Tensorflow tfjs-models / body-pix experiment - follow my eyes</li>
+<li><a href="../../demo/tensorflow-002.html">TensorFlow-002</a> - Tensorflow tfjs-models / body-pix experiment - model image output</li>
 </ul>
 
             </div>
@@ -513,21 +494,16 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <h4 id="demos">Demos:</h4>
-<ul>
-<li><a href="../../demo/canvas-011.html">Canvas-011</a> - Shape entity (make, clone, method); drag and drop shape entitys</li>
-<li><a href="../../demo/canvas-012.html">Canvas-012</a> - Shape entity position; shape entity as a path for other artefacts to follow</li>
-<li><a href="../../demo/canvas-013.html">Canvas-013</a> - Path-defined entitys: oval, rectangle, line, quadratic, bezier, tetragon, polygon, star, spiral</li>
-<li><a href="../../demo/canvas-014.html">Canvas-014</a> - Line, quadratic and bezier entitys - control lock alternatives</li>
-<li><a href="../../demo/canvas-018.html">Canvas-018</a> - Phrase entity - text along a path</li>
-<li><a href="../../demo/canvas-024.html">Canvas-024</a> - Loom entity functionality</li>
-<li><a href="../../demo/canvas-030.html">Canvas-030</a> - Polyline entity functionality</li>
-<li><a href="../../demo/canvas-038.html">Canvas-038</a> - Responsive Shape-based entitys</li>
-<li><a href="../../demo/dom-015.html">DOM-015</a> - Use stacked DOM artefact corners as pivot points</li>
-<li><a href="../../demo/packets-002.html">Packets-002</a> - Scrawl-canvas packets - save and load a range of different entitys</li>
-</ul>
+              <h4 id="imports">Imports</h4>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+<span class="hljs-keyword">import</span> { mergeOver, Ωempty, λ<span class="hljs-literal">null</span>, λ<span class="hljs-built_in">this</span>, xt, isa_fn } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+
+
+<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
+<span class="hljs-keyword">import</span> assetMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/asset.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -538,16 +514,48 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <h4 id="imports">Imports</h4>
+              <h4 id="rawasset-constructor">RawAsset constructor</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
-<span class="hljs-keyword">import</span> { Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> RawAsset = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
 
-<span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
-<span class="hljs-keyword">import</span> shapeMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shapeBasic.js&#x27;</span>;
-<span class="hljs-keyword">import</span> curveMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/shapeCurve.js&#x27;</span>;</pre></div></div>
+    <span class="hljs-built_in">this</span>.makeName(items.name);
+    <span class="hljs-built_in">this</span>.register();
+
+    <span class="hljs-built_in">this</span>.subscribers = [];
+
+    <span class="hljs-built_in">this</span>.set(<span class="hljs-built_in">this</span>.defs);
+
+    <span class="hljs-built_in">this</span>.updateSource = λ<span class="hljs-literal">null</span>;
+
+    <span class="hljs-keyword">let</span> keytypes = items.keytypes || {};
+
+    <span class="hljs-keyword">if</span> (items.userAttributes) {
+
+        items.userAttributes.forEach(<span class="hljs-function"><span class="hljs-params">att</span> =&gt;</span> {
+
+            <span class="hljs-built_in">this</span>.addAttribute(att);
+
+            <span class="hljs-keyword">if</span> (att.type) keytypes[att.key] = att.type;
+        });
+    }
+
+    <span class="hljs-built_in">this</span>.initializeAttributes(keytypes);
+
+    <span class="hljs-built_in">this</span>.set(items);
+
+    <span class="hljs-keyword">let</span> cell = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;canvas&#x27;</span>);
+    cell.width = <span class="hljs-number">0</span>;
+    cell.height = <span class="hljs-number">0</span>;
+
+    <span class="hljs-built_in">this</span>.element = cell;
+    <span class="hljs-built_in">this</span>.engine = cell.getContext(<span class="hljs-string">&#x27;2d&#x27;</span>, {<span class="hljs-attr">willReadFrequently</span>: <span class="hljs-literal">true</span>});
+
+    <span class="hljs-keyword">if</span> (items.subscribe) <span class="hljs-built_in">this</span>.subscribers.push(items.subscribe);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+};</pre></div></div>
             
         </li>
         
@@ -558,17 +566,16 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <h4 id="line-constructor">Line constructor</h4>
+              <h4 id="rawasset-prototype">RawAsset prototype</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Line = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = RawAsset.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
 
-    <span class="hljs-built_in">this</span>.curveInit(items);
-    <span class="hljs-built_in">this</span>.shapeInit(items);
-
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
-};</pre></div></div>
+P.type = <span class="hljs-string">&#x27;RawAsset&#x27;</span>;
+P.lib = <span class="hljs-string">&#x27;asset&#x27;</span>;
+P.isArtefact = <span class="hljs-literal">false</span>;
+P.isAsset = <span class="hljs-literal">true</span>;</pre></div></div>
             
         </li>
         
@@ -579,15 +586,12 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <h4 id="line-prototype">Line prototype</h4>
+              <h4 id="mixins">Mixins</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Line.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">&#x27;Line&#x27;</span>;
-P.lib = <span class="hljs-string">&#x27;entity&#x27;</span>;
-P.isArtefact = <span class="hljs-literal">true</span>;
-P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P = baseMix(P);
+P = assetMix(P);</pre></div></div>
             
         </li>
         
@@ -598,18 +602,16 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <h4 id="mixins">Mixins</h4>
+              <h4 id="rawasset-attributes">RawAsset attributes</h4>
 <ul>
-<li><a href="../mixin/base.html">base</a></li>
-<li><a href="../mixin/shapeBasic.html">shapeBasic</a></li>
-<li><a href="../mixin/shapeCurve.html">shapeCurve</a></li>
+<li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
+<li>Attributes defined in the <a href="../mixin/asset.html">asset mixin</a>: <strong>source, subscribers</strong>.</li>
+<li>The <strong>element</strong> and <strong>engine</strong> attributes are excluded from the defaults object</li>
 </ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = baseMix(P);
-P = shapeMix(P);
-P = curveMix(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {</pre></div></div>
             
         </li>
         
@@ -620,23 +622,15 @@ P = curveMix(P);</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <h4 id="line-attributes">Line attributes</h4>
+              <p><strong>keytypes</strong> - a Javascript object made up of <code>key:String</code> attributes. Used as part of the factory when generating assets which use user-defined attributes that need to be Scrawl-canvas Quaternions, Vectors (like gravity) or Coordinates.</p>
 <ul>
-<li>Attributes defined in the <a href="../mixin/base.html">base mixin</a>: <strong>name</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/position.html">position mixin</a>: <strong>group, visibility, order, start, <em>startX</em>, <em>startY</em>, handle, <em>handleX</em>, <em>handleY</em>, offset, <em>offsetX</em>, <em>offsetY</em>, dimensions, <em>width</em>, <em>height</em>, pivoted, mimicked, lockTo, <em>lockXTo</em>, <em>lockYTo</em>, scale, roll, noUserInteraction, noPositionDependencies, noCanvasEngineUpdates, noFilters, noPathUpdates, purge, bringToFrontOnDrag</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/delta.html">delta mixin</a>: <strong>delta, noDeltaUpdates</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/pivot.html">pivot mixin</a>: <strong>pivot, pivotCorner, addPivotHandle, addPivotOffset, addPivotRotation</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/mimic.html">mimic mixin</a>: <strong>mimic, useMimicDimensions, useMimicScale, useMimicStart, useMimicHandle, useMimicOffset, useMimicRotation, useMimicFlip, addOwnDimensionsToMimic, addOwnScaleToMimic, addOwnStartToMimic, addOwnHandleToMimic, addOwnOffsetToMimic, addOwnRotationToMimic</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/path.html">path mixin</a>: <strong>path, pathPosition, addPathHandle, addPathOffset, addPathRotation, constantPathSpeed</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/entity.html">entity mixin</a>: <strong>method, pathObject, winding, flipReverse, flipUpend, scaleOutline, lockFillStyleToEntity, lockStrokeStyleToEntity, onEnter, onLeave, onDown, onUp, <em>fillStyle, strokeStyle, globalAlpha, globalCompositeOperation, lineWidth, lineCap, lineJoin, lineDash, lineDashOffset, miterLimit, shadowOffsetX, shadowOffsetY, shadowBlur, shadowColor, filter</em></strong>.</li>
-<li>Attributes defined in the <a href="../mixin/anchor.html">anchor mixin</a>: <strong>anchor</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/filter.html">filter mixin</a>: <strong>filters, isStencil</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/shapeBasic.html">shapeBasic mixin</a>: <strong>species, useAsPath, precision, pathDefinition, showBoundingBox, boundingBoxColor, minimumBoundingBoxDimensions, constantPathSpeed</strong>.</li>
-<li>Attributes defined in the <a href="../mixin/shapeCurve.html">shapeCurve mixin</a>: <strong>end, endPivot, endPivotCorner, addEndPivotHandle, addEndPivotOffset, endPath, endPathPosition, addEndPathHandle, addEndPathOffset, endLockTo, useStartAsControlPoint</strong>.</li>
+<li>the <code>key</code> should be the attribute’s name</li>
+<li>the <code>value</code> should be a String - either <code>&#39;Quaternion&#39;</code>, <code>&#39;Vector&#39;</code> or <code>&#39;Coordinate&#39;</code>.</li>
 </ul>
-<p>No additional attributes required</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    keytypes: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -647,10 +641,11 @@ P = curveMix(P);</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <h4 id="packet-management">Packet management</h4>
-<p>No additional packet functionality required</p>
+              <p><strong>data</strong> - can be anything which needs to be processed and then applied to the canvas to create a source image for Picture entitys, Pattern styles, or filters.</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    data: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -661,10 +656,16 @@ P = curveMix(P);</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <h4 id="clone-management">Clone management</h4>
-<p>No additional clone functionality required</p>
+              <p><strong>updateSource</strong> - a user-defined function which will be run every time a subscriber invokes checkSource when the dirtyData flag is set to true</p>
+<ul>
+<li>At a minimum, the function will need to set the canvas element’s dimensions (<strong>width</strong> and <strong>height</strong>, both Numbers) and make an effort to draw something onto the canvas element </li>
+</ul>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    updateSource: <span class="hljs-literal">null</span>,
+};
+P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -675,10 +676,18 @@ P = curveMix(P);</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <h4 id="kill-management">Kill management</h4>
-<p>No additional kill functionality required</p>
+              <h4 id="packet-management">Packet management</h4>
+<p>Assets do not take part in the packet or clone systems; they can, however, be used for importing and actioning packets as they retain those base functions</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>P.saveAsPacket = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+
+    <span class="hljs-keyword">return</span> [<span class="hljs-built_in">this</span>.name, <span class="hljs-built_in">this</span>.type, <span class="hljs-built_in">this</span>.lib, {}];
+};
+P.stringifyFunction = λ<span class="hljs-literal">null</span>;
+P.processPacketOut = λ<span class="hljs-literal">null</span>;
+P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
@@ -689,10 +698,11 @@ P = curveMix(P);</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
-<p>No additional getter/setter functionality required</p>
+              <h4 id="clone-management">Clone management</h4>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>P.clone = λ<span class="hljs-built_in">this</span>;</pre></div></div>
             
         </li>
         
@@ -703,7 +713,8 @@ P = curveMix(P);</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
-              <h4 id="prototype-functions">Prototype functions</h4>
+              <h4 id="kill-management">Kill management</h4>
+<p>No additional kill functionality required</p>
 
             </div>
             
@@ -716,20 +727,13 @@ P = curveMix(P);</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
-              <p><code>cleanSpecies</code> - internal helper function - called by <code>prepareStamp</code></p>
+              <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.cleanSpecies = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-built_in">this</span>.dirtySpecies = <span class="hljs-literal">false</span>;
-
-    <span class="hljs-keyword">let</span> p = <span class="hljs-string">&#x27;M0,0&#x27;</span>;
-
-    p = <span class="hljs-built_in">this</span>.makeLinePath();
-    
-    <span class="hljs-built_in">this</span>.pathDefinition = p;
-};</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.getters,
+    S = P.setters,
+    D = P.deltaSetters;</pre></div></div>
             
         </li>
         
@@ -740,19 +744,30 @@ P = curveMix(P);</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
-              <p><code>makeLinePath</code> - internal helper function - called by <code>cleanSpecies</code></p>
+              <p><strong>source, engine</strong></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.makeLinePath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-    
-    <span class="hljs-keyword">let</span> [startX, startY] = <span class="hljs-built_in">this</span>.currentStampPosition;
-    <span class="hljs-keyword">let</span> [endX, endY] = <span class="hljs-built_in">this</span>.currentEnd;
+            <div class="content"><div class='highlight'><pre>S.source = λ<span class="hljs-literal">null</span>;
+S.element = λ<span class="hljs-literal">null</span>;
+S.engine = λ<span class="hljs-literal">null</span>;
 
-    <span class="hljs-keyword">let</span> x = (endX - startX).toFixed(<span class="hljs-number">2</span>),
-        y = (endY - startY).toFixed(<span class="hljs-number">2</span>);
+S.data = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
 
-    <span class="hljs-keyword">return</span> <span class="hljs-string">`m0,0l<span class="hljs-subst">${x}</span>,<span class="hljs-subst">${y}</span>`</span>;
+    <span class="hljs-keyword">if</span> (item) {
+
+        <span class="hljs-built_in">this</span>.data = item;
+        <span class="hljs-built_in">this</span>.dirtyData = <span class="hljs-literal">true</span>;
+    }
+};
+
+S.updateSource = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (item &amp;&amp; isa_fn(item)) {
+
+        <span class="hljs-built_in">this</span>.updateSource = item;
+        <span class="hljs-built_in">this</span>.dirtyData = <span class="hljs-literal">true</span>;
+    }
 };</pre></div></div>
             
         </li>
@@ -764,42 +779,9 @@ P = curveMix(P);</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
-              <p><code>cleanDimensions</code> - internal helper function called by <code>prepareStamp</code> </p>
-<ul>
-<li>Dimensional data has no meaning in the context of Shape entitys (beyond positioning handle Coordinates): width and height are emergent properties that cannot be set on the entity.</li>
-</ul>
+              <h4 id="prototype-functions">Prototype functions</h4>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>P.cleanDimensions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-built_in">this</span>.dirtyDimensions = <span class="hljs-literal">false</span>;
-    <span class="hljs-built_in">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.dirtyOffset = <span class="hljs-literal">true</span>;
-
-    <span class="hljs-built_in">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
-};
-
-
-P.preparePinsForStamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">const</span> dirtyPins = <span class="hljs-built_in">this</span>.dirtyPins,
-        ePivot = <span class="hljs-built_in">this</span>.endPivot,
-        ePath = <span class="hljs-built_in">this</span>.endPath;
-
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = dirtyPins.length, name; i &lt; iz; i++) {
-
-        name = dirtyPins[i];
-
-        <span class="hljs-keyword">if</span> ((ePivot &amp;&amp; ePivot.name == name) || (ePath &amp;&amp; ePath.name == name)) {
-
-            <span class="hljs-built_in">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.endLockTo.includes(<span class="hljs-string">&#x27;path&#x27;</span>)) <span class="hljs-built_in">this</span>.currentEndPathData = <span class="hljs-literal">false</span>;
-        }
-    };
-    dirtyPins.length = <span class="hljs-number">0</span>;
-};</pre></div></div>
             
         </li>
         
@@ -810,9 +792,20 @@ P.preparePinsForStamp = <span class="hljs-function"><span class="hljs-keyword">f
               <div class="sswrap ">
                 <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
-              <h4 id="factories">Factories</h4>
+              <p><code>checkSource</code></p>
+<ul>
+<li>Gets invoked by subscribers (who have a handle to the asset instance object) as part of the display cycle.</li>
+</ul>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>P.checkSource = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">width, height</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.source) <span class="hljs-built_in">this</span>.source = <span class="hljs-built_in">this</span>.element;
+
+    <span class="hljs-keyword">let</span> source = <span class="hljs-built_in">this</span>.source;
+
+    <span class="hljs-keyword">if</span> (source) {</pre></div></div>
             
         </li>
         
@@ -823,42 +816,33 @@ P.preparePinsForStamp = <span class="hljs-function"><span class="hljs-keyword">f
               <div class="sswrap ">
                 <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
-              <h5 id="makeline">makeLine</h5>
-<p>Accepts argument with attributes:</p>
-<ul>
-<li><strong>start</strong> (<em><strong>startX</strong></em>, <em><strong>startY</strong></em>) Coordinate, or <strong>pivot</strong>/<strong>mimic</strong>/<strong>path</strong> reference artefact (required)</li>
-<li><strong>end</strong> (<em><strong>endX</strong></em>, <em><strong>endY</strong></em>) Coordinate, or <strong>endPivot</strong>/<strong>endPath</strong> reference artefact (required) </li>
-<li>If using reference artefacts, may also need to set the <strong>lockTo</strong> (<em><strong>lockXTo</strong></em>, <em><strong>lockYTo</strong></em>) and <strong>endLockTo</strong> lock attributes</li>
-<li>additional reference-linked attributes for the <code>end</code> coordinate: <strong>endPivotCorner</strong>, <strong>addEndPivotHandle</strong>, <strong>addEndPivotOffset</strong>, <strong>endPathPosition</strong>, <strong>addEndPathHandle</strong>, <strong>addEndPathOffset</strong></li>
-</ul>
-<pre><code>scrawl.makeLine({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-line&#x27;</span>,
-
-    <span class="hljs-attr">startX</span>: <span class="hljs-number">20</span>,
-    <span class="hljs-attr">startY</span>: <span class="hljs-number">300</span>,
-
-    <span class="hljs-attr">endX</span>: <span class="hljs-number">580</span>,
-    <span class="hljs-attr">endY</span>: <span class="hljs-number">275</span>,
-
-    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">3</span>,
-    <span class="hljs-attr">lineCap</span>: <span class="hljs-string">&#x27;round&#x27;</span>,
-
-    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;darkgoldenrod&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
-});
-</code></pre>
+              <p>console.log(this.name, ‘checkSource’, width, height, this.dirtyData, source.width, source.height);</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeLine = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre>
+        <span class="hljs-keyword">let</span> notify = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    items.species = <span class="hljs-string">&#x27;line&#x27;</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Line(items);
-};
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyData) {
 
-<span class="hljs-title">constructors</span>.<span class="hljs-title">Line</span> = <span class="hljs-title">Line</span>;</pre></div></div>
+            <span class="hljs-built_in">this</span>.dirtyData = <span class="hljs-literal">false</span>;
+            <span class="hljs-built_in">this</span>.updateSource(<span class="hljs-built_in">this</span>);
+            notify = <span class="hljs-literal">true</span>;
+        }
+
+        <span class="hljs-built_in">this</span>.sourceLoaded = <span class="hljs-literal">true</span>;
+
+        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.sourceNaturalWidth || <span class="hljs-built_in">this</span>.sourceNaturalHeight || <span class="hljs-built_in">this</span>.sourceNaturalWidth !== width || <span class="hljs-built_in">this</span>.sourceNaturalHeight !== height) {
+
+            <span class="hljs-built_in">this</span>.sourceNaturalWidth = source.width;
+            <span class="hljs-built_in">this</span>.sourceNaturalHeight = source.height;
+            notify = <span class="hljs-literal">true</span>;
+        }
+
+        <span class="hljs-keyword">if</span> (notify &amp;&amp; <span class="hljs-built_in">this</span>.sourceNaturalWidth &amp;&amp; <span class="hljs-built_in">this</span>.sourceNaturalHeight) <span class="hljs-built_in">this</span>.notifySubscribers();
+    }
+    <span class="hljs-keyword">else</span> <span class="hljs-built_in">this</span>.sourceLoaded = <span class="hljs-literal">false</span>;
+};</pre></div></div>
             
         </li>
         
@@ -869,12 +853,132 @@ P.preparePinsForStamp = <span class="hljs-function"><span class="hljs-keyword">f
               <div class="sswrap ">
                 <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
+              <p><code>subscribeAction</code> - Overrides mixin/asset.js function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.subscribeAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">sub = {}</span>) </span>{
+
+    <span class="hljs-built_in">this</span>.subscribers.push(sub);
+    sub.asset = <span class="hljs-built_in">this</span>;
+    sub.source = <span class="hljs-built_in">this</span>.element;
+    <span class="hljs-built_in">this</span>.notifySubscriber(sub)
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
+              </div>
+              <p><code>addAttribute</code>, <code>removeAttribute</code> - we can use these functions to add and remove other attributes to the RawAsset object.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.addAttribute = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+
+    <span class="hljs-keyword">let</span> {key, defaultValue, setter, deltaSetter, getter} = items;
+
+    <span class="hljs-keyword">if</span> (key &amp;&amp; key.substring) {
+
+        <span class="hljs-built_in">this</span>.defs[key] = xt(defaultValue) ? defaultValue : <span class="hljs-literal">null</span>;
+        <span class="hljs-built_in">this</span>[key] = xt(defaultValue) ? defaultValue : <span class="hljs-literal">null</span>;
+
+        <span class="hljs-keyword">if</span> (isa_fn(setter)) S[key] = setter;
+        <span class="hljs-keyword">if</span> (isa_fn(deltaSetter)) D[key] = deltaSetter;
+        <span class="hljs-keyword">if</span> (isa_fn(getter)) G[key] = getter;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+};
+P.removeAttribute = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">key</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (key &amp;&amp; key.substring) {
+
+        <span class="hljs-keyword">delete</span> <span class="hljs-built_in">this</span>.defs[key];
+        <span class="hljs-keyword">delete</span> <span class="hljs-built_in">this</span>[key];
+        <span class="hljs-keyword">delete</span> G[key];
+        <span class="hljs-keyword">delete</span> S[key];
+        <span class="hljs-keyword">delete</span> D[key];
+    }
+
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
+              </div>
+              <p><code>initializeAttributes</code> - internal function called by the constructor.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.initializeAttributes = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">types</span>) </span>{
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> [key, value] <span class="hljs-keyword">of</span> <span class="hljs-built_in">Object</span>.entries(types)) {
+
+        <span class="hljs-keyword">switch</span> (value) {
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;Quaternion&#x27;</span> :
+                <span class="hljs-built_in">this</span>[key] = makeQuaternion();
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;Vector&#x27;</span> :
+                <span class="hljs-built_in">this</span>[key] = makeVector();
+                <span class="hljs-keyword">break</span>;
+
+            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;Coordinate&#x27;</span> :
+                <span class="hljs-built_in">this</span>[key] = makeCoordinate();
+                <span class="hljs-keyword">break</span>;
+        }
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
+              </div>
+              <h4 id="factory">Factory</h4>
+<pre><code>
+</code></pre>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeRawAsset = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+
+    <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> RawAsset(items);
+};
+
+<span class="hljs-title">constructors</span>.<span class="hljs-title">RawAsset</span> = <span class="hljs-title">RawAsset</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-23">&#x00a7;</a>
+              </div>
               <h4 id="exports">Exports</h4>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
-    makeLine,
+    makeRawAsset,
 };</pre></div></div>
             
         </li>

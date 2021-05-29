@@ -180,7 +180,8 @@ P.initializeAttributes = function (types) {
                 this[key] = makeCoordinate();
                 break;
         }
-    }};
+    }
+};
 
 
 // #### Factory

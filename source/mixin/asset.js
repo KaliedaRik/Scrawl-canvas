@@ -44,6 +44,7 @@ export default function (P = Ωempty) {
 // + Asset wrappers will detect, and handle actions required, if/when a browser decides to download a new image file, to update the &lt;img> element with a more detailed image, for instance when the browser viewport changes its dimensions, or a device is rotated from portrait to landscape viewing.
 // + The web Canvas API claims that __SVG__ images can be used as legitimate image sources for the canvas element. To make this happen, the SVG file needs to be set as the src attribute of an &lt;img> element, and the resulting image will be entirely static, and rasterized! 
 // + For this reason, we don't recommend trying to use SVG files for canvas image sources; instead, the SVG can be included in a Scrawl-canvas display by adding it - as an &lt;svg> element - to a Scrawl-canvas stack (see Demo DOM-003 for an example of this approach).
+// + &lt;img> elements using an animated GIF as their src are not supported.
 // + ___Be aware that this attribute cannot be directly or indirectly set.___ Scrawl-canvas will update it as part of its asset loading and wrapper creation functionality.
         source: null,
 
