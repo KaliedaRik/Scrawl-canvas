@@ -1,5 +1,5 @@
 // # Demo Canvas 051 
-// Manipulate artefact delta animation values
+// Line Spirals
 
 // [Run code](../../demo/canvas-051.html)
 import scrawl from '../source/scrawl.js'
