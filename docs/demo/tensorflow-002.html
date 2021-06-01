@@ -734,10 +734,15 @@ scrawl.makeFilter({
 });
 
 scrawl.makeFilter({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;blur&#x27;</span>,
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;blur&#x27;</span>,
-    <span class="hljs-attr">radius</span>: <span class="hljs-number">8</span>,
-    <span class="hljs-attr">passes</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;background-blur&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;gaussianBlur&#x27;</span>,
+    <span class="hljs-attr">radius</span>: <span class="hljs-number">20</span>,
+});
+
+scrawl.makeFilter({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;body-blur&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;gaussianBlur&#x27;</span>,
+    <span class="hljs-attr">radius</span>: <span class="hljs-number">10</span>,
 });</pre></div></div>
             
         </li>
@@ -870,7 +875,7 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> video, myBackground;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> video, myBackground, myOutline;</pre></div></div>
             
         </li>
         
@@ -959,7 +964,7 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        scrawl.makePicture({
+            <div class="content"><div class='highlight'><pre>        myOutline = scrawl.makePicture({
 
             <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;outline&#x27;</span>,
             <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;tensorflow-model-interpreter&#x27;</span>,
@@ -971,8 +976,7 @@ scrawl.makeFilter({
             <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">&#x27;80%&#x27;</span>,
             <span class="hljs-attr">copyHeight</span>: <span class="hljs-string">&#x27;80%&#x27;</span>,
             <span class="hljs-attr">copyStartX</span>: <span class="hljs-string">&#x27;10%&#x27;</span>,
-            <span class="hljs-attr">copyStartY</span>: <span class="hljs-string">&#x27;10%&#x27;</span>,
-        });</pre></div></div>
+            <span class="hljs-attr">copyStartY</span>: <span class="hljs-string">&#x27;10%&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -982,6 +986,25 @@ scrawl.makeFilter({
               
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
+              <p>We blur here to make the outline merge into the background</p>
+<ul>
+<li>this does slow the demo down, but needs must.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            filters: [<span class="hljs-string">&#x27;body-blur&#x27;</span>],
+        });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Invoke the forever loop</p>
 
@@ -996,11 +1019,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1026,11 +1049,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1046,11 +1069,11 @@ scrawl.makeFilter({
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <h4 id="user-interaction">User interaction</h4>
 <p>Event listeners</p>
@@ -1062,26 +1085,23 @@ scrawl.makeFilter({
     e.preventDefault();
     e.returnValue = <span class="hljs-literal">false</span>;
 
-    myBackground.clearFilters();
+    <span class="hljs-keyword">if</span> (e &amp;&amp; e.target) {
 
-    <span class="hljs-keyword">if</span> (e &amp;&amp; e.target &amp;&amp; e.target.value) myBackground.addFilters(e.target.value);
+        <span class="hljs-keyword">const</span> id = e.target.id,
+            val = e.target.value;
 
-}, <span class="hljs-string">&#x27;#backgroundFilter&#x27;</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
-              </div>
-              <p>Set DOM form initial input values</p>
+        <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;backgroundFilter&#x27;</span> === id) {
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#backgroundFilter&#x27;</span>).value = <span class="hljs-string">&#x27;&#x27;</span>;</pre></div></div>
+            myBackground.clearFilters();
+            <span class="hljs-keyword">if</span> (val) myBackground.addFilters(val);
+        }
+        <span class="hljs-keyword">else</span> {
+
+            <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;1&#x27;</span> === val) myOutline.addFilters(<span class="hljs-string">&#x27;body-blur&#x27;</span>);
+            <span class="hljs-keyword">else</span> myOutline.clearFilters();
+        }
+    }
+}, <span class="hljs-string">&#x27;.controlItem&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1091,6 +1111,22 @@ scrawl.makeFilter({
               
               <div class="sswrap ">
                 <a class="ss" href="#section-18">&#x00a7;</a>
+              </div>
+              <p>Set DOM form initial input values</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#backgroundFilter&#x27;</span>).value = <span class="hljs-string">&#x27;&#x27;</span>;
+<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#outlineFilter&#x27;</span>).value = <span class="hljs-string">&#x27;1&#x27;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

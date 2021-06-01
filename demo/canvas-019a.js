@@ -42,9 +42,8 @@ const checkFunctions = [];
 // + We do it this way because the blur filter is computationally very expensive - capturing a blurred version of the image is a lot better for end user power consumption
 scrawl.makeFilter({
     name: 'blur',
-    method: 'blur',
+    method: 'gaussianBlur',
     radius: 20,
-    passes: 2,
 });
 
 // Iterate through our data array to create Scrawl-canvas objects

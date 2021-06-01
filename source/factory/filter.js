@@ -502,7 +502,8 @@ const setActionsArray = {
         }];
     },
 
-// __blur__ - blurs the image
+// DEPRECATED! __blur__ - blurs the image
+// + Use the gaussian blur filter instead. This is being retained only for backwards compatibility and will be removed in a future major release
     blur: function (f) {
         f.actions = [{
             action: 'blur',
@@ -519,6 +520,17 @@ const setActionsArray = {
             radius: (f.radius != null) ? f.radius : 1,
             passes: (f.passes != null) ? f.passes : 1,
             step: (f.step != null) ? f.step : 1,
+        }];
+    },
+
+// __gaussianBlur__ - from this GitHub repository: https://github.com/nodeca/glur/blob/master/index.js (code accessed 1 June 2021)
+    gaussianBlur: function (f) {
+        f.actions = [{
+            action: 'gaussian-blur',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            radius: (f.radius != null) ? f.radius : 1,
         }];
     },
 
@@ -751,11 +763,10 @@ const setActionsArray = {
         }
         if (f.smoothing) {
             actions.push({
-                action: 'blur',
+                action: 'gaussian-blur',
                 lineIn: 'emboss-work',
                 lineOut: 'emboss-work',
                 radius: f.smoothing,
-                passes: 2,
             });
         }
         actions.push({

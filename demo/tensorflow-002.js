@@ -34,20 +34,14 @@ scrawl.makeFilter({
 
 scrawl.makeFilter({
     name: 'background-blur',
-    method: 'blur',
-    radius: 8,
-    passes: 1,
+    method: 'gaussianBlur',
+    radius: 20,
 });
 
 scrawl.makeFilter({
     name: 'body-blur',
-    method: 'blur',
-    radius: 4,
-    passes: 1,
-    includeRed: false,
-    includeGreen: false,
-    includeBlue: false,
-    includeAlpha: true,
+    method: 'gaussianBlur',
+    radius: 10,
 });
 
 // #### TensorFlow functionality

@@ -296,6 +296,13 @@ scrawl.makeFilter({
     excludeTransparentPixels: true,
 });
 
+// __Gaussian Blur__ filter
+scrawl.makeFilter({
+    name: 'gaussianBlur',
+    method: 'gaussianBlur',
+    radius: 30,
+});
+
 // __AreaAlpha__ filter
 scrawl.makeFilter({
     name: 'areaAlpha',
@@ -346,15 +353,10 @@ scrawl.makeFilter({
     name: 'dropShadow',
     actions: [
         {
-            action: 'blur',
+            action: 'gaussian-blur',
             lineIn: 'source-alpha',
             lineOut: 'shadow',
             radius: 2, 
-            passes: 2, 
-            includeRed: false, 
-            includeGreen: false, 
-            includeBlue: false, 
-            includeAlpha: true, 
         },
         {
             action: 'compose',
@@ -370,15 +372,10 @@ scrawl.makeFilter({
     name: 'redBorder',
     actions: [
         {
-            action: 'blur',
+            action: 'gaussian-blur',
             lineIn: 'source-alpha',
             lineOut: 'shadow',
-            radius: 3,
-            passes: 2, 
-            includeRed: false, 
-            includeGreen: false, 
-            includeBlue: false, 
-            includeAlpha: true, 
+            radius: 2,
         },
         {
             action: 'binary',
