@@ -82,8 +82,7 @@ Alternatively, a zip package of the v8.5.3 files can be downloaded from this lin
         });
 
         // Render the canvas scene once
-        canvas.render()
-        .catch(err => {});
+        canvas.render();
 
     </script>
 
