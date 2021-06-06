@@ -707,10 +707,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.library.canvas.mycanvas;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
 
 
-canvas.set({
+canvas.<span class="hljs-title function_">set</span>({
 
     <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,</pre></div></div>
             
@@ -780,12 +780,12 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>}).setBase({
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">setBase</span>({
 
     <span class="hljs-attr">width</span>: <span class="hljs-number">640</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-number">360</span>
 
-}).setAsCurrentCanvas();</pre></div></div>
+}).<span class="hljs-title function_">setAsCurrentCanvas</span>();</pre></div></div>
             
         </li>
         
@@ -800,7 +800,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myvideo = scrawl.makePicture({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myvideo = scrawl.<span class="hljs-title function_">makePicture</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;test-video&#x27;</span>,
 
@@ -813,9 +813,9 @@ canvas.set({
     <span class="hljs-attr">copyHeight</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
 });
 
-<span class="hljs-keyword">let</span> initialVideoStart = scrawl.addListener(<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
+<span class="hljs-keyword">let</span> initialVideoStart = scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
 
-    myvideo.set({
+    myvideo.<span class="hljs-title function_">set</span>({
 
         <span class="hljs-attr">video_muted</span>: <span class="hljs-literal">true</span>,
         <span class="hljs-attr">video_loop</span>: <span class="hljs-literal">true</span>,
@@ -834,9 +834,9 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    initialVideoStart();
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">initialVideoStart</span>();
 
-}, canvas.domElement);</pre></div></div>
+}, canvas.<span class="hljs-property">domElement</span>);</pre></div></div>
             
         </li>
         
@@ -851,7 +851,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makePhrase({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makePhrase</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;test-button-play-pause&#x27;</span>,
     <span class="hljs-attr">order</span>: <span class="hljs-number">2</span>,
@@ -872,9 +872,9 @@ canvas.set({
 
     <span class="hljs-attr">underlineStyle</span>: <span class="hljs-string">&#x27;yellow&#x27;</span>,
 
-    <span class="hljs-attr">onEnter</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        canvas.set({
+        canvas.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">css</span>: {
                 <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;pointer&#x27;</span>,
             }
@@ -893,45 +893,45 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-built_in">this</span>.set({
-            <span class="hljs-attr">text</span>: <span class="hljs-string">`§UNDERLINE§<span class="hljs-subst">${<span class="hljs-built_in">this</span>.text}</span>`</span>,
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
+            <span class="hljs-attr">text</span>: <span class="hljs-string">`§UNDERLINE§<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.text}</span>`</span>,
         });
     },
 
-    <span class="hljs-attr">onLeave</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-attr">onLeave</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        canvas.set({
+        canvas.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">css</span>: {
                 <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;auto&#x27;</span>,
             }
         });
 
-        <span class="hljs-built_in">this</span>.set({
-            <span class="hljs-attr">text</span>: <span class="hljs-built_in">this</span>.text.replace(<span class="hljs-string">&#x27;§UNDERLINE§&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>),
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
+            <span class="hljs-attr">text</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">text</span>.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;§UNDERLINE§&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>),
         });
     },
 
-    <span class="hljs-attr">onUp</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-attr">onUp</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-keyword">if</span> (myvideo.get(<span class="hljs-string">&#x27;video_paused&#x27;</span>)) {
+        <span class="hljs-keyword">if</span> (myvideo.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;video_paused&#x27;</span>)) {
 
-            <span class="hljs-built_in">this</span>.set({
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;PAUSE&#x27;</span>,
             });
 
-            myvideo.videoPlay();
+            myvideo.<span class="hljs-title function_">videoPlay</span>();
         }
         <span class="hljs-keyword">else</span> {
 
-            <span class="hljs-built_in">this</span>.set({
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;PLAY&#x27;</span>,
             });
 
-            myvideo.videoPause();
+            myvideo.<span class="hljs-title function_">videoPause</span>();
         }
     },
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;test-button-listen-mute&#x27;</span>,
 
@@ -939,25 +939,25 @@ canvas.set({
 
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;25%&#x27;</span>,
 
-    <span class="hljs-attr">onUp</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-attr">onUp</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-keyword">if</span> (myvideo.get(<span class="hljs-string">&#x27;video_muted&#x27;</span>)) {
+        <span class="hljs-keyword">if</span> (myvideo.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;video_muted&#x27;</span>)) {
 
-            <span class="hljs-built_in">this</span>.set({
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;MUTE&#x27;</span>,
             });
 
-            myvideo.set({
+            myvideo.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">video_muted</span>: <span class="hljs-literal">false</span>,
             });
         }
         <span class="hljs-keyword">else</span> {
 
-            <span class="hljs-built_in">this</span>.set({
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;LISTEN&#x27;</span>,
             });
 
-            myvideo.set({
+            myvideo.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">video_muted</span>: <span class="hljs-literal">true</span>,
             });
         }
@@ -977,7 +977,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeFilter({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;swan-mask&#x27;</span>,
 
@@ -996,7 +996,7 @@ canvas.set({
     ],
 });
 
-scrawl.makePicture({
+scrawl.<span class="hljs-title function_">makePicture</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;test-swan-image&#x27;</span>,
 
@@ -1016,35 +1016,35 @@ scrawl.makePicture({
 
     <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0.01</span>,
 
-    <span class="hljs-attr">onEnter</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-built_in">this</span>.set({
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0.1</span>,
         });
 
-        canvas.set({
+        canvas.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">css</span>: {
                 <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;pointer&#x27;</span>,
             }
         });
     },
 
-    <span class="hljs-attr">onLeave</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-attr">onLeave</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-built_in">this</span>.set({
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0.01</span>,
         });
 
-        canvas.set({
+        canvas.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">css</span>: {
                 <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;auto&#x27;</span>,
             }
         });
     },
 
-    <span class="hljs-attr">onUp</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-attr">onUp</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-built_in">this</span>.clickAnchor();
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">clickAnchor</span>();
     },
 
     <span class="hljs-attr">anchor</span>: {
@@ -1072,20 +1072,20 @@ scrawl.makePicture({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myticker = scrawl.makeTicker({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myticker = scrawl.<span class="hljs-title function_">makeTicker</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;test-video-ticker&#x27;</span>,
     <span class="hljs-attr">duration</span>: <span class="hljs-string">&#x27;22.55s&#x27;</span>,
     <span class="hljs-attr">cycles</span>: <span class="hljs-number">0</span>,
 });
 
-<span class="hljs-keyword">let</span> myLocalTweenFactory = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name, ticker, target, data</span>) </span>{
+<span class="hljs-keyword">let</span> myLocalTweenFactory = <span class="hljs-keyword">function</span> (<span class="hljs-params">name, ticker, target, data</span>) {
 
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = data.length; i &lt; iz; i++) {
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = data.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
         <span class="hljs-keyword">let</span> [start, duration, x0, y0, x1, y1] = data[i];
 
-        scrawl.makeTween({
+        scrawl.<span class="hljs-title function_">makeTween</span>({
 
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>`</span>,
 
@@ -1125,7 +1125,7 @@ scrawl.makePicture({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> mygoose = scrawl.makeBlock({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> mygoose = scrawl.<span class="hljs-title function_">makeBlock</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;test-goose1-hitzone&#x27;</span>,
     <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
@@ -1141,35 +1141,35 @@ scrawl.makePicture({
 
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;none&#x27;</span>,
 
-    <span class="hljs-attr">onEnter</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        canvas.set({
+        canvas.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">css</span>: {
                 <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;pointer&#x27;</span>,
             }
         });
 
-        <span class="hljs-built_in">this</span>.set({
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
         });
     },
 
-    <span class="hljs-attr">onLeave</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-attr">onLeave</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        canvas.set({
+        canvas.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">css</span>: {
                 <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;auto&#x27;</span>,
             }
         });
 
-        <span class="hljs-built_in">this</span>.set({
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;none&#x27;</span>,
         });
     },
 
-    <span class="hljs-attr">onUp</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-attr">onUp</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-built_in">this</span>.clickAnchor();
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">clickAnchor</span>();
     },
 
     <span class="hljs-attr">anchor</span>: {
@@ -1182,13 +1182,13 @@ scrawl.makePicture({
     },
 });
 
-myLocalTweenFactory(<span class="hljs-string">&#x27;test-goose1-tween&#x27;</span>, <span class="hljs-string">&#x27;test-video-ticker&#x27;</span>, <span class="hljs-string">&#x27;test-goose1-hitzone&#x27;</span>, [
+<span class="hljs-title function_">myLocalTweenFactory</span>(<span class="hljs-string">&#x27;test-goose1-tween&#x27;</span>, <span class="hljs-string">&#x27;test-video-ticker&#x27;</span>, <span class="hljs-string">&#x27;test-goose1-hitzone&#x27;</span>, [
 
     [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;3s&#x27;</span>, <span class="hljs-string">&#x27;27%&#x27;</span>, <span class="hljs-string">&#x27;73%&#x27;</span>, <span class="hljs-string">&#x27;12%&#x27;</span>, <span class="hljs-string">&#x27;66%&#x27;</span>],
     [<span class="hljs-string">&#x27;3s&#x27;</span>, <span class="hljs-string">&#x27;3s&#x27;</span>, <span class="hljs-string">&#x27;12%&#x27;</span>, <span class="hljs-string">&#x27;66%&#x27;</span>, <span class="hljs-string">&#x27;-3%&#x27;</span>, <span class="hljs-string">&#x27;68%&#x27;</span>]
 ]);
 
-scrawl.makeAction({
+scrawl.<span class="hljs-title function_">makeAction</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;test-goose1-action-show&#x27;</span>,
 
@@ -1198,22 +1198,22 @@ scrawl.makeAction({
 
     <span class="hljs-attr">targets</span>: [<span class="hljs-string">&#x27;test-goose1-hitzone&#x27;</span>],
 
-    <span class="hljs-attr">action</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ 
+    <span class="hljs-attr">action</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { 
 
-        <span class="hljs-built_in">this</span>.targets[<span class="hljs-number">0</span>].set({
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span>[<span class="hljs-number">0</span>].<span class="hljs-title function_">set</span>({
 
             <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span>,
         });
     },
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;test-goose1-action-hide&#x27;</span>,
     <span class="hljs-attr">time</span>: <span class="hljs-string">&#x27;6s&#x27;</span>,
 
-    <span class="hljs-attr">action</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ 
+    <span class="hljs-attr">action</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { 
 
-        <span class="hljs-built_in">this</span>.targets[<span class="hljs-number">0</span>].set({
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">targets</span>[<span class="hljs-number">0</span>].<span class="hljs-title function_">set</span>({
 
             <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
         });
@@ -1233,22 +1233,22 @@ scrawl.makeAction({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>mygoose.clone({
+            <div class="content"><div class='highlight'><pre>mygoose.<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;test-goose2-hitzone&#x27;</span>,
 
     <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;22%&#x27;</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;16%&#x27;</span>,
 
-    <span class="hljs-attr">onUp</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-attr">onUp</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        mygoose.clickAnchor();
+        mygoose.<span class="hljs-title function_">clickAnchor</span>();
     },
 
     <span class="hljs-attr">anchor</span>: <span class="hljs-literal">null</span>,
 });
 
-myLocalTweenFactory(<span class="hljs-string">&#x27;test-goose2-tween&#x27;</span>, <span class="hljs-string">&#x27;test-video-ticker&#x27;</span>, <span class="hljs-string">&#x27;test-goose2-hitzone&#x27;</span>, [
+<span class="hljs-title function_">myLocalTweenFactory</span>(<span class="hljs-string">&#x27;test-goose2-tween&#x27;</span>, <span class="hljs-string">&#x27;test-video-ticker&#x27;</span>, <span class="hljs-string">&#x27;test-goose2-hitzone&#x27;</span>, [
 
     [<span class="hljs-number">0</span>,       <span class="hljs-string">&#x27;4s&#x27;</span>,   <span class="hljs-string">&#x27;89%&#x27;</span>, <span class="hljs-string">&#x27;89%&#x27;</span>, <span class="hljs-string">&#x27;77%&#x27;</span>, <span class="hljs-string">&#x27;80%&#x27;</span>],
     [<span class="hljs-string">&#x27;4s&#x27;</span>,    <span class="hljs-string">&#x27;4s&#x27;</span>,   <span class="hljs-string">&#x27;77%&#x27;</span>, <span class="hljs-string">&#x27;80%&#x27;</span>, <span class="hljs-string">&#x27;65%&#x27;</span>, <span class="hljs-string">&#x27;80%&#x27;</span>],
@@ -1258,8 +1258,8 @@ myLocalTweenFactory(<span class="hljs-string">&#x27;test-goose2-tween&#x27;</spa
     [<span class="hljs-string">&#x27;19.5s&#x27;</span>, <span class="hljs-string">&#x27;3s&#x27;</span>,   <span class="hljs-string">&#x27;33%&#x27;</span>, <span class="hljs-string">&#x27;66%&#x27;</span>, <span class="hljs-string">&#x27;31%&#x27;</span>, <span class="hljs-string">&#x27;64%&#x27;</span>]
 ]);
 
-scrawl.addListener(<span class="hljs-string">&#x27;move&#x27;</span>, <span class="hljs-function">() =&gt;</span> canvas.cascadeEventAction(<span class="hljs-string">&#x27;move&#x27;</span>), canvas.domElement);
-scrawl.addNativeListener(<span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-function">() =&gt;</span> canvas.cascadeEventAction(<span class="hljs-string">&#x27;up&#x27;</span>), canvas.domElement);</pre></div></div>
+scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-string">&#x27;move&#x27;</span>, <span class="hljs-function">() =&gt;</span> canvas.<span class="hljs-title function_">cascadeEventAction</span>(<span class="hljs-string">&#x27;move&#x27;</span>), canvas.<span class="hljs-property">domElement</span>);
+scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-function">() =&gt;</span> canvas.<span class="hljs-title function_">cascadeEventAction</span>(<span class="hljs-string">&#x27;up&#x27;</span>), canvas.<span class="hljs-property">domElement</span>);</pre></div></div>
             
         </li>
         
@@ -1274,7 +1274,7 @@ scrawl.addNativeListener(<span class="hljs-string">&#x27;click&#x27;</span>, <sp
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> vtBackground = scrawl.makeBlock({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> vtBackground = scrawl.<span class="hljs-title function_">makeBlock</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;test-video-time-background&#x27;</span>,
 
@@ -1284,7 +1284,7 @@ scrawl.addNativeListener(<span class="hljs-string">&#x27;click&#x27;</span>, <sp
     <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;white&#x27;</span>,
 });
 
-<span class="hljs-keyword">let</span> vtTime = vtBackground.clone({
+<span class="hljs-keyword">let</span> vtTime = vtBackground.<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;test-video-time-bar&#x27;</span>,
 
@@ -1292,7 +1292,7 @@ scrawl.addNativeListener(<span class="hljs-string">&#x27;click&#x27;</span>, <sp
     <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
 })
 
-<span class="hljs-keyword">let</span> vtPhrase = scrawl.makePhrase({
+<span class="hljs-keyword">let</span> vtPhrase = scrawl.<span class="hljs-title function_">makePhrase</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;test-video-time-phrase&#x27;</span>,
 
@@ -1307,52 +1307,52 @@ scrawl.addNativeListener(<span class="hljs-string">&#x27;click&#x27;</span>, <sp
     <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;yellow&#x27;</span>,
 });
 
-<span class="hljs-keyword">let</span> videoTimeBar = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+<span class="hljs-keyword">let</span> videoTimeBar = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">let</span> currentVideoTime,
         videoDuration;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        currentVideoTime = myvideo.get(<span class="hljs-string">&#x27;video_currentTime&#x27;</span>);
+        currentVideoTime = myvideo.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;video_currentTime&#x27;</span>);
 
-        <span class="hljs-keyword">if</span> (!videoDuration) videoDuration = myvideo.get(<span class="hljs-string">&#x27;video_duration&#x27;</span>);
+        <span class="hljs-keyword">if</span> (!videoDuration) videoDuration = myvideo.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;video_duration&#x27;</span>);
 
         <span class="hljs-keyword">if</span> (videoDuration) {
 
-            vtTime.set({
+            vtTime.<span class="hljs-title function_">set</span>({
 
                 <span class="hljs-attr">width</span>: <span class="hljs-string">`<span class="hljs-subst">${(currentVideoTime * <span class="hljs-number">100</span>) / videoDuration}</span>%`</span>,
             });
 
-            vtPhrase.set({
+            vtPhrase.<span class="hljs-title function_">set</span>({
 
                 <span class="hljs-attr">text</span>: <span class="hljs-string">` <span class="hljs-subst">${currentVideoTime.toFixed(<span class="hljs-number">2</span>)}</span> / <span class="hljs-subst">${videoDuration.toFixed(<span class="hljs-number">2</span>)}</span>`</span>,
             });
 
-            myticker.seekTo(currentVideoTime * <span class="hljs-number">1000</span>, <span class="hljs-literal">true</span>);
+            myticker.<span class="hljs-title function_">seekTo</span>(currentVideoTime * <span class="hljs-number">1000</span>, <span class="hljs-literal">true</span>);
         }
     };
 }();
 
 
-<span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+<span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
     };
 }();
 
-scrawl.makeRender({
+scrawl.<span class="hljs-title function_">makeRender</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;test-animation&#x27;</span>,
     <span class="hljs-attr">target</span>: canvas,
 
@@ -1360,7 +1360,7 @@ scrawl.makeRender({
     <span class="hljs-attr">afterShow</span>: report,
 });
 
-<span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

@@ -707,24 +707,24 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.library.canvas.mycanvas;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
 
 <span class="hljs-keyword">const</span> background_dark = <span class="hljs-string">&#x27;#404040&#x27;</span>,
     text_dark = <span class="hljs-string">&#x27;#c0ffc0&#x27;</span>,
     background_light = <span class="hljs-string">&#x27;#f0f0f0&#x27;</span>,
     text_light = <span class="hljs-string">&#x27;#408f40&#x27;</span>;
 
-canvas.set({
+canvas.<span class="hljs-title function_">set</span>({
 
     <span class="hljs-attr">fit</span>: <span class="hljs-string">&quot;cover&quot;</span>,
     <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,
 
-}).setBase({
+}).<span class="hljs-title function_">setBase</span>({
 
     <span class="hljs-attr">width</span>: <span class="hljs-number">800</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-number">800</span>,
 
-}).setAsCurrentCanvas();</pre></div></div>
+}).<span class="hljs-title function_">setAsCurrentCanvas</span>();</pre></div></div>
             
         </li>
         
@@ -739,7 +739,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeOval({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeOval</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;loader-track&#x27;</span>,
 
@@ -777,13 +777,13 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> textGroup = scrawl.makeGroup({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> textGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;text-group&#x27;</span>,
-    <span class="hljs-attr">host</span>: canvas.base.name,
+    <span class="hljs-attr">host</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
 });
 
-scrawl.makePhrase({
+scrawl.<span class="hljs-title function_">makePhrase</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;loader-text-1&#x27;</span>,
     <span class="hljs-attr">group</span>: textGroup,
@@ -801,12 +801,12 @@ scrawl.makePhrase({
       <span class="hljs-attr">textPathPosition</span>: -<span class="hljs-number">0.002</span>
     },
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;loader-text-2&#x27;</span>,
     <span class="hljs-attr">textPathPosition</span>: <span class="hljs-number">0.333</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;loader-text-3&#x27;</span>,
     <span class="hljs-attr">textPathPosition</span>: <span class="hljs-number">0.667</span>,
@@ -826,16 +826,16 @@ scrawl.makePhrase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.setColorSchemeDarkAction(<span class="hljs-function">() =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">setColorSchemeDarkAction</span>(<span class="hljs-function">() =&gt;</span> {
 
-    canvas.set({ <span class="hljs-attr">backgroundColor</span>: background_dark});
-    textGroup.setArtefacts({ <span class="hljs-attr">fillStyle</span>: text_dark});
+    canvas.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">backgroundColor</span>: background_dark});
+    textGroup.<span class="hljs-title function_">setArtefacts</span>({ <span class="hljs-attr">fillStyle</span>: text_dark});
 });
 
-scrawl.setColorSchemeLightAction(<span class="hljs-function">() =&gt;</span> {
+scrawl.<span class="hljs-title function_">setColorSchemeLightAction</span>(<span class="hljs-function">() =&gt;</span> {
     
-    canvas.set({ <span class="hljs-attr">backgroundColor</span>: background_light});
-    textGroup.setArtefacts({ <span class="hljs-attr">fillStyle</span>: text_light});
+    canvas.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">backgroundColor</span>: background_light});
+    textGroup.<span class="hljs-title function_">setArtefacts</span>({ <span class="hljs-attr">fillStyle</span>: text_light});
 });</pre></div></div>
             
         </li>
@@ -854,7 +854,7 @@ scrawl.setColorSchemeLightAction(<span class="hljs-function">() =&gt;</span> {
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.colorSchemeActions();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">colorSchemeActions</span>();</pre></div></div>
             
         </li>
         
@@ -870,19 +870,19 @@ scrawl.setColorSchemeLightAction(<span class="hljs-function">() =&gt;</span> {
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
     };
 }();</pre></div></div>
             
@@ -899,7 +899,7 @@ scrawl.setColorSchemeLightAction(<span class="hljs-function">() =&gt;</span> {
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-animation&quot;</span>,
     <span class="hljs-attr">target</span>: canvas,
@@ -920,14 +920,14 @@ scrawl.setColorSchemeLightAction(<span class="hljs-function">() =&gt;</span> {
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.setReduceMotionAction(<span class="hljs-function">() =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">setReduceMotionAction</span>(<span class="hljs-function">() =&gt;</span> {
 
-    <span class="hljs-keyword">if</span> (demoAnimation.isRunning()) demoAnimation.halt();
+    <span class="hljs-keyword">if</span> (demoAnimation.<span class="hljs-title function_">isRunning</span>()) demoAnimation.<span class="hljs-title function_">halt</span>();
 });
 
-scrawl.setNoPreferenceMotionAction(<span class="hljs-function">() =&gt;</span> {
+scrawl.<span class="hljs-title function_">setNoPreferenceMotionAction</span>(<span class="hljs-function">() =&gt;</span> {
 
-    <span class="hljs-keyword">if</span> (!demoAnimation.isRunning()) demoAnimation.run();
+    <span class="hljs-keyword">if</span> (!demoAnimation.<span class="hljs-title function_">isRunning</span>()) demoAnimation.<span class="hljs-title function_">run</span>();
 });</pre></div></div>
             
         </li>
@@ -947,7 +947,7 @@ scrawl.setNoPreferenceMotionAction(<span class="hljs-function">() =&gt;</span> {
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> scrawl.reducedMotionActions(), <span class="hljs-number">5000</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> scrawl.<span class="hljs-title function_">reducedMotionActions</span>(), <span class="hljs-number">5000</span>);</pre></div></div>
             
         </li>
         
@@ -963,7 +963,7 @@ scrawl.setNoPreferenceMotionAction(<span class="hljs-function">() =&gt;</span> {
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

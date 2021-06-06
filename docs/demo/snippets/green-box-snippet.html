@@ -159,9 +159,9 @@
 <p><strong>Usage example:</strong></p>
 <pre><code><span class="hljs-keyword">import</span> greenBox <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./relative/or/absolute/path/to/this/file.js&#x27;</span>;
 
-<span class="hljs-keyword">let</span> myElements = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">&#x27;.some-class&#x27;</span>);
+<span class="hljs-keyword">let</span> myElements = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.some-class&#x27;</span>);
 
-myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> greenBox(el));
+myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">greenBox</span>(el));
 </code></pre>
 
             </div>
@@ -197,18 +197,18 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">el</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">el</span>) {
 
-    <span class="hljs-keyword">let</span> snippet = scrawl.makeSnippet({
+    <span class="hljs-keyword">let</span> snippet = scrawl.<span class="hljs-title function_">makeSnippet</span>({
         <span class="hljs-attr">domElement</span>: el,
     });
 
     <span class="hljs-keyword">if</span> (snippet) {
 
-        scrawl.makeBlock({
+        scrawl.<span class="hljs-title function_">makeBlock</span>({
 
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${snippet.element.name}</span>-box`</span>,
-            <span class="hljs-attr">group</span>: snippet.canvas.base.name,
+            <span class="hljs-attr">group</span>: snippet.<span class="hljs-property">canvas</span>.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
             <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
             <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
             <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;25%&#x27;</span>,

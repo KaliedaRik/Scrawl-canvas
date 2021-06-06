@@ -707,14 +707,14 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.library.canvas.mycanvas;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
 
-canvas.set({
+canvas.<span class="hljs-title function_">set</span>({
 
     <span class="hljs-attr">baseMatchesCanvasDimensions</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,
 
-}).setAsCurrentCanvas();</pre></div></div>
+}).<span class="hljs-title function_">setAsCurrentCanvas</span>();</pre></div></div>
             
         </li>
         
@@ -729,7 +729,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> mytext = scrawl.makePhrase({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> mytext = scrawl.<span class="hljs-title function_">makePhrase</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;display-shape-text&#x27;</span>,
 
@@ -766,7 +766,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>canvas.setDisplayShapeBreakpoints({
+            <div class="content"><div class='highlight'><pre>canvas.<span class="hljs-title function_">setDisplayShapeBreakpoints</span>({
 
     <span class="hljs-attr">breakToBanner</span>: <span class="hljs-number">3</span>,
     <span class="hljs-attr">breakToLandscape</span>: <span class="hljs-number">1.5</span>,
@@ -793,43 +793,43 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>canvas.set({
+            <div class="content"><div class='highlight'><pre>canvas.<span class="hljs-title function_">set</span>({
 
     <span class="hljs-attr">actionBannerShape</span>: <span class="hljs-function">() =&gt;</span> {
-        mytext.set({
+        mytext.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">text</span>: <span class="hljs-string">`Canvas display shape: <span class="hljs-subst">${canvas.get(<span class="hljs-string">&#x27;displayShape&#x27;</span>)}</span>`</span>,
             <span class="hljs-attr">roll</span>: <span class="hljs-number">0</span>,
         });
     },
 
     <span class="hljs-attr">actionRectangleShape</span>: <span class="hljs-function">() =&gt;</span> {
-        mytext.set({
+        mytext.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">text</span>: <span class="hljs-string">`Canvas display shape: <span class="hljs-subst">${canvas.get(<span class="hljs-string">&#x27;displayShape&#x27;</span>)}</span>`</span>,
             <span class="hljs-attr">roll</span>: -<span class="hljs-number">45</span>,
         });
     },
 
     <span class="hljs-attr">actionSkyscraperShape</span>: <span class="hljs-function">() =&gt;</span> {
-        mytext.set({
+        mytext.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">text</span>: <span class="hljs-string">`Canvas display shape: <span class="hljs-subst">${canvas.get(<span class="hljs-string">&#x27;displayShape&#x27;</span>)}</span>`</span>,
             <span class="hljs-attr">roll</span>: -<span class="hljs-number">90</span>,
         });
     },
 
     <span class="hljs-attr">actionLargestArea</span>: <span class="hljs-function">() =&gt;</span> {
-        mytext.set({
+        mytext.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">size</span>: <span class="hljs-string">&#x27;40px&#x27;</span>,
         });
     },
 
     <span class="hljs-attr">actionRegularArea</span>: <span class="hljs-function">() =&gt;</span> {
-        mytext.set({
+        mytext.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">size</span>: <span class="hljs-string">&#x27;28px&#x27;</span>,
         });
     },
 
     <span class="hljs-attr">actionSmallestArea</span>: <span class="hljs-function">() =&gt;</span> {
-        mytext.set({
+        mytext.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">size</span>: <span class="hljs-string">&#x27;16px&#x27;</span>,
         });
     },
@@ -848,28 +848,28 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>canvas.setActionPortraitShape(<span class="hljs-function">() =&gt;</span> {
-    mytext.set({
+            <div class="content"><div class='highlight'><pre>canvas.<span class="hljs-title function_">setActionPortraitShape</span>(<span class="hljs-function">() =&gt;</span> {
+    mytext.<span class="hljs-title function_">set</span>({
         <span class="hljs-attr">text</span>: <span class="hljs-string">`Canvas display shape: <span class="hljs-subst">${canvas.get(<span class="hljs-string">&#x27;displayShape&#x27;</span>)}</span>`</span>,
         <span class="hljs-attr">roll</span>: -<span class="hljs-number">67.5</span>,
     });
 });
 
-canvas.setActionLandscapeShape(<span class="hljs-function">() =&gt;</span> {
-    mytext.set({
+canvas.<span class="hljs-title function_">setActionLandscapeShape</span>(<span class="hljs-function">() =&gt;</span> {
+    mytext.<span class="hljs-title function_">set</span>({
         <span class="hljs-attr">text</span>: <span class="hljs-string">`Canvas display shape: <span class="hljs-subst">${canvas.get(<span class="hljs-string">&#x27;displayShape&#x27;</span>)}</span>`</span>,
         <span class="hljs-attr">roll</span>: -<span class="hljs-number">22.5</span>,
     });
 });
 
-canvas.setActionLargerArea(<span class="hljs-function">() =&gt;</span> {
-    mytext.set({
+canvas.<span class="hljs-title function_">setActionLargerArea</span>(<span class="hljs-function">() =&gt;</span> {
+    mytext.<span class="hljs-title function_">set</span>({
         <span class="hljs-attr">size</span>: <span class="hljs-string">&#x27;34px&#x27;</span>,
     });
 });
 
-canvas.setActionSmallerArea(<span class="hljs-function">() =&gt;</span> {
-    mytext.set({
+canvas.<span class="hljs-title function_">setActionSmallerArea</span>(<span class="hljs-function">() =&gt;</span> {
+    mytext.<span class="hljs-title function_">set</span>({
         <span class="hljs-attr">size</span>: <span class="hljs-string">&#x27;22px&#x27;</span>,
     });
 });</pre></div></div>
@@ -888,19 +888,19 @@ canvas.setActionSmallerArea(<span class="hljs-function">() =&gt;</span> {
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
     };
 }();</pre></div></div>
             
@@ -917,7 +917,7 @@ canvas.setActionSmallerArea(<span class="hljs-function">() =&gt;</span> {
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-animation&quot;</span>,
     <span class="hljs-attr">target</span>: canvas,
@@ -936,7 +936,7 @@ canvas.setActionSmallerArea(<span class="hljs-function">() =&gt;</span> {
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    afterCreated: <span class="hljs-function">() =&gt;</span> canvas.updateDisplay(),
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">afterCreated</span>: <span class="hljs-function">() =&gt;</span> canvas.<span class="hljs-title function_">updateDisplay</span>(),
 });</pre></div></div>
             
         </li>
@@ -952,7 +952,7 @@ canvas.setActionSmallerArea(<span class="hljs-function">() =&gt;</span> {
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

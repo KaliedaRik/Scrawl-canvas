@@ -707,10 +707,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.library.artefact.mycanvas;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;
 
 
-<span class="hljs-keyword">let</span> mySpiral = scrawl.makeLineSpiral({
+<span class="hljs-keyword">let</span> mySpiral = scrawl.<span class="hljs-title function_">makeLineSpiral</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-spiral&#x27;</span>,
 
@@ -737,19 +737,19 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
     Radius - start: <span class="hljs-subst">${mySpiral.startRadius}</span>, increment: <span class="hljs-subst">${mySpiral.radiusIncrement}</span>, adjust: <span class="hljs-subst">${mySpiral.radiusIncrementAdjust}</span>
     Angle - start: <span class="hljs-subst">${mySpiral.startAngle}</span>, increment: <span class="hljs-subst">${mySpiral.angleIncrement}</span>, adjust: <span class="hljs-subst">${mySpiral.angleIncrementAdjust}</span>
     Limit: <span class="hljs-subst">${mySpiral.stepLimit}</span>`</span>;
@@ -769,7 +769,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
     <span class="hljs-attr">target</span>: canvas,
@@ -790,7 +790,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.observeAndUpdate({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
 
     <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
     <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,
@@ -812,13 +812,13 @@
     },
 });
 
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#startRadius&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#radiusIncrement&#x27;</span>).value = <span class="hljs-number">0.1</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#radiusIncrementAdjust&#x27;</span>).value = <span class="hljs-number">1</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#startAngle&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#angleIncrement&#x27;</span>).value = <span class="hljs-number">5</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#angleIncrementAdjust&#x27;</span>).value = <span class="hljs-number">1</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#stepLimit&#x27;</span>).value = <span class="hljs-number">100</span>;</pre></div></div>
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#startRadius&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#radiusIncrement&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0.1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#radiusIncrementAdjust&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#startAngle&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#angleIncrement&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">5</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#angleIncrementAdjust&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#stepLimit&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">100</span>;</pre></div></div>
             
         </li>
         
@@ -833,7 +833,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

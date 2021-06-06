@@ -716,7 +716,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -731,13 +731,13 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeAnimation({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeAnimation</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
 
-    <span class="hljs-attr">fn</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-attr">fn</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve</span>) =&gt;</span> {</pre></div></div>
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve</span>) =&gt;</span> {</pre></div></div>
             
         </li>
         
@@ -752,7 +752,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            report.textContent = <span class="hljs-string">`cursor x: <span class="hljs-subst">${scrawl.currentCorePosition.x}</span>
+            <div class="content"><div class='highlight'><pre>            report.<span class="hljs-property">textContent</span> = <span class="hljs-string">`cursor x: <span class="hljs-subst">${scrawl.currentCorePosition.x}</span>
 cursor y: <span class="hljs-subst">${scrawl.currentCorePosition.y}</span>
 browser width: <span class="hljs-subst">${scrawl.currentCorePosition.w}</span>
 browser height: <span class="hljs-subst">${scrawl.currentCorePosition.h}</span>
@@ -760,7 +760,7 @@ scroll x: <span class="hljs-subst">${scrawl.currentCorePosition.scrollX}</span>
 scroll y: <span class="hljs-subst">${scrawl.currentCorePosition.scrollY}</span>
 cursor type: <span class="hljs-subst">${scrawl.currentCorePosition.type}</span>`</span>;
 
-            resolve(<span class="hljs-literal">true</span>);
+            <span class="hljs-title function_">resolve</span>(<span class="hljs-literal">true</span>);
         });
     },
 });</pre></div></div>

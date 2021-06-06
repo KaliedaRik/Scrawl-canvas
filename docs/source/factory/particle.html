@@ -532,7 +532,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">force</span>, <span class="hljs-title">spring</span>, <span class="hljs-title">springnames</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, force, spring, springnames } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { mergeOver, pushUnique, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { requestParticleHistoryObject, releaseParticleHistoryObject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./particleHistory.js&#x27;</span>;
@@ -566,16 +566,16 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Particle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">Particle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-built_in">this</span>.makeName(items.name);
-    <span class="hljs-built_in">this</span>.register();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(items.<span class="hljs-property">name</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
 
-    <span class="hljs-built_in">this</span>.set(<span class="hljs-built_in">this</span>.defs);
-    <span class="hljs-built_in">this</span>.initializePositions();
-    <span class="hljs-built_in">this</span>.set(items);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">initializePositions</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -591,7 +591,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Particle.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">Particle</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);</pre></div></div>
             
         </li>
         
@@ -606,10 +606,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.type = <span class="hljs-string">&#x27;Particle&#x27;</span>;
-P.lib = <span class="hljs-string">&#x27;particle&#x27;</span>;
-P.isArtefact = <span class="hljs-literal">false</span>;
-P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Particle&#x27;</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;particle&#x27;</span>;
+P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">false</span>;
+P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -624,7 +624,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = baseMix(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -657,7 +657,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    position: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">position</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -672,7 +672,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    velocity: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">velocity</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -687,7 +687,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    load: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">load</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -702,7 +702,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    history: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">history</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -717,7 +717,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    historyLength: <span class="hljs-number">1</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">historyLength</span>: <span class="hljs-number">1</span>,</pre></div></div>
             
         </li>
         
@@ -737,7 +737,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    engine: <span class="hljs-string">&#x27;euler&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">engine</span>: <span class="hljs-string">&#x27;euler&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -752,7 +752,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    forces: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">forces</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -767,7 +767,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    mass: <span class="hljs-number">1</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">mass</span>: <span class="hljs-number">1</span>,</pre></div></div>
             
         </li>
         
@@ -782,10 +782,10 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    fill: <span class="hljs-string">&#x27;#000000&#x27;</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">fill</span>: <span class="hljs-string">&#x27;#000000&#x27;</span>,
     <span class="hljs-attr">stroke</span>: <span class="hljs-string">&#x27;#000000&#x27;</span>,
 };
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
+P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -800,11 +800,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.packetExclusions = pushUnique(P.packetExclusions, []);
-P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, [<span class="hljs-string">&#x27;^(local|dirty|current)&#x27;</span>]);
-P.packetCoordinates = pushUnique(P.packetCoordinates, []);
-P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">&#x27;position&#x27;</span>, <span class="hljs-string">&#x27;velocity&#x27;</span>, <span class="hljs-string">&#x27;acceleration&#x27;</span>]);
-P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">packetExclusions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusions</span>, []);
+P.<span class="hljs-property">packetExclusionsByRegex</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusionsByRegex</span>, [<span class="hljs-string">&#x27;^(local|dirty|current)&#x27;</span>]);
+P.<span class="hljs-property">packetCoordinates</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetCoordinates</span>, []);
+P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetObjects</span>, [<span class="hljs-string">&#x27;position&#x27;</span>, <span class="hljs-string">&#x27;velocity&#x27;</span>, <span class="hljs-string">&#x27;acceleration&#x27;</span>]);
+P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetFunctions</span>, []);</pre></div></div>
             
         </li>
         
@@ -833,21 +833,21 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.factoryKill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">factoryKill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-built_in">this</span>.history.forEach(<span class="hljs-function"><span class="hljs-params">h</span> =&gt;</span> releaseParticleHistoryObject(h));
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">history</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">h</span> =&gt;</span> <span class="hljs-title function_">releaseParticleHistoryObject</span>(h));
 
     <span class="hljs-keyword">let</span> deadSprings = [];
 
-    springnames.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
+    springnames.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
         <span class="hljs-keyword">let</span> s = spring[name];
 
-        <span class="hljs-keyword">if</span> (s.particleFrom &amp;&amp; s.particleFrom.name === <span class="hljs-built_in">this</span>.name) deadSprings.push[s];
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (s.particleTo &amp;&amp; s.particleTo.name === <span class="hljs-built_in">this</span>.name) deadSprings.push[s];
+        <span class="hljs-keyword">if</span> (s.<span class="hljs-property">particleFrom</span> &amp;&amp; s.<span class="hljs-property">particleFrom</span>.<span class="hljs-property">name</span> === <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>) deadSprings.<span class="hljs-property">push</span>[s];
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (s.<span class="hljs-property">particleTo</span> &amp;&amp; s.<span class="hljs-property">particleTo</span>.<span class="hljs-property">name</span> === <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>) deadSprings.<span class="hljs-property">push</span>[s];
     });
 
-    deadSprings.forEach(<span class="hljs-function"><span class="hljs-params">s</span> =&gt;</span> s.kill());
+    deadSprings.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">s</span> =&gt;</span> s.<span class="hljs-title function_">kill</span>());
 };</pre></div></div>
             
         </li>
@@ -863,9 +863,9 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.getters,
-    S = P.setters,
-    D = P.deltaSetters;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.<span class="hljs-property">getters</span>,
+    S = P.<span class="hljs-property">setters</span>,
+    D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
             
         </li>
         
@@ -880,9 +880,9 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>G.positionX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.position.x; };
-G.positionY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.position.y; };
-G.positionZ = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.position.z; };</pre></div></div>
+            <div class="content"><div class='highlight'><pre>G.<span class="hljs-property">positionX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">position</span>.<span class="hljs-property">x</span>; };
+G.<span class="hljs-property">positionY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">position</span>.<span class="hljs-property">y</span>; };
+G.<span class="hljs-property">positionZ</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">position</span>.<span class="hljs-property">z</span>; };</pre></div></div>
             
         </li>
         
@@ -897,23 +897,23 @@ G.positionZ = <span class="hljs-function"><span class="hljs-keyword">function</s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>G.position = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>G.<span class="hljs-property">position</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> s = <span class="hljs-built_in">this</span>.position;
-    <span class="hljs-keyword">return</span> [s.x, s.y, s.z];
+    <span class="hljs-keyword">let</span> s = <span class="hljs-variable language_">this</span>.<span class="hljs-property">position</span>;
+    <span class="hljs-keyword">return</span> [s.<span class="hljs-property">x</span>, s.<span class="hljs-property">y</span>, s.<span class="hljs-property">z</span>];
 };
 
-S.positionX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{ <span class="hljs-built_in">this</span>.position.x = coord; };
-S.positionY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{ <span class="hljs-built_in">this</span>.position.y = coord; };
-S.positionZ = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{ <span class="hljs-built_in">this</span>.position.z = coord; };
+S.<span class="hljs-property">positionX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-property">position</span>.<span class="hljs-property">x</span> = coord; };
+S.<span class="hljs-property">positionY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-property">position</span>.<span class="hljs-property">y</span> = coord; };
+S.<span class="hljs-property">positionZ</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-property">position</span>.<span class="hljs-property">z</span> = coord; };
 
-S.position = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{ <span class="hljs-built_in">this</span>.position.set(item); };
+S.<span class="hljs-property">position</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-property">position</span>.<span class="hljs-title function_">set</span>(item); };
 
-D.positionX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{ <span class="hljs-built_in">this</span>.position.x += coord; };
-D.positionY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{ <span class="hljs-built_in">this</span>.position.y += coord; };
-D.positionZ = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{ <span class="hljs-built_in">this</span>.position.z += coord; };
+D.<span class="hljs-property">positionX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-property">position</span>.<span class="hljs-property">x</span> += coord; };
+D.<span class="hljs-property">positionY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-property">position</span>.<span class="hljs-property">y</span> += coord; };
+D.<span class="hljs-property">positionZ</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-property">position</span>.<span class="hljs-property">z</span> += coord; };
 
-D.position = λ<span class="hljs-literal">null</span>;</pre></div></div>
+D.<span class="hljs-property">position</span> = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
@@ -931,30 +931,30 @@ D.position = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>G.velocityX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.velocity.x; };
-G.velocityY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.velocity.y; };
-G.velocityZ = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.velocity.z; };
+            <div class="content"><div class='highlight'><pre>G.<span class="hljs-property">velocityX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">velocity</span>.<span class="hljs-property">x</span>; };
+G.<span class="hljs-property">velocityY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">velocity</span>.<span class="hljs-property">y</span>; };
+G.<span class="hljs-property">velocityZ</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">velocity</span>.<span class="hljs-property">z</span>; };
 
-G.velocity = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+G.<span class="hljs-property">velocity</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> s = <span class="hljs-built_in">this</span>.velocity;
-    <span class="hljs-keyword">return</span> [s.x, s.y, s.z];
+    <span class="hljs-keyword">let</span> s = <span class="hljs-variable language_">this</span>.<span class="hljs-property">velocity</span>;
+    <span class="hljs-keyword">return</span> [s.<span class="hljs-property">x</span>, s.<span class="hljs-property">y</span>, s.<span class="hljs-property">z</span>];
 };
 
-S.velocityX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{ <span class="hljs-built_in">this</span>.velocity.x = coord; };
-S.velocityY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{ <span class="hljs-built_in">this</span>.velocity.y = coord; };
-S.velocityZ = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{ <span class="hljs-built_in">this</span>.velocity.z = coord; };
+S.<span class="hljs-property">velocityX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-property">velocity</span>.<span class="hljs-property">x</span> = coord; };
+S.<span class="hljs-property">velocityY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-property">velocity</span>.<span class="hljs-property">y</span> = coord; };
+S.<span class="hljs-property">velocityZ</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-property">velocity</span>.<span class="hljs-property">z</span> = coord; };
 
-S.velocity = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y, z</span>) </span>{
+S.<span class="hljs-property">velocity</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y, z</span>) {
 
-    <span class="hljs-built_in">this</span>.velocity.set(x, y, z);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">velocity</span>.<span class="hljs-title function_">set</span>(x, y, z);
 };
 
-D.velocityX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{ <span class="hljs-built_in">this</span>.velocity.x += coord; };
-D.velocityY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{ <span class="hljs-built_in">this</span>.velocity.y += coord; };
-D.velocityZ = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{ <span class="hljs-built_in">this</span>.velocity.z += coord; };
+D.<span class="hljs-property">velocityX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-property">velocity</span>.<span class="hljs-property">x</span> += coord; };
+D.<span class="hljs-property">velocityY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-property">velocity</span>.<span class="hljs-property">y</span> += coord; };
+D.<span class="hljs-property">velocityZ</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-property">velocity</span>.<span class="hljs-property">z</span> += coord; };
 
-D.velocity = λ<span class="hljs-literal">null</span>;</pre></div></div>
+D.<span class="hljs-property">velocity</span> = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
@@ -969,16 +969,16 @@ D.velocity = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.forces = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">forces</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-keyword">if</span> (item) {
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(item)) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(item)) {
 
-            <span class="hljs-built_in">this</span>.forces.length = <span class="hljs-number">0</span>;
-            <span class="hljs-built_in">this</span>.forces = <span class="hljs-built_in">this</span>.forces.concat(item);
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">forces</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">forces</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">forces</span>.<span class="hljs-title function_">concat</span>(item);
         }
-        <span class="hljs-keyword">else</span> <span class="hljs-built_in">this</span>.forces.push(item);
+        <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">forces</span>.<span class="hljs-title function_">push</span>(item);
     }
 };</pre></div></div>
             
@@ -995,10 +995,10 @@ D.velocity = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.load = λ<span class="hljs-literal">null</span>;
-S.history = λ<span class="hljs-literal">null</span>;
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">load</span> = λ<span class="hljs-literal">null</span>;
+S.<span class="hljs-property">history</span> = λ<span class="hljs-literal">null</span>;
 
-D.load = λ<span class="hljs-literal">null</span>;</pre></div></div>
+D.<span class="hljs-property">load</span> = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
@@ -1017,15 +1017,15 @@ D.load = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.initializePositions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">initializePositions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-built_in">this</span>.initialPosition = makeVector();
-    <span class="hljs-built_in">this</span>.position = makeVector();
-    <span class="hljs-built_in">this</span>.velocity = makeVector();
-    <span class="hljs-built_in">this</span>.load = makeVector();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">initialPosition</span> = <span class="hljs-title function_">makeVector</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">position</span> = <span class="hljs-title function_">makeVector</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">velocity</span> = <span class="hljs-title function_">makeVector</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">load</span> = <span class="hljs-title function_">makeVector</span>();
 
-    <span class="hljs-built_in">this</span>.forces = [];
-    <span class="hljs-built_in">this</span>.history = [];</pre></div></div>
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">forces</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">history</span> = [];</pre></div></div>
             
         </li>
         
@@ -1040,7 +1040,7 @@ D.load = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.isRunning = <span class="hljs-literal">false</span>;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">isRunning</span> = <span class="hljs-literal">false</span>;
 };</pre></div></div>
             
         </li>
@@ -1059,17 +1059,17 @@ D.load = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.applyForces = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">world, host</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">applyForces</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">world, host</span>) {
 
-    <span class="hljs-built_in">this</span>.load.zero();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">load</span>.<span class="hljs-title function_">zero</span>();
 
-    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.isBeingDragged) {
+    <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">isBeingDragged</span>) {
 
-        <span class="hljs-built_in">this</span>.forces.forEach(<span class="hljs-function"><span class="hljs-params">key</span> =&gt;</span> {
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">forces</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">key</span> =&gt;</span> {
 
             <span class="hljs-keyword">let</span> f = force[key];
 
-            <span class="hljs-keyword">if</span> (f &amp;&amp; f.action) f.action(<span class="hljs-built_in">this</span>, world, host);
+            <span class="hljs-keyword">if</span> (f &amp;&amp; f.<span class="hljs-property">action</span>) f.<span class="hljs-title function_">action</span>(<span class="hljs-variable language_">this</span>, world, host);
         });
     }
 };</pre></div></div>
@@ -1090,10 +1090,10 @@ D.load = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.update = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">tick, world</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">update</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">tick, world</span>) {
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.isBeingDragged) <span class="hljs-built_in">this</span>.position.setFromVector(<span class="hljs-built_in">this</span>.isBeingDragged).vectorAdd(<span class="hljs-built_in">this</span>.dragOffset);
-    <span class="hljs-keyword">else</span> particleEngines[<span class="hljs-built_in">this</span>.engine].call(<span class="hljs-built_in">this</span>, tick * world.tickMultiplier);
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">isBeingDragged</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">position</span>.<span class="hljs-title function_">setFromVector</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">isBeingDragged</span>).<span class="hljs-title function_">vectorAdd</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">dragOffset</span>);
+    <span class="hljs-keyword">else</span> particleEngines[<span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span>].<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, tick * world.<span class="hljs-property">tickMultiplier</span>);
 };</pre></div></div>
             
         </li>
@@ -1109,9 +1109,9 @@ D.load = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.manageHistory = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">tick, host</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">manageHistory</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">tick, host</span>) {
 
-    <span class="hljs-keyword">let</span> {history, remainingTime, position, historyLength, hasLifetime, distanceLimit, initialPosition, killBeyondCanvas} = <span class="hljs-built_in">this</span>;
+    <span class="hljs-keyword">let</span> {history, remainingTime, position, historyLength, hasLifetime, distanceLimit, initialPosition, killBeyondCanvas} = <span class="hljs-variable language_">this</span>;
 
     <span class="hljs-keyword">let</span> addHistoryFlag = <span class="hljs-literal">true</span>,
         remaining = <span class="hljs-number">0</span>;</pre></div></div>
@@ -1141,15 +1141,15 @@ D.load = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
         <span class="hljs-keyword">if</span> (remaining &lt;= <span class="hljs-number">0</span>) {
 
-            <span class="hljs-keyword">let</span> last = history.pop();
+            <span class="hljs-keyword">let</span> last = history.<span class="hljs-title function_">pop</span>();
 
-            releaseParticleHistoryObject(last);
+            <span class="hljs-title function_">releaseParticleHistoryObject</span>(last);
 
             addHistoryFlag = <span class="hljs-literal">false</span>;
 
-            <span class="hljs-keyword">if</span> (!history.length) <span class="hljs-built_in">this</span>.isRunning = <span class="hljs-literal">false</span>;
+            <span class="hljs-keyword">if</span> (!history.<span class="hljs-property">length</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">isRunning</span> = <span class="hljs-literal">false</span>;
         }
-        <span class="hljs-keyword">else</span> <span class="hljs-built_in">this</span>.remainingTime = remaining;
+        <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">remainingTime</span> = remaining;
     }</pre></div></div>
             
         </li>
@@ -1169,7 +1169,7 @@ D.load = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> oldest = history[history.length - <span class="hljs-number">1</span>];
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> oldest = history[history.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>];
 
     <span class="hljs-keyword">if</span> (oldest) {
 
@@ -1177,28 +1177,28 @@ D.load = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
         <span class="hljs-keyword">if</span> (killBeyondCanvas) {
 
-            <span class="hljs-keyword">let</span> w = host.element.width,
-                h = host.element.height;
+            <span class="hljs-keyword">let</span> w = host.<span class="hljs-property">element</span>.<span class="hljs-property">width</span>,
+                h = host.<span class="hljs-property">element</span>.<span class="hljs-property">height</span>;
 
             <span class="hljs-keyword">if</span> (ox &lt; <span class="hljs-number">0</span> || oy &lt; <span class="hljs-number">0</span> || ox &gt; w || oy &gt; h) {
 
                 addHistoryFlag = <span class="hljs-literal">false</span>;
-                <span class="hljs-built_in">this</span>.isRunning = <span class="hljs-literal">false</span>;
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">isRunning</span> = <span class="hljs-literal">false</span>;
             }
         }
 
         <span class="hljs-keyword">if</span> (distanceLimit) {
 
-            <span class="hljs-keyword">let</span> test = requestVector(initialPosition);
+            <span class="hljs-keyword">let</span> test = <span class="hljs-title function_">requestVector</span>(initialPosition);
 
-            test.vectorSubtractArray([ox, oy, oz]);
+            test.<span class="hljs-title function_">vectorSubtractArray</span>([ox, oy, oz]);
 
-            <span class="hljs-keyword">if</span> (test.getMagnitude() &gt; distanceLimit) {
+            <span class="hljs-keyword">if</span> (test.<span class="hljs-title function_">getMagnitude</span>() &gt; distanceLimit) {
 
                 addHistoryFlag = <span class="hljs-literal">false</span>;
-                <span class="hljs-built_in">this</span>.isRunning = <span class="hljs-literal">false</span>;
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">isRunning</span> = <span class="hljs-literal">false</span>;
             }
-            releaseVector(test);
+            <span class="hljs-title function_">releaseVector</span>(test);
         }
     }</pre></div></div>
             
@@ -1219,17 +1219,17 @@ D.load = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
         <span class="hljs-keyword">let</span> {x, y, z} = position;
 
-        <span class="hljs-keyword">let</span> h = requestParticleHistoryObject();
+        <span class="hljs-keyword">let</span> h = <span class="hljs-title function_">requestParticleHistoryObject</span>();
 
-        h.push(remaining, z, x, y);
+        h.<span class="hljs-title function_">push</span>(remaining, z, x, y);
 
-        history.unshift(h);
+        history.<span class="hljs-title function_">unshift</span>(h);
 
-        <span class="hljs-keyword">if</span> (history.length &gt; historyLength) {
+        <span class="hljs-keyword">if</span> (history.<span class="hljs-property">length</span> &gt; historyLength) {
 
-            <span class="hljs-keyword">let</span> old = history.splice(historyLength);
+            <span class="hljs-keyword">let</span> old = history.<span class="hljs-title function_">splice</span>(historyLength);
 
-            old.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> releaseParticleHistoryObject(item));
+            old.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> <span class="hljs-title function_">releaseParticleHistoryObject</span>(item));
         }
     }
 };</pre></div></div>
@@ -1247,7 +1247,7 @@ D.load = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.run = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">timeKill, radiusKill, killBeyondCanvas</span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">run</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">timeKill, radiusKill, killBeyondCanvas</span>) {</pre></div></div>
             
         </li>
         
@@ -1262,11 +1262,11 @@ D.load = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.hasLifetime = <span class="hljs-literal">false</span>;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">hasLifetime</span> = <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">if</span> (timeKill) {
 
-        <span class="hljs-built_in">this</span>.remainingTime = timeKill;
-        <span class="hljs-built_in">this</span>.hasLifetime = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">remainingTime</span> = timeKill;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">hasLifetime</span> = <span class="hljs-literal">true</span>;
     }</pre></div></div>
             
         </li>
@@ -1282,11 +1282,11 @@ D.load = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.distanceLimit = <span class="hljs-number">0</span>;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">distanceLimit</span> = <span class="hljs-number">0</span>;
     <span class="hljs-keyword">if</span> (radiusKill) {
         
-        <span class="hljs-built_in">this</span>.initialPosition.set(<span class="hljs-built_in">this</span>.position);
-        <span class="hljs-built_in">this</span>.distanceLimit = radiusKill;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">initialPosition</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">position</span>);
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">distanceLimit</span> = radiusKill;
     }</pre></div></div>
             
         </li>
@@ -1302,9 +1302,9 @@ D.load = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.killBeyondCanvas = killBeyondCanvas;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">killBeyondCanvas</span> = killBeyondCanvas;
 
-    <span class="hljs-built_in">this</span>.isRunning = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">isRunning</span> = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1321,13 +1321,13 @@ D.load = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeParticle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeParticle = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Particle(items);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Particle</span>(items);
 };
 
-<span class="hljs-title">constructors</span>.<span class="hljs-title">Particle</span> = <span class="hljs-title">Particle</span>;</pre></div></div>
+constructors.<span class="hljs-property">Particle</span> = <span class="hljs-title class_">Particle</span>;</pre></div></div>
             
         </li>
         
@@ -1358,13 +1358,13 @@ D.load = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> requestParticle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> requestParticle = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
-    <span class="hljs-keyword">if</span> (!particlePool.length) particlePool.push(<span class="hljs-keyword">new</span> Particle());
+    <span class="hljs-keyword">if</span> (!particlePool.<span class="hljs-property">length</span>) particlePool.<span class="hljs-title function_">push</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Particle</span>());
 
-    <span class="hljs-keyword">let</span> v = particlePool.shift();
+    <span class="hljs-keyword">let</span> v = particlePool.<span class="hljs-title function_">shift</span>();
 
-    v.set(items);
+    v.<span class="hljs-title function_">set</span>(items);
 
     <span class="hljs-keyword">return</span> v
 };</pre></div></div>
@@ -1382,15 +1382,15 @@ D.load = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> releaseParticle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> releaseParticle = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (item &amp;&amp; item.type === <span class="hljs-string">&#x27;Particle&#x27;</span>) {
+    <span class="hljs-keyword">if</span> (item &amp;&amp; item.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Particle&#x27;</span>) {
 
-        item.history.forEach(<span class="hljs-function"><span class="hljs-params">h</span> =&gt;</span> releaseParticleHistoryObject(h));
-        item.history.length = <span class="hljs-number">0</span>;
+        item.<span class="hljs-property">history</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">h</span> =&gt;</span> <span class="hljs-title function_">releaseParticleHistoryObject</span>(h));
+        item.<span class="hljs-property">history</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
 
-        item.set(item.defs);
-        particlePool.push(item);</pre></div></div>
+        item.<span class="hljs-title function_">set</span>(item.<span class="hljs-property">defs</span>);
+        particlePool.<span class="hljs-title function_">push</span>(item);</pre></div></div>
             
         </li>
         
@@ -1405,11 +1405,11 @@ D.load = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (particlePool.length &gt; <span class="hljs-number">50</span>) {
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (particlePool.<span class="hljs-property">length</span> &gt; <span class="hljs-number">50</span>) {
 
-            <span class="hljs-keyword">let</span> temp = [].concat(particlePool);
-            particlePool.length = <span class="hljs-number">0</span>;
-            temp.forEach(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.kill());
+            <span class="hljs-keyword">let</span> temp = [].<span class="hljs-title function_">concat</span>(particlePool);
+            particlePool.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+            temp.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.<span class="hljs-title function_">kill</span>());
         }
     }
 };</pre></div></div>
@@ -1443,22 +1443,22 @@ D.load = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;euler&#x27;</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">tick</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;euler&#x27;</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">tick</span>) {
 
-        <span class="hljs-keyword">let</span> {position, velocity, load, mass} = <span class="hljs-built_in">this</span>;
+        <span class="hljs-keyword">let</span> {position, velocity, load, mass} = <span class="hljs-variable language_">this</span>;
 
-        <span class="hljs-keyword">let</span> acc = requestVector(),
-            vel = requestVector(velocity);
+        <span class="hljs-keyword">let</span> acc = <span class="hljs-title function_">requestVector</span>(),
+            vel = <span class="hljs-title function_">requestVector</span>(velocity);
 
-        acc.setFromVector(load).scalarDivide(mass);
+        acc.<span class="hljs-title function_">setFromVector</span>(load).<span class="hljs-title function_">scalarDivide</span>(mass);
 
-        vel.vectorAdd(acc.scalarMultiply(tick));
+        vel.<span class="hljs-title function_">vectorAdd</span>(acc.<span class="hljs-title function_">scalarMultiply</span>(tick));
 
-        velocity.setFromVector(vel);
+        velocity.<span class="hljs-title function_">setFromVector</span>(vel);
 
-        position.vectorAdd(vel.scalarMultiply(tick));
+        position.<span class="hljs-title function_">vectorAdd</span>(vel.<span class="hljs-title function_">scalarMultiply</span>(tick));
 
-        releaseVector(acc, vel);
+        <span class="hljs-title function_">releaseVector</span>(acc, vel);
     },</pre></div></div>
             
         </li>
@@ -1474,26 +1474,26 @@ D.load = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;improved-euler&#x27;</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">tick</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;improved-euler&#x27;</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">tick</span>) {
 
-        <span class="hljs-keyword">let</span> {position, velocity, load, mass} = <span class="hljs-built_in">this</span>;
+        <span class="hljs-keyword">let</span> {position, velocity, load, mass} = <span class="hljs-variable language_">this</span>;
 
-        <span class="hljs-keyword">let</span> acc1 = requestVector(),
-            acc2 = requestVector(),
-            acc3 = requestVector(),
-            vel = requestVector(velocity);
+        <span class="hljs-keyword">let</span> acc1 = <span class="hljs-title function_">requestVector</span>(),
+            acc2 = <span class="hljs-title function_">requestVector</span>(),
+            acc3 = <span class="hljs-title function_">requestVector</span>(),
+            vel = <span class="hljs-title function_">requestVector</span>(velocity);
 
-        acc1.setFromVector(load).scalarDivide(mass).scalarMultiply(tick);
-        acc2.setFromVector(load).vectorAdd(acc1).scalarDivide(mass).scalarMultiply(tick);
-        acc3.setFromVector(acc1).vectorAdd(acc2).scalarDivide(<span class="hljs-number">2</span>);
+        acc1.<span class="hljs-title function_">setFromVector</span>(load).<span class="hljs-title function_">scalarDivide</span>(mass).<span class="hljs-title function_">scalarMultiply</span>(tick);
+        acc2.<span class="hljs-title function_">setFromVector</span>(load).<span class="hljs-title function_">vectorAdd</span>(acc1).<span class="hljs-title function_">scalarDivide</span>(mass).<span class="hljs-title function_">scalarMultiply</span>(tick);
+        acc3.<span class="hljs-title function_">setFromVector</span>(acc1).<span class="hljs-title function_">vectorAdd</span>(acc2).<span class="hljs-title function_">scalarDivide</span>(<span class="hljs-number">2</span>);
 
-        vel.vectorAdd(acc3);
+        vel.<span class="hljs-title function_">vectorAdd</span>(acc3);
 
-        velocity.setFromVector(vel);
+        velocity.<span class="hljs-title function_">setFromVector</span>(vel);
 
-        position.vectorAdd(vel.scalarMultiply(tick));
+        position.<span class="hljs-title function_">vectorAdd</span>(vel.<span class="hljs-title function_">scalarMultiply</span>(tick));
 
-        releaseVector(acc1, acc2, acc3, vel);
+        <span class="hljs-title function_">releaseVector</span>(acc1, acc2, acc3, vel);
     },</pre></div></div>
             
         </li>
@@ -1509,34 +1509,34 @@ D.load = λ<span class="hljs-literal">null</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;runge-kutta&#x27;</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">tick</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;runge-kutta&#x27;</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">tick</span>) {
 
-        <span class="hljs-keyword">let</span> {position, velocity, load, mass} = <span class="hljs-built_in">this</span>;
+        <span class="hljs-keyword">let</span> {position, velocity, load, mass} = <span class="hljs-variable language_">this</span>;
 
-        <span class="hljs-keyword">let</span> acc1 = requestVector(),
-            acc2 = requestVector(),
-            acc3 = requestVector(),
-            acc4 = requestVector(),
-            acc5 = requestVector(),
-            vel = requestVector(velocity);
+        <span class="hljs-keyword">let</span> acc1 = <span class="hljs-title function_">requestVector</span>(),
+            acc2 = <span class="hljs-title function_">requestVector</span>(),
+            acc3 = <span class="hljs-title function_">requestVector</span>(),
+            acc4 = <span class="hljs-title function_">requestVector</span>(),
+            acc5 = <span class="hljs-title function_">requestVector</span>(),
+            vel = <span class="hljs-title function_">requestVector</span>(velocity);
 
-        acc1.setFromVector(load).scalarDivide(mass).scalarMultiply(tick).scalarDivide(<span class="hljs-number">2</span>);
-        acc2.setFromVector(load).vectorAdd(acc1).scalarDivide(mass).scalarMultiply(tick).scalarDivide(<span class="hljs-number">2</span>);
-        acc3.setFromVector(load).vectorAdd(acc2).scalarDivide(mass).scalarMultiply(tick).scalarDivide(<span class="hljs-number">2</span>);
-        acc4.setFromVector(load).vectorAdd(acc3).scalarDivide(mass).scalarMultiply(tick).scalarDivide(<span class="hljs-number">2</span>);
+        acc1.<span class="hljs-title function_">setFromVector</span>(load).<span class="hljs-title function_">scalarDivide</span>(mass).<span class="hljs-title function_">scalarMultiply</span>(tick).<span class="hljs-title function_">scalarDivide</span>(<span class="hljs-number">2</span>);
+        acc2.<span class="hljs-title function_">setFromVector</span>(load).<span class="hljs-title function_">vectorAdd</span>(acc1).<span class="hljs-title function_">scalarDivide</span>(mass).<span class="hljs-title function_">scalarMultiply</span>(tick).<span class="hljs-title function_">scalarDivide</span>(<span class="hljs-number">2</span>);
+        acc3.<span class="hljs-title function_">setFromVector</span>(load).<span class="hljs-title function_">vectorAdd</span>(acc2).<span class="hljs-title function_">scalarDivide</span>(mass).<span class="hljs-title function_">scalarMultiply</span>(tick).<span class="hljs-title function_">scalarDivide</span>(<span class="hljs-number">2</span>);
+        acc4.<span class="hljs-title function_">setFromVector</span>(load).<span class="hljs-title function_">vectorAdd</span>(acc3).<span class="hljs-title function_">scalarDivide</span>(mass).<span class="hljs-title function_">scalarMultiply</span>(tick).<span class="hljs-title function_">scalarDivide</span>(<span class="hljs-number">2</span>);
 
-        acc2.scalarMultiply(<span class="hljs-number">2</span>);
-        acc3.scalarMultiply(<span class="hljs-number">2</span>);
+        acc2.<span class="hljs-title function_">scalarMultiply</span>(<span class="hljs-number">2</span>);
+        acc3.<span class="hljs-title function_">scalarMultiply</span>(<span class="hljs-number">2</span>);
 
-        acc5.setFromVector(acc1).vectorAdd(acc2).vectorAdd(acc3).vectorAdd(acc4).scalarDivide(<span class="hljs-number">6</span>);
+        acc5.<span class="hljs-title function_">setFromVector</span>(acc1).<span class="hljs-title function_">vectorAdd</span>(acc2).<span class="hljs-title function_">vectorAdd</span>(acc3).<span class="hljs-title function_">vectorAdd</span>(acc4).<span class="hljs-title function_">scalarDivide</span>(<span class="hljs-number">6</span>);
 
-        vel.vectorAdd(acc5);
+        vel.<span class="hljs-title function_">vectorAdd</span>(acc5);
 
-        velocity.setFromVector(vel);
+        velocity.<span class="hljs-title function_">setFromVector</span>(vel);
 
-        position.vectorAdd(vel.scalarMultiply(tick));
+        position.<span class="hljs-title function_">vectorAdd</span>(vel.<span class="hljs-title function_">scalarMultiply</span>(tick));
 
-        releaseVector(acc1, acc2, acc3, acc4, acc5, vel);
+        <span class="hljs-title function_">releaseVector</span>(acc1, acc2, acc3, acc4, acc5, vel);
     },
 };</pre></div></div>
             

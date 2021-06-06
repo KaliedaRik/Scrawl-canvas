@@ -707,9 +707,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.library.canvas.mycanvas;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
 
-scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</pre></div></div>
+scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -724,7 +724,7 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</p
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> matrix3 = scrawl.makeFilter({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> matrix3 = scrawl.<span class="hljs-title function_">makeFilter</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;matrix3&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;matrix&#x27;</span>,
@@ -732,7 +732,7 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</p
     <span class="hljs-attr">weights</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>],
 });
 
-<span class="hljs-keyword">const</span> matrix5 = scrawl.makeFilter({
+<span class="hljs-keyword">const</span> matrix5 = scrawl.<span class="hljs-title function_">makeFilter</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;matrix5&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;matrix5&#x27;</span>,
@@ -753,7 +753,7 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</p
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> target = scrawl.makePicture({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> target = scrawl.<span class="hljs-title function_">makePicture</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;base-piccy&#x27;</span>,
 
@@ -784,21 +784,21 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</p
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">let</span> opacity = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#opacity&#x27;</span>);
+    <span class="hljs-keyword">let</span> opacity = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#opacity&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
     matrix3 weights array: <span class="hljs-subst">${matrix3.weights}</span>
     matrix5 weights array: <span class="hljs-subst">${matrix5.weights}</span>
     Opacity: <span class="hljs-subst">${opacity.value}</span>`</span>;
@@ -818,7 +818,7 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</p
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-animation&quot;</span>,
     <span class="hljs-attr">target</span>: canvas,
@@ -839,73 +839,73 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</p
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> changeMatrix = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> changeMatrix = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">const</span> selector = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#selectMatrix&#x27;</span>);
+    <span class="hljs-keyword">const</span> selector = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#selectMatrix&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        target.set({
-            <span class="hljs-attr">filters</span>: [selector.value],
+        target.<span class="hljs-title function_">set</span>({
+            <span class="hljs-attr">filters</span>: [selector.<span class="hljs-property">value</span>],
         });
     }
 }();
-scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], changeMatrix, <span class="hljs-string">&#x27;#selectMatrix&#x27;</span>);
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], changeMatrix, <span class="hljs-string">&#x27;#selectMatrix&#x27;</span>);
 
-<span class="hljs-keyword">const</span> updateWeights = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+<span class="hljs-keyword">const</span> updateWeights = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">const</span> m11 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m11&#x27;</span>);
-    <span class="hljs-keyword">const</span> m12 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m12&#x27;</span>);
-    <span class="hljs-keyword">const</span> m13 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m13&#x27;</span>);
-    <span class="hljs-keyword">const</span> m14 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m14&#x27;</span>);
-    <span class="hljs-keyword">const</span> m15 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m15&#x27;</span>);
-    <span class="hljs-keyword">const</span> m21 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m21&#x27;</span>);
-    <span class="hljs-keyword">const</span> m22 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m22&#x27;</span>);
-    <span class="hljs-keyword">const</span> m23 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m23&#x27;</span>);
-    <span class="hljs-keyword">const</span> m24 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m24&#x27;</span>);
-    <span class="hljs-keyword">const</span> m25 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m25&#x27;</span>);
-    <span class="hljs-keyword">const</span> m31 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m31&#x27;</span>);
-    <span class="hljs-keyword">const</span> m32 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m32&#x27;</span>);
-    <span class="hljs-keyword">const</span> m33 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m33&#x27;</span>);
-    <span class="hljs-keyword">const</span> m34 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m34&#x27;</span>);
-    <span class="hljs-keyword">const</span> m35 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m35&#x27;</span>);
-    <span class="hljs-keyword">const</span> m41 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m41&#x27;</span>);
-    <span class="hljs-keyword">const</span> m42 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m42&#x27;</span>);
-    <span class="hljs-keyword">const</span> m43 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m43&#x27;</span>);
-    <span class="hljs-keyword">const</span> m44 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m44&#x27;</span>);
-    <span class="hljs-keyword">const</span> m45 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m45&#x27;</span>);
-    <span class="hljs-keyword">const</span> m51 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m51&#x27;</span>);
-    <span class="hljs-keyword">const</span> m52 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m52&#x27;</span>);
-    <span class="hljs-keyword">const</span> m53 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m53&#x27;</span>);
-    <span class="hljs-keyword">const</span> m54 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m54&#x27;</span>);
-    <span class="hljs-keyword">const</span> m55 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m55&#x27;</span>);
+    <span class="hljs-keyword">const</span> m11 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m11&#x27;</span>);
+    <span class="hljs-keyword">const</span> m12 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m12&#x27;</span>);
+    <span class="hljs-keyword">const</span> m13 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m13&#x27;</span>);
+    <span class="hljs-keyword">const</span> m14 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m14&#x27;</span>);
+    <span class="hljs-keyword">const</span> m15 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m15&#x27;</span>);
+    <span class="hljs-keyword">const</span> m21 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m21&#x27;</span>);
+    <span class="hljs-keyword">const</span> m22 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m22&#x27;</span>);
+    <span class="hljs-keyword">const</span> m23 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m23&#x27;</span>);
+    <span class="hljs-keyword">const</span> m24 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m24&#x27;</span>);
+    <span class="hljs-keyword">const</span> m25 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m25&#x27;</span>);
+    <span class="hljs-keyword">const</span> m31 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m31&#x27;</span>);
+    <span class="hljs-keyword">const</span> m32 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m32&#x27;</span>);
+    <span class="hljs-keyword">const</span> m33 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m33&#x27;</span>);
+    <span class="hljs-keyword">const</span> m34 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m34&#x27;</span>);
+    <span class="hljs-keyword">const</span> m35 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m35&#x27;</span>);
+    <span class="hljs-keyword">const</span> m41 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m41&#x27;</span>);
+    <span class="hljs-keyword">const</span> m42 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m42&#x27;</span>);
+    <span class="hljs-keyword">const</span> m43 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m43&#x27;</span>);
+    <span class="hljs-keyword">const</span> m44 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m44&#x27;</span>);
+    <span class="hljs-keyword">const</span> m45 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m45&#x27;</span>);
+    <span class="hljs-keyword">const</span> m51 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m51&#x27;</span>);
+    <span class="hljs-keyword">const</span> m52 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m52&#x27;</span>);
+    <span class="hljs-keyword">const</span> m53 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m53&#x27;</span>);
+    <span class="hljs-keyword">const</span> m54 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m54&#x27;</span>);
+    <span class="hljs-keyword">const</span> m55 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m55&#x27;</span>);
 
     <span class="hljs-keyword">let</span> weights3, weights5;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        weights3 = [<span class="hljs-built_in">parseFloat</span>(m22.value), <span class="hljs-built_in">parseFloat</span>(m23.value), <span class="hljs-built_in">parseFloat</span>(m24.value), 
-                    <span class="hljs-built_in">parseFloat</span>(m32.value), <span class="hljs-built_in">parseFloat</span>(m33.value), <span class="hljs-built_in">parseFloat</span>(m34.value), 
-                    <span class="hljs-built_in">parseFloat</span>(m42.value), <span class="hljs-built_in">parseFloat</span>(m43.value), <span class="hljs-built_in">parseFloat</span>(m44.value)];
+        weights3 = [<span class="hljs-built_in">parseFloat</span>(m22.<span class="hljs-property">value</span>), <span class="hljs-built_in">parseFloat</span>(m23.<span class="hljs-property">value</span>), <span class="hljs-built_in">parseFloat</span>(m24.<span class="hljs-property">value</span>), 
+                    <span class="hljs-built_in">parseFloat</span>(m32.<span class="hljs-property">value</span>), <span class="hljs-built_in">parseFloat</span>(m33.<span class="hljs-property">value</span>), <span class="hljs-built_in">parseFloat</span>(m34.<span class="hljs-property">value</span>), 
+                    <span class="hljs-built_in">parseFloat</span>(m42.<span class="hljs-property">value</span>), <span class="hljs-built_in">parseFloat</span>(m43.<span class="hljs-property">value</span>), <span class="hljs-built_in">parseFloat</span>(m44.<span class="hljs-property">value</span>)];
 
-        weights5 = [<span class="hljs-built_in">parseFloat</span>(m11.value), <span class="hljs-built_in">parseFloat</span>(m12.value), <span class="hljs-built_in">parseFloat</span>(m13.value), <span class="hljs-built_in">parseFloat</span>(m14.value), <span class="hljs-built_in">parseFloat</span>(m15.value), 
-                    <span class="hljs-built_in">parseFloat</span>(m21.value), <span class="hljs-built_in">parseFloat</span>(m22.value), <span class="hljs-built_in">parseFloat</span>(m23.value), <span class="hljs-built_in">parseFloat</span>(m24.value), <span class="hljs-built_in">parseFloat</span>(m25.value), 
-                    <span class="hljs-built_in">parseFloat</span>(m31.value), <span class="hljs-built_in">parseFloat</span>(m32.value), <span class="hljs-built_in">parseFloat</span>(m33.value), <span class="hljs-built_in">parseFloat</span>(m34.value), <span class="hljs-built_in">parseFloat</span>(m35.value), 
-                    <span class="hljs-built_in">parseFloat</span>(m41.value), <span class="hljs-built_in">parseFloat</span>(m42.value), <span class="hljs-built_in">parseFloat</span>(m43.value), <span class="hljs-built_in">parseFloat</span>(m44.value), <span class="hljs-built_in">parseFloat</span>(m45.value), 
-                    <span class="hljs-built_in">parseFloat</span>(m51.value), <span class="hljs-built_in">parseFloat</span>(m52.value), <span class="hljs-built_in">parseFloat</span>(m53.value), <span class="hljs-built_in">parseFloat</span>(m54.value), <span class="hljs-built_in">parseFloat</span>(m55.value)];
+        weights5 = [<span class="hljs-built_in">parseFloat</span>(m11.<span class="hljs-property">value</span>), <span class="hljs-built_in">parseFloat</span>(m12.<span class="hljs-property">value</span>), <span class="hljs-built_in">parseFloat</span>(m13.<span class="hljs-property">value</span>), <span class="hljs-built_in">parseFloat</span>(m14.<span class="hljs-property">value</span>), <span class="hljs-built_in">parseFloat</span>(m15.<span class="hljs-property">value</span>), 
+                    <span class="hljs-built_in">parseFloat</span>(m21.<span class="hljs-property">value</span>), <span class="hljs-built_in">parseFloat</span>(m22.<span class="hljs-property">value</span>), <span class="hljs-built_in">parseFloat</span>(m23.<span class="hljs-property">value</span>), <span class="hljs-built_in">parseFloat</span>(m24.<span class="hljs-property">value</span>), <span class="hljs-built_in">parseFloat</span>(m25.<span class="hljs-property">value</span>), 
+                    <span class="hljs-built_in">parseFloat</span>(m31.<span class="hljs-property">value</span>), <span class="hljs-built_in">parseFloat</span>(m32.<span class="hljs-property">value</span>), <span class="hljs-built_in">parseFloat</span>(m33.<span class="hljs-property">value</span>), <span class="hljs-built_in">parseFloat</span>(m34.<span class="hljs-property">value</span>), <span class="hljs-built_in">parseFloat</span>(m35.<span class="hljs-property">value</span>), 
+                    <span class="hljs-built_in">parseFloat</span>(m41.<span class="hljs-property">value</span>), <span class="hljs-built_in">parseFloat</span>(m42.<span class="hljs-property">value</span>), <span class="hljs-built_in">parseFloat</span>(m43.<span class="hljs-property">value</span>), <span class="hljs-built_in">parseFloat</span>(m44.<span class="hljs-property">value</span>), <span class="hljs-built_in">parseFloat</span>(m45.<span class="hljs-property">value</span>), 
+                    <span class="hljs-built_in">parseFloat</span>(m51.<span class="hljs-property">value</span>), <span class="hljs-built_in">parseFloat</span>(m52.<span class="hljs-property">value</span>), <span class="hljs-built_in">parseFloat</span>(m53.<span class="hljs-property">value</span>), <span class="hljs-built_in">parseFloat</span>(m54.<span class="hljs-property">value</span>), <span class="hljs-built_in">parseFloat</span>(m55.<span class="hljs-property">value</span>)];
 
-        matrix3.set({
+        matrix3.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">weights</span>: weights3,
         });
 
-        matrix5.set({
+        matrix5.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">weights</span>: weights5,
         });
     }
 }();
-scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updateWeights, <span class="hljs-string">&#x27;.weight&#x27;</span>);
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updateWeights, <span class="hljs-string">&#x27;.weight&#x27;</span>);
 
-scrawl.observeAndUpdate({
+scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
 
     <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
     <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,
@@ -926,7 +926,7 @@ scrawl.observeAndUpdate({
     },
 });
 
-scrawl.observeAndUpdate({
+scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
 
     <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
     <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,
@@ -960,37 +960,37 @@ scrawl.observeAndUpdate({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#selectMatrix&#x27;</span>).value = <span class="hljs-string">&#x27;matrix3&#x27;</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m11&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m12&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m13&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m14&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m15&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m21&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m22&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m23&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m24&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m25&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m31&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m32&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m33&#x27;</span>).value = <span class="hljs-number">1</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m34&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m35&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m41&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m42&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m43&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m44&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m45&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m51&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m52&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m53&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m54&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#m55&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#includeRed&#x27;</span>).options.selectedIndex = <span class="hljs-number">1</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#includeGreen&#x27;</span>).options.selectedIndex = <span class="hljs-number">1</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#includeBlue&#x27;</span>).options.selectedIndex = <span class="hljs-number">1</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#includeAlpha&#x27;</span>).options.selectedIndex = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#opacity&#x27;</span>).value = <span class="hljs-number">1</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#selectMatrix&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;matrix3&#x27;</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m11&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m12&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m13&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m14&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m15&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m21&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m22&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m23&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m24&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m25&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m31&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m32&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m33&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m34&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m35&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m41&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m42&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m43&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m44&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m45&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m51&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m52&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m53&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m54&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#m55&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#includeRed&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#includeGreen&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#includeBlue&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#includeAlpha&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#opacity&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
             
         </li>
         
@@ -1005,7 +1005,7 @@ scrawl.observeAndUpdate({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

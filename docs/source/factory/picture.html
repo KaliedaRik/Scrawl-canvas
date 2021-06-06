@@ -535,7 +535,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">asset</span>, <span class="hljs-title">artefact</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, asset, artefact } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { mergeOver, xta, addStrings, pushUnique, removeItem, isa_obj, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
@@ -562,38 +562,38 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Picture = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">Picture</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-built_in">this</span>.copyStart = makeCoordinate();
-    <span class="hljs-built_in">this</span>.currentCopyStart = makeCoordinate();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyStart</span> = <span class="hljs-title function_">makeCoordinate</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentCopyStart</span> = <span class="hljs-title function_">makeCoordinate</span>();
 
-    <span class="hljs-built_in">this</span>.copyDimensions = makeCoordinate();
-    <span class="hljs-built_in">this</span>.currentCopyDimensions = makeCoordinate();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyDimensions</span> = <span class="hljs-title function_">makeCoordinate</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentCopyDimensions</span> = <span class="hljs-title function_">makeCoordinate</span>();
 
-    <span class="hljs-built_in">this</span>.copyArray = [];
-    <span class="hljs-built_in">this</span>.pasteArray = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyArray</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pasteArray</span> = [];
 
-    <span class="hljs-built_in">this</span>.entityInit(items);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">entityInit</span>(items);
 
-    <span class="hljs-keyword">if</span> (!items.copyStart) {
+    <span class="hljs-keyword">if</span> (!items.<span class="hljs-property">copyStart</span>) {
 
-        <span class="hljs-keyword">if</span> (!items.copyStartX) <span class="hljs-built_in">this</span>.copyStart[<span class="hljs-number">0</span>] = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (!items.copyStartY) <span class="hljs-built_in">this</span>.copyStart[<span class="hljs-number">1</span>] = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">if</span> (!items.<span class="hljs-property">copyStartX</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyStart</span>[<span class="hljs-number">0</span>] = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">if</span> (!items.<span class="hljs-property">copyStartY</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyStart</span>[<span class="hljs-number">1</span>] = <span class="hljs-number">0</span>;
     }
 
-    <span class="hljs-keyword">if</span> (!items.copyDimensions) {
+    <span class="hljs-keyword">if</span> (!items.<span class="hljs-property">copyDimensions</span>) {
 
-        <span class="hljs-keyword">if</span> (!items.copyWidth) <span class="hljs-built_in">this</span>.copyDimensions[<span class="hljs-number">0</span>] = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (!items.copyHeight) <span class="hljs-built_in">this</span>.copyDimensions[<span class="hljs-number">1</span>] = <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">if</span> (!items.<span class="hljs-property">copyWidth</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyDimensions</span>[<span class="hljs-number">0</span>] = <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">if</span> (!items.<span class="hljs-property">copyHeight</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyDimensions</span>[<span class="hljs-number">1</span>] = <span class="hljs-number">1</span>;
     }
 
-    <span class="hljs-built_in">this</span>.imageSubscribers = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">imageSubscribers</span> = [];
 
-    <span class="hljs-built_in">this</span>.dirtyCopyStart = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.dirtyCopyDimensions = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.dirtyImage = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyStart</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyDimensions</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImage</span> = <span class="hljs-literal">true</span>;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -609,11 +609,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Picture.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">&#x27;Picture&#x27;</span>;
-P.lib = <span class="hljs-string">&#x27;entity&#x27;</span>;
-P.isArtefact = <span class="hljs-literal">true</span>;
-P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">Picture</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
+P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Picture&#x27;</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;entity&#x27;</span>;
+P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">true</span>;
+P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -633,9 +633,9 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = baseMix(P);
-P = entityMix(P);
-P = assetConsumerMix(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);
+P = <span class="hljs-title function_">entityMix</span>(P);
+P = <span class="hljs-title function_">assetConsumerMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -680,7 +680,7 @@ P = assetConsumerMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    copyStart: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">copyStart</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -698,7 +698,7 @@ P = assetConsumerMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    copyDimensions: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">copyDimensions</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -713,7 +713,7 @@ P = assetConsumerMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    checkHitIgnoreTransparency: <span class="hljs-literal">false</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">checkHitIgnoreTransparency</span>: <span class="hljs-literal">false</span>,</pre></div></div>
             
         </li>
         
@@ -729,7 +729,7 @@ P = assetConsumerMix(P);</pre></div></div>
             </div>
             
             <div class="content"><div class='highlight'><pre>};
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
+P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -744,8 +744,8 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.packetCoordinates = pushUnique(P.packetCoordinates, [<span class="hljs-string">&#x27;copyStart&#x27;</span>, <span class="hljs-string">&#x27;copyDimensions&#x27;</span>]);
-P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">&#x27;asset&#x27;</span>]);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">packetCoordinates</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetCoordinates</span>, [<span class="hljs-string">&#x27;copyStart&#x27;</span>, <span class="hljs-string">&#x27;copyDimensions&#x27;</span>]);
+P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetObjects</span>, [<span class="hljs-string">&#x27;asset&#x27;</span>]);</pre></div></div>
             
         </li>
         
@@ -774,11 +774,11 @@ P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">&#x27;a
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.factoryKill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">killAsset = <span class="hljs-literal">false</span></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">factoryKill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">killAsset = <span class="hljs-literal">false</span></span>) {
 
-    <span class="hljs-keyword">let</span> { asset, removeAssetOnKill } = <span class="hljs-built_in">this</span>;
+    <span class="hljs-keyword">let</span> { asset, removeAssetOnKill } = <span class="hljs-variable language_">this</span>;
 
-    <span class="hljs-keyword">if</span> (isa_obj(asset)) asset.unsubscribe(<span class="hljs-built_in">this</span>);</pre></div></div>
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(asset)) asset.<span class="hljs-title function_">unsubscribe</span>(<span class="hljs-variable language_">this</span>);</pre></div></div>
             
         </li>
         
@@ -795,8 +795,8 @@ P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">&#x27;a
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (removeAssetOnKill) {
 
-        <span class="hljs-keyword">if</span> (removeAssetOnKill.substring) asset.kill(<span class="hljs-literal">true</span>);
-        <span class="hljs-keyword">else</span> asset.kill();
+        <span class="hljs-keyword">if</span> (removeAssetOnKill.<span class="hljs-property">substring</span>) asset.<span class="hljs-title function_">kill</span>(<span class="hljs-literal">true</span>);
+        <span class="hljs-keyword">else</span> asset.<span class="hljs-title function_">kill</span>();
     }
 };</pre></div></div>
             
@@ -813,9 +813,9 @@ P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">&#x27;a
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.getters,
-    S = P.setters,
-    D = P.deltaSetters;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.<span class="hljs-property">getters</span>,
+    S = P.<span class="hljs-property">setters</span>,
+    D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
             
         </li>
         
@@ -833,60 +833,60 @@ P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">&#x27;a
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>G.copyStart = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>G.<span class="hljs-property">copyStart</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">return</span> [].concat(<span class="hljs-built_in">this</span>.currentCopyStart);
+    <span class="hljs-keyword">return</span> [].<span class="hljs-title function_">concat</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentCopyStart</span>);
 };
-G.copyStartX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+G.<span class="hljs-property">copyStartX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.currentCopyStart[<span class="hljs-number">0</span>];
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentCopyStart</span>[<span class="hljs-number">0</span>];
 };
-G.copyStartY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+G.<span class="hljs-property">copyStartY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.currentCopyStart[<span class="hljs-number">1</span>];
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentCopyStart</span>[<span class="hljs-number">1</span>];
 };
-S.copyStartX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
+S.<span class="hljs-property">copyStartX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
 
     <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
 
-        <span class="hljs-built_in">this</span>.copyStart[<span class="hljs-number">0</span>] = coord;
-        <span class="hljs-built_in">this</span>.dirtyCopyStart = <span class="hljs-literal">true</span>;
-        <span class="hljs-built_in">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyStart</span>[<span class="hljs-number">0</span>] = coord;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyStart</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">true</span>;
     }
 };
-S.copyStartY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
+S.<span class="hljs-property">copyStartY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
 
     <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
 
-        <span class="hljs-built_in">this</span>.copyStart[<span class="hljs-number">1</span>] = coord;
-        <span class="hljs-built_in">this</span>.dirtyCopyStart = <span class="hljs-literal">true</span>;
-        <span class="hljs-built_in">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyStart</span>[<span class="hljs-number">1</span>] = coord;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyStart</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">true</span>;
     }
 };
-S.copyStart = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
+S.<span class="hljs-property">copyStart</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) {
 
-    <span class="hljs-built_in">this</span>.setCoordinateHelper(<span class="hljs-string">&#x27;copyStart&#x27;</span>, x, y);
-    <span class="hljs-built_in">this</span>.dirtyCopyStart = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setCoordinateHelper</span>(<span class="hljs-string">&#x27;copyStart&#x27;</span>, x, y);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyStart</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">true</span>;
 };
-D.copyStartX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
+D.<span class="hljs-property">copyStartX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
 
-    <span class="hljs-keyword">let</span> c = <span class="hljs-built_in">this</span>.copyStart;
-    c[<span class="hljs-number">0</span>] = addStrings(c[<span class="hljs-number">0</span>], coord);
-    <span class="hljs-built_in">this</span>.dirtyCopyStart = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">let</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyStart</span>;
+    c[<span class="hljs-number">0</span>] = <span class="hljs-title function_">addStrings</span>(c[<span class="hljs-number">0</span>], coord);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyStart</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">true</span>;
 };
-D.copyStartY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
+D.<span class="hljs-property">copyStartY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
 
-    <span class="hljs-keyword">let</span> c = <span class="hljs-built_in">this</span>.copyStart;
-    c[<span class="hljs-number">1</span>] = addStrings(c[<span class="hljs-number">1</span>], coord);
-    <span class="hljs-built_in">this</span>.dirtyCopyStart = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">let</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyStart</span>;
+    c[<span class="hljs-number">1</span>] = <span class="hljs-title function_">addStrings</span>(c[<span class="hljs-number">1</span>], coord);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyStart</span> = <span class="hljs-literal">true</span>;
 };
-D.copyStart = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
+D.<span class="hljs-property">copyStart</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) {
 
-    <span class="hljs-built_in">this</span>.setDeltaCoordinateHelper(<span class="hljs-string">&#x27;copyStart&#x27;</span>, x, y);
-    <span class="hljs-built_in">this</span>.dirtyCopyStart = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setDeltaCoordinateHelper</span>(<span class="hljs-string">&#x27;copyStart&#x27;</span>, x, y);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyStart</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -905,68 +905,68 @@ D.copyStart = <span class="hljs-function"><span class="hljs-keyword">function</s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>G.copyWidth = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>G.<span class="hljs-property">copyWidth</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.currentCopyDimensions[<span class="hljs-number">0</span>];
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentCopyDimensions</span>[<span class="hljs-number">0</span>];
 };
-G.copyHeight = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+G.<span class="hljs-property">copyHeight</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.currentCopyDimensions[<span class="hljs-number">1</span>];
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentCopyDimensions</span>[<span class="hljs-number">1</span>];
 };
-G.copyDimensions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">w, h</span>) </span>{
+G.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">w, h</span>) {
 
-    <span class="hljs-keyword">return</span> [].concat(<span class="hljs-built_in">this</span>.currentCopyDimensions);
+    <span class="hljs-keyword">return</span> [].<span class="hljs-title function_">concat</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentCopyDimensions</span>);
 };
-S.copyWidth = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{
+S.<span class="hljs-property">copyWidth</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
 
     <span class="hljs-keyword">if</span> (val != <span class="hljs-literal">null</span>) {
 
-        <span class="hljs-built_in">this</span>.copyDimensions[<span class="hljs-number">0</span>] = val;
-        <span class="hljs-built_in">this</span>.dirtyCopyDimensions = <span class="hljs-literal">true</span>;
-        <span class="hljs-built_in">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyDimensions</span>[<span class="hljs-number">0</span>] = val;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyDimensions</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">true</span>;
     }
 };
-S.copyHeight = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{
+S.<span class="hljs-property">copyHeight</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
 
     <span class="hljs-keyword">if</span> (val != <span class="hljs-literal">null</span>) {
 
-        <span class="hljs-built_in">this</span>.copyDimensions[<span class="hljs-number">1</span>] = val;
-        <span class="hljs-built_in">this</span>.dirtyCopyDimensions = <span class="hljs-literal">true</span>;
-        <span class="hljs-built_in">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyDimensions</span>[<span class="hljs-number">1</span>] = val;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyDimensions</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">true</span>;
     }
 };
-S.copyDimensions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">w, h</span>) </span>{
+S.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">w, h</span>) {
 
-    <span class="hljs-built_in">this</span>.setCoordinateHelper(<span class="hljs-string">&#x27;copyDimensions&#x27;</span>, w, h);
-    <span class="hljs-built_in">this</span>.dirtyCopyDimensions = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setCoordinateHelper</span>(<span class="hljs-string">&#x27;copyDimensions&#x27;</span>, w, h);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyDimensions</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">true</span>;
 };
-D.copyWidth = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{
+D.<span class="hljs-property">copyWidth</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
 
-    <span class="hljs-keyword">let</span> c = <span class="hljs-built_in">this</span>.copyDimensions;
-    c[<span class="hljs-number">0</span>] = addStrings(c[<span class="hljs-number">0</span>], val);
-    <span class="hljs-built_in">this</span>.dirtyCopyDimensions = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">let</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyDimensions</span>;
+    c[<span class="hljs-number">0</span>] = <span class="hljs-title function_">addStrings</span>(c[<span class="hljs-number">0</span>], val);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyDimensions</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">true</span>;
 };
-D.copyHeight = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{
+D.<span class="hljs-property">copyHeight</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
 
-    <span class="hljs-keyword">let</span> c = <span class="hljs-built_in">this</span>.copyDimensions;
-    c[<span class="hljs-number">1</span>] = addStrings(c[<span class="hljs-number">1</span>], val);
-    <span class="hljs-built_in">this</span>.dirtyCopyDimensions = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">let</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyDimensions</span>;
+    c[<span class="hljs-number">1</span>] = <span class="hljs-title function_">addStrings</span>(c[<span class="hljs-number">1</span>], val);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyDimensions</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">true</span>;
 };
-D.copyDimensions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">w, h</span>) </span>{
+D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">w, h</span>) {
 
-    <span class="hljs-built_in">this</span>.setDeltaCoordinateHelper(<span class="hljs-string">&#x27;copyDimensions&#x27;</span>, w, h);
-    <span class="hljs-built_in">this</span>.dirtyCopyDimensions = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setDeltaCoordinateHelper</span>(<span class="hljs-string">&#x27;copyDimensions&#x27;</span>, w, h);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyDimensions</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">true</span>;
 };
 
-S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">checkHitIgnoreTransparency</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.checkHitIgnoreTransparency = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">checkHitIgnoreTransparency</span> = item;
 
-    <span class="hljs-keyword">if</span> (item) <span class="hljs-built_in">this</span>.stashOutput = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">if</span> (item) <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashOutput</span> = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -995,35 +995,35 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.get = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">get</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">let</span> source = <span class="hljs-built_in">this</span>.source;
+    <span class="hljs-keyword">let</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
 
-    <span class="hljs-keyword">if</span> ((item.indexOf(<span class="hljs-string">&#x27;video_&#x27;</span>) === <span class="hljs-number">0</span> || item.indexOf(<span class="hljs-string">&#x27;image_&#x27;</span>) === <span class="hljs-number">0</span>) &amp;&amp; source) {
+    <span class="hljs-keyword">if</span> ((item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;video_&#x27;</span>) === <span class="hljs-number">0</span> || item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;image_&#x27;</span>) === <span class="hljs-number">0</span>) &amp;&amp; source) {
 
-        <span class="hljs-keyword">if</span> (gettableVideoAssetAtributes.indexOf(item) &gt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> source[item.substring(<span class="hljs-number">6</span>)];
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (gettableImageAssetAtributes.indexOf(item) &gt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> source[item.substring(<span class="hljs-number">6</span>)];
+        <span class="hljs-keyword">if</span> (gettableVideoAssetAtributes.<span class="hljs-title function_">indexOf</span>(item) &gt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> source[item.<span class="hljs-title function_">substring</span>(<span class="hljs-number">6</span>)];
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (gettableImageAssetAtributes.<span class="hljs-title function_">indexOf</span>(item) &gt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> source[item.<span class="hljs-title function_">substring</span>(<span class="hljs-number">6</span>)];
     }
 
     <span class="hljs-keyword">else</span> {
 
-        <span class="hljs-keyword">let</span> getter = <span class="hljs-built_in">this</span>.getters[item];
+        <span class="hljs-keyword">let</span> getter = <span class="hljs-variable language_">this</span>.<span class="hljs-property">getters</span>[item];
 
-        <span class="hljs-keyword">if</span> (getter) <span class="hljs-keyword">return</span> getter.call(<span class="hljs-built_in">this</span>);
+        <span class="hljs-keyword">if</span> (getter) <span class="hljs-keyword">return</span> getter.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>);
 
         <span class="hljs-keyword">else</span> {
 
-            <span class="hljs-keyword">let</span> def = <span class="hljs-built_in">this</span>.defs[item],
-                state = <span class="hljs-built_in">this</span>.state,
+            <span class="hljs-keyword">let</span> def = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>[item],
+                state = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>,
                 val;
 
             <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> def != <span class="hljs-string">&#x27;undefined&#x27;</span>) {
 
-                val = <span class="hljs-built_in">this</span>[item];
+                val = <span class="hljs-variable language_">this</span>[item];
                 <span class="hljs-keyword">return</span> (<span class="hljs-keyword">typeof</span> val != <span class="hljs-string">&#x27;undefined&#x27;</span>) ? val : def;
             }
 
-            def = state.defs[item];
+            def = state.<span class="hljs-property">defs</span>[item];
 
             <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> def != <span class="hljs-string">&#x27;undefined&#x27;</span>) {
 
@@ -1048,20 +1048,20 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.set = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">set</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-keyword">const</span> keys = <span class="hljs-built_in">Object</span>.keys(items),
-        keysLen = keys.length;
+    <span class="hljs-keyword">const</span> keys = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(items),
+        keysLen = keys.<span class="hljs-property">length</span>;
 
     <span class="hljs-keyword">if</span> (keysLen) {
 
-        <span class="hljs-keyword">const</span> setters = <span class="hljs-built_in">this</span>.setters,
-            defs = <span class="hljs-built_in">this</span>.defs,
-            source = <span class="hljs-built_in">this</span>.source,
-            state = <span class="hljs-built_in">this</span>.state;
+        <span class="hljs-keyword">const</span> setters = <span class="hljs-variable language_">this</span>.<span class="hljs-property">setters</span>,
+            defs = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>,
+            source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>,
+            state = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>;
 
-        <span class="hljs-keyword">const</span> stateSetters = (state) ? state.setters : Ωempty;
-        <span class="hljs-keyword">const</span> stateDefs = (state) ? state.defs : Ωempty;
+        <span class="hljs-keyword">const</span> stateSetters = (state) ? state.<span class="hljs-property">setters</span> : Ωempty;
+        <span class="hljs-keyword">const</span> stateDefs = (state) ? state.<span class="hljs-property">defs</span> : Ωempty;
 
         <span class="hljs-keyword">let</span> predefined, i, key, value;
 
@@ -1070,32 +1070,32 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
             key = keys[i];
             value = items[key];
 
-            <span class="hljs-keyword">if</span> ((key.indexOf(<span class="hljs-string">&#x27;video_&#x27;</span>) === <span class="hljs-number">0</span> || key.indexOf(<span class="hljs-string">&#x27;image_&#x27;</span>) === <span class="hljs-number">0</span>) &amp;&amp; source) {
+            <span class="hljs-keyword">if</span> ((key.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;video_&#x27;</span>) === <span class="hljs-number">0</span> || key.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;image_&#x27;</span>) === <span class="hljs-number">0</span>) &amp;&amp; source) {
 
-                <span class="hljs-keyword">if</span> (settableVideoAssetAtributes.indexOf(key) &gt;= <span class="hljs-number">0</span>) source[key.substring(<span class="hljs-number">6</span>)] = value
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (settableImageAssetAtributes.indexOf(key) &gt;= <span class="hljs-number">0</span>) source[key.substring(<span class="hljs-number">6</span>)] = value
+                <span class="hljs-keyword">if</span> (settableVideoAssetAtributes.<span class="hljs-title function_">indexOf</span>(key) &gt;= <span class="hljs-number">0</span>) source[key.<span class="hljs-title function_">substring</span>(<span class="hljs-number">6</span>)] = value
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (settableImageAssetAtributes.<span class="hljs-title function_">indexOf</span>(key) &gt;= <span class="hljs-number">0</span>) source[key.<span class="hljs-title function_">substring</span>(<span class="hljs-number">6</span>)] = value
             }
 
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (key &amp;&amp; key !== <span class="hljs-string">&#x27;name&#x27;</span> &amp;&amp; value != <span class="hljs-literal">null</span>) {
 
-                <span class="hljs-keyword">if</span> (stateKeys.indexOf(key) &lt; <span class="hljs-number">0</span>) {
+                <span class="hljs-keyword">if</span> (stateKeys.<span class="hljs-title function_">indexOf</span>(key) &lt; <span class="hljs-number">0</span>) {
 
                     predefined = setters[key];
 
-                    <span class="hljs-keyword">if</span> (predefined) predefined.call(<span class="hljs-built_in">this</span>, value);
-                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] != <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-built_in">this</span>[key] = value;
+                    <span class="hljs-keyword">if</span> (predefined) predefined.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, value);
+                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] != <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-variable language_">this</span>[key] = value;
                 }
                 <span class="hljs-keyword">else</span> {
 
                     predefined = stateSetters[key];
 
-                    <span class="hljs-keyword">if</span> (predefined) predefined.call(state, value);
+                    <span class="hljs-keyword">if</span> (predefined) predefined.<span class="hljs-title function_">call</span>(state, value);
                     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> stateDefs[key] != <span class="hljs-string">&#x27;undefined&#x27;</span>) state[key] = value;
                 }
             }
         }
     }
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -1124,17 +1124,17 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.updateImageSubscribers = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">updateImageSubscribers</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-built_in">this</span>.dirtyImageSubscribers = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.imageSubscribers.length) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">imageSubscribers</span>.<span class="hljs-property">length</span>) {
 
-        <span class="hljs-built_in">this</span>.imageSubscribers.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">imageSubscribers</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
             <span class="hljs-keyword">let</span> instance = artefact[name];
 
-            <span class="hljs-keyword">if</span> (instance) instance.dirtyInput = <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">if</span> (instance) instance.<span class="hljs-property">dirtyInput</span> = <span class="hljs-literal">true</span>;
         });
     }
 };</pre></div></div>
@@ -1152,9 +1152,9 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.imageSubscribe = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">imageSubscribe</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">name</span>) {
 
-    <span class="hljs-keyword">if</span> (name &amp;&amp; name.substring) pushUnique(<span class="hljs-built_in">this</span>.imageSubscribers, name);
+    <span class="hljs-keyword">if</span> (name &amp;&amp; name.<span class="hljs-property">substring</span>) <span class="hljs-title function_">pushUnique</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">imageSubscribers</span>, name);
 };</pre></div></div>
             
         </li>
@@ -1170,9 +1170,9 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.imageUnsubscribe = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">imageUnsubscribe</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">name</span>) {
 
-    <span class="hljs-keyword">if</span> (name &amp;&amp; name.substring) removeItem(<span class="hljs-built_in">this</span>.imageSubscribers, name);
+    <span class="hljs-keyword">if</span> (name &amp;&amp; name.<span class="hljs-property">substring</span>) <span class="hljs-title function_">removeItem</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">imageSubscribers</span>, name);
 };</pre></div></div>
             
         </li>
@@ -1201,30 +1201,30 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.cleanImage = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">cleanImage</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> natWidth = <span class="hljs-built_in">this</span>.sourceNaturalWidth,
-        natHeight = <span class="hljs-built_in">this</span>.sourceNaturalHeight;
+    <span class="hljs-keyword">let</span> natWidth = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span>,
+        natHeight = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span>;
 
-    <span class="hljs-keyword">if</span> (xta(natWidth, natHeight)) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xta</span>(natWidth, natHeight)) {
 
-        <span class="hljs-built_in">this</span>.dirtyImage = <span class="hljs-literal">false</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImage</span> = <span class="hljs-literal">false</span>;
 
-        <span class="hljs-keyword">let</span> start = <span class="hljs-built_in">this</span>.currentCopyStart,
+        <span class="hljs-keyword">let</span> start = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentCopyStart</span>,
             x = start[<span class="hljs-number">0</span>],
             y = start[<span class="hljs-number">1</span>];
 
-        <span class="hljs-keyword">let</span> dims = <span class="hljs-built_in">this</span>.currentCopyDimensions,
+        <span class="hljs-keyword">let</span> dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentCopyDimensions</span>,
             w = dims[<span class="hljs-number">0</span>],
             h = dims[<span class="hljs-number">1</span>];
 
         <span class="hljs-keyword">if</span> (x + w &gt; natWidth) start[<span class="hljs-number">0</span>] = natWidth - w;
         <span class="hljs-keyword">if</span> (y + h &gt; natHeight) start[<span class="hljs-number">1</span>] = natHeight - h;
 
-        <span class="hljs-keyword">let</span> copyArray = <span class="hljs-built_in">this</span>.copyArray;
+        <span class="hljs-keyword">let</span> copyArray = <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyArray</span>;
 
-        copyArray.length = <span class="hljs-number">0</span>;
-        copyArray.push(start[<span class="hljs-number">0</span>], start[<span class="hljs-number">1</span>], w, h);
+        copyArray.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+        copyArray.<span class="hljs-title function_">push</span>(start[<span class="hljs-number">0</span>], start[<span class="hljs-number">1</span>], w, h);
     }
 };</pre></div></div>
             
@@ -1241,18 +1241,18 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.cleanCopyStart = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">cleanCopyStart</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> width = <span class="hljs-built_in">this</span>.sourceNaturalWidth,
-        height = <span class="hljs-built_in">this</span>.sourceNaturalHeight;
+    <span class="hljs-keyword">let</span> width = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span>,
+        height = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span>;
 
-    <span class="hljs-keyword">if</span> (xta(width, height)) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xta</span>(width, height)) {
 
-        <span class="hljs-built_in">this</span>.dirtyCopyStart = <span class="hljs-literal">false</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyStart</span> = <span class="hljs-literal">false</span>;
 
-        <span class="hljs-built_in">this</span>.cleanPosition(<span class="hljs-built_in">this</span>.currentCopyStart, <span class="hljs-built_in">this</span>.copyStart, [width, height]);
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanPosition</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentCopyStart</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyStart</span>, [width, height]);
 
-        <span class="hljs-keyword">let</span> current = <span class="hljs-built_in">this</span>.currentCopyStart,
+        <span class="hljs-keyword">let</span> current = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentCopyStart</span>,
             x = current[<span class="hljs-number">0</span>],
             y = current[<span class="hljs-number">1</span>];
 
@@ -1267,7 +1267,7 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
             <span class="hljs-keyword">if</span> (y &lt; <span class="hljs-number">0</span>) current[<span class="hljs-number">1</span>] = <span class="hljs-number">0</span>;
             <span class="hljs-keyword">else</span> current[<span class="hljs-number">1</span>] = height - <span class="hljs-number">1</span>;
         }
-        <span class="hljs-built_in">this</span>.dirtyImage = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImage</span> = <span class="hljs-literal">true</span>;
     }
 };</pre></div></div>
             
@@ -1284,24 +1284,24 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.cleanCopyDimensions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">cleanCopyDimensions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> natWidth = <span class="hljs-built_in">this</span>.sourceNaturalWidth,
-        natHeight = <span class="hljs-built_in">this</span>.sourceNaturalHeight;
+    <span class="hljs-keyword">let</span> natWidth = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span>,
+        natHeight = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span>;
 
-    <span class="hljs-keyword">if</span> (xta(natWidth, natHeight)) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xta</span>(natWidth, natHeight)) {
 
-        <span class="hljs-built_in">this</span>.dirtyCopyDimensions = <span class="hljs-literal">false</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyDimensions</span> = <span class="hljs-literal">false</span>;
 
-        <span class="hljs-keyword">let</span> dims = <span class="hljs-built_in">this</span>.copyDimensions,
-            currentDims = <span class="hljs-built_in">this</span>.currentCopyDimensions,
+        <span class="hljs-keyword">let</span> dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyDimensions</span>,
+            currentDims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentCopyDimensions</span>,
             width = dims[<span class="hljs-number">0</span>], 
             height = dims[<span class="hljs-number">1</span>];
 
-        <span class="hljs-keyword">if</span> (width.substring) currentDims[<span class="hljs-number">0</span>] = (<span class="hljs-built_in">parseFloat</span>(width) / <span class="hljs-number">100</span>) * natWidth;
+        <span class="hljs-keyword">if</span> (width.<span class="hljs-property">substring</span>) currentDims[<span class="hljs-number">0</span>] = (<span class="hljs-built_in">parseFloat</span>(width) / <span class="hljs-number">100</span>) * natWidth;
         <span class="hljs-keyword">else</span> currentDims[<span class="hljs-number">0</span>] = width;
 
-        <span class="hljs-keyword">if</span> (height.substring) currentDims[<span class="hljs-number">1</span>] = (<span class="hljs-built_in">parseFloat</span>(height) / <span class="hljs-number">100</span>) * natHeight;
+        <span class="hljs-keyword">if</span> (height.<span class="hljs-property">substring</span>) currentDims[<span class="hljs-number">1</span>] = (<span class="hljs-built_in">parseFloat</span>(height) / <span class="hljs-number">100</span>) * natHeight;
         <span class="hljs-keyword">else</span> currentDims[<span class="hljs-number">1</span>] = height;
 
         <span class="hljs-keyword">let</span> currentWidth = currentDims[<span class="hljs-number">0</span>],
@@ -1318,7 +1318,7 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
             <span class="hljs-keyword">if</span> (currentHeight &lt;= <span class="hljs-number">0</span>) currentDims[<span class="hljs-number">1</span>] = <span class="hljs-number">1</span>;
             <span class="hljs-keyword">else</span> currentDims[<span class="hljs-number">1</span>] = natHeight;
         }
-        <span class="hljs-built_in">this</span>.dirtyImage = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImage</span> = <span class="hljs-literal">true</span>;
     }
 };</pre></div></div>
             
@@ -1335,7 +1335,7 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.prepareStamp = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">prepareStamp</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {</pre></div></div>
             
         </li>
         
@@ -1350,7 +1350,7 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyAsset) <span class="hljs-built_in">this</span>.cleanAsset();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyAsset</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanAsset</span>();</pre></div></div>
             
         </li>
         
@@ -1365,13 +1365,13 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.asset) {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">asset</span>) {
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.asset.type === <span class="hljs-string">&#x27;Sprite&#x27;</span>) <span class="hljs-built_in">this</span>.checkSpriteFrame(<span class="hljs-built_in">this</span>);
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">asset</span>.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Sprite&#x27;</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkSpriteFrame</span>(<span class="hljs-variable language_">this</span>);
         <span class="hljs-keyword">else</span> {
 
-            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.asset.checkSource) <span class="hljs-built_in">this</span>.asset.checkSource(<span class="hljs-built_in">this</span>.sourceNaturalWidth, <span class="hljs-built_in">this</span>.sourceNaturalHeight);
-            <span class="hljs-keyword">else</span> <span class="hljs-built_in">this</span>.dirtyAsset = <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">asset</span>.<span class="hljs-property">checkSource</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">asset</span>.<span class="hljs-title function_">checkSource</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span>);
+            <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyAsset</span> = <span class="hljs-literal">true</span>;
         }
     }</pre></div></div>
             
@@ -1388,33 +1388,33 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyDimensions || <span class="hljs-built_in">this</span>.dirtyHandle || <span class="hljs-built_in">this</span>.dirtyScale) <span class="hljs-built_in">this</span>.dirtyPaste = <span class="hljs-literal">true</span>;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHandle</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScale</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPaste</span> = <span class="hljs-literal">true</span>;
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyScale || <span class="hljs-built_in">this</span>.dirtyDimensions || <span class="hljs-built_in">this</span>.dirtyStart || <span class="hljs-built_in">this</span>.dirtyOffset || <span class="hljs-built_in">this</span>.dirtyHandle) <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScale</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStart</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOffset</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHandle</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyScale) <span class="hljs-built_in">this</span>.cleanScale();
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyDimensions) <span class="hljs-built_in">this</span>.cleanDimensions();
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyLock) <span class="hljs-built_in">this</span>.cleanLock();
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyStart) <span class="hljs-built_in">this</span>.cleanStart();
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyOffset) <span class="hljs-built_in">this</span>.cleanOffset();
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyHandle) <span class="hljs-built_in">this</span>.cleanHandle();
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyRotation) <span class="hljs-built_in">this</span>.cleanRotation();
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScale</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanScale</span>();
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanDimensions</span>();
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyLock</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanLock</span>();
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStart</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanStart</span>();
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOffset</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanOffset</span>();
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHandle</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanHandle</span>();
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyRotation</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanRotation</span>();
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.isBeingDragged || <span class="hljs-built_in">this</span>.lockTo.indexOf(<span class="hljs-string">&#x27;mouse&#x27;</span>) &gt;= <span class="hljs-number">0</span> || <span class="hljs-built_in">this</span>.lockTo.indexOf(<span class="hljs-string">&#x27;particle&#x27;</span>) &gt;= <span class="hljs-number">0</span>) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">isBeingDragged</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;mouse&#x27;</span>) &gt;= <span class="hljs-number">0</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;particle&#x27;</span>) &gt;= <span class="hljs-number">0</span>) {
 
-        <span class="hljs-built_in">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
-        <span class="hljs-built_in">this</span>.dirtyStampHandlePositions = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampPositions</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampHandlePositions</span> = <span class="hljs-literal">true</span>;
     }
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyStampPositions) <span class="hljs-built_in">this</span>.cleanStampPositions();
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyStampHandlePositions) <span class="hljs-built_in">this</span>.cleanStampHandlePositions();
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampPositions</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanStampPositions</span>();
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampHandlePositions</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanStampHandlePositions</span>();
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyCopyStart) <span class="hljs-built_in">this</span>.cleanCopyStart();
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyCopyDimensions) <span class="hljs-built_in">this</span>.cleanCopyDimensions();
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyImage) <span class="hljs-built_in">this</span>.cleanImage();
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyPaste) <span class="hljs-built_in">this</span>.preparePasteObject();
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyStart</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanCopyStart</span>();
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyDimensions</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanCopyDimensions</span>();
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImage</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanImage</span>();
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPaste</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">preparePasteObject</span>();
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyPathObject) <span class="hljs-built_in">this</span>.cleanPathObject();</pre></div></div>
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanPathObject</span>();</pre></div></div>
             
         </li>
         
@@ -1429,7 +1429,7 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyPositionSubscribers) <span class="hljs-built_in">this</span>.updatePositionSubscribers();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPositionSubscribers</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updatePositionSubscribers</span>();</pre></div></div>
             
         </li>
         
@@ -1444,7 +1444,7 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyImageSubscribers) <span class="hljs-built_in">this</span>.updateImageSubscribers();
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImageSubscribers</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateImageSubscribers</span>();
 };</pre></div></div>
             
         </li>
@@ -1463,25 +1463,25 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.preparePasteObject = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">preparePasteObject</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-built_in">this</span>.dirtyPaste = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPaste</span> = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> handle = <span class="hljs-built_in">this</span>.currentStampHandlePosition,
-        dims = <span class="hljs-built_in">this</span>.currentDimensions,
-        scale = <span class="hljs-built_in">this</span>.currentScale;
+    <span class="hljs-keyword">let</span> handle = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampHandlePosition</span>,
+        dims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>,
+        scale = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentScale</span>;
 
     <span class="hljs-keyword">let</span> x = -handle[<span class="hljs-number">0</span>] * scale,
         y = -handle[<span class="hljs-number">1</span>] * scale,
         w = dims[<span class="hljs-number">0</span>] * scale,
         h = dims[<span class="hljs-number">1</span>] * scale;
 
-    <span class="hljs-keyword">let</span> pasteArray = <span class="hljs-built_in">this</span>.pasteArray;
+    <span class="hljs-keyword">let</span> pasteArray = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pasteArray</span>;
 
-    pasteArray.length = <span class="hljs-number">0</span>;
-    pasteArray.push(x, y, w, h);
+    pasteArray.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+    pasteArray.<span class="hljs-title function_">push</span>(x, y, w, h);
 
-    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1500,17 +1500,17 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.cleanPathObject = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">cleanPathObject</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.noPathUpdates || !<span class="hljs-built_in">this</span>.pathObject) {
+    <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">noPathUpdates</span> || !<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>) {
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.pasteArray) <span class="hljs-built_in">this</span>.preparePasteObject();
+        <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">pasteArray</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">preparePasteObject</span>();
 
-        <span class="hljs-keyword">let</span> p = <span class="hljs-built_in">this</span>.pathObject = <span class="hljs-keyword">new</span> Path2D();
+        <span class="hljs-keyword">let</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path</span>2D();
 
-        p.rect(...this.pasteArray);
+        p.<span class="hljs-title function_">rect</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-property">pasteArray</span>);
     }
 };</pre></div></div>
             
@@ -1540,9 +1540,9 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.draw = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">draw</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-    engine.stroke(<span class="hljs-built_in">this</span>.pathObject);
+    engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>);
 };</pre></div></div>
             
         </li>
@@ -1558,10 +1558,10 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.fill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">fill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-    <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-built_in">this</span>.copyArray;
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.source &amp;&amp; w &amp;&amp; h) engine.drawImage(<span class="hljs-built_in">this</span>.source, ...this.copyArray, ...this.pasteArray);
+    <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyArray</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span> &amp;&amp; w &amp;&amp; h) engine.<span class="hljs-title function_">drawImage</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>, ...<span class="hljs-variable language_">this</span>.<span class="hljs-property">copyArray</span>, ...<span class="hljs-variable language_">this</span>.<span class="hljs-property">pasteArray</span>);
 };</pre></div></div>
             
         </li>
@@ -1577,18 +1577,18 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.drawAndFill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">drawAndFill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-    <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-built_in">this</span>.copyArray;
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.source &amp;&amp; w &amp;&amp; h) {
+    <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyArray</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span> &amp;&amp; w &amp;&amp; h) {
 
-        engine.stroke(<span class="hljs-built_in">this</span>.pathObject);
-        engine.drawImage(<span class="hljs-built_in">this</span>.source, ...this.copyArray, ...this.pasteArray);
+        engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>);
+        engine.<span class="hljs-title function_">drawImage</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>, ...<span class="hljs-variable language_">this</span>.<span class="hljs-property">copyArray</span>, ...<span class="hljs-variable language_">this</span>.<span class="hljs-property">pasteArray</span>);
 
-        <span class="hljs-built_in">this</span>.currentHost.clearShadow();
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>.<span class="hljs-title function_">clearShadow</span>();
 
-        engine.stroke(<span class="hljs-built_in">this</span>.pathObject);
-        engine.drawImage(<span class="hljs-built_in">this</span>.source, ...this.copyArray, ...this.pasteArray);
+        engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>);
+        engine.<span class="hljs-title function_">drawImage</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>, ...<span class="hljs-variable language_">this</span>.<span class="hljs-property">copyArray</span>, ...<span class="hljs-variable language_">this</span>.<span class="hljs-property">pasteArray</span>);
     }
 };</pre></div></div>
             
@@ -1605,21 +1605,21 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.fillAndDraw = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">fillAndDraw</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-    <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-built_in">this</span>.copyArray;
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.source &amp;&amp; w &amp;&amp; h) {
+    <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyArray</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span> &amp;&amp; w &amp;&amp; h) {
 
-        engine.drawImage(<span class="hljs-built_in">this</span>.source, ...this.copyArray, ...this.pasteArray);
-        engine.stroke(<span class="hljs-built_in">this</span>.pathObject);
+        engine.<span class="hljs-title function_">drawImage</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>, ...<span class="hljs-variable language_">this</span>.<span class="hljs-property">copyArray</span>, ...<span class="hljs-variable language_">this</span>.<span class="hljs-property">pasteArray</span>);
+        engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>);
 
-        <span class="hljs-built_in">this</span>.currentHost.clearShadow();
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>.<span class="hljs-title function_">clearShadow</span>();
 
-        engine.drawImage(<span class="hljs-built_in">this</span>.source, ...this.copyArray, ...this.pasteArray);
-        engine.stroke(<span class="hljs-built_in">this</span>.pathObject);
+        engine.<span class="hljs-title function_">drawImage</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>, ...<span class="hljs-variable language_">this</span>.<span class="hljs-property">copyArray</span>, ...<span class="hljs-variable language_">this</span>.<span class="hljs-property">pasteArray</span>);
+        engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>);
     }
 
-    engine.stroke(<span class="hljs-built_in">this</span>.pathObject);
+    engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>);
 };</pre></div></div>
             
         </li>
@@ -1635,13 +1635,13 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.drawThenFill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">drawThenFill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-    <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-built_in">this</span>.copyArray;
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.source &amp;&amp; w &amp;&amp; h) {
+    <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyArray</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span> &amp;&amp; w &amp;&amp; h) {
 
-        engine.stroke(<span class="hljs-built_in">this</span>.pathObject);
-        engine.drawImage(<span class="hljs-built_in">this</span>.source, ...this.copyArray, ...this.pasteArray);
+        engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>);
+        engine.<span class="hljs-title function_">drawImage</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>, ...<span class="hljs-variable language_">this</span>.<span class="hljs-property">copyArray</span>, ...<span class="hljs-variable language_">this</span>.<span class="hljs-property">pasteArray</span>);
     }
 };</pre></div></div>
             
@@ -1658,13 +1658,13 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.fillThenDraw = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">fillThenDraw</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-    <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-built_in">this</span>.copyArray;
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.source &amp;&amp; w &amp;&amp; h) {
+    <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyArray</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span> &amp;&amp; w &amp;&amp; h) {
 
-        engine.drawImage(<span class="hljs-built_in">this</span>.source, ...this.copyArray, ...this.pasteArray);
-        engine.stroke(<span class="hljs-built_in">this</span>.pathObject);
+        engine.<span class="hljs-title function_">drawImage</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>, ...<span class="hljs-variable language_">this</span>.<span class="hljs-property">copyArray</span>, ...<span class="hljs-variable language_">this</span>.<span class="hljs-property">pasteArray</span>);
+        engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>);
     }
 };</pre></div></div>
             
@@ -1681,27 +1681,27 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.checkHitReturn = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y, cell</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">checkHitReturn</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y, cell</span>) {
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.checkHitIgnoreTransparency &amp;&amp; cell &amp;&amp; cell.engine) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">checkHitIgnoreTransparency</span> &amp;&amp; cell &amp;&amp; cell.<span class="hljs-property">engine</span>) {
 
-        <span class="hljs-keyword">let</span> [copyX, copyY, copyWidth, copyHeight] = <span class="hljs-built_in">this</span>.copyArray;
-        <span class="hljs-keyword">let</span> [pasteX, pasteY, pasteWidth, pasteHeight] = <span class="hljs-built_in">this</span>.pasteArray;
-        <span class="hljs-keyword">let</span> [stampX, stampY] = <span class="hljs-built_in">this</span>.currentStampPosition;
+        <span class="hljs-keyword">let</span> [copyX, copyY, copyWidth, copyHeight] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyArray</span>;
+        <span class="hljs-keyword">let</span> [pasteX, pasteY, pasteWidth, pasteHeight] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pasteArray</span>;
+        <span class="hljs-keyword">let</span> [stampX, stampY] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>;
 
-        <span class="hljs-keyword">let</span> img = cell.engine.getImageData(copyX, copyY, copyWidth, copyHeight);
+        <span class="hljs-keyword">let</span> img = cell.<span class="hljs-property">engine</span>.<span class="hljs-title function_">getImageData</span>(copyX, copyY, copyWidth, copyHeight);
 
         <span class="hljs-keyword">let</span> myX = x - stampX,
             myY = y - stampY;
 
         <span class="hljs-keyword">let</span> index = (((myY * pasteWidth) + myX) * <span class="hljs-number">4</span>) + <span class="hljs-number">3</span>;
 
-        <span class="hljs-keyword">if</span> (img.data[index]) {
+        <span class="hljs-keyword">if</span> (img.<span class="hljs-property">data</span>[index]) {
 
             <span class="hljs-keyword">return</span> {
                 <span class="hljs-attr">x</span>: x,
                 <span class="hljs-attr">y</span>: y,
-                <span class="hljs-attr">artefact</span>: <span class="hljs-built_in">this</span>
+                <span class="hljs-attr">artefact</span>: <span class="hljs-variable language_">this</span>
             };
         }
         <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
@@ -1711,7 +1711,7 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
         <span class="hljs-keyword">return</span> {
             <span class="hljs-attr">x</span>: x,
             <span class="hljs-attr">y</span>: y,
-            <span class="hljs-attr">artefact</span>: <span class="hljs-built_in">this</span>
+            <span class="hljs-attr">artefact</span>: <span class="hljs-variable language_">this</span>
         };
     }
 };</pre></div></div>
@@ -1726,9 +1726,9 @@ S.checkHitIgnoreTransparency = <span class="hljs-function"><span class="hljs-key
                 <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
-<pre><code>scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);
+<pre><code>scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);
 
-scrawl.makePicture({
+scrawl.<span class="hljs-title function_">makePicture</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myFlower&#x27;</span>,
     <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;iris&#x27;</span>,
@@ -1752,7 +1752,7 @@ scrawl.makePicture({
     <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;drawAndFill&#x27;</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myFactory&#x27;</span>,
     <span class="hljs-attr">imageSource</span>: <span class="hljs-string">&#x27;img/canalFactory-800.png&#x27;</span>,
@@ -1777,13 +1777,13 @@ scrawl.makePicture({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makePicture = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makePicture = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Picture(items);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Picture</span>(items);
 };
 
-<span class="hljs-title">constructors</span>.<span class="hljs-title">Picture</span> = <span class="hljs-title">Picture</span>;</pre></div></div>
+constructors.<span class="hljs-property">Picture</span> = <span class="hljs-title class_">Picture</span>;</pre></div></div>
             
         </li>
         

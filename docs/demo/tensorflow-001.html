@@ -707,7 +707,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.library.artefact.mycanvas;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
             
         </li>
         
@@ -723,7 +723,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myAsset = scrawl.makeRawAsset({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myAsset = scrawl.<span class="hljs-title function_">makeRawAsset</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;tensorflow-model-interpreter&#x27;</span>,
 
@@ -742,48 +742,48 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        key: <span class="hljs-string">&#x27;parts&#x27;</span>, 
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;parts&#x27;</span>, 
         <span class="hljs-attr">defaultValue</span>: {},
-        <span class="hljs-attr">setter</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+        <span class="hljs-attr">setter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-            <span class="hljs-keyword">if</span> (item &amp;&amp; item.allPoses &amp;&amp; item.allPoses.length) {
+            <span class="hljs-keyword">if</span> (item &amp;&amp; item.<span class="hljs-property">allPoses</span> &amp;&amp; item.<span class="hljs-property">allPoses</span>.<span class="hljs-property">length</span>) {
 
-                <span class="hljs-keyword">const</span> { parts, leftEyeX, leftEyeY, leftEye, rightEyeX, rightEyeY, rightEye, wobbleDamper } = <span class="hljs-built_in">this</span>;
+                <span class="hljs-keyword">const</span> { parts, leftEyeX, leftEyeY, leftEye, rightEyeX, rightEyeY, rightEye, wobbleDamper } = <span class="hljs-variable language_">this</span>;
 
-                <span class="hljs-keyword">let</span> segs = item.allPoses[<span class="hljs-number">0</span>];
+                <span class="hljs-keyword">let</span> segs = item.<span class="hljs-property">allPoses</span>[<span class="hljs-number">0</span>];
 
-                segs.keypoints.forEach(<span class="hljs-function"><span class="hljs-params">s</span> =&gt;</span> parts[s.part] = s.position);
+                segs.<span class="hljs-property">keypoints</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">s</span> =&gt;</span> parts[s.<span class="hljs-property">part</span>] = s.<span class="hljs-property">position</span>);
 
-                <span class="hljs-keyword">if</span> (parts.leftEye != <span class="hljs-literal">null</span>) {
+                <span class="hljs-keyword">if</span> (parts.<span class="hljs-property">leftEye</span> != <span class="hljs-literal">null</span>) {
 
-                    <span class="hljs-built_in">this</span>.dirtyData = <span class="hljs-literal">true</span>;
+                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyData</span> = <span class="hljs-literal">true</span>;
 
-                    <span class="hljs-keyword">let</span> eye = parts.leftEye;
+                    <span class="hljs-keyword">let</span> eye = parts.<span class="hljs-property">leftEye</span>;
 
-                    <span class="hljs-keyword">if</span> (leftEyeX.length &gt; wobbleDamper) leftEyeX.shift();
-                    <span class="hljs-keyword">if</span> (leftEyeY.length &gt; wobbleDamper) leftEyeY.shift();
+                    <span class="hljs-keyword">if</span> (leftEyeX.<span class="hljs-property">length</span> &gt; wobbleDamper) leftEyeX.<span class="hljs-title function_">shift</span>();
+                    <span class="hljs-keyword">if</span> (leftEyeY.<span class="hljs-property">length</span> &gt; wobbleDamper) leftEyeY.<span class="hljs-title function_">shift</span>();
 
-                    leftEyeX.push(eye.x);
-                    leftEyeY.push(eye.y);
+                    leftEyeX.<span class="hljs-title function_">push</span>(eye.<span class="hljs-property">x</span>);
+                    leftEyeY.<span class="hljs-title function_">push</span>(eye.<span class="hljs-property">y</span>);
 
-                    leftEye[<span class="hljs-number">0</span>] = <span class="hljs-built_in">Math</span>.round(leftEyeX.reduce(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a + v, <span class="hljs-number">0</span>) / leftEyeX.length);
-                    leftEye[<span class="hljs-number">1</span>] = <span class="hljs-built_in">Math</span>.round(leftEyeY.reduce(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a + v, <span class="hljs-number">0</span>) / leftEyeY.length);
+                    leftEye[<span class="hljs-number">0</span>] = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(leftEyeX.<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a + v, <span class="hljs-number">0</span>) / leftEyeX.<span class="hljs-property">length</span>);
+                    leftEye[<span class="hljs-number">1</span>] = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(leftEyeY.<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a + v, <span class="hljs-number">0</span>) / leftEyeY.<span class="hljs-property">length</span>);
                 }
 
-                <span class="hljs-keyword">if</span> (parts.rightEye != <span class="hljs-literal">null</span>) {
+                <span class="hljs-keyword">if</span> (parts.<span class="hljs-property">rightEye</span> != <span class="hljs-literal">null</span>) {
 
-                    <span class="hljs-built_in">this</span>.dirtyData = <span class="hljs-literal">true</span>;
+                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyData</span> = <span class="hljs-literal">true</span>;
 
-                    <span class="hljs-keyword">let</span> eye = parts.rightEye;
+                    <span class="hljs-keyword">let</span> eye = parts.<span class="hljs-property">rightEye</span>;
 
-                    <span class="hljs-keyword">if</span> (rightEyeX.length &gt; wobbleDamper) rightEyeX.shift();
-                    <span class="hljs-keyword">if</span> (rightEyeY.length &gt; wobbleDamper) rightEyeY.shift();
+                    <span class="hljs-keyword">if</span> (rightEyeX.<span class="hljs-property">length</span> &gt; wobbleDamper) rightEyeX.<span class="hljs-title function_">shift</span>();
+                    <span class="hljs-keyword">if</span> (rightEyeY.<span class="hljs-property">length</span> &gt; wobbleDamper) rightEyeY.<span class="hljs-title function_">shift</span>();
 
-                    rightEyeX.push(eye.x);
-                    rightEyeY.push(eye.y);
+                    rightEyeX.<span class="hljs-title function_">push</span>(eye.<span class="hljs-property">x</span>);
+                    rightEyeY.<span class="hljs-title function_">push</span>(eye.<span class="hljs-property">y</span>);
 
-                    rightEye[<span class="hljs-number">0</span>] = <span class="hljs-built_in">Math</span>.round(rightEyeX.reduce(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a + v, <span class="hljs-number">0</span>) / rightEyeX.length);
-                    rightEye[<span class="hljs-number">1</span>] = <span class="hljs-built_in">Math</span>.round(rightEyeY.reduce(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a + v, <span class="hljs-number">0</span>) / rightEyeY.length);
+                    rightEye[<span class="hljs-number">0</span>] = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(rightEyeX.<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a + v, <span class="hljs-number">0</span>) / rightEyeX.<span class="hljs-property">length</span>);
+                    rightEye[<span class="hljs-number">1</span>] = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(rightEyeY.<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a + v, <span class="hljs-number">0</span>) / rightEyeY.<span class="hljs-property">length</span>);
                 }
             }</pre></div></div>
             
@@ -800,18 +800,18 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (item &amp;&amp; item.width &amp;&amp; item.height) {
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (item &amp;&amp; item.<span class="hljs-property">width</span> &amp;&amp; item.<span class="hljs-property">height</span>) {
 
-                <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.canvasWidth !== item.width) {
+                <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasWidth</span> !== item.<span class="hljs-property">width</span>) {
 
-                    <span class="hljs-built_in">this</span>.canvasWidth = item.width;
-                    <span class="hljs-built_in">this</span>.dirtyData = <span class="hljs-literal">true</span>;
+                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasWidth</span> = item.<span class="hljs-property">width</span>;
+                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyData</span> = <span class="hljs-literal">true</span>;
                 }
 
-                <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.canvasHeight !== item.height) {
+                <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasHeight</span> !== item.<span class="hljs-property">height</span>) {
 
-                    <span class="hljs-built_in">this</span>.canvasHeight = item.height;
-                    <span class="hljs-built_in">this</span>.dirtyData = <span class="hljs-literal">true</span>;
+                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvasHeight</span> = item.<span class="hljs-property">height</span>;
+                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyData</span> = <span class="hljs-literal">true</span>;
                 }
             }
         },
@@ -865,10 +865,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    updateSource: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">assetWrapper</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">updateSource</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">assetWrapper</span>) {
 
         <span class="hljs-keyword">const</span> { element, engine, leftEye, rightEye, canvasWidth, canvasHeight } = assetWrapper;
-        <span class="hljs-keyword">const</span> end = <span class="hljs-number">2</span> * <span class="hljs-built_in">Math</span>.PI;</pre></div></div>
+        <span class="hljs-keyword">const</span> end = <span class="hljs-number">2</span> * <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span>;</pre></div></div>
             
         </li>
         
@@ -883,8 +883,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        element.width = canvasWidth;
-        element.height = canvasHeight;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        element.<span class="hljs-property">width</span> = canvasWidth;
+        element.<span class="hljs-property">height</span> = canvasHeight;</pre></div></div>
             
         </li>
         
@@ -899,17 +899,17 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        engine.globalAlpha = <span class="hljs-number">0.5</span>;
+            <div class="content"><div class='highlight'><pre>        engine.<span class="hljs-property">globalAlpha</span> = <span class="hljs-number">0.5</span>;
 
-        engine.fillStyle = <span class="hljs-string">&#x27;red&#x27;</span>;
-        engine.beginPath();
-        engine.arc(...leftEye, <span class="hljs-number">50</span>, <span class="hljs-number">0</span>, end);
-        engine.fill();
+        engine.<span class="hljs-property">fillStyle</span> = <span class="hljs-string">&#x27;red&#x27;</span>;
+        engine.<span class="hljs-title function_">beginPath</span>();
+        engine.<span class="hljs-title function_">arc</span>(...leftEye, <span class="hljs-number">50</span>, <span class="hljs-number">0</span>, end);
+        engine.<span class="hljs-title function_">fill</span>();
         
-        engine.fillStyle = <span class="hljs-string">&#x27;orange&#x27;</span>;
-        engine.beginPath();
-        engine.arc(...rightEye, <span class="hljs-number">50</span>, <span class="hljs-number">0</span>, end);
-        engine.fill();
+        engine.<span class="hljs-property">fillStyle</span> = <span class="hljs-string">&#x27;orange&#x27;</span>;
+        engine.<span class="hljs-title function_">beginPath</span>();
+        engine.<span class="hljs-title function_">arc</span>(...rightEye, <span class="hljs-number">50</span>, <span class="hljs-number">0</span>, end);
+        engine.<span class="hljs-title function_">fill</span>();
     },
 });</pre></div></div>
             
@@ -926,13 +926,15 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">perform</span> (<span class="hljs-params">net</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> perform = <span class="hljs-keyword">function</span> (<span class="hljs-params">net</span>) {
 
-    <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) {
+    net.<span class="hljs-title function_">segmentPerson</span>(video.<span class="hljs-property">source</span>)
+    .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">parts</span> =&gt;</span> {
 
-        <span class="hljs-keyword">const</span> parts = <span class="hljs-keyword">await</span> net.segmentPerson(video.source);
-        myAsset.set({ parts });
-    }
+        myAsset.<span class="hljs-title function_">set</span>({parts});
+        <span class="hljs-title function_">perform</span>(net);
+    })
+    .<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(e));
 };</pre></div></div>
             
         </li>
@@ -964,11 +966,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.importMediaStream({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">importMediaStream</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;device-camera&#x27;</span>,
     <span class="hljs-attr">audio</span>: <span class="hljs-literal">false</span>,
 })
-.then(<span class="hljs-function"><span class="hljs-params">mycamera</span> =&gt;</span> {
+.<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">mycamera</span> =&gt;</span> {
 
     video = mycamera;</pre></div></div>
             
@@ -981,14 +983,30 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
+              <p>This fixes the issue in Firefox where the media stream will crash Tensorflow if the stream’s video element’s dimensions have not been set</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    video.<span class="hljs-property">source</span>.<span class="hljs-property">width</span> = <span class="hljs-string">&quot;1280&quot;</span>;
+    video.<span class="hljs-property">source</span>.<span class="hljs-property">height</span> = <span class="hljs-string">&quot;720&quot;</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
+              </div>
               <p>Take the media stream and display it in our canvas element</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    scrawl.makePicture({
+            <div class="content"><div class='highlight'><pre>    scrawl.<span class="hljs-title function_">makePicture</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;mediastream-video&#x27;</span>,
-        <span class="hljs-attr">asset</span>: mycamera.name,
+        <span class="hljs-attr">asset</span>: mycamera.<span class="hljs-property">name</span>,
 
         <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
         <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
@@ -1000,33 +1018,33 @@
         </li>
         
         
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
-              </div>
-              <p>Start the TensorFlow model</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    bodyPix.load()
-    .then (<span class="hljs-function"><span class="hljs-params">net</span> =&gt;</span> {</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
+              <p>Start the TensorFlow model</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    bodyPix.<span class="hljs-title function_">load</span>()
+    .<span class="hljs-property">then</span> (<span class="hljs-function"><span class="hljs-params">net</span> =&gt;</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
               <p>Display the visual generated by our raw asset</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        scrawl.makePicture({
+            <div class="content"><div class='highlight'><pre>        scrawl.<span class="hljs-title function_">makePicture</span>({
 
             <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;tensorflow-data-output&#x27;</span>,
             <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;tensorflow-model-interpreter&#x27;</span>,
@@ -1039,51 +1057,21 @@
         </li>
         
         
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
-              </div>
-              <p>Invoke the forever loop</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        perform(net);
-    })
-    .catch(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;ERROR: &#x27;</span>, e));
-})
-.catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err.message));</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
-              <h4 id="scene-animation">Scene animation</h4>
-<p>Function to display frames-per-second data, and other information relevant to the demo</p>
+              <p>Invoke the forever loop</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
-        testTime, testNow,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
-
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-
-        testNow = <span class="hljs-built_in">Date</span>.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
-    };
-}();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-title function_">perform</span>(net);
+    })
+    .<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;ERROR: &#x27;</span>, e));
+})
+.<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(err.<span class="hljs-property">message</span>));</pre></div></div>
             
         </li>
         
@@ -1094,18 +1082,48 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
+              <h4 id="scene-animation">Scene animation</h4>
+<p>Function to display frames-per-second data, and other information relevant to the demo</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
+        testTime, testNow,
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
+        testTime = testNow - testTicker;
+        testTicker = testNow;
+
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
+    };
+}();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
+              </div>
               <p>Create the Display cycle animation</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
     <span class="hljs-attr">target</span>: canvas,
     <span class="hljs-attr">afterShow</span>: report,
 });
 
-<span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

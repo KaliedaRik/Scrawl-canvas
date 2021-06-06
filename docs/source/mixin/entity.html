@@ -519,7 +519,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">P = Ωempty</span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">P = Ωempty</span>) {</pre></div></div>
             
         </li>
         
@@ -543,13 +543,13 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P = positionMix(P);
-    P = deltaMix(P);
-    P = pivotMix(P);
-    P = mimicMix(P);
-    P = pathMix(P);
-    P = anchorMix(P);
-    P = filterMix(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    P = <span class="hljs-title function_">positionMix</span>(P);
+    P = <span class="hljs-title function_">deltaMix</span>(P);
+    P = <span class="hljs-title function_">pivotMix</span>(P);
+    P = <span class="hljs-title function_">mimicMix</span>(P);
+    P = <span class="hljs-title function_">pathMix</span>(P);
+    P = <span class="hljs-title function_">anchorMix</span>(P);
+    P = <span class="hljs-title function_">filterMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -590,7 +590,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        method: <span class="hljs-string">&#x27;fill&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -605,7 +605,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        pathObject: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">pathObject</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -623,7 +623,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        winding: <span class="hljs-string">&#x27;nonzero&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">winding</span>: <span class="hljs-string">&#x27;nonzero&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -642,7 +642,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        flipReverse: <span class="hljs-literal">false</span>,
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">flipReverse</span>: <span class="hljs-literal">false</span>,
         <span class="hljs-attr">flipUpend</span>: <span class="hljs-literal">false</span>,</pre></div></div>
             
         </li>
@@ -658,7 +658,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        scaleOutline: <span class="hljs-literal">true</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">scaleOutline</span>: <span class="hljs-literal">true</span>,</pre></div></div>
             
         </li>
         
@@ -677,7 +677,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        lockFillStyleToEntity: <span class="hljs-literal">false</span>,
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">lockFillStyleToEntity</span>: <span class="hljs-literal">false</span>,
         <span class="hljs-attr">lockStrokeStyleToEntity</span>: <span class="hljs-literal">false</span>,</pre></div></div>
             
         </li>
@@ -725,7 +725,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        onEnter: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">onEnter</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -740,7 +740,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        onLeave: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">onLeave</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -755,7 +755,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        onDown: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">onDown</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -770,7 +770,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        onUp: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">onUp</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -840,7 +840,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>    };
-    P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
+    P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -855,29 +855,29 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.packetExclusions = pushUnique(P.packetExclusions, [<span class="hljs-string">&#x27;state&#x27;</span>]);
-    P.packetFunctions = pushUnique(P.packetFunctions, [<span class="hljs-string">&#x27;onEnter&#x27;</span>, <span class="hljs-string">&#x27;onLeave&#x27;</span>, <span class="hljs-string">&#x27;onDown&#x27;</span>, <span class="hljs-string">&#x27;onUp&#x27;</span>]);
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">packetExclusions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusions</span>, [<span class="hljs-string">&#x27;state&#x27;</span>]);
+    P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetFunctions</span>, [<span class="hljs-string">&#x27;onEnter&#x27;</span>, <span class="hljs-string">&#x27;onLeave&#x27;</span>, <span class="hljs-string">&#x27;onDown&#x27;</span>, <span class="hljs-string">&#x27;onUp&#x27;</span>]);
 
-    P.processEntityPacketOut = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">key, value, includes</span>) </span>{
+    P.<span class="hljs-property">processEntityPacketOut</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">key, value, includes</span>) {
 
-        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.processFactoryPacketOut(key, value, includes);
+        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processFactoryPacketOut</span>(key, value, includes);
     };
 
-    P.processFactoryPacketOut = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">key, value, includes</span>) </span>{
+    P.<span class="hljs-property">processFactoryPacketOut</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">key, value, includes</span>) {
 
         <span class="hljs-keyword">let</span> result = <span class="hljs-literal">true</span>;
 
-        <span class="hljs-keyword">if</span>(includes.indexOf(key) &lt; <span class="hljs-number">0</span> &amp;&amp; value === <span class="hljs-built_in">this</span>.defs[key]) result = <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">if</span>(includes.<span class="hljs-title function_">indexOf</span>(key) &lt; <span class="hljs-number">0</span> &amp;&amp; value === <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>[key]) result = <span class="hljs-literal">false</span>;
 
         <span class="hljs-keyword">return</span> result;
     };
 
-    P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) </span>{
+    P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) {
 
-        <span class="hljs-keyword">let</span> stateCopy = <span class="hljs-built_in">JSON</span>.parse(<span class="hljs-built_in">this</span>.state.saveAsPacket(items))[<span class="hljs-number">3</span>];
-        copy = mergeOver(copy, stateCopy);
+        <span class="hljs-keyword">let</span> stateCopy = <span class="hljs-variable constant_">JSON</span>.<span class="hljs-title function_">parse</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-title function_">saveAsPacket</span>(items))[<span class="hljs-number">3</span>];
+        copy = <span class="hljs-title function_">mergeOver</span>(copy, stateCopy);
 
-        copy = <span class="hljs-built_in">this</span>.handlePacketAnchor(copy, items);
+        copy = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">handlePacketAnchor</span>(copy, items);
 
         <span class="hljs-keyword">return</span> copy;
     };</pre></div></div>
@@ -895,12 +895,12 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.postCloneAction = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">clone, items</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">postCloneAction</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params">clone, items</span>) {
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.onEnter) clone.onEnter = <span class="hljs-built_in">this</span>.onEnter;
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.onLeave) clone.onLeave = <span class="hljs-built_in">this</span>.onLeave;
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.onDown) clone.onDown = <span class="hljs-built_in">this</span>.onDown;
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.onUp) clone.onUp = <span class="hljs-built_in">this</span>.onUp;</pre></div></div>
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">onEnter</span>) clone.<span class="hljs-property">onEnter</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">onEnter</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">onLeave</span>) clone.<span class="hljs-property">onLeave</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">onLeave</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">onDown</span>) clone.<span class="hljs-property">onDown</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">onDown</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">onUp</span>) clone.<span class="hljs-property">onUp</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">onUp</span>;</pre></div></div>
             
         </li>
         
@@ -915,7 +915,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (items.sharedState) clone.state = <span class="hljs-built_in">this</span>.state;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (items.<span class="hljs-property">sharedState</span>) clone.<span class="hljs-property">state</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>;</pre></div></div>
             
         </li>
         
@@ -930,16 +930,16 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (items.anchor) {
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (items.<span class="hljs-property">anchor</span>) {
 
-            items.anchor.host = clone;
+            items.<span class="hljs-property">anchor</span>.<span class="hljs-property">host</span> = clone;
 
-            <span class="hljs-keyword">if</span> (!xt(items.anchor.focusAction)) items.anchor.focusAction = <span class="hljs-built_in">this</span>.anchor.focusAction;
-            <span class="hljs-keyword">if</span> (!xt(items.anchor.blurAction)) items.anchor.blurAction = <span class="hljs-built_in">this</span>.anchor.blurAction;
+            <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xt</span>(items.<span class="hljs-property">anchor</span>.<span class="hljs-property">focusAction</span>)) items.<span class="hljs-property">anchor</span>.<span class="hljs-property">focusAction</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">anchor</span>.<span class="hljs-property">focusAction</span>;
+            <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xt</span>(items.<span class="hljs-property">anchor</span>.<span class="hljs-property">blurAction</span>)) items.<span class="hljs-property">anchor</span>.<span class="hljs-property">blurAction</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">anchor</span>.<span class="hljs-property">blurAction</span>;
 
-            clone.buildAnchor(items.anchor);
+            clone.<span class="hljs-title function_">buildAnchor</span>(items.<span class="hljs-property">anchor</span>);
 
-            <span class="hljs-keyword">if</span> (!items.anchor.clickAction) clone.anchor.clickAction = <span class="hljs-built_in">this</span>.anchor.clickAction;
+            <span class="hljs-keyword">if</span> (!items.<span class="hljs-property">anchor</span>.<span class="hljs-property">clickAction</span>) clone.<span class="hljs-property">anchor</span>.<span class="hljs-property">clickAction</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">anchor</span>.<span class="hljs-property">clickAction</span>;
         }
         <span class="hljs-keyword">return</span> clone;
     };</pre></div></div>
@@ -971,9 +971,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> G = P.getters,
-        S = P.setters,
-        D = P.deltaSetters;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> G = P.<span class="hljs-property">getters</span>,
+        S = P.<span class="hljs-property">setters</span>,
+        D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
             
         </li>
         
@@ -988,9 +988,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    G.group = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>    G.<span class="hljs-property">group</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-keyword">return</span> (<span class="hljs-built_in">this</span>.group) ? <span class="hljs-built_in">this</span>.group.name : <span class="hljs-string">&#x27;&#x27;</span>;
+        <span class="hljs-keyword">return</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">group</span>) ? <span class="hljs-variable language_">this</span>.<span class="hljs-property">group</span>.<span class="hljs-property">name</span> : <span class="hljs-string">&#x27;&#x27;</span>;
     };</pre></div></div>
             
         </li>
@@ -1006,10 +1006,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    S.lockStylesToEntity = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">lockStylesToEntity</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-        <span class="hljs-built_in">this</span>.lockFillStyleToEntity = item;
-        <span class="hljs-built_in">this</span>.lockStrokeStyleToEntity = item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockFillStyleToEntity</span> = item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockStrokeStyleToEntity</span> = item;
     };</pre></div></div>
             
         </li>
@@ -1025,26 +1025,26 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.get = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">get</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-        <span class="hljs-keyword">const</span> getter = <span class="hljs-built_in">this</span>.getters[item];
+        <span class="hljs-keyword">const</span> getter = <span class="hljs-variable language_">this</span>.<span class="hljs-property">getters</span>[item];
 
-        <span class="hljs-keyword">if</span> (getter) <span class="hljs-keyword">return</span> getter.call(<span class="hljs-built_in">this</span>);
+        <span class="hljs-keyword">if</span> (getter) <span class="hljs-keyword">return</span> getter.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>);
 
         <span class="hljs-keyword">else</span> {
 
-            <span class="hljs-keyword">let</span> def = <span class="hljs-built_in">this</span>.defs[item],
-                state = <span class="hljs-built_in">this</span>.state;
+            <span class="hljs-keyword">let</span> def = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>[item],
+                state = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>;
 
             <span class="hljs-keyword">let</span> val;
 
             <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> def != <span class="hljs-string">&#x27;undefined&#x27;</span>) {
 
-                val = <span class="hljs-built_in">this</span>[item];
+                val = <span class="hljs-variable language_">this</span>[item];
                 <span class="hljs-keyword">return</span> (<span class="hljs-keyword">typeof</span> val != <span class="hljs-string">&#x27;undefined&#x27;</span>) ? val : def;
             }
 
-            def = state.defs[item];
+            def = state.<span class="hljs-property">defs</span>[item];
 
             <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> def != <span class="hljs-string">&#x27;undefined&#x27;</span>) {
 
@@ -1055,19 +1055,19 @@
         }
     };
 
-    P.set = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+    P.<span class="hljs-property">set</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-        <span class="hljs-keyword">const</span> keys = <span class="hljs-built_in">Object</span>.keys(items),
-            keysLen = keys.length;
+        <span class="hljs-keyword">const</span> keys = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(items),
+            keysLen = keys.<span class="hljs-property">length</span>;
 
         <span class="hljs-keyword">if</span> (keysLen) {
 
-            <span class="hljs-keyword">const</span> setters = <span class="hljs-built_in">this</span>.setters,
-                defs = <span class="hljs-built_in">this</span>.defs,
-                state = <span class="hljs-built_in">this</span>.state;
+            <span class="hljs-keyword">const</span> setters = <span class="hljs-variable language_">this</span>.<span class="hljs-property">setters</span>,
+                defs = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>,
+                state = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>;
 
-            <span class="hljs-keyword">const</span> stateSetters = (state) ? state.setters : Ωempty;
-            <span class="hljs-keyword">const</span> stateDefs = (state) ? state.defs : Ωempty;
+            <span class="hljs-keyword">const</span> stateSetters = (state) ? state.<span class="hljs-property">setters</span> : Ωempty;
+            <span class="hljs-keyword">const</span> stateDefs = (state) ? state.<span class="hljs-property">defs</span> : Ωempty;
 
             <span class="hljs-keyword">let</span> predefined, i, key, value;
 
@@ -1078,39 +1078,39 @@
 
                 <span class="hljs-keyword">if</span> (key &amp;&amp; key != <span class="hljs-string">&#x27;name&#x27;</span> &amp;&amp; value != <span class="hljs-literal">null</span>) {
 
-                    <span class="hljs-keyword">if</span> (stateKeys.indexOf(key) &lt; <span class="hljs-number">0</span>) {
+                    <span class="hljs-keyword">if</span> (stateKeys.<span class="hljs-title function_">indexOf</span>(key) &lt; <span class="hljs-number">0</span>) {
 
                         predefined = setters[key];
 
-                        <span class="hljs-keyword">if</span> (predefined) predefined.call(<span class="hljs-built_in">this</span>, value);
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] != <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-built_in">this</span>[key] = value;
+                        <span class="hljs-keyword">if</span> (predefined) predefined.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, value);
+                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] != <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-variable language_">this</span>[key] = value;
                     }
                     <span class="hljs-keyword">else</span> {
 
                         predefined = stateSetters[key];
 
-                        <span class="hljs-keyword">if</span> (predefined) predefined.call(state, value);
+                        <span class="hljs-keyword">if</span> (predefined) predefined.<span class="hljs-title function_">call</span>(state, value);
                         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> stateDefs[key] != <span class="hljs-string">&#x27;undefined&#x27;</span>) state[key] = value;
                     }
                 }
             }
         }
-        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
     };
 
-    P.setDelta = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+    P.<span class="hljs-property">setDelta</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-        <span class="hljs-keyword">const</span> keys = <span class="hljs-built_in">Object</span>.keys(items),
-            keysLen = keys.length;
+        <span class="hljs-keyword">const</span> keys = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(items),
+            keysLen = keys.<span class="hljs-property">length</span>;
 
         <span class="hljs-keyword">if</span> (keysLen) {
 
-            <span class="hljs-keyword">const</span> setters = <span class="hljs-built_in">this</span>.deltaSetters,
-                defs = <span class="hljs-built_in">this</span>.defs,
-                state = <span class="hljs-built_in">this</span>.state;
+            <span class="hljs-keyword">const</span> setters = <span class="hljs-variable language_">this</span>.<span class="hljs-property">deltaSetters</span>,
+                defs = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>,
+                state = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>;
 
-            <span class="hljs-keyword">const</span> stateSetters = (state) ? state.deltaSetters : Ωempty;
-            <span class="hljs-keyword">const</span> stateDefs = (state) ? state.defs : Ωempty;
+            <span class="hljs-keyword">const</span> stateSetters = (state) ? state.<span class="hljs-property">deltaSetters</span> : Ωempty;
+            <span class="hljs-keyword">const</span> stateDefs = (state) ? state.<span class="hljs-property">defs</span> : Ωempty;
 
             <span class="hljs-keyword">let</span> predefined, i, key, value;
 
@@ -1121,24 +1121,24 @@
 
                 <span class="hljs-keyword">if</span> (key &amp;&amp; key != <span class="hljs-string">&#x27;name&#x27;</span> &amp;&amp; value != <span class="hljs-literal">null</span>) {
 
-                    <span class="hljs-keyword">if</span> (stateKeys.indexOf(key) &lt; <span class="hljs-number">0</span>) {
+                    <span class="hljs-keyword">if</span> (stateKeys.<span class="hljs-title function_">indexOf</span>(key) &lt; <span class="hljs-number">0</span>) {
 
                         predefined = setters[key];
 
-                        <span class="hljs-keyword">if</span> (predefined) predefined.call(<span class="hljs-built_in">this</span>, value);
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] != <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-built_in">this</span>[key] = addStrings(<span class="hljs-built_in">this</span>[key], value);
+                        <span class="hljs-keyword">if</span> (predefined) predefined.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, value);
+                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] != <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-variable language_">this</span>[key] = <span class="hljs-title function_">addStrings</span>(<span class="hljs-variable language_">this</span>[key], value);
                     }
                     <span class="hljs-keyword">else</span> {
 
                         predefined = stateSetters[key];
 
-                        <span class="hljs-keyword">if</span> (predefined) predefined.call(state, value);
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> stateDefs[key] != <span class="hljs-string">&#x27;undefined&#x27;</span>) state[key] = addStrings(state[key], value);
+                        <span class="hljs-keyword">if</span> (predefined) predefined.<span class="hljs-title function_">call</span>(state, value);
+                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> stateDefs[key] != <span class="hljs-string">&#x27;undefined&#x27;</span>) state[key] = <span class="hljs-title function_">addStrings</span>(state[key], value);
                     }
                 }
             }
         }
-        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
     };</pre></div></div>
             
         </li>
@@ -1167,31 +1167,31 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.entityInit = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">entityInit</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-        <span class="hljs-built_in">this</span>.makeName(items.name);
-        <span class="hljs-built_in">this</span>.register();
-        <span class="hljs-built_in">this</span>.initializePositions();
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(items.<span class="hljs-property">name</span>);
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">initializePositions</span>();
 
-        <span class="hljs-built_in">this</span>.state = makeState(Ωempty);
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span> = <span class="hljs-title function_">makeState</span>(Ωempty);
 
-        <span class="hljs-built_in">this</span>.set(<span class="hljs-built_in">this</span>.defs);
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);
 
-        <span class="hljs-keyword">if</span> (!items.group) items.group = currentGroup;
+        <span class="hljs-keyword">if</span> (!items.<span class="hljs-property">group</span>) items.<span class="hljs-property">group</span> = currentGroup;
 
-        <span class="hljs-built_in">this</span>.onEnter = λ<span class="hljs-literal">null</span>;
-        <span class="hljs-built_in">this</span>.onLeave = λ<span class="hljs-literal">null</span>;
-        <span class="hljs-built_in">this</span>.onDown = λ<span class="hljs-literal">null</span>;
-        <span class="hljs-built_in">this</span>.onUp = λ<span class="hljs-literal">null</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">onEnter</span> = λ<span class="hljs-literal">null</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">onLeave</span> = λ<span class="hljs-literal">null</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">onDown</span> = λ<span class="hljs-literal">null</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">onUp</span> = λ<span class="hljs-literal">null</span>;
 
-        <span class="hljs-built_in">this</span>.set(items);
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
 
-        <span class="hljs-built_in">this</span>.midInitActions(items);
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">midInitActions</span>(items);
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.purge) <span class="hljs-built_in">this</span>.purgeArtefact(<span class="hljs-built_in">this</span>.purge);
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">purge</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">purgeArtefact</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">purge</span>);
     };
 
-    P.midInitActions = λ<span class="hljs-literal">null</span>;</pre></div></div>
+    P.<span class="hljs-property">midInitActions</span> = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
@@ -1238,7 +1238,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.prepareStamp = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">prepareStamp</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {</pre></div></div>
             
         </li>
         
@@ -1253,10 +1253,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyHost) {
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHost</span>) {
 
-            <span class="hljs-built_in">this</span>.dirtyHost = <span class="hljs-literal">false</span>;
-            <span class="hljs-built_in">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHost</span> = <span class="hljs-literal">false</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
         }</pre></div></div>
             
         </li>
@@ -1272,7 +1272,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyScale || <span class="hljs-built_in">this</span>.dirtyDimensions || <span class="hljs-built_in">this</span>.dirtyStart || <span class="hljs-built_in">this</span>.dirtyOffset || <span class="hljs-built_in">this</span>.dirtyHandle) <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScale</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStart</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOffset</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHandle</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;</pre></div></div>
             
         </li>
         
@@ -1287,7 +1287,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyScale) <span class="hljs-built_in">this</span>.cleanScale();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScale</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanScale</span>();</pre></div></div>
             
         </li>
         
@@ -1302,7 +1302,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyDimensions) <span class="hljs-built_in">this</span>.cleanDimensions();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanDimensions</span>();</pre></div></div>
             
         </li>
         
@@ -1317,7 +1317,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyLock) <span class="hljs-built_in">this</span>.cleanLock();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyLock</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanLock</span>();</pre></div></div>
             
         </li>
         
@@ -1332,7 +1332,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyStart) <span class="hljs-built_in">this</span>.cleanStart();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStart</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanStart</span>();</pre></div></div>
             
         </li>
         
@@ -1347,7 +1347,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyOffset) <span class="hljs-built_in">this</span>.cleanOffset();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOffset</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanOffset</span>();</pre></div></div>
             
         </li>
         
@@ -1362,7 +1362,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyHandle) <span class="hljs-built_in">this</span>.cleanHandle();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHandle</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanHandle</span>();</pre></div></div>
             
         </li>
         
@@ -1377,7 +1377,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyRotation) <span class="hljs-built_in">this</span>.cleanRotation();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyRotation</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanRotation</span>();</pre></div></div>
             
         </li>
         
@@ -1392,10 +1392,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.isBeingDragged || <span class="hljs-built_in">this</span>.lockTo.indexOf(<span class="hljs-string">&#x27;mouse&#x27;</span>) &gt;= <span class="hljs-number">0</span> || <span class="hljs-built_in">this</span>.lockTo.indexOf(<span class="hljs-string">&#x27;particle&#x27;</span>) &gt;= <span class="hljs-number">0</span>) {
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">isBeingDragged</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;mouse&#x27;</span>) &gt;= <span class="hljs-number">0</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;particle&#x27;</span>) &gt;= <span class="hljs-number">0</span>) {
 
-            <span class="hljs-built_in">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
-            <span class="hljs-built_in">this</span>.dirtyStampHandlePositions = <span class="hljs-literal">true</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampPositions</span> = <span class="hljs-literal">true</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampHandlePositions</span> = <span class="hljs-literal">true</span>;
         }</pre></div></div>
             
         </li>
@@ -1411,8 +1411,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyStampPositions) <span class="hljs-built_in">this</span>.cleanStampPositions();
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyStampHandlePositions) <span class="hljs-built_in">this</span>.cleanStampHandlePositions();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampPositions</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanStampPositions</span>();
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampHandlePositions</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanStampHandlePositions</span>();</pre></div></div>
             
         </li>
         
@@ -1427,7 +1427,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyPathObject) <span class="hljs-built_in">this</span>.cleanPathObject();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanPathObject</span>();</pre></div></div>
             
         </li>
         
@@ -1442,7 +1442,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyPositionSubscribers) <span class="hljs-built_in">this</span>.updatePositionSubscribers();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPositionSubscribers</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updatePositionSubscribers</span>();</pre></div></div>
             
         </li>
         
@@ -1470,10 +1470,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.anchor &amp;&amp; <span class="hljs-built_in">this</span>.dirtyAnchorHold) {
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">anchor</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyAnchorHold</span>) {
 
-            <span class="hljs-built_in">this</span>.dirtyAnchorHold = <span class="hljs-literal">false</span>;
-            <span class="hljs-built_in">this</span>.buildAnchor(<span class="hljs-built_in">this</span>.anchor);
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyAnchorHold</span> = <span class="hljs-literal">false</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildAnchor</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">anchor</span>);
         }
     };</pre></div></div>
             
@@ -1493,7 +1493,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.cleanPathObject = λ<span class="hljs-literal">null</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">cleanPathObject</span> = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
@@ -1509,26 +1509,26 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.stamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">force = <span class="hljs-literal">false</span>, host, changes</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">stamp</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">force = <span class="hljs-literal">false</span>, host, changes</span>) {
 
-        <span class="hljs-keyword">let</span> filterTest = (!<span class="hljs-built_in">this</span>.noFilters &amp;&amp; <span class="hljs-built_in">this</span>.filters &amp;&amp; <span class="hljs-built_in">this</span>.filters.length) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">let</span> filterTest = (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">noFilters</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">filters</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">filters</span>.<span class="hljs-property">length</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
 
         <span class="hljs-keyword">if</span> (force) {
 
-            <span class="hljs-keyword">if</span> (host &amp;&amp; host.type === <span class="hljs-string">&#x27;Cell&#x27;</span>) <span class="hljs-built_in">this</span>.currentHost = host;
+            <span class="hljs-keyword">if</span> (host &amp;&amp; host.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Cell&#x27;</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span> = host;
 
-            <span class="hljs-keyword">if</span> (changes) <span class="hljs-built_in">this</span>.set(changes);
+            <span class="hljs-keyword">if</span> (changes) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(changes);
 
-            <span class="hljs-built_in">this</span>.prepareStamp();
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">prepareStamp</span>();
 
-            <span class="hljs-keyword">if</span> (filterTest) <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.filteredStamp();
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.regularStamp();
+            <span class="hljs-keyword">if</span> (filterTest) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">filteredStamp</span>();
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">regularStamp</span>();
         }
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.visibility) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">visibility</span>) {
 
-            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.stashOutput || filterTest) <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.filteredStamp();
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.regularStamp();
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">stashOutput</span> || filterTest) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">filteredStamp</span>();
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">regularStamp</span>();
         }
     };</pre></div></div>
             
@@ -1553,14 +1553,14 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.regularStamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">regularStamp</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-keyword">let</span> dest = <span class="hljs-built_in">this</span>.currentHost;
+        <span class="hljs-keyword">let</span> dest = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>;
 
         <span class="hljs-keyword">if</span> (dest) {
 
-            <span class="hljs-keyword">let</span> engine = dest.engine,
-                stamp = <span class="hljs-built_in">this</span>.currentStampPosition,
+            <span class="hljs-keyword">let</span> engine = dest.<span class="hljs-property">engine</span>,
+                stamp = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>,
                 x = stamp[<span class="hljs-number">0</span>],
                 y = stamp[<span class="hljs-number">1</span>];</pre></div></div>
             
@@ -1577,7 +1577,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            dest.rotateDestination(engine, x, y, <span class="hljs-built_in">this</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            dest.<span class="hljs-title function_">rotateDestination</span>(engine, x, y, <span class="hljs-variable language_">this</span>);</pre></div></div>
             
         </li>
         
@@ -1592,7 +1592,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.noCanvasEngineUpdates) dest.setEngine(<span class="hljs-built_in">this</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">noCanvasEngineUpdates</span>) dest.<span class="hljs-title function_">setEngine</span>(<span class="hljs-variable language_">this</span>);</pre></div></div>
             
         </li>
         
@@ -1607,7 +1607,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-built_in">this</span>[<span class="hljs-built_in">this</span>.method](engine);
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-variable language_">this</span>[<span class="hljs-variable language_">this</span>.<span class="hljs-property">method</span>](engine);
         }
     };</pre></div></div>
             
@@ -1624,7 +1624,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.filteredStamp = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">filteredStamp</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {</pre></div></div>
             
         </li>
         
@@ -1639,7 +1639,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyFilters || !<span class="hljs-built_in">this</span>.currentFilters) <span class="hljs-built_in">this</span>.cleanFilters();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilters</span> || !<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFilters</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanFilters</span>();</pre></div></div>
             
         </li>
         
@@ -1654,10 +1654,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> currentHost = <span class="hljs-built_in">this</span>.currentHost,
-            currentElement = currentHost.element,
-            currentEngine = currentHost.engine,
-            currentDimensions = currentHost.currentDimensions;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> currentHost = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>,
+            currentElement = currentHost.<span class="hljs-property">element</span>,
+            currentEngine = currentHost.<span class="hljs-property">engine</span>,
+            currentDimensions = currentHost.<span class="hljs-property">currentDimensions</span>;</pre></div></div>
             
         </li>
         
@@ -1672,14 +1672,14 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> filterHost = requestCell(),
-            filterCellElement = filterHost.element,
-            filterCellEngine = filterHost.engine;
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> filterHost = <span class="hljs-title function_">requestCell</span>(),
+            filterCellElement = filterHost.<span class="hljs-property">element</span>,
+            filterCellEngine = filterHost.<span class="hljs-property">engine</span>;
 
-        <span class="hljs-built_in">this</span>.currentHost = filterHost;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span> = filterHost;
         
-        <span class="hljs-keyword">let</span> w = filterCellElement.width = currentDimensions[<span class="hljs-number">0</span>] || currentElement.width,
-            h = filterCellElement.height = currentDimensions[<span class="hljs-number">1</span>] || currentElement.height;</pre></div></div>
+        <span class="hljs-keyword">let</span> w = filterCellElement.<span class="hljs-property">width</span> = currentDimensions[<span class="hljs-number">0</span>] || currentElement.<span class="hljs-property">width</span>,
+            h = filterCellElement.<span class="hljs-property">height</span> = currentDimensions[<span class="hljs-number">1</span>] || currentElement.<span class="hljs-property">height</span>;</pre></div></div>
             
         </li>
         
@@ -1694,8 +1694,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> oldNoCanvasEngineUpdates = <span class="hljs-built_in">this</span>.noCanvasEngineUpdates;
-        <span class="hljs-built_in">this</span>.noCanvasEngineUpdates = <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> oldNoCanvasEngineUpdates = <span class="hljs-variable language_">this</span>.<span class="hljs-property">noCanvasEngineUpdates</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">noCanvasEngineUpdates</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -1710,9 +1710,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-built_in">this</span>.regularStamp();
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">regularStamp</span>();
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.noFilters &amp;&amp; <span class="hljs-built_in">this</span>.filters &amp;&amp; <span class="hljs-built_in">this</span>.filters.length) {</pre></div></div>
+        <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">noFilters</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">filters</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">filters</span>.<span class="hljs-property">length</span>) {</pre></div></div>
             
         </li>
         
@@ -1727,43 +1727,43 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.isStencil) {
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">isStencil</span>) {
 
-                filterCellEngine.save();
-                filterCellEngine.globalCompositeOperation = <span class="hljs-string">&#x27;source-in&#x27;</span>;
-                filterCellEngine.globalAlpha = <span class="hljs-number">1</span>;
-                filterCellEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-                filterCellEngine.drawImage(currentElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-                filterCellEngine.restore();
+                filterCellEngine.<span class="hljs-title function_">save</span>();
+                filterCellEngine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-string">&#x27;source-in&#x27;</span>;
+                filterCellEngine.<span class="hljs-property">globalAlpha</span> = <span class="hljs-number">1</span>;
+                filterCellEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+                filterCellEngine.<span class="hljs-title function_">drawImage</span>(currentElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+                filterCellEngine.<span class="hljs-title function_">restore</span>();
             } 
 
-            filterCellEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+            filterCellEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
 
-            <span class="hljs-keyword">let</span> myimage = filterCellEngine.getImageData(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, w, h);
+            <span class="hljs-keyword">let</span> myimage = filterCellEngine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, w, h);
 
-            <span class="hljs-built_in">this</span>.preprocessFilters(<span class="hljs-built_in">this</span>.currentFilters);
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">preprocessFilters</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFilters</span>);
 
-            <span class="hljs-keyword">let</span> img = filterEngine.action({
+            <span class="hljs-keyword">let</span> img = filterEngine.<span class="hljs-title function_">action</span>({
                 <span class="hljs-attr">image</span>: myimage,
-                <span class="hljs-attr">filters</span>: <span class="hljs-built_in">this</span>.currentFilters
+                <span class="hljs-attr">filters</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFilters</span>
             });
 
             <span class="hljs-keyword">if</span> (img) {
 
-                filterCellEngine.globalCompositeOperation = <span class="hljs-string">&#x27;source-over&#x27;</span>;
-                filterCellEngine.globalAlpha = <span class="hljs-number">1</span>;
-                filterCellEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-                filterCellEngine.putImageData(img, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+                filterCellEngine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-string">&#x27;source-over&#x27;</span>;
+                filterCellEngine.<span class="hljs-property">globalAlpha</span> = <span class="hljs-number">1</span>;
+                filterCellEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+                filterCellEngine.<span class="hljs-title function_">putImageData</span>(img, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
             }
         }
-        currentEngine.save();
+        currentEngine.<span class="hljs-title function_">save</span>();
 
-        currentEngine.globalAlpha = (<span class="hljs-built_in">this</span>.state &amp;&amp; <span class="hljs-built_in">this</span>.state.globalAlpha) ? <span class="hljs-built_in">this</span>.state.globalAlpha : <span class="hljs-number">1</span>;
-        currentEngine.globalCompositeOperation = (<span class="hljs-built_in">this</span>.state &amp;&amp; <span class="hljs-built_in">this</span>.state.globalCompositeOperation) ? <span class="hljs-built_in">this</span>.state.globalCompositeOperation : <span class="hljs-string">&#x27;source-over&#x27;</span>;
+        currentEngine.<span class="hljs-property">globalAlpha</span> = (<span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-property">globalAlpha</span>) ? <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-property">globalAlpha</span> : <span class="hljs-number">1</span>;
+        currentEngine.<span class="hljs-property">globalCompositeOperation</span> = (<span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-property">globalCompositeOperation</span>) ? <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-property">globalCompositeOperation</span> : <span class="hljs-string">&#x27;source-over&#x27;</span>;
         
-        currentEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+        currentEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
 
-        currentEngine.drawImage(filterCellElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);</pre></div></div>
+        currentEngine.<span class="hljs-title function_">drawImage</span>(filterCellElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);</pre></div></div>
             
         </li>
         
@@ -1778,15 +1778,15 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.stashOutput) {
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">stashOutput</span>) {
 
-            <span class="hljs-built_in">this</span>.stashOutput = <span class="hljs-literal">false</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashOutput</span> = <span class="hljs-literal">false</span>;
 
-            <span class="hljs-keyword">let</span> [stashX, stashY, stashWidth, stashHeight] = <span class="hljs-built_in">this</span>.getCellCoverage(filterCellEngine.getImageData(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, filterCellElement.width, filterCellElement.height));
+            <span class="hljs-keyword">let</span> [stashX, stashY, stashWidth, stashHeight] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getCellCoverage</span>(filterCellEngine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, filterCellElement.<span class="hljs-property">width</span>, filterCellElement.<span class="hljs-property">height</span>));
 
-            <span class="hljs-built_in">this</span>.stashedImageData = filterCellEngine.getImageData(stashX, stashY, stashWidth, stashHeight);
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashedImageData</span> = filterCellEngine.<span class="hljs-title function_">getImageData</span>(stashX, stashY, stashWidth, stashHeight);
 
-            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.stashOutputAsAsset) {</pre></div></div>
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">stashOutputAsAsset</span>) {</pre></div></div>
             
         </li>
         
@@ -1801,36 +1801,36 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-built_in">this</span>.stashOutputAsAsset = <span class="hljs-literal">false</span>;
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashOutputAsAsset</span> = <span class="hljs-literal">false</span>;
 
-                filterCellElement.width = stashWidth;
-                filterCellElement.height = stashHeight;
-                filterCellEngine.putImageData(<span class="hljs-built_in">this</span>.stashedImageData, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+                filterCellElement.<span class="hljs-property">width</span> = stashWidth;
+                filterCellElement.<span class="hljs-property">height</span> = stashHeight;
+                filterCellEngine.<span class="hljs-title function_">putImageData</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">stashedImageData</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
 
-                <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.stashedImage) {
+                <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">stashedImage</span>) {
 
-                    <span class="hljs-keyword">let</span> newimg = <span class="hljs-built_in">this</span>.stashedImage = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;img&#x27;</span>);
+                    <span class="hljs-keyword">let</span> newimg = <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashedImage</span> = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;img&#x27;</span>);
 
-                    newimg.id = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span>-image`</span>;
+                    newimg.<span class="hljs-property">id</span> = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>-image`</span>;
 
-                    newimg.onload = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+                    newimg.<span class="hljs-property">onload</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-                        scrawlCanvasHold.appendChild(newimg);
-                        importDomImage(<span class="hljs-string">`#<span class="hljs-subst">${newimg.id}</span>`</span>);
+                        scrawlCanvasHold.<span class="hljs-title function_">appendChild</span>(newimg);
+                        <span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">`#<span class="hljs-subst">${newimg.id}</span>`</span>);
                     };
 
-                    newimg.src = filterCellElement.toDataURL();
+                    newimg.<span class="hljs-property">src</span> = filterCellElement.<span class="hljs-title function_">toDataURL</span>();
                 }
-                <span class="hljs-keyword">else</span> <span class="hljs-built_in">this</span>.stashedImage.src = filterCellElement.toDataURL();
+                <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashedImage</span>.<span class="hljs-property">src</span> = filterCellElement.<span class="hljs-title function_">toDataURL</span>();
             }
         }
 
-        releaseCell(filterHost);
+        <span class="hljs-title function_">releaseCell</span>(filterHost);
 
-        currentEngine.restore();
+        currentEngine.<span class="hljs-title function_">restore</span>();
 
-        <span class="hljs-built_in">this</span>.currentHost = currentHost;
-        <span class="hljs-built_in">this</span>.noCanvasEngineUpdates = oldNoCanvasEngineUpdates;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span> = currentHost;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">noCanvasEngineUpdates</span> = oldNoCanvasEngineUpdates;
     };</pre></div></div>
             
         </li>
@@ -1846,11 +1846,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.getCellCoverage = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">img</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">getCellCoverage</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">img</span>) {
 
-        <span class="hljs-keyword">let</span> width = img.width,
-            height = img.height,
-            data = img.data,
+        <span class="hljs-keyword">let</span> width = img.<span class="hljs-property">width</span>,
+            height = img.<span class="hljs-property">height</span>,
+            data = img.<span class="hljs-property">data</span>,
             maxX = <span class="hljs-number">0</span>,
             maxY = <span class="hljs-number">0</span>,
             minX = width,
@@ -1894,16 +1894,16 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.simpleStamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">host, changes = Ωempty</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">simpleStamp</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">host, changes = Ωempty</span>) {
 
-        <span class="hljs-keyword">if</span> (host &amp;&amp; host.type === <span class="hljs-string">&#x27;Cell&#x27;</span>) {
+        <span class="hljs-keyword">if</span> (host &amp;&amp; host.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Cell&#x27;</span>) {
 
-            <span class="hljs-built_in">this</span>.currentHost = host;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span> = host;
             
-            <span class="hljs-built_in">this</span>.set(changes);
-            <span class="hljs-built_in">this</span>.prepareStamp();
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(changes);
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">prepareStamp</span>();
 
-            <span class="hljs-built_in">this</span>.regularStamp();
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">regularStamp</span>();
         }
     };</pre></div></div>
             
@@ -1934,9 +1934,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.draw = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">draw</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-        engine.stroke(<span class="hljs-built_in">this</span>.pathObject);
+        engine.<span class="hljs-title function_">stroke</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>);
     };</pre></div></div>
             
         </li>
@@ -1952,9 +1952,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.fill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">fill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-        engine.fill(<span class="hljs-built_in">this</span>.pathObject, <span class="hljs-built_in">this</span>.winding);
+        engine.<span class="hljs-title function_">fill</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
     };</pre></div></div>
             
         </li>
@@ -1970,15 +1970,15 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.drawAndFill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">drawAndFill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-        <span class="hljs-keyword">let</span> p = <span class="hljs-built_in">this</span>.pathObject;
+        <span class="hljs-keyword">let</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>;
 
-        engine.stroke(p);
-        engine.fill(p, <span class="hljs-built_in">this</span>.winding);
-        <span class="hljs-built_in">this</span>.currentHost.clearShadow();
-        engine.stroke(p);
-        engine.fill(p, <span class="hljs-built_in">this</span>.winding);
+        engine.<span class="hljs-title function_">stroke</span>(p);
+        engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>.<span class="hljs-title function_">clearShadow</span>();
+        engine.<span class="hljs-title function_">stroke</span>(p);
+        engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
     };</pre></div></div>
             
         </li>
@@ -1994,15 +1994,15 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.fillAndDraw = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">fillAndDraw</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-        <span class="hljs-keyword">let</span> p = <span class="hljs-built_in">this</span>.pathObject;
+        <span class="hljs-keyword">let</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>;
 
-        engine.fill(p, <span class="hljs-built_in">this</span>.winding);
-        engine.stroke(p);
-        <span class="hljs-built_in">this</span>.currentHost.clearShadow();
-        engine.fill(p, <span class="hljs-built_in">this</span>.winding);
-        engine.stroke(p);
+        engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
+        engine.<span class="hljs-title function_">stroke</span>(p);
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>.<span class="hljs-title function_">clearShadow</span>();
+        engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
+        engine.<span class="hljs-title function_">stroke</span>(p);
     };</pre></div></div>
             
         </li>
@@ -2018,12 +2018,12 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.drawThenFill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">drawThenFill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-        <span class="hljs-keyword">let</span> p = <span class="hljs-built_in">this</span>.pathObject;
+        <span class="hljs-keyword">let</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>;
 
-        engine.stroke(p);
-        engine.fill(p, <span class="hljs-built_in">this</span>.winding);
+        engine.<span class="hljs-title function_">stroke</span>(p);
+        engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
     };</pre></div></div>
             
         </li>
@@ -2039,12 +2039,12 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.fillThenDraw = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">fillThenDraw</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-        <span class="hljs-keyword">let</span> p = <span class="hljs-built_in">this</span>.pathObject;
+        <span class="hljs-keyword">let</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>;
 
-        engine.fill(p, <span class="hljs-built_in">this</span>.winding);
-        engine.stroke(p);
+        engine.<span class="hljs-title function_">fill</span>(p, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
+        engine.<span class="hljs-title function_">stroke</span>(p);
     };</pre></div></div>
             
         </li>
@@ -2060,9 +2060,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.clip = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">clip</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-        engine.clip(<span class="hljs-built_in">this</span>.pathObject, <span class="hljs-built_in">this</span>.winding);
+        engine.<span class="hljs-title function_">clip</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
      };</pre></div></div>
             
         </li>
@@ -2078,14 +2078,14 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.clear = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">clear</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {
 
-        <span class="hljs-keyword">let</span> gco = engine.globalCompositeOperation;
+        <span class="hljs-keyword">let</span> gco = engine.<span class="hljs-property">globalCompositeOperation</span>;
 
-        engine.globalCompositeOperation = <span class="hljs-string">&#x27;destination-out&#x27;</span>;
-        engine.fill(<span class="hljs-built_in">this</span>.pathObject, <span class="hljs-built_in">this</span>.winding);
+        engine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-string">&#x27;destination-out&#x27;</span>;
+        engine.<span class="hljs-title function_">fill</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">winding</span>);
         
-        engine.globalCompositeOperation = gco;
+        engine.<span class="hljs-property">globalCompositeOperation</span> = gco;
     };</pre></div></div>
             
         </li>
@@ -2101,7 +2101,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.none = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) </span>{}</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">none</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">engine</span>) {}</pre></div></div>
             
         </li>
         

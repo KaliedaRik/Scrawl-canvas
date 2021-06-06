@@ -511,7 +511,7 @@
 <li>the color object attribute labels MUST include a space after the String number; and </li>
 <li>the number itself must be a positive integer in the range 0-999:</li>
 </ul>
-<pre><code>myGradient.set({
+<pre><code>myGradient.<span class="hljs-title function_">set</span>({
 
     <span class="hljs-attr">colors</span>: {
 
@@ -557,7 +557,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { λ<span class="hljs-literal">null</span>, isa_obj, mergeOver, xt, xta, pushUnique, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeColor } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./color.js&#x27;</span>;
@@ -577,20 +577,20 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Palette = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">Palette</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
 
-    <span class="hljs-built_in">this</span>.makeName(items.name);
-    <span class="hljs-built_in">this</span>.register();
-    <span class="hljs-built_in">this</span>.set(<span class="hljs-built_in">this</span>.defs);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(items.<span class="hljs-property">name</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);
 
-    <span class="hljs-built_in">this</span>.colors = items.colors || {<span class="hljs-string">&#x27;0 &#x27;</span>: [<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>], <span class="hljs-string">&#x27;999 &#x27;</span>: [<span class="hljs-number">255</span>,<span class="hljs-number">255</span>,<span class="hljs-number">255</span>,<span class="hljs-number">1</span>]};
-    <span class="hljs-built_in">this</span>.stops = <span class="hljs-built_in">Array</span>(<span class="hljs-number">1000</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">colors</span> = items.<span class="hljs-property">colors</span> || {<span class="hljs-string">&#x27;0 &#x27;</span>: [<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>], <span class="hljs-string">&#x27;999 &#x27;</span>: [<span class="hljs-number">255</span>,<span class="hljs-number">255</span>,<span class="hljs-number">255</span>,<span class="hljs-number">1</span>]};
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">stops</span> = <span class="hljs-title class_">Array</span>(<span class="hljs-number">1000</span>);
 
-    <span class="hljs-built_in">this</span>.set(items);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
 
-    <span class="hljs-built_in">this</span>.dirtyPalette = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPalette</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -606,12 +606,12 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Palette.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">Palette</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
 
-P.type = <span class="hljs-string">&#x27;Palette&#x27;</span>;
-P.lib = <span class="hljs-string">&#x27;palette&#x27;</span>;
-P.isArtefact = <span class="hljs-literal">false</span>;
-P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
+P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Palette&#x27;</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;palette&#x27;</span>;
+P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">false</span>;
+P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -626,7 +626,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = baseMix(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -659,7 +659,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    colors: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">colors</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -674,7 +674,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    stops: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">stops</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -689,9 +689,9 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    cyclic: <span class="hljs-literal">false</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">cyclic</span>: <span class="hljs-literal">false</span>,
 };
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
+P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -706,7 +706,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.packetExclusions = pushUnique(P.packetExclusions, [<span class="hljs-string">&#x27;stops&#x27;</span>]);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">packetExclusions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusions</span>, [<span class="hljs-string">&#x27;stops&#x27;</span>]);</pre></div></div>
             
         </li>
         
@@ -749,8 +749,8 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.getters,
-    S = P.setters;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.<span class="hljs-property">getters</span>,
+    S = P.<span class="hljs-property">setters</span>;</pre></div></div>
             
         </li>
         
@@ -765,23 +765,23 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.colors = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">colors</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (isa_obj(item)) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(item)) {
 
-        <span class="hljs-keyword">let</span> f = <span class="hljs-built_in">this</span>.factory;
+        <span class="hljs-keyword">let</span> f = <span class="hljs-variable language_">this</span>.<span class="hljs-property">factory</span>;
 
-        <span class="hljs-built_in">Object</span>.entries(item).forEach(<span class="hljs-function">(<span class="hljs-params">[pos, col]</span>) =&gt;</span> {
+        <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(item).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">[pos, col]</span>) =&gt;</span> {
 
-            <span class="hljs-keyword">if</span> (col.substring) {
+            <span class="hljs-keyword">if</span> (col.<span class="hljs-property">substring</span>) {
 
-                f.convert(col);
-                item[pos] = [f.r, f.g, f.b, f.a];
+                f.<span class="hljs-title function_">convert</span>(col);
+                item[pos] = [f.<span class="hljs-property">r</span>, f.<span class="hljs-property">g</span>, f.<span class="hljs-property">b</span>, f.<span class="hljs-property">a</span>];
             }
         });
 
-        <span class="hljs-built_in">this</span>.colors = item;
-        <span class="hljs-built_in">this</span>.dirtyPalette = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">colors</span> = item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPalette</span> = <span class="hljs-literal">true</span>;
     }
 };</pre></div></div>
             
@@ -798,7 +798,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.stops = λ<span class="hljs-literal">null</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">stops</span> = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
@@ -826,7 +826,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.recalculateHold = [];</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">recalculateHold</span> = [];</pre></div></div>
             
         </li>
         
@@ -841,25 +841,25 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.recalculate = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">recalculate</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">let</span> keys, i, iz, j, jz, cursor, diff, 
         current, next, nextKey, temp,
         r, g, b, a,
-        colors = <span class="hljs-built_in">this</span>.colors,
-        stops = <span class="hljs-built_in">this</span>.stops,
-        make = <span class="hljs-built_in">this</span>.makeColorString,
-        hold = <span class="hljs-built_in">this</span>.recalculateHold;
+        colors = <span class="hljs-variable language_">this</span>.<span class="hljs-property">colors</span>,
+        stops = <span class="hljs-variable language_">this</span>.<span class="hljs-property">stops</span>,
+        make = <span class="hljs-variable language_">this</span>.<span class="hljs-property">makeColorString</span>,
+        hold = <span class="hljs-variable language_">this</span>.<span class="hljs-property">recalculateHold</span>;
 
-    keys = <span class="hljs-built_in">Object</span>.keys(colors);
-    keys = keys.map(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> <span class="hljs-built_in">parseInt</span>(n, <span class="hljs-number">10</span>))
-    keys.sort(<span class="hljs-function">(<span class="hljs-params">a, b</span>) =&gt;</span> a - b);
+    keys = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(colors);
+    keys = keys.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> <span class="hljs-built_in">parseInt</span>(n, <span class="hljs-number">10</span>))
+    keys.<span class="hljs-title function_">sort</span>(<span class="hljs-function">(<span class="hljs-params">a, b</span>) =&gt;</span> a - b);
 
-    stops.fill(<span class="hljs-string">&#x27;rgba(0,0,0,0)&#x27;</span>);
+    stops.<span class="hljs-title function_">fill</span>(<span class="hljs-string">&#x27;rgba(0,0,0,0)&#x27;</span>);
 
-    <span class="hljs-built_in">this</span>.dirtyPalette = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPalette</span> = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = keys.length - <span class="hljs-number">1</span>; i &lt; iz; i++) {
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = keys.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>; i &lt; iz; i++) {
 
         cursor = keys[i];
         nextKey = keys[i + <span class="hljs-number">1</span>];
@@ -880,16 +880,16 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             hold[<span class="hljs-number">2</span>] = current[<span class="hljs-number">2</span>] + (b * j);
             hold[<span class="hljs-number">3</span>] = current[<span class="hljs-number">3</span>] + (a * j);
 
-            stops[cursor] = make(hold);
+            stops[cursor] = <span class="hljs-title function_">make</span>(hold);
             cursor++;
         }
     }
 
-    stops[cursor] = make(next);
+    stops[cursor] = <span class="hljs-title function_">make</span>(next);
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.cyclic) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">cyclic</span>) {
 
-        cursor = keys[keys.length - <span class="hljs-number">1</span>];
+        cursor = keys[keys.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>];
         nextKey = keys[<span class="hljs-number">0</span>];
         diff = (nextKey + <span class="hljs-number">1000</span>) - cursor;
 
@@ -908,7 +908,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             hold[<span class="hljs-number">2</span>] = current[<span class="hljs-number">2</span>] + (b * j);
             hold[<span class="hljs-number">3</span>] = current[<span class="hljs-number">3</span>] + (a * j);
 
-            stops[cursor] = make(hold);
+            stops[cursor] = <span class="hljs-title function_">make</span>(hold);
             cursor++;
 
             <span class="hljs-keyword">if</span> (cursor &gt; <span class="hljs-number">999</span>) cursor -= <span class="hljs-number">1000</span>;
@@ -928,7 +928,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             }
         }
 
-        cursor = keys[keys.length - <span class="hljs-number">1</span>];
+        cursor = keys[keys.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>];
 
         <span class="hljs-keyword">if</span> (cursor &lt; <span class="hljs-number">999</span>) {
 
@@ -955,21 +955,21 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.makeColorString = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">makeColorString</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">let</span> f = <span class="hljs-built_in">Math</span>.floor,
+    <span class="hljs-keyword">let</span> f = <span class="hljs-title class_">Math</span>.<span class="hljs-property">floor</span>,
         r, g, b, a;
 
-    <span class="hljs-keyword">let</span> constrainer = <span class="hljs-function">(<span class="hljs-params">n, min, max</span>) =&gt;</span> {
+    <span class="hljs-keyword">let</span> <span class="hljs-title function_">constrainer</span> = (<span class="hljs-params">n, min, max</span>) =&gt; {
         n = (n &lt; min) ? min : n;
         n = (n &gt; max) ? max : n;
         <span class="hljs-keyword">return</span> n;
     };
 
-    r = constrainer(f(item[<span class="hljs-number">0</span>]), <span class="hljs-number">0</span>, <span class="hljs-number">255</span>),
-    g = constrainer(f(item[<span class="hljs-number">1</span>]), <span class="hljs-number">0</span>, <span class="hljs-number">255</span>),
-    b = constrainer(f(item[<span class="hljs-number">2</span>]), <span class="hljs-number">0</span>, <span class="hljs-number">255</span>),
-    a = constrainer(item[<span class="hljs-number">3</span>], <span class="hljs-number">0</span>, <span class="hljs-number">1</span>);
+    r = <span class="hljs-title function_">constrainer</span>(<span class="hljs-title function_">f</span>(item[<span class="hljs-number">0</span>]), <span class="hljs-number">0</span>, <span class="hljs-number">255</span>),
+    g = <span class="hljs-title function_">constrainer</span>(<span class="hljs-title function_">f</span>(item[<span class="hljs-number">1</span>]), <span class="hljs-number">0</span>, <span class="hljs-number">255</span>),
+    b = <span class="hljs-title function_">constrainer</span>(<span class="hljs-title function_">f</span>(item[<span class="hljs-number">2</span>]), <span class="hljs-number">0</span>, <span class="hljs-number">255</span>),
+    a = <span class="hljs-title function_">constrainer</span>(item[<span class="hljs-number">3</span>], <span class="hljs-number">0</span>, <span class="hljs-number">1</span>);
 
     <span class="hljs-keyword">return</span> <span class="hljs-string">`rgba(<span class="hljs-subst">${r}</span>,<span class="hljs-subst">${g}</span>,<span class="hljs-subst">${b}</span>,<span class="hljs-subst">${a}</span>)`</span>;
 };</pre></div></div>
@@ -991,20 +991,20 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.updateColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">index, color</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">updateColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">index, color</span>) {
 
-    <span class="hljs-keyword">let</span> f = <span class="hljs-built_in">this</span>.factory;
+    <span class="hljs-keyword">let</span> f = <span class="hljs-variable language_">this</span>.<span class="hljs-property">factory</span>;
 
-    <span class="hljs-keyword">if</span> (xta(index, color)) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xta</span>(index, color)) {
 
-        index = (index.substring) ? <span class="hljs-built_in">parseInt</span>(index, <span class="hljs-number">10</span>) : <span class="hljs-built_in">Math</span>.floor(index);
+        index = (index.<span class="hljs-property">substring</span>) ? <span class="hljs-built_in">parseInt</span>(index, <span class="hljs-number">10</span>) : <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(index);
 
         <span class="hljs-keyword">if</span> (index &gt;= <span class="hljs-number">0</span> &amp;&amp; index &lt;= <span class="hljs-number">999</span>) {
 
-            f.convert(color);
+            f.<span class="hljs-title function_">convert</span>(color);
             index += <span class="hljs-string">&#x27; &#x27;</span>;
-            <span class="hljs-built_in">this</span>.colors[index] = [f.r, f.g, f.b, f.a];
-            <span class="hljs-built_in">this</span>.dirtyPalette = <span class="hljs-literal">true</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">colors</span>[index] = [f.<span class="hljs-property">r</span>, f.<span class="hljs-property">g</span>, f.<span class="hljs-property">b</span>, f.<span class="hljs-property">a</span>];
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPalette</span> = <span class="hljs-literal">true</span>;
         }
     }
 };</pre></div></div>
@@ -1025,17 +1025,17 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.removeColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">index</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">removeColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">index</span>) {
     
-    <span class="hljs-keyword">if</span> (xt(index)) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(index)) {
 
-        index = (index.substring) ? <span class="hljs-built_in">parseInt</span>(index, <span class="hljs-number">10</span>) : <span class="hljs-built_in">Math</span>.floor(index);
+        index = (index.<span class="hljs-property">substring</span>) ? <span class="hljs-built_in">parseInt</span>(index, <span class="hljs-number">10</span>) : <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(index);
         
         <span class="hljs-keyword">if</span> (index &gt;= <span class="hljs-number">0</span> &amp;&amp; index &lt;= <span class="hljs-number">999</span>) {
 
             index += <span class="hljs-string">&#x27; &#x27;</span>;
-            <span class="hljs-keyword">delete</span> <span class="hljs-built_in">this</span>.colors[index];
-            <span class="hljs-built_in">this</span>.dirtyPalette = <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">delete</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">colors</span>[index];
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPalette</span> = <span class="hljs-literal">true</span>;
         }
     }
 };</pre></div></div>
@@ -1053,18 +1053,18 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.addStopsToGradient = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">gradient, start, end, cycle</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">addStopsToGradient</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">gradient, start, end, cycle</span>) {
 
-    <span class="hljs-keyword">let</span> stops = <span class="hljs-built_in">this</span>.stops,
-        keys = <span class="hljs-built_in">Object</span>.keys(<span class="hljs-built_in">this</span>.colors),
+    <span class="hljs-keyword">let</span> stops = <span class="hljs-variable language_">this</span>.<span class="hljs-property">stops</span>,
+        keys = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">colors</span>),
         spread, offset, i, iz, item, n;
 
     <span class="hljs-keyword">if</span> (gradient) {
 
-        keys = keys.map(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> <span class="hljs-built_in">parseInt</span>(n, <span class="hljs-number">10</span>))
-        keys.sort(<span class="hljs-function">(<span class="hljs-params">a, b</span>) =&gt;</span> a - b);
+        keys = keys.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> <span class="hljs-built_in">parseInt</span>(n, <span class="hljs-number">10</span>))
+        keys.<span class="hljs-title function_">sort</span>(<span class="hljs-function">(<span class="hljs-params">a, b</span>) =&gt;</span> a - b);
 
-        <span class="hljs-keyword">if</span> (!xta(start, end)) {
+        <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xta</span>(start, end)) {
             start = <span class="hljs-number">0</span>;
             end = <span class="hljs-number">999</span>;
         }</pre></div></div>
@@ -1099,12 +1099,12 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (start &lt; end) {
 
-            gradient.addColorStop(<span class="hljs-number">0</span>, stops[start]);
-            gradient.addColorStop(<span class="hljs-number">1</span>, stops[end]);
+            gradient.<span class="hljs-title function_">addColorStop</span>(<span class="hljs-number">0</span>, stops[start]);
+            gradient.<span class="hljs-title function_">addColorStop</span>(<span class="hljs-number">1</span>, stops[end]);
         
             spread = end - start;
 
-            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = keys.length; i &lt; iz; i++) {
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = keys.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
                 item = keys[i];
 
@@ -1112,7 +1112,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
                     offset = (item - start) / spread;
 
-                    <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">0</span> &amp;&amp; offset &lt; <span class="hljs-number">1</span>) gradient.addColorStop(offset, stops[item]);
+                    <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">0</span> &amp;&amp; offset &lt; <span class="hljs-number">1</span>) gradient.<span class="hljs-title function_">addColorStop</span>(offset, stops[item]);
                 }
             }
         }
@@ -1135,13 +1135,13 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             <div class="content"><div class='highlight'><pre>
             <span class="hljs-keyword">if</span> (cycle) {
 
-                gradient.addColorStop(<span class="hljs-number">0</span>, stops[start]);
-                gradient.addColorStop(<span class="hljs-number">1</span>, stops[end]);
+                gradient.<span class="hljs-title function_">addColorStop</span>(<span class="hljs-number">0</span>, stops[start]);
+                gradient.<span class="hljs-title function_">addColorStop</span>(<span class="hljs-number">1</span>, stops[end]);
             
                 n = <span class="hljs-number">999</span> - start;
                 spread = n + end;
 
-                <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = keys.length; i &lt; iz; i++) {
+                <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = keys.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
                     item = keys[i];
 
@@ -1149,7 +1149,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
                     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item &lt; end) offset = (item + n) / spread;
                     <span class="hljs-keyword">else</span> <span class="hljs-keyword">continue</span>;
 
-                    <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">0</span> &amp;&amp; offset &lt; <span class="hljs-number">1</span>) gradient.addColorStop(offset, stops[item]);
+                    <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">0</span> &amp;&amp; offset &lt; <span class="hljs-number">1</span>) gradient.<span class="hljs-title function_">addColorStop</span>(offset, stops[item]);
                 }
             }</pre></div></div>
             
@@ -1168,12 +1168,12 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">else</span> {
 
-                gradient.addColorStop(<span class="hljs-number">0</span>, stops[start]);
-                gradient.addColorStop(<span class="hljs-number">1</span>, stops[end]);
+                gradient.<span class="hljs-title function_">addColorStop</span>(<span class="hljs-number">0</span>, stops[start]);
+                gradient.<span class="hljs-title function_">addColorStop</span>(<span class="hljs-number">1</span>, stops[end]);
             
                 spread = start - end;
 
-                <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = keys.length; i &lt; iz; i++) {
+                <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = keys.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
                     item = keys[i];
 
@@ -1181,7 +1181,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
                         offset = <span class="hljs-number">1</span> - ((item - end) / spread);
 
-                        <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">0</span> &amp;&amp; offset &lt; <span class="hljs-number">1</span>) gradient.addColorStop(offset, stops[item]);
+                        <span class="hljs-keyword">if</span> (offset &gt; <span class="hljs-number">0</span> &amp;&amp; offset &lt; <span class="hljs-number">1</span>) gradient.<span class="hljs-title function_">addColorStop</span>(offset, stops[item]);
                     }
                 }
             }
@@ -1218,7 +1218,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.factory = makeColor({
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">factory</span> = <span class="hljs-title function_">makeColor</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;palette-factory-color-calculator&#x27;</span>,
     <span class="hljs-attr">opaque</span>: <span class="hljs-literal">false</span>,
@@ -1237,13 +1237,13 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makePalette = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makePalette = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Palette(items);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Palette</span>(items);
 };
 
-<span class="hljs-title">constructors</span>.<span class="hljs-title">Palette</span> = <span class="hljs-title">Palette</span>;
+constructors.<span class="hljs-property">Palette</span> = <span class="hljs-title class_">Palette</span>;
 
 <span class="hljs-keyword">const</span> paletteKeys = [<span class="hljs-string">&#x27;colors&#x27;</span>, <span class="hljs-string">&#x27;cyclic&#x27;</span>, <span class="hljs-string">&#x27;stops&#x27;</span>];</pre></div></div>
             

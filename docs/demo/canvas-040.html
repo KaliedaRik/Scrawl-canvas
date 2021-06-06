@@ -707,11 +707,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.library.canvas.mycanvas;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
 
 <span class="hljs-keyword">const</span> balancePoint = <span class="hljs-number">2500</span>;
 
-canvas.setBase({
+canvas.<span class="hljs-title function_">setBase</span>({
     <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;aliceblue&#x27;</span>,
 });</pre></div></div>
             
@@ -728,7 +728,7 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> arrow = scrawl.makeShape({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> arrow = scrawl.<span class="hljs-title function_">makeShape</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-arrow&#x27;</span>,
 
@@ -763,7 +763,7 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    lineDash: [balancePoint, balancePoint],
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">lineDash</span>: [balancePoint, balancePoint],
     <span class="hljs-attr">lineDashOffset</span>: balancePoint,</pre></div></div>
             
         </li>
@@ -779,13 +779,13 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    useAsPath: <span class="hljs-literal">true</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">precision</span>: <span class="hljs-number">1</span>,
 
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
 });
 
-<span class="hljs-keyword">let</span> japan = arrow.clone({
+<span class="hljs-keyword">let</span> japan = arrow.<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;japan&#x27;</span>,
     <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;70%&#x27;</span>, <span class="hljs-string">&#x27;50%&#x27;</span>],
@@ -1139,9 +1139,9 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> progressElement = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#progress&#x27;</span>);
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> progressElement = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#progress&#x27;</span>);
 
-<span class="hljs-keyword">const</span> myWorld = scrawl.makeWorld({
+<span class="hljs-keyword">const</span> myWorld = scrawl.<span class="hljs-title function_">makeWorld</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-world&#x27;</span>,
 
@@ -1150,14 +1150,14 @@ canvas.setBase({
         {
             <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;progress&#x27;</span>, 
             <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">0</span>,
-            <span class="hljs-attr">setter</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <span class="hljs-attr">setter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-                <span class="hljs-built_in">this</span>.progress = item;
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">progress</span> = item;
 
-                <span class="hljs-keyword">if</span> (arrow.length != <span class="hljs-literal">null</span>) {
+                <span class="hljs-keyword">if</span> (arrow.<span class="hljs-property">length</span> != <span class="hljs-literal">null</span>) {
 
-                    arrow.set({
-                        <span class="hljs-attr">lineDashOffset</span>: balancePoint - <span class="hljs-built_in">Math</span>.round(arrow.length * (item / <span class="hljs-number">100</span>)),
+                    arrow.<span class="hljs-title function_">set</span>({
+                        <span class="hljs-attr">lineDashOffset</span>: balancePoint - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(arrow.<span class="hljs-property">length</span> * (item / <span class="hljs-number">100</span>)),
                     });</pre></div></div>
             
         </li>
@@ -1176,11 +1176,11 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                    japan.set({
-                        <span class="hljs-attr">lineDashOffset</span>: balancePoint - <span class="hljs-built_in">Math</span>.round(japan.length * (item / <span class="hljs-number">270</span>)),
+            <div class="content"><div class='highlight'><pre>                    japan.<span class="hljs-title function_">set</span>({
+                        <span class="hljs-attr">lineDashOffset</span>: balancePoint - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(japan.<span class="hljs-property">length</span> * (item / <span class="hljs-number">270</span>)),
                     });
 
-                    progressElement.value = item;
+                    progressElement.<span class="hljs-property">value</span> = item;
                 }
             },
         }
@@ -1202,14 +1202,14 @@ canvas.setBase({
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> dirty = <span class="hljs-literal">true</span>;
 
-<span class="hljs-keyword">const</span> checkDirty = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+<span class="hljs-keyword">const</span> checkDirty = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">if</span> (dirty) {
 
         dirty = <span class="hljs-literal">false</span>;
 
-        myWorld.set({
-            <span class="hljs-attr">progress</span>: progressElement.value,
+        myWorld.<span class="hljs-title function_">set</span>({
+            <span class="hljs-attr">progress</span>: progressElement.<span class="hljs-property">value</span>,
         });
     }
 };</pre></div></div>
@@ -1230,7 +1230,7 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myTween = scrawl.makeTween({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myTween = scrawl.<span class="hljs-title function_">makeTween</span>({
   
   <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;line-progression&#x27;</span>,
   
@@ -1262,19 +1262,19 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
     Arrow length: <span class="hljs-subst">${arrow.length}</span>
     Line progress: <span class="hljs-subst">${progressElement.value}</span>`</span>;
     };
@@ -1293,7 +1293,7 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-animation&quot;</span>,
     <span class="hljs-attr">target</span>: canvas,
@@ -1314,28 +1314,28 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> updateScale = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> updateScale = <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
 
-    e.preventDefault();
-    e.returnValue = <span class="hljs-literal">false</span>;
+    e.<span class="hljs-title function_">preventDefault</span>();
+    e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
 
-    arrow.set({
-        <span class="hljs-attr">scale</span>: e.target.value,
+    arrow.<span class="hljs-title function_">set</span>({
+        <span class="hljs-attr">scale</span>: e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>,
     });
 
     dirty = <span class="hljs-literal">true</span>;
 };
-scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updateScale, <span class="hljs-string">&#x27;#scale&#x27;</span>);
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updateScale, <span class="hljs-string">&#x27;#scale&#x27;</span>);
 
-<span class="hljs-keyword">const</span> updateProgress = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>{
+<span class="hljs-keyword">const</span> updateProgress = <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
 
-    e.preventDefault();
-    e.returnValue = <span class="hljs-literal">false</span>;
+    e.<span class="hljs-title function_">preventDefault</span>();
+    e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
     dirty = <span class="hljs-literal">true</span>;
 };
-scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updateProgress, <span class="hljs-string">&#x27;#progress&#x27;</span>);
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updateProgress, <span class="hljs-string">&#x27;#progress&#x27;</span>);
 
-scrawl.observeAndUpdate({
+scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
 
     <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
     <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;#roll&#x27;</span>,
@@ -1351,25 +1351,25 @@ scrawl.observeAndUpdate({
     },
 });
 
-<span class="hljs-keyword">const</span> actionTween = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>{
+<span class="hljs-keyword">const</span> actionTween = <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
 
-    e.preventDefault();
-    e.returnValue = <span class="hljs-literal">false</span>;
+    e.<span class="hljs-title function_">preventDefault</span>();
+    e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> val = e.target.value;
+    <span class="hljs-keyword">let</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
 
-    <span class="hljs-keyword">if</span> (myTween.isRunning() &amp;&amp; val === <span class="hljs-string">&#x27;halt&#x27;</span>) {
+    <span class="hljs-keyword">if</span> (myTween.<span class="hljs-title function_">isRunning</span>() &amp;&amp; val === <span class="hljs-string">&#x27;halt&#x27;</span>) {
 
-        myTween.halt();
-        progressElement.removeAttribute(<span class="hljs-string">&#x27;disabled&#x27;</span>);
+        myTween.<span class="hljs-title function_">halt</span>();
+        progressElement.<span class="hljs-title function_">removeAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>);
     }
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!myTween.isRunning() &amp;&amp; val === <span class="hljs-string">&#x27;run&#x27;</span>) {
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!myTween.<span class="hljs-title function_">isRunning</span>() &amp;&amp; val === <span class="hljs-string">&#x27;run&#x27;</span>) {
 
-        myTween.run();
-        progressElement.setAttribute(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
+        myTween.<span class="hljs-title function_">run</span>();
+        progressElement.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
     }
 };
-scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], actionTween, <span class="hljs-string">&#x27;#tween&#x27;</span>);</pre></div></div>
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], actionTween, <span class="hljs-string">&#x27;#tween&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1384,7 +1384,7 @@ scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

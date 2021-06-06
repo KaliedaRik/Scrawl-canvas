@@ -707,9 +707,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> artefact = scrawl.library.artefact,
-    stack = artefact.mystack,
-    flower = artefact.flower,
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> artefact = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>,
+    stack = artefact.<span class="hljs-property">mystack</span>,
+    flower = artefact.<span class="hljs-property">flower</span>,
     currentClass = <span class="hljs-string">&#x27;&#x27;</span>;</pre></div></div>
             
         </li>
@@ -728,7 +728,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> hitgroup = scrawl.makeGroup({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> hitgroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;hitareas&#x27;</span>,
     <span class="hljs-attr">host</span>: <span class="hljs-string">&#x27;mystack&#x27;</span>,
 });</pre></div></div>
@@ -746,7 +746,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>stack.set({
+            <div class="content"><div class='highlight'><pre>stack.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">width</span>: <span class="hljs-number">600</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-number">400</span>,</pre></div></div>
             
@@ -763,7 +763,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    css: {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">css</span>: {
         <span class="hljs-attr">overflow</span>: <span class="hljs-string">&#x27;hidden&#x27;</span>,
         <span class="hljs-attr">resize</span>: <span class="hljs-string">&#x27;both&#x27;</span>
     },</pre></div></div>
@@ -781,7 +781,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    checkForResize: <span class="hljs-literal">true</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,
 });</pre></div></div>
             
         </li>
@@ -797,7 +797,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>artefact.rightbox.set({
+            <div class="content"><div class='highlight'><pre>artefact.<span class="hljs-property">rightbox</span>.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;hitareas&#x27;</span>,
 
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;55%&#x27;</span>,
@@ -807,8 +807,8 @@
     <span class="hljs-attr">css</span>: { <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;red&#x27;</span> },
 });
 
-artefact.leftbox.set({
-    <span class="hljs-attr">group</span>: hitgroup.name,
+artefact.<span class="hljs-property">leftbox</span>.<span class="hljs-title function_">set</span>({
+    <span class="hljs-attr">group</span>: hitgroup.<span class="hljs-property">name</span>,
 
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;10%&#x27;</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;35%&#x27;</span>,
@@ -829,7 +829,7 @@ artefact.leftbox.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>hitgroup.setArtefacts({
+            <div class="content"><div class='highlight'><pre>hitgroup.<span class="hljs-title function_">setArtefacts</span>({
     <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;25%&#x27;</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
 
@@ -849,7 +849,7 @@ artefact.leftbox.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>flower.set({
+            <div class="content"><div class='highlight'><pre>flower.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">width</span>: <span class="hljs-number">200</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-number">200</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
@@ -883,7 +883,7 @@ artefact.leftbox.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    deltaConstraints: {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">deltaConstraints</span>: {
         <span class="hljs-attr">startX</span>: [<span class="hljs-string">&#x27;10%&#x27;</span>, <span class="hljs-string">&#x27;90%&#x27;</span>, <span class="hljs-string">&#x27;reverse&#x27;</span>],
         <span class="hljs-attr">startY</span>: [<span class="hljs-string">&#x27;10%&#x27;</span>, <span class="hljs-string">&#x27;90%&#x27;</span>, <span class="hljs-string">&#x27;reverse&#x27;</span>],
     },
@@ -916,18 +916,18 @@ artefact.leftbox.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> checkForFlowerClassUpdates = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> checkForFlowerClassUpdates = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> current = hitgroup.getArtefactAt([flower.get(<span class="hljs-string">&#x27;start&#x27;</span>)]).artefact;
+    <span class="hljs-keyword">let</span> current = hitgroup.<span class="hljs-title function_">getArtefactAt</span>([flower.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;start&#x27;</span>)]).<span class="hljs-property">artefact</span>;
 
     <span class="hljs-keyword">if</span> (current &amp;&amp; !currentClass) {
 
-        currentClass = (current.name === <span class="hljs-string">&#x27;leftbox&#x27;</span>) ? <span class="hljs-string">&#x27;make_blue&#x27;</span> : <span class="hljs-string">&#x27;make_red&#x27;</span>;
-        flower.addClasses(currentClass);
+        currentClass = (current.<span class="hljs-property">name</span> === <span class="hljs-string">&#x27;leftbox&#x27;</span>) ? <span class="hljs-string">&#x27;make_blue&#x27;</span> : <span class="hljs-string">&#x27;make_red&#x27;</span>;
+        flower.<span class="hljs-title function_">addClasses</span>(currentClass);
     }
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!current &amp;&amp; currentClass) {
 
-        flower.removeClasses(currentClass);
+        flower.<span class="hljs-title function_">removeClasses</span>(currentClass);
         currentClass = <span class="hljs-string">&#x27;&#x27;</span>;
     }
 };</pre></div></div>
@@ -945,7 +945,7 @@ artefact.leftbox.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> commenceActions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> commenceActions = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
             
         </li>
         
@@ -960,7 +960,7 @@ artefact.leftbox.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    checkForFlowerClassUpdates();
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">checkForFlowerClassUpdates</span>();
 };</pre></div></div>
             
         </li>
@@ -976,19 +976,19 @@ artefact.leftbox.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
 Current classes: &quot;<span class="hljs-subst">${flower.get(<span class="hljs-string">&#x27;classes&#x27;</span>)}</span>&quot;`</span>;
     };
 }();</pre></div></div>
@@ -1006,7 +1006,7 @@ Current classes: &quot;<span class="hljs-subst">${flower.get(<span class="hljs-s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
     <span class="hljs-attr">commence</span>: commenceActions,
@@ -1030,9 +1030,9 @@ Current classes: &quot;<span class="hljs-subst">${flower.get(<span class="hljs-s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    afterCreated: <span class="hljs-function">() =&gt;</span> {
-        stack.set({<span class="hljs-attr">height</span>: <span class="hljs-number">400.1</span>});
-        scrawl.startCoreListeners();
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">afterCreated</span>: <span class="hljs-function">() =&gt;</span> {
+        stack.<span class="hljs-title function_">set</span>({<span class="hljs-attr">height</span>: <span class="hljs-number">400.1</span>});
+        scrawl.<span class="hljs-title function_">startCoreListeners</span>();
     },
 });</pre></div></div>
             

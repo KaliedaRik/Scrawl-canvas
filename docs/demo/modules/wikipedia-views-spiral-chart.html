@@ -172,9 +172,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> getData = <span class="hljs-function">(<span class="hljs-params">page = <span class="hljs-string">&#x27;Cat&#x27;</span></span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">getData</span> = (<span class="hljs-params">page = <span class="hljs-string">&#x27;Cat&#x27;</span></span>) =&gt; {
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {
 
         <span class="hljs-keyword">const</span> data = {
             <span class="hljs-attr">page</span>: <span class="hljs-string">&#x27;&#x27;</span>,
@@ -191,61 +191,61 @@
             <span class="hljs-attr">saturday</span>: [], 
         };
 
-        <span class="hljs-keyword">let</span> t = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(),
-            f = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>();
+        <span class="hljs-keyword">let</span> t = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(),
+            f = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>();
 
-        t.setDate(t.getDate() - <span class="hljs-number">1</span>);
-        f.setFullYear(f.getFullYear() - <span class="hljs-number">3</span>);
+        t.<span class="hljs-title function_">setDate</span>(t.<span class="hljs-title function_">getDate</span>() - <span class="hljs-number">1</span>);
+        f.<span class="hljs-title function_">setFullYear</span>(f.<span class="hljs-title function_">getFullYear</span>() - <span class="hljs-number">3</span>);
 
-        <span class="hljs-keyword">let</span> fromdate = f.toISOString().split(<span class="hljs-string">&#x27;T&#x27;</span>)[<span class="hljs-number">0</span>].replace(<span class="hljs-regexp">/-/g</span>, <span class="hljs-string">&#x27;&#x27;</span>),
-            todate = t.toISOString().split(<span class="hljs-string">&#x27;T&#x27;</span>)[<span class="hljs-number">0</span>].replace(<span class="hljs-regexp">/-/g</span>, <span class="hljs-string">&#x27;&#x27;</span>),
-            dayCounter = f.getDay(),
+        <span class="hljs-keyword">let</span> fromdate = f.<span class="hljs-title function_">toISOString</span>().<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27;T&#x27;</span>)[<span class="hljs-number">0</span>].<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/-/g</span>, <span class="hljs-string">&#x27;&#x27;</span>),
+            todate = t.<span class="hljs-title function_">toISOString</span>().<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27;T&#x27;</span>)[<span class="hljs-number">0</span>].<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/-/g</span>, <span class="hljs-string">&#x27;&#x27;</span>),
+            dayCounter = f.<span class="hljs-title function_">getDay</span>(),
             maxViews = <span class="hljs-number">0</span>, minViews = -<span class="hljs-number">1</span>;
 
         <span class="hljs-keyword">let</span> url = <span class="hljs-string">`https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/user/<span class="hljs-subst">${page}</span>/daily/<span class="hljs-subst">${fromdate}</span>/<span class="hljs-subst">${todate}</span>`</span>;
 
-        fetch(url)
-        .then(<span class="hljs-function"><span class="hljs-params">response</span> =&gt;</span> response.json())
-        .then(<span class="hljs-function"><span class="hljs-params">dataObject</span> =&gt;</span> {
+        <span class="hljs-title function_">fetch</span>(url)
+        .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">response</span> =&gt;</span> response.<span class="hljs-title function_">json</span>())
+        .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">dataObject</span> =&gt;</span> {
 
-            <span class="hljs-keyword">let</span> dataArray = dataObject.items;
+            <span class="hljs-keyword">let</span> dataArray = dataObject.<span class="hljs-property">items</span>;
 
             <span class="hljs-keyword">let</span> results = [[],[],[],[],[],[],[]];
 
-            dataArray.forEach(<span class="hljs-function"><span class="hljs-params">d</span> =&gt;</span> {
+            dataArray.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">d</span> =&gt;</span> {
 
-                <span class="hljs-keyword">let</span> views = d.views;
+                <span class="hljs-keyword">let</span> views = d.<span class="hljs-property">views</span>;
 
                 maxViews = (views &gt; maxViews) ? views : maxViews;
 
                 <span class="hljs-keyword">if</span> (minViews &lt; <span class="hljs-number">0</span>) minViews = maxViews;
                 <span class="hljs-keyword">else</span> minViews = (views &lt; minViews) ? views : minViews;
 
-                results[dayCounter].push(views);
+                results[dayCounter].<span class="hljs-title function_">push</span>(views);
 
                 dayCounter++;
                 dayCounter = dayCounter % <span class="hljs-number">7</span>;
             });
 
-            data.page = page;
-            data.max = maxViews;
-            data.min = minViews;
-            data.fromdate = fromdate;
-            data.todate = todate;
-            data.sun = results[<span class="hljs-number">0</span>];
-            data.mon = results[<span class="hljs-number">1</span>];
-            data.tue = results[<span class="hljs-number">2</span>];
-            data.wed = results[<span class="hljs-number">3</span>];
-            data.thu = results[<span class="hljs-number">4</span>];
-            data.fri = results[<span class="hljs-number">5</span>];
-            data.sat = results[<span class="hljs-number">6</span>];
+            data.<span class="hljs-property">page</span> = page;
+            data.<span class="hljs-property">max</span> = maxViews;
+            data.<span class="hljs-property">min</span> = minViews;
+            data.<span class="hljs-property">fromdate</span> = fromdate;
+            data.<span class="hljs-property">todate</span> = todate;
+            data.<span class="hljs-property">sun</span> = results[<span class="hljs-number">0</span>];
+            data.<span class="hljs-property">mon</span> = results[<span class="hljs-number">1</span>];
+            data.<span class="hljs-property">tue</span> = results[<span class="hljs-number">2</span>];
+            data.<span class="hljs-property">wed</span> = results[<span class="hljs-number">3</span>];
+            data.<span class="hljs-property">thu</span> = results[<span class="hljs-number">4</span>];
+            data.<span class="hljs-property">fri</span> = results[<span class="hljs-number">5</span>];
+            data.<span class="hljs-property">sat</span> = results[<span class="hljs-number">6</span>];
 
-            resolve(data);
+            <span class="hljs-title function_">resolve</span>(data);
         })
-        .catch(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> {
+        .<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> {
 
-            <span class="hljs-built_in">console</span>.log(e);
-            reject(data);
+            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(e);
+            <span class="hljs-title function_">reject</span>(data);
         });
     });
 };</pre></div></div>
@@ -276,7 +276,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">page, canvasWrapper, reqs = {}</span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">page, canvasWrapper, reqs = {}</span>) {</pre></div></div>
             
         </li>
         
@@ -291,7 +291,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {</pre></div></div>
             
         </li>
         
@@ -306,17 +306,17 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> cell = canvasWrapper.buildCell({
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> cell = canvasWrapper.<span class="hljs-title function_">buildCell</span>({
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${page}</span>-cell`</span>,
-            <span class="hljs-attr">width</span>: reqs.size || <span class="hljs-number">400</span>,
-            <span class="hljs-attr">height</span>: reqs.size || <span class="hljs-number">400</span>,
+            <span class="hljs-attr">width</span>: reqs.<span class="hljs-property">size</span> || <span class="hljs-number">400</span>,
+            <span class="hljs-attr">height</span>: reqs.<span class="hljs-property">size</span> || <span class="hljs-number">400</span>,
             <span class="hljs-attr">cleared</span>: <span class="hljs-literal">false</span>,
             <span class="hljs-attr">compiled</span>: <span class="hljs-literal">false</span>,
             <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span>,
-            <span class="hljs-attr">backgroundColor</span>: reqs.backgroundColor || <span class="hljs-string">&#x27;transparent&#x27;</span>,
+            <span class="hljs-attr">backgroundColor</span>: reqs.<span class="hljs-property">backgroundColor</span> || <span class="hljs-string">&#x27;transparent&#x27;</span>,
         });
 
-        <span class="hljs-keyword">const</span> chartGroup = scrawl.library.group[cell.name];</pre></div></div>
+        <span class="hljs-keyword">const</span> chartGroup = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">group</span>[cell.<span class="hljs-property">name</span>];</pre></div></div>
             
         </li>
         
@@ -331,16 +331,16 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> lowViewsFactory = scrawl.makeColor({
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> lowViewsFactory = scrawl.<span class="hljs-title function_">makeColor</span>({
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${page}</span>-low-views`</span>,
-            <span class="hljs-attr">minimumColor</span>: reqs.minimumColor || <span class="hljs-string">&#x27;azure&#x27;</span>,
-            <span class="hljs-attr">maximumColor</span>: reqs.medialColor || <span class="hljs-string">&#x27;blue&#x27;</span>,
+            <span class="hljs-attr">minimumColor</span>: reqs.<span class="hljs-property">minimumColor</span> || <span class="hljs-string">&#x27;azure&#x27;</span>,
+            <span class="hljs-attr">maximumColor</span>: reqs.<span class="hljs-property">medialColor</span> || <span class="hljs-string">&#x27;blue&#x27;</span>,
         });
 
-        <span class="hljs-keyword">const</span> highViewsFactory = scrawl.makeColor({
+        <span class="hljs-keyword">const</span> highViewsFactory = scrawl.<span class="hljs-title function_">makeColor</span>({
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${page}</span>-high-views`</span>,
-            <span class="hljs-attr">maximumColor</span>: reqs.medialColor || <span class="hljs-string">&#x27;blue&#x27;</span>,
-            <span class="hljs-attr">maximumColor</span>: reqs.maximumColor || <span class="hljs-string">&#x27;red&#x27;</span>,
+            <span class="hljs-attr">maximumColor</span>: reqs.<span class="hljs-property">medialColor</span> || <span class="hljs-string">&#x27;blue&#x27;</span>,
+            <span class="hljs-attr">maximumColor</span>: reqs.<span class="hljs-property">maximumColor</span> || <span class="hljs-string">&#x27;red&#x27;</span>,
         });</pre></div></div>
             
         </li>
@@ -356,8 +356,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        getData(page)
-        .then(<span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-title function_">getData</span>(page)
+        .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> {</pre></div></div>
             
         </li>
         
@@ -372,11 +372,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> maxViews = data.max,
-                minViews = data.min,
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> maxViews = data.<span class="hljs-property">max</span>,
+                minViews = data.<span class="hljs-property">min</span>,
                 medianViews = (maxViews - minViews) / <span class="hljs-number">2</span>;
 
-            <span class="hljs-keyword">const</span> maxDataLen = <span class="hljs-built_in">Math</span>.max(data.mon.length, data.tue.length, data.wed.length, data.thu.length, data.fri.length, data.sat.length, data.sun.length);</pre></div></div>
+            <span class="hljs-keyword">const</span> maxDataLen = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(data.<span class="hljs-property">mon</span>.<span class="hljs-property">length</span>, data.<span class="hljs-property">tue</span>.<span class="hljs-property">length</span>, data.<span class="hljs-property">wed</span>.<span class="hljs-property">length</span>, data.<span class="hljs-property">thu</span>.<span class="hljs-property">length</span>, data.<span class="hljs-property">fri</span>.<span class="hljs-property">length</span>, data.<span class="hljs-property">sat</span>.<span class="hljs-property">length</span>, data.<span class="hljs-property">sun</span>.<span class="hljs-property">length</span>);</pre></div></div>
             
         </li>
         
@@ -391,29 +391,29 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> buildDayChart = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">dayData, offsetVal, dayName, missFirst</span>) </span>{
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> buildDayChart = <span class="hljs-keyword">function</span> (<span class="hljs-params">dayData, offsetVal, dayName, missFirst</span>) {
 
                 <span class="hljs-keyword">let</span> currentWeek, currentYear, nextWeek, nextYear;
 
-                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = dayData.length - <span class="hljs-number">2</span>; i &lt; iz; i++) {
+                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = dayData.<span class="hljs-property">length</span> - <span class="hljs-number">2</span>; i &lt; iz; i++) {
 
                     <span class="hljs-keyword">if</span> (missFirst) {
 
                         currentWeek = (i + <span class="hljs-number">1</span>) % <span class="hljs-number">52</span>;
-                        currentYear = <span class="hljs-built_in">Math</span>.floor((i + <span class="hljs-number">1</span>) / <span class="hljs-number">52</span>);
+                        currentYear = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>((i + <span class="hljs-number">1</span>) / <span class="hljs-number">52</span>);
 
                         nextWeek = (i + <span class="hljs-number">2</span>) % <span class="hljs-number">52</span>;
-                        nextYear = <span class="hljs-built_in">Math</span>.floor((i + <span class="hljs-number">2</span>) / <span class="hljs-number">52</span>);
+                        nextYear = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>((i + <span class="hljs-number">2</span>) / <span class="hljs-number">52</span>);
 
                         nextWeek = nextWeek % <span class="hljs-number">52</span>;
                     }
                     <span class="hljs-keyword">else</span> {
 
                         currentWeek = i % <span class="hljs-number">52</span>;
-                        currentYear = <span class="hljs-built_in">Math</span>.floor(i / <span class="hljs-number">52</span>);
+                        currentYear = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(i / <span class="hljs-number">52</span>);
 
                         nextWeek = (i + <span class="hljs-number">1</span>) % <span class="hljs-number">52</span>;
-                        nextYear = <span class="hljs-built_in">Math</span>.floor((i + <span class="hljs-number">1</span>) / <span class="hljs-number">52</span>);
+                        nextYear = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>((i + <span class="hljs-number">1</span>) / <span class="hljs-number">52</span>);
 
                         nextWeek = nextWeek % <span class="hljs-number">52</span>;
                     }
@@ -434,8 +434,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">if</span> (views &lt; medianViews) dataColor = lowViewsFactory.getRangeColor(views / medianViews);
-                    <span class="hljs-keyword">else</span> dataColor = highViewsFactory.getRangeColor((views - medianViews) / medianViews);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">if</span> (views &lt; medianViews) dataColor = lowViewsFactory.<span class="hljs-title function_">getRangeColor</span>(views / medianViews);
+                    <span class="hljs-keyword">else</span> dataColor = highViewsFactory.<span class="hljs-title function_">getRangeColor</span>((views - medianViews) / medianViews);</pre></div></div>
             
         </li>
         
@@ -450,7 +450,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                    scrawl.makeLine({
+            <div class="content"><div class='highlight'><pre>                    scrawl.<span class="hljs-title function_">makeLine</span>({
 
                         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${page}</span>-<span class="hljs-subst">${dayName}</span>-line-<span class="hljs-subst">${i}</span>`</span>,
                         <span class="hljs-attr">group</span>: chartGroup,
@@ -486,7 +486,7 @@
             
             <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">52</span>; i++) {
 
-                scrawl.makeLine({
+                scrawl.<span class="hljs-title function_">makeLine</span>({
 
                     <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${page}</span>-week-line-<span class="hljs-subst">${i}</span>`</span>,
                     <span class="hljs-attr">group</span>: chartGroup,
@@ -510,7 +510,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                    method: <span class="hljs-string">&#x27;none&#x27;</span>,
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;none&#x27;</span>,
                 });
             }</pre></div></div>
             
@@ -527,13 +527,13 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            buildDayChart(data.mon, <span class="hljs-number">0</span>, <span class="hljs-string">&#x27;mon&#x27;</span>, (data.mon.length &lt; maxDataLen) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>);
-            buildDayChart(data.tue, <span class="hljs-number">0.042</span>, <span class="hljs-string">&#x27;tue&#x27;</span>, (data.tue.length &lt; maxDataLen) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>);
-            buildDayChart(data.wed, <span class="hljs-number">0.084</span>, <span class="hljs-string">&#x27;wed&#x27;</span>, (data.wed.length &lt; maxDataLen) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>);
-            buildDayChart(data.thu, <span class="hljs-number">0.126</span>, <span class="hljs-string">&#x27;thu&#x27;</span>, (data.thu.length &lt; maxDataLen) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>);
-            buildDayChart(data.fri, <span class="hljs-number">0.168</span>, <span class="hljs-string">&#x27;fri&#x27;</span>, (data.fri.length &lt; maxDataLen) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>);
-            buildDayChart(data.sat, <span class="hljs-number">0.21</span>, <span class="hljs-string">&#x27;sat&#x27;</span>, (data.sat.length &lt; maxDataLen) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>);
-            buildDayChart(data.sun, <span class="hljs-number">0.252</span>, <span class="hljs-string">&#x27;sun&#x27;</span>, (data.sun.length &lt; maxDataLen) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-title function_">buildDayChart</span>(data.<span class="hljs-property">mon</span>, <span class="hljs-number">0</span>, <span class="hljs-string">&#x27;mon&#x27;</span>, (data.<span class="hljs-property">mon</span>.<span class="hljs-property">length</span> &lt; maxDataLen) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>);
+            <span class="hljs-title function_">buildDayChart</span>(data.<span class="hljs-property">tue</span>, <span class="hljs-number">0.042</span>, <span class="hljs-string">&#x27;tue&#x27;</span>, (data.<span class="hljs-property">tue</span>.<span class="hljs-property">length</span> &lt; maxDataLen) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>);
+            <span class="hljs-title function_">buildDayChart</span>(data.<span class="hljs-property">wed</span>, <span class="hljs-number">0.084</span>, <span class="hljs-string">&#x27;wed&#x27;</span>, (data.<span class="hljs-property">wed</span>.<span class="hljs-property">length</span> &lt; maxDataLen) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>);
+            <span class="hljs-title function_">buildDayChart</span>(data.<span class="hljs-property">thu</span>, <span class="hljs-number">0.126</span>, <span class="hljs-string">&#x27;thu&#x27;</span>, (data.<span class="hljs-property">thu</span>.<span class="hljs-property">length</span> &lt; maxDataLen) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>);
+            <span class="hljs-title function_">buildDayChart</span>(data.<span class="hljs-property">fri</span>, <span class="hljs-number">0.168</span>, <span class="hljs-string">&#x27;fri&#x27;</span>, (data.<span class="hljs-property">fri</span>.<span class="hljs-property">length</span> &lt; maxDataLen) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>);
+            <span class="hljs-title function_">buildDayChart</span>(data.<span class="hljs-property">sat</span>, <span class="hljs-number">0.21</span>, <span class="hljs-string">&#x27;sat&#x27;</span>, (data.<span class="hljs-property">sat</span>.<span class="hljs-property">length</span> &lt; maxDataLen) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>);
+            <span class="hljs-title function_">buildDayChart</span>(data.<span class="hljs-property">sun</span>, <span class="hljs-number">0.252</span>, <span class="hljs-string">&#x27;sun&#x27;</span>, (data.<span class="hljs-property">sun</span>.<span class="hljs-property">length</span> &lt; maxDataLen) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>);</pre></div></div>
             
         </li>
         
@@ -548,8 +548,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            lowViewsFactory.kill();
-            highViewsFactory.kill();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            lowViewsFactory.<span class="hljs-title function_">kill</span>();
+            highViewsFactory.<span class="hljs-title function_">kill</span>();</pre></div></div>
             
         </li>
         
@@ -564,7 +564,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            cell.clear();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            cell.<span class="hljs-title function_">clear</span>();</pre></div></div>
             
         </li>
         
@@ -579,7 +579,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            scrawl.createImageFromCell(cell, <span class="hljs-literal">true</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            scrawl.<span class="hljs-title function_">createImageFromCell</span>(cell, <span class="hljs-literal">true</span>);</pre></div></div>
             
         </li>
         
@@ -594,7 +594,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            cell.compile()</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            cell.<span class="hljs-title function_">compile</span>()</pre></div></div>
             
         </li>
         
@@ -609,8 +609,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            chartGroup.kill(<span class="hljs-literal">true</span>);
-            cell.kill();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            chartGroup.<span class="hljs-title function_">kill</span>(<span class="hljs-literal">true</span>);
+            cell.<span class="hljs-title function_">kill</span>();</pre></div></div>
             
         </li>
         
@@ -625,9 +625,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">let</span> img = scrawl.makePicture({
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">let</span> img = scrawl.<span class="hljs-title function_">makePicture</span>({
                 <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${page}</span>-chart-image`</span>,
-                <span class="hljs-attr">group</span>: canvasWrapper.base.name,
+                <span class="hljs-attr">group</span>: canvasWrapper.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
 
                 <span class="hljs-attr">asset</span>: <span class="hljs-string">`<span class="hljs-subst">${page}</span>-cell-image`</span>,
 
@@ -635,12 +635,12 @@
                 <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
             });
 
-            resolve(img);
+            <span class="hljs-title function_">resolve</span>(img);
         })
-        .catch(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> {
+        .<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> {
 
-            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;buildChart error&#x27;</span>, e);
-            resolve(<span class="hljs-literal">false</span>);
+            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;buildChart error&#x27;</span>, e);
+            <span class="hljs-title function_">resolve</span>(<span class="hljs-literal">false</span>);
         });
     });
 };</pre></div></div>

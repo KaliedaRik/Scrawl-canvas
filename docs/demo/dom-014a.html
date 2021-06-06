@@ -700,14 +700,14 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>
 
-<span class="hljs-keyword">let</span> canvas = scrawl.library.artefact.mycanvas1;
-canvas.setAsCurrentCanvas();
+<span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas1</span>;
+canvas.<span class="hljs-title function_">setAsCurrentCanvas</span>();
 
-canvas.setBase({
+canvas.<span class="hljs-title function_">setBase</span>({
     <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;aliceblue&#x27;</span>,
 });
 
-<span class="hljs-keyword">let</span> myPivot = scrawl.makeWheel({
+<span class="hljs-keyword">let</span> myPivot = scrawl.<span class="hljs-title function_">makeWheel</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;mouse-pivot&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;none&#x27;</span>,
 
@@ -715,7 +715,7 @@ canvas.setBase({
     <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
 });
 
-<span class="hljs-keyword">let</span> myblock = scrawl.makeBlock({
+<span class="hljs-keyword">let</span> myblock = scrawl.<span class="hljs-title function_">makeBlock</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;base-block&#x27;</span>,
 
     <span class="hljs-attr">width</span>: <span class="hljs-number">150</span>,
@@ -742,7 +742,7 @@ canvas.setBase({
     },
 });
 
-<span class="hljs-keyword">let</span> mywheel = scrawl.makeWheel({
+<span class="hljs-keyword">let</span> mywheel = scrawl.<span class="hljs-title function_">makeWheel</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;base-wheel&#x27;</span>,
 
     <span class="hljs-attr">radius</span>: <span class="hljs-number">60</span>,
@@ -770,7 +770,7 @@ canvas.setBase({
     },
 });
 
-myblock.clone({
+myblock.<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pivot-block&#x27;</span>,
 
     <span class="hljs-attr">height</span>: <span class="hljs-number">30</span>,
@@ -793,7 +793,7 @@ myblock.clone({
         <span class="hljs-attr">roll</span>: <span class="hljs-number">0</span>,
     },
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pivot-wheel&#x27;</span>,
 
     <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;base-wheel&#x27;</span>,
@@ -804,7 +804,7 @@ myblock.clone({
 
     <span class="hljs-attr">offsetY</span>: <span class="hljs-number">0</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;mimic-wheel&#x27;</span>,
 
     <span class="hljs-attr">mimic</span>: <span class="hljs-string">&#x27;base-wheel&#x27;</span>,
@@ -834,7 +834,7 @@ myblock.clone({
     <span class="hljs-attr">addOwnRotationToMimic</span>: <span class="hljs-literal">false</span>,
 });
 
-mywheel.clone({
+mywheel.<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;mimic-block&#x27;</span>,
 
     <span class="hljs-attr">mimic</span>: <span class="hljs-string">&#x27;base-block&#x27;</span>,
@@ -861,42 +861,42 @@ mywheel.clone({
     <span class="hljs-attr">addOwnRotationToMimic</span>: <span class="hljs-literal">false</span>,
 });
 
-<span class="hljs-keyword">let</span> mouseCheck = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+<span class="hljs-keyword">let</span> mouseCheck = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">let</span> active = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-keyword">if</span> (canvas.here.active !== active) {
+        <span class="hljs-keyword">if</span> (canvas.<span class="hljs-property">here</span>.<span class="hljs-property">active</span> !== active) {
 
-            active = canvas.here.active;
+            active = canvas.<span class="hljs-property">here</span>.<span class="hljs-property">active</span>;
 
-            myPivot.set({
+            myPivot.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">lockTo</span>: (active) ? <span class="hljs-string">&#x27;mouse&#x27;</span> : <span class="hljs-string">&#x27;start&#x27;</span>
             });
         }
     };
 }();
 
-<span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+<span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage1&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage1&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Animation threshhold set to 0.5
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Animation threshhold set to 0.5
  - 50% of canvas must be visible for animation to run
 Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
     };
 }();
 
-<span class="hljs-keyword">let</span> animation = scrawl.makeRender({
+<span class="hljs-keyword">let</span> animation = scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation1&#x27;</span>,
     <span class="hljs-attr">target</span>: canvas,
@@ -918,21 +918,21 @@ Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> observer = <span class="hljs-keyword">new</span> IntersectionObserver(<span class="hljs-function">(<span class="hljs-params">entries, observer</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> observer = <span class="hljs-keyword">new</span> <span class="hljs-title class_">IntersectionObserver</span>(<span class="hljs-function">(<span class="hljs-params">entries, observer</span>) =&gt;</span> {
 
-    entries.forEach(<span class="hljs-function"><span class="hljs-params">entry</span> =&gt;</span> {
+    entries.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">entry</span> =&gt;</span> {
 
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;observer A starts&#x27;</span>, animation.name, animation.isRunning(), entry.intersectionRatio, entry.isIntersecting);
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;observer A starts&#x27;</span>, animation.<span class="hljs-property">name</span>, animation.<span class="hljs-title function_">isRunning</span>(), entry.<span class="hljs-property">intersectionRatio</span>, entry.<span class="hljs-property">isIntersecting</span>);
 
-        <span class="hljs-keyword">if</span> (entry.isIntersecting &amp;&amp; !animation.isRunning()) animation.run();
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!entry.isIntersecting &amp;&amp; animation.isRunning()) animation.halt();
+        <span class="hljs-keyword">if</span> (entry.<span class="hljs-property">isIntersecting</span> &amp;&amp; !animation.<span class="hljs-title function_">isRunning</span>()) animation.<span class="hljs-title function_">run</span>();
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!entry.<span class="hljs-property">isIntersecting</span> &amp;&amp; animation.<span class="hljs-title function_">isRunning</span>()) animation.<span class="hljs-title function_">halt</span>();
 
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;observer A completes&#x27;</span>, animation.name, animation.isRunning(), entry.intersectionRatio, entry.isIntersecting);
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;observer A completes&#x27;</span>, animation.<span class="hljs-property">name</span>, animation.<span class="hljs-title function_">isRunning</span>(), entry.<span class="hljs-property">intersectionRatio</span>, entry.<span class="hljs-property">isIntersecting</span>);
     });
 }, { <span class="hljs-attr">threshold</span>: <span class="hljs-number">0.5</span> });
-observer.observe(canvas.domElement);
+observer.<span class="hljs-title function_">observe</span>(canvas.<span class="hljs-property">domElement</span>);
 
-<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;#014a&#x27;</span>, scrawl.library);</pre></div></div>
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;#014a&#x27;</span>, scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

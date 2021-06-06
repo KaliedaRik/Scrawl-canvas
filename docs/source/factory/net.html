@@ -514,7 +514,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">artefact</span>, <span class="hljs-title">artefactnames</span>, <span class="hljs-title">entity</span>, <span class="hljs-title">world</span>, <span class="hljs-title">particle</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, artefact, artefactnames, entity, world, particle } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { pushUnique, mergeOver, λ<span class="hljs-literal">null</span>, isa_fn, isa_obj, xt, xta, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { currentGroup } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/document.js&#x27;</span>;
 
@@ -538,12 +538,12 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Net = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">Net</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-built_in">this</span>.makeName(items.name);
-    <span class="hljs-built_in">this</span>.register();
-    <span class="hljs-built_in">this</span>.initializePositions();
-    <span class="hljs-built_in">this</span>.set(<span class="hljs-built_in">this</span>.defs);</pre></div></div>
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(items.<span class="hljs-property">name</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">initializePositions</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);</pre></div></div>
             
         </li>
         
@@ -558,10 +558,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.onEnter = λ<span class="hljs-literal">null</span>;
-    <span class="hljs-built_in">this</span>.onLeave = λ<span class="hljs-literal">null</span>;
-    <span class="hljs-built_in">this</span>.onDown = λ<span class="hljs-literal">null</span>;
-    <span class="hljs-built_in">this</span>.onUp = λ<span class="hljs-literal">null</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">onEnter</span> = λ<span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">onLeave</span> = λ<span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">onDown</span> = λ<span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">onUp</span> = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
@@ -576,7 +576,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.generate = λ<span class="hljs-literal">null</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">generate</span> = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
@@ -591,7 +591,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.postGenerate = λ<span class="hljs-literal">null</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">postGenerate</span> = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
@@ -606,7 +606,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.stampAction = λ<span class="hljs-literal">null</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">stampAction</span> = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
@@ -621,16 +621,16 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.particleStore = [];
-    <span class="hljs-built_in">this</span>.springs = [];
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">particleStore</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">springs</span> = [];
 
-    <span class="hljs-keyword">if</span> (!items.group) items.group = currentGroup;
+    <span class="hljs-keyword">if</span> (!items.<span class="hljs-property">group</span>) items.<span class="hljs-property">group</span> = currentGroup;
 
-    <span class="hljs-built_in">this</span>.set(items);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.purge) <span class="hljs-built_in">this</span>.purgeArtefact(<span class="hljs-built_in">this</span>.purge);
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">purge</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">purgeArtefact</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">purge</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -646,12 +646,12 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Net.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">Net</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
 
-P.type = <span class="hljs-string">&#x27;Net&#x27;</span>;
-P.lib = <span class="hljs-string">&#x27;entity&#x27;</span>;
-P.isArtefact = <span class="hljs-literal">true</span>;
-P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
+P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Net&#x27;</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;entity&#x27;</span>;
+P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">true</span>;
+P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -666,8 +666,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = baseMix(P);
-P = entityMix(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);
+P = <span class="hljs-title function_">entityMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -708,7 +708,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    world: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">world</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -726,7 +726,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    artefact: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">artefact</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -741,7 +741,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    historyLength: <span class="hljs-number">1</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">historyLength</span>: <span class="hljs-number">1</span>,</pre></div></div>
             
         </li>
         
@@ -759,7 +759,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    forces: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">forces</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -777,7 +777,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    mass: <span class="hljs-number">1</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">mass</span>: <span class="hljs-number">1</span>,</pre></div></div>
             
         </li>
         
@@ -792,7 +792,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    engine: <span class="hljs-string">&#x27;euler&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">engine</span>: <span class="hljs-string">&#x27;euler&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -807,7 +807,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    springConstant: <span class="hljs-number">50</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">springConstant</span>: <span class="hljs-number">50</span>,
     <span class="hljs-attr">damperConstant</span>: <span class="hljs-number">10</span>,</pre></div></div>
             
         </li>
@@ -823,7 +823,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    restLength: <span class="hljs-number">1</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">restLength</span>: <span class="hljs-number">1</span>,</pre></div></div>
             
         </li>
         
@@ -838,7 +838,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    showSprings: <span class="hljs-literal">false</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">showSprings</span>: <span class="hljs-literal">false</span>,</pre></div></div>
             
         </li>
         
@@ -853,7 +853,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    showSpringsColor: <span class="hljs-string">&#x27;#000000&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">showSpringsColor</span>: <span class="hljs-string">&#x27;#000000&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -869,7 +869,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    rows: <span class="hljs-number">0</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">rows</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">columns</span>: <span class="hljs-number">0</span>,</pre></div></div>
             
         </li>
@@ -885,7 +885,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    rowDistance: <span class="hljs-number">0</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">rowDistance</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">columnDistance</span>: <span class="hljs-number">0</span>,</pre></div></div>
             
         </li>
@@ -902,7 +902,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    shapeTemplate: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">shapeTemplate</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -917,7 +917,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    precision: <span class="hljs-number">20</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">precision</span>: <span class="hljs-number">20</span>,</pre></div></div>
             
         </li>
         
@@ -932,7 +932,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    joinTemplateEnds: <span class="hljs-literal">false</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">joinTemplateEnds</span>: <span class="hljs-literal">false</span>,
 
     <span class="hljs-attr">particlesAreDraggable</span>: <span class="hljs-literal">false</span>,</pre></div></div>
             
@@ -949,7 +949,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    hitRadius: <span class="hljs-number">10</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">hitRadius</span>: <span class="hljs-number">10</span>,</pre></div></div>
             
         </li>
         
@@ -964,7 +964,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    showHitRadius: <span class="hljs-literal">false</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">showHitRadius</span>: <span class="hljs-literal">false</span>,</pre></div></div>
             
         </li>
         
@@ -979,7 +979,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    hitRadiusColor: <span class="hljs-string">&#x27;#000000&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">hitRadiusColor</span>: <span class="hljs-string">&#x27;#000000&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -994,7 +994,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    resetAfterBlur: <span class="hljs-number">3</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">resetAfterBlur</span>: <span class="hljs-number">3</span>,</pre></div></div>
             
         </li>
         
@@ -1049,7 +1049,7 @@ P = entityMix(P);</pre></div></div>
             </div>
             
             <div class="content"><div class='highlight'><pre>};
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
+P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -1064,29 +1064,29 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.packetExclusions = pushUnique(P.packetExclusions, [<span class="hljs-string">&#x27;forces&#x27;</span>, <span class="hljs-string">&#x27;springs&#x27;</span>, <span class="hljs-string">&#x27;particleStore&#x27;</span>]);
-P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-P.packetCoordinates = pushUnique(P.packetCoordinates, []);
-P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">&#x27;world&#x27;</span>, <span class="hljs-string">&#x27;artefact&#x27;</span>, <span class="hljs-string">&#x27;shapeTemplate&#x27;</span>]);
-P.packetFunctions = pushUnique(P.packetFunctions, [<span class="hljs-string">&#x27;generate&#x27;</span>, <span class="hljs-string">&#x27;postGenerate&#x27;</span>, <span class="hljs-string">&#x27;stampAction&#x27;</span>]);
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">packetExclusions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusions</span>, [<span class="hljs-string">&#x27;forces&#x27;</span>, <span class="hljs-string">&#x27;springs&#x27;</span>, <span class="hljs-string">&#x27;particleStore&#x27;</span>]);
+P.<span class="hljs-property">packetExclusionsByRegex</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusionsByRegex</span>, []);
+P.<span class="hljs-property">packetCoordinates</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetCoordinates</span>, []);
+P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetObjects</span>, [<span class="hljs-string">&#x27;world&#x27;</span>, <span class="hljs-string">&#x27;artefact&#x27;</span>, <span class="hljs-string">&#x27;shapeTemplate&#x27;</span>]);
+P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetFunctions</span>, [<span class="hljs-string">&#x27;generate&#x27;</span>, <span class="hljs-string">&#x27;postGenerate&#x27;</span>, <span class="hljs-string">&#x27;stampAction&#x27;</span>]);
 
-P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) </span>{
+P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) {
 
-    <span class="hljs-keyword">let</span> forces = items.forces || <span class="hljs-built_in">this</span>.forces || <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">let</span> forces = items.<span class="hljs-property">forces</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">forces</span> || <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">if</span> (forces) {
 
         <span class="hljs-keyword">let</span> tempForces = [];
-        forces.forEach(<span class="hljs-function"><span class="hljs-params">f</span> =&gt;</span> {
+        forces.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">f</span> =&gt;</span> {
 
-            <span class="hljs-keyword">if</span> (f.substring) tempForces.push(f);
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isa_obj(f) &amp;&amp; f.name) tempForces.push(f.name);
+            <span class="hljs-keyword">if</span> (f.<span class="hljs-property">substring</span>) tempForces.<span class="hljs-title function_">push</span>(f);
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(f) &amp;&amp; f.<span class="hljs-property">name</span>) tempForces.<span class="hljs-title function_">push</span>(f.<span class="hljs-property">name</span>);
         });
-        copy.forces = tempForces;
+        copy.<span class="hljs-property">forces</span> = tempForces;
     }
 
     <span class="hljs-keyword">let</span> tempParticles = [];
-    <span class="hljs-built_in">this</span>.particleStore.forEach(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> tempParticles.push(p.saveAsPacket()));
-    copy.particleStore = tempParticles;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">particleStore</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> tempParticles.<span class="hljs-title function_">push</span>(p.<span class="hljs-title function_">saveAsPacket</span>()));
+    copy.<span class="hljs-property">particleStore</span> = tempParticles;
 
     <span class="hljs-keyword">return</span> copy;
 };</pre></div></div>
@@ -1104,7 +1104,7 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.postCloneAction = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">clone, items</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">postCloneAction</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params">clone, items</span>) {
 
     <span class="hljs-keyword">return</span> clone;
 };</pre></div></div>
@@ -1122,22 +1122,22 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.factoryKill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">killArtefact, killWorld</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">factoryKill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">killArtefact, killWorld</span>) {
 
-    <span class="hljs-built_in">this</span>.isRunning = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">isRunning</span> = <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">if</span> (killArtefact) {
 
-        <span class="hljs-built_in">this</span>.artefact.kill();
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.shapeTemplate) <span class="hljs-built_in">this</span>.shapeTemplate.kill();
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefact</span>.<span class="hljs-title function_">kill</span>();
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">shapeTemplate</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">shapeTemplate</span>.<span class="hljs-title function_">kill</span>();
     }
 
-    <span class="hljs-keyword">if</span> (killWorld) <span class="hljs-built_in">this</span>.world.kill();
-    <span class="hljs-built_in">this</span>.purgeParticlesFromLibrary();
+    <span class="hljs-keyword">if</span> (killWorld) <span class="hljs-variable language_">this</span>.<span class="hljs-property">world</span>.<span class="hljs-title function_">kill</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">purgeParticlesFromLibrary</span>();
 };
 
-P.purgeParticlesFromLibrary = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+P.<span class="hljs-property">purgeParticlesFromLibrary</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> {particleStore, springs} = <span class="hljs-built_in">this</span>;</pre></div></div>
+    <span class="hljs-keyword">let</span> {particleStore, springs} = <span class="hljs-variable language_">this</span>;</pre></div></div>
             
         </li>
         
@@ -1152,13 +1152,13 @@ P.purgeParticlesFromLibrary = <span class="hljs-function"><span class="hljs-keyw
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    artefactnames.forEach(<span class="hljs-function"><span class="hljs-params">a</span> =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>    artefactnames.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">a</span> =&gt;</span> {
 
         <span class="hljs-keyword">let</span> tempArt = artefact[a];
 
         <span class="hljs-keyword">if</span> (tempArt) {
 
-            <span class="hljs-keyword">if</span> (tempArt.particle &amp;&amp; !tempArt.particle.substring &amp;&amp; tempArt.particle.name) tempArt.particle = tempArt.particle.name;</pre></div></div>
+            <span class="hljs-keyword">if</span> (tempArt.<span class="hljs-property">particle</span> &amp;&amp; !tempArt.<span class="hljs-property">particle</span>.<span class="hljs-property">substring</span> &amp;&amp; tempArt.<span class="hljs-property">particle</span>.<span class="hljs-property">name</span>) tempArt.<span class="hljs-property">particle</span> = tempArt.<span class="hljs-property">particle</span>.<span class="hljs-property">name</span>;</pre></div></div>
             
         </li>
         
@@ -1173,14 +1173,14 @@ P.purgeParticlesFromLibrary = <span class="hljs-function"><span class="hljs-keyw
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (tempArt.type === <span class="hljs-string">&#x27;Polyline&#x27;</span> &amp;&amp; tempArt.useParticlesAsPins) {
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (tempArt.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Polyline&#x27;</span> &amp;&amp; tempArt.<span class="hljs-property">useParticlesAsPins</span>) {
 
-                tempArt.pins.forEach(<span class="hljs-function">(<span class="hljs-params">pin, index</span>) =&gt;</span> {
+                tempArt.<span class="hljs-property">pins</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">pin, index</span>) =&gt;</span> {
 
-                    <span class="hljs-keyword">if</span> (isa_obj(pin) &amp;&amp; pin.type === <span class="hljs-string">&#x27;Particle&#x27;</span>) {
+                    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(pin) &amp;&amp; pin.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Particle&#x27;</span>) {
 
-                        tempArt.pins[index] = pin.name;
-                        tempArt.dirtyPins = <span class="hljs-literal">true</span>;
+                        tempArt.<span class="hljs-property">pins</span>[index] = pin.<span class="hljs-property">name</span>;
+                        tempArt.<span class="hljs-property">dirtyPins</span> = <span class="hljs-literal">true</span>;
                     }
                 });
             }
@@ -1200,8 +1200,8 @@ P.purgeParticlesFromLibrary = <span class="hljs-function"><span class="hljs-keyw
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    particleStore.forEach(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.kill());
-    particleStore.length = <span class="hljs-number">0</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    particleStore.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.<span class="hljs-title function_">kill</span>());
+    particleStore.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;</pre></div></div>
             
         </li>
         
@@ -1216,8 +1216,8 @@ P.purgeParticlesFromLibrary = <span class="hljs-function"><span class="hljs-keyw
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    springs.forEach(<span class="hljs-function"><span class="hljs-params">s</span> =&gt;</span> s.kill());
-    springs.length = <span class="hljs-number">0</span>;
+            <div class="content"><div class='highlight'><pre>    springs.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">s</span> =&gt;</span> s.<span class="hljs-title function_">kill</span>());
+    springs.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
 };</pre></div></div>
             
         </li>
@@ -1233,56 +1233,56 @@ P.purgeParticlesFromLibrary = <span class="hljs-function"><span class="hljs-keyw
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.getters,
-    S = P.setters,
-    D = P.deltaSetters;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.<span class="hljs-property">getters</span>,
+    S = P.<span class="hljs-property">setters</span>,
+    D = P.<span class="hljs-property">deltaSetters</span>;
 
-S.generate = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">generate</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (isa_fn(item)) <span class="hljs-built_in">this</span>.generate = item;
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">generate</span> = item;
 
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.substring &amp;&amp; generators[item]) <span class="hljs-built_in">this</span>.generate = generators[item];
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span> &amp;&amp; generators[item]) <span class="hljs-variable language_">this</span>.<span class="hljs-property">generate</span> = generators[item];
 };
 
-S.postGenerate = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">postGenerate</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (isa_fn(item)) <span class="hljs-built_in">this</span>.postGenerate = item;
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">postGenerate</span> = item;
 };
 
-S.stampAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">stampAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (isa_fn(item)) <span class="hljs-built_in">this</span>.stampAction = item;
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">stampAction</span> = item;
 };
 
 
-S.world = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">world</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-keyword">let</span> w;
 
-    <span class="hljs-keyword">if</span> (item.substring) w = world[item];
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isa_obj(item) &amp;&amp; item.type === <span class="hljs-string">&#x27;World&#x27;</span>) w = item;
+    <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) w = world[item];
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(item) &amp;&amp; item.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;World&#x27;</span>) w = item;
 
-    <span class="hljs-keyword">if</span> (w) <span class="hljs-built_in">this</span>.world = w;
+    <span class="hljs-keyword">if</span> (w) <span class="hljs-variable language_">this</span>.<span class="hljs-property">world</span> = w;
 };
 
-S.artefact = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">artefact</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-keyword">let</span> art;
 
-    <span class="hljs-keyword">if</span> (item.substring) art = artefact[item];
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isa_obj(item) &amp;&amp; item.isArtefact) art = item;
+    <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) art = artefact[item];
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(item) &amp;&amp; item.<span class="hljs-property">isArtefact</span>) art = item;
 
-    <span class="hljs-keyword">if</span> (art) <span class="hljs-built_in">this</span>.artefact = art;
+    <span class="hljs-keyword">if</span> (art) <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefact</span> = art;
 };
 
-S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-keyword">let</span> art;
 
-    <span class="hljs-keyword">if</span> (item.substring) art = entity[item];
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isa_obj(item) &amp;&amp; item.isArtefact &amp;&amp; xt(item.species)) art = item;
+    <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) art = entity[item];
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(item) &amp;&amp; item.<span class="hljs-property">isArtefact</span> &amp;&amp; <span class="hljs-title function_">xt</span>(item.<span class="hljs-property">species</span>)) art = item;
 
-    <span class="hljs-keyword">if</span> (art) <span class="hljs-built_in">this</span>.shapeTemplate = art;
+    <span class="hljs-keyword">if</span> (art) <span class="hljs-variable language_">this</span>.<span class="hljs-property">shapeTemplate</span> = art;
 };</pre></div></div>
             
         </li>
@@ -1311,19 +1311,19 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.regularStamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">regularStamp</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> {world, <span class="hljs-attr">artefact</span>:art, particleStore, springs, generate, postGenerate, stampAction, lastUpdated, resetAfterBlur, showSprings, showSpringsColor, showHitRadius, hitRadius, hitRadiusColor} = <span class="hljs-built_in">this</span>;
+    <span class="hljs-keyword">let</span> {world, <span class="hljs-attr">artefact</span>:art, particleStore, springs, generate, postGenerate, stampAction, lastUpdated, resetAfterBlur, showSprings, showSpringsColor, showHitRadius, hitRadius, hitRadiusColor} = <span class="hljs-variable language_">this</span>;
 
     <span class="hljs-keyword">let</span> globalAlpha = <span class="hljs-number">1</span>,
         globalCompositeOperation = <span class="hljs-string">&#x27;source-over&#x27;</span>;
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.state) {
-        globalAlpha = <span class="hljs-built_in">this</span>.state.globalAlpha;
-        globalCompositeOperation = <span class="hljs-built_in">this</span>.state.globalCompositeOperation;
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>) {
+        globalAlpha = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-property">globalAlpha</span>;
+        globalCompositeOperation = <span class="hljs-variable language_">this</span>.<span class="hljs-property">state</span>.<span class="hljs-property">globalCompositeOperation</span>;
     }
 
-    <span class="hljs-keyword">let</span> host = <span class="hljs-built_in">this</span>.currentHost;</pre></div></div>
+    <span class="hljs-keyword">let</span> host = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>;</pre></div></div>
             
         </li>
         
@@ -1339,7 +1339,7 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> deltaTime = <span class="hljs-number">16</span> / <span class="hljs-number">1000</span>,
-        now = <span class="hljs-built_in">Date</span>.now();
+        now = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
 
     <span class="hljs-keyword">if</span> (lastUpdated) deltaTime = (now - lastUpdated) / <span class="hljs-number">1000</span>;</pre></div></div>
             
@@ -1358,7 +1358,7 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (deltaTime &gt; resetAfterBlur) {
 
-        <span class="hljs-built_in">this</span>.purgeParticlesFromLibrary();
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">purgeParticlesFromLibrary</span>();
         deltaTime = <span class="hljs-number">16</span> / <span class="hljs-number">1000</span>;
     }</pre></div></div>
             
@@ -1375,10 +1375,10 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!particleStore.length) {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!particleStore.<span class="hljs-property">length</span>) {
 
-        generate.call(<span class="hljs-built_in">this</span>, host);
-        postGenerate.call(<span class="hljs-built_in">this</span>);
+        generate.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, host);
+        postGenerate.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>);
     }</pre></div></div>
             
         </li>
@@ -1399,9 +1399,9 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    particleStore.forEach(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.applyForces(world, host));
-    springs.forEach(<span class="hljs-function"><span class="hljs-params">s</span> =&gt;</span> s.applySpring());
-    particleStore.forEach(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.update(deltaTime, world));</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    particleStore.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.<span class="hljs-title function_">applyForces</span>(world, host));
+    springs.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">s</span> =&gt;</span> s.<span class="hljs-title function_">applySpring</span>());
+    particleStore.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.<span class="hljs-title function_">update</span>(deltaTime, world));</pre></div></div>
             
         </li>
         
@@ -1418,29 +1418,29 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (showSprings) {
 
-        <span class="hljs-keyword">let</span> engine = host.engine;
+        <span class="hljs-keyword">let</span> engine = host.<span class="hljs-property">engine</span>;
 
-        engine.save();
-        engine.globalAlpha = globalAlpha;
-        engine.globalCompositeOperation = globalCompositeOperation;
-        engine.strokeStyle = showSpringsColor;
-        engine.shadowOffsetX = <span class="hljs-number">0</span>,
-        engine.shadowOffsetY = <span class="hljs-number">0</span>,
-        engine.shadowBlur = <span class="hljs-number">0</span>,
-        engine.shadowColor = <span class="hljs-string">&#x27;rgba(0,0,0,0)&#x27;</span>,
-        engine.lineWidth = <span class="hljs-number">1</span>;
-        engine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-        engine.beginPath();
+        engine.<span class="hljs-title function_">save</span>();
+        engine.<span class="hljs-property">globalAlpha</span> = globalAlpha;
+        engine.<span class="hljs-property">globalCompositeOperation</span> = globalCompositeOperation;
+        engine.<span class="hljs-property">strokeStyle</span> = showSpringsColor;
+        engine.<span class="hljs-property">shadowOffsetX</span> = <span class="hljs-number">0</span>,
+        engine.<span class="hljs-property">shadowOffsetY</span> = <span class="hljs-number">0</span>,
+        engine.<span class="hljs-property">shadowBlur</span> = <span class="hljs-number">0</span>,
+        engine.<span class="hljs-property">shadowColor</span> = <span class="hljs-string">&#x27;rgba(0,0,0,0)&#x27;</span>,
+        engine.<span class="hljs-property">lineWidth</span> = <span class="hljs-number">1</span>;
+        engine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+        engine.<span class="hljs-title function_">beginPath</span>();
 
-        springs.forEach(<span class="hljs-function"><span class="hljs-params">s</span> =&gt;</span> {
+        springs.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">s</span> =&gt;</span> {
 
             <span class="hljs-keyword">let</span> {particleFrom, particleTo} = s;
 
-            engine.moveTo(particleFrom.position.x, particleFrom.position.y);
-            engine.lineTo(particleTo.position.x, particleTo.position.y);
+            engine.<span class="hljs-title function_">moveTo</span>(particleFrom.<span class="hljs-property">position</span>.<span class="hljs-property">x</span>, particleFrom.<span class="hljs-property">position</span>.<span class="hljs-property">y</span>);
+            engine.<span class="hljs-title function_">lineTo</span>(particleTo.<span class="hljs-property">position</span>.<span class="hljs-property">x</span>, particleTo.<span class="hljs-property">position</span>.<span class="hljs-property">y</span>);
         });
-        engine.stroke();
-        engine.restore();
+        engine.<span class="hljs-title function_">stroke</span>();
+        engine.<span class="hljs-title function_">restore</span>();
     }</pre></div></div>
             
         </li>
@@ -1460,10 +1460,10 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    particleStore.forEach(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>    particleStore.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> {
 
-        p.manageHistory(deltaTime, host);
-        stampAction.call(<span class="hljs-built_in">this</span>, art, p, host);
+        p.<span class="hljs-title function_">manageHistory</span>(deltaTime, host);
+        stampAction.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, art, p, host);
     });</pre></div></div>
             
         </li>
@@ -1481,28 +1481,28 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (showHitRadius) {
 
-        <span class="hljs-keyword">let</span> engine = host.engine;
+        <span class="hljs-keyword">let</span> engine = host.<span class="hljs-property">engine</span>;
 
-        engine.save();
-        engine.globalAlpha = globalAlpha;
-        engine.globalCompositeOperation = globalCompositeOperation;
-        engine.lineWidth = <span class="hljs-number">1</span>;
-        engine.strokeStyle = hitRadiusColor;
-        engine.shadowOffsetX = <span class="hljs-number">0</span>,
-        engine.shadowOffsetY = <span class="hljs-number">0</span>,
-        engine.shadowBlur = <span class="hljs-number">0</span>,
-        engine.shadowColor = <span class="hljs-string">&#x27;rgba(0,0,0,0)&#x27;</span>,
+        engine.<span class="hljs-title function_">save</span>();
+        engine.<span class="hljs-property">globalAlpha</span> = globalAlpha;
+        engine.<span class="hljs-property">globalCompositeOperation</span> = globalCompositeOperation;
+        engine.<span class="hljs-property">lineWidth</span> = <span class="hljs-number">1</span>;
+        engine.<span class="hljs-property">strokeStyle</span> = hitRadiusColor;
+        engine.<span class="hljs-property">shadowOffsetX</span> = <span class="hljs-number">0</span>,
+        engine.<span class="hljs-property">shadowOffsetY</span> = <span class="hljs-number">0</span>,
+        engine.<span class="hljs-property">shadowBlur</span> = <span class="hljs-number">0</span>,
+        engine.<span class="hljs-property">shadowColor</span> = <span class="hljs-string">&#x27;rgba(0,0,0,0)&#x27;</span>,
 
-        engine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-        engine.beginPath();
+        engine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+        engine.<span class="hljs-title function_">beginPath</span>();
 
-        particleStore.forEach(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> {
-            engine.moveTo(p.position.x, p.position.y);
-            engine.arc(p.position.x, p.position.y, hitRadius, <span class="hljs-number">0</span>, <span class="hljs-built_in">Math</span>.PI * <span class="hljs-number">2</span>);
+        particleStore.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> {
+            engine.<span class="hljs-title function_">moveTo</span>(p.<span class="hljs-property">position</span>.<span class="hljs-property">x</span>, p.<span class="hljs-property">position</span>.<span class="hljs-property">y</span>);
+            engine.<span class="hljs-title function_">arc</span>(p.<span class="hljs-property">position</span>.<span class="hljs-property">x</span>, p.<span class="hljs-property">position</span>.<span class="hljs-property">y</span>, hitRadius, <span class="hljs-number">0</span>, <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span> * <span class="hljs-number">2</span>);
         });
         
-        engine.stroke();
-        engine.restore();
+        engine.<span class="hljs-title function_">stroke</span>();
+        engine.<span class="hljs-title function_">restore</span>();
     }</pre></div></div>
             
         </li>
@@ -1518,7 +1518,7 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.lastUpdated = now;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastUpdated</span> = now;
 };</pre></div></div>
             
         </li>
@@ -1534,13 +1534,13 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.restart = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">restart</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-built_in">this</span>.purgeParticlesFromLibrary();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">purgeParticlesFromLibrary</span>();
     
-    <span class="hljs-built_in">this</span>.lastUpdated = <span class="hljs-built_in">Date</span>.now();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastUpdated</span> = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
 
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -1560,59 +1560,59 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.checkHit = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = [], mycell</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">checkHit</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = [], mycell</span>) {
 
-    <span class="hljs-built_in">this</span>.lastHitParticle = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastHitParticle</span> = <span class="hljs-literal">null</span>;
 
-    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.particlesAreDraggable) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">particlesAreDraggable</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.noUserInteraction) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">noUserInteraction</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> tests = (!<span class="hljs-built_in">Array</span>.isArray(items)) ?  [items] : items;
+    <span class="hljs-keyword">let</span> tests = (!<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(items)) ?  [items] : items;
 
-    <span class="hljs-keyword">let</span> particleStore = <span class="hljs-built_in">this</span>.particleStore,
+    <span class="hljs-keyword">let</span> particleStore = <span class="hljs-variable language_">this</span>.<span class="hljs-property">particleStore</span>,
         res = <span class="hljs-literal">false</span>,
         tx, ty, i, iz, p;
 
-    <span class="hljs-keyword">if</span> (tests.some(<span class="hljs-function"><span class="hljs-params">test</span> =&gt;</span> {
+    <span class="hljs-keyword">if</span> (tests.<span class="hljs-title function_">some</span>(<span class="hljs-function"><span class="hljs-params">test</span> =&gt;</span> {
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(test)) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(test)) {
 
             tx = test[<span class="hljs-number">0</span>];
             ty = test[<span class="hljs-number">1</span>];
         }
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (xta(test, test.x, test.y)) {
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xta</span>(test, test.<span class="hljs-property">x</span>, test.<span class="hljs-property">y</span>)) {
 
-            tx = test.x;
-            ty = test.y;
+            tx = test.<span class="hljs-property">x</span>;
+            ty = test.<span class="hljs-property">y</span>;
         }
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 
-        <span class="hljs-keyword">if</span> (!tx.toFixed || !ty.toFixed || <span class="hljs-built_in">isNaN</span>(tx) || <span class="hljs-built_in">isNaN</span>(ty)) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">if</span> (!tx.<span class="hljs-property">toFixed</span> || !ty.<span class="hljs-property">toFixed</span> || <span class="hljs-built_in">isNaN</span>(tx) || <span class="hljs-built_in">isNaN</span>(ty)) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 
-        <span class="hljs-keyword">let</span> v = requestVector();
+        <span class="hljs-keyword">let</span> v = <span class="hljs-title function_">requestVector</span>();
 
-        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = particleStore.length; i &lt; iz; i++) {
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = particleStore.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
             p = particleStore[i];
 
-            v.set(p.position).vectorSubtract(test);
+            v.<span class="hljs-title function_">set</span>(p.<span class="hljs-property">position</span>).<span class="hljs-title function_">vectorSubtract</span>(test);
 
-            <span class="hljs-keyword">if</span> (v.getMagnitude() &lt; <span class="hljs-built_in">this</span>.hitRadius) {
+            <span class="hljs-keyword">if</span> (v.<span class="hljs-title function_">getMagnitude</span>() &lt; <span class="hljs-variable language_">this</span>.<span class="hljs-property">hitRadius</span>) {
 
                 res = p;
                 <span class="hljs-keyword">break</span>;
             }
         }
-        releaseVector(v);
+        <span class="hljs-title function_">releaseVector</span>(v);
 
         <span class="hljs-keyword">return</span> res;
 
-    }, <span class="hljs-built_in">this</span>)) {
+    }, <span class="hljs-variable language_">this</span>)) {
 
-        <span class="hljs-keyword">let</span> r = <span class="hljs-built_in">this</span>.checkHitReturn(tx, ty, mycell, res);
+        <span class="hljs-keyword">let</span> r = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkHitReturn</span>(tx, ty, mycell, res);
 
-        <span class="hljs-built_in">this</span>.lastHitParticle = res;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastHitParticle</span> = res;
 
         <span class="hljs-keyword">return</span> r;
     }
@@ -1635,12 +1635,12 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.checkHitReturn = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y, cell, particle</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">checkHitReturn</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y, cell, particle</span>) {
 
     <span class="hljs-keyword">return</span> {
         <span class="hljs-attr">x</span>: x,
         <span class="hljs-attr">y</span>: y,
-        <span class="hljs-attr">artefact</span>: <span class="hljs-built_in">this</span>,
+        <span class="hljs-attr">artefact</span>: <span class="hljs-variable language_">this</span>,
         <span class="hljs-attr">particle</span>: particle,
     };
 };</pre></div></div>
@@ -1661,17 +1661,17 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.pickupArtefact = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">pickupArtefact</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
-    <span class="hljs-keyword">let</span> particle = <span class="hljs-built_in">this</span>.lastHitParticle;
+    <span class="hljs-keyword">let</span> particle = <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastHitParticle</span>;
 
-    <span class="hljs-keyword">if</span> (xta(items, particle)) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xta</span>(items, particle)) {
 
-        particle.isBeingDragged = items;
-        particle.dragOffset = requestVector(particle.position).vectorSubtract(items);
-        <span class="hljs-built_in">this</span>.lastHitParticle
+        particle.<span class="hljs-property">isBeingDragged</span> = items;
+        particle.<span class="hljs-property">dragOffset</span> = <span class="hljs-title function_">requestVector</span>(particle.<span class="hljs-property">position</span>).<span class="hljs-title function_">vectorSubtract</span>(items);
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastHitParticle</span>
     }
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -1690,13 +1690,13 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.dropArtefact = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">dropArtefact</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-built_in">this</span>.lastHitParticle.isBeingDragged = <span class="hljs-literal">null</span>;
-    releaseVector(<span class="hljs-built_in">this</span>.lastHitParticle.dragOffset);
-    <span class="hljs-built_in">this</span>.lastHitParticle.dragOffset = <span class="hljs-literal">null</span>;
-    <span class="hljs-built_in">this</span>.lastHitParticle = <span class="hljs-literal">null</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastHitParticle</span>.<span class="hljs-property">isBeingDragged</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-title function_">releaseVector</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">lastHitParticle</span>.<span class="hljs-property">dragOffset</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastHitParticle</span>.<span class="hljs-property">dragOffset</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastHitParticle</span> = <span class="hljs-literal">null</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -1730,17 +1730,17 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;weak-net&#x27;</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;weak-net&#x27;</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) {
 
-        <span class="hljs-keyword">let</span> { particleStore, <span class="hljs-attr">artefact</span>:art, historyLength, engine, forces, springs, mass, rows, columns, rowDistance, columnDistance, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength } = <span class="hljs-built_in">this</span>;
+        <span class="hljs-keyword">let</span> { particleStore, <span class="hljs-attr">artefact</span>:art, historyLength, engine, forces, springs, mass, rows, columns, rowDistance, columnDistance, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength } = <span class="hljs-variable language_">this</span>;
 
         <span class="hljs-keyword">if</span> (host &amp;&amp; rows &gt; <span class="hljs-number">0</span> &amp;&amp; columns &gt; <span class="hljs-number">0</span>) {
 
-            <span class="hljs-keyword">let</span> [x, y] = <span class="hljs-built_in">this</span>.currentStampPosition;
-            <span class="hljs-keyword">let</span> [width, height] = host.currentDimensions;
+            <span class="hljs-keyword">let</span> [x, y] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>;
+            <span class="hljs-keyword">let</span> [width, height] = host.<span class="hljs-property">currentDimensions</span>;
 
-            <span class="hljs-keyword">let</span> deltaR = (rowDistance.substring) ? (<span class="hljs-built_in">parseFloat</span>(rowDistance) / <span class="hljs-number">100</span>) * height : rowDistance;
-            <span class="hljs-keyword">let</span> deltaC = (columnDistance.substring) ? (<span class="hljs-built_in">parseFloat</span>(columnDistance) / <span class="hljs-number">100</span>) * height : columnDistance;
+            <span class="hljs-keyword">let</span> deltaR = (rowDistance.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(rowDistance) / <span class="hljs-number">100</span>) * height : rowDistance;
+            <span class="hljs-keyword">let</span> deltaC = (columnDistance.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(columnDistance) / <span class="hljs-number">100</span>) * height : columnDistance;
 
             <span class="hljs-keyword">let</span> dx, dy, p, i, j;</pre></div></div>
             
@@ -1765,7 +1765,7 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
 
                     dx = (deltaC * j) + x;
 
-                    p = makeParticle({
+                    p = <span class="hljs-title function_">makeParticle</span>({
 
                         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${j}</span>`</span>,
 
@@ -1783,24 +1783,24 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
 
                         mass,
 
-                        <span class="hljs-attr">fill</span>: art.get(<span class="hljs-string">&#x27;fillStyle&#x27;</span>),
-                        <span class="hljs-attr">stroke</span>: art.get(<span class="hljs-string">&#x27;strokeStyle&#x27;</span>),
+                        <span class="hljs-attr">fill</span>: art.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;fillStyle&#x27;</span>),
+                        <span class="hljs-attr">stroke</span>: art.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;strokeStyle&#x27;</span>),
                     });
 
-                    p.run(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">false</span>);
+                    p.<span class="hljs-title function_">run</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">false</span>);
 
-                    particleStore.push(p);
+                    particleStore.<span class="hljs-title function_">push</span>(p);
                 }
             }
 
-            <span class="hljs-keyword">const</span> springMaker = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">particleFrom, particleTo, springName</span>) </span>{
+            <span class="hljs-keyword">const</span> springMaker = <span class="hljs-keyword">function</span> (<span class="hljs-params">particleFrom, particleTo, springName</span>) {
 
                 <span class="hljs-keyword">let</span> v, l, s;
 
-                v = requestVector(particleFrom.position).vectorSubtract(particleTo.position);
-                l = v.getMagnitude();
+                v = <span class="hljs-title function_">requestVector</span>(particleFrom.<span class="hljs-property">position</span>).<span class="hljs-title function_">vectorSubtract</span>(particleTo.<span class="hljs-property">position</span>);
+                l = v.<span class="hljs-title function_">getMagnitude</span>();
 
-                s = makeSpring({
+                s = <span class="hljs-title function_">makeSpring</span>({
 
                     <span class="hljs-attr">name</span>: springName,
 
@@ -1813,8 +1813,8 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
                     <span class="hljs-attr">restLength</span>: l * restLength,
                 });
 
-                springs.push(s);
-                releaseVector(v);
+                springs.<span class="hljs-title function_">push</span>(s);
+                <span class="hljs-title function_">releaseVector</span>(v);
             };
 
             <span class="hljs-keyword">let</span> f, t;</pre></div></div>
@@ -1838,7 +1838,7 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
 
                     f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${j}</span>`</span>];
                     t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${j + <span class="hljs-number">1</span>}</span>`</span>];
-                    springMaker(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${j}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${j + <span class="hljs-number">1</span>}</span>`</span>);
+                    <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${j}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${j + <span class="hljs-number">1</span>}</span>`</span>);
                 }
             }
 
@@ -1848,7 +1848,7 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
 
                     f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j}</span>-<span class="hljs-subst">${i}</span>`</span>];
                     t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j + <span class="hljs-number">1</span>}</span>-<span class="hljs-subst">${i}</span>`</span>];
-                    springMaker(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j + <span class="hljs-number">1</span>}</span>-<span class="hljs-subst">${i}</span>`</span>);
+                    <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j + <span class="hljs-number">1</span>}</span>-<span class="hljs-subst">${i}</span>`</span>);
                 }
             }
         }
@@ -1870,17 +1870,17 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;strong-net&#x27;</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;strong-net&#x27;</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) {
 
-        <span class="hljs-keyword">let</span> { particleStore, <span class="hljs-attr">artefact</span>:art, historyLength, engine, forces, springs, mass, rows, columns, rowDistance, columnDistance, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength } = <span class="hljs-built_in">this</span>;
+        <span class="hljs-keyword">let</span> { particleStore, <span class="hljs-attr">artefact</span>:art, historyLength, engine, forces, springs, mass, rows, columns, rowDistance, columnDistance, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength } = <span class="hljs-variable language_">this</span>;
 
         <span class="hljs-keyword">if</span> (host &amp;&amp; rows &gt; <span class="hljs-number">0</span> &amp;&amp; columns &gt; <span class="hljs-number">0</span>) {
 
-            <span class="hljs-keyword">let</span> [x, y] = <span class="hljs-built_in">this</span>.currentStampPosition;
-            <span class="hljs-keyword">let</span> [width, height] = host.currentDimensions;
+            <span class="hljs-keyword">let</span> [x, y] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>;
+            <span class="hljs-keyword">let</span> [width, height] = host.<span class="hljs-property">currentDimensions</span>;
 
-            <span class="hljs-keyword">let</span> deltaR = (rowDistance.substring) ? (<span class="hljs-built_in">parseFloat</span>(rowDistance) / <span class="hljs-number">100</span>) * height : rowDistance;
-            <span class="hljs-keyword">let</span> deltaC = (columnDistance.substring) ? (<span class="hljs-built_in">parseFloat</span>(columnDistance) / <span class="hljs-number">100</span>) * height : columnDistance;
+            <span class="hljs-keyword">let</span> deltaR = (rowDistance.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(rowDistance) / <span class="hljs-number">100</span>) * height : rowDistance;
+            <span class="hljs-keyword">let</span> deltaC = (columnDistance.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(columnDistance) / <span class="hljs-number">100</span>) * height : columnDistance;
 
             <span class="hljs-keyword">let</span> dx, dy, p, i, j;</pre></div></div>
             
@@ -1905,7 +1905,7 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
 
                     dx = (deltaC * j) + x;
 
-                    p = makeParticle({
+                    p = <span class="hljs-title function_">makeParticle</span>({
 
                         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${j}</span>`</span>,
 
@@ -1923,24 +1923,24 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
 
                         mass,
 
-                        <span class="hljs-attr">fill</span>: art.get(<span class="hljs-string">&#x27;fillStyle&#x27;</span>),
-                        <span class="hljs-attr">stroke</span>: art.get(<span class="hljs-string">&#x27;strokeStyle&#x27;</span>),
+                        <span class="hljs-attr">fill</span>: art.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;fillStyle&#x27;</span>),
+                        <span class="hljs-attr">stroke</span>: art.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;strokeStyle&#x27;</span>),
                     });
 
-                    p.run(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">false</span>);
+                    p.<span class="hljs-title function_">run</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">false</span>);
 
-                    particleStore.push(p);
+                    particleStore.<span class="hljs-title function_">push</span>(p);
                 }
             }
 
-            <span class="hljs-keyword">const</span> springMaker = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">particleFrom, particleTo, springName</span>) </span>{
+            <span class="hljs-keyword">const</span> springMaker = <span class="hljs-keyword">function</span> (<span class="hljs-params">particleFrom, particleTo, springName</span>) {
 
                 <span class="hljs-keyword">let</span> v, l, s;
 
-                v = requestVector(particleFrom.position).vectorSubtract(particleTo.position);
-                l = v.getMagnitude();
+                v = <span class="hljs-title function_">requestVector</span>(particleFrom.<span class="hljs-property">position</span>).<span class="hljs-title function_">vectorSubtract</span>(particleTo.<span class="hljs-property">position</span>);
+                l = v.<span class="hljs-title function_">getMagnitude</span>();
 
-                s = makeSpring({
+                s = <span class="hljs-title function_">makeSpring</span>({
 
                     <span class="hljs-attr">name</span>: springName,
 
@@ -1953,8 +1953,8 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
                     <span class="hljs-attr">restLength</span>: l * restLength,
                 });
 
-                springs.push(s);
-                releaseVector(v);
+                springs.<span class="hljs-title function_">push</span>(s);
+                <span class="hljs-title function_">releaseVector</span>(v);
             };
 
             <span class="hljs-keyword">let</span> f, t;</pre></div></div>
@@ -1978,7 +1978,7 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
 
                     f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${j}</span>`</span>];
                     t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${j + <span class="hljs-number">1</span>}</span>`</span>];
-                    springMaker(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${j}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${j + <span class="hljs-number">1</span>}</span>`</span>);
+                    <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${j}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${j + <span class="hljs-number">1</span>}</span>`</span>);
                 }
             }
 
@@ -1988,7 +1988,7 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
 
                     f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j}</span>-<span class="hljs-subst">${i}</span>`</span>];
                     t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j + <span class="hljs-number">1</span>}</span>-<span class="hljs-subst">${i}</span>`</span>];
-                    springMaker(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j + <span class="hljs-number">1</span>}</span>-<span class="hljs-subst">${i}</span>`</span>);
+                    <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j + <span class="hljs-number">1</span>}</span>-<span class="hljs-subst">${i}</span>`</span>);
                 }
             }
 
@@ -1998,7 +1998,7 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
 
                     f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j}</span>-<span class="hljs-subst">${i}</span>`</span>];
                     t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j + <span class="hljs-number">1</span>}</span>-<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>];
-                    springMaker(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j + <span class="hljs-number">1</span>}</span>-<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>);
+                    <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j + <span class="hljs-number">1</span>}</span>-<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>);
                 }
             }
 
@@ -2008,7 +2008,7 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
 
                     f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j}</span>-<span class="hljs-subst">${i}</span>`</span>];
                     t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j - <span class="hljs-number">1</span>}</span>-<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>];
-                    springMaker(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j - <span class="hljs-number">1</span>}</span>-<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>);
+                    <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${j - <span class="hljs-number">1</span>}</span>-<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>);
                 }
             }
         }
@@ -2027,18 +2027,18 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;weak-shape&#x27;</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;weak-shape&#x27;</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) {
 
-        <span class="hljs-keyword">let</span> { particleStore, <span class="hljs-attr">artefact</span>:art, historyLength, engine, forces, springs, mass, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength, shapeTemplate, precision, joinTemplateEnds } = <span class="hljs-built_in">this</span>;
+        <span class="hljs-keyword">let</span> { particleStore, <span class="hljs-attr">artefact</span>:art, historyLength, engine, forces, springs, mass, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength, shapeTemplate, precision, joinTemplateEnds } = <span class="hljs-variable language_">this</span>;
 
-        <span class="hljs-keyword">const</span> springMaker = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">particleFrom, particleTo, springName</span>) </span>{
+        <span class="hljs-keyword">const</span> springMaker = <span class="hljs-keyword">function</span> (<span class="hljs-params">particleFrom, particleTo, springName</span>) {
 
             <span class="hljs-keyword">let</span> v, l, s;
 
-            v = requestVector(particleFrom.position).vectorSubtract(particleTo.position);
-            l = v.getMagnitude();
+            v = <span class="hljs-title function_">requestVector</span>(particleFrom.<span class="hljs-property">position</span>).<span class="hljs-title function_">vectorSubtract</span>(particleTo.<span class="hljs-property">position</span>);
+            l = v.<span class="hljs-title function_">getMagnitude</span>();
 
-            s = makeSpring({
+            s = <span class="hljs-title function_">makeSpring</span>({
 
                 <span class="hljs-attr">name</span>: springName,
 
@@ -2051,8 +2051,8 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
                 <span class="hljs-attr">restLength</span>: l * restLength,
             });
 
-            springs.push(s);
-            releaseVector(v);
+            springs.<span class="hljs-title function_">push</span>(s);
+            <span class="hljs-title function_">releaseVector</span>(v);
         };
 
         <span class="hljs-keyword">let</span> i, p, f, t;
@@ -2061,14 +2061,14 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
 
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; precision; i++) {
 
-                <span class="hljs-keyword">let</span> coords = shapeTemplate.getPathPositionData(i / precision);
+                <span class="hljs-keyword">let</span> coords = shapeTemplate.<span class="hljs-title function_">getPathPositionData</span>(i / precision);
 
-                p = makeParticle({
+                p = <span class="hljs-title function_">makeParticle</span>({
 
                     <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>`</span>,
 
-                    <span class="hljs-attr">positionX</span>: coords.x,
-                    <span class="hljs-attr">positionY</span>: coords.y,
+                    <span class="hljs-attr">positionX</span>: coords.<span class="hljs-property">x</span>,
+                    <span class="hljs-attr">positionY</span>: coords.<span class="hljs-property">y</span>,
                     <span class="hljs-attr">positionZ</span>: <span class="hljs-number">0</span>,
 
                     <span class="hljs-attr">velocityX</span>: <span class="hljs-number">0</span>,
@@ -2081,67 +2081,67 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
 
                     mass,
 
-                    <span class="hljs-attr">fill</span>: art.get(<span class="hljs-string">&#x27;fillStyle&#x27;</span>),
-                    <span class="hljs-attr">stroke</span>: art.get(<span class="hljs-string">&#x27;strokeStyle&#x27;</span>),
+                    <span class="hljs-attr">fill</span>: art.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;fillStyle&#x27;</span>),
+                    <span class="hljs-attr">stroke</span>: art.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;strokeStyle&#x27;</span>),
                 });
 
-                p.run(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">false</span>);
+                p.<span class="hljs-title function_">run</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">false</span>);
 
-                particleStore.push(p);
+                particleStore.<span class="hljs-title function_">push</span>(p);
             }
 
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; precision - <span class="hljs-number">1</span>; i++) {
 
                 f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>`</span>];
                 t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>];
-                springMaker(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>);
+                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>);
             }
 
             <span class="hljs-keyword">if</span> (joinTemplateEnds) {
 
                 f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>`</span>];
                 t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>];
-                springMaker(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>);
+                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>);
             }
 
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; precision - <span class="hljs-number">2</span>; i++) {
 
                 f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>`</span>];
                 t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">2</span>}</span>`</span>];
-                springMaker(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">2</span>}</span>`</span>);
+                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">2</span>}</span>`</span>);
             }
 
             <span class="hljs-keyword">if</span> (joinTemplateEnds) {
 
                 f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">2</span>}</span>`</span>];
                 t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>];
-                springMaker(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">2</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>);
+                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">2</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>);
 
                 f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>`</span>];
                 t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">1</span>}</span>`</span>];
-                springMaker(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">1</span>}</span>`</span>);
+                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">1</span>}</span>`</span>);
             }
 
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; precision - <span class="hljs-number">3</span>; i++) {
 
                 f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>`</span>];
                 t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">3</span>}</span>`</span>];
-                springMaker(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">3</span>}</span>`</span>);
+                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">3</span>}</span>`</span>);
             }
 
             <span class="hljs-keyword">if</span> (joinTemplateEnds) {
 
                 f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">3</span>}</span>`</span>];
                 t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>];
-                springMaker(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">3</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>);
+                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">3</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>);
 
                 f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">2</span>}</span>`</span>];
                 t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">1</span>}</span>`</span>];
-                springMaker(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">2</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">1</span>}</span>`</span>);
+                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">2</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">1</span>}</span>`</span>);
 
                 f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>`</span>];
                 t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">2</span>}</span>`</span>];
-                springMaker(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">2</span>}</span>`</span>);
+                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">2</span>}</span>`</span>);
             }
         }
     },</pre></div></div>
@@ -2159,18 +2159,18 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;strong-shape&#x27;</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;strong-shape&#x27;</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) {
 
-        <span class="hljs-keyword">let</span> { particleStore, <span class="hljs-attr">artefact</span>:art, historyLength, engine, forces, springs, mass, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength, shapeTemplate, precision, joinTemplateEnds } = <span class="hljs-built_in">this</span>;
+        <span class="hljs-keyword">let</span> { particleStore, <span class="hljs-attr">artefact</span>:art, historyLength, engine, forces, springs, mass, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength, shapeTemplate, precision, joinTemplateEnds } = <span class="hljs-variable language_">this</span>;
 
-        <span class="hljs-keyword">const</span> springMaker = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">particleFrom, particleTo, springName</span>) </span>{
+        <span class="hljs-keyword">const</span> springMaker = <span class="hljs-keyword">function</span> (<span class="hljs-params">particleFrom, particleTo, springName</span>) {
 
             <span class="hljs-keyword">let</span> v, l, s;
 
-            v = requestVector(particleFrom.position).vectorSubtract(particleTo.position);
-            l = v.getMagnitude();
+            v = <span class="hljs-title function_">requestVector</span>(particleFrom.<span class="hljs-property">position</span>).<span class="hljs-title function_">vectorSubtract</span>(particleTo.<span class="hljs-property">position</span>);
+            l = v.<span class="hljs-title function_">getMagnitude</span>();
 
-            s = makeSpring({
+            s = <span class="hljs-title function_">makeSpring</span>({
 
                 <span class="hljs-attr">name</span>: springName,
 
@@ -2183,8 +2183,8 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
                 <span class="hljs-attr">restLength</span>: l * restLength,
             });
 
-            springs.push(s);
-            releaseVector(v);
+            springs.<span class="hljs-title function_">push</span>(s);
+            <span class="hljs-title function_">releaseVector</span>(v);
         };
 
         <span class="hljs-keyword">let</span> i, p, f, t;
@@ -2193,14 +2193,14 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
 
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; precision; i++) {
 
-                <span class="hljs-keyword">let</span> coords = shapeTemplate.getPathPositionData(i / precision);
+                <span class="hljs-keyword">let</span> coords = shapeTemplate.<span class="hljs-title function_">getPathPositionData</span>(i / precision);
 
-                p = makeParticle({
+                p = <span class="hljs-title function_">makeParticle</span>({
 
                     <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>`</span>,
 
-                    <span class="hljs-attr">positionX</span>: coords.x,
-                    <span class="hljs-attr">positionY</span>: coords.y,
+                    <span class="hljs-attr">positionX</span>: coords.<span class="hljs-property">x</span>,
+                    <span class="hljs-attr">positionY</span>: coords.<span class="hljs-property">y</span>,
                     <span class="hljs-attr">positionZ</span>: <span class="hljs-number">0</span>,
 
                     <span class="hljs-attr">velocityX</span>: <span class="hljs-number">0</span>,
@@ -2213,70 +2213,70 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
 
                     mass,
 
-                    <span class="hljs-attr">fill</span>: art.get(<span class="hljs-string">&#x27;fillStyle&#x27;</span>),
-                    <span class="hljs-attr">stroke</span>: art.get(<span class="hljs-string">&#x27;strokeStyle&#x27;</span>),
+                    <span class="hljs-attr">fill</span>: art.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;fillStyle&#x27;</span>),
+                    <span class="hljs-attr">stroke</span>: art.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;strokeStyle&#x27;</span>),
                 });
 
-                p.run(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">false</span>);
+                p.<span class="hljs-title function_">run</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">false</span>);
 
-                particleStore.push(p);
+                particleStore.<span class="hljs-title function_">push</span>(p);
             }
 
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; precision - <span class="hljs-number">1</span>; i++) {
 
                 f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>`</span>];
                 t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>];
-                springMaker(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>);
+                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>);
             }
 
             <span class="hljs-keyword">if</span> (joinTemplateEnds) {
 
                 f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>`</span>];
                 t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>];
-                springMaker(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>);
+                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>);
             }
 
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; precision - <span class="hljs-number">2</span>; i++) {
 
                 f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>`</span>];
                 t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">2</span>}</span>`</span>];
-                springMaker(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">2</span>}</span>`</span>);
+                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">2</span>}</span>`</span>);
             }
 
             <span class="hljs-keyword">if</span> (joinTemplateEnds) {
 
                 f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">2</span>}</span>`</span>];
                 t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>];
-                springMaker(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">2</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>);
+                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">2</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>);
 
                 f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>`</span>];
                 t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">1</span>}</span>`</span>];
-                springMaker(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">1</span>}</span>`</span>);
+                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">1</span>}</span>`</span>);
             }
 
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; precision - <span class="hljs-number">3</span>; i++) {
 
                 f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>`</span>];
                 t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">3</span>}</span>`</span>];
-                springMaker(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">3</span>}</span>`</span>);
+                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">3</span>}</span>`</span>);
             }
 
             <span class="hljs-keyword">if</span> (joinTemplateEnds) {
 
                 f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">3</span>}</span>`</span>];
                 t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>];
-                springMaker(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">3</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>);
+                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">3</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>);
 
                 f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">2</span>}</span>`</span>];
                 t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">1</span>}</span>`</span>];
-                springMaker(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">2</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">1</span>}</span>`</span>);
+                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">2</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">1</span>}</span>`</span>);
 
                 f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>`</span>];
                 t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">2</span>}</span>`</span>];
-                springMaker(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">2</span>}</span>`</span>);
+                <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">2</span>}</span>`</span>);
             }
 
-            <span class="hljs-keyword">let</span> halfPrecision = <span class="hljs-built_in">Math</span>.floor(precision / <span class="hljs-number">2</span>);
+            <span class="hljs-keyword">let</span> halfPrecision = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(precision / <span class="hljs-number">2</span>);
 
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; precision - halfPrecision; i++) {
 
@@ -2285,7 +2285,7 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
                 <span class="hljs-keyword">if</span> (i + halfPrecision &lt; precision - <span class="hljs-number">1</span>) {
 
                     t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + halfPrecision}</span>`</span>];
-                    springMaker(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + halfPrecision}</span>`</span>);
+                    <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + halfPrecision}</span>`</span>);
                 }
             }
         }
@@ -2304,22 +2304,22 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;hub-spoke&#x27;</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;hub-spoke&#x27;</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) {
 
-        <span class="hljs-keyword">let</span> { shapeTemplate, precision } = <span class="hljs-built_in">this</span>;
+        <span class="hljs-keyword">let</span> { shapeTemplate, precision } = <span class="hljs-variable language_">this</span>;
 
-        <span class="hljs-keyword">if</span> (shapeTemplate &amp;&amp; shapeTemplate.type &amp;&amp; precision) {
+        <span class="hljs-keyword">if</span> (shapeTemplate &amp;&amp; shapeTemplate.<span class="hljs-property">type</span> &amp;&amp; precision) {
 
-            <span class="hljs-keyword">let</span> { particleStore, <span class="hljs-attr">artefact</span>:art, historyLength, engine, forces, springs, mass, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength, joinTemplateEnds } = <span class="hljs-built_in">this</span>;
+            <span class="hljs-keyword">let</span> { particleStore, <span class="hljs-attr">artefact</span>:art, historyLength, engine, forces, springs, mass, showSprings, showSpringsColor, name, springConstant, damperConstant, restLength, joinTemplateEnds } = <span class="hljs-variable language_">this</span>;
 
-            <span class="hljs-keyword">const</span> springMaker = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">particleFrom, particleTo, springName</span>) </span>{
+            <span class="hljs-keyword">const</span> springMaker = <span class="hljs-keyword">function</span> (<span class="hljs-params">particleFrom, particleTo, springName</span>) {
 
                 <span class="hljs-keyword">let</span> v, l, s;
 
-                v = requestVector(particleFrom.position).vectorSubtract(particleTo.position);
-                l = v.getMagnitude();
+                v = <span class="hljs-title function_">requestVector</span>(particleFrom.<span class="hljs-property">position</span>).<span class="hljs-title function_">vectorSubtract</span>(particleTo.<span class="hljs-property">position</span>);
+                l = v.<span class="hljs-title function_">getMagnitude</span>();
 
-                s = makeSpring({
+                s = <span class="hljs-title function_">makeSpring</span>({
 
                     <span class="hljs-attr">name</span>: springName,
 
@@ -2332,13 +2332,13 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
                     <span class="hljs-attr">restLength</span>: l * restLength,
                 });
 
-                springs.push(s);
-                releaseVector(v);
+                springs.<span class="hljs-title function_">push</span>(s);
+                <span class="hljs-title function_">releaseVector</span>(v);
             };
 
             <span class="hljs-keyword">let</span> i, p, f, t, hub;
 
-            <span class="hljs-keyword">if</span> ([<span class="hljs-string">&#x27;Bezier&#x27;</span>, <span class="hljs-string">&#x27;Line&#x27;</span>, <span class="hljs-string">&#x27;Oval&#x27;</span>, <span class="hljs-string">&#x27;Polygon&#x27;</span>, <span class="hljs-string">&#x27;Polyline&#x27;</span>, <span class="hljs-string">&#x27;Quadratic&#x27;</span>, <span class="hljs-string">&#x27;Rectangle&#x27;</span>, <span class="hljs-string">&#x27;Shape&#x27;</span>, <span class="hljs-string">&#x27;Spiral&#x27;</span>, <span class="hljs-string">&#x27;Star&#x27;</span>, <span class="hljs-string">&#x27;Tetragon&#x27;</span>].indexOf(shapeTemplate.type) &gt;= <span class="hljs-number">0</span>) {</pre></div></div>
+            <span class="hljs-keyword">if</span> ([<span class="hljs-string">&#x27;Bezier&#x27;</span>, <span class="hljs-string">&#x27;Line&#x27;</span>, <span class="hljs-string">&#x27;Oval&#x27;</span>, <span class="hljs-string">&#x27;Polygon&#x27;</span>, <span class="hljs-string">&#x27;Polyline&#x27;</span>, <span class="hljs-string">&#x27;Quadratic&#x27;</span>, <span class="hljs-string">&#x27;Rectangle&#x27;</span>, <span class="hljs-string">&#x27;Shape&#x27;</span>, <span class="hljs-string">&#x27;Spiral&#x27;</span>, <span class="hljs-string">&#x27;Star&#x27;</span>, <span class="hljs-string">&#x27;Tetragon&#x27;</span>].<span class="hljs-title function_">indexOf</span>(shapeTemplate.<span class="hljs-property">type</span>) &gt;= <span class="hljs-number">0</span>) {</pre></div></div>
             
         </li>
         
@@ -2355,14 +2355,14 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
             
             <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; precision; i++) {
 
-                    <span class="hljs-keyword">let</span> coords = shapeTemplate.getPathPositionData(i / precision);
+                    <span class="hljs-keyword">let</span> coords = shapeTemplate.<span class="hljs-title function_">getPathPositionData</span>(i / precision);
 
-                    p = makeParticle({
+                    p = <span class="hljs-title function_">makeParticle</span>({
 
                         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>`</span>,
 
-                        <span class="hljs-attr">positionX</span>: coords.x,
-                        <span class="hljs-attr">positionY</span>: coords.y,
+                        <span class="hljs-attr">positionX</span>: coords.<span class="hljs-property">x</span>,
+                        <span class="hljs-attr">positionY</span>: coords.<span class="hljs-property">y</span>,
                         <span class="hljs-attr">positionZ</span>: <span class="hljs-number">0</span>,
 
                         <span class="hljs-attr">velocityX</span>: <span class="hljs-number">0</span>,
@@ -2375,57 +2375,57 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
 
                         mass,
 
-                        <span class="hljs-attr">fill</span>: art.get(<span class="hljs-string">&#x27;fillStyle&#x27;</span>),
-                        <span class="hljs-attr">stroke</span>: art.get(<span class="hljs-string">&#x27;strokeStyle&#x27;</span>),
+                        <span class="hljs-attr">fill</span>: art.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;fillStyle&#x27;</span>),
+                        <span class="hljs-attr">stroke</span>: art.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;strokeStyle&#x27;</span>),
                     });
 
-                    p.run(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">false</span>);
+                    p.<span class="hljs-title function_">run</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">false</span>);
 
-                    particleStore.push(p);
+                    particleStore.<span class="hljs-title function_">push</span>(p);
                 }
 
                 <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; precision - <span class="hljs-number">1</span>; i++) {
 
                     f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>`</span>];
                     t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>];
-                    springMaker(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>);
+                    <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>-<span class="hljs-subst">${i + <span class="hljs-number">1</span>}</span>`</span>);
                 }
 
                 <span class="hljs-keyword">if</span> (joinTemplateEnds) {
 
                     f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>`</span>];
                     t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>];
-                    springMaker(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>-0`</span>);
+                    <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>-0`</span>);
                 }
 
                 <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; precision - <span class="hljs-number">2</span>; i++) {
 
                     f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>`</span>];
                     t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">2</span>}</span>`</span>];
-                    springMaker(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">2</span>}</span>`</span>);
+                    <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${i + <span class="hljs-number">2</span>}</span>`</span>);
                 }
 
                 <span class="hljs-keyword">if</span> (joinTemplateEnds) {
 
                     f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">2</span>}</span>`</span>];
                     t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>];
-                    springMaker(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">2</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>);
+                    <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">2</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">0</span>}</span>`</span>);
 
                     f = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>`</span>];
                     t = particle[<span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">1</span>}</span>`</span>];
-                    springMaker(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">1</span>}</span>`</span>);
+                    <span class="hljs-title function_">springMaker</span>(f, t, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${precision - <span class="hljs-number">1</span>}</span>~<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${<span class="hljs-number">1</span>}</span>`</span>);
                 }
             }
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ([<span class="hljs-string">&#x27;Block&#x27;</span>, <span class="hljs-string">&#x27;Cell&#x27;</span>, <span class="hljs-string">&#x27;Element&#x27;</span>, <span class="hljs-string">&#x27;Grid&#x27;</span>, <span class="hljs-string">&#x27;Phrase&#x27;</span>, <span class="hljs-string">&#x27;Picture&#x27;</span>, <span class="hljs-string">&#x27;Stack&#x27;</span>].indexOf(host.type) &gt;= <span class="hljs-number">0</span>) {
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ([<span class="hljs-string">&#x27;Block&#x27;</span>, <span class="hljs-string">&#x27;Cell&#x27;</span>, <span class="hljs-string">&#x27;Element&#x27;</span>, <span class="hljs-string">&#x27;Grid&#x27;</span>, <span class="hljs-string">&#x27;Phrase&#x27;</span>, <span class="hljs-string">&#x27;Picture&#x27;</span>, <span class="hljs-string">&#x27;Stack&#x27;</span>].<span class="hljs-title function_">indexOf</span>(host.<span class="hljs-property">type</span>) &gt;= <span class="hljs-number">0</span>) {
 
             }
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (host.type === <span class="hljs-string">&#x27;Wheel&#x27;</span>) {
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (host.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Wheel&#x27;</span>) {
 
             }
 
-            <span class="hljs-keyword">let</span> [x, y] = shapeTemplate.get(<span class="hljs-string">&#x27;position&#x27;</span>);
+            <span class="hljs-keyword">let</span> [x, y] = shapeTemplate.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;position&#x27;</span>);
 
-            hub = makeParticle({
+            hub = <span class="hljs-title function_">makeParticle</span>({
 
                 <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-hub`</span>,
 
@@ -2443,15 +2443,15 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
 
                 mass,
 
-                <span class="hljs-attr">fill</span>: art.get(<span class="hljs-string">&#x27;fillStyle&#x27;</span>),
-                <span class="hljs-attr">stroke</span>: art.get(<span class="hljs-string">&#x27;strokeStyle&#x27;</span>),
+                <span class="hljs-attr">fill</span>: art.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;fillStyle&#x27;</span>),
+                <span class="hljs-attr">stroke</span>: art.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;strokeStyle&#x27;</span>),
             });
 
-            hub.run(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">false</span>);
+            hub.<span class="hljs-title function_">run</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">false</span>);
 
-            particleStore.forEach(<span class="hljs-function">(<span class="hljs-params">p, index</span>) =&gt;</span> springMaker(p, hub, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${index}</span>-hub`</span>));
+            particleStore.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">p, index</span>) =&gt;</span> <span class="hljs-title function_">springMaker</span>(p, hub, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-<span class="hljs-subst">${index}</span>-hub`</span>));
 
-            particleStore.push(hub);
+            particleStore.<span class="hljs-title function_">push</span>(hub);
         }
     },
 };</pre></div></div>
@@ -2469,13 +2469,13 @@ S.shapeTemplate = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeNet = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeNet = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Net(items);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Net</span>(items);
 };
 
-<span class="hljs-title">constructors</span>.<span class="hljs-title">Net</span> = <span class="hljs-title">Net</span>;</pre></div></div>
+constructors.<span class="hljs-property">Net</span> = <span class="hljs-title class_">Net</span>;</pre></div></div>
             
         </li>
         

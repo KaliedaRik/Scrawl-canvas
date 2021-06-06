@@ -542,7 +542,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
@@ -562,12 +562,12 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Line = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">Line</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-built_in">this</span>.curveInit(items);
-    <span class="hljs-built_in">this</span>.shapeInit(items);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">curveInit</span>(items);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">shapeInit</span>(items);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -583,11 +583,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Line.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">&#x27;Line&#x27;</span>;
-P.lib = <span class="hljs-string">&#x27;entity&#x27;</span>;
-P.isArtefact = <span class="hljs-literal">true</span>;
-P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">Line</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
+P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Line&#x27;</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;entity&#x27;</span>;
+P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">true</span>;
+P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -607,9 +607,9 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = baseMix(P);
-P = shapeMix(P);
-P = curveMix(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);
+P = <span class="hljs-title function_">shapeMix</span>(P);
+P = <span class="hljs-title function_">curveMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -720,15 +720,15 @@ P = curveMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.cleanSpecies = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">cleanSpecies</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-built_in">this</span>.dirtySpecies = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtySpecies</span> = <span class="hljs-literal">false</span>;
 
     <span class="hljs-keyword">let</span> p = <span class="hljs-string">&#x27;M0,0&#x27;</span>;
 
-    p = <span class="hljs-built_in">this</span>.makeLinePath();
+    p = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeLinePath</span>();
     
-    <span class="hljs-built_in">this</span>.pathDefinition = p;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span> = p;
 };</pre></div></div>
             
         </li>
@@ -744,13 +744,13 @@ P = curveMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.makeLinePath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">makeLinePath</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
     
-    <span class="hljs-keyword">let</span> [startX, startY] = <span class="hljs-built_in">this</span>.currentStampPosition;
-    <span class="hljs-keyword">let</span> [endX, endY] = <span class="hljs-built_in">this</span>.currentEnd;
+    <span class="hljs-keyword">let</span> [startX, startY] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>;
+    <span class="hljs-keyword">let</span> [endX, endY] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEnd</span>;
 
-    <span class="hljs-keyword">let</span> x = (endX - startX).toFixed(<span class="hljs-number">2</span>),
-        y = (endY - startY).toFixed(<span class="hljs-number">2</span>);
+    <span class="hljs-keyword">let</span> x = (endX - startX).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">2</span>),
+        y = (endY - startY).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">2</span>);
 
     <span class="hljs-keyword">return</span> <span class="hljs-string">`m0,0l<span class="hljs-subst">${x}</span>,<span class="hljs-subst">${y}</span>`</span>;
 };</pre></div></div>
@@ -771,34 +771,34 @@ P = curveMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.cleanDimensions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">cleanDimensions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-built_in">this</span>.dirtyDimensions = <span class="hljs-literal">false</span>;
-    <span class="hljs-built_in">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.dirtyOffset = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHandle</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOffset</span> = <span class="hljs-literal">true</span>;
 
-    <span class="hljs-built_in">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStart</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyEnd</span> = <span class="hljs-literal">true</span>;
 };
 
 
-P.preparePinsForStamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+P.<span class="hljs-property">preparePinsForStamp</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">const</span> dirtyPins = <span class="hljs-built_in">this</span>.dirtyPins,
-        ePivot = <span class="hljs-built_in">this</span>.endPivot,
-        ePath = <span class="hljs-built_in">this</span>.endPath;
+    <span class="hljs-keyword">const</span> dirtyPins = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPins</span>,
+        ePivot = <span class="hljs-variable language_">this</span>.<span class="hljs-property">endPivot</span>,
+        ePath = <span class="hljs-variable language_">this</span>.<span class="hljs-property">endPath</span>;
 
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = dirtyPins.length, name; i &lt; iz; i++) {
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = dirtyPins.<span class="hljs-property">length</span>, name; i &lt; iz; i++) {
 
         name = dirtyPins[i];
 
-        <span class="hljs-keyword">if</span> ((ePivot &amp;&amp; ePivot.name == name) || (ePath &amp;&amp; ePath.name == name)) {
+        <span class="hljs-keyword">if</span> ((ePivot &amp;&amp; ePivot.<span class="hljs-property">name</span> == name) || (ePath &amp;&amp; ePath.<span class="hljs-property">name</span> == name)) {
 
-            <span class="hljs-built_in">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.endLockTo.includes(<span class="hljs-string">&#x27;path&#x27;</span>)) <span class="hljs-built_in">this</span>.currentEndPathData = <span class="hljs-literal">false</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyEnd</span> = <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">endLockTo</span>.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;path&#x27;</span>)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEndPathData</span> = <span class="hljs-literal">false</span>;
         }
     };
-    dirtyPins.length = <span class="hljs-number">0</span>;
+    dirtyPins.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
 };</pre></div></div>
             
         </li>
@@ -831,7 +831,7 @@ P.preparePinsForStamp = <span class="hljs-function"><span class="hljs-keyword">f
 <li>If using reference artefacts, may also need to set the <strong>lockTo</strong> (<em><strong>lockXTo</strong></em>, <em><strong>lockYTo</strong></em>) and <strong>endLockTo</strong> lock attributes</li>
 <li>additional reference-linked attributes for the <code>end</code> coordinate: <strong>endPivotCorner</strong>, <strong>addEndPivotHandle</strong>, <strong>addEndPivotOffset</strong>, <strong>endPathPosition</strong>, <strong>addEndPathHandle</strong>, <strong>addEndPathOffset</strong></li>
 </ul>
-<pre><code>scrawl.makeLine({
+<pre><code>scrawl.<span class="hljs-title function_">makeLine</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-line&#x27;</span>,
 
@@ -851,14 +851,14 @@ P.preparePinsForStamp = <span class="hljs-function"><span class="hljs-keyword">f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeLine = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeLine = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    items.species = <span class="hljs-string">&#x27;line&#x27;</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Line(items);
+    items.<span class="hljs-property">species</span> = <span class="hljs-string">&#x27;line&#x27;</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Line</span>(items);
 };
 
-<span class="hljs-title">constructors</span>.<span class="hljs-title">Line</span> = <span class="hljs-title">Line</span>;</pre></div></div>
+constructors.<span class="hljs-property">Line</span> = <span class="hljs-title class_">Line</span>;</pre></div></div>
             
         </li>
         

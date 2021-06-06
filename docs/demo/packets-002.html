@@ -707,9 +707,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.library.artefact.mycanvas;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;
 
-canvas.set({
+canvas.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;aliceblue&#x27;</span>,
 });</pre></div></div>
             
@@ -726,7 +726,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> mygradient = scrawl.makeGradient({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> mygradient = scrawl.<span class="hljs-title function_">makeGradient</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;blue-green&#x27;</span>,
     <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
     <span class="hljs-attr">colors</span>: {
@@ -749,7 +749,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> mycolor = scrawl.makeColor({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> mycolor = scrawl.<span class="hljs-title function_">makeColor</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myColorObject&#x27;</span>,
     <span class="hljs-attr">r</span>: <span class="hljs-number">100</span>,
     <span class="hljs-attr">g</span>: <span class="hljs-number">50</span>,
@@ -783,7 +783,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myfilter = scrawl.makeFilter({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myfilter = scrawl.<span class="hljs-title function_">makeFilter</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;emboss&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;emboss&#x27;</span>,
@@ -810,7 +810,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myblock = scrawl.makeBlock({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myblock = scrawl.<span class="hljs-title function_">makeBlock</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;block-tester&#x27;</span>,
     <span class="hljs-attr">collides</span>: <span class="hljs-literal">true</span>,
@@ -838,7 +838,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> mypicture = scrawl.makePicture({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> mypicture = scrawl.<span class="hljs-title function_">makePicture</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;picture-tester&#x27;</span>,
 
@@ -872,7 +872,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myphrase = scrawl.makePhrase({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myphrase = scrawl.<span class="hljs-title function_">makePhrase</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;phrase-tester&#x27;</span>,
 
@@ -904,7 +904,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> mypie = scrawl.makeWheel({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> mypie = scrawl.<span class="hljs-title function_">makeWheel</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;wheel-pie-tester&#x27;</span>,
 
@@ -936,7 +936,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myoval = scrawl.makeOval({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myoval = scrawl.<span class="hljs-title function_">makeOval</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;shape-oval-tester&#x27;</span>,
 
@@ -964,7 +964,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> mybezier = scrawl.makeBezier({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> mybezier = scrawl.<span class="hljs-title function_">makeBezier</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;shape-bezier-tester&#x27;</span>,
 
@@ -999,7 +999,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> mygrid = scrawl.makeGrid({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> mygrid = scrawl.<span class="hljs-title function_">makeGrid</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;test-grid&#x27;</span>,
 
@@ -1043,7 +1043,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myshape = scrawl.makeShape({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myshape = scrawl.<span class="hljs-title function_">makeShape</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;shape-test&#x27;</span>,
 
@@ -1084,7 +1084,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    pathDefinition: <span class="hljs-string">`M96.947,642.362c0.029,0.929,1.348,0.51,2.576,0.03c1.229-0.479,2.368-1.019,3.207-1.079c0.838-0.06,1.378,0.359,1.677-0.06
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">pathDefinition</span>: <span class="hljs-string">`M96.947,642.362c0.029,0.929,1.348,0.51,2.576,0.03c1.229-0.479,2.368-1.019,3.207-1.079c0.838-0.06,1.378,0.359,1.677-0.06
     s0.36-1.678,0.959-2.517c0.599-0.839,1.738-1.259,2.517-1.798s1.198-1.198,0.869-2.008c-0.33-0.809-1.408-1.767-1.468-2.756
     c-0.06-0.988,0.899-2.008,1.887-2.157c0.989-0.149,2.008,0.569,2.787,0.989c0.779,0.419,1.318,0.539,1.947,0.539
     c0.629,0,1.348-0.12,2.337-1.708s2.247-4.644,3.057-6.861c0.809-2.217,1.168-3.595,1.108-4.674c-0.06-1.078-0.539-1.857-0.539-3.115
@@ -1408,112 +1408,112 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> performEntityTests = <span class="hljs-function">() =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> <span class="hljs-title function_">performEntityTests</span> = (<span class="hljs-params"></span>) =&gt; {
 
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;Creating packets for all entitys in test&#x27;</span>);
-    <span class="hljs-keyword">let</span> myblockPacket = myblock.saveAsPacket();
-    <span class="hljs-keyword">let</span> mypicturePacket = mypicture.saveAsPacket();
-    <span class="hljs-keyword">let</span> myphrasePacket = myphrase.saveAsPacket();
-    <span class="hljs-keyword">let</span> mypiePacket = mypie.saveAsPacket();
-    <span class="hljs-keyword">let</span> myovalPacket = myoval.saveAsPacket();
-    <span class="hljs-keyword">let</span> mybezierPacket = mybezier.saveAsPacket();
-    <span class="hljs-keyword">let</span> mygridPacket = mygrid.saveAsPacket();
-    <span class="hljs-keyword">let</span> myshapePacket = myshape.saveAsPacket();
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Creating packets for all entitys in test&#x27;</span>);
+    <span class="hljs-keyword">let</span> myblockPacket = myblock.<span class="hljs-title function_">saveAsPacket</span>();
+    <span class="hljs-keyword">let</span> mypicturePacket = mypicture.<span class="hljs-title function_">saveAsPacket</span>();
+    <span class="hljs-keyword">let</span> myphrasePacket = myphrase.<span class="hljs-title function_">saveAsPacket</span>();
+    <span class="hljs-keyword">let</span> mypiePacket = mypie.<span class="hljs-title function_">saveAsPacket</span>();
+    <span class="hljs-keyword">let</span> myovalPacket = myoval.<span class="hljs-title function_">saveAsPacket</span>();
+    <span class="hljs-keyword">let</span> mybezierPacket = mybezier.<span class="hljs-title function_">saveAsPacket</span>();
+    <span class="hljs-keyword">let</span> mygridPacket = mygrid.<span class="hljs-title function_">saveAsPacket</span>();
+    <span class="hljs-keyword">let</span> myshapePacket = myshape.<span class="hljs-title function_">saveAsPacket</span>();
 
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;Kill all entitys in test&#x27;</span>);
-    myblock.kill();
-    mypicture.kill();
-    myphrase.kill();
-    mypie.kill();
-    myoval.kill();
-    mybezier.kill();
-    mygrid.kill();
-    myshape.kill();
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Kill all entitys in test&#x27;</span>);
+    myblock.<span class="hljs-title function_">kill</span>();
+    mypicture.<span class="hljs-title function_">kill</span>();
+    myphrase.<span class="hljs-title function_">kill</span>();
+    mypie.<span class="hljs-title function_">kill</span>();
+    myoval.<span class="hljs-title function_">kill</span>();
+    mybezier.<span class="hljs-title function_">kill</span>();
+    mygrid.<span class="hljs-title function_">kill</span>();
+    myshape.<span class="hljs-title function_">kill</span>();
 
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;Import and resurrect all entitys&#x27;</span>);
-    canvas.importPacket(myblockPacket)
-    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Import and resurrect all entitys&#x27;</span>);
+    canvas.<span class="hljs-title function_">importPacket</span>(myblockPacket)
+    .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
         myblock = res;
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;myblock resurrected&#x27;</span>);
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;myblock resurrected&#x27;</span>);
     })
-    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));
+    .<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(err));
 
-    canvas.importPacket(mypicturePacket)
-    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
+    canvas.<span class="hljs-title function_">importPacket</span>(mypicturePacket)
+    .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
         mypicture = res;
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;mypicture resurrected&#x27;</span>);
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;mypicture resurrected&#x27;</span>);
     })
-    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));
+    .<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(err));
 
-    canvas.importPacket(myphrasePacket)
-    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
+    canvas.<span class="hljs-title function_">importPacket</span>(myphrasePacket)
+    .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
         myphrase = res;
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;myphrase resurrected&#x27;</span>);
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;myphrase resurrected&#x27;</span>);
     })
-    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));
+    .<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(err));
 
-    canvas.importPacket(mypiePacket)
-    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
+    canvas.<span class="hljs-title function_">importPacket</span>(mypiePacket)
+    .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
         mypie = res;
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;mypie resurrected&#x27;</span>);
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;mypie resurrected&#x27;</span>);
     })
-    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));
+    .<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(err));
 
-    canvas.importPacket(myovalPacket)
-    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
+    canvas.<span class="hljs-title function_">importPacket</span>(myovalPacket)
+    .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
         myoval = res;
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;myoval resurrected&#x27;</span>);
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;myoval resurrected&#x27;</span>);
     })
-    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));
+    .<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(err));
 
-    canvas.importPacket(mybezierPacket)
-    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
+    canvas.<span class="hljs-title function_">importPacket</span>(mybezierPacket)
+    .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
         mybezier = res;
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;mybezier resurrected&#x27;</span>);
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;mybezier resurrected&#x27;</span>);
     })
-    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));
+    .<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(err));
 
-    canvas.importPacket(mygridPacket)
-    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
+    canvas.<span class="hljs-title function_">importPacket</span>(mygridPacket)
+    .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
         mygrid = res;
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;mygrid resurrected&#x27;</span>);
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;mygrid resurrected&#x27;</span>);
     })
-    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));
+    .<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(err));
 
-    canvas.importPacket(myshapePacket)
-    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
+    canvas.<span class="hljs-title function_">importPacket</span>(myshapePacket)
+    .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
         myshape = res;
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;myshape resurrected&#x27;</span>);
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;myshape resurrected&#x27;</span>);
     })
-    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));
+    .<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(err));
 };
 
-<span class="hljs-keyword">let</span> performOtherTests = <span class="hljs-function">() =&gt;</span> {
+<span class="hljs-keyword">let</span> <span class="hljs-title function_">performOtherTests</span> = (<span class="hljs-params"></span>) =&gt; {
 
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;Creating packets for other objects in test&#x27;</span>);
-    <span class="hljs-keyword">let</span> mygradientPacket = mygradient.saveAsPacket();
-    <span class="hljs-keyword">let</span> mycolorPacket = mycolor.saveAsPacket();
-    <span class="hljs-keyword">let</span> myfilterPacket = myfilter.saveAsPacket();
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Creating packets for other objects in test&#x27;</span>);
+    <span class="hljs-keyword">let</span> mygradientPacket = mygradient.<span class="hljs-title function_">saveAsPacket</span>();
+    <span class="hljs-keyword">let</span> mycolorPacket = mycolor.<span class="hljs-title function_">saveAsPacket</span>();
+    <span class="hljs-keyword">let</span> myfilterPacket = myfilter.<span class="hljs-title function_">saveAsPacket</span>();
 
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;Kill other objects in test&#x27;</span>);
-    mygradient.kill();
-    mycolor.kill();
-    myfilter.kill();
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Kill other objects in test&#x27;</span>);
+    mygradient.<span class="hljs-title function_">kill</span>();
+    mycolor.<span class="hljs-title function_">kill</span>();
+    myfilter.<span class="hljs-title function_">kill</span>();
 
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;Import and resurrect other objects&#x27;</span>);
-    canvas.importPacket(mygradientPacket)
-    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Import and resurrect other objects&#x27;</span>);
+    canvas.<span class="hljs-title function_">importPacket</span>(mygradientPacket)
+    .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
         mygradient = res;
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;mygradient resurrected&#x27;</span>);
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;mygradient resurrected&#x27;</span>);
     })
-    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));
+    .<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(err));
 
-    canvas.importPacket(mycolorPacket)
-    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
+    canvas.<span class="hljs-title function_">importPacket</span>(mycolorPacket)
+    .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
         mycolor = res;
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;mycolor resurrected&#x27;</span>);
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;mycolor resurrected&#x27;</span>);
     })
-    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));</pre></div></div>
+    .<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(err));</pre></div></div>
             
         </li>
         
@@ -1528,17 +1528,17 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    canvas.importPacket(myfilterPacket)
-    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>    canvas.<span class="hljs-title function_">importPacket</span>(myfilterPacket)
+    .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
         myfilter = res;
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;myfilter resurrected&#x27;</span>);
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;myfilter resurrected&#x27;</span>);
     })
-    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));
+    .<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(err));
 };
 
-<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;TESTS BEFORE starting render cycle&#x27;</span>);
-performEntityTests();
-performOtherTests();</pre></div></div>
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;TESTS BEFORE starting render cycle&#x27;</span>);
+<span class="hljs-title function_">performEntityTests</span>();
+<span class="hljs-title function_">performOtherTests</span>();</pre></div></div>
             
         </li>
         
@@ -1554,34 +1554,34 @@ performOtherTests();</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
     <span class="hljs-attr">target</span>: canvas,
 });
 
-<span class="hljs-built_in">console</span>.log(scrawl.library);
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);
 
-<span class="hljs-keyword">let</span> fixEntitys = <span class="hljs-function">() =&gt;</span> {
+<span class="hljs-keyword">let</span> <span class="hljs-title function_">fixEntitys</span> = (<span class="hljs-params"></span>) =&gt; {
 
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;Fix entitys to use other objects&#x27;</span>);
-    myblock.set({
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Fix entitys to use other objects&#x27;</span>);
+    myblock.<span class="hljs-title function_">set</span>({
         <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;myColorObject&#x27;</span>,
     });
 
-    mypie.set({
+    mypie.<span class="hljs-title function_">set</span>({
         <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;blue-green&#x27;</span>,
     });
 
-    myshape.set({
+    myshape.<span class="hljs-title function_">set</span>({
         <span class="hljs-attr">filters</span>: <span class="hljs-string">&#x27;emboss&#x27;</span>,
     })
 };
 
 <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;TESTS AFTER starting render cycle&#x27;</span>);
-    performEntityTests();
-    performOtherTests();
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;TESTS AFTER starting render cycle&#x27;</span>);
+    <span class="hljs-title function_">performEntityTests</span>();
+    <span class="hljs-title function_">performOtherTests</span>();
 
     <span class="hljs-built_in">setTimeout</span>(fixEntitys, <span class="hljs-number">1000</span>);
 }, <span class="hljs-number">5000</span>);</pre></div></div>

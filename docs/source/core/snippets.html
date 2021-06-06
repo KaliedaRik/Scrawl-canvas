@@ -527,19 +527,19 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeSnippet = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeSnippet = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
-    <span class="hljs-keyword">let</span> domElement = (isa_dom(items.domElement)) ? items.domElement : <span class="hljs-literal">false</span>,
-        animationHooks = (isa_obj(items.animationHooks)) ? items.animationHooks : {},
-        canvasSpecs = (isa_obj(items.canvasSpecs)) ? items.canvasSpecs : {},
-        observerSpecs = (isa_obj(items.observerSpecs)) ? items.observerSpecs : {},
-        includeCanvas = (isa_boolean(items.includeCanvas)) ? items.includeCanvas : <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">let</span> domElement = (<span class="hljs-title function_">isa_dom</span>(items.<span class="hljs-property">domElement</span>)) ? items.<span class="hljs-property">domElement</span> : <span class="hljs-literal">false</span>,
+        animationHooks = (<span class="hljs-title function_">isa_obj</span>(items.<span class="hljs-property">animationHooks</span>)) ? items.<span class="hljs-property">animationHooks</span> : {},
+        canvasSpecs = (<span class="hljs-title function_">isa_obj</span>(items.<span class="hljs-property">canvasSpecs</span>)) ? items.<span class="hljs-property">canvasSpecs</span> : {},
+        observerSpecs = (<span class="hljs-title function_">isa_obj</span>(items.<span class="hljs-property">observerSpecs</span>)) ? items.<span class="hljs-property">observerSpecs</span> : {},
+        includeCanvas = (<span class="hljs-title function_">isa_boolean</span>(items.<span class="hljs-property">includeCanvas</span>)) ? items.<span class="hljs-property">includeCanvas</span> : <span class="hljs-literal">true</span>;
 
-    <span class="hljs-keyword">if</span> (domElement &amp;&amp; domElement.id &amp;&amp; artefact[domElement.id]) {
+    <span class="hljs-keyword">if</span> (domElement &amp;&amp; domElement.<span class="hljs-property">id</span> &amp;&amp; artefact[domElement.<span class="hljs-property">id</span>]) {
 
-        <span class="hljs-keyword">return</span> makeStackSnippet(domElement, canvasSpecs, animationHooks, observerSpecs);
+        <span class="hljs-keyword">return</span> <span class="hljs-title function_">makeStackSnippet</span>(domElement, canvasSpecs, animationHooks, observerSpecs);
     }
-    <span class="hljs-keyword">return</span> makeUnstackedSnippet(domElement, canvasSpecs, animationHooks, observerSpecs, includeCanvas);
+    <span class="hljs-keyword">return</span> <span class="hljs-title function_">makeUnstackedSnippet</span>(domElement, canvasSpecs, animationHooks, observerSpecs, includeCanvas);
 };</pre></div></div>
             
         </li>
@@ -555,29 +555,29 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeStackSnippet = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">domElement, canvasSpecs, animationHooks, observerSpecs</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeStackSnippet = <span class="hljs-keyword">function</span> (<span class="hljs-params">domElement, canvasSpecs, animationHooks, observerSpecs</span>) {
 
-    <span class="hljs-keyword">let</span> myElement = artefact[domElement.id];
+    <span class="hljs-keyword">let</span> myElement = artefact[domElement.<span class="hljs-property">id</span>];
 
     <span class="hljs-keyword">if</span> (!myElement) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 
-    canvasSpecs.baseMatchesCanvasDimensions = <span class="hljs-literal">true</span>;
+    canvasSpecs.<span class="hljs-property">baseMatchesCanvasDimensions</span> = <span class="hljs-literal">true</span>;
 
-    <span class="hljs-keyword">let</span> myCanvas = myElement.addCanvas(canvasSpecs);
-    myElement.elementComputedStyles = <span class="hljs-built_in">window</span>.getComputedStyle(domElement);
+    <span class="hljs-keyword">let</span> myCanvas = myElement.<span class="hljs-title function_">addCanvas</span>(canvasSpecs);
+    myElement.<span class="hljs-property">elementComputedStyles</span> = <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">getComputedStyle</span>(domElement);
 
-    animationHooks.name = <span class="hljs-string">`<span class="hljs-subst">${myElement.name}</span>-animation`</span>;
-    animationHooks.target = myCanvas;
+    animationHooks.<span class="hljs-property">name</span> = <span class="hljs-string">`<span class="hljs-subst">${myElement.name}</span>-animation`</span>;
+    animationHooks.<span class="hljs-property">target</span> = myCanvas;
 
-    <span class="hljs-keyword">let</span> myAnimation = makeRender(animationHooks);
+    <span class="hljs-keyword">let</span> myAnimation = <span class="hljs-title function_">makeRender</span>(animationHooks);
 
-    <span class="hljs-keyword">let</span> myObserver = makeAnimationObserver(myAnimation, myElement, observerSpecs);
+    <span class="hljs-keyword">let</span> myObserver = <span class="hljs-title function_">makeAnimationObserver</span>(myAnimation, myElement, observerSpecs);
 
-    <span class="hljs-keyword">let</span> destroy = <span class="hljs-function">() =&gt;</span> {
-        myObserver();
-        myAnimation.kill();
-        myCanvas.demolish();
-        myElement.demolish(<span class="hljs-literal">true</span>);
+    <span class="hljs-keyword">let</span> <span class="hljs-title function_">destroy</span> = (<span class="hljs-params"></span>) =&gt; {
+        <span class="hljs-title function_">myObserver</span>();
+        myAnimation.<span class="hljs-title function_">kill</span>();
+        myCanvas.<span class="hljs-title function_">demolish</span>();
+        myElement.<span class="hljs-title function_">demolish</span>(<span class="hljs-literal">true</span>);
     };
 
     <span class="hljs-keyword">return</span> {
@@ -601,38 +601,38 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeUnstackedSnippet = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">domElement, canvasSpecs, animationHooks, observerSpecs, includeCanvas</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeUnstackedSnippet = <span class="hljs-keyword">function</span> (<span class="hljs-params">domElement, canvasSpecs, animationHooks, observerSpecs, includeCanvas</span>) {
 
     <span class="hljs-keyword">const</span> unsupportedElements = [<span class="hljs-string">&#x27;AREA&#x27;</span>, <span class="hljs-string">&#x27;BASE&#x27;</span>, <span class="hljs-string">&#x27;BR&#x27;</span>, <span class="hljs-string">&#x27;COL&#x27;</span>, <span class="hljs-string">&#x27;EMBED&#x27;</span>, <span class="hljs-string">&#x27;HR&#x27;</span>, <span class="hljs-string">&#x27;IMG&#x27;</span>, <span class="hljs-string">&#x27;INPUT&#x27;</span>, <span class="hljs-string">&#x27;KEYGEN&#x27;</span>, <span class="hljs-string">&#x27;LINK&#x27;</span>, <span class="hljs-string">&#x27;META&#x27;</span>, <span class="hljs-string">&#x27;PARAM&#x27;</span>, <span class="hljs-string">&#x27;SOURCE&#x27;</span>, <span class="hljs-string">&#x27;TRACK&#x27;</span>, <span class="hljs-string">&#x27;WBR&#x27;</span>];
 
-    <span class="hljs-keyword">if</span> (!domElement || unsupportedElements.indexOf(domElement.tagName) &gt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> {};
+    <span class="hljs-keyword">if</span> (!domElement || unsupportedElements.<span class="hljs-title function_">indexOf</span>(domElement.<span class="hljs-property">tagName</span>) &gt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> {};
 
     <span class="hljs-keyword">let</span> myElement,
-        id = domElement.id;
+        id = domElement.<span class="hljs-property">id</span>;
 
     <span class="hljs-keyword">if</span> (id &amp;&amp; unstackedelement[id]) myElement = unstackedelement[id];
-    <span class="hljs-keyword">else</span> myElement = makeUnstackedElement(domElement);
+    <span class="hljs-keyword">else</span> myElement = <span class="hljs-title function_">makeUnstackedElement</span>(domElement);
 
-    canvasSpecs.baseMatchesCanvasDimensions = <span class="hljs-literal">true</span>;
+    canvasSpecs.<span class="hljs-property">baseMatchesCanvasDimensions</span> = <span class="hljs-literal">true</span>;
 
-    <span class="hljs-keyword">let</span> myCanvas = (includeCanvas) ? myElement.addCanvas(canvasSpecs) : <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">let</span> myCanvas = (includeCanvas) ? myElement.<span class="hljs-title function_">addCanvas</span>(canvasSpecs) : <span class="hljs-literal">false</span>;
 
-    animationHooks.name = <span class="hljs-string">`<span class="hljs-subst">${myElement.name}</span>-animation`</span>;
+    animationHooks.<span class="hljs-property">name</span> = <span class="hljs-string">`<span class="hljs-subst">${myElement.name}</span>-animation`</span>;
     <span class="hljs-keyword">if</span> (myCanvas) {
 
-        <span class="hljs-keyword">if</span> (!animationHooks.afterClear) animationHooks.afterClear = <span class="hljs-function">() =&gt;</span> myElement.updateCanvas();
-        animationHooks.target = myCanvas;
+        <span class="hljs-keyword">if</span> (!animationHooks.<span class="hljs-property">afterClear</span>) animationHooks.<span class="hljs-property">afterClear</span> = <span class="hljs-function">() =&gt;</span> myElement.<span class="hljs-title function_">updateCanvas</span>();
+        animationHooks.<span class="hljs-property">target</span> = myCanvas;
     }
 
-    <span class="hljs-keyword">let</span> myAnimation = makeRender(animationHooks);
+    <span class="hljs-keyword">let</span> myAnimation = <span class="hljs-title function_">makeRender</span>(animationHooks);
 
-    <span class="hljs-keyword">let</span> myObserver = makeAnimationObserver(myAnimation, myElement, observerSpecs);
+    <span class="hljs-keyword">let</span> myObserver = <span class="hljs-title function_">makeAnimationObserver</span>(myAnimation, myElement, observerSpecs);
 
-    <span class="hljs-keyword">let</span> destroy = <span class="hljs-function">() =&gt;</span> {
-        myObserver();
-        myAnimation.kill();
-        <span class="hljs-keyword">if</span> (myCanvas) myCanvas.demolish();
-        myElement.demolish(<span class="hljs-literal">true</span>);
+    <span class="hljs-keyword">let</span> <span class="hljs-title function_">destroy</span> = (<span class="hljs-params"></span>) =&gt; {
+        <span class="hljs-title function_">myObserver</span>();
+        myAnimation.<span class="hljs-title function_">kill</span>();
+        <span class="hljs-keyword">if</span> (myCanvas) myCanvas.<span class="hljs-title function_">demolish</span>();
+        myElement.<span class="hljs-title function_">demolish</span>(<span class="hljs-literal">true</span>);
     };
 
     <span class="hljs-keyword">return</span> {

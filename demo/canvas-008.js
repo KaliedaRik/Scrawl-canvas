@@ -76,7 +76,11 @@ let report = function () {
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
+    Copy - x: ${piccy.copyStart[0]}, y: ${piccy.copyStart[1]}, w: ${piccy.copyDimensions[0]}, h:${piccy.copyDimensions[1]}
+    Paste - x: ${piccy.start[0]}, y: ${piccy.start[1]}, w: ${piccy.dimensions[0]}, h:${piccy.dimensions[1]}
+    Handle - x: ${piccy.handle[0]}, y: ${piccy.handle[1]}
+    Roll: ${piccy.roll}; Scale: ${piccy.scale}`;
     };
 }();
 

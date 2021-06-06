@@ -150,22 +150,22 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../../source/scrawl.js&#x27;</span>;
 
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">el</span>) </span>{
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">el</span>) {
 
-    <span class="hljs-keyword">let</span> snippet = scrawl.makeSnippet({
+    <span class="hljs-keyword">let</span> snippet = scrawl.<span class="hljs-title function_">makeSnippet</span>({
         <span class="hljs-attr">domElement</span>: el,
     });
 
     <span class="hljs-keyword">if</span> (snippet) {
 
-        <span class="hljs-keyword">let</span> canvas = snippet.canvas,
-            animation = snippet.animation,
-            wrapper = snippet.element,
-            name = wrapper.name;
+        <span class="hljs-keyword">let</span> canvas = snippet.<span class="hljs-property">canvas</span>,
+            animation = snippet.<span class="hljs-property">animation</span>,
+            wrapper = snippet.<span class="hljs-property">element</span>,
+            name = wrapper.<span class="hljs-property">name</span>;
 
-        canvas.setAsCurrentCanvas();
+        canvas.<span class="hljs-title function_">setAsCurrentCanvas</span>();
 
-        <span class="hljs-keyword">let</span> spotlightGradient = scrawl.makeRadialGradient({
+        <span class="hljs-keyword">let</span> spotlightGradient = scrawl.<span class="hljs-title function_">makeRadialGradient</span>({
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-gradient`</span>,
             <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
             <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
@@ -173,19 +173,19 @@
             <span class="hljs-attr">endY</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
             <span class="hljs-attr">endRadius</span>: <span class="hljs-string">&#x27;20%&#x27;</span>,
         })
-        .updateColor(<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;white&#x27;</span>)
-        .updateColor(<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;lightgray&#x27;</span>);
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;white&#x27;</span>)
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;lightgray&#x27;</span>);
 
-        animation.commence = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+        animation.<span class="hljs-property">commence</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
             <span class="hljs-keyword">let</span> active = <span class="hljs-literal">false</span>;
 
-            <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-                <span class="hljs-keyword">if</span> (canvas.here.active !== active) {
+                <span class="hljs-keyword">if</span> (canvas.<span class="hljs-property">here</span>.<span class="hljs-property">active</span> !== active) {
 
-                    active = canvas.here.active;
-                    block.set({
+                    active = canvas.<span class="hljs-property">here</span>.<span class="hljs-property">active</span>;
+                    block.<span class="hljs-title function_">set</span>({
                         <span class="hljs-attr">lockTo</span>: (active) ? <span class="hljs-string">&#x27;mouse&#x27;</span> : <span class="hljs-string">&#x27;start&#x27;</span>,
                         <span class="hljs-attr">fillStyle</span>: (active) ? spotlightGradient : <span class="hljs-string">&#x27;lightgray&#x27;</span>,
                     });
@@ -193,7 +193,7 @@
             };
         }();
 
-        <span class="hljs-keyword">let</span> block = scrawl.makeBlock({
+        <span class="hljs-keyword">let</span> block = scrawl.<span class="hljs-title function_">makeBlock</span>({
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-spotlight`</span>,
             <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;200%&#x27;</span>,
             <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;200%&#x27;</span>,
@@ -209,7 +209,7 @@
             <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>, 
         });
 
-        scrawl.makeBlock({
+        scrawl.<span class="hljs-title function_">makeBlock</span>({
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-box`</span>,
             <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
             <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,

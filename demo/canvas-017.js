@@ -69,7 +69,11 @@ let report = function () {
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
+    Start - x: ${lorem.start[0]}, y: ${lorem.start[1]}
+    Handle - x: ${lorem.handle[0]}, y: ${lorem.handle[1]}
+    Width: ${lorem.dimensions[0]}; Roll: ${lorem.roll}; Scale: ${lorem.scale}
+    Line height: ${lorem.lineHeight}; Letter spacing: ${lorem.letterSpacing}; Overline: ${lorem.overlinePosition}`;
     };
 }();
 

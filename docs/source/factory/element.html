@@ -474,8 +474,8 @@
 <li>They can be stored and retrieved (‘packet’ functionality), cloned (‘clone’, based on packets) and killed (‘kill’ functions)</li>
 </ul>
 <p><strong>A <a href="./stack.html">Stack</a> is a wrapper object around a DOM element</strong>, whose direct children are given Scrawl-canvas Element wrappers:</p>
-<pre><code>Stack    ~~&gt; Canvas/Cell  
-Element  ~~&gt; Entity (eg Block)  
+<pre><code><span class="hljs-title class_">Stack</span>    ~~&gt; <span class="hljs-title class_">Canvas</span>/<span class="hljs-title class_">Cell</span>  
+<span class="hljs-title class_">Element</span>  ~~&gt; <span class="hljs-title class_">Entity</span> (eg <span class="hljs-title class_">Block</span>)  
 </code></pre>
 <p>During initialization Scrawl-canvas will search the DOM tree and automatically create Stack wrappers for any element which has been given a <code>data-stack</code> attribute which resolves to true. Every direct (first level) child inside the stack element will have Element wrappers created for them (except for &lt;canvas&gt; elements). As part of this work, Scrawl-canvas will modify the affected elements’ <code>position</code> CSS style:</p>
 <ul>
@@ -523,7 +523,7 @@ Element  ~~&gt; Entity (eg Block)
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { element, elementnames, artefact, artefactnames, <span class="hljs-title">constructors</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { element, elementnames, artefact, artefactnames, constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { pushUnique, removeItem, isa_dom, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { uiSubscribedElements } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/userInteraction.js&#x27;</span>;
 
@@ -545,12 +545,12 @@ Element  ~~&gt; Entity (eg Block)
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Element = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">Element</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
     
-    <span class="hljs-keyword">let</span> el = items.domElement;
+    <span class="hljs-keyword">let</span> el = items.<span class="hljs-property">domElement</span>;
 
-    <span class="hljs-built_in">this</span>.makeName(items.name);
-    <span class="hljs-built_in">this</span>.register();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(items.<span class="hljs-property">name</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
 
     <span class="hljs-keyword">if</span> (el) {</pre></div></div>
             
@@ -567,29 +567,29 @@ Element  ~~&gt; Entity (eg Block)
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (items.text) el.textContent = items.text;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (items.content) el.innerHTML = items.content;
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (items.<span class="hljs-property">text</span>) el.<span class="hljs-property">textContent</span> = items.<span class="hljs-property">text</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (items.<span class="hljs-property">content</span>) el.<span class="hljs-property">innerHTML</span> = items.<span class="hljs-property">content</span>;
     }
 
-    <span class="hljs-built_in">this</span>.initializePositions();
-    <span class="hljs-built_in">this</span>.dimensions[<span class="hljs-number">0</span>] = <span class="hljs-built_in">this</span>.dimensions[<span class="hljs-number">1</span>] = <span class="hljs-number">100</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">initializePositions</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dimensions</span>[<span class="hljs-number">0</span>] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dimensions</span>[<span class="hljs-number">1</span>] = <span class="hljs-number">100</span>;
 
-    <span class="hljs-built_in">this</span>.pathCorners = [];
-    <span class="hljs-built_in">this</span>.css = {};
-    <span class="hljs-built_in">this</span>.here = {};
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathCorners</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">css</span> = {};
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">here</span> = {};
 
-    <span class="hljs-built_in">this</span>.initializeDomLayout(items);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">initializeDomLayout</span>(items);
 
-    <span class="hljs-built_in">this</span>.set(<span class="hljs-built_in">this</span>.defs);
-    <span class="hljs-built_in">this</span>.set(items);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
 
-    el = <span class="hljs-built_in">this</span>.domElement;
+    el = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>;
 
-    <span class="hljs-keyword">if</span> (el) el.id = <span class="hljs-built_in">this</span>.name;
+    <span class="hljs-keyword">if</span> (el) el.<span class="hljs-property">id</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;
 
-    <span class="hljs-built_in">this</span>.apply();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">apply</span>();
     
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -605,11 +605,11 @@ Element  ~~&gt; Entity (eg Block)
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Element.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">&#x27;Element&#x27;</span>;
-P.lib = <span class="hljs-string">&#x27;element&#x27;</span>;
-P.isArtefact = <span class="hljs-literal">true</span>;
-P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">Element</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
+P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Element&#x27;</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;element&#x27;</span>;
+P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">true</span>;
+P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -628,8 +628,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = baseMix(P);
-P = domMix(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);
+P = <span class="hljs-title function_">domMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -696,11 +696,11 @@ P = domMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.factoryKill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">factoryKill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    removeItem(uiSubscribedElements, <span class="hljs-built_in">this</span>.name);
+    <span class="hljs-title function_">removeItem</span>(uiSubscribedElements, <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
 
-    <span class="hljs-built_in">this</span>.domElement.remove();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>.<span class="hljs-title function_">remove</span>();
 };</pre></div></div>
             
         </li>
@@ -716,7 +716,7 @@ P = domMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> S = P.setters;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> S = P.<span class="hljs-property">setters</span>;</pre></div></div>
             
         </li>
         
@@ -732,18 +732,18 @@ P = domMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.text = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">text</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (isa_dom(<span class="hljs-built_in">this</span>.domElement)) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_dom</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>)) {
 
-        <span class="hljs-keyword">let</span> el = <span class="hljs-built_in">this</span>.domElement,
-            kids = el.querySelectorAll(<span class="hljs-string">&#x27;[data-corner-div=&quot;sc&quot;]&#x27;</span>);
+        <span class="hljs-keyword">let</span> el = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>,
+            kids = el.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;[data-corner-div=&quot;sc&quot;]&#x27;</span>);
 
-        el.textContent = item;
+        el.<span class="hljs-property">textContent</span> = item;
 
-        kids.forEach(<span class="hljs-function"><span class="hljs-params">kid</span> =&gt;</span> el.appendChild(kid));
+        kids.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">kid</span> =&gt;</span> el.<span class="hljs-title function_">appendChild</span>(kid));
 
-        <span class="hljs-built_in">this</span>.dirtyContent = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyContent</span> = <span class="hljs-literal">true</span>;
     }
 };</pre></div></div>
             
@@ -761,18 +761,18 @@ P = domMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.content = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">content</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.domElement) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) {
 
-        <span class="hljs-keyword">let</span> el = <span class="hljs-built_in">this</span>.domElement,
-            kids = el.querySelectorAll(<span class="hljs-string">&#x27;[data-corner-div=&quot;sc&quot;]&#x27;</span>);
+        <span class="hljs-keyword">let</span> el = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>,
+            kids = el.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;[data-corner-div=&quot;sc&quot;]&#x27;</span>);
 
-        el.innerHTML = item;
+        el.<span class="hljs-property">innerHTML</span> = item;
 
-        kids.forEach(<span class="hljs-function"><span class="hljs-params">kid</span> =&gt;</span> el.appendChild(kid));
+        kids.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">kid</span> =&gt;</span> el.<span class="hljs-title function_">appendChild</span>(kid));
 
-        <span class="hljs-built_in">this</span>.dirtyContent = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyContent</span> = <span class="hljs-literal">true</span>;
     }
 };</pre></div></div>
             
@@ -802,9 +802,9 @@ P = domMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.cleanDimensionsAdditionalActions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">cleanDimensionsAdditionalActions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-built_in">this</span>.dirtyDomDimensions = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDomDimensions</span> = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -838,28 +838,28 @@ P = domMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.addCanvas = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">addCanvas</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.canvas) {
+    <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">canvas</span>) {
 
-        <span class="hljs-keyword">let</span> canvas = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;canvas&#x27;</span>),
-            el = <span class="hljs-built_in">this</span>.domElement;
+        <span class="hljs-keyword">let</span> canvas = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;canvas&#x27;</span>),
+            el = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>;
 
-        <span class="hljs-keyword">let</span> rect = el.getBoundingClientRect(),
-            style = <span class="hljs-built_in">window</span>.getComputedStyle(el);
+        <span class="hljs-keyword">let</span> rect = el.<span class="hljs-title function_">getBoundingClientRect</span>(),
+            style = <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">getComputedStyle</span>(el);
 
-        el.parentNode.insertBefore(canvas, <span class="hljs-built_in">this</span>.domElement);
+        el.<span class="hljs-property">parentNode</span>.<span class="hljs-title function_">insertBefore</span>(canvas, <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>);
 
-        <span class="hljs-keyword">let</span> art = makeCanvas({
-            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span>-canvas`</span>,
+        <span class="hljs-keyword">let</span> art = <span class="hljs-title function_">makeCanvas</span>({
+            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>-canvas`</span>,
             <span class="hljs-attr">domElement</span>: canvas,
 
             <span class="hljs-attr">position</span>: <span class="hljs-string">&#x27;absolute&#x27;</span>,
 
-            <span class="hljs-attr">width</span>: rect.width,
-            <span class="hljs-attr">height</span>: rect.height,
+            <span class="hljs-attr">width</span>: rect.<span class="hljs-property">width</span>,
+            <span class="hljs-attr">height</span>: rect.<span class="hljs-property">height</span>,
 
-            <span class="hljs-attr">mimic</span>: <span class="hljs-built_in">this</span>.name,
+            <span class="hljs-attr">mimic</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>,
             <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;mimic&#x27;</span>,
             
             <span class="hljs-attr">useMimicDimensions</span>: <span class="hljs-literal">true</span>,
@@ -877,9 +877,9 @@ P = domMix(P);</pre></div></div>
             <span class="hljs-attr">addOwnRotationToMimic</span>: <span class="hljs-literal">false</span>,
         });
 
-        art.set(items);
+        art.<span class="hljs-title function_">set</span>(items);
 
-        <span class="hljs-built_in">this</span>.canvas = art;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">canvas</span> = art;
 
         <span class="hljs-keyword">return</span> art;
     }
@@ -895,10 +895,10 @@ P = domMix(P);</pre></div></div>
                 <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
-<pre><code>Get a handle to a Stack wrapper
-<span class="hljs-keyword">let</span> stack = scrawl.library.stack.mystack;
+<pre><code><span class="hljs-title class_">Get</span> a handle to a <span class="hljs-title class_">Stack</span> wrapper
+<span class="hljs-keyword">let</span> stack = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">stack</span>.<span class="hljs-property">mystack</span>;
 
-stack.addNewElement({
+stack.<span class="hljs-title function_">addNewElement</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;list&#x27;</span>,
     <span class="hljs-attr">tag</span>: <span class="hljs-string">&#x27;ul&#x27;</span>,
@@ -928,7 +928,7 @@ stack.addNewElement({
         <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;grab&#x27;</span>,
     },
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;list-no-border&#x27;</span>,
 
@@ -945,13 +945,13 @@ stack.addNewElement({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeElement = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeElement = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
     
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Element(items);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Element</span>(items);
 };
 
-<span class="hljs-title">constructors</span>.<span class="hljs-title">Element</span> = <span class="hljs-title">Element</span>;</pre></div></div>
+constructors.<span class="hljs-property">Element</span> = <span class="hljs-title class_">Element</span>;</pre></div></div>
             
         </li>
         

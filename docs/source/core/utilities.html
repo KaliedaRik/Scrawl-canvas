@@ -508,32 +508,32 @@
               </div>
               <p><strong>addStrings</strong> adds the two arguments together and returns a percentage string value if either of the values was a string; </p>
 <p>Examples:</p>
-<pre><code>addStrings(<span class="hljs-number">20</span>, <span class="hljs-number">40</span>);
+<pre><code><span class="hljs-title function_">addStrings</span>(<span class="hljs-number">20</span>, <span class="hljs-number">40</span>);
 -&gt; <span class="hljs-string">&#x27;60%&#x27;</span>
    
-addStrings(<span class="hljs-string">&#x27;20%&#x27;</span>, <span class="hljs-number">40</span>);
+<span class="hljs-title function_">addStrings</span>(<span class="hljs-string">&#x27;20%&#x27;</span>, <span class="hljs-number">40</span>);
 -&gt; <span class="hljs-string">&#x27;60%&#x27;</span>
  
-addStrings(<span class="hljs-number">20</span>, <span class="hljs-string">&#x27;40%&#x27;</span>);
+<span class="hljs-title function_">addStrings</span>(<span class="hljs-number">20</span>, <span class="hljs-string">&#x27;40%&#x27;</span>);
 -&gt; <span class="hljs-string">&#x27;60%&#x27;</span>
  
-addStrings(<span class="hljs-string">&#x27;20%&#x27;</span>, <span class="hljs-string">&#x27;40%&#x27;</span>);
+<span class="hljs-title function_">addStrings</span>(<span class="hljs-string">&#x27;20%&#x27;</span>, <span class="hljs-string">&#x27;40%&#x27;</span>);
 -&gt; <span class="hljs-string">&#x27;60%&#x27;</span>
 </code></pre>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>
-<span class="hljs-keyword">const</span> addStrings = <span class="hljs-function">(<span class="hljs-params">current, delta</span>) =&gt;</span> {
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">addStrings</span> = (<span class="hljs-params">current, delta</span>) =&gt; {
 
-    <span class="hljs-keyword">if</span> (!xt(delta)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/utilities addStrings() error - no delta argument supplied <span class="hljs-subst">${current}</span>, <span class="hljs-subst">${delta}</span>`</span>);
+    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xt</span>(delta)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/utilities addStrings() error - no delta argument supplied <span class="hljs-subst">${current}</span>, <span class="hljs-subst">${delta}</span>`</span>);
 
     <span class="hljs-keyword">if</span> ((delta != <span class="hljs-literal">null</span>)) {
 
-        <span class="hljs-keyword">let</span> stringFlag = (current.substring || delta.substring) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">let</span> stringFlag = (current.<span class="hljs-property">substring</span> || delta.<span class="hljs-property">substring</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
 
-        <span class="hljs-keyword">if</span> (isa_number(current)) current += (isa_number(delta) ? delta : <span class="hljs-built_in">parseFloat</span>(delta));
-        <span class="hljs-keyword">else</span> current = <span class="hljs-built_in">parseFloat</span>(current) + (isa_number(delta) ? delta : <span class="hljs-built_in">parseFloat</span>(delta));
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(current)) current += (<span class="hljs-title function_">isa_number</span>(delta) ? delta : <span class="hljs-built_in">parseFloat</span>(delta));
+        <span class="hljs-keyword">else</span> current = <span class="hljs-built_in">parseFloat</span>(current) + (<span class="hljs-title function_">isa_number</span>(delta) ? delta : <span class="hljs-built_in">parseFloat</span>(delta));
 
         <span class="hljs-keyword">return</span> (stringFlag) ? current + <span class="hljs-string">&#x27;%&#x27;</span> : current;
     }
@@ -551,37 +551,37 @@ addStrings(<span class="hljs-string">&#x27;20%&#x27;</span>, <span class="hljs-s
               </div>
               <p><strong>convertTime</strong> converts a time value into its component string suffix and (millisecond) number value properties; returns an array</p>
 <p>Examples:</p>
-<pre><code>convertTime(<span class="hljs-number">5000</span>);
+<pre><code><span class="hljs-title function_">convertTime</span>(<span class="hljs-number">5000</span>);
 -&gt; [<span class="hljs-string">&#x27;ms&#x27;</span>, <span class="hljs-number">5000</span>]
    
-convertTime(<span class="hljs-string">&#x27;50%&#x27;</span>);
+<span class="hljs-title function_">convertTime</span>(<span class="hljs-string">&#x27;50%&#x27;</span>);
 -&gt; [<span class="hljs-string">&#x27;%&#x27;</span>, <span class="hljs-number">50</span>]
  
-convertTime(<span class="hljs-string">&#x27;5000ms&#x27;</span>); 
+<span class="hljs-title function_">convertTime</span>(<span class="hljs-string">&#x27;5000ms&#x27;</span>); 
 -&gt; [<span class="hljs-string">&#x27;ms&#x27;</span>, <span class="hljs-number">5000</span>]
  
-convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
+<span class="hljs-title function_">convertTime</span>(<span class="hljs-string">&#x27;5s&#x27;</span>);
 -&gt; [<span class="hljs-string">&#x27;ms&#x27;</span>, <span class="hljs-number">5000</span>]
 </code></pre>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> convertTime = <span class="hljs-function">(<span class="hljs-params">item</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">convertTime</span> = (<span class="hljs-params">item</span>) =&gt; {
 
     <span class="hljs-keyword">let</span> a, timeUnit, timeValue;
 
-    <span class="hljs-keyword">if</span> (!xt(item)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/utilities convertTime() error - no argument supplied`</span>);
+    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xt</span>(item)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/utilities convertTime() error - no argument supplied`</span>);
 
-    <span class="hljs-keyword">if</span> (isa_number(item)) <span class="hljs-keyword">return</span> [<span class="hljs-string">&#x27;ms&#x27;</span>, item];
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(item)) <span class="hljs-keyword">return</span> [<span class="hljs-string">&#x27;ms&#x27;</span>, item];
 
-    <span class="hljs-keyword">if</span> (!item.substring) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/utilities convertTime() error - invalid argument: <span class="hljs-subst">${item}</span>`</span>);
+    <span class="hljs-keyword">if</span> (!item.<span class="hljs-property">substring</span>) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/utilities convertTime() error - invalid argument: <span class="hljs-subst">${item}</span>`</span>);
 
-    a = item.match(<span class="hljs-regexp">/^\d+\.?\d*(\D*)/</span>);
-    timeUnit = (a[<span class="hljs-number">1</span>].toLowerCase) ? a[<span class="hljs-number">1</span>].toLowerCase() : <span class="hljs-string">&#x27;ms&#x27;</span>;
+    a = item.<span class="hljs-title function_">match</span>(<span class="hljs-regexp">/^\d+\.?\d*(\D*)/</span>);
+    timeUnit = (a[<span class="hljs-number">1</span>].<span class="hljs-property">toLowerCase</span>) ? a[<span class="hljs-number">1</span>].<span class="hljs-title function_">toLowerCase</span>() : <span class="hljs-string">&#x27;ms&#x27;</span>;
     
     timeValue = <span class="hljs-built_in">parseFloat</span>(item);
 
-    <span class="hljs-keyword">if</span> (!isa_number(timeValue)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/base error - convertTime() argument converts to NaN: <span class="hljs-subst">${item}</span>`</span>);
+    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">isa_number</span>(timeValue)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/base error - convertTime() argument converts to NaN: <span class="hljs-subst">${item}</span>`</span>);
 
     <span class="hljs-keyword">switch</span> (timeUnit) {
 
@@ -592,7 +592,7 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
         <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;%&#x27;</span>:
             <span class="hljs-keyword">break</span>;
 
-        <span class="hljs-keyword">default</span>:
+        <span class="hljs-attr">default</span>:
             timeUnit = <span class="hljs-string">&#x27;ms&#x27;</span>;
     }
     
@@ -612,9 +612,9 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> correctForZero = <span class="hljs-function">(<span class="hljs-params">item</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">correctForZero</span> = (<span class="hljs-params">item</span>) =&gt; {
 
-    <span class="hljs-keyword">if</span> (!item.toFixed) <span class="hljs-keyword">return</span> item;
+    <span class="hljs-keyword">if</span> (!item.<span class="hljs-property">toFixed</span>) <span class="hljs-keyword">return</span> item;
     <span class="hljs-keyword">if</span> (item == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> item;
     <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(item)) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
     <span class="hljs-keyword">if</span> (item &lt; -<span class="hljs-number">0.000001</span>) <span class="hljs-keyword">return</span> item;
@@ -636,9 +636,9 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> λ<span class="hljs-literal">null</span> = <span class="hljs-function">() =&gt;</span> {};
-<span class="hljs-keyword">const</span> λfirstArg = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">a</span>) </span>{ <span class="hljs-keyword">return</span> a; };
-<span class="hljs-keyword">const</span> λ<span class="hljs-built_in">this</span> = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>; };
-<span class="hljs-keyword">const</span> λpromise = <span class="hljs-function">() =&gt;</span> <span class="hljs-built_in">Promise</span>.resolve(<span class="hljs-literal">true</span>);
+<span class="hljs-keyword">const</span> λfirstArg = <span class="hljs-keyword">function</span> (<span class="hljs-params">a</span>) { <span class="hljs-keyword">return</span> a; };
+<span class="hljs-keyword">const</span> λ<span class="hljs-variable language_">this</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>; };
+<span class="hljs-keyword">const</span> λpromise = <span class="hljs-function">() =&gt;</span> <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">resolve</span>(<span class="hljs-literal">true</span>);
 <span class="hljs-keyword">const</span> Ωempty = {};</pre></div></div>
             
         </li>
@@ -656,11 +656,11 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> generateUuid = <span class="hljs-function">() =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">generateUuid</span> = (<span class="hljs-params"></span>) =&gt; {
 
-    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">s4</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">function</span> <span class="hljs-title function_">s4</span>(<span class="hljs-params"></span>) {
 
-        <span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.floor((<span class="hljs-number">1</span> + <span class="hljs-built_in">Math</span>.random()) * <span class="hljs-number">0x10000</span>).toString(<span class="hljs-number">16</span>).substring(<span class="hljs-number">1</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>((<span class="hljs-number">1</span> + <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>()) * <span class="hljs-number">0x10000</span>).<span class="hljs-title function_">toString</span>(<span class="hljs-number">16</span>).<span class="hljs-title function_">substring</span>(<span class="hljs-number">1</span>);
     }
 
     <span class="hljs-keyword">return</span> <span class="hljs-string">`<span class="hljs-subst">${s4()}</span><span class="hljs-subst">${s4()}</span>-<span class="hljs-subst">${s4()}</span>-<span class="hljs-subst">${s4()}</span>-<span class="hljs-subst">${s4()}</span>-<span class="hljs-subst">${s4()}</span><span class="hljs-subst">${s4()}</span><span class="hljs-subst">${s4()}</span>`</span>;
@@ -681,9 +681,9 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> generateUniqueString = <span class="hljs-function">() =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">generateUniqueString</span> = (<span class="hljs-params"></span>) =&gt; {
 
-    <span class="hljs-keyword">return</span> performance.now().toString(<span class="hljs-number">36</span>) + <span class="hljs-built_in">Math</span>.random().toString(<span class="hljs-number">36</span>).substr(<span class="hljs-number">2</span>);
+    <span class="hljs-keyword">return</span> performance.<span class="hljs-title function_">now</span>().<span class="hljs-title function_">toString</span>(<span class="hljs-number">36</span>) + <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>().<span class="hljs-title function_">toString</span>(<span class="hljs-number">36</span>).<span class="hljs-title function_">substr</span>(<span class="hljs-number">2</span>);
 };</pre></div></div>
             
         </li>
@@ -699,7 +699,7 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> interpolate = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val, min, max</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> interpolate = <span class="hljs-keyword">function</span> (<span class="hljs-params">val, min, max</span>) {
     <span class="hljs-keyword">return</span> min + val * (max - min);
 };</pre></div></div>
             
@@ -716,7 +716,7 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> isa_boolean = <span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> (<span class="hljs-keyword">typeof</span> item === <span class="hljs-string">&#x27;boolean&#x27;</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_boolean</span> = item =&gt; (<span class="hljs-keyword">typeof</span> item === <span class="hljs-string">&#x27;boolean&#x27;</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -731,7 +731,7 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> isa_canvas = <span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> (<span class="hljs-built_in">Object</span>.prototype.toString.call(item) === <span class="hljs-string">&#x27;[object HTMLCanvasElement]&#x27;</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_canvas</span> = item =&gt; (<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">toString</span>.<span class="hljs-title function_">call</span>(item) === <span class="hljs-string">&#x27;[object HTMLCanvasElement]&#x27;</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -746,7 +746,7 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> isa_dom = <span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> (item &amp;&amp; item.querySelector &amp;&amp; item.dispatchEvent) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_dom</span> = item =&gt; (item &amp;&amp; item.<span class="hljs-property">querySelector</span> &amp;&amp; item.<span class="hljs-property">dispatchEvent</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -761,7 +761,7 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> isa_fn = <span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> (<span class="hljs-keyword">typeof</span> item === <span class="hljs-string">&#x27;function&#x27;</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_fn</span> = item =&gt; (<span class="hljs-keyword">typeof</span> item === <span class="hljs-string">&#x27;function&#x27;</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -776,7 +776,7 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> isa_number = <span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> (<span class="hljs-keyword">typeof</span> item != <span class="hljs-string">&#x27;undefined&#x27;</span> &amp;&amp; item.toFixed &amp;&amp; !<span class="hljs-built_in">Number</span>.isNaN(item)) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_number</span> = item =&gt; (<span class="hljs-keyword">typeof</span> item != <span class="hljs-string">&#x27;undefined&#x27;</span> &amp;&amp; item.<span class="hljs-property">toFixed</span> &amp;&amp; !<span class="hljs-title class_">Number</span>.<span class="hljs-built_in">isNaN</span>(item)) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -791,7 +791,7 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> isa_obj = <span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> (<span class="hljs-built_in">Object</span>.prototype.toString.call(item) === <span class="hljs-string">&#x27;[object Object]&#x27;</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_obj</span> = item =&gt; (<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">toString</span>.<span class="hljs-title function_">call</span>(item) === <span class="hljs-string">&#x27;[object Object]&#x27;</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -806,7 +806,7 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> isa_quaternion = <span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> (item &amp;&amp; item.type &amp;&amp; item.type === <span class="hljs-string">&#x27;Quaternion&#x27;</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_quaternion</span> = item =&gt; (item &amp;&amp; item.<span class="hljs-property">type</span> &amp;&amp; item.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Quaternion&#x27;</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -821,20 +821,20 @@ convertTime(<span class="hljs-string">&#x27;5s&#x27;</span>);
 <p>Example:</p>
 <pre><code><span class="hljs-keyword">var</span> original = { <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;Peter&#x27;</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">42</span>, <span class="hljs-attr">job</span>: <span class="hljs-string">&#x27;lawyer&#x27;</span> };
 <span class="hljs-keyword">var</span> additional = { <span class="hljs-attr">age</span>: <span class="hljs-number">32</span>, <span class="hljs-attr">job</span>: <span class="hljs-string">&#x27;coder&#x27;</span>, <span class="hljs-attr">pet</span>: <span class="hljs-string">&#x27;cat&#x27;</span> };
-scrawl.utils.mergeInto(original, additional);
+scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function_">mergeInto</span>(original, additional);
 
 -&gt; { <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;Peter&#x27;</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">42</span>, <span class="hljs-attr">job</span>: <span class="hljs-string">&#x27;lawyer&#x27;</span>, <span class="hljs-attr">pet</span>: <span class="hljs-string">&#x27;cat&#x27;</span> }
 </code></pre>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> mergeInto = <span class="hljs-function">(<span class="hljs-params">original, additional</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">mergeInto</span> = (<span class="hljs-params">original, additional</span>) =&gt; {
 
-    <span class="hljs-keyword">if</span> (!isa_obj(original) || !isa_obj(additional)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/utilities mergeInto() error - insufficient arguments supplied <span class="hljs-subst">${original}</span>, <span class="hljs-subst">${additional}</span>`</span>);
+    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">isa_obj</span>(original) || !<span class="hljs-title function_">isa_obj</span>(additional)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/utilities mergeInto() error - insufficient arguments supplied <span class="hljs-subst">${original}</span>, <span class="hljs-subst">${additional}</span>`</span>);
 
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> key <span class="hljs-keyword">in</span> additional) {
 
-        <span class="hljs-keyword">if</span> (additional.hasOwnProperty(key) &amp;&amp; <span class="hljs-keyword">typeof</span> original[key] == <span class="hljs-string">&#x27;undefined&#x27;</span>) original[key] = additional[key];
+        <span class="hljs-keyword">if</span> (additional.<span class="hljs-title function_">hasOwnProperty</span>(key) &amp;&amp; <span class="hljs-keyword">typeof</span> original[key] == <span class="hljs-string">&#x27;undefined&#x27;</span>) original[key] = additional[key];
     }
     <span class="hljs-keyword">return</span> original;
 };</pre></div></div>
@@ -852,20 +852,20 @@ scrawl.utils.mergeInto(original, additional);
 <p>Example:</p>
 <pre><code><span class="hljs-keyword">var</span> original = { <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;Peter&#x27;</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">42</span>, <span class="hljs-attr">job</span>: <span class="hljs-string">&#x27;lawyer&#x27;</span> };
 <span class="hljs-keyword">var</span> additional = { <span class="hljs-attr">age</span>: <span class="hljs-number">32</span>, <span class="hljs-attr">job</span>: <span class="hljs-string">&#x27;coder&#x27;</span>, <span class="hljs-attr">pet</span>: <span class="hljs-string">&#x27;cat&#x27;</span> };
-scrawl.utils.mergeOver(original, additional);
+scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function_">mergeOver</span>(original, additional);
 
 -&gt; { <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;Peter&#x27;</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">32</span>, <span class="hljs-attr">job</span>: <span class="hljs-string">&#x27;coder&#x27;</span>, <span class="hljs-attr">pet</span>: <span class="hljs-string">&#x27;cat&#x27;</span> }
 </code></pre>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> mergeOver = <span class="hljs-function">(<span class="hljs-params">original, additional</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">mergeOver</span> = (<span class="hljs-params">original, additional</span>) =&gt; {
 
-    <span class="hljs-keyword">if</span> (!isa_obj(original) || !isa_obj(additional)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/utilities mergeOver() error - insufficient arguments supplied <span class="hljs-subst">${original}</span>, <span class="hljs-subst">${additional}</span>`</span>);
+    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">isa_obj</span>(original) || !<span class="hljs-title function_">isa_obj</span>(additional)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/utilities mergeOver() error - insufficient arguments supplied <span class="hljs-subst">${original}</span>, <span class="hljs-subst">${additional}</span>`</span>);
 
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> key <span class="hljs-keyword">in</span> additional) {
 
-        <span class="hljs-keyword">if</span> (additional.hasOwnProperty(key)) original[key] = additional[key];
+        <span class="hljs-keyword">if</span> (additional.<span class="hljs-title function_">hasOwnProperty</span>(key)) original[key] = additional[key];
     }
     <span class="hljs-keyword">return</span> original;
 };</pre></div></div>
@@ -883,18 +883,18 @@ scrawl.utils.mergeOver(original, additional);
 <p>Example:</p>
 <pre><code><span class="hljs-keyword">var</span> original = { <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;Peter&#x27;</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">42</span>, <span class="hljs-attr">job</span>: <span class="hljs-string">&#x27;lawyer&#x27;</span> };
 <span class="hljs-keyword">var</span> additional = { <span class="hljs-attr">age</span>: <span class="hljs-number">32</span>, <span class="hljs-attr">job</span>: <span class="hljs-literal">null</span>, <span class="hljs-attr">pet</span>: <span class="hljs-string">&#x27;cat&#x27;</span> };
-scrawl.utils.mergeOver(original, additional);
+scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function_">mergeOver</span>(original, additional);
    
 -&gt; { <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;Peter&#x27;</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">32</span>, <span class="hljs-attr">pet</span>: <span class="hljs-string">&#x27;cat&#x27;</span> }
 </code></pre>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> mergeDiscard = <span class="hljs-function">(<span class="hljs-params">original, additional</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">mergeDiscard</span> = (<span class="hljs-params">original, additional</span>) =&gt; {
 
-    <span class="hljs-keyword">if</span> (!isa_obj(original) || !isa_obj(additional)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/utilities mergeDiscard() error - insufficient arguments supplied <span class="hljs-subst">${original}</span>, <span class="hljs-subst">${additional}</span>`</span>);
+    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">isa_obj</span>(original) || !<span class="hljs-title function_">isa_obj</span>(additional)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/utilities mergeDiscard() error - insufficient arguments supplied <span class="hljs-subst">${original}</span>, <span class="hljs-subst">${additional}</span>`</span>);
 
-    <span class="hljs-built_in">Object</span>.entries(additional).forEach(<span class="hljs-function">(<span class="hljs-params">[key, val]</span>) =&gt;</span> {
+    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(additional).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">[key, val]</span>) =&gt;</span> {
 
         <span class="hljs-keyword">if</span> (val === <span class="hljs-literal">null</span>) <span class="hljs-keyword">delete</span> original[key];
         <span class="hljs-keyword">else</span> original[key] = additional[key];
@@ -914,28 +914,28 @@ scrawl.utils.mergeOver(original, additional);
               <p><strong>pushUnique</strong> adds a value to the end of an array, if that value is not already present in the array. This function mutates the array</p>
 <p>Example:</p>
 <pre><code><span class="hljs-keyword">var</span> myarray = [<span class="hljs-string">&#x27;apple&#x27;</span>, <span class="hljs-string">&#x27;orange&#x27;</span>];
-scrawl.utils.pushUnique(myarray, <span class="hljs-string">&#x27;apple&#x27;</span>);    
+scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function_">pushUnique</span>(myarray, <span class="hljs-string">&#x27;apple&#x27;</span>);    
 -&gt; [<span class="hljs-string">&#x27;apple&#x27;</span>, <span class="hljs-string">&#x27;orange&#x27;</span>]
 
-scrawl.utils.pushUnique(myarray, <span class="hljs-string">&#x27;banana&#x27;</span>);
+scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function_">pushUnique</span>(myarray, <span class="hljs-string">&#x27;banana&#x27;</span>);
 -&gt; [<span class="hljs-string">&#x27;apple&#x27;</span>, <span class="hljs-string">&#x27;orange&#x27;</span>, <span class="hljs-string">&#x27;banana&#x27;</span>]
 </code></pre>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> pushUnique = <span class="hljs-function">(<span class="hljs-params">myArray, potentialMember</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">pushUnique</span> = (<span class="hljs-params">myArray, potentialMember</span>) =&gt; {
 
-    <span class="hljs-keyword">if</span> (!xta(myArray, potentialMember)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/utilities pushUnique() error - insufficient arguments supplied <span class="hljs-subst">${myArray}</span>, <span class="hljs-subst">${potentialMember}</span>`</span>);
+    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xta</span>(myArray, potentialMember)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/utilities pushUnique() error - insufficient arguments supplied <span class="hljs-subst">${myArray}</span>, <span class="hljs-subst">${potentialMember}</span>`</span>);
 
-    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Array</span>.isArray(myArray)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/utilities pushUnique() error - argument not an array <span class="hljs-subst">${myArray}</span>`</span>);
+    <span class="hljs-keyword">if</span> (!<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(myArray)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/utilities pushUnique() error - argument not an array <span class="hljs-subst">${myArray}</span>`</span>);
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(potentialMember)) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(potentialMember)) {
 
-        potentialMember.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> pushUnique(myArray, item));
+        potentialMember.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> <span class="hljs-title function_">pushUnique</span>(myArray, item));
     }
     <span class="hljs-keyword">else</span> {
 
-        <span class="hljs-keyword">if</span> (myArray.indexOf(potentialMember) &lt; <span class="hljs-number">0</span>) myArray.push(potentialMember);
+        <span class="hljs-keyword">if</span> (myArray.<span class="hljs-title function_">indexOf</span>(potentialMember) &lt; <span class="hljs-number">0</span>) myArray.<span class="hljs-title function_">push</span>(potentialMember);
     }
 
     <span class="hljs-keyword">return</span> myArray;
@@ -953,24 +953,24 @@ scrawl.utils.pushUnique(myarray, <span class="hljs-string">&#x27;banana&#x27;</s
               <p><strong>removeItem</strong> removes a value from an array. This function mutates the array</p>
 <p>Example:</p>
 <pre><code><span class="hljs-keyword">var</span> myarray = [<span class="hljs-string">&#x27;apple&#x27;</span>, <span class="hljs-string">&#x27;orange&#x27;</span>];
-scrawl.utils.removeItem(myarray, <span class="hljs-string">&#x27;banana&#x27;</span>);   
+scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function_">removeItem</span>(myarray, <span class="hljs-string">&#x27;banana&#x27;</span>);   
 -&gt; [<span class="hljs-string">&#x27;apple&#x27;</span>, <span class="hljs-string">&#x27;orange&#x27;</span>]
 
-scrawl.utils.removeItem(myarray, <span class="hljs-string">&#x27;apple&#x27;</span>);    
+scrawl.<span class="hljs-property">utils</span>.<span class="hljs-title function_">removeItem</span>(myarray, <span class="hljs-string">&#x27;apple&#x27;</span>);    
 -&gt; [<span class="hljs-string">&#x27;orange&#x27;</span>]
 </code></pre>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> removeItem = <span class="hljs-function">(<span class="hljs-params">myArray, unwantedMember</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">removeItem</span> = (<span class="hljs-params">myArray, unwantedMember</span>) =&gt; {
 
-    <span class="hljs-keyword">if</span> (!xta(myArray, unwantedMember)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/utilities removeItem() error - insufficient arguments supplied <span class="hljs-subst">${myArray}</span>, <span class="hljs-subst">${unwantedMember}</span>`</span>);
+    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xta</span>(myArray, unwantedMember)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/utilities removeItem() error - insufficient arguments supplied <span class="hljs-subst">${myArray}</span>, <span class="hljs-subst">${unwantedMember}</span>`</span>);
 
-    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Array</span>.isArray(myArray)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`core/utilities removeItem() error - argument not an array <span class="hljs-subst">${myArray}</span>`</span>);
+    <span class="hljs-keyword">if</span> (!<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(myArray)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`core/utilities removeItem() error - argument not an array <span class="hljs-subst">${myArray}</span>`</span>);
 
-    <span class="hljs-keyword">let</span> index = myArray.indexOf(unwantedMember);
+    <span class="hljs-keyword">let</span> index = myArray.<span class="hljs-title function_">indexOf</span>(unwantedMember);
 
-    <span class="hljs-keyword">if</span> (index &gt;= <span class="hljs-number">0</span>) myArray.splice(index, <span class="hljs-number">1</span>);
+    <span class="hljs-keyword">if</span> (index &gt;= <span class="hljs-number">0</span>) myArray.<span class="hljs-title function_">splice</span>(index, <span class="hljs-number">1</span>);
 
     <span class="hljs-keyword">return</span> myArray;
 };</pre></div></div>
@@ -988,7 +988,7 @@ scrawl.utils.removeItem(myarray, <span class="hljs-string">&#x27;apple&#x27;</sp
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> xt = <span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> (<span class="hljs-keyword">typeof</span> item == <span class="hljs-string">&#x27;undefined&#x27;</span>) ? <span class="hljs-literal">false</span> : <span class="hljs-literal">true</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">xt</span> = item =&gt; (<span class="hljs-keyword">typeof</span> item == <span class="hljs-string">&#x27;undefined&#x27;</span>) ? <span class="hljs-literal">false</span> : <span class="hljs-literal">true</span>;</pre></div></div>
             
         </li>
         
@@ -1003,7 +1003,7 @@ scrawl.utils.removeItem(myarray, <span class="hljs-string">&#x27;apple&#x27;</sp
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> xta = <span class="hljs-function">(<span class="hljs-params">...args</span>) =&gt;</span> args.every(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> <span class="hljs-keyword">typeof</span> item != <span class="hljs-string">&#x27;undefined&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">xta</span> = (<span class="hljs-params">...args</span>) =&gt; args.<span class="hljs-title function_">every</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> <span class="hljs-keyword">typeof</span> item != <span class="hljs-string">&#x27;undefined&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1018,7 +1018,7 @@ scrawl.utils.removeItem(myarray, <span class="hljs-string">&#x27;apple&#x27;</sp
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> xtGet = <span class="hljs-function">(<span class="hljs-params">...args</span>) =&gt;</span> args.find(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> <span class="hljs-keyword">typeof</span> item != <span class="hljs-string">&#x27;undefined&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">xtGet</span> = (<span class="hljs-params">...args</span>) =&gt; args.<span class="hljs-title function_">find</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> <span class="hljs-keyword">typeof</span> item != <span class="hljs-string">&#x27;undefined&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1033,7 +1033,7 @@ scrawl.utils.removeItem(myarray, <span class="hljs-string">&#x27;apple&#x27;</sp
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> xto = <span class="hljs-function">(<span class="hljs-params">...args</span>) =&gt;</span> (args.find(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> <span class="hljs-keyword">typeof</span> item != <span class="hljs-string">&#x27;undefined&#x27;</span>)) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">xto</span> = (<span class="hljs-params">...args</span>) =&gt; (args.<span class="hljs-title function_">find</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> <span class="hljs-keyword">typeof</span> item != <span class="hljs-string">&#x27;undefined&#x27;</span>)) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -1112,13 +1112,13 @@ that every bit of the input affects every bit of the output 50% of the time,
 which is good.  See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
 ============================================================================
 */</span>
-<span class="hljs-keyword">var</span> Mash = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+<span class="hljs-keyword">var</span> <span class="hljs-title class_">Mash</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
     <span class="hljs-keyword">var</span> n = <span class="hljs-number">0xefc8249d</span>;
-    <span class="hljs-keyword">var</span> mash = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">data</span>) </span>{
+    <span class="hljs-keyword">var</span> mash = <span class="hljs-keyword">function</span> (<span class="hljs-params">data</span>) {
         <span class="hljs-keyword">if</span> (data) {
-            data = data.toString();
-            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; data.length; i++) {
-                n += data.charCodeAt(i);
+            data = data.<span class="hljs-title function_">toString</span>();
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; data.<span class="hljs-property">length</span>; i++) {
+                n += data.<span class="hljs-title function_">charCodeAt</span>(i);
                 <span class="hljs-keyword">var</span> h = <span class="hljs-number">0.02519603282416938</span> * n;
                 n = h &gt;&gt;&gt; <span class="hljs-number">0</span>;
                 h -= n;
@@ -1135,12 +1135,12 @@ which is good.  See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
     <span class="hljs-keyword">return</span> mash;
 };
 
-<span class="hljs-keyword">var</span> uheprng = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">seed</span>) </span>{
-    <span class="hljs-keyword">return</span> (<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+<span class="hljs-keyword">var</span> uheprng = <span class="hljs-keyword">function</span> (<span class="hljs-params">seed</span>) {
+    <span class="hljs-keyword">return</span> (<span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
         <span class="hljs-keyword">var</span> o = <span class="hljs-number">48</span>; <span class="hljs-comment">// set the &#x27;order&#x27; number of ENTROPY-holding 32-bit values</span>
         <span class="hljs-keyword">var</span> c = <span class="hljs-number">1</span>; <span class="hljs-comment">// init the &#x27;carry&#x27; used by the multiply-with-carry (MWC) algorithm</span>
         <span class="hljs-keyword">var</span> p = o; <span class="hljs-comment">// init the &#x27;phase&#x27; (max-1) of the intermediate variable pointer</span>
-        <span class="hljs-keyword">var</span> s = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Array</span>(o); <span class="hljs-comment">// declare our intermediate variables array</span>
+        <span class="hljs-keyword">var</span> s = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Array</span>(o); <span class="hljs-comment">// declare our intermediate variables array</span>
         <span class="hljs-keyword">var</span> i; <span class="hljs-comment">// general purpose local</span>
         <span class="hljs-keyword">var</span> j; <span class="hljs-comment">// general purpose local</span>
         <span class="hljs-keyword">var</span> k = <span class="hljs-number">0</span>; <span class="hljs-comment">// general purpose local</span></pre></div></div>
@@ -1160,7 +1160,7 @@ be wonderful, it’s useful for establishing large startup entropy for our usage
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> mash = <span class="hljs-keyword">new</span> Mash(); <span class="hljs-comment">// get a pointer to our high-performance &quot;Mash&quot; hash</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> mash = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Mash</span>(); <span class="hljs-comment">// get a pointer to our high-performance &quot;Mash&quot; hash</span></pre></div></div>
             
         </li>
         
@@ -1176,7 +1176,7 @@ be wonderful, it’s useful for establishing large startup entropy for our usage
             </div>
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; o; i++) {
-            s[i] = mash(<span class="hljs-built_in">Math</span>.random());
+            s[i] = <span class="hljs-title function_">mash</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>());
         }</pre></div></div>
             
         </li>
@@ -1196,7 +1196,7 @@ characters from 33 to 126.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> rawprng = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> rawprng = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
             <span class="hljs-keyword">if</span> (++p &gt;= o) {
                 p = <span class="hljs-number">0</span>;
             }
@@ -1221,8 +1221,8 @@ resolution 53-bit prng (0 to &lt;1), then we multiply this by the caller’s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> random = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">range</span>) </span>{
-            <span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.floor(range * (rawprng() + (rawprng() * <span class="hljs-number">0x200000</span> | <span class="hljs-number">0</span>) * <span class="hljs-number">1.1102230246251565e-16</span>)); <span class="hljs-comment">// 2^-53</span>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> random = <span class="hljs-keyword">function</span> (<span class="hljs-params">range</span>) {
+            <span class="hljs-keyword">return</span> <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(range * (<span class="hljs-title function_">rawprng</span>() + (<span class="hljs-title function_">rawprng</span>() * <span class="hljs-number">0x200000</span> | <span class="hljs-number">0</span>) * <span class="hljs-number">1.1102230246251565e-16</span>)); <span class="hljs-comment">// 2^-53</span>
         };</pre></div></div>
             
         </li>
@@ -1239,11 +1239,11 @@ resolution 53-bit prng (0 to &lt;1), then we multiply this by the caller’s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        random.string = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">count</span>) </span>{
+            <div class="content"><div class='highlight'><pre>        random.<span class="hljs-property">string</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">count</span>) {
             <span class="hljs-keyword">var</span> i;
             <span class="hljs-keyword">var</span> s = <span class="hljs-string">&#x27;&#x27;</span>;
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; count; i++) {
-                s += <span class="hljs-built_in">String</span>.fromCharCode(<span class="hljs-number">33</span> + random(<span class="hljs-number">94</span>));
+                s += <span class="hljs-title class_">String</span>.<span class="hljs-title function_">fromCharCode</span>(<span class="hljs-number">33</span> + <span class="hljs-title function_">random</span>(<span class="hljs-number">94</span>));
             }
             <span class="hljs-keyword">return</span> s;
         };</pre></div></div>
@@ -1263,11 +1263,11 @@ which is used to pour entropy into the PRNG.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> hash = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-            <span class="hljs-keyword">var</span> args = <span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-built_in">arguments</span>);
-            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; args.length; i++) {
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> hash = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <span class="hljs-keyword">var</span> args = <span class="hljs-title class_">Array</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">slice</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">arguments</span>);
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; args.<span class="hljs-property">length</span>; i++) {
                 <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; o; j++) {
-                    s[j] -= mash(args[i]);
+                    s[j] -= <span class="hljs-title function_">mash</span>(args[i]);
                     <span class="hljs-keyword">if</span> (s[j] &lt; <span class="hljs-number">0</span>) {
                         s[j] += <span class="hljs-number">1</span>;
                     }
@@ -1291,10 +1291,10 @@ users always obtain the same EFFECTIVE uheprng seeding key.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        random.cleanString = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">inStr</span>) </span>{
-            inStr = inStr.replace(<span class="hljs-regexp">/(^\s*)|(\s*$)/gi</span>, <span class="hljs-string">&#x27;&#x27;</span>); <span class="hljs-comment">// remove any/all leading spaces</span>
-            inStr = inStr.replace(<span class="hljs-regexp">/[\x00-\x1F]/gi</span>, <span class="hljs-string">&#x27;&#x27;</span>); <span class="hljs-comment">// remove any/all control characters</span>
-            inStr = inStr.replace(<span class="hljs-regexp">/\n /</span>, <span class="hljs-string">&#x27;\n&#x27;</span>); <span class="hljs-comment">// remove any/all trailing spaces</span>
+            <div class="content"><div class='highlight'><pre>        random.<span class="hljs-property">cleanString</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">inStr</span>) {
+            inStr = inStr.<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/(^\s*)|(\s*$)/gi</span>, <span class="hljs-string">&#x27;&#x27;</span>); <span class="hljs-comment">// remove any/all leading spaces</span>
+            inStr = inStr.<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/[\x00-\x1F]/gi</span>, <span class="hljs-string">&#x27;&#x27;</span>); <span class="hljs-comment">// remove any/all control characters</span>
+            inStr = inStr.<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/\n /</span>, <span class="hljs-string">&#x27;\n&#x27;</span>); <span class="hljs-comment">// remove any/all trailing spaces</span>
             <span class="hljs-keyword">return</span> inStr; <span class="hljs-comment">// return the cleaned up result</span>
         };</pre></div></div>
             
@@ -1312,13 +1312,13 @@ any leading or trailing spaces and ignoring any embedded carriage returns (CR) o
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        random.hashString = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">inStr</span>) </span>{
-            inStr = random.cleanString(inStr);
-            mash(inStr); <span class="hljs-comment">// use the string to evolve the &#x27;mash&#x27; state</span>
-            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; inStr.length; i++) { <span class="hljs-comment">// scan through the characters in our string</span>
-                k = inStr.charCodeAt(i); <span class="hljs-comment">// get the character code at the location</span>
+            <div class="content"><div class='highlight'><pre>        random.<span class="hljs-property">hashString</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">inStr</span>) {
+            inStr = random.<span class="hljs-title function_">cleanString</span>(inStr);
+            <span class="hljs-title function_">mash</span>(inStr); <span class="hljs-comment">// use the string to evolve the &#x27;mash&#x27; state</span>
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; inStr.<span class="hljs-property">length</span>; i++) { <span class="hljs-comment">// scan through the characters in our string</span>
+                k = inStr.<span class="hljs-title function_">charCodeAt</span>(i); <span class="hljs-comment">// get the character code at the location</span>
                 <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; o; j++) { <span class="hljs-comment">//    &quot;mash&quot; it into the UHEPRNG state</span>
-                    s[j] -= mash(k);
+                    s[j] -= <span class="hljs-title function_">mash</span>(k);
                     <span class="hljs-keyword">if</span> (s[j] &lt; <span class="hljs-number">0</span>) {
                         s[j] += <span class="hljs-number">1</span>;
                     }
@@ -1339,20 +1339,20 @@ any leading or trailing spaces and ignoring any embedded carriage returns (CR) o
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        random.seed = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">seed</span>) </span>{
+            <div class="content"><div class='highlight'><pre>        random.<span class="hljs-property">seed</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">seed</span>) {
             <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> seed === <span class="hljs-string">&#x27;undefined&#x27;</span> || seed === <span class="hljs-literal">null</span>) {
-                seed = <span class="hljs-built_in">Math</span>.random();
+                seed = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>();
             }
             <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> seed !== <span class="hljs-string">&#x27;string&#x27;</span>) {
-                seed = stringify(seed, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">key, value</span>) </span>{
+                seed = <span class="hljs-title function_">stringify</span>(seed, <span class="hljs-keyword">function</span> (<span class="hljs-params">key, value</span>) {
                     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> value === <span class="hljs-string">&#x27;function&#x27;</span>) {
-                        <span class="hljs-keyword">return</span> (value).toString();
+                        <span class="hljs-keyword">return</span> (value).<span class="hljs-title function_">toString</span>();
                     }
                     <span class="hljs-keyword">return</span> value;
                 });
             }
-            random.initState();
-            random.hashString(seed);
+            random.<span class="hljs-title function_">initState</span>();
+            random.<span class="hljs-title function_">hashString</span>(seed);
         };</pre></div></div>
             
         </li>
@@ -1368,12 +1368,12 @@ any leading or trailing spaces and ignoring any embedded carriage returns (CR) o
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        random.addEntropy = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"> <span class="hljs-comment">/* accept zero or more arguments */</span> </span>) </span>{
+            <div class="content"><div class='highlight'><pre>        random.<span class="hljs-property">addEntropy</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"> <span class="hljs-comment">/* accept zero or more arguments */</span> </span>) {
             <span class="hljs-keyword">var</span> args = [];
-            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-built_in">arguments</span>.length; i++) {
-                args.push(<span class="hljs-built_in">arguments</span>[i]);
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-variable language_">arguments</span>.<span class="hljs-property">length</span>; i++) {
+                args.<span class="hljs-title function_">push</span>(<span class="hljs-variable language_">arguments</span>[i]);
             }
-            hash((k++) + (<span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>().getTime()) + args.join(<span class="hljs-string">&#x27;&#x27;</span>) + <span class="hljs-built_in">Math</span>.random());
+            <span class="hljs-title function_">hash</span>((k++) + (<span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>().<span class="hljs-title function_">getTime</span>()) + args.<span class="hljs-title function_">join</span>(<span class="hljs-string">&#x27;&#x27;</span>) + <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>());
         };</pre></div></div>
             
         </li>
@@ -1392,10 +1392,10 @@ some hashing input</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        random.initState = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-            mash(); <span class="hljs-comment">// pass a null arg to force mash hash to init</span>
+            <div class="content"><div class='highlight'><pre>        random.<span class="hljs-property">initState</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <span class="hljs-title function_">mash</span>(); <span class="hljs-comment">// pass a null arg to force mash hash to init</span>
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; o; i++) {
-                s[i] = mash(<span class="hljs-string">&#x27; &#x27;</span>); <span class="hljs-comment">// fill the array with initial mash hash values</span>
+                s[i] = <span class="hljs-title function_">mash</span>(<span class="hljs-string">&#x27; &#x27;</span>); <span class="hljs-comment">// fill the array with initial mash hash values</span>
             }
             c = <span class="hljs-number">1</span>; <span class="hljs-comment">// init our multiply-with-carry carry</span>
             p = o; <span class="hljs-comment">// init our phase</span>
@@ -1417,7 +1417,7 @@ necessary, of course, but it’s good JavaScript citizenship.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        random.done = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>        random.<span class="hljs-property">done</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
             mash = <span class="hljs-literal">null</span>;
         };</pre></div></div>
             
@@ -1435,7 +1435,7 @@ necessary, of course, but it’s good JavaScript citizenship.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> seed !== <span class="hljs-string">&#x27;undefined&#x27;</span>) {
-            random.seed(seed);
+            random.<span class="hljs-title function_">seed</span>(seed);
         }</pre></div></div>
             
         </li>
@@ -1451,8 +1451,8 @@ necessary, of course, but it’s good JavaScript citizenship.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        random.range = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">range</span>) </span>{
-            <span class="hljs-keyword">return</span> random(range);
+            <div class="content"><div class='highlight'><pre>        random.<span class="hljs-property">range</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">range</span>) {
+            <span class="hljs-keyword">return</span> <span class="hljs-title function_">random</span>(range);
         };</pre></div></div>
             
         </li>
@@ -1468,8 +1468,8 @@ necessary, of course, but it’s good JavaScript citizenship.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        random.random = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-            <span class="hljs-keyword">return</span> random(<span class="hljs-built_in">Number</span>.MAX_VALUE - <span class="hljs-number">1</span>) / <span class="hljs-built_in">Number</span>.MAX_VALUE;
+            <div class="content"><div class='highlight'><pre>        random.<span class="hljs-property">random</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <span class="hljs-keyword">return</span> <span class="hljs-title function_">random</span>(<span class="hljs-title class_">Number</span>.<span class="hljs-property">MAX_VALUE</span> - <span class="hljs-number">1</span>) / <span class="hljs-title class_">Number</span>.<span class="hljs-property">MAX_VALUE</span>;
         };</pre></div></div>
             
         </li>
@@ -1485,8 +1485,8 @@ necessary, of course, but it’s good JavaScript citizenship.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        random.floatBetween = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">min, max</span>) </span>{
-            <span class="hljs-keyword">return</span> random.random() * (max - min) + min;
+            <div class="content"><div class='highlight'><pre>        random.<span class="hljs-property">floatBetween</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">min, max</span>) {
+            <span class="hljs-keyword">return</span> random.<span class="hljs-title function_">random</span>() * (max - min) + min;
         };</pre></div></div>
             
         </li>
@@ -1502,8 +1502,8 @@ necessary, of course, but it’s good JavaScript citizenship.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        random.intBetween = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">min, max</span>) </span>{
-            <span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.floor(random.random() * (max - min + <span class="hljs-number">1</span>)) + min;
+            <div class="content"><div class='highlight'><pre>        random.<span class="hljs-property">intBetween</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">min, max</span>) {
+            <span class="hljs-keyword">return</span> <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(random.<span class="hljs-title function_">random</span>() * (max - min + <span class="hljs-number">1</span>)) + min;
         };</pre></div></div>
             
         </li>
@@ -1541,34 +1541,34 @@ using any of these functions.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">stringify</span>(<span class="hljs-params">obj, replacer, spaces, cycleReplacer</span>) </span>{
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">JSON</span>.stringify(obj, serializer(replacer, cycleReplacer), spaces)
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">function</span> <span class="hljs-title function_">stringify</span>(<span class="hljs-params">obj, replacer, spaces, cycleReplacer</span>) {
+    <span class="hljs-keyword">return</span> <span class="hljs-variable constant_">JSON</span>.<span class="hljs-title function_">stringify</span>(obj, <span class="hljs-title function_">serializer</span>(replacer, cycleReplacer), spaces)
 }
 
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">serializer</span>(<span class="hljs-params">replacer, cycleReplacer</span>) </span>{
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">serializer</span>(<span class="hljs-params">replacer, cycleReplacer</span>) {
     <span class="hljs-keyword">var</span> stack = [], keys = []
 
-    <span class="hljs-keyword">if</span> (cycleReplacer == <span class="hljs-literal">null</span>) cycleReplacer = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">key, value</span>) </span>{
+    <span class="hljs-keyword">if</span> (cycleReplacer == <span class="hljs-literal">null</span>) cycleReplacer = <span class="hljs-keyword">function</span>(<span class="hljs-params">key, value</span>) {
         <span class="hljs-keyword">if</span> (stack[<span class="hljs-number">0</span>] === value) <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;[Circular ~]&quot;</span>
-        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;[Circular ~.&quot;</span> + keys.slice(<span class="hljs-number">0</span>, stack.indexOf(value)).join(<span class="hljs-string">&quot;.&quot;</span>) + <span class="hljs-string">&quot;]&quot;</span>
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;[Circular ~.&quot;</span> + keys.<span class="hljs-title function_">slice</span>(<span class="hljs-number">0</span>, stack.<span class="hljs-title function_">indexOf</span>(value)).<span class="hljs-title function_">join</span>(<span class="hljs-string">&quot;.&quot;</span>) + <span class="hljs-string">&quot;]&quot;</span>
     }
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">key, value</span>) </span>{
-        <span class="hljs-keyword">if</span> (stack.length &gt; <span class="hljs-number">0</span>) {
-            <span class="hljs-keyword">var</span> thisPos = stack.indexOf(<span class="hljs-built_in">this</span>)
-            ~thisPos ? stack.splice(thisPos + <span class="hljs-number">1</span>) : stack.push(<span class="hljs-built_in">this</span>)
-            ~thisPos ? keys.splice(thisPos, <span class="hljs-literal">Infinity</span>, key) : keys.push(key)
-            <span class="hljs-keyword">if</span> (~stack.indexOf(value)) value = cycleReplacer.call(<span class="hljs-built_in">this</span>, key, value)
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span>(<span class="hljs-params">key, value</span>) {
+        <span class="hljs-keyword">if</span> (stack.<span class="hljs-property">length</span> &gt; <span class="hljs-number">0</span>) {
+            <span class="hljs-keyword">var</span> thisPos = stack.<span class="hljs-title function_">indexOf</span>(<span class="hljs-variable language_">this</span>)
+            ~thisPos ? stack.<span class="hljs-title function_">splice</span>(thisPos + <span class="hljs-number">1</span>) : stack.<span class="hljs-title function_">push</span>(<span class="hljs-variable language_">this</span>)
+            ~thisPos ? keys.<span class="hljs-title function_">splice</span>(thisPos, <span class="hljs-title class_">Infinity</span>, key) : keys.<span class="hljs-title function_">push</span>(key)
+            <span class="hljs-keyword">if</span> (~stack.<span class="hljs-title function_">indexOf</span>(value)) value = cycleReplacer.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, key, value)
         }
-        <span class="hljs-keyword">else</span> stack.push(value)
+        <span class="hljs-keyword">else</span> stack.<span class="hljs-title function_">push</span>(value)
 
-        <span class="hljs-keyword">return</span> replacer == <span class="hljs-literal">null</span> ? value : replacer.call(<span class="hljs-built_in">this</span>, key, value)
+        <span class="hljs-keyword">return</span> replacer == <span class="hljs-literal">null</span> ? value : replacer.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, key, value)
     }
 }
 
-<span class="hljs-keyword">const</span> seededRandomNumberGenerator = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">seed</span>) </span>{
+<span class="hljs-keyword">const</span> seededRandomNumberGenerator = <span class="hljs-keyword">function</span> (<span class="hljs-params">seed</span>) {
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> uheprng(seed);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title function_">uheprng</span>(seed);
 };</pre></div></div>
             
         </li>
@@ -1588,65 +1588,65 @@ using any of these functions.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> easeOutSine = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - <span class="hljs-built_in">Math</span>.cos((t * <span class="hljs-built_in">Math</span>.PI) / <span class="hljs-number">2</span>) };
-<span class="hljs-keyword">const</span> easeInSine = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.sin((t * <span class="hljs-built_in">Math</span>.PI) / <span class="hljs-number">2</span>) };
-<span class="hljs-keyword">const</span> easeOutInSine = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> -(<span class="hljs-built_in">Math</span>.cos(<span class="hljs-built_in">Math</span>.PI * t) - <span class="hljs-number">1</span>) / <span class="hljs-number">2</span> };
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> easeOutSine = <span class="hljs-keyword">function</span> (<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">cos</span>((t * <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span>) / <span class="hljs-number">2</span>) };
+<span class="hljs-keyword">const</span> easeInSine = <span class="hljs-keyword">function</span> (<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sin</span>((t * <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span>) / <span class="hljs-number">2</span>) };
+<span class="hljs-keyword">const</span> easeOutInSine = <span class="hljs-keyword">function</span> (<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> -(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">cos</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span> * t) - <span class="hljs-number">1</span>) / <span class="hljs-number">2</span> };
 
-<span class="hljs-keyword">const</span> easeOutQuad = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> t * t };
-<span class="hljs-keyword">const</span> easeInQuad = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - ((<span class="hljs-number">1</span> - t) * (<span class="hljs-number">1</span> - t)) };
-<span class="hljs-keyword">const</span> easeOutInQuad = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> t &lt; <span class="hljs-number">0.5</span> ? <span class="hljs-number">2</span> * t * t : <span class="hljs-number">1</span> - <span class="hljs-built_in">Math</span>.pow(-<span class="hljs-number">2</span> * t + <span class="hljs-number">2</span>, <span class="hljs-number">2</span>) / <span class="hljs-number">2</span> };
+<span class="hljs-keyword">const</span> easeOutQuad = <span class="hljs-keyword">function</span> (<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> t * t };
+<span class="hljs-keyword">const</span> easeInQuad = <span class="hljs-keyword">function</span> (<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - ((<span class="hljs-number">1</span> - t) * (<span class="hljs-number">1</span> - t)) };
+<span class="hljs-keyword">const</span> easeOutInQuad = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> t &lt; <span class="hljs-number">0.5</span> ? <span class="hljs-number">2</span> * t * t : <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(-<span class="hljs-number">2</span> * t + <span class="hljs-number">2</span>, <span class="hljs-number">2</span>) / <span class="hljs-number">2</span> };
 
-<span class="hljs-keyword">const</span> easeOutCubic = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> t * t * t };
-<span class="hljs-keyword">const</span> easeInCubic = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - <span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">1</span> - t, <span class="hljs-number">3</span>) };
-<span class="hljs-keyword">const</span> easeOutInCubic = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> t &lt; <span class="hljs-number">0.5</span> ? <span class="hljs-number">4</span> * t * t * t : <span class="hljs-number">1</span> - <span class="hljs-built_in">Math</span>.pow(-<span class="hljs-number">2</span> * t + <span class="hljs-number">2</span>, <span class="hljs-number">3</span>) / <span class="hljs-number">2</span> };
+<span class="hljs-keyword">const</span> easeOutCubic = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> t * t * t };
+<span class="hljs-keyword">const</span> easeInCubic = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">1</span> - t, <span class="hljs-number">3</span>) };
+<span class="hljs-keyword">const</span> easeOutInCubic = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> t &lt; <span class="hljs-number">0.5</span> ? <span class="hljs-number">4</span> * t * t * t : <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(-<span class="hljs-number">2</span> * t + <span class="hljs-number">2</span>, <span class="hljs-number">3</span>) / <span class="hljs-number">2</span> };
 
-<span class="hljs-keyword">const</span> easeOutQuart = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> t * t * t * t };
-<span class="hljs-keyword">const</span> easeInQuart = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - <span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">1</span> - t, <span class="hljs-number">4</span>) };
-<span class="hljs-keyword">const</span> easeOutInQuart = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> t &lt; <span class="hljs-number">0.5</span> ? <span class="hljs-number">8</span> * t * t * t * t : <span class="hljs-number">1</span> - <span class="hljs-built_in">Math</span>.pow(-<span class="hljs-number">2</span> * t + <span class="hljs-number">2</span>, <span class="hljs-number">4</span>) / <span class="hljs-number">2</span> };
+<span class="hljs-keyword">const</span> easeOutQuart = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> t * t * t * t };
+<span class="hljs-keyword">const</span> easeInQuart = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">1</span> - t, <span class="hljs-number">4</span>) };
+<span class="hljs-keyword">const</span> easeOutInQuart = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> t &lt; <span class="hljs-number">0.5</span> ? <span class="hljs-number">8</span> * t * t * t * t : <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(-<span class="hljs-number">2</span> * t + <span class="hljs-number">2</span>, <span class="hljs-number">4</span>) / <span class="hljs-number">2</span> };
 
-<span class="hljs-keyword">const</span> easeOutQuint = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> t * t * t * t * t };
-<span class="hljs-keyword">const</span> easeInQuint = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - <span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">1</span> - t, <span class="hljs-number">5</span>) };
-<span class="hljs-keyword">const</span> easeOutInQuint = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> t &lt; <span class="hljs-number">0.5</span> ? <span class="hljs-number">16</span> * t * t * t * t * t : <span class="hljs-number">1</span> - <span class="hljs-built_in">Math</span>.pow(-<span class="hljs-number">2</span> * t + <span class="hljs-number">2</span>, <span class="hljs-number">5</span>) / <span class="hljs-number">2</span> };
+<span class="hljs-keyword">const</span> easeOutQuint = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> t * t * t * t * t };
+<span class="hljs-keyword">const</span> easeInQuint = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">1</span> - t, <span class="hljs-number">5</span>) };
+<span class="hljs-keyword">const</span> easeOutInQuint = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> t &lt; <span class="hljs-number">0.5</span> ? <span class="hljs-number">16</span> * t * t * t * t * t : <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(-<span class="hljs-number">2</span> * t + <span class="hljs-number">2</span>, <span class="hljs-number">5</span>) / <span class="hljs-number">2</span> };
 
-<span class="hljs-keyword">const</span> easeOutExpo = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> t === <span class="hljs-number">0</span> ? <span class="hljs-number">0</span> : <span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">2</span>, <span class="hljs-number">10</span> * t - <span class="hljs-number">10</span>) };
-<span class="hljs-keyword">const</span> easeInExpo = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> t === <span class="hljs-number">1</span> ? <span class="hljs-number">1</span> : <span class="hljs-number">1</span> - <span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">2</span>, -<span class="hljs-number">10</span> * t) };
-<span class="hljs-keyword">const</span> easeOutInExpo = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{
+<span class="hljs-keyword">const</span> easeOutExpo = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> t === <span class="hljs-number">0</span> ? <span class="hljs-number">0</span> : <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span>, <span class="hljs-number">10</span> * t - <span class="hljs-number">10</span>) };
+<span class="hljs-keyword">const</span> easeInExpo = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> t === <span class="hljs-number">1</span> ? <span class="hljs-number">1</span> : <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span>, -<span class="hljs-number">10</span> * t) };
+<span class="hljs-keyword">const</span> easeOutInExpo = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) {
     <span class="hljs-keyword">if</span> (t === <span class="hljs-number">0</span> || t === <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> t;
-    <span class="hljs-keyword">return</span> t &lt; <span class="hljs-number">0.5</span> ? <span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">2</span>, <span class="hljs-number">20</span> * t - <span class="hljs-number">10</span>) / <span class="hljs-number">2</span> : (<span class="hljs-number">2</span> - <span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">2</span>, -<span class="hljs-number">20</span> * t + <span class="hljs-number">10</span>)) / <span class="hljs-number">2</span>;        
+    <span class="hljs-keyword">return</span> t &lt; <span class="hljs-number">0.5</span> ? <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span>, <span class="hljs-number">20</span> * t - <span class="hljs-number">10</span>) / <span class="hljs-number">2</span> : (<span class="hljs-number">2</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span>, -<span class="hljs-number">20</span> * t + <span class="hljs-number">10</span>)) / <span class="hljs-number">2</span>;        
 };
 
-<span class="hljs-keyword">const</span> easeOutCirc = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - <span class="hljs-built_in">Math</span>.sqrt(<span class="hljs-number">1</span> - <span class="hljs-built_in">Math</span>.pow(t, <span class="hljs-number">2</span>)) };
-<span class="hljs-keyword">const</span> easeInCirc = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.sqrt(<span class="hljs-number">1</span> - <span class="hljs-built_in">Math</span>.pow(t - <span class="hljs-number">1</span>, <span class="hljs-number">2</span>)) };
-<span class="hljs-keyword">const</span> easeOutInCirc = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> t &lt; <span class="hljs-number">0.5</span> ? (<span class="hljs-number">1</span> - <span class="hljs-built_in">Math</span>.sqrt(<span class="hljs-number">1</span> - <span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">2</span> * t, <span class="hljs-number">2</span>))) / <span class="hljs-number">2</span> : (<span class="hljs-built_in">Math</span>.sqrt(<span class="hljs-number">1</span> - <span class="hljs-built_in">Math</span>.pow(-<span class="hljs-number">2</span> * t + <span class="hljs-number">2</span>, <span class="hljs-number">2</span>)) + <span class="hljs-number">1</span>) / <span class="hljs-number">2</span> };
+<span class="hljs-keyword">const</span> easeOutCirc = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sqrt</span>(<span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(t, <span class="hljs-number">2</span>)) };
+<span class="hljs-keyword">const</span> easeInCirc = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sqrt</span>(<span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(t - <span class="hljs-number">1</span>, <span class="hljs-number">2</span>)) };
+<span class="hljs-keyword">const</span> easeOutInCirc = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> t &lt; <span class="hljs-number">0.5</span> ? (<span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sqrt</span>(<span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span> * t, <span class="hljs-number">2</span>))) / <span class="hljs-number">2</span> : (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sqrt</span>(<span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(-<span class="hljs-number">2</span> * t + <span class="hljs-number">2</span>, <span class="hljs-number">2</span>)) + <span class="hljs-number">1</span>) / <span class="hljs-number">2</span> };
 
-<span class="hljs-keyword">const</span> easeOutBack = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> (<span class="hljs-number">2.70158</span> * t * t * t) - (<span class="hljs-number">1.70158</span> * t * t) };
-<span class="hljs-keyword">const</span> easeInBack = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> + (<span class="hljs-number">2.70158</span> * <span class="hljs-built_in">Math</span>.pow(t - <span class="hljs-number">1</span>, <span class="hljs-number">3</span>)) + (<span class="hljs-number">1.70158</span> * <span class="hljs-built_in">Math</span>.pow(t - <span class="hljs-number">1</span>, <span class="hljs-number">2</span>)) };
-<span class="hljs-keyword">const</span> easeOutInBack = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{
+<span class="hljs-keyword">const</span> easeOutBack = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> (<span class="hljs-number">2.70158</span> * t * t * t) - (<span class="hljs-number">1.70158</span> * t * t) };
+<span class="hljs-keyword">const</span> easeInBack = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) { <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> + (<span class="hljs-number">2.70158</span> * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(t - <span class="hljs-number">1</span>, <span class="hljs-number">3</span>)) + (<span class="hljs-number">1.70158</span> * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(t - <span class="hljs-number">1</span>, <span class="hljs-number">2</span>)) };
+<span class="hljs-keyword">const</span> easeOutInBack = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) {
     <span class="hljs-keyword">let</span> c1 = <span class="hljs-number">1.70158</span>, c2 = c1 * <span class="hljs-number">1.525</span>;
-    <span class="hljs-keyword">return</span> t &lt; <span class="hljs-number">0.5</span> ? (<span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">2</span> * t, <span class="hljs-number">2</span>) * ((c2 + <span class="hljs-number">1</span>) * <span class="hljs-number">2</span> * t - c2)) / <span class="hljs-number">2</span> : (<span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">2</span> * t - <span class="hljs-number">2</span>, <span class="hljs-number">2</span>) * ((c2 + <span class="hljs-number">1</span>) * (t * <span class="hljs-number">2</span> - <span class="hljs-number">2</span>) + c2) + <span class="hljs-number">2</span>) / <span class="hljs-number">2</span>;
+    <span class="hljs-keyword">return</span> t &lt; <span class="hljs-number">0.5</span> ? (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span> * t, <span class="hljs-number">2</span>) * ((c2 + <span class="hljs-number">1</span>) * <span class="hljs-number">2</span> * t - c2)) / <span class="hljs-number">2</span> : (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span> * t - <span class="hljs-number">2</span>, <span class="hljs-number">2</span>) * ((c2 + <span class="hljs-number">1</span>) * (t * <span class="hljs-number">2</span> - <span class="hljs-number">2</span>) + c2) + <span class="hljs-number">2</span>) / <span class="hljs-number">2</span>;
 };
 
-<span class="hljs-keyword">const</span> easeOutElastic = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{
-    <span class="hljs-keyword">const</span> c4 = (<span class="hljs-number">2</span> * <span class="hljs-built_in">Math</span>.PI) / <span class="hljs-number">3</span>;
+<span class="hljs-keyword">const</span> easeOutElastic = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) {
+    <span class="hljs-keyword">const</span> c4 = (<span class="hljs-number">2</span> * <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span>) / <span class="hljs-number">3</span>;
     <span class="hljs-keyword">if</span> (t === <span class="hljs-number">0</span> || t === <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> t;
-    <span class="hljs-keyword">return</span> -<span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">2</span>, <span class="hljs-number">10</span> * t - <span class="hljs-number">10</span>) * <span class="hljs-built_in">Math</span>.sin((t * <span class="hljs-number">10</span> - <span class="hljs-number">10.75</span>) * c4);
+    <span class="hljs-keyword">return</span> -<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span>, <span class="hljs-number">10</span> * t - <span class="hljs-number">10</span>) * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sin</span>((t * <span class="hljs-number">10</span> - <span class="hljs-number">10.75</span>) * c4);
 };
 
-<span class="hljs-keyword">const</span> easeInElastic = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{
-    <span class="hljs-keyword">const</span> c4 = (<span class="hljs-number">2</span> * <span class="hljs-built_in">Math</span>.PI) / <span class="hljs-number">3</span>;
+<span class="hljs-keyword">const</span> easeInElastic = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) {
+    <span class="hljs-keyword">const</span> c4 = (<span class="hljs-number">2</span> * <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span>) / <span class="hljs-number">3</span>;
     <span class="hljs-keyword">if</span> (t === <span class="hljs-number">0</span> || t === <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> t;
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">2</span>, -<span class="hljs-number">10</span> * t) * <span class="hljs-built_in">Math</span>.sin((t * <span class="hljs-number">10</span> - <span class="hljs-number">0.75</span>) * c4) + <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span>, -<span class="hljs-number">10</span> * t) * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sin</span>((t * <span class="hljs-number">10</span> - <span class="hljs-number">0.75</span>) * c4) + <span class="hljs-number">1</span>;
 };
 
-<span class="hljs-keyword">const</span> easeOutInElastic = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{
-    <span class="hljs-keyword">const</span> c5 = (<span class="hljs-number">2</span> * <span class="hljs-built_in">Math</span>.PI) / <span class="hljs-number">4.5</span>;
+<span class="hljs-keyword">const</span> easeOutInElastic = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) {
+    <span class="hljs-keyword">const</span> c5 = (<span class="hljs-number">2</span> * <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span>) / <span class="hljs-number">4.5</span>;
     <span class="hljs-keyword">if</span> (t === <span class="hljs-number">0</span> || t === <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> t;
     <span class="hljs-keyword">return</span> t &lt; <span class="hljs-number">0.5</span> ? 
-        -(<span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">2</span>, <span class="hljs-number">20</span> * t - <span class="hljs-number">10</span>) * <span class="hljs-built_in">Math</span>.sin((<span class="hljs-number">20</span> * t - <span class="hljs-number">11.125</span>) * c5)) / <span class="hljs-number">2</span> : 
-        (<span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">2</span>, -<span class="hljs-number">20</span> * t + <span class="hljs-number">10</span>) * <span class="hljs-built_in">Math</span>.sin((<span class="hljs-number">20</span> * t - <span class="hljs-number">11.125</span>) * c5)) / <span class="hljs-number">2</span> + <span class="hljs-number">1</span>;
+        -(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span>, <span class="hljs-number">20</span> * t - <span class="hljs-number">10</span>) * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sin</span>((<span class="hljs-number">20</span> * t - <span class="hljs-number">11.125</span>) * c5)) / <span class="hljs-number">2</span> : 
+        (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">pow</span>(<span class="hljs-number">2</span>, -<span class="hljs-number">20</span> * t + <span class="hljs-number">10</span>) * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sin</span>((<span class="hljs-number">20</span> * t - <span class="hljs-number">11.125</span>) * c5)) / <span class="hljs-number">2</span> + <span class="hljs-number">1</span>;
 };
 
-<span class="hljs-keyword">const</span> easeOutBounce = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{
+<span class="hljs-keyword">const</span> easeOutBounce = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) {
     t = <span class="hljs-number">1</span> - t;
     <span class="hljs-keyword">const</span> n1 = <span class="hljs-number">7.5625</span>, d1 = <span class="hljs-number">2.75</span>;
     <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">1</span> / d1) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - (n1 * t * t);
@@ -1655,7 +1655,7 @@ using any of these functions.</p>
     <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> - (n1 * (t -= <span class="hljs-number">2.625</span> / d1) * t + <span class="hljs-number">0.984375</span>);
 };
 
-<span class="hljs-keyword">const</span> easeInBounce = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{
+<span class="hljs-keyword">const</span> easeInBounce = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) {
     <span class="hljs-keyword">const</span> n1 = <span class="hljs-number">7.5625</span>, d1 = <span class="hljs-number">2.75</span>;
     <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">1</span> / d1) <span class="hljs-keyword">return</span> n1 * t * t;
     <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">2</span> / d1) <span class="hljs-keyword">return</span> n1 * (t -= <span class="hljs-number">1.5</span> / d1) * t + <span class="hljs-number">0.75</span>;
@@ -1663,7 +1663,7 @@ using any of these functions.</p>
     <span class="hljs-keyword">return</span> n1 * (t -= <span class="hljs-number">2.625</span> / d1) * t + <span class="hljs-number">0.984375</span>;
 };
 
-<span class="hljs-keyword">const</span> easeOutInBounce = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) </span>{
+<span class="hljs-keyword">const</span> easeOutInBounce = <span class="hljs-keyword">function</span>(<span class="hljs-params">t</span>) {
     <span class="hljs-keyword">const</span> n1 = <span class="hljs-number">7.5625</span>, d1 = <span class="hljs-number">2.75</span>;
     <span class="hljs-keyword">let</span> res;
     <span class="hljs-keyword">if</span> (t &lt; <span class="hljs-number">0.5</span>) {
@@ -1703,7 +1703,7 @@ using any of these functions.</p>
     correctForZero,
     λ<span class="hljs-literal">null</span>,
     λfirstArg,
-    λ<span class="hljs-built_in">this</span>,
+    λ<span class="hljs-variable language_">this</span>,
     λpromise,
     Ωempty,
     generateUuid,

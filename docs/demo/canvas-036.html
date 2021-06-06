@@ -707,10 +707,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.library.canvas.mycanvas;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
 
 
-canvas.set({
+canvas.<span class="hljs-title function_">set</span>({
 
     <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;honeydew&#x27;</span>,</pre></div></div>
             
@@ -727,7 +727,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    checkForResize: <span class="hljs-literal">true</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,</pre></div></div>
             
         </li>
         
@@ -742,7 +742,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    baseMatchesCanvasDimensions: <span class="hljs-literal">true</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">baseMatchesCanvasDimensions</span>: <span class="hljs-literal">true</span>,
 });</pre></div></div>
             
         </li>
@@ -758,7 +758,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> cell1 = canvas.buildCell({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> cell1 = canvas.<span class="hljs-title function_">buildCell</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;cell-1&#x27;</span>,
 
@@ -791,7 +791,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> cell2 = canvas.buildCell({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> cell2 = canvas.<span class="hljs-title function_">buildCell</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;cell-2&#x27;</span>,
 
@@ -824,7 +824,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeOval({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeOval</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;mytrack&#x27;</span>,
 
@@ -855,7 +855,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> cell3 = canvas.buildCell({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> cell3 = canvas.<span class="hljs-title function_">buildCell</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;cell-3&#x27;</span>,
 
@@ -894,13 +894,13 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myGroup = scrawl.makeGroup({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;target-group&#x27;</span>,
-    <span class="hljs-attr">host</span>: canvas.base.name,
+    <span class="hljs-attr">host</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
 });
 
-scrawl.makeBlock({
+scrawl.<span class="hljs-title function_">makeBlock</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;block-1&#x27;</span>,
     <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;target-group&#x27;</span>,
@@ -919,7 +919,7 @@ scrawl.makeBlock({
 
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;block-2&#x27;</span>,
     <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">120</span>, <span class="hljs-number">100</span>],
@@ -946,7 +946,7 @@ scrawl.makeBlock({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeDragZone({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeDragZone</span>({
 
     <span class="hljs-attr">zone</span>: canvas,
     <span class="hljs-attr">collisionGroup</span>: myGroup,
@@ -966,7 +966,7 @@ scrawl.makeBlock({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> cell4 = canvas.buildCell({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> cell4 = canvas.<span class="hljs-title function_">buildCell</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;cell-4&#x27;</span>,
 
@@ -1009,7 +1009,7 @@ scrawl.makeBlock({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> cell5 = canvas.buildCell({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> cell5 = canvas.<span class="hljs-title function_">buildCell</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;cell-5&#x27;</span>,
 
@@ -1037,39 +1037,39 @@ scrawl.makeBlock({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.library.entity[<span class="hljs-string">&#x27;block-1&#x27;</span>].set({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">entity</span>[<span class="hljs-string">&#x27;block-1&#x27;</span>].<span class="hljs-title function_">set</span>({
 
-    <span class="hljs-attr">onEnter</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-built_in">this</span>.set({
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">scale</span>: <span class="hljs-number">1.2</span>,
         });
 
-        cell4.set({
+        cell4.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;pink&#x27;</span>,
         });
     },
 
-    <span class="hljs-attr">onLeave</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-attr">onLeave</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-built_in">this</span>.set({
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">scale</span>: <span class="hljs-number">1</span>,
         });
 
-        cell4.set({
+        cell4.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;lavender&#x27;</span>,
         });
     },
 });
 
-scrawl.library.entity[<span class="hljs-string">&#x27;block-2&#x27;</span>].set({
+scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">entity</span>[<span class="hljs-string">&#x27;block-2&#x27;</span>].<span class="hljs-title function_">set</span>({
 
-    <span class="hljs-attr">onEnter</span>: <span class="hljs-function">() =&gt;</span> cell5.set({ <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;pink&#x27;</span> }),
+    <span class="hljs-attr">onEnter</span>: <span class="hljs-function">() =&gt;</span> cell5.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;pink&#x27;</span> }),
 
-    <span class="hljs-attr">onLeave</span>: <span class="hljs-function">() =&gt;</span> cell5.set({ <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;lavender&#x27;</span> }),
+    <span class="hljs-attr">onLeave</span>: <span class="hljs-function">() =&gt;</span> cell5.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;lavender&#x27;</span> }),
 });
 
-scrawl.addListener(<span class="hljs-string">&#x27;move&#x27;</span>, <span class="hljs-function">() =&gt;</span> canvas.here.active &amp;&amp; canvas.cascadeEventAction(<span class="hljs-string">&#x27;move&#x27;</span>), canvas.domElement);</pre></div></div>
+scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-string">&#x27;move&#x27;</span>, <span class="hljs-function">() =&gt;</span> canvas.<span class="hljs-property">here</span>.<span class="hljs-property">active</span> &amp;&amp; canvas.<span class="hljs-title function_">cascadeEventAction</span>(<span class="hljs-string">&#x27;move&#x27;</span>), canvas.<span class="hljs-property">domElement</span>);</pre></div></div>
             
         </li>
         
@@ -1084,7 +1084,7 @@ scrawl.addListener(<span class="hljs-string">&#x27;move&#x27;</span>, <span clas
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makePhrase({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makePhrase</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;label-1&#x27;</span>,
     <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;cell-1&#x27;</span>,
@@ -1095,7 +1095,7 @@ scrawl.addListener(<span class="hljs-string">&#x27;move&#x27;</span>, <span clas
 
     <span class="hljs-attr">start</span>: [<span class="hljs-number">5</span>, <span class="hljs-number">5</span>],
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;label-2&#x27;</span>,
     <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;cell-2&#x27;</span>,
@@ -1105,7 +1105,7 @@ scrawl.addListener(<span class="hljs-string">&#x27;move&#x27;</span>, <span clas
     <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
     <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;label-3&#x27;</span>,
     <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;cell-3&#x27;</span>,
@@ -1113,7 +1113,7 @@ scrawl.addListener(<span class="hljs-string">&#x27;move&#x27;</span>, <span clas
     <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Cell 3&#x27;</span>,
     <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;white&#x27;</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;label-4&#x27;</span>,
     <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;cell-4&#x27;</span>,
@@ -1121,7 +1121,7 @@ scrawl.addListener(<span class="hljs-string">&#x27;move&#x27;</span>, <span clas
     <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Cell 4&#x27;</span>,
     <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;green&#x27;</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;label-5&#x27;</span>,
     <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;cell-5&#x27;</span>,
@@ -1142,7 +1142,7 @@ scrawl.addListener(<span class="hljs-string">&#x27;move&#x27;</span>, <span clas
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeWheel({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeWheel</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;wheel-1&#x27;</span>,
     <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;cell-1&#x27;</span>,
@@ -1155,7 +1155,7 @@ scrawl.addListener(<span class="hljs-string">&#x27;move&#x27;</span>, <span clas
     <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">8</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;wheel-2&#x27;</span>,
     <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;cell-2&#x27;</span>,
@@ -1165,10 +1165,10 @@ scrawl.addListener(<span class="hljs-string">&#x27;move&#x27;</span>, <span clas
     <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
     <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;wheel-3&#x27;</span>,
-    <span class="hljs-attr">group</span>: canvas.base.name,
+    <span class="hljs-attr">group</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
 
     <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;green&#x27;</span>,
 
@@ -1177,11 +1177,11 @@ scrawl.addListener(<span class="hljs-string">&#x27;move&#x27;</span>, <span clas
     <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
 });
 
-scrawl.makeBlock({
+scrawl.<span class="hljs-title function_">makeBlock</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;mimic-block&#x27;</span>,
 
-    <span class="hljs-attr">group</span>: canvas.base.name,
+    <span class="hljs-attr">group</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
 
     <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;yellow&#x27;</span>,
     <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;green&#x27;</span>,
@@ -1226,23 +1226,26 @@ scrawl.makeBlock({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
 Canvas dimensions: <span class="hljs-subst">${canvas.currentDimensions}</span>
 Base dimensions: <span class="hljs-subst">${canvas.base.currentDimensions}</span>
 Cell 1 dimensions: <span class="hljs-subst">${cell1.currentDimensions}</span>
-Cell 2 dimensions: <span class="hljs-subst">${cell2.currentDimensions}</span>`</span>;
+Cell 2 dimensions: <span class="hljs-subst">${cell2.currentDimensions}</span>
+Cell 3 dimensions: <span class="hljs-subst">${cell3.currentDimensions}</span>
+Cell 4 dimensions: <span class="hljs-subst">${cell4.currentDimensions}</span>
+Cell 5 dimensions: <span class="hljs-subst">${cell5.currentDimensions}</span>`</span>;
     };
 }();</pre></div></div>
             
@@ -1259,7 +1262,7 @@ Cell 2 dimensions: <span class="hljs-subst">${cell2.currentDimensions}</span>`</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-animation&quot;</span>,
     <span class="hljs-attr">target</span>: canvas,
@@ -1279,7 +1282,7 @@ Cell 2 dimensions: <span class="hljs-subst">${cell2.currentDimensions}</span>`</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

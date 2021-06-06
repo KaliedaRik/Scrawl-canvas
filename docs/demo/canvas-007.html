@@ -707,11 +707,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.library.artefact.mycanvas;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;
 
-scrawl.importDomImage(<span class="hljs-string">&#x27;.map&#x27;</span>);
+scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.map&#x27;</span>);
 
-canvas.set({
+canvas.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">fit</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
     <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;beige&#x27;</span>,
     <span class="hljs-attr">css</span>: {
@@ -732,30 +732,30 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myGrad = scrawl.makeGradient({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myGrad = scrawl.<span class="hljs-title function_">makeGradient</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;linear1&#x27;</span>,
     <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
 })
-.updateColor(<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;pink&#x27;</span>)
-.updateColor(<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;darkgreen&#x27;</span>);
+.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;pink&#x27;</span>)
+.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;darkgreen&#x27;</span>);
 
-myGrad.clone({
+myGrad.<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;linear2&#x27;</span>,
 })
-.updateColor(<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;darkblue&#x27;</span>)
-.updateColor(<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;white&#x27;</span>);
+.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;darkblue&#x27;</span>)
+.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;white&#x27;</span>);
 
-myGrad.clone({
+myGrad.<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;linear3&#x27;</span>,
 })
-.updateColor(<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;yellow&#x27;</span>)
-.updateColor(<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;purple&#x27;</span>);
+.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;yellow&#x27;</span>)
+.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;purple&#x27;</span>);
 
-myGrad.clone({
+myGrad.<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;linear4&#x27;</span>,
 })
-.updateColor(<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;black&#x27;</span>)
-.updateColor(<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;coral&#x27;</span>);</pre></div></div>
+.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;black&#x27;</span>)
+.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;coral&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -770,7 +770,7 @@ myGrad.clone({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> block1 = scrawl.makeBlock({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> block1 = scrawl.<span class="hljs-title function_">makeBlock</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;b1&#x27;</span>,
     <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;70%&#x27;</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;70%&#x27;</span>,
@@ -783,7 +783,7 @@ myGrad.clone({
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillAndDraw&#x27;</span>,
 });
 
-<span class="hljs-keyword">let</span> block2 = block1.clone({
+<span class="hljs-keyword">let</span> block2 = block1.<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;b2&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;45%&#x27;</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;47%&#x27;</span>,
@@ -798,7 +798,7 @@ myGrad.clone({
     <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
 });
 
-<span class="hljs-keyword">let</span> wheel1 = scrawl.makeWheel({
+<span class="hljs-keyword">let</span> wheel1 = scrawl.<span class="hljs-title function_">makeWheel</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;w1&#x27;</span>,
     <span class="hljs-attr">radius</span>: <span class="hljs-string">&#x27;20%&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;70%&#x27;</span>,
@@ -812,7 +812,7 @@ myGrad.clone({
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillAndDraw&#x27;</span>,
 });
 
-<span class="hljs-keyword">let</span> wheel2 = wheel1.clone({
+<span class="hljs-keyword">let</span> wheel2 = wheel1.<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;w2&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;32%&#x27;</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;82%&#x27;</span>,
@@ -853,7 +853,7 @@ myGrad.clone({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeFilter({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;gray&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;gray&#x27;</span>,</pre></div></div>
             
@@ -870,7 +870,7 @@ myGrad.clone({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>}).clone({
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;grayscale&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;grayscale&#x27;</span>,</pre></div></div>
             
@@ -887,7 +887,7 @@ myGrad.clone({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>}).clone({
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;sepia&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;sepia&#x27;</span>,</pre></div></div>
             
@@ -904,7 +904,7 @@ myGrad.clone({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>}).clone({
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;invert&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;invert&#x27;</span>,</pre></div></div>
             
@@ -921,7 +921,7 @@ myGrad.clone({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>}).clone({
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;red&#x27;</span>,</pre></div></div>
             
@@ -938,7 +938,7 @@ myGrad.clone({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>}).clone({
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;green&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;green&#x27;</span>,</pre></div></div>
             
@@ -955,7 +955,7 @@ myGrad.clone({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>}).clone({
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,</pre></div></div>
             
@@ -972,7 +972,7 @@ myGrad.clone({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>}).clone({
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;notred&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;notred&#x27;</span>,</pre></div></div>
             
@@ -989,7 +989,7 @@ myGrad.clone({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>}).clone({
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;notgreen&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;notgreen&#x27;</span>,</pre></div></div>
             
@@ -1006,7 +1006,7 @@ myGrad.clone({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>}).clone({
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;notblue&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;notblue&#x27;</span>,</pre></div></div>
             
@@ -1023,7 +1023,7 @@ myGrad.clone({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>}).clone({
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;cyan&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;cyan&#x27;</span>,</pre></div></div>
             
@@ -1040,7 +1040,7 @@ myGrad.clone({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>}).clone({
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;magenta&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;magenta&#x27;</span>,</pre></div></div>
             
@@ -1057,7 +1057,7 @@ myGrad.clone({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>}).clone({
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;yellow&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;yellow&#x27;</span>,</pre></div></div>
             
@@ -1074,7 +1074,7 @@ myGrad.clone({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>}).clone({
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;edgeDetect&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;edgeDetect&#x27;</span>,</pre></div></div>
             
@@ -1091,7 +1091,7 @@ myGrad.clone({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>}).clone({
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;sharpen&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;sharpen&#x27;</span>,
 });</pre></div></div>
@@ -1109,7 +1109,7 @@ myGrad.clone({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeFilter({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;emboss&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;emboss&#x27;</span>,
     <span class="hljs-attr">angle</span>: <span class="hljs-number">225</span>,
@@ -1130,7 +1130,7 @@ myGrad.clone({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeFilter({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;chroma&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;chroma&#x27;</span>,
     <span class="hljs-attr">ranges</span>: [[<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">80</span>, <span class="hljs-number">80</span>, <span class="hljs-number">80</span>], [<span class="hljs-number">180</span>, <span class="hljs-number">180</span>, <span class="hljs-number">180</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>]],
@@ -1149,7 +1149,7 @@ myGrad.clone({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeFilter({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;brightness&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;brightness&#x27;</span>,
     <span class="hljs-attr">level</span>: <span class="hljs-number">0.5</span>,</pre></div></div>
@@ -1167,7 +1167,7 @@ myGrad.clone({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>}).clone({
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;saturation&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;saturation&#x27;</span>,
     <span class="hljs-attr">level</span>: <span class="hljs-number">1.4</span>,</pre></div></div>
@@ -1185,7 +1185,7 @@ myGrad.clone({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>}).clone({
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;threshold&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;threshold&#x27;</span>,
     <span class="hljs-attr">level</span>: <span class="hljs-number">127</span>,
@@ -1210,7 +1210,7 @@ myGrad.clone({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeFilter({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;channels&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;channels&#x27;</span>,
     <span class="hljs-attr">red</span>: <span class="hljs-number">0.4</span>,
@@ -1230,7 +1230,7 @@ myGrad.clone({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>}).clone({
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;channelstep&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;channelstep&#x27;</span>,
     <span class="hljs-attr">red</span>: <span class="hljs-number">64</span>,
@@ -1251,7 +1251,7 @@ myGrad.clone({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeFilter({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;tint&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;tint&#x27;</span>,
     <span class="hljs-attr">redInRed</span>: <span class="hljs-number">0.5</span>,
@@ -1278,7 +1278,7 @@ myGrad.clone({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeFilter({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;offset&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;offset&#x27;</span>,
     <span class="hljs-attr">offsetX</span>: <span class="hljs-number">12</span>,
@@ -1299,7 +1299,7 @@ myGrad.clone({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeFilter({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;offsetChannels&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;offsetChannels&#x27;</span>,
     <span class="hljs-attr">offsetRedX</span>: -<span class="hljs-number">12</span>,
@@ -1323,7 +1323,7 @@ myGrad.clone({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeFilter({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pixelate&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;pixelate&#x27;</span>,
     <span class="hljs-attr">tileWidth</span>: <span class="hljs-number">20</span>,
@@ -1345,7 +1345,7 @@ myGrad.clone({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeFilter({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;blur&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;blur&#x27;</span>,
     <span class="hljs-attr">radius</span>: <span class="hljs-number">8</span>,
@@ -1366,7 +1366,7 @@ myGrad.clone({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeFilter({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;gaussianBlur&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;gaussianBlur&#x27;</span>,
     <span class="hljs-attr">radius</span>: <span class="hljs-number">30</span>,
@@ -1385,7 +1385,7 @@ myGrad.clone({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeFilter({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;areaAlpha&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;areaAlpha&#x27;</span>,
     <span class="hljs-attr">tileWidth</span>: <span class="hljs-number">20</span>,
@@ -1410,7 +1410,7 @@ myGrad.clone({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeFilter({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;matrix&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;matrix&#x27;</span>,
     <span class="hljs-attr">weights</span>: [-<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>],</pre></div></div>
@@ -1428,7 +1428,7 @@ myGrad.clone({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>}).clone({
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;matrix5&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;matrix5&#x27;</span>,
     <span class="hljs-attr">weights</span>: [-<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, -<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>],
@@ -1447,7 +1447,7 @@ myGrad.clone({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeFilter({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;channelLevels&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;channelLevels&#x27;</span>,
     <span class="hljs-attr">red</span>: [<span class="hljs-number">50</span>, <span class="hljs-number">200</span>],
@@ -1456,7 +1456,7 @@ myGrad.clone({
     <span class="hljs-attr">alpha</span>: [],
 });
 
-scrawl.makeFilter({
+scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;chromakey&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;chromakey&#x27;</span>,
     <span class="hljs-attr">red</span>: <span class="hljs-number">0</span>,
@@ -1466,7 +1466,7 @@ scrawl.makeFilter({
     <span class="hljs-attr">transparentAt</span>: <span class="hljs-number">0.5</span>,
 });
 
-scrawl.makeFilter({
+scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;dropShadow&#x27;</span>,
     <span class="hljs-attr">actions</span>: [
         {
@@ -1485,7 +1485,7 @@ scrawl.makeFilter({
     ],
 });
 
-scrawl.makeFilter({
+scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;redBorder&#x27;</span>,
     <span class="hljs-attr">actions</span>: [
         {
@@ -1521,7 +1521,7 @@ scrawl.makeFilter({
     ],
 });
 
-scrawl.makeFilter({
+scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;noise&#x27;</span>,
     <span class="hljs-attr">actions</span>: [
         {
@@ -1557,19 +1557,19 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow, dragging,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
     };
 }();</pre></div></div>
             
@@ -1586,7 +1586,7 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
     <span class="hljs-attr">target</span>: canvas,
@@ -1607,24 +1607,24 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> events = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> events = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> base = canvas.base,
-        group = scrawl.library.group[base.name],
+    <span class="hljs-keyword">let</span> base = canvas.<span class="hljs-property">base</span>,
+        group = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">group</span>[base.<span class="hljs-property">name</span>],
         currentTarget, currentFilter;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
 
-        e.preventDefault();
-        e.returnValue = <span class="hljs-literal">false</span>;
+        e.<span class="hljs-title function_">preventDefault</span>();
+        e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
 
         <span class="hljs-keyword">let</span> action = <span class="hljs-literal">false</span>, 
             val;
 
-        <span class="hljs-keyword">switch</span> (e.target.id) {
+        <span class="hljs-keyword">switch</span> (e.<span class="hljs-property">target</span>.<span class="hljs-property">id</span>) {
 
             <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;target&#x27;</span>:
-                val = e.target.value;
+                val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
 
                 <span class="hljs-keyword">if</span> (val !== currentTarget) {
 
@@ -1634,11 +1634,11 @@ scrawl.makeFilter({
                 <span class="hljs-keyword">break</span>;
 
             <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;filter&#x27;</span>:
-                val = e.target.value;
+                val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
 
                 <span class="hljs-keyword">if</span>(val !== currentFilter){
 
-                    currentFilter = val.split(<span class="hljs-string">&#x27;,&#x27;</span>);
+                    currentFilter = val.<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27;,&#x27;</span>);
                     action = <span class="hljs-literal">true</span>;
                 }
                 <span class="hljs-keyword">break</span>;
@@ -1646,36 +1646,36 @@ scrawl.makeFilter({
 
         <span class="hljs-keyword">if</span> (action) {
 
-            base.clearFilters();
-            group.clearFilters();
-            group.clearFiltersFromEntitys();
+            base.<span class="hljs-title function_">clearFilters</span>();
+            group.<span class="hljs-title function_">clearFilters</span>();
+            group.<span class="hljs-title function_">clearFiltersFromEntitys</span>();
 
             <span class="hljs-keyword">if</span> (currentTarget &amp;&amp; currentFilter) {
 
                 <span class="hljs-keyword">switch</span> (currentTarget) {
 
                     <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;block1&#x27;</span> :
-                        block1.addFilters(...currentFilter);
+                        block1.<span class="hljs-title function_">addFilters</span>(...currentFilter);
                         <span class="hljs-keyword">break</span>;
 
                     <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;block2&#x27;</span> :
-                        block2.addFilters(...currentFilter);
+                        block2.<span class="hljs-title function_">addFilters</span>(...currentFilter);
                         <span class="hljs-keyword">break</span>;
 
                     <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;wheel1&#x27;</span> :
-                        wheel1.addFilters(...currentFilter);
+                        wheel1.<span class="hljs-title function_">addFilters</span>(...currentFilter);
                         <span class="hljs-keyword">break</span>;
 
                     <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;wheel2&#x27;</span> :
-                        wheel2.addFilters(...currentFilter);
+                        wheel2.<span class="hljs-title function_">addFilters</span>(...currentFilter);
                         <span class="hljs-keyword">break</span>;
 
                     <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;group&#x27;</span> :
-                        group.addFilters(...currentFilter);
+                        group.<span class="hljs-title function_">addFilters</span>(...currentFilter);
                         <span class="hljs-keyword">break</span>;
 
                     <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;cell&#x27;</span> :
-                        base.addFilters(...currentFilter);
+                        base.<span class="hljs-title function_">addFilters</span>(...currentFilter);
                         <span class="hljs-keyword">break</span>;
                 }
             }
@@ -1696,7 +1696,7 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], events, <span class="hljs-string">&#x27;.controlItem&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], events, <span class="hljs-string">&#x27;.controlItem&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1711,8 +1711,8 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#target&#x27;</span>).value = <span class="hljs-string">&#x27;&#x27;</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#filter&#x27;</span>).value = <span class="hljs-string">&#x27;&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#target&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;&#x27;</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#filter&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -1727,7 +1727,7 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         
@@ -1742,8 +1742,8 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(myGrad.saveAsPacket());
-<span class="hljs-built_in">console</span>.log(myGrad.palette.saveAsPacket());</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(myGrad.<span class="hljs-title function_">saveAsPacket</span>());
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(myGrad.<span class="hljs-property">palette</span>.<span class="hljs-title function_">saveAsPacket</span>());</pre></div></div>
             
         </li>
         

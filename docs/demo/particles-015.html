@@ -707,45 +707,45 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.library.canvas.mycanvas;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
 
-canvas.setBase({
+canvas.<span class="hljs-title function_">setBase</span>({
     <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;azure&#x27;</span>,
 });
 
-canvas.buildCell({
+canvas.<span class="hljs-title function_">buildCell</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;trace-chamber&#x27;</span>,
     <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
     <span class="hljs-attr">clearAlpha</span>: <span class="hljs-number">0.995</span>,
 });
 
-<span class="hljs-keyword">let</span> lowAdjuster = scrawl.makeColor({
+<span class="hljs-keyword">let</span> lowAdjuster = scrawl.<span class="hljs-title function_">makeColor</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;low-adjuster&#x27;</span>,
     <span class="hljs-attr">minimumColor</span>: <span class="hljs-string">&#x27;black&#x27;</span>,
     <span class="hljs-attr">maximumColor</span>: <span class="hljs-string">&#x27;green&#x27;</span>,
 });
 
-<span class="hljs-keyword">let</span> highAdjuster = scrawl.makeColor({
+<span class="hljs-keyword">let</span> highAdjuster = scrawl.<span class="hljs-title function_">makeColor</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;high-adjuster&#x27;</span>,
     <span class="hljs-attr">minimumColor</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
     <span class="hljs-attr">maximumColor</span>: <span class="hljs-string">&#x27;lightgreen&#x27;</span>,
 });
 
-<span class="hljs-keyword">let</span> myWorld = scrawl.makeWorld({
+<span class="hljs-keyword">let</span> myWorld = scrawl.<span class="hljs-title function_">makeWorld</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-world&#x27;</span>,
     <span class="hljs-attr">tickMultiplier</span>: <span class="hljs-number">2</span>,
     <span class="hljs-attr">userAttributes</span>: [
         {
             <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;rangeColorValue&#x27;</span>, 
             <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">0</span>,
-            <span class="hljs-attr">setter</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{ 
+            <span class="hljs-attr">setter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { 
 
-                <span class="hljs-built_in">this</span>.rangeColorValue = item;
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">rangeColorValue</span> = item;
 
-                emitter.set({
-                    <span class="hljs-attr">fillMinimumColor</span>: lowAdjuster.getRangeColor(item),
-                    <span class="hljs-attr">fillMaximumColor</span>: highAdjuster.getRangeColor(item),
+                emitter.<span class="hljs-title function_">set</span>({
+                    <span class="hljs-attr">fillMinimumColor</span>: lowAdjuster.<span class="hljs-title function_">getRangeColor</span>(item),
+                    <span class="hljs-attr">fillMaximumColor</span>: highAdjuster.<span class="hljs-title function_">getRangeColor</span>(item),
                 });
             },
         },
@@ -753,7 +753,7 @@ canvas.buildCell({
 });
 
 
-<span class="hljs-keyword">let</span> emitter = scrawl.makeEmitter({
+<span class="hljs-keyword">let</span> emitter = scrawl.<span class="hljs-title function_">makeEmitter</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;emitter-1&#x27;</span>,
     <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;trace-chamber&#x27;</span>,
@@ -782,7 +782,7 @@ canvas.buildCell({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    generateFromExistingParticleHistories: <span class="hljs-literal">true</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">generateFromExistingParticleHistories</span>: <span class="hljs-literal">true</span>,
 
     <span class="hljs-attr">fillMinimumColor</span>: <span class="hljs-string">&#x27;black&#x27;</span>,
     <span class="hljs-attr">fillMaximumColor</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
@@ -791,32 +791,32 @@ canvas.buildCell({
     <span class="hljs-attr">rangeFromX</span>: -<span class="hljs-number">20</span>,
     <span class="hljs-attr">limitDirectionToAngleMultiples</span>: <span class="hljs-number">60</span>,
 
-    <span class="hljs-attr">artefact</span>: scrawl.makeWheel({
+    <span class="hljs-attr">artefact</span>: scrawl.<span class="hljs-title function_">makeWheel</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;trace&#x27;</span>,
         <span class="hljs-attr">radius</span>: <span class="hljs-number">2</span>,
         <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
     }),
 
-    <span class="hljs-attr">stampAction</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) </span>{
+    <span class="hljs-attr">stampAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) {
 
-        <span class="hljs-keyword">let</span> history = particle.history,
-            len = history.length,
+        <span class="hljs-keyword">let</span> history = particle.<span class="hljs-property">history</span>,
+            len = history.<span class="hljs-property">length</span>,
             remaining, start, z;
 
-        history.forEach(<span class="hljs-function">(<span class="hljs-params">p, index</span>) =&gt;</span> {
+        history.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">p, index</span>) =&gt;</span> {
 
             [remaining, z, ...start] = p;
 
-            artefact.simpleStamp(host, { 
+            artefact.<span class="hljs-title function_">simpleStamp</span>(host, { 
                 start,
-                <span class="hljs-attr">fillStyle</span>: particle.fill,
+                <span class="hljs-attr">fillStyle</span>: particle.<span class="hljs-property">fill</span>,
                 <span class="hljs-attr">radius</span>: (index / len) * <span class="hljs-number">4</span>,
             });
         });
     },
 });
 
-scrawl.makeTween({
+scrawl.<span class="hljs-title function_">makeTween</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;color-adjuster&#x27;</span>,
     <span class="hljs-attr">duration</span>: <span class="hljs-string">&#x27;100s&#x27;</span>,
@@ -832,7 +832,7 @@ scrawl.makeTween({
             <span class="hljs-attr">end</span>: <span class="hljs-number">1</span>,
         },
     ],
-}).run();</pre></div></div>
+}).<span class="hljs-title function_">run</span>();</pre></div></div>
             
         </li>
         
@@ -848,19 +848,19 @@ scrawl.makeTween({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow, dragging,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
     };
 }();</pre></div></div>
             
@@ -877,7 +877,7 @@ scrawl.makeTween({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-animation&quot;</span>,
     <span class="hljs-attr">target</span>: canvas,
@@ -897,7 +897,7 @@ scrawl.makeTween({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

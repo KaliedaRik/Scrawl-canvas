@@ -194,10 +194,10 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> graphWidth = frame.graphWidth,
-    graphHeight = frame.graphHeight,
-    graphBottom = frame.graphBottom,
-    graphLeft = frame.graphLeft;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> graphWidth = frame.<span class="hljs-property">graphWidth</span>,
+    graphHeight = frame.<span class="hljs-property">graphHeight</span>,
+    graphBottom = frame.<span class="hljs-property">graphBottom</span>,
+    graphLeft = frame.<span class="hljs-property">graphLeft</span>;</pre></div></div>
             
         </li>
         
@@ -229,7 +229,7 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> build = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">namespace, canvas, dataSet</span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> build = <span class="hljs-keyword">function</span> (<span class="hljs-params">namespace, canvas, dataSet</span>) {</pre></div></div>
             
         </li>
         
@@ -246,8 +246,8 @@ Data supplied to graph module as Javascript object with structure:
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!positionGroup) {
 
-        <span class="hljs-keyword">let</span> yearLabels = dataSet.yearLabels,
-            xStep = graphWidth / yearLabels.length;</pre></div></div>
+        <span class="hljs-keyword">let</span> yearLabels = dataSet.<span class="hljs-property">yearLabels</span>,
+            xStep = graphWidth / yearLabels.<span class="hljs-property">length</span>;</pre></div></div>
             
         </li>
         
@@ -265,10 +265,10 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        positionGroup = scrawl.makeGroup({
+            <div class="content"><div class='highlight'><pre>        positionGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
 
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-position-group`</span>,
-            <span class="hljs-attr">host</span>: canvas.base.name,
+            <span class="hljs-attr">host</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
             <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
             <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
         });</pre></div></div>
@@ -290,10 +290,10 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        lineGroup = scrawl.makeGroup({
+            <div class="content"><div class='highlight'><pre>        lineGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
 
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-line-group`</span>,
-            <span class="hljs-attr">host</span>: canvas.base.name,
+            <span class="hljs-attr">host</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
             <span class="hljs-attr">order</span>: <span class="hljs-number">2</span>,
             <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
         });</pre></div></div>
@@ -316,10 +316,10 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        pinGroup = scrawl.makeGroup({
+            <div class="content"><div class='highlight'><pre>        pinGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
 
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-pin-group`</span>,
-            <span class="hljs-attr">host</span>: canvas.base.name,
+            <span class="hljs-attr">host</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
             <span class="hljs-attr">order</span>: <span class="hljs-number">3</span>,
             <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
         });</pre></div></div>
@@ -337,7 +337,7 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        yearLabels.forEach(<span class="hljs-function">(<span class="hljs-params">label, index</span>) =&gt;</span> {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        yearLabels.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">label, index</span>) =&gt;</span> {</pre></div></div>
             
         </li>
         
@@ -352,7 +352,7 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            scrawl.makeBlock({
+            <div class="content"><div class='highlight'><pre>            scrawl.<span class="hljs-title function_">makeBlock</span>({
 
                 <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${index}</span>-position`</span>,
                 <span class="hljs-attr">group</span>: positionGroup,
@@ -380,7 +380,7 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                scrawl.makeLine({
+            <div class="content"><div class='highlight'><pre>                scrawl.<span class="hljs-title function_">makeLine</span>({
 
                     <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${index}</span>-line`</span>,
                     <span class="hljs-attr">group</span>: lineGroup,
@@ -413,7 +413,7 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            scrawl.makeWheel({
+            <div class="content"><div class='highlight'><pre>            scrawl.<span class="hljs-title function_">makeWheel</span>({
 
                 <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${index}</span>-pin`</span>,
                 <span class="hljs-attr">group</span>: pinGroup,
@@ -447,7 +447,7 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        update(namespace, dataSet);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-title function_">update</span>(namespace, dataSet);</pre></div></div>
             
         </li>
         
@@ -462,7 +462,7 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        show();
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-title function_">show</span>();
     }
 };</pre></div></div>
             
@@ -482,7 +482,7 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> calculateBatchValue = <span class="hljs-function">(<span class="hljs-params">val</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">calculateBatchValue</span> = (<span class="hljs-params">val</span>) =&gt; {
 
     <span class="hljs-keyword">if</span> (val &gt; <span class="hljs-number">50000</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">10000</span>;
     <span class="hljs-keyword">if</span> (val &gt; <span class="hljs-number">25000</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">5000</span>;
@@ -512,7 +512,7 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> update = <span class="hljs-function">(<span class="hljs-params">namespace, dataSet</span>) =&gt;</span> {</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">update</span> = (<span class="hljs-params">namespace, dataSet</span>) =&gt; {</pre></div></div>
             
         </li>
         
@@ -542,14 +542,14 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> yearLabels = dataSet.yearLabels,
-            data = dataSet.data,
-            max = <span class="hljs-built_in">Math</span>.max(...data),
-            min = <span class="hljs-built_in">Math</span>.min(...data),
-            batch = calculateBatchValue(max - min);
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> yearLabels = dataSet.<span class="hljs-property">yearLabels</span>,
+            data = dataSet.<span class="hljs-property">data</span>,
+            max = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(...data),
+            min = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">min</span>(...data),
+            batch = <span class="hljs-title function_">calculateBatchValue</span>(max - min);
 
-        max = ((<span class="hljs-built_in">Math</span>.floor(max / batch)) * batch) + batch;
-        min = (<span class="hljs-built_in">Math</span>.floor(min / batch)) * batch;
+        max = ((<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(max / batch)) * batch) + batch;
+        min = (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(min / batch)) * batch;
 
         <span class="hljs-keyword">let</span> categoryValue = graphHeight / (max - min),
             yDepth = graphBottom - graphHeight;</pre></div></div>
@@ -567,7 +567,7 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> entity = scrawl.library.entity;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> entity = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">entity</span>;</pre></div></div>
             
         </li>
         
@@ -582,7 +582,7 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        pinGroup.setArtefacts({
+            <div class="content"><div class='highlight'><pre>        pinGroup.<span class="hljs-title function_">setArtefacts</span>({
             <span class="hljs-attr">scale</span>: <span class="hljs-number">1</span>,
             <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;aliceblue&#x27;</span>,
         });</pre></div></div>
@@ -600,28 +600,28 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        yearLabels.forEach(<span class="hljs-function">(<span class="hljs-params">label, index</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>        yearLabels.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">label, index</span>) =&gt;</span> {
 
             <span class="hljs-keyword">let</span> pointDepth = (data[index] - min) * categoryValue,
                 yVal = yDepth + (graphHeight - pointDepth),
                 tempName = <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${index}</span>`</span>;
 
-            entity[<span class="hljs-string">`<span class="hljs-subst">${tempName}</span>-position`</span>].set({
+            entity[<span class="hljs-string">`<span class="hljs-subst">${tempName}</span>-position`</span>].<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">startY</span>: <span class="hljs-string">`<span class="hljs-subst">${yVal}</span>%`</span>,
             });
 
-            entity[<span class="hljs-string">`<span class="hljs-subst">${tempName}</span>-pin`</span>].set({
+            entity[<span class="hljs-string">`<span class="hljs-subst">${tempName}</span>-pin`</span>].<span class="hljs-title function_">set</span>({
 
-                <span class="hljs-attr">onEnter</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+                <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-                    pinGroup.setArtefacts({
+                    pinGroup.<span class="hljs-title function_">setArtefacts</span>({
                         <span class="hljs-attr">scale</span>: <span class="hljs-number">1</span>,
                         <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;aliceblue&#x27;</span>,
                     });
 
-                    frame.updateSubtitle(<span class="hljs-string">`<span class="hljs-subst">${label}</span>: §RED§<span class="hljs-subst">${data[index].toLocaleString()}</span>`</span>);
+                    frame.<span class="hljs-title function_">updateSubtitle</span>(<span class="hljs-string">`<span class="hljs-subst">${label}</span>: §RED§<span class="hljs-subst">${data[index].toLocaleString()}</span>`</span>);
 
-                    <span class="hljs-built_in">this</span>.set({
+                    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
                         <span class="hljs-attr">scale</span>: <span class="hljs-number">1.5</span>,
                         <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
                     });
@@ -642,11 +642,11 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        frame.updateSubtitle(<span class="hljs-string">&#x27;No data selected&#x27;</span>);
-        frame.updateYTop(max.toLocaleString());
-        frame.updateYBottom(min.toLocaleString());
-        frame.updateXLeft(yearLabels[<span class="hljs-number">0</span>]);
-        frame.updateXRight(yearLabels[yearLabels.length - <span class="hljs-number">1</span>]);
+            <div class="content"><div class='highlight'><pre>        frame.<span class="hljs-title function_">updateSubtitle</span>(<span class="hljs-string">&#x27;No data selected&#x27;</span>);
+        frame.<span class="hljs-title function_">updateYTop</span>(max.<span class="hljs-title function_">toLocaleString</span>());
+        frame.<span class="hljs-title function_">updateYBottom</span>(min.<span class="hljs-title function_">toLocaleString</span>());
+        frame.<span class="hljs-title function_">updateXLeft</span>(yearLabels[<span class="hljs-number">0</span>]);
+        frame.<span class="hljs-title function_">updateXRight</span>(yearLabels[yearLabels.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>]);
     }
 };</pre></div></div>
             
@@ -663,13 +663,13 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> kill = <span class="hljs-function">() =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">kill</span> = (<span class="hljs-params"></span>) =&gt; {
 
     <span class="hljs-keyword">if</span> (positionGroup) {
 
-        positionGroup.kill(<span class="hljs-literal">true</span>);
-        lineGroup.kill(<span class="hljs-literal">true</span>);
-        pinGroup.kill(<span class="hljs-literal">true</span>);
+        positionGroup.<span class="hljs-title function_">kill</span>(<span class="hljs-literal">true</span>);
+        lineGroup.<span class="hljs-title function_">kill</span>(<span class="hljs-literal">true</span>);
+        pinGroup.<span class="hljs-title function_">kill</span>(<span class="hljs-literal">true</span>);
 
         positionGroup = <span class="hljs-literal">false</span>;
         lineGroup = <span class="hljs-literal">false</span>;
@@ -690,13 +690,13 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> hide = <span class="hljs-function">() =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">hide</span> = (<span class="hljs-params"></span>) =&gt; {
 
     <span class="hljs-keyword">if</span> (positionGroup) {
 
-        positionGroup.visibility = <span class="hljs-literal">false</span>;
-        lineGroup.visibility = <span class="hljs-literal">false</span>;
-        pinGroup.visibility = <span class="hljs-literal">false</span>;
+        positionGroup.<span class="hljs-property">visibility</span> = <span class="hljs-literal">false</span>;
+        lineGroup.<span class="hljs-property">visibility</span> = <span class="hljs-literal">false</span>;
+        pinGroup.<span class="hljs-property">visibility</span> = <span class="hljs-literal">false</span>;
     }
 };</pre></div></div>
             
@@ -713,13 +713,13 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> show = <span class="hljs-function">() =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">show</span> = (<span class="hljs-params"></span>) =&gt; {
 
     <span class="hljs-keyword">if</span> (positionGroup) {
 
-        positionGroup.visibility = <span class="hljs-literal">true</span>;
-        lineGroup.visibility = <span class="hljs-literal">true</span>;
-        pinGroup.visibility = <span class="hljs-literal">true</span>;
+        positionGroup.<span class="hljs-property">visibility</span> = <span class="hljs-literal">true</span>;
+        lineGroup.<span class="hljs-property">visibility</span> = <span class="hljs-literal">true</span>;
+        pinGroup.<span class="hljs-property">visibility</span> = <span class="hljs-literal">true</span>;
     }
 };
 

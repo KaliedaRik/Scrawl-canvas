@@ -707,9 +707,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.library.canvas.mycanvas;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
 
-canvas.set({</pre></div></div>
+canvas.<span class="hljs-title function_">set</span>({</pre></div></div>
             
         </li>
         
@@ -724,10 +724,10 @@ canvas.set({</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    fit: <span class="hljs-string">&#x27;cover&#x27;</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">fit</span>: <span class="hljs-string">&#x27;cover&#x27;</span>,
     <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,
 
-}).setBase({</pre></div></div>
+}).<span class="hljs-title function_">setBase</span>({</pre></div></div>
             
         </li>
         
@@ -745,7 +745,7 @@ canvas.set({</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    width: <span class="hljs-number">640</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">width</span>: <span class="hljs-number">640</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-number">360</span>,
 });</pre></div></div>
             
@@ -762,7 +762,7 @@ canvas.set({</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeFilter({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-complex-filter&#x27;</span>,
 
     <span class="hljs-attr">actions</span>: [
@@ -854,15 +854,15 @@ canvas.set({</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.importMediaStream({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">importMediaStream</span>({
     <span class="hljs-attr">audio</span>: <span class="hljs-literal">false</span>,
 })
-.then(<span class="hljs-function"><span class="hljs-params">myface</span> =&gt;</span> {
+.<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">myface</span> =&gt;</span> {
 
-    scrawl.makePicture({
+    scrawl.<span class="hljs-title function_">makePicture</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;camera-picture&#x27;</span>,
-        <span class="hljs-attr">asset</span>: myface.name,
+        <span class="hljs-attr">asset</span>: myface.<span class="hljs-property">name</span>,
 
         <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
         <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
@@ -875,7 +875,7 @@ canvas.set({</pre></div></div>
         <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;my-complex-filter&#x27;</span>]
     });
 })
-.catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err.message));</pre></div></div>
+.<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(err.<span class="hljs-property">message</span>));</pre></div></div>
             
         </li>
         
@@ -891,19 +891,19 @@ canvas.set({</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
     };
 }();</pre></div></div>
             
@@ -920,7 +920,7 @@ canvas.set({</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
     <span class="hljs-attr">target</span>: canvas,

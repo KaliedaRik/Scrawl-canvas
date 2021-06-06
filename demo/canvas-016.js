@@ -96,7 +96,11 @@ let report = function () {
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
+    Start - x: ${lorem.start[0]}, y: ${lorem.start[1]}
+    Handle - x: ${lorem.handle[0]}, y: ${lorem.handle[1]}
+    Offset - x: ${lorem.offset[0]}, y: ${lorem.offset[1]}
+    Width: ${lorem.dimensions[0]}; Roll: ${lorem.roll}; Scale: ${lorem.scale}`;
     };
 }();
 

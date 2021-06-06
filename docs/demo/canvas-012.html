@@ -720,7 +720,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> arrow = scrawl.makeShape({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> arrow = scrawl.<span class="hljs-title function_">makeShape</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myArrow&#x27;</span>,
 
@@ -769,7 +769,7 @@ pathDefinition: ‘M 1049.6339,1050 C 1049.6339,1050 1030.0866,1022.855 1019.408
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    useAsPath: <span class="hljs-literal">true</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">precision</span>: <span class="hljs-number">2</span>,</pre></div></div>
             
         </li>
@@ -785,7 +785,7 @@ pathDefinition: ‘M 1049.6339,1050 C 1049.6339,1050 1030.0866,1022.855 1019.408
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    showBoundingBox: <span class="hljs-literal">true</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">showBoundingBox</span>: <span class="hljs-literal">true</span>,
 });</pre></div></div>
             
         </li>
@@ -801,7 +801,7 @@ pathDefinition: ‘M 1049.6339,1050 C 1049.6339,1050 1030.0866,1022.855 1019.408
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeWheel({</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeWheel</span>({</pre></div></div>
             
         </li>
         
@@ -842,7 +842,7 @@ pathDefinition: ‘M 1049.6339,1050 C 1049.6339,1050 1030.0866,1022.855 1019.408
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myWheel = scrawl.makeWheel({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myWheel = scrawl.<span class="hljs-title function_">makeWheel</span>({
 
     <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
     <span class="hljs-attr">radius</span>: <span class="hljs-number">3</span>,</pre></div></div>
@@ -860,7 +860,7 @@ pathDefinition: ‘M 1049.6339,1050 C 1049.6339,1050 1030.0866,1022.855 1019.408
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    roll: -<span class="hljs-number">90</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">roll</span>: -<span class="hljs-number">90</span>,
 
     <span class="hljs-attr">startAngle</span>: <span class="hljs-number">90</span>,
     <span class="hljs-attr">endAngle</span>: -<span class="hljs-number">90</span>,
@@ -886,7 +886,7 @@ pathDefinition: ‘M 1049.6339,1050 C 1049.6339,1050 1030.0866,1022.855 1019.408
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    delta: {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">delta</span>: {
         <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.0008</span>,
     }
 });</pre></div></div>
@@ -914,7 +914,7 @@ pathDefinition: ‘M 1049.6339,1050 C 1049.6339,1050 1030.0866,1022.855 1019.408
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (i &lt; <span class="hljs-number">0.8</span>) col = <span class="hljs-string">&#x27;blue&#x27;</span>;
     <span class="hljs-keyword">else</span> col = <span class="hljs-string">&#x27;purple&#x27;</span>;
 
-    myWheel.clone({
+    myWheel.<span class="hljs-title function_">clone</span>({
         <span class="hljs-attr">pathPosition</span>: i,
         <span class="hljs-attr">fillStyle</span>: col,
     });
@@ -934,20 +934,24 @@ pathDefinition: ‘M 1049.6339,1050 C 1049.6339,1050 1030.0866,1022.855 1019.408
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
-Shape path length: <span class="hljs-subst">${arrow.length}</span>`</span>;
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
+    Arrow path length: <span class="hljs-subst">${arrow.length}</span>
+    Start - x: <span class="hljs-subst">${arrow.start[<span class="hljs-number">0</span>]}</span>, y: <span class="hljs-subst">${arrow.start[<span class="hljs-number">1</span>]}</span>
+    Handle - x: <span class="hljs-subst">${arrow.handle[<span class="hljs-number">0</span>]}</span>, y: <span class="hljs-subst">${arrow.handle[<span class="hljs-number">1</span>]}</span>
+    Offset - x: <span class="hljs-subst">${arrow.offset[<span class="hljs-number">0</span>]}</span>, y: <span class="hljs-subst">${arrow.offset[<span class="hljs-number">1</span>]}</span>
+    Roll: <span class="hljs-subst">${arrow.roll}</span>; Scale: <span class="hljs-subst">${arrow.scale}</span>`</span>;
     };
 }();</pre></div></div>
             
@@ -964,10 +968,10 @@ Shape path length: <span class="hljs-subst">${arrow.length}</span>`</span>;
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
-    <span class="hljs-attr">target</span>: scrawl.library.artefact.mycanvas,
+    <span class="hljs-attr">target</span>: scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>,
     <span class="hljs-attr">afterShow</span>: report,
 });</pre></div></div>
             
@@ -985,7 +989,7 @@ Shape path length: <span class="hljs-subst">${arrow.length}</span>`</span>;
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.observeAndUpdate({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
 
     <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
     <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,
@@ -1040,28 +1044,28 @@ Shape path length: <span class="hljs-subst">${arrow.length}</span>`</span>;
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#start_xPercent&#x27;</span>).value = <span class="hljs-number">50</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#start_yPercent&#x27;</span>).value = <span class="hljs-number">50</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#handle_xPercent&#x27;</span>).value = <span class="hljs-number">50</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#handle_yPercent&#x27;</span>).value = <span class="hljs-number">50</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#start_xAbsolute&#x27;</span>).value = <span class="hljs-number">300</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#start_yAbsolute&#x27;</span>).value = <span class="hljs-number">200</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#handle_xAbsolute&#x27;</span>).value = <span class="hljs-number">100</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#handle_yAbsolute&#x27;</span>).value = <span class="hljs-number">100</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#start_xString&#x27;</span>).options.selectedIndex = <span class="hljs-number">1</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#start_yString&#x27;</span>).options.selectedIndex = <span class="hljs-number">1</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#handle_xString&#x27;</span>).options.selectedIndex = <span class="hljs-number">1</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#handle_yString&#x27;</span>).options.selectedIndex = <span class="hljs-number">1</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#offset_xPercent&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#offset_yPercent&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#offset_xAbsolute&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#offset_yAbsolute&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#roll&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#scale&#x27;</span>).value = <span class="hljs-number">0.2</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#upend&#x27;</span>).options.selectedIndex = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reverse&#x27;</span>).options.selectedIndex = <span class="hljs-number">0</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#start_xPercent&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#start_yPercent&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#handle_xPercent&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#handle_yPercent&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#start_xAbsolute&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">300</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#start_yAbsolute&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">200</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#handle_xAbsolute&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">100</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#handle_yAbsolute&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">100</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#start_xString&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#start_yString&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#handle_xString&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#handle_yString&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#offset_xPercent&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#offset_yPercent&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#offset_xAbsolute&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#offset_yAbsolute&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#roll&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#scale&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0.2</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#upend&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reverse&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
 
-<span class="hljs-built_in">console</span>.log(scrawl.library.entity.myArrow);</pre></div></div>
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">entity</span>.<span class="hljs-property">myArrow</span>);</pre></div></div>
             
         </li>
         

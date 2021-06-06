@@ -707,8 +707,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.library.artefact.mycanvas,
-    entity = scrawl.library.entity;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>,
+    entity = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">entity</span>;</pre></div></div>
             
         </li>
         
@@ -723,7 +723,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.importDomImage(<span class="hljs-string">&#x27;.canal&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.canal&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -738,7 +738,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makePicture({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makePicture</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;background&#x27;</span>,
     <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;factory&#x27;</span>,
@@ -772,87 +772,87 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> clipzone = scrawl.makeBlock({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> clipzone = scrawl.<span class="hljs-title function_">makeBlock</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;block-clipper&#x27;</span>,
     <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">200</span>, <span class="hljs-number">200</span>],
-}).set(generics).set({ <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span> });
+}).<span class="hljs-title function_">set</span>(generics).<span class="hljs-title function_">set</span>({ <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span> });
 
-scrawl.makeWheel({
+scrawl.<span class="hljs-title function_">makeWheel</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;wheel-clipper&#x27;</span>,
     <span class="hljs-attr">radius</span>: <span class="hljs-number">150</span>,
     <span class="hljs-attr">startAngle</span>: <span class="hljs-number">30</span>,
     <span class="hljs-attr">endAngle</span>: -<span class="hljs-number">30</span>,
     <span class="hljs-attr">includeCenter</span>: <span class="hljs-literal">true</span>,
-}).set(generics);
+}).<span class="hljs-title function_">set</span>(generics);
 
-scrawl.makePhrase({
+scrawl.<span class="hljs-title function_">makePhrase</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;phrase-clipper&#x27;</span>,
     <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;HELLO!&#x27;</span>,
     <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;50px arial, sans-serif&#x27;</span>,    
-}).set(generics);
+}).<span class="hljs-title function_">set</span>(generics);
 
-scrawl.makeCog({
+scrawl.<span class="hljs-title function_">makeCog</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;cog-clipper&#x27;</span>,
     <span class="hljs-attr">outerRadius</span>: <span class="hljs-number">140</span>,
     <span class="hljs-attr">innerRadius</span>: <span class="hljs-number">120</span>,
     <span class="hljs-attr">outerControlsDistance</span>: <span class="hljs-number">20</span>,
     <span class="hljs-attr">innerControlsDistance</span>: <span class="hljs-number">16</span>,
     <span class="hljs-attr">points</span>: <span class="hljs-number">24</span>,
-}).set(generics);
+}).<span class="hljs-title function_">set</span>(generics);
 
-scrawl.makeOval({
+scrawl.<span class="hljs-title function_">makeOval</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;oval-clipper&#x27;</span>,
     <span class="hljs-attr">radiusX</span>: <span class="hljs-number">120</span>,
     <span class="hljs-attr">radiusY</span>: <span class="hljs-number">150</span>,
     <span class="hljs-attr">intersectY</span>: <span class="hljs-number">0.55</span>,
-}).set(generics);
+}).<span class="hljs-title function_">set</span>(generics);
 
-scrawl.makePolygon({
+scrawl.<span class="hljs-title function_">makePolygon</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;polygon-clipper&#x27;</span>,
     <span class="hljs-attr">sideLength</span>: <span class="hljs-number">150</span>,
     <span class="hljs-attr">sides</span>: <span class="hljs-number">6</span>,
-}).set(generics);
+}).<span class="hljs-title function_">set</span>(generics);
 
-scrawl.makeRectangle({
+scrawl.<span class="hljs-title function_">makeRectangle</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;rectangle-clipper&#x27;</span>,
     <span class="hljs-attr">rectangleWidth</span>: <span class="hljs-number">240</span>,
     <span class="hljs-attr">rectangleHeight</span>: <span class="hljs-number">180</span>,
     <span class="hljs-attr">radius</span>: <span class="hljs-number">30</span>,
-}).set(generics);
+}).<span class="hljs-title function_">set</span>(generics);
 
-scrawl.makeShape({
+scrawl.<span class="hljs-title function_">makeShape</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;shape-clipper&#x27;</span>,
     <span class="hljs-attr">pathDefinition</span>: <span class="hljs-string">&#x27;M266.2,703.1 h-178 L375.1,990 l287-286.9 H481.9 C507.4,365,683.4,91.9,911.8,25.5 877,15.4,840.9,10,803.9,10 525.1,10,295.5,313.4,266.2,703.1 z&#x27;</span>,
     <span class="hljs-attr">scale</span>: <span class="hljs-number">0.4</span>,
-}).set(generics);
+}).<span class="hljs-title function_">set</span>(generics);
 
-scrawl.makeSpiral({
+scrawl.<span class="hljs-title function_">makeSpiral</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;spiral-clipper&#x27;</span>,
     <span class="hljs-attr">loops</span>: <span class="hljs-number">2</span>,
     <span class="hljs-attr">loopIncrement</span>: <span class="hljs-number">80</span>,
     <span class="hljs-attr">drawFromLoop</span>: <span class="hljs-number">1</span>,
-}).set(generics);
+}).<span class="hljs-title function_">set</span>(generics);
 
-scrawl.makeStar({
+scrawl.<span class="hljs-title function_">makeStar</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;star-clipper&#x27;</span>,
     <span class="hljs-attr">radius1</span>: <span class="hljs-number">80</span>,
     <span class="hljs-attr">radius2</span>: <span class="hljs-number">140</span>,
     <span class="hljs-attr">points</span>: <span class="hljs-number">6</span>,
-}).set(generics);
+}).<span class="hljs-title function_">set</span>(generics);
 
-scrawl.makeTetragon({
+scrawl.<span class="hljs-title function_">makeTetragon</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;tetragon-clipper&#x27;</span>,
     <span class="hljs-attr">radiusX</span>: <span class="hljs-number">120</span>,
     <span class="hljs-attr">radiusY</span>: <span class="hljs-number">150</span>,
     <span class="hljs-attr">intersectY</span>: <span class="hljs-number">1.2</span>,
-}).set(generics);
+}).<span class="hljs-title function_">set</span>(generics);
 
-scrawl.makePolyline({
+scrawl.<span class="hljs-title function_">makePolyline</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;polyline-clipper&#x27;</span>,
     <span class="hljs-attr">pins</span>: [[<span class="hljs-number">100</span>, <span class="hljs-number">200</span>], [<span class="hljs-number">200</span>, <span class="hljs-number">400</span>], [<span class="hljs-number">300</span>, <span class="hljs-number">300</span>], [<span class="hljs-number">400</span>, <span class="hljs-number">400</span>], [<span class="hljs-number">500</span>, <span class="hljs-number">200</span>], [<span class="hljs-number">240</span>, <span class="hljs-number">100</span>]],
     <span class="hljs-attr">tension</span>: <span class="hljs-number">0.5</span>,
     <span class="hljs-attr">closed</span>: <span class="hljs-literal">true</span>,
-}).set(generics);</pre></div></div>
+}).<span class="hljs-title function_">set</span>(generics);</pre></div></div>
             
         </li>
         
@@ -868,28 +868,28 @@ scrawl.makePolyline({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
 Current clip entity: <span class="hljs-subst">${clipzone.name}</span>`</span>;
     };
 }();
 
 
-<span class="hljs-keyword">const</span> checkForActivity = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+<span class="hljs-keyword">const</span> checkForActivity = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    clipzone.set({
-        <span class="hljs-attr">lockTo</span>: (canvas.here.active) ? <span class="hljs-string">&#x27;mouse&#x27;</span> : <span class="hljs-string">&#x27;start&#x27;</span>,
+    clipzone.<span class="hljs-title function_">set</span>({
+        <span class="hljs-attr">lockTo</span>: (canvas.<span class="hljs-property">here</span>.<span class="hljs-property">active</span>) ? <span class="hljs-string">&#x27;mouse&#x27;</span> : <span class="hljs-string">&#x27;start&#x27;</span>,
     });
 };</pre></div></div>
             
@@ -906,7 +906,7 @@ Current clip entity: <span class="hljs-subst">${clipzone.name}</span>`</span>;
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
     <span class="hljs-attr">target</span>: canvas,
@@ -928,20 +928,20 @@ Current clip entity: <span class="hljs-subst">${clipzone.name}</span>`</span>;
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
 
-    <span class="hljs-keyword">let</span> val = e.target.value,
+    <span class="hljs-keyword">let</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>,
         selected = entity[val];
 
     <span class="hljs-keyword">if</span> (selected) {
 
-        clipzone.set({
+        clipzone.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
         });
 
         clipzone = selected;
 
-        clipzone.set({
+        clipzone.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span>,
         });
     }
@@ -961,7 +961,7 @@ Current clip entity: <span class="hljs-subst">${clipzone.name}</span>`</span>;
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#clip-entity&#x27;</span>).options.selectedIndex = <span class="hljs-number">0</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#clip-entity&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
             
         </li>
         
@@ -976,7 +976,7 @@ Current clip entity: <span class="hljs-subst">${clipzone.name}</span>`</span>;
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

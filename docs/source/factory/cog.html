@@ -542,7 +542,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { mergeOver, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { requestVector, releaseVector } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./vector.js&#x27;</span>;
@@ -563,10 +563,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Cog = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">Cog</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-built_in">this</span>.shapeInit(items);
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">shapeInit</span>(items);
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -582,11 +582,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Cog.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">&#x27;Cog&#x27;</span>;
-P.lib = <span class="hljs-string">&#x27;entity&#x27;</span>;
-P.isArtefact = <span class="hljs-literal">true</span>;
-P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">Cog</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
+P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Cog&#x27;</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;entity&#x27;</span>;
+P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">true</span>;
+P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -605,8 +605,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = baseMix(P);
-P = shapeMix(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);
+P = <span class="hljs-title function_">shapeMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -645,7 +645,7 @@ P = shapeMix(P);</pre></div></div>
     <span class="hljs-attr">twist</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">curve</span>: <span class="hljs-string">&#x27;bezier&#x27;</span>,
 };
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
+P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -702,8 +702,8 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> S = P.setters,
-    D = P.deltaSetters;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> S = P.<span class="hljs-property">setters</span>,
+    D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
             
         </li>
         
@@ -718,25 +718,25 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.outerRadius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">outerRadius</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.outerRadius = item;
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">outerRadius</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };
-D.outerRadius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">outerRadius</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.outerRadius += item;
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">outerRadius</span> += item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };
-S.innerRadius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">innerRadius</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.innerRadius = item;
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">innerRadius</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };
-D.innerRadius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">innerRadius</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.innerRadius += item;
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">innerRadius</span> += item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };</pre></div></div>
             
         </li>
@@ -752,25 +752,25 @@ D.innerRadius = <span class="hljs-function"><span class="hljs-keyword">function<
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.outerControlsDistance = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">outerControlsDistance</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.outerControlsDistance = item;
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">outerControlsDistance</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };
-D.outerControlsDistance = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">outerControlsDistance</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.outerControlsDistance += item;
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">outerControlsDistance</span> += item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };
-S.innerControlsDistance = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">innerControlsDistance</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.innerControlsDistance = item;
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">innerControlsDistance</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };
-D.innerControlsDistance = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">innerControlsDistance</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.innerControlsDistance += item;
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">innerControlsDistance</span> += item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };</pre></div></div>
             
         </li>
@@ -786,25 +786,25 @@ D.innerControlsDistance = <span class="hljs-function"><span class="hljs-keyword"
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.outerControlsOffset = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">outerControlsOffset</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.outerControlsOffset = item;
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">outerControlsOffset</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };
-D.outerControlsOffset = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">outerControlsOffset</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.outerControlsOffset += item;
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">outerControlsOffset</span> += item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };
-S.innerControlsOffset = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">innerControlsOffset</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.innerControlsOffset = item;
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">innerControlsOffset</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };
-D.innerControlsOffset = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">innerControlsOffset</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.innerControlsOffset += item;
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">innerControlsOffset</span> += item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };</pre></div></div>
             
         </li>
@@ -820,15 +820,15 @@ D.innerControlsOffset = <span class="hljs-function"><span class="hljs-keyword">f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.points = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">points</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.points = item;
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">points</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };
-D.points = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">points</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.points += item;
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">points</span> += item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };</pre></div></div>
             
         </li>
@@ -844,15 +844,15 @@ D.points = <span class="hljs-function"><span class="hljs-keyword">function</span
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.twist = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.twist = item;
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">twist</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };
-D.twist = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">twist</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.twist += item;
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">twist</span> += item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };</pre></div></div>
             
         </li>
@@ -868,17 +868,17 @@ D.twist = <span class="hljs-function"><span class="hljs-keyword">function</span>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.curve = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">curve</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (item &amp;&amp; [<span class="hljs-string">&#x27;line&#x27;</span>, <span class="hljs-string">&#x27;quadratic&#x27;</span>, <span class="hljs-string">&#x27;bezier&#x27;</span>].indexOf(item) &gt;= <span class="hljs-number">0</span>) {
+    <span class="hljs-keyword">if</span> (item &amp;&amp; [<span class="hljs-string">&#x27;line&#x27;</span>, <span class="hljs-string">&#x27;quadratic&#x27;</span>, <span class="hljs-string">&#x27;bezier&#x27;</span>].<span class="hljs-title function_">indexOf</span>(item) &gt;= <span class="hljs-number">0</span>) {
 
-        <span class="hljs-built_in">this</span>.curve = item;
-        <span class="hljs-built_in">this</span>.updateDirty();
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">curve</span> = item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
     }
     <span class="hljs-keyword">else</span> {
 
-        <span class="hljs-built_in">this</span>.curve = <span class="hljs-string">&#x27;bezier&#x27;</span>;
-        <span class="hljs-built_in">this</span>.updateDirty();
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">curve</span> = <span class="hljs-string">&#x27;bezier&#x27;</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
     }
 };</pre></div></div>
             
@@ -908,14 +908,14 @@ D.twist = <span class="hljs-function"><span class="hljs-keyword">function</span>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.cleanSpecies = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">cleanSpecies</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-built_in">this</span>.dirtySpecies = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtySpecies</span> = <span class="hljs-literal">false</span>;
 
     <span class="hljs-keyword">let</span> p = <span class="hljs-string">&#x27;M0,0&#x27;</span>;
-    p = <span class="hljs-built_in">this</span>.makeCogPath();
+    p = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeCogPath</span>();
 
-    <span class="hljs-built_in">this</span>.pathDefinition = p;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span> = p;
 };</pre></div></div>
             
         </li>
@@ -931,9 +931,9 @@ D.twist = <span class="hljs-function"><span class="hljs-keyword">function</span>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.makeCogPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">makeCogPath</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> {points, twist, outerRadius, innerRadius, outerControlsDistance, innerControlsDistance, outerControlsOffset, innerControlsOffset, curve} = <span class="hljs-built_in">this</span>;
+    <span class="hljs-keyword">let</span> {points, twist, outerRadius, innerRadius, outerControlsDistance, innerControlsDistance, outerControlsOffset, innerControlsOffset, curve} = <span class="hljs-variable language_">this</span>;
 
     <span class="hljs-keyword">let</span> turn = <span class="hljs-number">360</span> / points,
         xPts = [],
@@ -942,81 +942,81 @@ D.twist = <span class="hljs-function"><span class="hljs-keyword">function</span>
         myMin, myXoffset, myYoffset, i,
         myPath = <span class="hljs-string">&#x27;&#x27;</span>;
 
-    <span class="hljs-keyword">if</span> (outerRadius.substring || innerRadius.substring || outerControlsDistance.substring || innerControlsDistance.substring || outerControlsOffset.substring || innerControlsOffset.substring) {
+    <span class="hljs-keyword">if</span> (outerRadius.<span class="hljs-property">substring</span> || innerRadius.<span class="hljs-property">substring</span> || outerControlsDistance.<span class="hljs-property">substring</span> || innerControlsDistance.<span class="hljs-property">substring</span> || outerControlsOffset.<span class="hljs-property">substring</span> || innerControlsOffset.<span class="hljs-property">substring</span>) {
 
-        <span class="hljs-keyword">let</span> host = <span class="hljs-built_in">this</span>.getHost();
+        <span class="hljs-keyword">let</span> host = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getHost</span>();
 
         <span class="hljs-keyword">if</span> (host) {
 
-            <span class="hljs-keyword">let</span> [hW, hH] = host.currentDimensions;
+            <span class="hljs-keyword">let</span> [hW, hH] = host.<span class="hljs-property">currentDimensions</span>;
 
-            outerRadius = (outerRadius.substring) ? (<span class="hljs-built_in">parseFloat</span>(outerRadius) / <span class="hljs-number">100</span>) * hW : outerRadius;
-            innerRadius = (innerRadius.substring) ? (<span class="hljs-built_in">parseFloat</span>(innerRadius) / <span class="hljs-number">100</span>) * hW : innerRadius;
-            outerControlsDistance = (outerControlsDistance.substring) ? (<span class="hljs-built_in">parseFloat</span>(outerControlsDistance) / <span class="hljs-number">100</span>) * hW : outerControlsDistance;
-            innerControlsDistance = (innerControlsDistance.substring) ? (<span class="hljs-built_in">parseFloat</span>(innerControlsDistance) / <span class="hljs-number">100</span>) * hW : innerControlsDistance;
-            outerControlsOffset = (outerControlsOffset.substring) ? (<span class="hljs-built_in">parseFloat</span>(outerControlsOffset) / <span class="hljs-number">100</span>) * hW : outerControlsOffset;
-            innerControlsOffset = (innerControlsOffset.substring) ? (<span class="hljs-built_in">parseFloat</span>(innerControlsOffset) / <span class="hljs-number">100</span>) * hW : innerControlsOffset;
+            outerRadius = (outerRadius.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(outerRadius) / <span class="hljs-number">100</span>) * hW : outerRadius;
+            innerRadius = (innerRadius.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(innerRadius) / <span class="hljs-number">100</span>) * hW : innerRadius;
+            outerControlsDistance = (outerControlsDistance.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(outerControlsDistance) / <span class="hljs-number">100</span>) * hW : outerControlsDistance;
+            innerControlsDistance = (innerControlsDistance.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(innerControlsDistance) / <span class="hljs-number">100</span>) * hW : innerControlsDistance;
+            outerControlsOffset = (outerControlsOffset.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(outerControlsOffset) / <span class="hljs-number">100</span>) * hW : outerControlsOffset;
+            innerControlsOffset = (innerControlsOffset.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(innerControlsOffset) / <span class="hljs-number">100</span>) * hW : innerControlsOffset;
         } 
     }
 
-    <span class="hljs-keyword">let</span> outerPoint = requestVector({<span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: -outerRadius}),
-        innerPoint = requestVector({<span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: -innerRadius}),
-        outerPointLead = requestVector({<span class="hljs-attr">x</span>: outerControlsDistance + outerControlsOffset, <span class="hljs-attr">y</span>: -outerRadius}),
-        innerPointTrail = requestVector({<span class="hljs-attr">x</span>: -innerControlsDistance + innerControlsOffset, <span class="hljs-attr">y</span>: -innerRadius}),
-        innerPointLead = requestVector({<span class="hljs-attr">x</span>: innerControlsDistance + innerControlsOffset, <span class="hljs-attr">y</span>: -innerRadius}),
-        outerPointTrail = requestVector({<span class="hljs-attr">x</span>: -outerControlsDistance + outerControlsOffset, <span class="hljs-attr">y</span>: -outerRadius});
+    <span class="hljs-keyword">let</span> outerPoint = <span class="hljs-title function_">requestVector</span>({<span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: -outerRadius}),
+        innerPoint = <span class="hljs-title function_">requestVector</span>({<span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: -innerRadius}),
+        outerPointLead = <span class="hljs-title function_">requestVector</span>({<span class="hljs-attr">x</span>: outerControlsDistance + outerControlsOffset, <span class="hljs-attr">y</span>: -outerRadius}),
+        innerPointTrail = <span class="hljs-title function_">requestVector</span>({<span class="hljs-attr">x</span>: -innerControlsDistance + innerControlsOffset, <span class="hljs-attr">y</span>: -innerRadius}),
+        innerPointLead = <span class="hljs-title function_">requestVector</span>({<span class="hljs-attr">x</span>: innerControlsDistance + innerControlsOffset, <span class="hljs-attr">y</span>: -innerRadius}),
+        outerPointTrail = <span class="hljs-title function_">requestVector</span>({<span class="hljs-attr">x</span>: -outerControlsDistance + outerControlsOffset, <span class="hljs-attr">y</span>: -outerRadius});
 
-    innerPointTrail.rotate(-turn/<span class="hljs-number">2</span>);
-    innerPointTrail.rotate(twist);
-    innerPoint.rotate(-turn/<span class="hljs-number">2</span>);
-    innerPoint.rotate(twist);
-    innerPointLead.rotate(-turn/<span class="hljs-number">2</span>);
-    innerPointLead.rotate(twist);
+    innerPointTrail.<span class="hljs-title function_">rotate</span>(-turn/<span class="hljs-number">2</span>);
+    innerPointTrail.<span class="hljs-title function_">rotate</span>(twist);
+    innerPoint.<span class="hljs-title function_">rotate</span>(-turn/<span class="hljs-number">2</span>);
+    innerPoint.<span class="hljs-title function_">rotate</span>(twist);
+    innerPointLead.<span class="hljs-title function_">rotate</span>(-turn/<span class="hljs-number">2</span>);
+    innerPointLead.<span class="hljs-title function_">rotate</span>(twist);
 
-    currentPointX = outerPoint.x;
-    currentPointY = outerPoint.y;
+    currentPointX = outerPoint.<span class="hljs-property">x</span>;
+    currentPointY = outerPoint.<span class="hljs-property">y</span>;
 
-    xPts.push(currentPointX);
+    xPts.<span class="hljs-title function_">push</span>(currentPointX);
 
     <span class="hljs-keyword">if</span> (curve == <span class="hljs-string">&#x27;bezier&#x27;</span>) {
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; points; i++) {
 
-            deltaX = <span class="hljs-built_in">parseFloat</span>((outerPointLead.x - currentPointX).toFixed(<span class="hljs-number">1</span>));
-            deltaY = <span class="hljs-built_in">parseFloat</span>((outerPointLead.y - currentPointY).toFixed(<span class="hljs-number">1</span>));
+            deltaX = <span class="hljs-built_in">parseFloat</span>((outerPointLead.<span class="hljs-property">x</span> - currentPointX).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
+            deltaY = <span class="hljs-built_in">parseFloat</span>((outerPointLead.<span class="hljs-property">y</span> - currentPointY).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
             myPath += <span class="hljs-string">`<span class="hljs-subst">${deltaX}</span>,<span class="hljs-subst">${deltaY}</span> `</span>;
 
-            innerPointTrail.rotate(turn);
-            innerPoint.rotate(turn);
-            innerPointLead.rotate(turn);
+            innerPointTrail.<span class="hljs-title function_">rotate</span>(turn);
+            innerPoint.<span class="hljs-title function_">rotate</span>(turn);
+            innerPointLead.<span class="hljs-title function_">rotate</span>(turn);
 
-            deltaX = <span class="hljs-built_in">parseFloat</span>((innerPointTrail.x - currentPointX).toFixed(<span class="hljs-number">1</span>));
-            deltaY = <span class="hljs-built_in">parseFloat</span>((innerPointTrail.y - currentPointY).toFixed(<span class="hljs-number">1</span>));
+            deltaX = <span class="hljs-built_in">parseFloat</span>((innerPointTrail.<span class="hljs-property">x</span> - currentPointX).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
+            deltaY = <span class="hljs-built_in">parseFloat</span>((innerPointTrail.<span class="hljs-property">y</span> - currentPointY).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
             myPath += <span class="hljs-string">`<span class="hljs-subst">${deltaX}</span>,<span class="hljs-subst">${deltaY}</span> `</span>;
 
-            deltaX = <span class="hljs-built_in">parseFloat</span>((innerPoint.x - currentPointX).toFixed(<span class="hljs-number">1</span>));
+            deltaX = <span class="hljs-built_in">parseFloat</span>((innerPoint.<span class="hljs-property">x</span> - currentPointX).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
             currentPointX += deltaX;
-            xPts.push(currentPointX);
-            deltaY = <span class="hljs-built_in">parseFloat</span>((innerPoint.y - currentPointY).toFixed(<span class="hljs-number">1</span>));
+            xPts.<span class="hljs-title function_">push</span>(currentPointX);
+            deltaY = <span class="hljs-built_in">parseFloat</span>((innerPoint.<span class="hljs-property">y</span> - currentPointY).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
             currentPointY += deltaY;
             myPath += <span class="hljs-string">`<span class="hljs-subst">${deltaX}</span>,<span class="hljs-subst">${deltaY}</span> `</span>;
 
-            deltaX = <span class="hljs-built_in">parseFloat</span>((innerPointLead.x - currentPointX).toFixed(<span class="hljs-number">1</span>));
-            deltaY = <span class="hljs-built_in">parseFloat</span>((innerPointLead.y - currentPointY).toFixed(<span class="hljs-number">1</span>));
+            deltaX = <span class="hljs-built_in">parseFloat</span>((innerPointLead.<span class="hljs-property">x</span> - currentPointX).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
+            deltaY = <span class="hljs-built_in">parseFloat</span>((innerPointLead.<span class="hljs-property">y</span> - currentPointY).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
             myPath += <span class="hljs-string">`<span class="hljs-subst">${deltaX}</span>,<span class="hljs-subst">${deltaY}</span> `</span>;
 
-            outerPointTrail.rotate(turn);
-            outerPoint.rotate(turn);
-            outerPointLead.rotate(turn);
+            outerPointTrail.<span class="hljs-title function_">rotate</span>(turn);
+            outerPoint.<span class="hljs-title function_">rotate</span>(turn);
+            outerPointLead.<span class="hljs-title function_">rotate</span>(turn);
 
-            deltaX = <span class="hljs-built_in">parseFloat</span>((outerPointTrail.x - currentPointX).toFixed(<span class="hljs-number">1</span>));
-            deltaY = <span class="hljs-built_in">parseFloat</span>((outerPointTrail.y - currentPointY).toFixed(<span class="hljs-number">1</span>));
+            deltaX = <span class="hljs-built_in">parseFloat</span>((outerPointTrail.<span class="hljs-property">x</span> - currentPointX).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
+            deltaY = <span class="hljs-built_in">parseFloat</span>((outerPointTrail.<span class="hljs-property">y</span> - currentPointY).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
             myPath += <span class="hljs-string">`<span class="hljs-subst">${deltaX}</span>,<span class="hljs-subst">${deltaY}</span> `</span>;
 
-            deltaX = <span class="hljs-built_in">parseFloat</span>((outerPoint.x - currentPointX).toFixed(<span class="hljs-number">1</span>));
+            deltaX = <span class="hljs-built_in">parseFloat</span>((outerPoint.<span class="hljs-property">x</span> - currentPointX).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
             currentPointX += deltaX;
-            xPts.push(currentPointX);
-            deltaY = <span class="hljs-built_in">parseFloat</span>((outerPoint.y - currentPointY).toFixed(<span class="hljs-number">1</span>));
+            xPts.<span class="hljs-title function_">push</span>(currentPointX);
+            deltaY = <span class="hljs-built_in">parseFloat</span>((outerPoint.<span class="hljs-property">y</span> - currentPointY).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
             currentPointY += deltaY;
             myPath += <span class="hljs-string">`<span class="hljs-subst">${deltaX}</span>,<span class="hljs-subst">${deltaY}</span> `</span>;
         }
@@ -1025,31 +1025,31 @@ D.twist = <span class="hljs-function"><span class="hljs-keyword">function</span>
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; points; i++) {
 
-            deltaX = <span class="hljs-built_in">parseFloat</span>((outerPointLead.x - currentPointX).toFixed(<span class="hljs-number">1</span>));
-            deltaY = <span class="hljs-built_in">parseFloat</span>((outerPointLead.y - currentPointY).toFixed(<span class="hljs-number">1</span>));
+            deltaX = <span class="hljs-built_in">parseFloat</span>((outerPointLead.<span class="hljs-property">x</span> - currentPointX).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
+            deltaY = <span class="hljs-built_in">parseFloat</span>((outerPointLead.<span class="hljs-property">y</span> - currentPointY).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
             myPath += <span class="hljs-string">`<span class="hljs-subst">${deltaX}</span>,<span class="hljs-subst">${deltaY}</span> `</span>;
 
-            innerPoint.rotate(turn);
-            innerPointLead.rotate(turn);
+            innerPoint.<span class="hljs-title function_">rotate</span>(turn);
+            innerPointLead.<span class="hljs-title function_">rotate</span>(turn);
 
-            deltaX = <span class="hljs-built_in">parseFloat</span>((innerPoint.x - currentPointX).toFixed(<span class="hljs-number">1</span>));
+            deltaX = <span class="hljs-built_in">parseFloat</span>((innerPoint.<span class="hljs-property">x</span> - currentPointX).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
             currentPointX += deltaX;
-            xPts.push(currentPointX);
-            deltaY = <span class="hljs-built_in">parseFloat</span>((innerPoint.y - currentPointY).toFixed(<span class="hljs-number">1</span>));
+            xPts.<span class="hljs-title function_">push</span>(currentPointX);
+            deltaY = <span class="hljs-built_in">parseFloat</span>((innerPoint.<span class="hljs-property">y</span> - currentPointY).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
             currentPointY += deltaY;
             myPath += <span class="hljs-string">`<span class="hljs-subst">${deltaX}</span>,<span class="hljs-subst">${deltaY}</span> `</span>;
 
-            deltaX = <span class="hljs-built_in">parseFloat</span>((innerPointLead.x - currentPointX).toFixed(<span class="hljs-number">1</span>));
-            deltaY = <span class="hljs-built_in">parseFloat</span>((innerPointLead.y - currentPointY).toFixed(<span class="hljs-number">1</span>));
+            deltaX = <span class="hljs-built_in">parseFloat</span>((innerPointLead.<span class="hljs-property">x</span> - currentPointX).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
+            deltaY = <span class="hljs-built_in">parseFloat</span>((innerPointLead.<span class="hljs-property">y</span> - currentPointY).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
             myPath += <span class="hljs-string">`<span class="hljs-subst">${deltaX}</span>,<span class="hljs-subst">${deltaY}</span> `</span>;
 
-            outerPoint.rotate(turn);
-            outerPointLead.rotate(turn);
+            outerPoint.<span class="hljs-title function_">rotate</span>(turn);
+            outerPointLead.<span class="hljs-title function_">rotate</span>(turn);
 
-            deltaX = <span class="hljs-built_in">parseFloat</span>((outerPoint.x - currentPointX).toFixed(<span class="hljs-number">1</span>));
+            deltaX = <span class="hljs-built_in">parseFloat</span>((outerPoint.<span class="hljs-property">x</span> - currentPointX).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
             currentPointX += deltaX;
-            xPts.push(currentPointX);
-            deltaY = <span class="hljs-built_in">parseFloat</span>((outerPoint.y - currentPointY).toFixed(<span class="hljs-number">1</span>));
+            xPts.<span class="hljs-title function_">push</span>(currentPointX);
+            deltaY = <span class="hljs-built_in">parseFloat</span>((outerPoint.<span class="hljs-property">y</span> - currentPointY).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
             currentPointY += deltaY;
             myPath += <span class="hljs-string">`<span class="hljs-subst">${deltaX}</span>,<span class="hljs-subst">${deltaY}</span> `</span>;
         }
@@ -1058,61 +1058,61 @@ D.twist = <span class="hljs-function"><span class="hljs-keyword">function</span>
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; points; i++) {
 
-            deltaX = <span class="hljs-built_in">parseFloat</span>((outerPointLead.x - currentPointX).toFixed(<span class="hljs-number">1</span>));
+            deltaX = <span class="hljs-built_in">parseFloat</span>((outerPointLead.<span class="hljs-property">x</span> - currentPointX).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
             currentPointX += deltaX;
-            xPts.push(currentPointX);
-            deltaY = <span class="hljs-built_in">parseFloat</span>((outerPointLead.y - currentPointY).toFixed(<span class="hljs-number">1</span>));
+            xPts.<span class="hljs-title function_">push</span>(currentPointX);
+            deltaY = <span class="hljs-built_in">parseFloat</span>((outerPointLead.<span class="hljs-property">y</span> - currentPointY).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
             currentPointY += deltaY;
             myPath += <span class="hljs-string">`<span class="hljs-subst">${deltaX}</span>,<span class="hljs-subst">${deltaY}</span> `</span>;
 
-            innerPointTrail.rotate(turn);
-            innerPoint.rotate(turn);
-            innerPointLead.rotate(turn);
+            innerPointTrail.<span class="hljs-title function_">rotate</span>(turn);
+            innerPoint.<span class="hljs-title function_">rotate</span>(turn);
+            innerPointLead.<span class="hljs-title function_">rotate</span>(turn);
 
-            deltaX = <span class="hljs-built_in">parseFloat</span>((innerPointTrail.x - currentPointX).toFixed(<span class="hljs-number">1</span>));
+            deltaX = <span class="hljs-built_in">parseFloat</span>((innerPointTrail.<span class="hljs-property">x</span> - currentPointX).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
             currentPointX += deltaX;
-            xPts.push(currentPointX);
-            deltaY = <span class="hljs-built_in">parseFloat</span>((innerPointTrail.y - currentPointY).toFixed(<span class="hljs-number">1</span>));
+            xPts.<span class="hljs-title function_">push</span>(currentPointX);
+            deltaY = <span class="hljs-built_in">parseFloat</span>((innerPointTrail.<span class="hljs-property">y</span> - currentPointY).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
             currentPointY += deltaY;
             myPath += <span class="hljs-string">`<span class="hljs-subst">${deltaX}</span>,<span class="hljs-subst">${deltaY}</span> `</span>;
 
-            deltaX = <span class="hljs-built_in">parseFloat</span>((innerPoint.x - currentPointX).toFixed(<span class="hljs-number">1</span>));
+            deltaX = <span class="hljs-built_in">parseFloat</span>((innerPoint.<span class="hljs-property">x</span> - currentPointX).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
             currentPointX += deltaX;
-            xPts.push(currentPointX);
-            deltaY = <span class="hljs-built_in">parseFloat</span>((innerPoint.y - currentPointY).toFixed(<span class="hljs-number">1</span>));
+            xPts.<span class="hljs-title function_">push</span>(currentPointX);
+            deltaY = <span class="hljs-built_in">parseFloat</span>((innerPoint.<span class="hljs-property">y</span> - currentPointY).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
             currentPointY += deltaY;
             myPath += <span class="hljs-string">`<span class="hljs-subst">${deltaX}</span>,<span class="hljs-subst">${deltaY}</span> `</span>;
 
-            deltaX = <span class="hljs-built_in">parseFloat</span>((innerPointLead.x - currentPointX).toFixed(<span class="hljs-number">1</span>));
+            deltaX = <span class="hljs-built_in">parseFloat</span>((innerPointLead.<span class="hljs-property">x</span> - currentPointX).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
             currentPointX += deltaX;
-            xPts.push(currentPointX);
-            deltaY = <span class="hljs-built_in">parseFloat</span>((innerPointLead.y - currentPointY).toFixed(<span class="hljs-number">1</span>));
+            xPts.<span class="hljs-title function_">push</span>(currentPointX);
+            deltaY = <span class="hljs-built_in">parseFloat</span>((innerPointLead.<span class="hljs-property">y</span> - currentPointY).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
             currentPointY += deltaY;
             myPath += <span class="hljs-string">`<span class="hljs-subst">${deltaX}</span>,<span class="hljs-subst">${deltaY}</span> `</span>;
 
-            outerPointTrail.rotate(turn);
-            outerPoint.rotate(turn);
-            outerPointLead.rotate(turn);
+            outerPointTrail.<span class="hljs-title function_">rotate</span>(turn);
+            outerPoint.<span class="hljs-title function_">rotate</span>(turn);
+            outerPointLead.<span class="hljs-title function_">rotate</span>(turn);
 
-            deltaX = <span class="hljs-built_in">parseFloat</span>((outerPointTrail.x - currentPointX).toFixed(<span class="hljs-number">1</span>));
+            deltaX = <span class="hljs-built_in">parseFloat</span>((outerPointTrail.<span class="hljs-property">x</span> - currentPointX).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
             currentPointX += deltaX;
-            xPts.push(currentPointX);
-            deltaY = <span class="hljs-built_in">parseFloat</span>((outerPointTrail.y - currentPointY).toFixed(<span class="hljs-number">1</span>));
+            xPts.<span class="hljs-title function_">push</span>(currentPointX);
+            deltaY = <span class="hljs-built_in">parseFloat</span>((outerPointTrail.<span class="hljs-property">y</span> - currentPointY).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
             currentPointY += deltaY;
             myPath += <span class="hljs-string">`<span class="hljs-subst">${deltaX}</span>,<span class="hljs-subst">${deltaY}</span> `</span>;
 
-            deltaX = <span class="hljs-built_in">parseFloat</span>((outerPoint.x - currentPointX).toFixed(<span class="hljs-number">1</span>));
+            deltaX = <span class="hljs-built_in">parseFloat</span>((outerPoint.<span class="hljs-property">x</span> - currentPointX).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
             currentPointX += deltaX;
-            xPts.push(currentPointX);
-            deltaY = <span class="hljs-built_in">parseFloat</span>((outerPoint.y - currentPointY).toFixed(<span class="hljs-number">1</span>));
+            xPts.<span class="hljs-title function_">push</span>(currentPointX);
+            deltaY = <span class="hljs-built_in">parseFloat</span>((outerPoint.<span class="hljs-property">y</span> - currentPointY).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>));
             currentPointY += deltaY;
             myPath += <span class="hljs-string">`<span class="hljs-subst">${deltaX}</span>,<span class="hljs-subst">${deltaY}</span> `</span>;
         }
     }
-    releaseVector(outerPoint, outerPointLead, outerPointTrail, innerPoint, innerPointLead, innerPointTrail);
+    <span class="hljs-title function_">releaseVector</span>(outerPoint, outerPointLead, outerPointTrail, innerPoint, innerPointLead, innerPointTrail);
 
-    myMin = <span class="hljs-built_in">Math</span>.min(...xPts);
-    myXoffset = <span class="hljs-built_in">Math</span>.abs(myMin).toFixed(<span class="hljs-number">1</span>);
+    myMin = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">min</span>(...xPts);
+    myXoffset = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(myMin).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>);
 
     <span class="hljs-keyword">if</span> (curve == <span class="hljs-string">&#x27;bezier&#x27;</span>) <span class="hljs-keyword">return</span> <span class="hljs-string">`m<span class="hljs-subst">${myXoffset}</span>,0c<span class="hljs-subst">${myPath}</span>z`</span>;
     <span class="hljs-keyword">if</span> (curve == <span class="hljs-string">&#x27;quadratic&#x27;</span>) <span class="hljs-keyword">return</span> <span class="hljs-string">`m<span class="hljs-subst">${myXoffset}</span>,0q<span class="hljs-subst">${myPath}</span>z`</span>;
@@ -1154,7 +1154,7 @@ D.twist = <span class="hljs-function"><span class="hljs-keyword">function</span>
 <li><strong>curve</strong> - String: one of ‘bezier’ (default); ‘quadratic’; or ‘line’ - when this flag is set, the entity will be built using the appropriate curve.</li>
 <li>Note that the use of <em>inner</em> and <em>outer</em> above is purely descriptive: <code>innerRadius</code> can be larger than <code>outerRadius</code></li>
 </ul>
-<pre><code>scrawl.makeCog({
+<pre><code>scrawl.<span class="hljs-title function_">makeCog</span>({
 
   <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;smooth-cog&#x27;</span>,
   <span class="hljs-attr">startX</span>: <span class="hljs-number">20</span>,
@@ -1172,14 +1172,14 @@ D.twist = <span class="hljs-function"><span class="hljs-keyword">function</span>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeCog = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeCog = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    items.species = <span class="hljs-string">&#x27;cog&#x27;</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Cog(items);
+    items.<span class="hljs-property">species</span> = <span class="hljs-string">&#x27;cog&#x27;</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cog</span>(items);
 };
 
-<span class="hljs-title">constructors</span>.<span class="hljs-title">Cog</span> = <span class="hljs-title">Cog</span>;</pre></div></div>
+constructors.<span class="hljs-property">Cog</span> = <span class="hljs-title class_">Cog</span>;</pre></div></div>
             
         </li>
         

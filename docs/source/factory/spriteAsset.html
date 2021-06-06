@@ -504,8 +504,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
-<span class="hljs-keyword">import</span> { mergeOver, isa_obj, λ<span class="hljs-literal">null</span>, λ<span class="hljs-built_in">this</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { mergeOver, isa_obj, λ<span class="hljs-literal">null</span>, λ<span class="hljs-variable language_">this</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 <span class="hljs-keyword">import</span> assetMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/asset.js&#x27;</span>;</pre></div></div>
@@ -523,11 +523,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> SpriteAsset = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">SpriteAsset</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-built_in">this</span>.assetConstructor(items);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">assetConstructor</span>(items);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -543,11 +543,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = SpriteAsset.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">&#x27;Sprite&#x27;</span>;
-P.lib = <span class="hljs-string">&#x27;asset&#x27;</span>;
-P.isArtefact = <span class="hljs-literal">false</span>;
-P.isAsset = <span class="hljs-literal">true</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">SpriteAsset</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
+P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Sprite&#x27;</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;asset&#x27;</span>;
+P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">false</span>;
+P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">true</span>;</pre></div></div>
             
         </li>
         
@@ -566,8 +566,8 @@ P.isAsset = <span class="hljs-literal">true</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = baseMix(P);
-P = assetMix(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);
+P = <span class="hljs-title function_">assetMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -601,9 +601,9 @@ P = assetMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    manifest: <span class="hljs-literal">null</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">manifest</span>: <span class="hljs-literal">null</span>,
 };
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
+P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -619,13 +619,13 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.saveAsPacket = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">return</span> [<span class="hljs-built_in">this</span>.name, <span class="hljs-built_in">this</span>.type, <span class="hljs-built_in">this</span>.lib, {}];
+    <span class="hljs-keyword">return</span> [<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">type</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">lib</span>, {}];
 };
-P.stringifyFunction = λ<span class="hljs-literal">null</span>;
-P.processPacketOut = λ<span class="hljs-literal">null</span>;
-P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div>
+P.<span class="hljs-property">stringifyFunction</span> = λ<span class="hljs-literal">null</span>;
+P.<span class="hljs-property">processPacketOut</span> = λ<span class="hljs-literal">null</span>;
+P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
@@ -640,7 +640,7 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.clone = λ<span class="hljs-built_in">this</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">clone</span> = λ<span class="hljs-variable language_">this</span>;</pre></div></div>
             
         </li>
         
@@ -669,9 +669,9 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.getters,
-    S = P.setters,
-    D = P.deltaSetters;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.<span class="hljs-property">getters</span>,
+    S = P.<span class="hljs-property">setters</span>,
+    D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
             
         </li>
         
@@ -686,25 +686,25 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.source = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = []</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">source</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = []</span>) {
 
     <span class="hljs-keyword">if</span> (items &amp;&amp; items[<span class="hljs-number">0</span>]) {
 
-        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.sourceHold) <span class="hljs-built_in">this</span>.sourceHold = {};
+        <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceHold</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceHold</span> = {};
 
-        <span class="hljs-keyword">let</span> hold = <span class="hljs-built_in">this</span>.sourceHold;
+        <span class="hljs-keyword">let</span> hold = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceHold</span>;
 
-        items.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
+        items.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
 
-            <span class="hljs-keyword">let</span> name = item.id || item.name;
+            <span class="hljs-keyword">let</span> name = item.<span class="hljs-property">id</span> || item.<span class="hljs-property">name</span>;
 
             <span class="hljs-keyword">if</span> (name) hold[name] = item;
         })
 
-        <span class="hljs-built_in">this</span>.source = items[<span class="hljs-number">0</span>];
-        <span class="hljs-built_in">this</span>.sourceNaturalWidth = items[<span class="hljs-number">0</span>].naturalWidth;
-        <span class="hljs-built_in">this</span>.sourceNaturalHeight = items[<span class="hljs-number">0</span>].naturalHeight;
-        <span class="hljs-built_in">this</span>.sourceLoaded = items[<span class="hljs-number">0</span>].complete;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span> = items[<span class="hljs-number">0</span>];
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span> = items[<span class="hljs-number">0</span>].<span class="hljs-property">naturalWidth</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span> = items[<span class="hljs-number">0</span>].<span class="hljs-property">naturalHeight</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceLoaded</span> = items[<span class="hljs-number">0</span>].<span class="hljs-property">complete</span>;
     }
 };</pre></div></div>
             
@@ -734,7 +734,7 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.checkSource = λ<span class="hljs-literal">null</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">checkSource</span> = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
@@ -805,7 +805,7 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 </ul>
 <p>Note: strings and object arguments can be mixed - Scrawl-canvas will interrrogate each argument in turn and take appropriate action to load the assets.</p>
 <p>The <strong>manifest</strong> must resolve to an object containing a set of attributes which represent ‘tracks’ - sequences of frames which, when run, will result in a particular animation (eg ‘walk’, ‘turn’, ‘fire-arrow’, ‘die’, etc). Each track attribute is an Array of arrays, with each sub-array supplying details of the source file, copy start coordinates, and copy dimensions for each frame:</p>
-<pre><code>manifestSrc: {
+<pre><code><span class="hljs-attr">manifestSrc</span>: {
 
     <span class="hljs-string">&quot;default&quot;</span> : [
         [<span class="hljs-string">&#x27;picturename&#x27;</span>, copyStartX, copyStartY, width, height]
@@ -825,13 +825,13 @@ Note also that the <strong>default</strong> track is mandatory, and should consi
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> importSprite = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> importSprite = <span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) {
 
     <span class="hljs-keyword">let</span> reg = <span class="hljs-regexp">/.*\/(.*?)\./</span>,
         fileTlas = <span class="hljs-regexp">/\.(jpeg|jpg|png|gif|webp|svg|JPEG|JPG|PNG|GIF|WEBP|SVG)/</span>,
         results = [];
 
-    args.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {</pre></div></div>
+    args.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {</pre></div></div>
             
         </li>
         
@@ -851,30 +851,30 @@ Note also that the <strong>default</strong> track is mandatory, and should consi
 
         <span class="hljs-keyword">let</span> flag = <span class="hljs-literal">false</span>;
 
-        <span class="hljs-keyword">if</span> (item.substring) {
+        <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) {
 
-            <span class="hljs-keyword">let</span> match = reg.exec(item);
+            <span class="hljs-keyword">let</span> match = reg.<span class="hljs-title function_">exec</span>(item);
 
             name = (match &amp;&amp; match[<span class="hljs-number">1</span>]) ? match[<span class="hljs-number">1</span>] : <span class="hljs-string">&#x27;&#x27;</span>;
             urls = [item];
             className = <span class="hljs-string">&#x27;&#x27;</span>;
             visibility = <span class="hljs-literal">false</span>;
-            manifest = item.replace(fileTlas, <span class="hljs-string">&#x27;.json&#x27;</span>);
+            manifest = item.<span class="hljs-title function_">replace</span>(fileTlas, <span class="hljs-string">&#x27;.json&#x27;</span>);
 
             flag = <span class="hljs-literal">true</span>;
         }
         <span class="hljs-keyword">else</span> {
 
-            <span class="hljs-keyword">if</span> (!isa_obj(item) || !item.imageSrc || !item.manifestSrc) results.push(<span class="hljs-literal">false</span>);
+            <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">isa_obj</span>(item) || !item.<span class="hljs-property">imageSrc</span> || !item.<span class="hljs-property">manifestSrc</span>) results.<span class="hljs-title function_">push</span>(<span class="hljs-literal">false</span>);
             <span class="hljs-keyword">else</span> {
 
-                name = item.name || <span class="hljs-string">&#x27;&#x27;</span>;
+                name = item.<span class="hljs-property">name</span> || <span class="hljs-string">&#x27;&#x27;</span>;
 
-                urls = <span class="hljs-built_in">Array</span>.isArray(item.imageSrc) ? item.imageSrc : [item.imageSrc];
-                manifest = item.manifestSrc;
-                className = item.className || <span class="hljs-string">&#x27;&#x27;</span>;
-                visibility = item.visibility || <span class="hljs-literal">false</span>;
-                parent = <span class="hljs-built_in">document</span>.querySelector(item.parent);
+                urls = <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(item.<span class="hljs-property">imageSrc</span>) ? item.<span class="hljs-property">imageSrc</span> : [item.<span class="hljs-property">imageSrc</span>];
+                manifest = item.<span class="hljs-property">manifestSrc</span>;
+                className = item.<span class="hljs-property">className</span> || <span class="hljs-string">&#x27;&#x27;</span>;
+                visibility = item.<span class="hljs-property">visibility</span> || <span class="hljs-literal">false</span>;
+                parent = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(item.<span class="hljs-property">parent</span>);
 
                 flag = <span class="hljs-literal">true</span>;
             }
@@ -882,7 +882,7 @@ Note also that the <strong>default</strong> track is mandatory, and should consi
 
         <span class="hljs-keyword">if</span> (flag) {
 
-            <span class="hljs-keyword">let</span> image = makeSpriteAsset({
+            <span class="hljs-keyword">let</span> image = <span class="hljs-title function_">makeSpriteAsset</span>({
                 <span class="hljs-attr">name</span>: name,
             });</pre></div></div>
             
@@ -899,52 +899,52 @@ Note also that the <strong>default</strong> track is mandatory, and should consi
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (isa_obj(manifest)) image.manifest = manifest;
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(manifest)) image.<span class="hljs-property">manifest</span> = manifest;
             <span class="hljs-keyword">else</span> {
 
-                fetch(manifest)
-                .then(<span class="hljs-function"><span class="hljs-params">response</span> =&gt;</span> {
+                <span class="hljs-title function_">fetch</span>(manifest)
+                .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">response</span> =&gt;</span> {
 
-                    <span class="hljs-keyword">if</span> (response.status !== <span class="hljs-number">200</span>) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">&#x27;Failed to load manifest&#x27;</span>);
-                    <span class="hljs-keyword">return</span> response.json();
+                    <span class="hljs-keyword">if</span> (response.<span class="hljs-property">status</span> !== <span class="hljs-number">200</span>) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">&#x27;Failed to load manifest&#x27;</span>);
+                    <span class="hljs-keyword">return</span> response.<span class="hljs-title function_">json</span>();
                 })
-                .then(<span class="hljs-function"><span class="hljs-params">jsonString</span> =&gt;</span> image.manifest = jsonString)
-                .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err.message));
+                .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">jsonString</span> =&gt;</span> image.<span class="hljs-property">manifest</span> = jsonString)
+                .<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(err.<span class="hljs-property">message</span>));
             }
 
             <span class="hljs-keyword">let</span> imgArray = [];
 
-            urls.forEach(<span class="hljs-function"><span class="hljs-params">url</span> =&gt;</span> {
+            urls.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">url</span> =&gt;</span> {
 
-                <span class="hljs-keyword">let</span> img = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;img&#x27;</span>),
+                <span class="hljs-keyword">let</span> img = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;img&#x27;</span>),
                     filename, match;
 
-                <span class="hljs-keyword">if</span> (fileTlas.test(url)) {
+                <span class="hljs-keyword">if</span> (fileTlas.<span class="hljs-title function_">test</span>(url)) {
 
-                    match = reg.exec(url);
+                    match = reg.<span class="hljs-title function_">exec</span>(url);
                     filename = (match &amp;&amp; match[<span class="hljs-number">1</span>]) ? match[<span class="hljs-number">1</span>] : <span class="hljs-string">&#x27;&#x27;</span>;
                 }
 
-                img.name = filename || name;
-                img.className = className;
-                img.crossorigin = <span class="hljs-string">&#x27;anonymous&#x27;</span>;
+                img.<span class="hljs-property">name</span> = filename || name;
+                img.<span class="hljs-property">className</span> = className;
+                img.<span class="hljs-property">crossorigin</span> = <span class="hljs-string">&#x27;anonymous&#x27;</span>;
 
-                img.style.display = (visibility) ? <span class="hljs-string">&#x27;block&#x27;</span> : <span class="hljs-string">&#x27;none&#x27;</span>;
+                img.<span class="hljs-property">style</span>.<span class="hljs-property">display</span> = (visibility) ? <span class="hljs-string">&#x27;block&#x27;</span> : <span class="hljs-string">&#x27;none&#x27;</span>;
 
-                <span class="hljs-keyword">if</span> (parent) parent.appendChild(img);
+                <span class="hljs-keyword">if</span> (parent) parent.<span class="hljs-title function_">appendChild</span>(img);
                 
-                img.src = url;
+                img.<span class="hljs-property">src</span> = url;
 
-                imgArray.push(img);
+                imgArray.<span class="hljs-title function_">push</span>(img);
             });
 
-            image.set({
+            image.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">source</span>: imgArray,
             });
 
-            results.push(name);
+            results.<span class="hljs-title function_">push</span>(name);
         }
-        <span class="hljs-keyword">else</span> results.push(<span class="hljs-literal">false</span>);
+        <span class="hljs-keyword">else</span> results.<span class="hljs-title function_">push</span>(<span class="hljs-literal">false</span>);
     });
     <span class="hljs-keyword">return</span> results;
 };</pre></div></div>
@@ -975,13 +975,13 @@ Note also that the <strong>default</strong> track is mandatory, and should consi
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeSpriteAsset = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeSpriteAsset = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> SpriteAsset(items);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">SpriteAsset</span>(items);
 };
 
-<span class="hljs-title">constructors</span>.<span class="hljs-title">SpriteAsset</span> = <span class="hljs-title">SpriteAsset</span>;</pre></div></div>
+constructors.<span class="hljs-property">SpriteAsset</span> = <span class="hljs-title class_">SpriteAsset</span>;</pre></div></div>
             
         </li>
         

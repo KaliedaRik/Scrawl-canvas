@@ -707,10 +707,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.library.canvas.mycanvas;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
 
 
-canvas.set({
+canvas.<span class="hljs-title function_">set</span>({
 
     <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;honeydew&#x27;</span>,
     <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,
@@ -730,7 +730,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeOval({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeOval</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;responsive-oval&#x27;</span>,
 
@@ -744,7 +744,7 @@ canvas.set({
     <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">10</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;static-oval&#x27;</span>,
 
@@ -754,7 +754,7 @@ canvas.set({
     <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
 });
 
-scrawl.makeTetragon({
+scrawl.<span class="hljs-title function_">makeTetragon</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;responsive-diamond&#x27;</span>,
 
@@ -768,7 +768,7 @@ scrawl.makeTetragon({
     <span class="hljs-attr">radiusX</span>: <span class="hljs-string">&#x27;40%&#x27;</span>,
     <span class="hljs-attr">radiusY</span>: <span class="hljs-string">&#x27;40%&#x27;</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;static-diamond&#x27;</span>,
 
@@ -778,7 +778,7 @@ scrawl.makeTetragon({
     <span class="hljs-attr">radiusY</span>: <span class="hljs-number">140</span>,    
 });
 
-scrawl.makeLine({
+scrawl.<span class="hljs-title function_">makeLine</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;responsive-line&#x27;</span>,
 
@@ -789,7 +789,7 @@ scrawl.makeLine({
     <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;20%&#x27;</span>, <span class="hljs-string">&#x27;45%&#x27;</span>],
     <span class="hljs-attr">end</span>: [<span class="hljs-string">&#x27;80%&#x27;</span>, <span class="hljs-string">&#x27;45%&#x27;</span>],
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;static-line&#x27;</span>,
 
@@ -799,7 +799,7 @@ scrawl.makeLine({
     <span class="hljs-attr">end</span>: [<span class="hljs-number">350</span>, <span class="hljs-number">210</span>],
 });
 
-scrawl.makeRectangle({
+scrawl.<span class="hljs-title function_">makeRectangle</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;responsive-rectangle&#x27;</span>,
 
@@ -816,7 +816,7 @@ scrawl.makeRectangle({
     <span class="hljs-attr">radiusT</span>: <span class="hljs-string">&#x27;5%&#x27;</span>,
     <span class="hljs-attr">radiusB</span>: <span class="hljs-string">&#x27;15%&#x27;</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;static-rectangle&#x27;</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;75%&#x27;</span>,
@@ -829,7 +829,7 @@ scrawl.makeRectangle({
     <span class="hljs-attr">radius</span>: <span class="hljs-number">15</span>,
 })
 
-scrawl.makeStar({
+scrawl.<span class="hljs-title function_">makeStar</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;responsive-star&#x27;</span>,
 
@@ -845,7 +845,7 @@ scrawl.makeStar({
     <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">4</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;static-star&#x27;</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;75%&#x27;</span>,
@@ -855,7 +855,7 @@ scrawl.makeStar({
     <span class="hljs-attr">radius2</span>: <span class="hljs-number">80</span>,
 });
 
-scrawl.makeCog({
+scrawl.<span class="hljs-title function_">makeCog</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;static-cog&#x27;</span>,
 
@@ -872,7 +872,7 @@ scrawl.makeCog({
     <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">8</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;responsive-cog&#x27;</span>,
 
@@ -899,19 +899,19 @@ scrawl.makeCog({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
     };
 }();</pre></div></div>
             
@@ -928,7 +928,7 @@ scrawl.makeCog({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-animation&quot;</span>,
     <span class="hljs-attr">target</span>: canvas,
@@ -948,7 +948,7 @@ scrawl.makeCog({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

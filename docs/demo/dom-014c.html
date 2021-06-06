@@ -694,39 +694,39 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>
 
-<span class="hljs-keyword">let</span> artefact = scrawl.library.artefact,
-    stack = artefact.mystack,
-    element = artefact.myelement,
-    canvas = artefact.mycanvas3,
-    cell = canvas.base;
+<span class="hljs-keyword">let</span> artefact = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>,
+    stack = artefact.<span class="hljs-property">mystack</span>,
+    element = artefact.<span class="hljs-property">myelement</span>,
+    canvas = artefact.<span class="hljs-property">mycanvas3</span>,
+    cell = canvas.<span class="hljs-property">base</span>;
 
-canvas.setAsCurrentCanvas();
+canvas.<span class="hljs-title function_">setAsCurrentCanvas</span>();
 
-stack.set({
+stack.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">width</span>: <span class="hljs-number">600</span>,
     <span class="hljs-attr">height</span>:<span class="hljs-number">400</span>,
     <span class="hljs-attr">perspectiveZ</span>: <span class="hljs-number">1200</span>,
 });
 
 
-canvas.set({
+canvas.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
     <span class="hljs-attr">height</span>:<span class="hljs-string">&#x27;100%&#x27;</span>,
     <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;black&#x27;</span>,
 });
 
-cell.set({
+cell.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
     <span class="hljs-attr">height</span>:<span class="hljs-string">&#x27;100%&#x27;</span>,
 });
 
-<span class="hljs-keyword">let</span> testers = scrawl.makeGroup({
+<span class="hljs-keyword">let</span> testers = scrawl.<span class="hljs-title function_">makeGroup</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;testers&#x27;</span>,
     <span class="hljs-attr">host</span>: <span class="hljs-string">&#x27;mystack&#x27;</span>,
 });
 
-element.set({
+element.<span class="hljs-title function_">set</span>({
 
     <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;testers&#x27;</span>,
 
@@ -753,17 +753,17 @@ element.set({
     highlightColor = <span class="hljs-string">&#x27;red&#x27;</span>,
     gridSize = <span class="hljs-number">40</span>;
 
-<span class="hljs-keyword">let</span> grid = scrawl.makeGroup({
+<span class="hljs-keyword">let</span> grid = scrawl.<span class="hljs-title function_">makeGroup</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;grid&#x27;</span>,
-    <span class="hljs-attr">host</span>: cell.name,
+    <span class="hljs-attr">host</span>: cell.<span class="hljs-property">name</span>,
 });
 
 <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> y = <span class="hljs-number">0</span>; y &lt; <span class="hljs-number">400</span>; y += gridSize) {
 
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> x = <span class="hljs-number">0</span>; x &lt; <span class="hljs-number">600</span>; x += gridSize) {
 
-        scrawl.makeBlock({
+        scrawl.<span class="hljs-title function_">makeBlock</span>({
 
             <span class="hljs-attr">name</span>: <span class="hljs-string">`grid-<span class="hljs-subst">${x <span class="hljs-regexp">/ gridSize}-${y /</span> gridSize}</span>`</span>,
             <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;grid&#x27;</span>,
@@ -780,59 +780,59 @@ element.set({
     }
 }
 
-scrawl.makeDragZone({
+scrawl.<span class="hljs-title function_">makeDragZone</span>({
 
     <span class="hljs-attr">zone</span>: stack,
     <span class="hljs-attr">collisionGroup</span>: testers,
     <span class="hljs-attr">endOn</span>: [<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-string">&#x27;leave&#x27;</span>],
 });
 
-<span class="hljs-keyword">let</span> checkHits = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+<span class="hljs-keyword">let</span> checkHits = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">let</span> hits = [];
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        hits.forEach(<span class="hljs-function"><span class="hljs-params">hit</span> =&gt;</span> hit.artefact.set({
+        hits.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">hit</span> =&gt;</span> hit.<span class="hljs-property">artefact</span>.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">fillStyle</span>: baseColor
         }));
 
-        hits = grid.getArtefactCollisions(element);
+        hits = grid.<span class="hljs-title function_">getArtefactCollisions</span>(element);
 
-        hits.forEach(<span class="hljs-function"><span class="hljs-params">hit</span> =&gt;</span> hit.artefact.set({
+        hits.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">hit</span> =&gt;</span> hit.<span class="hljs-property">artefact</span>.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">fillStyle</span>: highlightColor
         }));
     };
 }();
 
-<span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+<span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage3&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage3&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Animation threshhold set to 0.0
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Animation threshhold set to 0.0
 - at least 1px of the stack must be visible for the animation to run
 Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
     };
 }();
 
-<span class="hljs-keyword">let</span> animations = scrawl.makeRender({
+<span class="hljs-keyword">let</span> animations = scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation3&#x27;</span>,
     <span class="hljs-attr">target</span>: [stack, canvas],
-    <span class="hljs-attr">afterCreated</span>: <span class="hljs-function">() =&gt;</span> element.set({ <span class="hljs-attr">roll</span>: <span class="hljs-number">10.001</span> }),
+    <span class="hljs-attr">afterCreated</span>: <span class="hljs-function">() =&gt;</span> element.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">roll</span>: <span class="hljs-number">10.001</span> }),
     <span class="hljs-attr">commence</span>: checkHits,
     <span class="hljs-attr">afterShow</span>: report,
 });
 
-scrawl.observeAndUpdate({
+scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
 
     <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
     <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,
@@ -858,7 +858,7 @@ scrawl.observeAndUpdate({
     },
 });
 
-scrawl.observeAndUpdate({
+scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
 
     <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
     <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,
@@ -886,16 +886,16 @@ scrawl.observeAndUpdate({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#sensitivity&#x27;</span>).value = <span class="hljs-number">50</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#handle_xAbsolute&#x27;</span>).value = <span class="hljs-number">100</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#handle_yAbsolute&#x27;</span>).value = <span class="hljs-number">100</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#offset_xAbsolute&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#offset_yAbsolute&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#roll&#x27;</span>).value = <span class="hljs-number">10</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#pitch&#x27;</span>).value = <span class="hljs-number">20</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#yaw&#x27;</span>).value = <span class="hljs-number">30</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#scale&#x27;</span>).value = <span class="hljs-number">1</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#perspective&#x27;</span>).value = <span class="hljs-number">1200</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#sensitivity&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#handle_xAbsolute&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">100</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#handle_yAbsolute&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">100</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#offset_xAbsolute&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#offset_yAbsolute&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#roll&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">10</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#pitch&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">20</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#yaw&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">30</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#scale&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#perspective&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">1200</span>;</pre></div></div>
             
         </li>
         
@@ -910,9 +910,9 @@ scrawl.observeAndUpdate({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> observer = <span class="hljs-keyword">new</span> IntersectionObserver(<span class="hljs-function">(<span class="hljs-params">entries, observer</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> observer = <span class="hljs-keyword">new</span> <span class="hljs-title class_">IntersectionObserver</span>(<span class="hljs-function">(<span class="hljs-params">entries, observer</span>) =&gt;</span> {
 
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;observer C starts&#x27;</span>, animations[<span class="hljs-number">0</span>].name, animations[<span class="hljs-number">0</span>].isRunning());</pre></div></div>
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;observer C starts&#x27;</span>, animations[<span class="hljs-number">0</span>].<span class="hljs-property">name</span>, animations[<span class="hljs-number">0</span>].<span class="hljs-title function_">isRunning</span>());</pre></div></div>
             
         </li>
         
@@ -927,13 +927,13 @@ scrawl.observeAndUpdate({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    entries.forEach(<span class="hljs-function"><span class="hljs-params">entry</span> =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>    entries.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">entry</span> =&gt;</span> {
 
-        <span class="hljs-keyword">if</span> (entry.isIntersecting) animations.forEach(<span class="hljs-function"><span class="hljs-params">anim</span> =&gt;</span> !anim.isRunning() &amp;&amp; anim.run());
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!entry.isIntersecting) animations.forEach(<span class="hljs-function"><span class="hljs-params">anim</span> =&gt;</span> anim.isRunning() &amp;&amp; anim.halt());
+        <span class="hljs-keyword">if</span> (entry.<span class="hljs-property">isIntersecting</span>) animations.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">anim</span> =&gt;</span> !anim.<span class="hljs-title function_">isRunning</span>() &amp;&amp; anim.<span class="hljs-title function_">run</span>());
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!entry.<span class="hljs-property">isIntersecting</span>) animations.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">anim</span> =&gt;</span> anim.<span class="hljs-title function_">isRunning</span>() &amp;&amp; anim.<span class="hljs-title function_">halt</span>());
     });
 
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;observer C completes&#x27;</span>, animations[<span class="hljs-number">0</span>].name, animations[<span class="hljs-number">0</span>].isRunning());</pre></div></div>
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;observer C completes&#x27;</span>, animations[<span class="hljs-number">0</span>].<span class="hljs-property">name</span>, animations[<span class="hljs-number">0</span>].<span class="hljs-title function_">isRunning</span>());</pre></div></div>
             
         </li>
         
@@ -953,9 +953,9 @@ scrawl.observeAndUpdate({
             </div>
             
             <div class="content"><div class='highlight'><pre>}, {});
-observer.observe(stack.domElement);
+observer.<span class="hljs-title function_">observe</span>(stack.<span class="hljs-property">domElement</span>);
 
-<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;#014c&#x27;</span>, scrawl.library);</pre></div></div>
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;#014c&#x27;</span>, scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

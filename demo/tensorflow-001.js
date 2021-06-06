@@ -142,13 +142,15 @@ let myAsset = scrawl.makeRawAsset({
 });
 
 // The forever loop function, which captures the tensorflow model's output and passes it on to our raw asset for processing
-async function perform (net) {
+const perform = function (net) {
 
-    while (true) {
+    net.segmentPerson(video.source)
+    .then(parts => {
 
-        const parts = await net.segmentPerson(video.source);
-        myAsset.set({ parts });
-    }
+        myAsset.set({parts});
+        perform(net);
+    })
+    .catch(e => console.log(e));
 };
 
 
@@ -164,6 +166,10 @@ scrawl.importMediaStream({
 .then(mycamera => {
 
     video = mycamera;
+
+    // This fixes the issue in Firefox where the media stream will crash Tensorflow if the stream's video element's dimensions have not been set
+    video.source.width = "1280";
+    video.source.height = "720";
 
     // Take the media stream and display it in our canvas element
     scrawl.makePicture({

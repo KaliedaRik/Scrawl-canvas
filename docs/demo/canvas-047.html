@@ -707,23 +707,23 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.library.canvas.mycanvas;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
 
 
-canvas.set({
+canvas.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;honeydew&#x27;</span>,
 });
 
-<span class="hljs-keyword">const</span> easingDisplayComponent = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name, ypos</span>) </span>{
+<span class="hljs-keyword">const</span> easingDisplayComponent = <span class="hljs-keyword">function</span> (<span class="hljs-params">name, ypos</span>) {
 
-    <span class="hljs-keyword">let</span> color = scrawl.makeColor({
+    <span class="hljs-keyword">let</span> color = scrawl.<span class="hljs-title function_">makeColor</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-color`</span>,
         <span class="hljs-attr">easing</span>: name,
         <span class="hljs-attr">minimumColor</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
         <span class="hljs-attr">maximumColor</span>: <span class="hljs-string">&#x27;green&#x27;</span>,
     });
 
-    scrawl.makeLine({
+    scrawl.<span class="hljs-title function_">makeLine</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-line`</span>,
         <span class="hljs-attr">startX</span>: <span class="hljs-number">122</span>,
         <span class="hljs-attr">startY</span>: ypos + <span class="hljs-number">12</span>,
@@ -732,23 +732,23 @@ canvas.set({
         <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
     });
 
-    <span class="hljs-keyword">let</span> wheel = scrawl.makeWheel({
+    <span class="hljs-keyword">let</span> wheel = scrawl.<span class="hljs-title function_">makeWheel</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-wheel`</span>,
         <span class="hljs-attr">radius</span>: <span class="hljs-number">12</span>,
         <span class="hljs-attr">startX</span>: <span class="hljs-number">110</span>,
         <span class="hljs-attr">startY</span>: ypos,
         <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
-        <span class="hljs-attr">fillStyle</span>: color.getRangeColor(<span class="hljs-number">0</span>),
+        <span class="hljs-attr">fillStyle</span>: color.<span class="hljs-title function_">getRangeColor</span>(<span class="hljs-number">0</span>),
     });
 
-    scrawl.makePhrase({
+    scrawl.<span class="hljs-title function_">makePhrase</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-label`</span>,
         <span class="hljs-attr">text</span>: name,
         <span class="hljs-attr">startX</span>: <span class="hljs-number">10</span>,
         <span class="hljs-attr">startY</span>: ypos + <span class="hljs-number">6</span>,
     });
 
-    scrawl.makeTween({
+    scrawl.<span class="hljs-title function_">makeTween</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-move-tween`</span>,
         <span class="hljs-attr">targets</span>: wheel,
         <span class="hljs-attr">duration</span>: <span class="hljs-number">8000</span>,
@@ -762,9 +762,9 @@ canvas.set({
                 <span class="hljs-attr">engine</span>: name,
             },
         ],
-    }).run();
+    }).<span class="hljs-title function_">run</span>();
 
-    scrawl.makeTween({
+    scrawl.<span class="hljs-title function_">makeTween</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-color-tween`</span>,
         <span class="hljs-attr">targets</span>: wheel,
         <span class="hljs-attr">duration</span>: <span class="hljs-number">8000</span>,
@@ -775,15 +775,15 @@ canvas.set({
                 <span class="hljs-attr">attribute</span>: <span class="hljs-string">&#x27;fillStyle&#x27;</span>,
                 <span class="hljs-attr">start</span>: <span class="hljs-number">0</span>,
                 <span class="hljs-attr">end</span>: <span class="hljs-number">1</span>,
-                <span class="hljs-attr">engine</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) </span>{ <span class="hljs-keyword">return</span> color.getRangeColor(position) },
+                <span class="hljs-attr">engine</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">start, change, position</span>) { <span class="hljs-keyword">return</span> color.<span class="hljs-title function_">getRangeColor</span>(position) },
             },
         ],
-    }).run();
+    }).<span class="hljs-title function_">run</span>();
 };
 
 <span class="hljs-keyword">const</span> easings = [<span class="hljs-string">&#x27;easeOutSine&#x27;</span>, <span class="hljs-string">&#x27;easeOutQuad&#x27;</span>, <span class="hljs-string">&#x27;easeOutCubic&#x27;</span>, <span class="hljs-string">&#x27;easeOutQuart&#x27;</span>, <span class="hljs-string">&#x27;easeOutQuint&#x27;</span>, <span class="hljs-string">&#x27;easeOutExpo&#x27;</span>, <span class="hljs-string">&#x27;easeOutCirc&#x27;</span>, <span class="hljs-string">&#x27;easeOutBack&#x27;</span>, <span class="hljs-string">&#x27;easeOutElastic&#x27;</span>, <span class="hljs-string">&#x27;easeOutBounce&#x27;</span>, <span class="hljs-string">&#x27;easeInSine&#x27;</span>, <span class="hljs-string">&#x27;easeInQuad&#x27;</span>, <span class="hljs-string">&#x27;easeInCubic&#x27;</span>, <span class="hljs-string">&#x27;easeInQuart&#x27;</span>, <span class="hljs-string">&#x27;easeInQuint&#x27;</span>, <span class="hljs-string">&#x27;easeInExpo&#x27;</span>, <span class="hljs-string">&#x27;easeInCirc&#x27;</span>, <span class="hljs-string">&#x27;easeInBack&#x27;</span>, <span class="hljs-string">&#x27;easeInElastic&#x27;</span>, <span class="hljs-string">&#x27;easeInBounce&#x27;</span>, <span class="hljs-string">&#x27;easeOutInSine&#x27;</span>, <span class="hljs-string">&#x27;easeOutInQuad&#x27;</span>, <span class="hljs-string">&#x27;easeOutInCubic&#x27;</span>, <span class="hljs-string">&#x27;easeOutInQuart&#x27;</span>, <span class="hljs-string">&#x27;easeOutInQuint&#x27;</span>, <span class="hljs-string">&#x27;easeOutInExpo&#x27;</span>, <span class="hljs-string">&#x27;easeOutInCirc&#x27;</span>, <span class="hljs-string">&#x27;easeOutInBack&#x27;</span>, <span class="hljs-string">&#x27;easeOutInElastic&#x27;</span>, <span class="hljs-string">&#x27;easeOutInBounce&#x27;</span>];
 
-easings.forEach(<span class="hljs-function">(<span class="hljs-params">easing, index</span>) =&gt;</span> easingDisplayComponent(easing, <span class="hljs-number">50</span> + (index * <span class="hljs-number">30</span>)));</pre></div></div>
+easings.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">easing, index</span>) =&gt;</span> <span class="hljs-title function_">easingDisplayComponent</span>(easing, <span class="hljs-number">50</span> + (index * <span class="hljs-number">30</span>)));</pre></div></div>
             
         </li>
         
@@ -799,19 +799,19 @@ easings.forEach(<span class="hljs-function">(<span class="hljs-params">easing, i
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
     };
 }();</pre></div></div>
             
@@ -828,7 +828,7 @@ easings.forEach(<span class="hljs-function">(<span class="hljs-params">easing, i
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-animation&quot;</span>,
     <span class="hljs-attr">target</span>: canvas,
@@ -848,7 +848,7 @@ easings.forEach(<span class="hljs-function">(<span class="hljs-params">easing, i
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

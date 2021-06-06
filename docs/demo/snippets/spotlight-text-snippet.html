@@ -154,8 +154,8 @@
 <pre><code><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../relative/or/absolute/path/to/scrawl.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { mySnippet } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./relative/or/absolute/path/to/snippet/definition/file.js&#x27;</span>;
 
-<span class="hljs-keyword">let</span> myElements = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">&#x27;.some-class&#x27;</span>);
-myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> mySnippet(el));
+<span class="hljs-keyword">let</span> myElements = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.some-class&#x27;</span>);
+myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">mySnippet</span>(el));
 </code></pre>
 <p>Snippet definition functions can be written in any way the developer sees fit - a developer could write a snippet definition so that it:</p>
 <ul>
@@ -218,9 +218,9 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 <h5 id="usage-example">Usage example:</h5>
 <pre><code><span class="hljs-keyword">import</span> spotlightText <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./relative/or/absolute/path/to/this/file.js&#x27;</span>;
 
-<span class="hljs-keyword">let</span> myElements = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">&#x27;.some-class&#x27;</span>);
+<span class="hljs-keyword">let</span> myElements = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.some-class&#x27;</span>);
 
-myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> spotlightText(el));
+myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">spotlightText</span>(el));
 </code></pre>
 <p><strong>Effects on the element:</strong> </p>
 <ul>
@@ -230,7 +230,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">el, args = {}</span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">el, args = {}</span>) {</pre></div></div>
             
         </li>
         
@@ -249,8 +249,8 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> spotlightColor = args.spotlightColor || <span class="hljs-string">&#x27;white&#x27;</span>,
-        backgroundColor = args.backgroundColor || <span class="hljs-string">&#x27;lightgray&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> spotlightColor = args.<span class="hljs-property">spotlightColor</span> || <span class="hljs-string">&#x27;white&#x27;</span>,
+        backgroundColor = args.<span class="hljs-property">backgroundColor</span> || <span class="hljs-string">&#x27;lightgray&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -265,7 +265,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> snippet = scrawl.makeSnippet({</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> snippet = scrawl.<span class="hljs-title function_">makeSnippet</span>({</pre></div></div>
             
         </li>
         
@@ -280,7 +280,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        domElement: el,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">domElement</span>: el,</pre></div></div>
             
         </li>
         
@@ -303,7 +303,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        animationHooks: {},</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">animationHooks</span>: {},</pre></div></div>
             
         </li>
         
@@ -318,7 +318,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        observerSpecs: {},</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">observerSpecs</span>: {},</pre></div></div>
             
         </li>
         
@@ -333,7 +333,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        includeCanvas: <span class="hljs-literal">true</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">includeCanvas</span>: <span class="hljs-literal">true</span>,</pre></div></div>
             
         </li>
         
@@ -348,7 +348,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        canvasSpecs: {},
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">canvasSpecs</span>: {},
     });</pre></div></div>
             
         </li>
@@ -385,12 +385,12 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> canvas = snippet.canvas,
-            animation = snippet.animation,
-            wrapper = snippet.element,
-            name = wrapper.name;
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> canvas = snippet.<span class="hljs-property">canvas</span>,
+            animation = snippet.<span class="hljs-property">animation</span>,
+            wrapper = snippet.<span class="hljs-property">element</span>,
+            name = wrapper.<span class="hljs-property">name</span>;
 
-        canvas.setAsCurrentCanvas();</pre></div></div>
+        canvas.<span class="hljs-title function_">setAsCurrentCanvas</span>();</pre></div></div>
             
         </li>
         
@@ -405,7 +405,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> spotlightGradient = scrawl.makeRadialGradient({
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> spotlightGradient = scrawl.<span class="hljs-title function_">makeRadialGradient</span>({
 
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-gradient`</span>,
             <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
@@ -414,8 +414,8 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
             <span class="hljs-attr">endY</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
             <span class="hljs-attr">endRadius</span>: <span class="hljs-string">&#x27;20%&#x27;</span>,
         })
-        .updateColor(<span class="hljs-number">0</span>, spotlightColor)
-        .updateColor(<span class="hljs-number">999</span>, backgroundColor);</pre></div></div>
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">0</span>, spotlightColor)
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">999</span>, backgroundColor);</pre></div></div>
             
         </li>
         
@@ -430,15 +430,15 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        animation.commence = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>        animation.<span class="hljs-property">commence</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
             <span class="hljs-keyword">let</span> active = <span class="hljs-literal">false</span>;
 
-            <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-                <span class="hljs-keyword">if</span> (canvas.here.active !== active) {
+                <span class="hljs-keyword">if</span> (canvas.<span class="hljs-property">here</span>.<span class="hljs-property">active</span> !== active) {
 
-                    active = canvas.here.active;</pre></div></div>
+                    active = canvas.<span class="hljs-property">here</span>.<span class="hljs-property">active</span>;</pre></div></div>
             
         </li>
         
@@ -453,7 +453,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                    block.set({
+            <div class="content"><div class='highlight'><pre>                    block.<span class="hljs-title function_">set</span>({
                         <span class="hljs-attr">lockTo</span>: (active) ? <span class="hljs-string">&#x27;mouse&#x27;</span> : <span class="hljs-string">&#x27;start&#x27;</span>,
                         <span class="hljs-attr">fillStyle</span>: (active) ? spotlightGradient : backgroundColor,
                     });
@@ -474,7 +474,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> block = scrawl.makeBlock({
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> block = scrawl.<span class="hljs-title function_">makeBlock</span>({
 
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-spotlight`</span>,
             <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;200%&#x27;</span>,

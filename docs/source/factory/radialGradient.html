@@ -509,7 +509,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { mergeOver, addStrings, isa_number, pushUnique, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
@@ -528,10 +528,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> RadialGradient = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">RadialGradient</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-built_in">this</span>.stylesInit(items);
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">stylesInit</span>(items);
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -547,12 +547,12 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = RadialGradient.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">RadialGradient</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
 
-P.type = <span class="hljs-string">&#x27;RadialGradient&#x27;</span>;
-P.lib = <span class="hljs-string">&#x27;styles&#x27;</span>;
-P.isArtefact = <span class="hljs-literal">false</span>;
-P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
+P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;RadialGradient&#x27;</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;styles&#x27;</span>;
+P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">false</span>;
+P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -567,8 +567,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = baseMix(P);
-P = stylesMix(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);
+P = <span class="hljs-title function_">stylesMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -607,10 +607,10 @@ P = stylesMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    startRadius: <span class="hljs-number">0</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">startRadius</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">endRadius</span>: <span class="hljs-number">0</span>,
 };
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
+P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -660,7 +660,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">&#x27;palette&#x27;</span>]);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetObjects</span>, [<span class="hljs-string">&#x27;palette&#x27;</span>]);</pre></div></div>
             
         </li>
         
@@ -703,9 +703,9 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.getters,
-    S = P.setters,
-    D = P.deltaSetters;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.<span class="hljs-property">getters</span>,
+    S = P.<span class="hljs-property">setters</span>,
+    D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
             
         </li>
         
@@ -720,13 +720,13 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>G.startRadius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>G.<span class="hljs-property">startRadius</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.currentStartRadius;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStartRadius</span>;
 };
-G.endRadius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+G.<span class="hljs-property">endRadius</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.currentEndRadius;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEndRadius</span>;
 };</pre></div></div>
             
         </li>
@@ -742,25 +742,25 @@ G.endRadius = <span class="hljs-function"><span class="hljs-keyword">function</s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.startRadius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">startRadius</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.startRadius = item;
-    <span class="hljs-built_in">this</span>.dirtyStyle = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">startRadius</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStyle</span> = <span class="hljs-literal">true</span>;
 };
-S.endRadius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">endRadius</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.endRadius = item;
-    <span class="hljs-built_in">this</span>.dirtyStyle = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">endRadius</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStyle</span> = <span class="hljs-literal">true</span>;
 };
-D.startRadius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">startRadius</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.startRadius = addStrings(<span class="hljs-built_in">this</span>.startRadius, item);
-    <span class="hljs-built_in">this</span>.dirtyStyle = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">startRadius</span> = <span class="hljs-title function_">addStrings</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">startRadius</span>, item);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStyle</span> = <span class="hljs-literal">true</span>;
 };
-D.endRadius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">endRadius</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.endRadius = addStrings(<span class="hljs-built_in">this</span>.endRadius, item);
-    <span class="hljs-built_in">this</span>.dirtyStyle = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">endRadius</span> = <span class="hljs-title function_">addStrings</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">endRadius</span>, item);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStyle</span> = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -789,11 +789,11 @@ D.endRadius = <span class="hljs-function"><span class="hljs-keyword">function</s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.cleanRadius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">width</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">cleanRadius</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">width</span>) {
 
-    <span class="hljs-keyword">const</span> convertLength = <span class="hljs-function">(<span class="hljs-params">val, len</span>) =&gt;</span> {
+    <span class="hljs-keyword">const</span> <span class="hljs-title function_">convertLength</span> = (<span class="hljs-params">val, len</span>) =&gt; {
 
-        <span class="hljs-keyword">if</span> (isa_number(val)) <span class="hljs-keyword">return</span> val;
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(val)) <span class="hljs-keyword">return</span> val;
 
         <span class="hljs-keyword">else</span> {
 
@@ -813,15 +813,15 @@ D.endRadius = <span class="hljs-function"><span class="hljs-keyword">function</s
                 <span class="hljs-keyword">default</span> :
                     val = <span class="hljs-built_in">parseFloat</span>(val);
 
-                    <span class="hljs-keyword">if</span> (!isa_number(val)) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+                    <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">isa_number</span>(val)) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 
                     <span class="hljs-keyword">return</span> ( val / <span class="hljs-number">100</span>) * len;
             }
         }
     };
 
-    <span class="hljs-built_in">this</span>.currentStartRadius = (width) ? convertLength(<span class="hljs-built_in">this</span>.startRadius, width) : <span class="hljs-built_in">this</span>.defs.startRadius;
-    <span class="hljs-built_in">this</span>.currentEndRadius = (width) ? convertLength(<span class="hljs-built_in">this</span>.endRadius, width) : <span class="hljs-built_in">this</span>.defs.endRadius;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStartRadius</span> = (width) ? <span class="hljs-title function_">convertLength</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">startRadius</span>, width) : <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>.<span class="hljs-property">startRadius</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEndRadius</span> = (width) ? <span class="hljs-title function_">convertLength</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">endRadius</span>, width) : <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>.<span class="hljs-property">endRadius</span>;
 };</pre></div></div>
             
         </li>
@@ -837,17 +837,17 @@ D.endRadius = <span class="hljs-function"><span class="hljs-keyword">function</s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.buildStyle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">cell</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">buildStyle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">cell</span>) {
     
     <span class="hljs-keyword">if</span> (cell) {
 
-        <span class="hljs-keyword">let</span> engine = cell.engine;
+        <span class="hljs-keyword">let</span> engine = cell.<span class="hljs-property">engine</span>;
 
         <span class="hljs-keyword">if</span> (engine) {
 
-            <span class="hljs-keyword">let</span> gradient = engine.createRadialGradient(...this.gradientArgs);
+            <span class="hljs-keyword">let</span> gradient = engine.<span class="hljs-title function_">createRadialGradient</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-property">gradientArgs</span>);
             
-            <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.addStopsToGradient(gradient, <span class="hljs-built_in">this</span>.paletteStart, <span class="hljs-built_in">this</span>.paletteEnd, <span class="hljs-built_in">this</span>.cyclePalette);
+            <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">addStopsToGradient</span>(gradient, <span class="hljs-variable language_">this</span>.<span class="hljs-property">paletteStart</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">paletteEnd</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">cyclePalette</span>);
         }
     }
     <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;rgba(0,0,0,0)&#x27;</span>;
@@ -866,13 +866,13 @@ D.endRadius = <span class="hljs-function"><span class="hljs-keyword">function</s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.updateGradientArgs = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">updateGradientArgs</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) {
 
-    <span class="hljs-keyword">let</span> gradientArgs = <span class="hljs-built_in">this</span>.gradientArgs,
-        currentStart = <span class="hljs-built_in">this</span>.currentStart,
-        currentEnd = <span class="hljs-built_in">this</span>.currentEnd,
-        sr = <span class="hljs-built_in">this</span>.currentStartRadius,
-        er = <span class="hljs-built_in">this</span>.currentEndRadius;
+    <span class="hljs-keyword">let</span> gradientArgs = <span class="hljs-variable language_">this</span>.<span class="hljs-property">gradientArgs</span>,
+        currentStart = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStart</span>,
+        currentEnd = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEnd</span>,
+        sr = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStartRadius</span>,
+        er = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEndRadius</span>;
 
     <span class="hljs-keyword">let</span> sx = currentStart[<span class="hljs-number">0</span>] + x,
         sy = currentStart[<span class="hljs-number">1</span>] + y,
@@ -894,8 +894,8 @@ D.endRadius = <span class="hljs-function"><span class="hljs-keyword">function</s
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (sx === ex &amp;&amp; sy === ey &amp;&amp; sr === er) er++;
 
-    gradientArgs.length = <span class="hljs-number">0</span>;
-    gradientArgs.push(sx, sy, sr, ex, ey, er);
+    gradientArgs.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+    gradientArgs.<span class="hljs-title function_">push</span>(sx, sy, sr, ex, ey, er);
 };</pre></div></div>
             
         </li>
@@ -908,7 +908,7 @@ D.endRadius = <span class="hljs-function"><span class="hljs-keyword">function</s
                 <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
-<pre><code><span class="hljs-keyword">let</span> graddy = scrawl.makeRadialGradient({
+<pre><code><span class="hljs-keyword">let</span> graddy = scrawl.<span class="hljs-title function_">makeRadialGradient</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;mygradient&#x27;</span>,
 
@@ -920,7 +920,7 @@ D.endRadius = <span class="hljs-function"><span class="hljs-keyword">function</s
     <span class="hljs-attr">endRadius</span>: <span class="hljs-number">300</span>,
 });
 
-scrawl.makeBlock({
+scrawl.<span class="hljs-title function_">makeBlock</span>({
    
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myblock&#x27;</span>,
    
@@ -939,13 +939,13 @@ scrawl.makeBlock({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeRadialGradient = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeRadialGradient = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> RadialGradient(items);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RadialGradient</span>(items);
 };
 
-<span class="hljs-title">constructors</span>.<span class="hljs-title">RadialGradient</span> = <span class="hljs-title">RadialGradient</span>;</pre></div></div>
+constructors.<span class="hljs-property">RadialGradient</span> = <span class="hljs-title class_">RadialGradient</span>;</pre></div></div>
             
         </li>
         

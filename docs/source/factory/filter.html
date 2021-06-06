@@ -499,7 +499,7 @@
 <pre><code><span class="hljs-comment">// Example: the following code creates a filter that applies a thick red border around the entitys </span>
 <span class="hljs-comment">// it is applied to; if used on a group then it will outline the outside of the group&#x27;s entitys, </span>
 <span class="hljs-comment">// ignoring overlaps between entitys:</span>
-scrawl.makeFilter({
+scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;redBorder&#x27;</span>,
     <span class="hljs-attr">actions</span>: [
         {
@@ -576,7 +576,7 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">cell</span>, <span class="hljs-title">group</span>, <span class="hljs-title">entity</span>, <span class="hljs-title">asset</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, cell, group, entity, asset } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { mergeOver, removeItem, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;</pre></div></div>
@@ -594,15 +594,15 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Filter = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">Filter</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-built_in">this</span>.makeName(items.name);
-    <span class="hljs-built_in">this</span>.register();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(items.<span class="hljs-property">name</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
 
-    <span class="hljs-built_in">this</span>.actions = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">actions</span> = [];
 
-    <span class="hljs-built_in">this</span>.set(items);
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -618,11 +618,11 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Filter.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">&#x27;Filter&#x27;</span>;
-P.lib = <span class="hljs-string">&#x27;filter&#x27;</span>;
-P.isArtefact = <span class="hljs-literal">false</span>;
-P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">Filter</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
+P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Filter&#x27;</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;filter&#x27;</span>;
+P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">false</span>;
+P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -637,7 +637,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = baseMix(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -672,7 +672,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    actions: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">actions</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -692,7 +692,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    method: <span class="hljs-string">&#x27;&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -719,7 +719,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    lineIn: <span class="hljs-string">&#x27;&#x27;</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;&#x27;</span>,
     <span class="hljs-attr">lineMix</span>: <span class="hljs-string">&#x27;&#x27;</span>,
     <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;&#x27;</span>,</pre></div></div>
             
@@ -741,7 +741,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    opacity: <span class="hljs-number">1</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">opacity</span>: <span class="hljs-number">1</span>,</pre></div></div>
             
         </li>
         
@@ -779,7 +779,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    alpha: <span class="hljs-number">255</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">alpha</span>: <span class="hljs-number">255</span>,
     <span class="hljs-attr">angle</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">areaAlphaLevels</span>: <span class="hljs-literal">null</span>,
     <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;&#x27;</span>,
@@ -856,7 +856,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
     <span class="hljs-attr">weights</span>: <span class="hljs-literal">null</span>,
     <span class="hljs-attr">width</span>: <span class="hljs-number">1</span>,
 };
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
+P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -900,9 +900,9 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.kill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">kill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> myname = <span class="hljs-built_in">this</span>.name;</pre></div></div>
+    <span class="hljs-keyword">let</span> myname = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;</pre></div></div>
             
         </li>
         
@@ -917,10 +917,10 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">Object</span>.entries(entity).forEach(<span class="hljs-function">(<span class="hljs-params">[name, ent]</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(entity).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">[name, ent]</span>) =&gt;</span> {
 
-        <span class="hljs-keyword">let</span> f = ent.filters;
-        <span class="hljs-keyword">if</span> (f &amp;&amp; f.indexOf(myname) &gt;= <span class="hljs-number">0</span>) removeItem(f, myname);
+        <span class="hljs-keyword">let</span> f = ent.<span class="hljs-property">filters</span>;
+        <span class="hljs-keyword">if</span> (f &amp;&amp; f.<span class="hljs-title function_">indexOf</span>(myname) &gt;= <span class="hljs-number">0</span>) <span class="hljs-title function_">removeItem</span>(f, myname);
     });</pre></div></div>
             
         </li>
@@ -936,10 +936,10 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">Object</span>.entries(group).forEach(<span class="hljs-function">(<span class="hljs-params">[name, grp]</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(group).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">[name, grp]</span>) =&gt;</span> {
 
-        <span class="hljs-keyword">let</span> f = grp.filters;
-        <span class="hljs-keyword">if</span> (f &amp;&amp; f.indexOf(myname) &gt;= <span class="hljs-number">0</span>) removeItem(f, myname);
+        <span class="hljs-keyword">let</span> f = grp.<span class="hljs-property">filters</span>;
+        <span class="hljs-keyword">if</span> (f &amp;&amp; f.<span class="hljs-title function_">indexOf</span>(myname) &gt;= <span class="hljs-number">0</span>) <span class="hljs-title function_">removeItem</span>(f, myname);
     });</pre></div></div>
             
         </li>
@@ -955,10 +955,10 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">Object</span>.entries(cell).forEach(<span class="hljs-function">(<span class="hljs-params">[name, c]</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(cell).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">[name, c]</span>) =&gt;</span> {
 
-        <span class="hljs-keyword">let</span> f = c.filters;
-        <span class="hljs-keyword">if</span> (f &amp;&amp; f.indexOf(myname) &gt;= <span class="hljs-number">0</span>) removeItem(f, myname);
+        <span class="hljs-keyword">let</span> f = c.<span class="hljs-property">filters</span>;
+        <span class="hljs-keyword">if</span> (f &amp;&amp; f.<span class="hljs-title function_">indexOf</span>(myname) &gt;= <span class="hljs-number">0</span>) <span class="hljs-title function_">removeItem</span>(f, myname);
     });</pre></div></div>
             
         </li>
@@ -974,9 +974,9 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.deregister();
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deregister</span>();
     
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -992,19 +992,19 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> S = P.setters, 
-    D = P.deltaSetters;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> S = P.<span class="hljs-property">setters</span>, 
+    D = P.<span class="hljs-property">deltaSetters</span>;
 
 
-P.set = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+P.<span class="hljs-property">set</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-keyword">const</span> keys = <span class="hljs-built_in">Object</span>.keys(items),
-        keysLen = keys.length;
+    <span class="hljs-keyword">const</span> keys = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(items),
+        keysLen = keys.<span class="hljs-property">length</span>;
 
     <span class="hljs-keyword">if</span> (keysLen) {
 
-        <span class="hljs-keyword">const</span> setters = <span class="hljs-built_in">this</span>.setters,
-            defs = <span class="hljs-built_in">this</span>.defs;
+        <span class="hljs-keyword">const</span> setters = <span class="hljs-variable language_">this</span>.<span class="hljs-property">setters</span>,
+            defs = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>;
         
         <span class="hljs-keyword">let</span> predefined, i, key, value;
 
@@ -1017,28 +1017,28 @@ P.set = <span class="hljs-function"><span class="hljs-keyword">function</span> (
 
                 predefined = setters[key];
 
-                <span class="hljs-keyword">if</span> (predefined) predefined.call(<span class="hljs-built_in">this</span>, value);
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] !== <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-built_in">this</span>[key] = value;
+                <span class="hljs-keyword">if</span> (predefined) predefined.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, value);
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] !== <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-variable language_">this</span>[key] = value;
             }
         }
     }
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.method &amp;&amp; setActionsArray[<span class="hljs-built_in">this</span>.method]) setActionsArray[<span class="hljs-built_in">this</span>.method](<span class="hljs-built_in">this</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">method</span> &amp;&amp; setActionsArray[<span class="hljs-variable language_">this</span>.<span class="hljs-property">method</span>]) setActionsArray[<span class="hljs-variable language_">this</span>.<span class="hljs-property">method</span>](<span class="hljs-variable language_">this</span>);
 
-    <span class="hljs-built_in">this</span>.dirtyFiltersCache = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFiltersCache</span> = <span class="hljs-literal">true</span>;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };
 
 
-P.setDelta = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+P.<span class="hljs-property">setDelta</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-keyword">const</span> keys = <span class="hljs-built_in">Object</span>.keys(items),
-        keysLen = keys.length;
+    <span class="hljs-keyword">const</span> keys = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(items),
+        keysLen = keys.<span class="hljs-property">length</span>;
 
     <span class="hljs-keyword">if</span> (keysLen) {
 
-        <span class="hljs-keyword">const</span> setters = <span class="hljs-built_in">this</span>.deltaSetters,
-            defs = <span class="hljs-built_in">this</span>.defs;
+        <span class="hljs-keyword">const</span> setters = <span class="hljs-variable language_">this</span>.<span class="hljs-property">deltaSetters</span>,
+            defs = <span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>;
         
         <span class="hljs-keyword">let</span> predefined, i, iz, key, value;
 
@@ -1051,16 +1051,16 @@ P.setDelta = <span class="hljs-function"><span class="hljs-keyword">function</sp
 
                 predefined = setters[key];
 
-                <span class="hljs-keyword">if</span> (predefined) predefined.call(<span class="hljs-built_in">this</span>, value);
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] !== <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-built_in">this</span>[key] = addStrings(<span class="hljs-built_in">this</span>[key], value);
+                <span class="hljs-keyword">if</span> (predefined) predefined.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, value);
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] !== <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-variable language_">this</span>[key] = <span class="hljs-title function_">addStrings</span>(<span class="hljs-variable language_">this</span>[key], value);
             }
         }
     }
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.method &amp;&amp; setActionsArray[<span class="hljs-built_in">this</span>.method]) setActionsArray[<span class="hljs-built_in">this</span>.method](<span class="hljs-built_in">this</span>);
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">method</span> &amp;&amp; setActionsArray[<span class="hljs-variable language_">this</span>.<span class="hljs-property">method</span>]) setActionsArray[<span class="hljs-variable language_">this</span>.<span class="hljs-property">method</span>](<span class="hljs-variable language_">this</span>);
 
-    <span class="hljs-built_in">this</span>.dirtyFiltersCache = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFiltersCache</span> = <span class="hljs-literal">true</span>;
     
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -1077,13 +1077,13 @@ P.setDelta = <span class="hljs-function"><span class="hljs-keyword">function</sp
 <p>The legacy system - defining filters using <strong>method</strong> String attributes - has been adapted to use the new system behind the scenes. As a result all legacy filters will continue to work as expected - with one exception: user-defined filters, which allowed the user to coder a function string to pass on to the filter engine, will no longer function in Scrawl-canvas v8.4.0.</p>
 <p>Note that there are no plans to deprecate the legacy method of defining/creating Filters. The following code will continue to work:</p>
 <pre><code><span class="hljs-comment">// __Brightness__ filter</span>
-scrawl.makeFilter({
+scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-bright-filter&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;brightness&#x27;</span>,
     <span class="hljs-attr">level</span>: <span class="hljs-number">0.5</span>,
 
 <span class="hljs-comment">// __Threshhold__ filter</span>
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-duotone-filter&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;threshold&#x27;</span>,
     <span class="hljs-attr">level</span>: <span class="hljs-number">127</span>,
@@ -1126,18 +1126,18 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    alphaToChannels: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">alphaToChannels</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;alpha-to-channels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">includeRed</span>: (f.includeRed != <span class="hljs-literal">null</span>) ? f.includeRed : <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">includeGreen</span>: (f.includeGreen != <span class="hljs-literal">null</span>) ? f.includeGreen : <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">includeBlue</span>: (f.includeBlue != <span class="hljs-literal">null</span>) ? f.includeBlue : <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">excludeRed</span>: (f.excludeRed != <span class="hljs-literal">null</span>) ? f.excludeRed : <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">excludeGreen</span>: (f.excludeGreen != <span class="hljs-literal">null</span>) ? f.excludeGreen : <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">excludeBlue</span>: (f.excludeBlue != <span class="hljs-literal">null</span>) ? f.excludeBlue : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">includeRed</span>: (f.<span class="hljs-property">includeRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeRed</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">includeGreen</span>: (f.<span class="hljs-property">includeGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeGreen</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">includeBlue</span>: (f.<span class="hljs-property">includeBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeBlue</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">excludeRed</span>: (f.<span class="hljs-property">excludeRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">excludeRed</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">excludeGreen</span>: (f.<span class="hljs-property">excludeGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">excludeGreen</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">excludeBlue</span>: (f.<span class="hljs-property">excludeBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">excludeBlue</span> : <span class="hljs-literal">true</span>,
         }];
     },</pre></div></div>
             
@@ -1154,19 +1154,19 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    areaAlpha: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">areaAlpha</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;area-alpha&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">tileWidth</span>: (f.tileWidth != <span class="hljs-literal">null</span>) ? f.tileWidth : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">tileHeight</span>: (f.tileHeight != <span class="hljs-literal">null</span>) ? f.tileHeight : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">offsetX</span>: (f.offsetX != <span class="hljs-literal">null</span>) ? f.offsetX : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">offsetY</span>: (f.offsetY != <span class="hljs-literal">null</span>) ? f.offsetY : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">gutterWidth</span>: (f.gutterWidth != <span class="hljs-literal">null</span>) ? f.gutterWidth : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">gutterHeight</span>: (f.gutterHeight != <span class="hljs-literal">null</span>) ? f.gutterHeight : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">areaAlphaLevels</span>: (f.areaAlphaLevels != <span class="hljs-literal">null</span>) ? f.areaAlphaLevels : [<span class="hljs-number">255</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>],
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">tileWidth</span>: (f.<span class="hljs-property">tileWidth</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">tileWidth</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">tileHeight</span>: (f.<span class="hljs-property">tileHeight</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">tileHeight</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">offsetX</span>: (f.<span class="hljs-property">offsetX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetX</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">offsetY</span>: (f.<span class="hljs-property">offsetY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetY</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">gutterWidth</span>: (f.<span class="hljs-property">gutterWidth</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">gutterWidth</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">gutterHeight</span>: (f.<span class="hljs-property">gutterHeight</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">gutterHeight</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">areaAlphaLevels</span>: (f.<span class="hljs-property">areaAlphaLevels</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">areaAlphaLevels</span> : [<span class="hljs-number">255</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>],
         }];
     },</pre></div></div>
             
@@ -1183,16 +1183,16 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    binary: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">binary</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;binary&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">red</span>: (f.red != <span class="hljs-literal">null</span>) ? f.red : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">green</span>: (f.green != <span class="hljs-literal">null</span>) ? f.green : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">blue</span>: (f.blue != <span class="hljs-literal">null</span>) ? f.blue : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">alpha</span>: (f.alpha != <span class="hljs-literal">null</span>) ? f.alpha : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">red</span>: (f.<span class="hljs-property">red</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">red</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">green</span>: (f.<span class="hljs-property">green</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">green</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">blue</span>: (f.<span class="hljs-property">blue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">blue</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">alpha</span>: (f.<span class="hljs-property">alpha</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">alpha</span> : <span class="hljs-number">0</span>,
         }];
     },</pre></div></div>
             
@@ -1209,16 +1209,16 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    blend: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">blend</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;blend&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineMix</span>: (f.lineMix != <span class="hljs-literal">null</span>) ? f.lineMix : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">blend</span>: (f.blend != <span class="hljs-literal">null</span>) ? f.blend : <span class="hljs-string">&#x27;normal&#x27;</span>,
-            <span class="hljs-attr">offsetX</span>: (f.offsetX != <span class="hljs-literal">null</span>) ? f.offsetX : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">offsetY</span>: (f.offsetY != <span class="hljs-literal">null</span>) ? f.offsetY : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineMix</span>: (f.<span class="hljs-property">lineMix</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineMix</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">blend</span>: (f.<span class="hljs-property">blend</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">blend</span> : <span class="hljs-string">&#x27;normal&#x27;</span>,
+            <span class="hljs-attr">offsetX</span>: (f.<span class="hljs-property">offsetX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetX</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">offsetY</span>: (f.<span class="hljs-property">offsetY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetY</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
         }];
     },</pre></div></div>
             
@@ -1235,12 +1235,12 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    blue: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">blue</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;average-channels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">excludeRed</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">excludeGreen</span>: <span class="hljs-literal">true</span>,
         }];
@@ -1262,22 +1262,22 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    blur: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">blur</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;blur&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">includeRed</span>: (f.includeRed != <span class="hljs-literal">null</span>) ? f.includeRed : <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">includeGreen</span>: (f.includeGreen != <span class="hljs-literal">null</span>) ? f.includeGreen : <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">includeBlue</span>: (f.includeBlue != <span class="hljs-literal">null</span>) ? f.includeBlue : <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">includeAlpha</span>: (f.includeAlpha != <span class="hljs-literal">null</span>) ? f.includeAlpha : <span class="hljs-literal">false</span>,
-            <span class="hljs-attr">excludeTransparentPixels</span>: (f.excludeTransparentPixels != <span class="hljs-literal">null</span>) ? f.excludeTransparentPixels : <span class="hljs-literal">false</span>,
-            <span class="hljs-attr">processHorizontal</span>: (f.processHorizontal != <span class="hljs-literal">null</span>) ? f.processHorizontal : <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">processVertical</span>: (f.processVertical != <span class="hljs-literal">null</span>) ? f.processVertical : <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">radius</span>: (f.radius != <span class="hljs-literal">null</span>) ? f.radius : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">passes</span>: (f.passes != <span class="hljs-literal">null</span>) ? f.passes : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">step</span>: (f.step != <span class="hljs-literal">null</span>) ? f.step : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">includeRed</span>: (f.<span class="hljs-property">includeRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeRed</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">includeGreen</span>: (f.<span class="hljs-property">includeGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeGreen</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">includeBlue</span>: (f.<span class="hljs-property">includeBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeBlue</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">includeAlpha</span>: (f.<span class="hljs-property">includeAlpha</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeAlpha</span> : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">excludeTransparentPixels</span>: (f.<span class="hljs-property">excludeTransparentPixels</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">excludeTransparentPixels</span> : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">processHorizontal</span>: (f.<span class="hljs-property">processHorizontal</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">processHorizontal</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">processVertical</span>: (f.<span class="hljs-property">processVertical</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">processVertical</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">radius</span>: (f.<span class="hljs-property">radius</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">radius</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">passes</span>: (f.<span class="hljs-property">passes</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">passes</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">step</span>: (f.<span class="hljs-property">step</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">step</span> : <span class="hljs-number">1</span>,
         }];
     },</pre></div></div>
             
@@ -1294,13 +1294,13 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    gaussianBlur: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">gaussianBlur</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;gaussian-blur&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">radius</span>: (f.radius != <span class="hljs-literal">null</span>) ? f.radius : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">radius</span>: (f.<span class="hljs-property">radius</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">radius</span> : <span class="hljs-number">1</span>,
         }];
     },</pre></div></div>
             
@@ -1317,14 +1317,14 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    brightness: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        <span class="hljs-keyword">let</span> level = (f.level != <span class="hljs-literal">null</span>) ? f.level : <span class="hljs-number">1</span>;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">brightness</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        <span class="hljs-keyword">let</span> level = (f.<span class="hljs-property">level</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">level</span> : <span class="hljs-number">1</span>;
 
-        f.actions = [{
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;modulate-channels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">red</span>: level,
             <span class="hljs-attr">green</span>: level,
             <span class="hljs-attr">blue</span>: level,
@@ -1344,16 +1344,16 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    channelLevels: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">channelLevels</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;lock-channels-to-levels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">red</span>: (f.red != <span class="hljs-literal">null</span>) ? f.red : [<span class="hljs-number">0</span>],
-            <span class="hljs-attr">green</span>: (f.green != <span class="hljs-literal">null</span>) ? f.green : [<span class="hljs-number">0</span>],
-            <span class="hljs-attr">blue</span>: (f.blue != <span class="hljs-literal">null</span>) ? f.blue : [<span class="hljs-number">0</span>],
-            <span class="hljs-attr">alpha</span>: (f.alpha != <span class="hljs-literal">null</span>) ? f.alpha : [<span class="hljs-number">255</span>],
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">red</span>: (f.<span class="hljs-property">red</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">red</span> : [<span class="hljs-number">0</span>],
+            <span class="hljs-attr">green</span>: (f.<span class="hljs-property">green</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">green</span> : [<span class="hljs-number">0</span>],
+            <span class="hljs-attr">blue</span>: (f.<span class="hljs-property">blue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">blue</span> : [<span class="hljs-number">0</span>],
+            <span class="hljs-attr">alpha</span>: (f.<span class="hljs-property">alpha</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">alpha</span> : [<span class="hljs-number">255</span>],
         }];
     },</pre></div></div>
             
@@ -1370,16 +1370,16 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    channels: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">channels</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;modulate-channels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">red</span>: (f.red != <span class="hljs-literal">null</span>) ? f.red : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">green</span>: (f.green != <span class="hljs-literal">null</span>) ? f.green : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">blue</span>: (f.blue != <span class="hljs-literal">null</span>) ? f.blue : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">alpha</span>: (f.alpha != <span class="hljs-literal">null</span>) ? f.alpha : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">red</span>: (f.<span class="hljs-property">red</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">red</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">green</span>: (f.<span class="hljs-property">green</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">green</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">blue</span>: (f.<span class="hljs-property">blue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">blue</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">alpha</span>: (f.<span class="hljs-property">alpha</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">alpha</span> : <span class="hljs-number">1</span>,
         }];
     },</pre></div></div>
             
@@ -1396,15 +1396,15 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    channelstep: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">channelstep</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;step-channels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">red</span>: (f.red != <span class="hljs-literal">null</span>) ? f.red : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">green</span>: (f.green != <span class="hljs-literal">null</span>) ? f.green : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">blue</span>: (f.blue != <span class="hljs-literal">null</span>) ? f.blue : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">red</span>: (f.<span class="hljs-property">red</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">red</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">green</span>: (f.<span class="hljs-property">green</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">green</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">blue</span>: (f.<span class="hljs-property">blue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">blue</span> : <span class="hljs-number">1</span>,
         }];
     },</pre></div></div>
             
@@ -1421,15 +1421,15 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    channelsToAlpha: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">channelsToAlpha</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;channels-to-alpha&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">includeRed</span>: (f.includeRed != <span class="hljs-literal">null</span>) ? f.includeRed : <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">includeGreen</span>: (f.includeGreen != <span class="hljs-literal">null</span>) ? f.includeGreen : <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">includeBlue</span>: (f.includeBlue != <span class="hljs-literal">null</span>) ? f.includeBlue : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">includeRed</span>: (f.<span class="hljs-property">includeRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeRed</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">includeGreen</span>: (f.<span class="hljs-property">includeGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeGreen</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">includeBlue</span>: (f.<span class="hljs-property">includeBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeBlue</span> : <span class="hljs-literal">true</span>,
         }];
     },</pre></div></div>
             
@@ -1446,13 +1446,13 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    chroma: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">chroma</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;chroma&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">ranges</span>: (f.ranges != <span class="hljs-literal">null</span>) ? f.ranges : [],
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">ranges</span>: (f.<span class="hljs-property">ranges</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">ranges</span> : [],
         }];
     },</pre></div></div>
             
@@ -1469,17 +1469,17 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    chromakey: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">chromakey</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;colors-to-alpha&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">red</span>: (f.red != <span class="hljs-literal">null</span>) ? f.red : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">green</span>: (f.green != <span class="hljs-literal">null</span>) ? f.green : <span class="hljs-number">255</span>,
-            <span class="hljs-attr">blue</span>: (f.blue != <span class="hljs-literal">null</span>) ? f.blue : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">transparentAt</span>: (f.transparentAt != <span class="hljs-literal">null</span>) ? f.transparentAt : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">opaqueAt</span>: (f.opaqueAt != <span class="hljs-literal">null</span>) ? f.opaqueAt : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">red</span>: (f.<span class="hljs-property">red</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">red</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">green</span>: (f.<span class="hljs-property">green</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">green</span> : <span class="hljs-number">255</span>,
+            <span class="hljs-attr">blue</span>: (f.<span class="hljs-property">blue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">blue</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">transparentAt</span>: (f.<span class="hljs-property">transparentAt</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">transparentAt</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">opaqueAt</span>: (f.<span class="hljs-property">opaqueAt</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opaqueAt</span> : <span class="hljs-number">1</span>,
         }];
     },</pre></div></div>
             
@@ -1496,18 +1496,18 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    clampChannels: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">clampChannels</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;clamp-channels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">lowRed</span>: (f.lowRed != <span class="hljs-literal">null</span>) ? f.lowRed : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">lowGreen</span>: (f.lowGreen != <span class="hljs-literal">null</span>) ? f.lowGreen : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">lowBlue</span>: (f.lowBlue != <span class="hljs-literal">null</span>) ? f.lowBlue : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">highRed</span>: (f.highRed != <span class="hljs-literal">null</span>) ? f.highRed : <span class="hljs-number">255</span>,
-            <span class="hljs-attr">highGreen</span>: (f.highGreen != <span class="hljs-literal">null</span>) ? f.highGreen : <span class="hljs-number">255</span>,
-            <span class="hljs-attr">highBlue</span>: (f.highBlue != <span class="hljs-literal">null</span>) ? f.highBlue : <span class="hljs-number">255</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">lowRed</span>: (f.<span class="hljs-property">lowRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lowRed</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">lowGreen</span>: (f.<span class="hljs-property">lowGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lowGreen</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">lowBlue</span>: (f.<span class="hljs-property">lowBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lowBlue</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">highRed</span>: (f.<span class="hljs-property">highRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">highRed</span> : <span class="hljs-number">255</span>,
+            <span class="hljs-attr">highGreen</span>: (f.<span class="hljs-property">highGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">highGreen</span> : <span class="hljs-number">255</span>,
+            <span class="hljs-attr">highBlue</span>: (f.<span class="hljs-property">highBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">highBlue</span> : <span class="hljs-number">255</span>,
         }];
     },</pre></div></div>
             
@@ -1524,16 +1524,16 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    compose: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">compose</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;compose&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineMix</span>: (f.lineMix != <span class="hljs-literal">null</span>) ? f.lineMix : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">compose</span>: (f.compose != <span class="hljs-literal">null</span>) ? f.compose : <span class="hljs-string">&#x27;source-over&#x27;</span>,
-            <span class="hljs-attr">offsetX</span>: (f.offsetX != <span class="hljs-literal">null</span>) ? f.offsetX : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">offsetY</span>: (f.offsetY != <span class="hljs-literal">null</span>) ? f.offsetY : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineMix</span>: (f.<span class="hljs-property">lineMix</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineMix</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">compose</span>: (f.<span class="hljs-property">compose</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">compose</span> : <span class="hljs-string">&#x27;source-over&#x27;</span>,
+            <span class="hljs-attr">offsetX</span>: (f.<span class="hljs-property">offsetX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetX</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">offsetY</span>: (f.<span class="hljs-property">offsetY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetY</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
         }];
     },</pre></div></div>
             
@@ -1550,21 +1550,21 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    corrode: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">corrode</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;corrode&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">width</span>: (f.width != <span class="hljs-literal">null</span>) ? f.width : <span class="hljs-number">3</span>,
-            <span class="hljs-attr">height</span>: (f.height != <span class="hljs-literal">null</span>) ? f.height : <span class="hljs-number">3</span>,
-            <span class="hljs-attr">offsetX</span>: (f.offsetX != <span class="hljs-literal">null</span>) ? f.offsetX : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">offsetY</span>: (f.offsetY != <span class="hljs-literal">null</span>) ? f.offsetY : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">includeRed</span>: (f.includeRed != <span class="hljs-literal">null</span>) ? f.includeRed : <span class="hljs-literal">false</span>,
-            <span class="hljs-attr">includeGreen</span>: (f.includeGreen != <span class="hljs-literal">null</span>) ? f.includeGreen : <span class="hljs-literal">false</span>,
-            <span class="hljs-attr">includeBlue</span>: (f.includeBlue != <span class="hljs-literal">null</span>) ? f.includeBlue : <span class="hljs-literal">false</span>,
-            <span class="hljs-attr">includeAlpha</span>: (f.includeAlpha != <span class="hljs-literal">null</span>) ? f.includeAlpha : <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">operation</span>: (f.operation != <span class="hljs-literal">null</span>) ? f.operation : <span class="hljs-string">&#x27;mean&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">width</span>: (f.<span class="hljs-property">width</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">width</span> : <span class="hljs-number">3</span>,
+            <span class="hljs-attr">height</span>: (f.<span class="hljs-property">height</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">height</span> : <span class="hljs-number">3</span>,
+            <span class="hljs-attr">offsetX</span>: (f.<span class="hljs-property">offsetX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetX</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">offsetY</span>: (f.<span class="hljs-property">offsetY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetY</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">includeRed</span>: (f.<span class="hljs-property">includeRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeRed</span> : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">includeGreen</span>: (f.<span class="hljs-property">includeGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeGreen</span> : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">includeBlue</span>: (f.<span class="hljs-property">includeBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeBlue</span> : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">includeAlpha</span>: (f.<span class="hljs-property">includeAlpha</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeAlpha</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">operation</span>: (f.<span class="hljs-property">operation</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">operation</span> : <span class="hljs-string">&#x27;mean&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
         }];
     },</pre></div></div>
             
@@ -1581,12 +1581,12 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    cyan: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">cyan</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;average-channels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">includeGreen</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">includeBlue</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">excludeRed</span>: <span class="hljs-literal">true</span>,
@@ -1606,20 +1606,20 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    displace: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">displace</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;displace&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineMix</span>: (f.lineMix != <span class="hljs-literal">null</span>) ? f.lineMix : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">channelX</span>: (f.channelX != <span class="hljs-literal">null</span>) ? f.channelX : <span class="hljs-string">&#x27;red&#x27;</span>,
-            <span class="hljs-attr">channelY</span>: (f.channelY != <span class="hljs-literal">null</span>) ? f.channelY : <span class="hljs-string">&#x27;green&#x27;</span>,
-            <span class="hljs-attr">offsetX</span>: (f.offsetX != <span class="hljs-literal">null</span>) ? f.offsetX : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">offsetY</span>: (f.offsetY != <span class="hljs-literal">null</span>) ? f.offsetY : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">scaleX</span>: (f.scaleX != <span class="hljs-literal">null</span>) ? f.scaleX : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">scaleY</span>: (f.scaleY != <span class="hljs-literal">null</span>) ? f.scaleY : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">transparentEdges</span>: (f.transparentEdges != <span class="hljs-literal">null</span>) ? f.transparentEdges : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineMix</span>: (f.<span class="hljs-property">lineMix</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineMix</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">channelX</span>: (f.<span class="hljs-property">channelX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">channelX</span> : <span class="hljs-string">&#x27;red&#x27;</span>,
+            <span class="hljs-attr">channelY</span>: (f.<span class="hljs-property">channelY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">channelY</span> : <span class="hljs-string">&#x27;green&#x27;</span>,
+            <span class="hljs-attr">offsetX</span>: (f.<span class="hljs-property">offsetX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetX</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">offsetY</span>: (f.<span class="hljs-property">offsetY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetY</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">scaleX</span>: (f.<span class="hljs-property">scaleX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">scaleX</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">scaleY</span>: (f.<span class="hljs-property">scaleY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">scaleY</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">transparentEdges</span>: (f.<span class="hljs-property">transparentEdges</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">transparentEdges</span> : <span class="hljs-literal">false</span>,
         }];
     },</pre></div></div>
             
@@ -1636,12 +1636,12 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    edgeDetect: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">edgeDetect</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;matrix&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">width</span>: <span class="hljs-number">3</span>,
             <span class="hljs-attr">height</span>: <span class="hljs-number">3</span>,
             <span class="hljs-attr">offsetX</span>: <span class="hljs-number">1</span>,
@@ -1667,58 +1667,58 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    emboss: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">emboss</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
         <span class="hljs-keyword">const</span> actions = [];
-        <span class="hljs-keyword">if</span> (f.useNaturalGrayscale) {
-            actions.push({
+        <span class="hljs-keyword">if</span> (f.<span class="hljs-property">useNaturalGrayscale</span>) {
+            actions.<span class="hljs-title function_">push</span>({
                 <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;grayscale&#x27;</span>,
-                <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
+                <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
                 <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;emboss-work&#x27;</span>,
             });
         }
         <span class="hljs-keyword">else</span> {
-            actions.push({
+            actions.<span class="hljs-title function_">push</span>({
                 <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;average-channels&#x27;</span>,
-                <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
+                <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
                 <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;emboss-work&#x27;</span>,
                 <span class="hljs-attr">includeRed</span>: <span class="hljs-literal">true</span>,
                 <span class="hljs-attr">includeGreen</span>: <span class="hljs-literal">true</span>,
                 <span class="hljs-attr">includeBlue</span>: <span class="hljs-literal">true</span>,
             });
         }
-        <span class="hljs-keyword">if</span> (f.clamp) {
-            actions.push({
+        <span class="hljs-keyword">if</span> (f.<span class="hljs-property">clamp</span>) {
+            actions.<span class="hljs-title function_">push</span>({
                 <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;clamp-channels&#x27;</span>,
                 <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;emboss-work&#x27;</span>,
                 <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;emboss-work&#x27;</span>,
-                <span class="hljs-attr">lowRed</span>: <span class="hljs-number">0</span> + f.clamp, 
-                <span class="hljs-attr">lowGreen</span>: <span class="hljs-number">0</span> + f.clamp, 
-                <span class="hljs-attr">lowBlue</span>: <span class="hljs-number">0</span> + f.clamp, 
-                <span class="hljs-attr">highRed</span>: <span class="hljs-number">255</span> - f.clamp, 
-                <span class="hljs-attr">highGreen</span>: <span class="hljs-number">255</span> - f.clamp, 
-                <span class="hljs-attr">highBlue</span>: <span class="hljs-number">255</span> - f.clamp,
+                <span class="hljs-attr">lowRed</span>: <span class="hljs-number">0</span> + f.<span class="hljs-property">clamp</span>, 
+                <span class="hljs-attr">lowGreen</span>: <span class="hljs-number">0</span> + f.<span class="hljs-property">clamp</span>, 
+                <span class="hljs-attr">lowBlue</span>: <span class="hljs-number">0</span> + f.<span class="hljs-property">clamp</span>, 
+                <span class="hljs-attr">highRed</span>: <span class="hljs-number">255</span> - f.<span class="hljs-property">clamp</span>, 
+                <span class="hljs-attr">highGreen</span>: <span class="hljs-number">255</span> - f.<span class="hljs-property">clamp</span>, 
+                <span class="hljs-attr">highBlue</span>: <span class="hljs-number">255</span> - f.<span class="hljs-property">clamp</span>,
             });
         }
-        <span class="hljs-keyword">if</span> (f.smoothing) {
-            actions.push({
+        <span class="hljs-keyword">if</span> (f.<span class="hljs-property">smoothing</span>) {
+            actions.<span class="hljs-title function_">push</span>({
                 <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;gaussian-blur&#x27;</span>,
                 <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;emboss-work&#x27;</span>,
                 <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;emboss-work&#x27;</span>,
-                <span class="hljs-attr">radius</span>: f.smoothing,
+                <span class="hljs-attr">radius</span>: f.<span class="hljs-property">smoothing</span>,
             });
         }
-        actions.push({
+        actions.<span class="hljs-title function_">push</span>({
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;emboss&#x27;</span>,
             <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;emboss-work&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">angle</span>: (f.angle != <span class="hljs-literal">null</span>) ? f.angle : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">strength</span>: (f.strength != <span class="hljs-literal">null</span>) ? f.strength : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">tolerance</span>: (f.tolerance != <span class="hljs-literal">null</span>) ? f.tolerance : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">keepOnlyChangedAreas</span>: (f.keepOnlyChangedAreas != <span class="hljs-literal">null</span>) ? f.keepOnlyChangedAreas : <span class="hljs-literal">false</span>,
-            <span class="hljs-attr">postProcessResults</span>: (f.postProcessResults != <span class="hljs-literal">null</span>) ? f.postProcessResults : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">angle</span>: (f.<span class="hljs-property">angle</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">angle</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">strength</span>: (f.<span class="hljs-property">strength</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">strength</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">tolerance</span>: (f.<span class="hljs-property">tolerance</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">tolerance</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">keepOnlyChangedAreas</span>: (f.<span class="hljs-property">keepOnlyChangedAreas</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">keepOnlyChangedAreas</span> : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">postProcessResults</span>: (f.<span class="hljs-property">postProcessResults</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">postProcessResults</span> : <span class="hljs-literal">true</span>,
         });
-        f.actions = actions;
+        f.<span class="hljs-property">actions</span> = actions;
     },</pre></div></div>
             
         </li>
@@ -1734,16 +1734,16 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    flood: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">flood</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;flood&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">red</span>: (f.red != <span class="hljs-literal">null</span>) ? f.red : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">green</span>: (f.green != <span class="hljs-literal">null</span>) ? f.green : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">blue</span>: (f.blue != <span class="hljs-literal">null</span>) ? f.blue : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">alpha</span>: (f.alpha != <span class="hljs-literal">null</span>) ? f.alpha : <span class="hljs-number">255</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">red</span>: (f.<span class="hljs-property">red</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">red</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">green</span>: (f.<span class="hljs-property">green</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">green</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">blue</span>: (f.<span class="hljs-property">blue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">blue</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">alpha</span>: (f.<span class="hljs-property">alpha</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">alpha</span> : <span class="hljs-number">255</span>,
         }];
     },</pre></div></div>
             
@@ -1760,12 +1760,12 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    gray: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">gray</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;average-channels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">includeRed</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">includeGreen</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">includeBlue</span>: <span class="hljs-literal">true</span>,
@@ -1785,12 +1785,12 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    grayscale: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">grayscale</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;grayscale&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
         }];
     },</pre></div></div>
             
@@ -1807,12 +1807,12 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    green: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">green</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;average-channels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">excludeRed</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">excludeBlue</span>: <span class="hljs-literal">true</span>,
         }];
@@ -1831,18 +1831,18 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    image: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">image</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
 
-        f.actions = [{
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;process-image&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">asset</span>: (f.asset != <span class="hljs-literal">null</span>) ? f.asset : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">width</span>: (f.width != <span class="hljs-literal">null</span>) ? f.width : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">height</span>: (f.height != <span class="hljs-literal">null</span>) ? f.height : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">copyWidth</span>: (f.copyWidth != <span class="hljs-literal">null</span>) ? f.copyWidth : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">copyHeight</span>: (f.copyHeight != <span class="hljs-literal">null</span>) ? f.copyHeight : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">copyX</span>: (f.copyX != <span class="hljs-literal">null</span>) ? f.copyX : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">copyY</span>: (f.copyY != <span class="hljs-literal">null</span>) ? f.copyY : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">asset</span>: (f.<span class="hljs-property">asset</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">asset</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">width</span>: (f.<span class="hljs-property">width</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">width</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">height</span>: (f.<span class="hljs-property">height</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">height</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">copyWidth</span>: (f.<span class="hljs-property">copyWidth</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">copyWidth</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">copyHeight</span>: (f.<span class="hljs-property">copyHeight</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">copyHeight</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">copyX</span>: (f.<span class="hljs-property">copyX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">copyX</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">copyY</span>: (f.<span class="hljs-property">copyY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">copyY</span> : <span class="hljs-number">0</span>,
         }];
     },</pre></div></div>
             
@@ -1859,12 +1859,12 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    invert: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">invert</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;invert-channels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">includeRed</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">includeGreen</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">includeBlue</span>: <span class="hljs-literal">true</span>,
@@ -1884,12 +1884,12 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    magenta: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">magenta</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;average-channels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">includeRed</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">includeBlue</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">excludeGreen</span>: <span class="hljs-literal">true</span>,
@@ -1909,21 +1909,21 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    matrix: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">matrix</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;matrix&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">width</span>: <span class="hljs-number">3</span>,
             <span class="hljs-attr">height</span>: <span class="hljs-number">3</span>,
             <span class="hljs-attr">offsetX</span>: <span class="hljs-number">1</span>,
             <span class="hljs-attr">offsetY</span>: <span class="hljs-number">1</span>,
-            <span class="hljs-attr">includeRed</span>: (f.includeRed != <span class="hljs-literal">null</span>) ? f.includeRed : <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">includeGreen</span>: (f.includeGreen != <span class="hljs-literal">null</span>) ? f.includeGreen : <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">includeBlue</span>: (f.includeBlue != <span class="hljs-literal">null</span>) ? f.includeBlue : <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">includeAlpha</span>: (f.includeAlpha != <span class="hljs-literal">null</span>) ? f.includeAlpha : <span class="hljs-literal">false</span>,
-            <span class="hljs-attr">weights</span>: (f.weights != <span class="hljs-literal">null</span>) ? f.weights : [<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>],
+            <span class="hljs-attr">includeRed</span>: (f.<span class="hljs-property">includeRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeRed</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">includeGreen</span>: (f.<span class="hljs-property">includeGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeGreen</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">includeBlue</span>: (f.<span class="hljs-property">includeBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeBlue</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">includeAlpha</span>: (f.<span class="hljs-property">includeAlpha</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeAlpha</span> : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">weights</span>: (f.<span class="hljs-property">weights</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">weights</span> : [<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>],
         }];
     },</pre></div></div>
             
@@ -1940,21 +1940,21 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    matrix5: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">matrix5</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;matrix&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">width</span>: <span class="hljs-number">5</span>,
             <span class="hljs-attr">height</span>: <span class="hljs-number">5</span>,
             <span class="hljs-attr">offsetX</span>: <span class="hljs-number">2</span>,
             <span class="hljs-attr">offsetY</span>: <span class="hljs-number">2</span>,
-            <span class="hljs-attr">includeRed</span>: (f.includeRed != <span class="hljs-literal">null</span>) ? f.includeRed : <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">includeGreen</span>: (f.includeGreen != <span class="hljs-literal">null</span>) ? f.includeGreen : <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">includeBlue</span>: (f.includeBlue != <span class="hljs-literal">null</span>) ? f.includeBlue : <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">includeAlpha</span>: (f.includeAlpha != <span class="hljs-literal">null</span>) ? f.includeAlpha : <span class="hljs-literal">false</span>,
-            <span class="hljs-attr">weights</span>: (f.weights != <span class="hljs-literal">null</span>) ? f.weights : [<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>],
+            <span class="hljs-attr">includeRed</span>: (f.<span class="hljs-property">includeRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeRed</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">includeGreen</span>: (f.<span class="hljs-property">includeGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeGreen</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">includeBlue</span>: (f.<span class="hljs-property">includeBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeBlue</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">includeAlpha</span>: (f.<span class="hljs-property">includeAlpha</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeAlpha</span> : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">weights</span>: (f.<span class="hljs-property">weights</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">weights</span> : [<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>],
         }];
     },</pre></div></div>
             
@@ -1971,12 +1971,12 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    notblue: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">notblue</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;set-channel-to-level&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">includeBlue</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">level</span>: <span class="hljs-number">0</span>,
         }];
@@ -1995,12 +1995,12 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    notgreen: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">notgreen</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;set-channel-to-level&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">includeGreen</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">level</span>: <span class="hljs-number">0</span>,
         }];
@@ -2019,12 +2019,12 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    notred: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">notred</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;set-channel-to-level&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">includeRed</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">level</span>: <span class="hljs-number">0</span>,
         }];
@@ -2043,20 +2043,20 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    offset: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">offset</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;offset&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">offsetRedX</span>: (f.offsetX != <span class="hljs-literal">null</span>) ? f.offsetX : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">offsetRedY</span>: (f.offsetY != <span class="hljs-literal">null</span>) ? f.offsetY : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">offsetGreenX</span>: (f.offsetX != <span class="hljs-literal">null</span>) ? f.offsetX : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">offsetGreenY</span>: (f.offsetY != <span class="hljs-literal">null</span>) ? f.offsetY : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">offsetBlueX</span>: (f.offsetX != <span class="hljs-literal">null</span>) ? f.offsetX : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">offsetBlueY</span>: (f.offsetY != <span class="hljs-literal">null</span>) ? f.offsetY : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">offsetAlphaX</span>: (f.offsetX != <span class="hljs-literal">null</span>) ? f.offsetX : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">offsetAlphaY</span>: (f.offsetY != <span class="hljs-literal">null</span>) ? f.offsetY : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">offsetRedX</span>: (f.<span class="hljs-property">offsetX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetX</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">offsetRedY</span>: (f.<span class="hljs-property">offsetY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetY</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">offsetGreenX</span>: (f.<span class="hljs-property">offsetX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetX</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">offsetGreenY</span>: (f.<span class="hljs-property">offsetY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetY</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">offsetBlueX</span>: (f.<span class="hljs-property">offsetX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetX</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">offsetBlueY</span>: (f.<span class="hljs-property">offsetY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetY</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">offsetAlphaX</span>: (f.<span class="hljs-property">offsetX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetX</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">offsetAlphaY</span>: (f.<span class="hljs-property">offsetY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetY</span> : <span class="hljs-number">0</span>,
         }];
     },</pre></div></div>
             
@@ -2073,20 +2073,20 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    offsetChannels: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">offsetChannels</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;offset&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">offsetRedX</span>: (f.offsetRedX != <span class="hljs-literal">null</span>) ? f.offsetRedX : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">offsetRedY</span>: (f.offsetRedY != <span class="hljs-literal">null</span>) ? f.offsetRedY : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">offsetGreenX</span>: (f.offsetGreenX != <span class="hljs-literal">null</span>) ? f.offsetGreenX : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">offsetGreenY</span>: (f.offsetGreenY != <span class="hljs-literal">null</span>) ? f.offsetGreenY : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">offsetBlueX</span>: (f.offsetBlueX != <span class="hljs-literal">null</span>) ? f.offsetBlueX : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">offsetBlueY</span>: (f.offsetBlueY != <span class="hljs-literal">null</span>) ? f.offsetBlueY : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">offsetAlphaX</span>: (f.offsetAlphaX != <span class="hljs-literal">null</span>) ? f.offsetAlphaX : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">offsetAlphaY</span>: (f.offsetAlphaY != <span class="hljs-literal">null</span>) ? f.offsetAlphaY : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">offsetRedX</span>: (f.<span class="hljs-property">offsetRedX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetRedX</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">offsetRedY</span>: (f.<span class="hljs-property">offsetRedY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetRedY</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">offsetGreenX</span>: (f.<span class="hljs-property">offsetGreenX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetGreenX</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">offsetGreenY</span>: (f.<span class="hljs-property">offsetGreenY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetGreenY</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">offsetBlueX</span>: (f.<span class="hljs-property">offsetBlueX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetBlueX</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">offsetBlueY</span>: (f.<span class="hljs-property">offsetBlueY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetBlueY</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">offsetAlphaX</span>: (f.<span class="hljs-property">offsetAlphaX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetAlphaX</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">offsetAlphaY</span>: (f.<span class="hljs-property">offsetAlphaY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetAlphaY</span> : <span class="hljs-number">0</span>,
         }];
     },</pre></div></div>
             
@@ -2103,20 +2103,20 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    pixelate: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">pixelate</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;pixelate&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">tileWidth</span>: (f.tileWidth != <span class="hljs-literal">null</span>) ? f.tileWidth : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">tileHeight</span>: (f.tileHeight != <span class="hljs-literal">null</span>) ? f.tileHeight : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">offsetX</span>: (f.offsetX != <span class="hljs-literal">null</span>) ? f.offsetX : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">offsetY</span>: (f.offsetY != <span class="hljs-literal">null</span>) ? f.offsetY : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">includeRed</span>: (f.includeRed != <span class="hljs-literal">null</span>) ? f.includeRed : <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">includeGreen</span>: (f.includeGreen != <span class="hljs-literal">null</span>) ? f.includeGreen : <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">includeBlue</span>: (f.includeBlue != <span class="hljs-literal">null</span>) ? f.includeBlue : <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">includeAlpha</span>: (f.includeAlpha != <span class="hljs-literal">null</span>) ? f.includeAlpha : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">tileWidth</span>: (f.<span class="hljs-property">tileWidth</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">tileWidth</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">tileHeight</span>: (f.<span class="hljs-property">tileHeight</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">tileHeight</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">offsetX</span>: (f.<span class="hljs-property">offsetX</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetX</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">offsetY</span>: (f.<span class="hljs-property">offsetY</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetY</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">includeRed</span>: (f.<span class="hljs-property">includeRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeRed</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">includeGreen</span>: (f.<span class="hljs-property">includeGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeGreen</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">includeBlue</span>: (f.<span class="hljs-property">includeBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeBlue</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">includeAlpha</span>: (f.<span class="hljs-property">includeAlpha</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeAlpha</span> : <span class="hljs-literal">false</span>,
         }];
     },</pre></div></div>
             
@@ -2133,12 +2133,12 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    red: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">red</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;average-channels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">excludeGreen</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">excludeBlue</span>: <span class="hljs-literal">true</span>,
         }];
@@ -2157,14 +2157,14 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    saturation: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        <span class="hljs-keyword">let</span> level = (f.level != <span class="hljs-literal">null</span>) ? f.level : <span class="hljs-number">1</span>;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">saturation</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        <span class="hljs-keyword">let</span> level = (f.<span class="hljs-property">level</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">level</span> : <span class="hljs-number">1</span>;
 
-        f.actions = [{
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;modulate-channels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">red</span>: level,
             <span class="hljs-attr">green</span>: level,
             <span class="hljs-attr">blue</span>: level,
@@ -2185,12 +2185,12 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    sepia: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">sepia</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;tint-channels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">redInRed</span>: <span class="hljs-number">0.393</span>,
             <span class="hljs-attr">redInGreen</span>: <span class="hljs-number">0.349</span>,
             <span class="hljs-attr">redInBlue</span>: <span class="hljs-number">0.272</span>,
@@ -2216,12 +2216,12 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    sharpen: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">sharpen</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;matrix&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">width</span>: <span class="hljs-number">3</span>,
             <span class="hljs-attr">height</span>: <span class="hljs-number">3</span>,
             <span class="hljs-attr">offsetX</span>: <span class="hljs-number">1</span>,
@@ -2247,29 +2247,29 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    threshold: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        <span class="hljs-keyword">let</span> lowRed = (f.lowRed != <span class="hljs-literal">null</span>) ? f.lowRed : <span class="hljs-number">0</span>,
-            lowGreen = (f.lowGreen != <span class="hljs-literal">null</span>) ? f.lowGreen : <span class="hljs-number">0</span>,
-            lowBlue = (f.lowBlue != <span class="hljs-literal">null</span>) ? f.lowBlue : <span class="hljs-number">0</span>,
-            lowAlpha = (f.lowAlpha != <span class="hljs-literal">null</span>) ? f.lowAlpha : <span class="hljs-number">255</span>,
-            highRed = (f.highRed != <span class="hljs-literal">null</span>) ? f.highRed : <span class="hljs-number">255</span>,
-            highGreen = (f.highGreen != <span class="hljs-literal">null</span>) ? f.highGreen : <span class="hljs-number">255</span>,
-            highBlue = (f.highBlue != <span class="hljs-literal">null</span>) ? f.highBlue : <span class="hljs-number">255</span>,
-            highAlpha = (f.highAlpha != <span class="hljs-literal">null</span>) ? f.highAlpha : <span class="hljs-number">255</span>;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">threshold</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        <span class="hljs-keyword">let</span> lowRed = (f.<span class="hljs-property">lowRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lowRed</span> : <span class="hljs-number">0</span>,
+            lowGreen = (f.<span class="hljs-property">lowGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lowGreen</span> : <span class="hljs-number">0</span>,
+            lowBlue = (f.<span class="hljs-property">lowBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lowBlue</span> : <span class="hljs-number">0</span>,
+            lowAlpha = (f.<span class="hljs-property">lowAlpha</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lowAlpha</span> : <span class="hljs-number">255</span>,
+            highRed = (f.<span class="hljs-property">highRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">highRed</span> : <span class="hljs-number">255</span>,
+            highGreen = (f.<span class="hljs-property">highGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">highGreen</span> : <span class="hljs-number">255</span>,
+            highBlue = (f.<span class="hljs-property">highBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">highBlue</span> : <span class="hljs-number">255</span>,
+            highAlpha = (f.<span class="hljs-property">highAlpha</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">highAlpha</span> : <span class="hljs-number">255</span>;
             
 
-        <span class="hljs-keyword">let</span> low = (f.low != <span class="hljs-literal">null</span>) ? f.low : [lowRed, lowGreen, lowBlue, lowAlpha],
-            high = (f.high != <span class="hljs-literal">null</span>) ? f.high : [highRed, highGreen, highBlue, highAlpha];
+        <span class="hljs-keyword">let</span> low = (f.<span class="hljs-property">low</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">low</span> : [lowRed, lowGreen, lowBlue, lowAlpha],
+            high = (f.<span class="hljs-property">high</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">high</span> : [highRed, highGreen, highBlue, highAlpha];
 
-        f.actions = [{
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;threshold&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">level</span>: (f.level != <span class="hljs-literal">null</span>) ? f.level : <span class="hljs-number">128</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">level</span>: (f.<span class="hljs-property">level</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">level</span> : <span class="hljs-number">128</span>,
             low,
             high,
-            <span class="hljs-attr">includeAlpha</span>: (f.includeAlpha != <span class="hljs-literal">null</span>) ? f.includeAlpha : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">includeAlpha</span>: (f.<span class="hljs-property">includeAlpha</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeAlpha</span> : <span class="hljs-literal">false</span>,
         }];
     },</pre></div></div>
             
@@ -2286,21 +2286,21 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    tint: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">tint</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;tint-channels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">redInRed</span>: (f.redInRed != <span class="hljs-literal">null</span>) ? f.redInRed : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">redInGreen</span>: (f.redInGreen != <span class="hljs-literal">null</span>) ? f.redInGreen : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">redInBlue</span>: (f.redInBlue != <span class="hljs-literal">null</span>) ? f.redInBlue : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">greenInRed</span>: (f.greenInRed != <span class="hljs-literal">null</span>) ? f.greenInRed : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">greenInGreen</span>: (f.greenInGreen != <span class="hljs-literal">null</span>) ? f.greenInGreen : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">greenInBlue</span>: (f.greenInBlue != <span class="hljs-literal">null</span>) ? f.greenInBlue : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">blueInRed</span>: (f.blueInRed != <span class="hljs-literal">null</span>) ? f.blueInRed : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">blueInGreen</span>: (f.blueInGreen != <span class="hljs-literal">null</span>) ? f.blueInGreen : <span class="hljs-number">0</span>,
-            <span class="hljs-attr">blueInBlue</span>: (f.blueInBlue != <span class="hljs-literal">null</span>) ? f.blueInBlue : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">redInRed</span>: (f.<span class="hljs-property">redInRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">redInRed</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">redInGreen</span>: (f.<span class="hljs-property">redInGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">redInGreen</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">redInBlue</span>: (f.<span class="hljs-property">redInBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">redInBlue</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">greenInRed</span>: (f.<span class="hljs-property">greenInRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">greenInRed</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">greenInGreen</span>: (f.<span class="hljs-property">greenInGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">greenInGreen</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">greenInBlue</span>: (f.<span class="hljs-property">greenInBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">greenInBlue</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">blueInRed</span>: (f.<span class="hljs-property">blueInRed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">blueInRed</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">blueInGreen</span>: (f.<span class="hljs-property">blueInGreen</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">blueInGreen</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">blueInBlue</span>: (f.<span class="hljs-property">blueInBlue</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">blueInBlue</span> : <span class="hljs-number">1</span>,
         }];
     },</pre></div></div>
             
@@ -2317,12 +2317,12 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    userDefined: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">userDefined</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;user-defined-legacy&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
         }];
     },</pre></div></div>
             
@@ -2339,12 +2339,12 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    yellow: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) </span>{
-        f.actions = [{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">yellow</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
             <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;average-channels&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.lineIn != <span class="hljs-literal">null</span>) ? f.lineIn : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.lineOut != <span class="hljs-literal">null</span>) ? f.lineOut : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.opacity != <span class="hljs-literal">null</span>) ? f.opacity : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
             <span class="hljs-attr">includeRed</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">includeGreen</span>: <span class="hljs-literal">true</span>,
             <span class="hljs-attr">excludeBlue</span>: <span class="hljs-literal">true</span>,
@@ -2379,13 +2379,13 @@ scrawl.makeFilter({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeFilter = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeFilter = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Filter(items);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Filter</span>(items);
 };
 
-<span class="hljs-title">constructors</span>.<span class="hljs-title">Filter</span> = <span class="hljs-title">Filter</span>;</pre></div></div>
+constructors.<span class="hljs-property">Filter</span> = <span class="hljs-title class_">Filter</span>;</pre></div></div>
             
         </li>
         

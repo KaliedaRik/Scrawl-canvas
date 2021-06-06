@@ -542,7 +542,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { mergeOver, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { requestVector, releaseVector } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./vector.js&#x27;</span>;
@@ -563,10 +563,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Polygon = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">Polygon</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-built_in">this</span>.shapeInit(items);
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">shapeInit</span>(items);
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -582,11 +582,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Polygon.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">&#x27;Polygon&#x27;</span>;
-P.lib = <span class="hljs-string">&#x27;entity&#x27;</span>;
-P.isArtefact = <span class="hljs-literal">true</span>;
-P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">Polygon</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
+P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Polygon&#x27;</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;entity&#x27;</span>;
+P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">true</span>;
+P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -605,8 +605,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = baseMix(P);
-P = shapeMix(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);
+P = <span class="hljs-title function_">shapeMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -651,9 +651,9 @@ P = shapeMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    radius: <span class="hljs-number">0</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">radius</span>: <span class="hljs-number">0</span>,
 };
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
+P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -710,8 +710,8 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> S = P.setters,
-    D = P.deltaSetters;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> S = P.<span class="hljs-property">setters</span>,
+    D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
             
         </li>
         
@@ -726,15 +726,15 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.sides = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">sides</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.sides = item;
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">sides</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };
-D.sides = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">sides</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.sides += item;
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">sides</span> += item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };</pre></div></div>
             
         </li>
@@ -750,15 +750,15 @@ D.sides = <span class="hljs-function"><span class="hljs-keyword">function</span>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.sideLength = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">sideLength</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.sideLength = item;
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">sideLength</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };
-D.sideLength = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">sideLength</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.sideLength += item;
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">sideLength</span> += item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };</pre></div></div>
             
         </li>
@@ -774,15 +774,15 @@ D.sideLength = <span class="hljs-function"><span class="hljs-keyword">function</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.radius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">radius</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.radius = item;
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">radius</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };
-D.radius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">radius</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.radius += item;
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">radius</span> += item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };</pre></div></div>
             
         </li>
@@ -811,14 +811,14 @@ D.radius = <span class="hljs-function"><span class="hljs-keyword">function</span
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.cleanSpecies = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">cleanSpecies</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-built_in">this</span>.dirtySpecies = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtySpecies</span> = <span class="hljs-literal">false</span>;
 
     <span class="hljs-keyword">let</span> p = <span class="hljs-string">&#x27;M0,0&#x27;</span>;
-    p = <span class="hljs-built_in">this</span>.makePolygonPath();
+    p = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makePolygonPath</span>();
 
-    <span class="hljs-built_in">this</span>.pathDefinition = p;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span> = p;
 };</pre></div></div>
             
         </li>
@@ -834,7 +834,7 @@ D.radius = <span class="hljs-function"><span class="hljs-keyword">function</span
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.makePolygonPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">makePolygonPath</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
             
         </li>
         
@@ -849,29 +849,29 @@ D.radius = <span class="hljs-function"><span class="hljs-keyword">function</span
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> sideLength = <span class="hljs-built_in">this</span>.sideLength || <span class="hljs-built_in">this</span>.radius,
-        sides = <span class="hljs-built_in">this</span>.sides,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> sideLength = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sideLength</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">radius</span>,
+        sides = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sides</span>,
         turn = <span class="hljs-number">360</span> / sides,
         myPath = <span class="hljs-string">``</span>,
         yPts = [],
         currentY = <span class="hljs-number">0</span>,
         myMax, myMin, myYoffset;
 
-    <span class="hljs-keyword">let</span> v = requestVector({<span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: -sideLength});
+    <span class="hljs-keyword">let</span> v = <span class="hljs-title function_">requestVector</span>({<span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: -sideLength});
 
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; sides; i++) {
 
-        v.rotate(turn);
-        currentY += v.y;
-        yPts.push(currentY);
+        v.<span class="hljs-title function_">rotate</span>(turn);
+        currentY += v.<span class="hljs-property">y</span>;
+        yPts.<span class="hljs-title function_">push</span>(currentY);
         myPath += <span class="hljs-string">`<span class="hljs-subst">${v.x.toFixed(<span class="hljs-number">1</span>)}</span>,<span class="hljs-subst">${v.y.toFixed(<span class="hljs-number">1</span>)}</span> `</span>;
     }
 
-    releaseVector(v);
+    <span class="hljs-title function_">releaseVector</span>(v);
 
-    myMin = <span class="hljs-built_in">Math</span>.min(...yPts);
-    myMax = <span class="hljs-built_in">Math</span>.max(...yPts);
-    myYoffset = (((<span class="hljs-built_in">Math</span>.abs(myMin) + <span class="hljs-built_in">Math</span>.abs(myMax)) - sideLength) / <span class="hljs-number">2</span>).toFixed(<span class="hljs-number">1</span>);
+    myMin = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">min</span>(...yPts);
+    myMax = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(...yPts);
+    myYoffset = (((<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(myMin) + <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(myMax)) - sideLength) / <span class="hljs-number">2</span>).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">1</span>);
 
     myPath = <span class="hljs-string">`m0,<span class="hljs-subst">${myYoffset}</span>l<span class="hljs-subst">${myPath}</span>z`</span>;
 
@@ -906,7 +906,7 @@ D.radius = <span class="hljs-function"><span class="hljs-keyword">function</span
 <li><strong>sides</strong> (required) - integer positive Number (greater than 2) representing the number of sides the Shape will have</li>
 <li><strong>sideLength</strong> (required) - float Number representing the length (in px) of each of the shape’s sides.</li>
 </ul>
-<pre><code>scrawl.makePolygon({
+<pre><code>scrawl.<span class="hljs-title function_">makePolygon</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;triangle&#x27;</span>,
 
@@ -923,14 +923,14 @@ D.radius = <span class="hljs-function"><span class="hljs-keyword">function</span
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makePolygon = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makePolygon = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    items.species = <span class="hljs-string">&#x27;polygon&#x27;</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Polygon(items);
+    items.<span class="hljs-property">species</span> = <span class="hljs-string">&#x27;polygon&#x27;</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Polygon</span>(items);
 };
 
-<span class="hljs-title">constructors</span>.<span class="hljs-title">Polygon</span> = <span class="hljs-title">Polygon</span>;</pre></div></div>
+constructors.<span class="hljs-property">Polygon</span> = <span class="hljs-title class_">Polygon</span>;</pre></div></div>
             
         </li>
         

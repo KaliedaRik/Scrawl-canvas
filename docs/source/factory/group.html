@@ -511,7 +511,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">cell</span>, <span class="hljs-title">artefact</span>, <span class="hljs-title">group</span>, <span class="hljs-title">entity</span>, <span class="hljs-title">asset</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, cell, artefact, group, entity, asset } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { mergeOver, pushUnique, removeItem, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { scrawlCanvasHold } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/document.js&#x27;</span>;
 
@@ -535,18 +535,18 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Group = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">Group</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-built_in">this</span>.makeName(items.name);
-    <span class="hljs-built_in">this</span>.register();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(items.<span class="hljs-property">name</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
 
-    <span class="hljs-built_in">this</span>.artefacts = [];
-    <span class="hljs-built_in">this</span>.artefactBuckets = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefacts</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefactBuckets</span> = [];
 
-    <span class="hljs-built_in">this</span>.set(<span class="hljs-built_in">this</span>.defs);
-    <span class="hljs-built_in">this</span>.set(items);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -562,11 +562,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Group.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">&#x27;Group&#x27;</span>;
-P.lib = <span class="hljs-string">&#x27;group&#x27;</span>;
-P.isArtefact = <span class="hljs-literal">false</span>;
-P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">Group</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
+P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Group&#x27;</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;group&#x27;</span>;
+P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">false</span>;
+P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -581,8 +581,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = baseMix(P);
-P = filterMix(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);
+P = <span class="hljs-title function_">filterMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -616,7 +616,7 @@ P = filterMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    artefacts: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">artefacts</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -631,7 +631,7 @@ P = filterMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    order: <span class="hljs-number">0</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">order</span>: <span class="hljs-number">0</span>,</pre></div></div>
             
         </li>
         
@@ -646,7 +646,7 @@ P = filterMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    visibility: <span class="hljs-literal">true</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span>,</pre></div></div>
             
         </li>
         
@@ -661,9 +661,9 @@ P = filterMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    regionRadius: <span class="hljs-number">0</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">regionRadius</span>: <span class="hljs-number">0</span>,
 };
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
+P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -678,7 +678,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.packetExclusions = pushUnique(P.packetExclusions, [<span class="hljs-string">&#x27;artefactBuckets&#x27;</span>, <span class="hljs-string">&#x27;batchResort&#x27;</span>]);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">packetExclusions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusions</span>, [<span class="hljs-string">&#x27;artefactBuckets&#x27;</span>, <span class="hljs-string">&#x27;batchResort&#x27;</span>]);</pre></div></div>
             
         </li>
         
@@ -693,23 +693,23 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.postCloneAction = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">clone, items</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">postCloneAction</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params">clone, items</span>) {
 
     <span class="hljs-keyword">let</span> host;
 
-    <span class="hljs-keyword">if</span> (items.host) {
+    <span class="hljs-keyword">if</span> (items.<span class="hljs-property">host</span>) {
 
-        host = artefact[items.host];
+        host = artefact[items.<span class="hljs-property">host</span>];
     }
     <span class="hljs-keyword">else</span> {
 
-        host = (<span class="hljs-built_in">this</span>.currentHost) ? <span class="hljs-built_in">this</span>.currentHost : (<span class="hljs-built_in">this</span>.host) ? artefact[<span class="hljs-built_in">this</span>.host] : <span class="hljs-literal">false</span>;
+        host = (<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>) ? <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span> : (<span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span>) ? artefact[<span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span>] : <span class="hljs-literal">false</span>;
     }
 
     <span class="hljs-keyword">if</span> (host) {
 
-        host.addGroups(clone.name);
-        <span class="hljs-keyword">if</span> (!clone.host) clone.host = host.name;
+        host.<span class="hljs-title function_">addGroups</span>(clone.<span class="hljs-property">name</span>);
+        <span class="hljs-keyword">if</span> (!clone.<span class="hljs-property">host</span>) clone.<span class="hljs-property">host</span> = host.<span class="hljs-property">name</span>;
     }
 
     <span class="hljs-keyword">return</span> clone;
@@ -728,9 +728,9 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.kill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">killArtefacts = <span class="hljs-literal">false</span></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">kill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">killArtefacts = <span class="hljs-literal">false</span></span>) {
 
-    <span class="hljs-keyword">let</span> myname = <span class="hljs-built_in">this</span>.name;</pre></div></div>
+    <span class="hljs-keyword">let</span> myname = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;</pre></div></div>
             
         </li>
         
@@ -745,25 +745,25 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">Object</span>.entries(artefact).forEach(<span class="hljs-function">(<span class="hljs-params">[name, art]</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(artefact).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">[name, art]</span>) =&gt;</span> {
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(art.groups) &amp;&amp; art.groups.indexOf(myname) &gt;= <span class="hljs-number">0</span>) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(art.<span class="hljs-property">groups</span>) &amp;&amp; art.<span class="hljs-property">groups</span>.<span class="hljs-title function_">indexOf</span>(myname) &gt;= <span class="hljs-number">0</span>) {
 
-            removeItem(art.groups, myname);
-            art.batchResort = <span class="hljs-literal">true</span>;
+            <span class="hljs-title function_">removeItem</span>(art.<span class="hljs-property">groups</span>, myname);
+            art.<span class="hljs-property">batchResort</span> = <span class="hljs-literal">true</span>;
         };
     });
 
-    <span class="hljs-built_in">Object</span>.entries(cell).forEach(<span class="hljs-function">(<span class="hljs-params">[name, obj]</span>) =&gt;</span> {
+    <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(cell).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">[name, obj]</span>) =&gt;</span> {
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(obj.groups) &amp;&amp; obj.groups.indexOf(myname) &gt;= <span class="hljs-number">0</span>) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(obj.<span class="hljs-property">groups</span>) &amp;&amp; obj.<span class="hljs-property">groups</span>.<span class="hljs-title function_">indexOf</span>(myname) &gt;= <span class="hljs-number">0</span>) {
 
-            removeItem(obj.groups, myname);
-            obj.batchResort = <span class="hljs-literal">true</span>;
+            <span class="hljs-title function_">removeItem</span>(obj.<span class="hljs-property">groups</span>, myname);
+            obj.<span class="hljs-property">batchResort</span> = <span class="hljs-literal">true</span>;
         };
     });
 
-    <span class="hljs-keyword">if</span> (killArtefacts) <span class="hljs-built_in">this</span>.artefactBuckets.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.kill());</pre></div></div>
+    <span class="hljs-keyword">if</span> (killArtefacts) <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefactBuckets</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.<span class="hljs-title function_">kill</span>());</pre></div></div>
             
         </li>
         
@@ -778,14 +778,14 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.deregister();
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deregister</span>();
 }
 
-P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-built_in">this</span>.artefactBuckets.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.kill());
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefactBuckets</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.<span class="hljs-title function_">kill</span>());
 
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 }</pre></div></div>
             
         </li>
@@ -801,8 +801,8 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.getters,
-    S = P.setters;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.<span class="hljs-property">getters</span>,
+    S = P.<span class="hljs-property">setters</span>;</pre></div></div>
             
         </li>
         
@@ -830,9 +830,9 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>G.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>G.<span class="hljs-property">artefacts</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">return</span> [].concat(<span class="hljs-built_in">this</span>.artefacts);
+    <span class="hljs-keyword">return</span> [].<span class="hljs-title function_">concat</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">artefacts</span>);
 };</pre></div></div>
             
         </li>
@@ -848,11 +848,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.artefacts = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">artefacts</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.artefacts = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefacts</span> = [];
 
-    <span class="hljs-built_in">this</span>.addArtefacts(item);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">addArtefacts</span>(item);
 };</pre></div></div>
             
         </li>
@@ -868,16 +868,16 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.host = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">host</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">let</span> host = <span class="hljs-built_in">this</span>.getHost(item);
+    <span class="hljs-keyword">let</span> host = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getHost</span>(item);
 
-    <span class="hljs-keyword">if</span> (host &amp;&amp; host.addGroups) {
+    <span class="hljs-keyword">if</span> (host &amp;&amp; host.<span class="hljs-property">addGroups</span>) {
         
-        <span class="hljs-built_in">this</span>.host = item;
-        host.addGroups(<span class="hljs-built_in">this</span>.name);
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span> = item;
+        host.<span class="hljs-title function_">addGroups</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
 
-        <span class="hljs-built_in">this</span>.dirtyHost = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHost</span> = <span class="hljs-literal">true</span>;
     }
 };</pre></div></div>
             
@@ -894,15 +894,15 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.order = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">order</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">let</span> host = <span class="hljs-built_in">this</span>.getHost(<span class="hljs-built_in">this</span>.host);
+    <span class="hljs-keyword">let</span> host = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getHost</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span>);
 
-    <span class="hljs-built_in">this</span>.order = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">order</span> = item;
 
     <span class="hljs-keyword">if</span> (host) {
 
-        host.set({
+        host.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">batchResort</span>: <span class="hljs-literal">true</span>
         });
     }
@@ -934,11 +934,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.getHost = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getHost</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">let</span> host = <span class="hljs-built_in">this</span>.currentHost;
+    <span class="hljs-keyword">let</span> host = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>;
 
-    <span class="hljs-keyword">if</span> (!host || host.substring) <span class="hljs-keyword">return</span> artefact[item] || cell[item] || artefact[host] || cell[host] || <span class="hljs-literal">null</span>;
+    <span class="hljs-keyword">if</span> (!host || host.<span class="hljs-property">substring</span>) <span class="hljs-keyword">return</span> artefact[item] || cell[item] || artefact[host] || cell[host] || <span class="hljs-literal">null</span>;
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> host;
 };</pre></div></div>
             
@@ -955,12 +955,12 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.forceStamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">forceStamp</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> v = <span class="hljs-built_in">this</span>.visibility;
-    <span class="hljs-built_in">this</span>.visibility = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.stamp()
-    <span class="hljs-built_in">this</span>.visibility = v;
+    <span class="hljs-keyword">let</span> v = <span class="hljs-variable language_">this</span>.<span class="hljs-property">visibility</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">visibility</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">stamp</span>()
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">visibility</span> = v;
 };</pre></div></div>
             
         </li>
@@ -976,7 +976,7 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.stamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">stamp</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
             
         </li>
         
@@ -991,19 +991,19 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyHost || !<span class="hljs-built_in">this</span>.currentHost) {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHost</span> || !<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>) {
 
-        <span class="hljs-built_in">this</span>.dirtyHost = <span class="hljs-literal">false</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHost</span> = <span class="hljs-literal">false</span>;
 
-        <span class="hljs-keyword">let</span> currentHost = <span class="hljs-built_in">this</span>.getHost(<span class="hljs-built_in">this</span>.host);
+        <span class="hljs-keyword">let</span> currentHost = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getHost</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span>);
 
-        <span class="hljs-keyword">if</span> (currentHost) <span class="hljs-built_in">this</span>.currentHost = currentHost;
-        <span class="hljs-keyword">else</span> <span class="hljs-built_in">this</span>.dirtyHost = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (currentHost) <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span> = currentHost;
+        <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHost</span> = <span class="hljs-literal">true</span>;
     }
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.visibility) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">visibility</span>) {
 
-        <span class="hljs-keyword">let</span> { currentHost, stashOutput, noFilters, filters } = <span class="hljs-built_in">this</span>;
+        <span class="hljs-keyword">let</span> { currentHost, stashOutput, noFilters, filters } = <span class="hljs-variable language_">this</span>;
 
         <span class="hljs-keyword">if</span> (currentHost) {</pre></div></div>
             
@@ -1020,7 +1020,7 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-built_in">this</span>.sortArtefacts();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">sortArtefacts</span>();</pre></div></div>
             
         </li>
         
@@ -1035,8 +1035,8 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">let</span> filterCell = (stashOutput || (!noFilters &amp;&amp; filters &amp;&amp; filters.length)) ?
-                requestCell() :
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">let</span> filterCell = (stashOutput || (!noFilters &amp;&amp; filters &amp;&amp; filters.<span class="hljs-property">length</span>)) ?
+                <span class="hljs-title function_">requestCell</span>() :
                 <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
@@ -1052,14 +1052,14 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (filterCell &amp;&amp; filterCell.element) {
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (filterCell &amp;&amp; filterCell.<span class="hljs-property">element</span>) {
 
-                <span class="hljs-keyword">let</span> dims = currentHost.currentDimensions;
+                <span class="hljs-keyword">let</span> dims = currentHost.<span class="hljs-property">currentDimensions</span>;
 
                 <span class="hljs-keyword">if</span> (dims) {
 
-                    filterCell.element.width = dims[<span class="hljs-number">0</span>];
-                    filterCell.element.height = dims[<span class="hljs-number">1</span>];
+                    filterCell.<span class="hljs-property">element</span>.<span class="hljs-property">width</span> = dims[<span class="hljs-number">0</span>];
+                    filterCell.<span class="hljs-property">element</span>.<span class="hljs-property">height</span> = dims[<span class="hljs-number">1</span>];
                 }
             }</pre></div></div>
             
@@ -1079,7 +1079,7 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (currentHost.engine) currentHost.engine.save();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (currentHost.<span class="hljs-property">engine</span>) currentHost.<span class="hljs-property">engine</span>.<span class="hljs-title function_">save</span>();</pre></div></div>
             
         </li>
         
@@ -1094,7 +1094,7 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-built_in">this</span>.prepareStamp(filterCell);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">prepareStamp</span>(filterCell);</pre></div></div>
             
         </li>
         
@@ -1109,15 +1109,15 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-built_in">this</span>.stampAction(filterCell);
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">stampAction</span>(filterCell);
 
-            <span class="hljs-keyword">if</span> (filterCell) releaseCell(filterCell);
+            <span class="hljs-keyword">if</span> (filterCell) <span class="hljs-title function_">releaseCell</span>(filterCell);
             <span class="hljs-keyword">else</span> {
 
-                <span class="hljs-keyword">if</span> (currentHost.engine) {
+                <span class="hljs-keyword">if</span> (currentHost.<span class="hljs-property">engine</span>) {
 
-                    currentHost.engine.restore();
-                    currentHost.setEngineFromState(currentHost.engine);
+                    currentHost.<span class="hljs-property">engine</span>.<span class="hljs-title function_">restore</span>();
+                    currentHost.<span class="hljs-title function_">setEngineFromState</span>(currentHost.<span class="hljs-property">engine</span>);
                 }
             }
         }
@@ -1137,26 +1137,26 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.sortArtefacts = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">sortArtefacts</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.batchResort) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">batchResort</span>) {
 
-        <span class="hljs-built_in">this</span>.batchResort = <span class="hljs-literal">false</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">batchResort</span> = <span class="hljs-literal">false</span>;
 
-        <span class="hljs-keyword">let</span> floor = <span class="hljs-built_in">Math</span>.floor,
+        <span class="hljs-keyword">let</span> floor = <span class="hljs-title class_">Math</span>.<span class="hljs-property">floor</span>,
             buckets = [];
         
-        <span class="hljs-built_in">this</span>.artefacts.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefacts</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
             <span class="hljs-keyword">let</span> obj = artefact[name],
-                order = floor(obj.order) || <span class="hljs-number">0</span>;
+                order = <span class="hljs-title function_">floor</span>(obj.<span class="hljs-property">order</span>) || <span class="hljs-number">0</span>;
 
             <span class="hljs-keyword">if</span> (!buckets[order]) buckets[order] = [];
 
-            buckets[order].push(obj);
+            buckets[order].<span class="hljs-title function_">push</span>(obj);
         });
 
-         <span class="hljs-built_in">this</span>.artefactBuckets = buckets.reduce(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a.concat(v), []);
+         <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefactBuckets</span> = buckets.<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a.<span class="hljs-title function_">concat</span>(v), []);
     }
 };</pre></div></div>
             
@@ -1173,26 +1173,26 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.prepareStamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">myCell</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">prepareStamp</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">myCell</span>) {
 
-    <span class="hljs-keyword">let</span> host = <span class="hljs-built_in">this</span>.currentHost;
+    <span class="hljs-keyword">let</span> host = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>;
 
     <span class="hljs-keyword">if</span> (myCell) host = myCell;
 
-    <span class="hljs-built_in">this</span>.artefactBuckets.forEach(<span class="hljs-function"><span class="hljs-params">art</span> =&gt;</span> {
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefactBuckets</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">art</span> =&gt;</span> {
 
-        <span class="hljs-keyword">if</span> (art.lib === <span class="hljs-string">&#x27;entity&#x27;</span>) {
+        <span class="hljs-keyword">if</span> (art.<span class="hljs-property">lib</span> === <span class="hljs-string">&#x27;entity&#x27;</span>) {
             
-            <span class="hljs-keyword">if</span> (!art.currentHost || art.currentHost.name !== host.name) {
+            <span class="hljs-keyword">if</span> (!art.<span class="hljs-property">currentHost</span> || art.<span class="hljs-property">currentHost</span>.<span class="hljs-property">name</span> !== host.<span class="hljs-property">name</span>) {
 
-                art.currentHost = host;
-                <span class="hljs-keyword">if</span> (!myCell) art.dirtyHost = <span class="hljs-literal">true</span>;
+                art.<span class="hljs-property">currentHost</span> = host;
+                <span class="hljs-keyword">if</span> (!myCell) art.<span class="hljs-property">dirtyHost</span> = <span class="hljs-literal">true</span>;
             }
         }
 
-        <span class="hljs-keyword">if</span> (!art.noDeltaUpdates) art.updateByDelta();
+        <span class="hljs-keyword">if</span> (!art.<span class="hljs-property">noDeltaUpdates</span>) art.<span class="hljs-title function_">updateByDelta</span>();
 
-        art.prepareStamp();
+        art.<span class="hljs-title function_">prepareStamp</span>();
     });
 };</pre></div></div>
             
@@ -1209,25 +1209,25 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.stampAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">myCell</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">stampAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">myCell</span>) {
 
-    <span class="hljs-keyword">let</span> mystash = (<span class="hljs-built_in">this</span>.currentHost &amp;&amp; <span class="hljs-built_in">this</span>.currentHost.stashOutput) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">let</span> mystash = (<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>.<span class="hljs-property">stashOutput</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> { dirtyFilters, currentFilters, artefactBuckets, noFilters, filters, stashOutput, currentHost } = <span class="hljs-built_in">this</span>;
+    <span class="hljs-keyword">let</span> { dirtyFilters, currentFilters, artefactBuckets, noFilters, filters, stashOutput, currentHost } = <span class="hljs-variable language_">this</span>;
 
-    <span class="hljs-keyword">if</span> (dirtyFilters || !currentFilters) <span class="hljs-built_in">this</span>.cleanFilters();
+    <span class="hljs-keyword">if</span> (dirtyFilters || !currentFilters) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanFilters</span>();
 
-    artefactBuckets.forEach(<span class="hljs-function"><span class="hljs-params">art</span> =&gt;</span> {
+    artefactBuckets.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">art</span> =&gt;</span> {
 
-        <span class="hljs-keyword">if</span> (art &amp;&amp; art.stamp) art.stamp();
+        <span class="hljs-keyword">if</span> (art &amp;&amp; art.<span class="hljs-property">stamp</span>) art.<span class="hljs-title function_">stamp</span>();
     });
 
     <span class="hljs-keyword">if</span> (myCell) {
 
-        <span class="hljs-keyword">if</span> (!noFilters &amp;&amp; filters &amp;&amp; filters.length) {
+        <span class="hljs-keyword">if</span> (!noFilters &amp;&amp; filters &amp;&amp; filters.<span class="hljs-property">length</span>) {
 
-            <span class="hljs-keyword">let</span> img = <span class="hljs-built_in">this</span>.applyFilters(myCell);
-            <span class="hljs-built_in">this</span>.stashAction(img);
+            <span class="hljs-keyword">let</span> img = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">applyFilters</span>(myCell);
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">stashAction</span>(img);
         }
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (stashOutput) {</pre></div></div>
             
@@ -1244,25 +1244,25 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">let</span> tempElement = myCell.element,
-                tempEngine = myCell.engine,
-                realEngine = (currentHost &amp;&amp; currentHost.engine) ? currentHost.engine : <span class="hljs-literal">false</span>;
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">let</span> tempElement = myCell.<span class="hljs-property">element</span>,
+                tempEngine = myCell.<span class="hljs-property">engine</span>,
+                realEngine = (currentHost &amp;&amp; currentHost.<span class="hljs-property">engine</span>) ? currentHost.<span class="hljs-property">engine</span> : <span class="hljs-literal">false</span>;
 
             <span class="hljs-keyword">if</span> (realEngine) {
 
-                realEngine.save();
+                realEngine.<span class="hljs-title function_">save</span>();
                 
-                realEngine.globalCompositeOperation = <span class="hljs-string">&#x27;source-over&#x27;</span>;
-                realEngine.globalAlpha = <span class="hljs-number">1</span>;
-                realEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+                realEngine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-string">&#x27;source-over&#x27;</span>;
+                realEngine.<span class="hljs-property">globalAlpha</span> = <span class="hljs-number">1</span>;
+                realEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
 
-                realEngine.drawImage(tempElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+                realEngine.<span class="hljs-title function_">drawImage</span>(tempElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
                 
-                realEngine.restore();
+                realEngine.<span class="hljs-title function_">restore</span>();
 
-                <span class="hljs-keyword">let</span> tempImg = tempEngine.getImageData(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, tempElement.width, tempElement.height);
+                <span class="hljs-keyword">let</span> tempImg = tempEngine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, tempElement.<span class="hljs-property">width</span>, tempElement.<span class="hljs-property">height</span>);
 
-                <span class="hljs-built_in">this</span>.stashAction(tempImg);
+                <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">stashAction</span>(tempImg);
             }
         }
     }
@@ -1281,9 +1281,9 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.applyFilters = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">myCell</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">applyFilters</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">myCell</span>) {
 
-    <span class="hljs-keyword">let</span> currentHost = <span class="hljs-built_in">this</span>.currentHost,
+    <span class="hljs-keyword">let</span> currentHost = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>,
         filterHost = myCell;
 
     <span class="hljs-keyword">if</span> (!currentHost || !filterHost) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;</pre></div></div>
@@ -1301,11 +1301,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> currentElement = currentHost.element,
-        currentEngine = currentHost.engine;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> currentElement = currentHost.<span class="hljs-property">element</span>,
+        currentEngine = currentHost.<span class="hljs-property">engine</span>;
 
-    <span class="hljs-keyword">let</span> filterCellElement = filterHost.element,
-        filterCellEngine = filterHost.engine;</pre></div></div>
+    <span class="hljs-keyword">let</span> filterCellElement = filterHost.<span class="hljs-property">element</span>,
+        filterCellEngine = filterHost.<span class="hljs-property">engine</span>;</pre></div></div>
             
         </li>
         
@@ -1320,14 +1320,14 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.isStencil) {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">isStencil</span>) {
         
-        filterCellEngine.save();
-        filterCellEngine.globalCompositeOperation = <span class="hljs-string">&#x27;source-in&#x27;</span>;
-        filterCellEngine.globalAlpha = <span class="hljs-number">1</span>;
-        filterCellEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-        filterCellEngine.drawImage(currentElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-        filterCellEngine.restore();
+        filterCellEngine.<span class="hljs-title function_">save</span>();
+        filterCellEngine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-string">&#x27;source-in&#x27;</span>;
+        filterCellEngine.<span class="hljs-property">globalAlpha</span> = <span class="hljs-number">1</span>;
+        filterCellEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+        filterCellEngine.<span class="hljs-title function_">drawImage</span>(currentElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+        filterCellEngine.<span class="hljs-title function_">restore</span>();
     }</pre></div></div>
             
         </li>
@@ -1343,29 +1343,29 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    filterCellEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+            <div class="content"><div class='highlight'><pre>    filterCellEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
 
-    <span class="hljs-keyword">let</span> myimage = filterCellEngine.getImageData(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, filterCellElement.width, filterCellElement.height);
+    <span class="hljs-keyword">let</span> myimage = filterCellEngine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, filterCellElement.<span class="hljs-property">width</span>, filterCellElement.<span class="hljs-property">height</span>);
 
-    <span class="hljs-built_in">this</span>.preprocessFilters(<span class="hljs-built_in">this</span>.currentFilters);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">preprocessFilters</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFilters</span>);
 
-    <span class="hljs-keyword">let</span> img = filterEngine.action({
+    <span class="hljs-keyword">let</span> img = filterEngine.<span class="hljs-title function_">action</span>({
         <span class="hljs-attr">image</span>: myimage,
-        <span class="hljs-attr">filters</span>: <span class="hljs-built_in">this</span>.currentFilters,
+        <span class="hljs-attr">filters</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFilters</span>,
     })
 
     <span class="hljs-keyword">if</span> (img) {
 
-        filterCellEngine.globalCompositeOperation = <span class="hljs-string">&#x27;source-over&#x27;</span>;
-        filterCellEngine.globalAlpha = <span class="hljs-number">1</span>;
-        filterCellEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-        filterCellEngine.putImageData(img, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+        filterCellEngine.<span class="hljs-property">globalCompositeOperation</span> = <span class="hljs-string">&#x27;source-over&#x27;</span>;
+        filterCellEngine.<span class="hljs-property">globalAlpha</span> = <span class="hljs-number">1</span>;
+        filterCellEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+        filterCellEngine.<span class="hljs-title function_">putImageData</span>(img, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
     }
     
-    currentEngine.save();
-    currentEngine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-    currentEngine.drawImage(filterCellElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-    currentEngine.restore();
+    currentEngine.<span class="hljs-title function_">save</span>();
+    currentEngine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+    currentEngine.<span class="hljs-title function_">drawImage</span>(filterCellElement, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+    currentEngine.<span class="hljs-title function_">restore</span>();
 
     <span class="hljs-keyword">return</span> img;
 };</pre></div></div>
@@ -1384,48 +1384,48 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.stashAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">img</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">stashAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">img</span>) {
 
     <span class="hljs-keyword">if</span> (!img) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.stashOutput) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">stashOutput</span>) {
 
-        <span class="hljs-built_in">this</span>.stashOutput = <span class="hljs-literal">false</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashOutput</span> = <span class="hljs-literal">false</span>;
 
-        <span class="hljs-keyword">let</span> [x, y, width, height] = <span class="hljs-built_in">this</span>.getCellCoverage(img);
+        <span class="hljs-keyword">let</span> [x, y, width, height] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getCellCoverage</span>(img);
 
-        <span class="hljs-keyword">let</span> myCell = requestCell(),
-            myEngine = myCell.engine,
-            myElement = myCell.element;
+        <span class="hljs-keyword">let</span> myCell = <span class="hljs-title function_">requestCell</span>(),
+            myEngine = myCell.<span class="hljs-property">engine</span>,
+            myElement = myCell.<span class="hljs-property">element</span>;
 
-        myElement.width = width;
-        myElement.height = height;
+        myElement.<span class="hljs-property">width</span> = width;
+        myElement.<span class="hljs-property">height</span> = height;
 
-        myEngine.putImageData(img, -x, -y);
+        myEngine.<span class="hljs-title function_">putImageData</span>(img, -x, -y);
 
-        <span class="hljs-built_in">this</span>.stashedImageData = myEngine.getImageData(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, width, height);
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashedImageData</span> = myEngine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, width, height);
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.stashOutputAsAsset) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">stashOutputAsAsset</span>) {
 
-            <span class="hljs-built_in">this</span>.stashOutputAsAsset = <span class="hljs-literal">false</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashOutputAsAsset</span> = <span class="hljs-literal">false</span>;
 
-            <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.stashedImage) {
+            <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">stashedImage</span>) {
 
-                <span class="hljs-keyword">let</span> newimg = <span class="hljs-built_in">this</span>.stashedImage = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;img&#x27;</span>);
+                <span class="hljs-keyword">let</span> newimg = <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashedImage</span> = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;img&#x27;</span>);
 
-                newimg.id = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span>-groupimage`</span>;
+                newimg.<span class="hljs-property">id</span> = <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>-groupimage`</span>;
 
-                newimg.onload = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+                newimg.<span class="hljs-property">onload</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-                    scrawlCanvasHold.appendChild(newimg);
-                    importDomImage(<span class="hljs-string">`#<span class="hljs-subst">${newimg.id}</span>`</span>);
+                    scrawlCanvasHold.<span class="hljs-title function_">appendChild</span>(newimg);
+                    <span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">`#<span class="hljs-subst">${newimg.id}</span>`</span>);
                 };
 
-                newimg.src = myElement.toDataURL();
+                newimg.<span class="hljs-property">src</span> = myElement.<span class="hljs-title function_">toDataURL</span>();
             }
-            <span class="hljs-keyword">else</span> <span class="hljs-built_in">this</span>.stashedImage.src = myElement.toDataURL();
+            <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">stashedImage</span>.<span class="hljs-property">src</span> = myElement.<span class="hljs-title function_">toDataURL</span>();
         }
-        releaseCell(myCell);
+        <span class="hljs-title function_">releaseCell</span>(myCell);
     }
 };</pre></div></div>
             
@@ -1442,11 +1442,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.getCellCoverage = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">img</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getCellCoverage</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">img</span>) {
 
-    <span class="hljs-keyword">let</span> width = img.width,
-        height = img.height,
-        data = img.data,
+    <span class="hljs-keyword">let</span> width = img.<span class="hljs-property">width</span>,
+        height = img.<span class="hljs-property">height</span>,
+        data = img.<span class="hljs-property">data</span>,
         maxX = <span class="hljs-number">0</span>,
         maxY = <span class="hljs-number">0</span>,
         minX = width,
@@ -1501,21 +1501,21 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.addArtefacts = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">addArtefacts</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) {
 
-    <span class="hljs-keyword">if</span> (args &amp;&amp; <span class="hljs-built_in">Array</span>.isArray(args[<span class="hljs-number">0</span>])) args = args[<span class="hljs-number">0</span>];
+    <span class="hljs-keyword">if</span> (args &amp;&amp; <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(args[<span class="hljs-number">0</span>])) args = args[<span class="hljs-number">0</span>];
 
-    args.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
+    args.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
 
         <span class="hljs-keyword">if</span> (item) {
 
-            <span class="hljs-keyword">if</span> (item.substring) pushUnique(<span class="hljs-built_in">this</span>.artefacts, item);
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.name) pushUnique(<span class="hljs-built_in">this</span>.artefacts, item.name);
+            <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) <span class="hljs-title function_">pushUnique</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">artefacts</span>, item);
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-property">name</span>) <span class="hljs-title function_">pushUnique</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">artefacts</span>, item.<span class="hljs-property">name</span>);
         }
-    }, <span class="hljs-built_in">this</span>);
+    }, <span class="hljs-variable language_">this</span>);
 
-    <span class="hljs-built_in">this</span>.batchResort = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">batchResort</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -1531,19 +1531,19 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.removeArtefacts = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">removeArtefacts</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) {
 
-    args.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
+    args.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
 
         <span class="hljs-keyword">if</span> (item) {
 
-            <span class="hljs-keyword">if</span> (item.substring) removeItem(<span class="hljs-built_in">this</span>.artefacts, item);
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.name) removeItem(<span class="hljs-built_in">this</span>.artefacts, item.name);
+            <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) <span class="hljs-title function_">removeItem</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">artefacts</span>, item);
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-property">name</span>) <span class="hljs-title function_">removeItem</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">artefacts</span>, item.<span class="hljs-property">name</span>);
         }
-    }, <span class="hljs-built_in">this</span>);
+    }, <span class="hljs-variable language_">this</span>);
 
-    <span class="hljs-built_in">this</span>.batchResort = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">batchResort</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -1559,34 +1559,34 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.moveArtefactsIntoGroup = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">moveArtefactsIntoGroup</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) {
 
     <span class="hljs-keyword">let</span> temp, art, grp;
 
-    args.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
+    args.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
 
         <span class="hljs-keyword">if</span> (item) {
 
-            art = (item.substring) ? artefact[item] : item;
+            art = (item.<span class="hljs-property">substring</span>) ? artefact[item] : item;
 
-            <span class="hljs-keyword">if</span> (art &amp;&amp; art.isArtefact) {
+            <span class="hljs-keyword">if</span> (art &amp;&amp; art.<span class="hljs-property">isArtefact</span>) {
 
-                <span class="hljs-keyword">if</span> (art.group) temp = art.group;
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (art.host) temp = group[art.host];
+                <span class="hljs-keyword">if</span> (art.<span class="hljs-property">group</span>) temp = art.<span class="hljs-property">group</span>;
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (art.<span class="hljs-property">host</span>) temp = group[art.<span class="hljs-property">host</span>];
                 <span class="hljs-keyword">else</span> temp = <span class="hljs-literal">false</span>;
             }
 
             <span class="hljs-keyword">if</span> (temp) {
 
-                temp.removeArtefacts(item);
-                temp.batchResort = <span class="hljs-literal">true</span>;
+                temp.<span class="hljs-title function_">removeArtefacts</span>(item);
+                temp.<span class="hljs-property">batchResort</span> = <span class="hljs-literal">true</span>;
             }
-            pushUnique(<span class="hljs-built_in">this</span>.artefacts, item);
+            <span class="hljs-title function_">pushUnique</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">artefacts</span>, item);
         }
-    }, <span class="hljs-built_in">this</span>);
+    }, <span class="hljs-variable language_">this</span>);
 
-    <span class="hljs-built_in">this</span>.batchResort = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">batchResort</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -1602,12 +1602,12 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.clearArtefacts = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">clearArtefacts</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-built_in">this</span>.artefacts.length = <span class="hljs-number">0</span>;
-    <span class="hljs-built_in">this</span>.artefactBuckets.length = <span class="hljs-number">0</span>;
-    <span class="hljs-built_in">this</span>.batchResort = <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefacts</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefactBuckets</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">batchResort</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -1623,10 +1623,10 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.updateArtefacts = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">updateArtefacts</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
-    <span class="hljs-built_in">this</span>.cascadeAction(items, <span class="hljs-string">&#x27;setDelta&#x27;</span>);
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cascadeAction</span>(items, <span class="hljs-string">&#x27;setDelta&#x27;</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -1642,10 +1642,10 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.setArtefacts = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">setArtefacts</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
-    <span class="hljs-built_in">this</span>.cascadeAction(items, <span class="hljs-string">&#x27;set&#x27;</span>);
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cascadeAction</span>(items, <span class="hljs-string">&#x27;set&#x27;</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -1661,10 +1661,10 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.updateByDelta = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">updateByDelta</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-built_in">this</span>.cascadeAction(<span class="hljs-literal">false</span>, <span class="hljs-string">&#x27;updateByDelta&#x27;</span>);
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cascadeAction</span>(<span class="hljs-literal">false</span>, <span class="hljs-string">&#x27;updateByDelta&#x27;</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -1680,10 +1680,10 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.reverseByDelta = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">reverseByDelta</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-built_in">this</span>.cascadeAction(<span class="hljs-literal">false</span>, <span class="hljs-string">&#x27;reverseByDelta&#x27;</span>);
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cascadeAction</span>(<span class="hljs-literal">false</span>, <span class="hljs-string">&#x27;reverseByDelta&#x27;</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -1699,10 +1699,10 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.addArtefactClasses = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">addArtefactClasses</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
-    <span class="hljs-built_in">this</span>.cascadeAction(items, <span class="hljs-string">&#x27;addClasses&#x27;</span>);
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cascadeAction</span>(items, <span class="hljs-string">&#x27;addClasses&#x27;</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -1718,10 +1718,10 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.removeArtefactClasses = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">removeArtefactClasses</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
-    <span class="hljs-built_in">this</span>.cascadeAction(items, <span class="hljs-string">&#x27;removeClasses&#x27;</span>);
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cascadeAction</span>(items, <span class="hljs-string">&#x27;removeClasses&#x27;</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -1737,15 +1737,15 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.cascadeAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items, action</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">cascadeAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items, action</span>) {
 
-    <span class="hljs-built_in">this</span>.artefacts.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefacts</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
         <span class="hljs-keyword">let</span> art = artefact[name];
         
         <span class="hljs-keyword">if</span>(art &amp;&amp; art[action]) art[action](items);
     });
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -1761,11 +1761,11 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.setDeltaValues = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">setDeltaValues</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-built_in">this</span>.artefactBuckets.forEach(<span class="hljs-function"><span class="hljs-params">art</span> =&gt;</span> art.setDeltaValues(items));
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefactBuckets</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">art</span> =&gt;</span> art.<span class="hljs-title function_">setDeltaValues</span>(items));
 
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -1794,15 +1794,15 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.addFiltersToEntitys = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">addFiltersToEntitys</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) {
 
-    <span class="hljs-built_in">this</span>.artefacts.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefacts</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
         <span class="hljs-keyword">let</span> ent = entity[name];
         
-        <span class="hljs-keyword">if</span> (ent &amp;&amp; ent.addFilters) ent.addFilters(args);
+        <span class="hljs-keyword">if</span> (ent &amp;&amp; ent.<span class="hljs-property">addFilters</span>) ent.<span class="hljs-title function_">addFilters</span>(args);
     });
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -1818,15 +1818,15 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.removeFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">removeFiltersFromEntitys</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) {
 
-    <span class="hljs-built_in">this</span>.artefacts.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefacts</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
         <span class="hljs-keyword">let</span> ent = entity[name];
 
-        <span class="hljs-keyword">if</span> (ent &amp;&amp; ent.removeFilters) ent.removeFilters(args);
+        <span class="hljs-keyword">if</span> (ent &amp;&amp; ent.<span class="hljs-property">removeFilters</span>) ent.<span class="hljs-title function_">removeFilters</span>(args);
     });
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -1842,15 +1842,15 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.clearFiltersFromEntitys = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">clearFiltersFromEntitys</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-built_in">this</span>.artefacts.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefacts</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
         <span class="hljs-keyword">let</span> ent = entity[name];
 
-        <span class="hljs-keyword">if</span> (ent &amp;&amp; ent.clearFilters) ent.clearFilters();
+        <span class="hljs-keyword">if</span> (ent &amp;&amp; ent.<span class="hljs-property">clearFilters</span>) ent.<span class="hljs-title function_">clearFilters</span>();
     });
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -1876,30 +1876,30 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.getArtefactAt = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getArtefactAt</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
-    <span class="hljs-keyword">let</span> myCell = requestCell(),
-        artBuckets = <span class="hljs-built_in">this</span>.artefactBuckets;
+    <span class="hljs-keyword">let</span> myCell = <span class="hljs-title function_">requestCell</span>(),
+        artBuckets = <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefactBuckets</span>;
 
-    <span class="hljs-built_in">this</span>.sortArtefacts();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">sortArtefacts</span>();
 
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = artBuckets.length - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) {
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = artBuckets.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) {
 
         <span class="hljs-keyword">let</span> art = artBuckets[i];
         
         <span class="hljs-keyword">if</span> (art) {
 
-            <span class="hljs-keyword">let</span> result = art.checkHit(items, myCell);
+            <span class="hljs-keyword">let</span> result = art.<span class="hljs-title function_">checkHit</span>(items, myCell);
 
             <span class="hljs-keyword">if</span> (result) {
 
-                releaseCell(myCell);
+                <span class="hljs-title function_">releaseCell</span>(myCell);
                 <span class="hljs-keyword">return</span> result;
             }
         }
     }
 
-    releaseCell(myCell);
+    <span class="hljs-title function_">releaseCell</span>(myCell);
     <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 };</pre></div></div>
             
@@ -1917,37 +1917,37 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.getAllArtefactsAt = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getAllArtefactsAt</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
-    <span class="hljs-keyword">let</span> myCell = requestCell(),
-        artBuckets = <span class="hljs-built_in">this</span>.artefactBuckets,
+    <span class="hljs-keyword">let</span> myCell = <span class="hljs-title function_">requestCell</span>(),
+        artBuckets = <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefactBuckets</span>,
         resultNames = [],
         results = [];
 
-    <span class="hljs-built_in">this</span>.sortArtefacts();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">sortArtefacts</span>();
     
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = artBuckets.length - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) {
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = artBuckets.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) {
 
         <span class="hljs-keyword">let</span> art = artBuckets[i];
         
         <span class="hljs-keyword">if</span> (art) {
 
-            <span class="hljs-keyword">let</span> result = art.checkHit(items, myCell);
+            <span class="hljs-keyword">let</span> result = art.<span class="hljs-title function_">checkHit</span>(items, myCell);
             
-            <span class="hljs-keyword">if</span> (result &amp;&amp; result.artefact) {
+            <span class="hljs-keyword">if</span> (result &amp;&amp; result.<span class="hljs-property">artefact</span>) {
 
-                <span class="hljs-keyword">let</span> hit = result.artefact;
+                <span class="hljs-keyword">let</span> hit = result.<span class="hljs-property">artefact</span>;
 
-                <span class="hljs-keyword">if</span> (resultNames.indexOf(hit.name) &lt; <span class="hljs-number">0</span>) {
+                <span class="hljs-keyword">if</span> (resultNames.<span class="hljs-title function_">indexOf</span>(hit.<span class="hljs-property">name</span>) &lt; <span class="hljs-number">0</span>) {
 
-                    resultNames.push(hit.name);
-                    results.push(result);
+                    resultNames.<span class="hljs-title function_">push</span>(hit.<span class="hljs-property">name</span>);
+                    results.<span class="hljs-title function_">push</span>(result);
                 }
             }
         }
     }
 
-    releaseCell(myCell);
+    <span class="hljs-title function_">releaseCell</span>(myCell);
     <span class="hljs-keyword">return</span> results;
 };</pre></div></div>
             
@@ -1965,7 +1965,7 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.getArtefactCollisions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">art</span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getArtefactCollisions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">art</span>) {</pre></div></div>
             
         </li>
         
@@ -1980,9 +1980,9 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!art || !art.isArtefact || !<span class="hljs-built_in">this</span>.artefactBuckets.length) <span class="hljs-keyword">return</span> [];
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!art || !art.<span class="hljs-property">isArtefact</span> || !<span class="hljs-variable language_">this</span>.<span class="hljs-property">artefactBuckets</span>.<span class="hljs-property">length</span>) <span class="hljs-keyword">return</span> [];
 
-    <span class="hljs-keyword">if</span> (art.substring) art = artefact[art];</pre></div></div>
+    <span class="hljs-keyword">if</span> (art.<span class="hljs-property">substring</span>) art = artefact[art];</pre></div></div>
             
         </li>
         
@@ -1997,9 +1997,9 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!art.collides) <span class="hljs-keyword">return</span> [];
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!art.<span class="hljs-property">collides</span>) <span class="hljs-keyword">return</span> [];
 
-    <span class="hljs-keyword">let</span> artBuckets = <span class="hljs-built_in">this</span>.artefactBuckets,
+    <span class="hljs-keyword">let</span> artBuckets = <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefactBuckets</span>,
         targets = [],
         target, i, iz;</pre></div></div>
             
@@ -2016,7 +2016,7 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> [entityRadius, entitySensors] = art.cleanCollisionData();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> [entityRadius, entitySensors] = art.<span class="hljs-title function_">cleanCollisionData</span>();</pre></div></div>
             
         </li>
         
@@ -2031,12 +2031,12 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = artBuckets.length; i &lt; iz; i++) {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = artBuckets.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
         target = artBuckets[i];
 
-        <span class="hljs-keyword">if</span> (!target || !target.cleanCollisionData || art.name === target.name) targets.push(<span class="hljs-literal">false</span>);
-        <span class="hljs-keyword">else</span> targets.push(target);
+        <span class="hljs-keyword">if</span> (!target || !target.<span class="hljs-property">cleanCollisionData</span> || art.<span class="hljs-property">name</span> === target.<span class="hljs-property">name</span>) targets.<span class="hljs-title function_">push</span>(<span class="hljs-literal">false</span>);
+        <span class="hljs-keyword">else</span> targets.<span class="hljs-title function_">push</span>(target);
     }</pre></div></div>
             
         </li>
@@ -2052,24 +2052,24 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> [entityStampX, entityStampY] = art.currentStampPosition;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> [entityStampX, entityStampY] = art.<span class="hljs-property">currentStampPosition</span>;
 
     <span class="hljs-keyword">let</span> combinedRadius, targetData, dx, dy, dh;
 
-    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = targets.length; i &lt; iz; i++) {
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = targets.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
         target = targets[i];
 
         <span class="hljs-keyword">if</span> (target) {
 
-            <span class="hljs-keyword">let</span> [targetStampX, targetStampY] = target.currentStampPosition;
+            <span class="hljs-keyword">let</span> [targetStampX, targetStampY] = target.<span class="hljs-property">currentStampPosition</span>;
 
-            targetData = target.cleanCollisionData();
+            targetData = target.<span class="hljs-title function_">cleanCollisionData</span>();
             combinedRadius = entityRadius + targetData[<span class="hljs-number">0</span>];
 
             dx = entityStampX - targetStampX;
             dy = entityStampY - targetStampY;
-            dh = <span class="hljs-built_in">Math</span>.sqrt((dx * dx) + (dy * dy));
+            dh = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sqrt</span>((dx * dx) + (dy * dy));
 
             <span class="hljs-keyword">if</span> (dh &gt; combinedRadius) targets[i] = <span class="hljs-literal">false</span>;
         }
@@ -2088,13 +2088,13 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> myCell = requestCell();
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> myCell = <span class="hljs-title function_">requestCell</span>();
 
-    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = targets.length; i &lt; iz; i++) {
+    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = targets.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
         target = targets[i];
 
-        <span class="hljs-keyword">if</span> (target) targets[i] = target.checkHit(entitySensors, myCell);
+        <span class="hljs-keyword">if</span> (target) targets[i] = target.<span class="hljs-title function_">checkHit</span>(entitySensors, myCell);
     }</pre></div></div>
             
         </li>
@@ -2110,9 +2110,9 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    releaseCell(myCell);
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">releaseCell</span>(myCell);
 
-    <span class="hljs-keyword">return</span> targets.filter(<span class="hljs-function"><span class="hljs-params">target</span> =&gt;</span> !!target);
+    <span class="hljs-keyword">return</span> targets.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">target</span> =&gt;</span> !!target);
 };</pre></div></div>
             
         </li>
@@ -2125,7 +2125,7 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
                 <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
-<pre><code><span class="hljs-keyword">let</span> faces = scrawl.makeGroup({
+<pre><code><span class="hljs-keyword">let</span> faces = scrawl.<span class="hljs-title function_">makeGroup</span>({
 
     <span class="hljs-comment">// Unique name to keep track of the Group</span>
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;faces&#x27;</span>,
@@ -2137,13 +2137,13 @@ P.killArtefacts = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeGroup = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeGroup = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Group(items);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Group</span>(items);
 };
 
-<span class="hljs-title">constructors</span>.<span class="hljs-title">Group</span> = <span class="hljs-title">Group</span>;</pre></div></div>
+constructors.<span class="hljs-property">Group</span> = <span class="hljs-title class_">Group</span>;</pre></div></div>
             
         </li>
         

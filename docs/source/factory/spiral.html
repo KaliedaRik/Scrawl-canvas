@@ -542,7 +542,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { mergeOver, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
@@ -561,10 +561,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Spiral = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">Spiral</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-built_in">this</span>.shapeInit(items);
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">shapeInit</span>(items);
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -580,11 +580,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Spiral.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">&#x27;Spiral&#x27;</span>;
-P.lib = <span class="hljs-string">&#x27;entity&#x27;</span>;
-P.isArtefact = <span class="hljs-literal">true</span>;
-P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">Spiral</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
+P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Spiral&#x27;</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;entity&#x27;</span>;
+P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">true</span>;
+P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -603,8 +603,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = baseMix(P);
-P = shapeMix(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);
+P = <span class="hljs-title function_">shapeMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -637,7 +637,7 @@ P = shapeMix(P);</pre></div></div>
     <span class="hljs-attr">loopIncrement</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">drawFromLoop</span>: <span class="hljs-number">0</span>,
 };
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
+P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -694,8 +694,8 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> S = P.setters,
-    D = P.deltaSetters;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> S = P.<span class="hljs-property">setters</span>,
+    D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
             
         </li>
         
@@ -710,15 +710,15 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.loops = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">loops</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.loops = item;
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">loops</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };
-D.loops = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">loops</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.loops += item;
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">loops</span> += item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };</pre></div></div>
             
         </li>
@@ -734,15 +734,15 @@ D.loops = <span class="hljs-function"><span class="hljs-keyword">function</span>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.loopIncrement = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">loopIncrement</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.loopIncrement = item;
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">loopIncrement</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };
-D.loopIncrement = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">loopIncrement</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.loopIncrement += item;
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">loopIncrement</span> += item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };</pre></div></div>
             
         </li>
@@ -758,15 +758,15 @@ D.loopIncrement = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.drawFromLoop = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">drawFromLoop</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.drawFromLoop = <span class="hljs-built_in">Math</span>.floor(item);
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">drawFromLoop</span> = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(item);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };
-D.drawFromLoop = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">drawFromLoop</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.drawFromLoop = <span class="hljs-built_in">Math</span>.floor(<span class="hljs-built_in">this</span>.drawFromLoop + item);
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">drawFromLoop</span> = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">drawFromLoop</span> + item);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };</pre></div></div>
             
         </li>
@@ -795,14 +795,14 @@ D.drawFromLoop = <span class="hljs-function"><span class="hljs-keyword">function
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.cleanSpecies = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">cleanSpecies</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-built_in">this</span>.dirtySpecies = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtySpecies</span> = <span class="hljs-literal">false</span>;
 
     <span class="hljs-keyword">let</span> p = <span class="hljs-string">&#x27;M0,0&#x27;</span>;
-    p = <span class="hljs-built_in">this</span>.makeSpiralPath();
+    p = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeSpiralPath</span>();
 
-    <span class="hljs-built_in">this</span>.pathDefinition = p;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span> = p;
 };</pre></div></div>
             
         </li>
@@ -823,7 +823,7 @@ D.drawFromLoop = <span class="hljs-function"><span class="hljs-keyword">function
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.firstTurn = [
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">firstTurn</span> = [
     [<span class="hljs-number">0.043</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.082</span>, -<span class="hljs-number">0.035</span>, <span class="hljs-number">0.088</span>, -<span class="hljs-number">0.088</span>],
     [<span class="hljs-number">0.007</span>, -<span class="hljs-number">0.057</span>, -<span class="hljs-number">0.024</span>, -<span class="hljs-number">0.121</span>, -<span class="hljs-number">0.088</span>, -<span class="hljs-number">0.162</span>],
     [-<span class="hljs-number">0.07</span>, -<span class="hljs-number">0.045</span>, -<span class="hljs-number">0.169</span>, -<span class="hljs-number">0.054</span>, -<span class="hljs-number">0.265</span>, -<span class="hljs-number">0.015</span>],
@@ -833,7 +833,7 @@ D.drawFromLoop = <span class="hljs-function"><span class="hljs-keyword">function
     [<span class="hljs-number">0.206</span>, <span class="hljs-number">0.044</span>, <span class="hljs-number">0.431</span>, -<span class="hljs-number">0.001</span>, <span class="hljs-number">0.619</span>, -<span class="hljs-number">0.131</span>],
     [<span class="hljs-number">0.2</span>, -<span class="hljs-number">0.139</span>, <span class="hljs-number">0.34</span>, -<span class="hljs-number">0.361</span>, <span class="hljs-number">0.381</span>, -<span class="hljs-number">0.619</span>]
 ];
-P.subsequentTurns = [
+P.<span class="hljs-property">subsequentTurns</span> = [
     [<span class="hljs-number">0</span>, -<span class="hljs-number">0.27</span>, -<span class="hljs-number">0.11</span>, -<span class="hljs-number">0.52</span>, -<span class="hljs-number">0.29</span>, -<span class="hljs-number">0.71</span>],
     [-<span class="hljs-number">0.19</span>, -<span class="hljs-number">0.19</span>, -<span class="hljs-number">0.44</span>, -<span class="hljs-number">0.29</span>, -<span class="hljs-number">0.71</span>, -<span class="hljs-number">0.29</span>],
     [-<span class="hljs-number">0.27</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">0.52</span>, <span class="hljs-number">0.11</span>, -<span class="hljs-number">0.71</span>, <span class="hljs-number">0.29</span>],
@@ -857,28 +857,28 @@ P.subsequentTurns = [
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.makeSpiralPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">makeSpiralPath</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> loops = <span class="hljs-built_in">Math</span>.floor(<span class="hljs-built_in">this</span>.loops),
-        loopIncrement = <span class="hljs-built_in">this</span>.loopIncrement,
-        drawFromLoop = <span class="hljs-built_in">Math</span>.floor(<span class="hljs-built_in">this</span>.drawFromLoop),
+    <span class="hljs-keyword">let</span> loops = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">loops</span>),
+        loopIncrement = <span class="hljs-variable language_">this</span>.<span class="hljs-property">loopIncrement</span>,
+        drawFromLoop = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">drawFromLoop</span>),
         x1, y1, x2, y2, x3, y3,
         sx1, sy1, sx2, sy2, sx3, sy3,
-        firstTurn = <span class="hljs-built_in">this</span>.firstTurn,
-        subsequentTurns = <span class="hljs-built_in">this</span>.subsequentTurns,
+        firstTurn = <span class="hljs-variable language_">this</span>.<span class="hljs-property">firstTurn</span>,
+        subsequentTurns = <span class="hljs-variable language_">this</span>.<span class="hljs-property">subsequentTurns</span>,
         currentTurn = [];
 
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; firstTurn.length; i++) {
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; firstTurn.<span class="hljs-property">length</span>; i++) {
 
         [x1, y1, x2, y2, x3, y3] = firstTurn[i];
-        currentTurn.push([x1 * loopIncrement, y1 * loopIncrement, x2 * loopIncrement, y2 * loopIncrement, x3 * loopIncrement, y3 * loopIncrement]);
+        currentTurn.<span class="hljs-title function_">push</span>([x1 * loopIncrement, y1 * loopIncrement, x2 * loopIncrement, y2 * loopIncrement, x3 * loopIncrement, y3 * loopIncrement]);
     }
 
     <span class="hljs-keyword">let</span> path = <span class="hljs-string">&#x27;m0,0&#x27;</span>;
 
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j = <span class="hljs-number">0</span>; j &lt; loops; j++) {
 
-        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; currentTurn.length; i++) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; currentTurn.<span class="hljs-property">length</span>; i++) {
 
             [x1, y1, x2, y2, x3, y3] = currentTurn[i];
 
@@ -891,14 +891,14 @@ P.subsequentTurns = [
     <span class="hljs-keyword">return</span> path;
 };
 
-P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+P.<span class="hljs-property">calculateLocalPathAdditionalActions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-built_in">this</span>.localBox,
-        scale = <span class="hljs-built_in">this</span>.scale;
+    <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">localBox</span>,
+        scale = <span class="hljs-variable language_">this</span>.<span class="hljs-property">scale</span>;
 
-    <span class="hljs-built_in">this</span>.pathDefinition = <span class="hljs-built_in">this</span>.pathDefinition.replace(<span class="hljs-string">&#x27;m0,0&#x27;</span>, <span class="hljs-string">`m<span class="hljs-subst">${-x <span class="hljs-regexp">/ scale},${-y /</span> scale}</span>`</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span>.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;m0,0&#x27;</span>, <span class="hljs-string">`m<span class="hljs-subst">${-x <span class="hljs-regexp">/ scale},${-y /</span> scale}</span>`</span>);
 
-    <span class="hljs-built_in">this</span>.pathCalculatedOnce = <span class="hljs-literal">false</span>;</pre></div></div>
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathCalculatedOnce</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -916,7 +916,7 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.calculateLocalPath(<span class="hljs-built_in">this</span>.pathDefinition, <span class="hljs-literal">true</span>);
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">calculateLocalPath</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span>, <span class="hljs-literal">true</span>);
 };</pre></div></div>
             
         </li>
@@ -948,7 +948,7 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
 <li><strong>loopIncrement</strong> - float Number representative of the distance between successive loops; negative values have the effect of rotating the spiral 180 degrees</li>
 <li><strong>drawFromLoop</strong> - positive integer Number representing the loop on which the spiral starts to be drawn</li>
 </ul>
-<pre><code>scrawl.makeSpiral({
+<pre><code>scrawl.<span class="hljs-title function_">makeSpiral</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;mySpiral&#x27;</span>,
 
@@ -966,14 +966,14 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeSpiral = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeSpiral = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    items.species = <span class="hljs-string">&#x27;spiral&#x27;</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Spiral(items);
+    items.<span class="hljs-property">species</span> = <span class="hljs-string">&#x27;spiral&#x27;</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Spiral</span>(items);
 };
 
-<span class="hljs-title">constructors</span>.<span class="hljs-title">Spiral</span> = <span class="hljs-title">Spiral</span>;</pre></div></div>
+constructors.<span class="hljs-property">Spiral</span> = <span class="hljs-title class_">Spiral</span>;</pre></div></div>
             
         </li>
         

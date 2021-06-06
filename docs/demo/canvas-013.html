@@ -707,9 +707,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.library.canvas.mycanvas
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>
 
-canvas.set({
+canvas.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;lightgray&#x27;</span>,
     <span class="hljs-attr">css</span>: {
         <span class="hljs-attr">border</span>: <span class="hljs-string">&#x27;1px solid black&#x27;</span>
@@ -729,7 +729,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeOval({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeOval</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;circle&#x27;</span>,
     <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;lightGreen&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillAndDraw&#x27;</span>,
@@ -740,25 +740,25 @@ canvas.set({
     <span class="hljs-attr">showBoundingBox</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;ellipse&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">120</span>,
     <span class="hljs-attr">radiusY</span>: <span class="hljs-number">60</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;egg&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">220</span>,
     <span class="hljs-attr">radiusX</span>: <span class="hljs-string">&#x27;7%&#x27;</span>,
     <span class="hljs-attr">radiusY</span>: <span class="hljs-string">&#x27;3%&#x27;</span>,
     <span class="hljs-attr">intersectY</span>: <span class="hljs-number">0.6</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;shield&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">335</span>,
     <span class="hljs-attr">radiusY</span>: <span class="hljs-string">&#x27;2.7%&#x27;</span>,
     <span class="hljs-attr">intersectY</span>: -<span class="hljs-number">0.2</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;splodge&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">460</span>,
     <span class="hljs-attr">radius</span>: <span class="hljs-number">50</span>,
@@ -780,7 +780,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeRectangle({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRectangle</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;ovalRectangle&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">20</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-number">200</span>,
@@ -793,20 +793,20 @@ canvas.set({
     <span class="hljs-attr">showBoundingBox</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;tab&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">165</span>,
     <span class="hljs-attr">rectangleHeight</span>: <span class="hljs-number">40</span>,
     <span class="hljs-attr">radiusT</span>: <span class="hljs-number">20</span>,
     <span class="hljs-attr">radiusB</span>: <span class="hljs-number">0</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;blockRectangle&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">310</span>,
     <span class="hljs-attr">rectangleHeight</span>: <span class="hljs-number">60</span>,
     <span class="hljs-attr">radius</span>: <span class="hljs-number">0</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;notRectangle&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">460</span>,
     <span class="hljs-attr">radiusX</span>: <span class="hljs-string">&#x27;15%&#x27;</span>,
@@ -828,7 +828,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeLine({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeLine</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;firstLine&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">20</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-number">320</span>,
@@ -842,12 +842,12 @@ canvas.set({
     <span class="hljs-attr">showBoundingBox</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;secondLine&#x27;</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;16.5%&#x27;</span>,
     <span class="hljs-attr">endY</span>: <span class="hljs-string">&#x27;13.7%&#x27;</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;thirdLine&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;20%&#x27;</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;14%&#x27;</span>,
@@ -868,7 +868,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeQuadratic({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeQuadratic</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;firstQuad&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;5%&#x27;</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;20%&#x27;</span>,
@@ -884,14 +884,14 @@ canvas.set({
     <span class="hljs-attr">showBoundingBox</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;secondQuad&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;12%&#x27;</span>,
     <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;88%&#x27;</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;21.5%&#x27;</span>,
     <span class="hljs-attr">endY</span>: <span class="hljs-string">&#x27;21.5%&#x27;</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;thirdQuad&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;19%&#x27;</span>,
     <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;81%&#x27;</span>,
@@ -912,7 +912,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeBezier({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeBezier</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;firstBezier&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;5%&#x27;</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;27%&#x27;</span>,
@@ -930,14 +930,14 @@ canvas.set({
     <span class="hljs-attr">showBoundingBox</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;secondBezier&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;7%&#x27;</span>,
     <span class="hljs-attr">startControlY</span>: <span class="hljs-string">&#x27;18%&#x27;</span>,
     <span class="hljs-attr">endControlY</span>: <span class="hljs-string">&#x27;36%&#x27;</span>,
     <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;93%&#x27;</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;thirdBezier&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;9%&#x27;</span>,
     <span class="hljs-attr">startControlY</span>: <span class="hljs-string">&#x27;14%&#x27;</span>,
@@ -958,7 +958,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeTetragon({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeTetragon</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;square&#x27;</span>,
     <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;lightGreen&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillAndDraw&#x27;</span>,
@@ -969,25 +969,25 @@ canvas.set({
     <span class="hljs-attr">showBoundingBox</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;diamond&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">120</span>,
     <span class="hljs-attr">radiusY</span>: <span class="hljs-number">60</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;triangle&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">220</span>,
     <span class="hljs-attr">radiusX</span>: <span class="hljs-string">&#x27;7%&#x27;</span>,
     <span class="hljs-attr">radiusY</span>: <span class="hljs-string">&#x27;3%&#x27;</span>,
     <span class="hljs-attr">intersectY</span>: <span class="hljs-number">1</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;arrow&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">330</span>,
     <span class="hljs-attr">radiusY</span>: <span class="hljs-string">&#x27;2.6%&#x27;</span>,
     <span class="hljs-attr">intersectY</span>: <span class="hljs-number">1.2</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;skewarrow&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">470</span>,
     <span class="hljs-attr">radius</span>: <span class="hljs-number">50</span>,
@@ -1007,7 +1007,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makePolygon({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makePolygon</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;equiTriangle&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">20</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-number">935</span>,
@@ -1019,17 +1019,17 @@ canvas.set({
     <span class="hljs-attr">showBoundingBox</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pentagon&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">120</span>,
     <span class="hljs-attr">sides</span>: <span class="hljs-number">5</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;hexagon&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">260</span>,
     <span class="hljs-attr">sides</span>: <span class="hljs-number">6</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;11sides&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">420</span>,
     <span class="hljs-attr">sideLength</span>: <span class="hljs-number">30</span>,
@@ -1049,7 +1049,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeStar({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeStar</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;5star&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">20</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-number">1080</span>,
@@ -1062,12 +1062,12 @@ canvas.set({
     <span class="hljs-attr">showBoundingBox</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;6star&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">220</span>,
     <span class="hljs-attr">points</span>: <span class="hljs-number">6</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;twistedstar&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">420</span>,
     <span class="hljs-attr">radius2</span>: <span class="hljs-number">20</span>,
@@ -1087,7 +1087,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeSpiral({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeSpiral</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;spiral1&#x27;</span>,
     <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;darkgreen&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
@@ -1102,18 +1102,18 @@ canvas.set({
     <span class="hljs-attr">showBoundingBox</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;spiral2&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">350</span>,
     <span class="hljs-attr">drawFromLoop</span>: <span class="hljs-number">3</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;spiral3&#x27;</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-number">1550</span>,
     <span class="hljs-attr">loopIncrement</span>: <span class="hljs-number">0.3</span>,
     <span class="hljs-attr">drawFromLoop</span>: <span class="hljs-number">0</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;spiral4&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">50</span>,
     <span class="hljs-attr">loopIncrement</span>: <span class="hljs-number">0.3</span>,
@@ -1133,7 +1133,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeCog({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeCog</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;tooth-cog&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">20</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-number">1790</span>,
@@ -1150,19 +1150,19 @@ canvas.set({
     <span class="hljs-attr">showBoundingBox</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;blade-tooth-cog&#x27;</span>,
     <span class="hljs-attr">outerControlsOffset</span>: <span class="hljs-number">5</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">220</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;twist-tooth-cog&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">420</span>,
     <span class="hljs-attr">outerControlsOffset</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">twist</span>: <span class="hljs-number">15</span>,
 });
 
-scrawl.makeCog({
+scrawl.<span class="hljs-title function_">makeCog</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;hill-cog&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">20</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-number">1980</span>,
@@ -1179,19 +1179,19 @@ scrawl.makeCog({
     <span class="hljs-attr">showBoundingBox</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;blade-hill-cog&#x27;</span>,
     <span class="hljs-attr">outerControlsOffset</span>: <span class="hljs-number">5</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">220</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;twist-hill-cog&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">420</span>,
     <span class="hljs-attr">outerControlsOffset</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">twist</span>: <span class="hljs-number">15</span>,
 });
 
-scrawl.makeCog({
+scrawl.<span class="hljs-title function_">makeCog</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;smooth-cog&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">20</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-number">2170</span>,
@@ -1207,12 +1207,12 @@ scrawl.makeCog({
     <span class="hljs-attr">showBoundingBox</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;blade-smooth-cog&#x27;</span>,
     <span class="hljs-attr">outerControlsOffset</span>: <span class="hljs-number">15</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">220</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;twist-smooth-cog&#x27;</span>,
     <span class="hljs-attr">startX</span>: <span class="hljs-number">420</span>,
     <span class="hljs-attr">outerControlsOffset</span>: <span class="hljs-number">0</span>,
@@ -1233,7 +1233,7 @@ scrawl.makeCog({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makePicture({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makePicture</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_tab&#x27;</span>,
     <span class="hljs-attr">imageSource</span>: <span class="hljs-string">&#x27;img/bunny.png&#x27;</span>,
@@ -1256,212 +1256,212 @@ scrawl.makeCog({
         <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.0015</span>,
     },
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_blockRectangle&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;blockRectangle&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.05</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_circle&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;circle&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.1</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_egg&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;egg&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.15</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_ellipse&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;ellipse&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.2</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_firstBezier&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;firstBezier&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.25</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_firstLine&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;firstLine&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.3</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_firstQuad&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;firstQuad&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.35</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_notRectangle&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;notRectangle&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.4</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_ovalRectangle&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;ovalRectangle&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.45</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_secondBezier&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;secondBezier&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.5</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_secondLine&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;secondLine&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.55</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_secondQuad&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;secondQuad&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.6</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_shield&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;shield&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.65</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_splodge&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;splodge&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.7</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_thirdBezier&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;thirdBezier&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.75</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_thirdQuad&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;thirdQuad&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.8</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_thirdLine&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;thirdLine&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.85</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_square&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;square&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_diamond&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;diamond&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.05</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_triangle&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;triangle&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.1</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_arrow&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;arrow&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.15</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_skewarrow&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;skewarrow&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.2</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_equiTriangle&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;equiTriangle&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.25</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_pentagon&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;pentagon&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.3</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_hexagon&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;hexagon&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.35</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_11sides&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;11sides&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.4</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_5star&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;5star&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.45</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_6star&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;6star&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.5</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_twistedstar&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;twistedstar&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.55</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_spiral1&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;spiral1&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_spiral2&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;spiral2&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.25</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_spiral3&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;spiral3&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.5</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_spiral4&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;spiral4&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.75</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_tooth-cog&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;tooth-cog&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_blade-tooth-cog&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;blade-tooth-cog&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.3</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_twist-tooth-cog&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;twist-tooth-cog&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.6</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_hill-cog&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;hill-cog&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.1</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_blade-hill-cog&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;blade-hill-cog&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.4</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_twist-hill-cog&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;twist-hill-cog&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.7</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_smooth-cog&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;smooth-cog&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.2</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_blade-smooth-cog&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;blade-smooth-cog&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.5</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;_twist-smooth-cog&#x27;</span>,
     <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;twist-smooth-cog&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.8</span>,
@@ -1481,19 +1481,19 @@ scrawl.makeCog({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
     };
 }();</pre></div></div>
             
@@ -1510,14 +1510,14 @@ scrawl.makeCog({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
     <span class="hljs-attr">target</span>: canvas,
     <span class="hljs-attr">afterShow</span>: report,
 });
 
-<span class="hljs-built_in">console</span>.log(scrawl.library.entity);</pre></div></div>
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">entity</span>);</pre></div></div>
             
         </li>
         

@@ -533,7 +533,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">P = Ωempty</span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">P = Ωempty</span>) {</pre></div></div>
             
         </li>
         
@@ -566,7 +566,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        sourceLoaded: <span class="hljs-literal">false</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">sourceLoaded</span>: <span class="hljs-literal">false</span>,</pre></div></div>
             
         </li>
         
@@ -590,7 +590,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        source: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">source</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -609,9 +609,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        subscribers: <span class="hljs-literal">null</span>,
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">subscribers</span>: <span class="hljs-literal">null</span>,
     };
-    P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
+    P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -627,14 +627,14 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.packetExclusions = pushUnique(P.packetExclusions, [<span class="hljs-string">&#x27;sourceLoaded&#x27;</span>, <span class="hljs-string">&#x27;source&#x27;</span>, <span class="hljs-string">&#x27;subscribers&#x27;</span>]);
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">packetExclusions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusions</span>, [<span class="hljs-string">&#x27;sourceLoaded&#x27;</span>, <span class="hljs-string">&#x27;source&#x27;</span>, <span class="hljs-string">&#x27;subscribers&#x27;</span>]);
 
 
-    P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) </span>{
+    P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) {
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.subscribers &amp;&amp; <span class="hljs-built_in">this</span>.subscribers.length) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span>.<span class="hljs-property">length</span>) {
 
-            copy.subscribers = <span class="hljs-built_in">this</span>.subscribers.map(<span class="hljs-function"><span class="hljs-params">sub</span> =&gt;</span> sub.name);
+            copy.<span class="hljs-property">subscribers</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span>.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">sub</span> =&gt;</span> sub.<span class="hljs-property">name</span>);
         }
         <span class="hljs-keyword">return</span> copy;
     };</pre></div></div>
@@ -666,10 +666,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.kill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">removeDomEntity = <span class="hljs-literal">false</span></span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">kill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">removeDomEntity = <span class="hljs-literal">false</span></span>) {
 
-        <span class="hljs-keyword">if</span> (removeDomEntity &amp;&amp; <span class="hljs-built_in">this</span>.source) <span class="hljs-built_in">this</span>.source.remove();
-        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.deregister();
+        <span class="hljs-keyword">if</span> (removeDomEntity &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>.<span class="hljs-title function_">remove</span>();
+        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deregister</span>();
     };</pre></div></div>
             
         </li>
@@ -685,9 +685,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> G = P.getters, 
-        S = P.setters, 
-        D = P.deltaSetters;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> G = P.<span class="hljs-property">getters</span>, 
+        S = P.<span class="hljs-property">setters</span>, 
+        D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
             
         </li>
         
@@ -702,7 +702,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    S.source = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">source</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
         <span class="hljs-keyword">if</span> (item) {</pre></div></div>
             
@@ -719,7 +719,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.sourceLoaded) <span class="hljs-built_in">this</span>.notifySubscribers();
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceLoaded</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">notifySubscribers</span>();
         }
     };</pre></div></div>
             
@@ -736,7 +736,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    S.subscribers = λ<span class="hljs-literal">null</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">subscribers</span> = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
@@ -764,17 +764,17 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.assetConstructor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">assetConstructor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
-        <span class="hljs-built_in">this</span>.makeName(items.name);
-        <span class="hljs-built_in">this</span>.register();
-        <span class="hljs-built_in">this</span>.subscribers = [];
-        <span class="hljs-built_in">this</span>.set(<span class="hljs-built_in">this</span>.defs);
-        <span class="hljs-built_in">this</span>.set(items);
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(items.<span class="hljs-property">name</span>);
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span> = [];
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
 
-        <span class="hljs-keyword">if</span> (items.subscribe) <span class="hljs-built_in">this</span>.subscribers.push(items.subscribe);
+        <span class="hljs-keyword">if</span> (items.<span class="hljs-property">subscribe</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span>.<span class="hljs-title function_">push</span>(items.<span class="hljs-property">subscribe</span>);
 
-        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
     };</pre></div></div>
             
         </li>
@@ -791,13 +791,13 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.subscribe = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">sub</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">subscribe</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">sub</span>) {
 
-        <span class="hljs-keyword">if</span> (sub &amp;&amp; sub.name) {
+        <span class="hljs-keyword">if</span> (sub &amp;&amp; sub.<span class="hljs-property">name</span>) {
 
-            <span class="hljs-keyword">let</span> name = sub.name;
+            <span class="hljs-keyword">let</span> name = sub.<span class="hljs-property">name</span>;
 
-            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.subscribers.every(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.name !== name)) <span class="hljs-built_in">this</span>.subscribeAction(sub);
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span>.<span class="hljs-title function_">every</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.<span class="hljs-property">name</span> !== name)) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">subscribeAction</span>(sub);
         }
     };</pre></div></div>
             
@@ -814,14 +814,14 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.subscribeAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">sub</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">subscribeAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">sub</span>) {
 
         <span class="hljs-keyword">if</span> (sub) {
 
-            <span class="hljs-built_in">this</span>.subscribers.push(sub);
-            sub.asset = <span class="hljs-built_in">this</span>;
-            sub.source = <span class="hljs-built_in">this</span>.source;
-            <span class="hljs-built_in">this</span>.notifySubscriber(sub);
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span>.<span class="hljs-title function_">push</span>(sub);
+            sub.<span class="hljs-property">asset</span> = <span class="hljs-variable language_">this</span>;
+            sub.<span class="hljs-property">source</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">notifySubscriber</span>(sub);
         }
     };</pre></div></div>
             
@@ -838,21 +838,21 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.unsubscribe = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">sub</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">unsubscribe</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">sub</span>) {
 
-        <span class="hljs-keyword">if</span> (sub &amp;&amp; sub.name) {
+        <span class="hljs-keyword">if</span> (sub &amp;&amp; sub.<span class="hljs-property">name</span>) {
 
-            <span class="hljs-keyword">let</span> name = sub.name,
-                index = <span class="hljs-built_in">this</span>.subscribers.findIndex(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.name === name);
+            <span class="hljs-keyword">let</span> name = sub.<span class="hljs-property">name</span>,
+                index = <span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span>.<span class="hljs-title function_">findIndex</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> item.<span class="hljs-property">name</span> === name);
 
             <span class="hljs-keyword">if</span> (index &gt;= <span class="hljs-number">0</span>) {
 
-                sub.source = <span class="hljs-literal">null</span>;
-                sub.asset = <span class="hljs-literal">null</span>;
-                sub.sourceNaturalHeight = <span class="hljs-number">0</span>;
-                sub.sourceNaturalWidth = <span class="hljs-number">0</span>;
-                sub.sourceLoaded = <span class="hljs-literal">false</span>;
-                <span class="hljs-built_in">this</span>.subscribers.splice(index, <span class="hljs-number">1</span>)
+                sub.<span class="hljs-property">source</span> = <span class="hljs-literal">null</span>;
+                sub.<span class="hljs-property">asset</span> = <span class="hljs-literal">null</span>;
+                sub.<span class="hljs-property">sourceNaturalHeight</span> = <span class="hljs-number">0</span>;
+                sub.<span class="hljs-property">sourceNaturalWidth</span> = <span class="hljs-number">0</span>;
+                sub.<span class="hljs-property">sourceLoaded</span> = <span class="hljs-literal">false</span>;
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span>.<span class="hljs-title function_">splice</span>(index, <span class="hljs-number">1</span>)
             }
         }
     };</pre></div></div>
@@ -877,21 +877,21 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.notifySubscribers = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">notifySubscribers</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-built_in">this</span>.subscribers.forEach(<span class="hljs-function"><span class="hljs-params">sub</span> =&gt;</span> <span class="hljs-built_in">this</span>.notifySubscriber(sub), <span class="hljs-built_in">this</span>);
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">sub</span> =&gt;</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">notifySubscriber</span>(sub), <span class="hljs-variable language_">this</span>);
     };
 
-    P.notifySubscriber = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">sub</span>) </span>{
+    P.<span class="hljs-property">notifySubscriber</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">sub</span>) {
 
-        sub.sourceNaturalWidth = <span class="hljs-built_in">this</span>.sourceNaturalWidth;
-        sub.sourceNaturalHeight = <span class="hljs-built_in">this</span>.sourceNaturalHeight;
-        sub.sourceLoaded = <span class="hljs-built_in">this</span>.sourceLoaded;
-        sub.source = <span class="hljs-built_in">this</span>.source;
-        sub.dirtyImage = <span class="hljs-literal">true</span>;
-        sub.dirtyCopyStart = <span class="hljs-literal">true</span>;
-        sub.dirtyCopyDimensions = <span class="hljs-literal">true</span>;
-        sub.dirtyImageSubscribers = <span class="hljs-literal">true</span>;
+        sub.<span class="hljs-property">sourceNaturalWidth</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span>;
+        sub.<span class="hljs-property">sourceNaturalHeight</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span>;
+        sub.<span class="hljs-property">sourceLoaded</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceLoaded</span>;
+        sub.<span class="hljs-property">source</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
+        sub.<span class="hljs-property">dirtyImage</span> = <span class="hljs-literal">true</span>;
+        sub.<span class="hljs-property">dirtyCopyStart</span> = <span class="hljs-literal">true</span>;
+        sub.<span class="hljs-property">dirtyCopyDimensions</span> = <span class="hljs-literal">true</span>;
+        sub.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>

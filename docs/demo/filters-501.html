@@ -707,9 +707,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.library.canvas.mycanvas;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
 
-scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</pre></div></div>
+scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -724,7 +724,7 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</p
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> piccy = scrawl.makePicture({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> piccy = scrawl.<span class="hljs-title function_">makePicture</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;base-piccy&#x27;</span>,
 
@@ -739,7 +739,7 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</p
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
 });
 
-<span class="hljs-keyword">const</span> text = scrawl.makePhrase({
+<span class="hljs-keyword">const</span> text = scrawl.<span class="hljs-title function_">makePhrase</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-text&#x27;</span>,
     <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Hello world&#x27;</span>,
@@ -767,19 +767,19 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</p
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
     };
 }();</pre></div></div>
             
@@ -796,7 +796,7 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</p
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-animation&quot;</span>,
     <span class="hljs-attr">target</span>: canvas,
@@ -814,18 +814,18 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</p
               </div>
               <h4 id="user-interaction">User interaction</h4>
 <p>No additional work required in the Javascript file to create the CSS filters; these are defined as Strings in the HTML select &lt;option&gt; elements, and will be set on the target entitys as part of the form control user interaction below.</p>
-<pre><code>&lt;select <span class="hljs-class"><span class="hljs-keyword">class</span></span>=<span class="hljs-string">&quot;controlItem&quot;</span> id=<span class="hljs-string">&quot;filter&quot;</span>&gt;
-    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;none&quot;</span>&gt;</span>none<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span>
-    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;blur(6px)&quot;</span>&gt;</span>blur(6px)<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span>
-    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;brightness(0.4)&quot;</span>&gt;</span>brightness(0.4)<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span>
-    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;contrast(200%)&quot;</span>&gt;</span>contrast(200%)<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span>
-    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;drop-shadow(4px 4px 4px blue)&quot;</span>&gt;</span>drop-shadow(4px 4px 4px blue)<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span>
-    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;grayscale(100%)&quot;</span>&gt;</span>grayscale(100%)<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span>
-    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;hue-rotate(90deg)&quot;</span>&gt;</span>hue-rotate(90deg)<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span>
-    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;invert(75%)&quot;</span>&gt;</span>invert(75%)<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span>
-    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;opacity(25%)&quot;</span>&gt;</span>opacity(25%)<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span>
-    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;saturate(30%)&quot;</span>&gt;</span>saturate(30%)<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span>
-    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;sepia(100%)&quot;</span>&gt;</span>sepia(100%)<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span>
+<pre><code>&lt;select <span class="hljs-keyword">class</span>=<span class="hljs-string">&quot;controlItem&quot;</span> id=<span class="hljs-string">&quot;filter&quot;</span>&gt;
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;none&quot;</span>&gt;</span>none<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span>
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;blur(6px)&quot;</span>&gt;</span>blur(6px)<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span>
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;brightness(0.4)&quot;</span>&gt;</span>brightness(0.4)<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span>
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;contrast(200%)&quot;</span>&gt;</span>contrast(200%)<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span>
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;drop-shadow(4px 4px 4px blue)&quot;</span>&gt;</span>drop-shadow(4px 4px 4px blue)<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span>
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;grayscale(100%)&quot;</span>&gt;</span>grayscale(100%)<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span>
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;hue-rotate(90deg)&quot;</span>&gt;</span>hue-rotate(90deg)<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span>
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;invert(75%)&quot;</span>&gt;</span>invert(75%)<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span>
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;opacity(25%)&quot;</span>&gt;</span>opacity(25%)<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span>
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;saturate(30%)&quot;</span>&gt;</span>saturate(30%)<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span>
+    <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;sepia(100%)&quot;</span>&gt;</span>sepia(100%)<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span>
 &lt;/select&gt;
 </code></pre>
 
@@ -848,43 +848,43 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</p
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> updateTarget = <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> <span class="hljs-title function_">updateTarget</span> = (<span class="hljs-params">e</span>) =&gt; {
 
-    e.preventDefault();
-    e.returnValue = <span class="hljs-literal">false</span>;
+    e.<span class="hljs-title function_">preventDefault</span>();
+    e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> val = e.target.value;
+    <span class="hljs-keyword">let</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
 
     <span class="hljs-keyword">if</span> (val) {
 
-        piccy.set({ <span class="hljs-attr">filter</span>: <span class="hljs-string">&#x27;none&#x27;</span>});
-        text.set({ <span class="hljs-attr">filter</span>: <span class="hljs-string">&#x27;none&#x27;</span>});
-        canvas.setBase({ <span class="hljs-attr">filter</span>: <span class="hljs-string">&#x27;none&#x27;</span>});
+        piccy.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">filter</span>: <span class="hljs-string">&#x27;none&#x27;</span>});
+        text.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">filter</span>: <span class="hljs-string">&#x27;none&#x27;</span>});
+        canvas.<span class="hljs-title function_">setBase</span>({ <span class="hljs-attr">filter</span>: <span class="hljs-string">&#x27;none&#x27;</span>});
 
         <span class="hljs-keyword">if</span> (val === <span class="hljs-string">&#x27;picture&#x27;</span>) filterTarget = piccy;
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (val === <span class="hljs-string">&#x27;phrase&#x27;</span>) filterTarget = text;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (val === <span class="hljs-string">&#x27;cell&#x27;</span>) filterTarget = canvas.base;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (val === <span class="hljs-string">&#x27;cell&#x27;</span>) filterTarget = canvas.<span class="hljs-property">base</span>;
 
-        filterTarget.set({ <span class="hljs-attr">filter</span>: filterString });
+        filterTarget.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">filter</span>: filterString });
     }
 };
-scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updateTarget, <span class="hljs-string">&#x27;#target&#x27;</span>);
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updateTarget, <span class="hljs-string">&#x27;#target&#x27;</span>);
 
-<span class="hljs-keyword">let</span> updateFilter = <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+<span class="hljs-keyword">let</span> <span class="hljs-title function_">updateFilter</span> = (<span class="hljs-params">e</span>) =&gt; {
 
-    e.preventDefault();
-    e.returnValue = <span class="hljs-literal">false</span>;
+    e.<span class="hljs-title function_">preventDefault</span>();
+    e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">if</span> (e.target &amp;&amp; e.target.value) {
+    <span class="hljs-keyword">if</span> (e.<span class="hljs-property">target</span> &amp;&amp; e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>) {
 
-        filterString = e.target.value;
-        filterTarget.set({ <span class="hljs-attr">filter</span>: filterString });
+        filterString = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
+        filterTarget.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">filter</span>: filterString });
     }
 };
-scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updateFilter, <span class="hljs-string">&#x27;#filter&#x27;</span>);
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updateFilter, <span class="hljs-string">&#x27;#filter&#x27;</span>);
 
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#filter&#x27;</span>).options.selectedIndex = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#target&#x27;</span>).options.selectedIndex = <span class="hljs-number">0</span>;</pre></div></div>
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#filter&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#target&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
             
         </li>
         
@@ -899,7 +899,7 @@ scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

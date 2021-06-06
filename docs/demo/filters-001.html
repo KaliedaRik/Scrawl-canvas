@@ -707,17 +707,17 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.library.canvas.mycanvas;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
 
-canvas.set({
+canvas.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">css</span>: {
       <span class="hljs-attr">display</span>: <span class="hljs-string">&#x27;inline-block&#x27;</span>,
     },
-}).setBase({
+}).<span class="hljs-title function_">setBase</span>({
     <span class="hljs-attr">compileOrder</span>: <span class="hljs-number">1</span>,
 });
 
-scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</pre></div></div>
+scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -734,7 +734,7 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</p
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> blurFilters = {
 
-    <span class="hljs-attr">blurFilter</span>: scrawl.makeFilter({
+    <span class="hljs-attr">blurFilter</span>: scrawl.<span class="hljs-title function_">makeFilter</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;blur&#x27;</span>,
         <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;blur&#x27;</span>,
@@ -744,7 +744,7 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</p
         <span class="hljs-attr">step</span>: <span class="hljs-number">1</span>,
     }),
 
-    <span class="hljs-attr">gaussianBlurFilter</span>: scrawl.makeFilter({
+    <span class="hljs-attr">gaussianBlurFilter</span>: scrawl.<span class="hljs-title function_">makeFilter</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;gaussian-blur&#x27;</span>,
         <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;gaussianBlur&#x27;</span>,
@@ -765,7 +765,7 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</p
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> piccy = scrawl.makePicture({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> piccy = scrawl.<span class="hljs-title function_">makePicture</span>({
 
     <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;iris&#x27;</span>,
 
@@ -794,24 +794,24 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</p
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">let</span> radius = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#radius&#x27;</span>),
-        passes = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#passes&#x27;</span>),
-        step = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#step&#x27;</span>),
-        opacity = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#opacity&#x27;</span>);
+    <span class="hljs-keyword">let</span> radius = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#radius&#x27;</span>),
+        passes = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#passes&#x27;</span>),
+        step = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#step&#x27;</span>),
+        opacity = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#opacity&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
     Radius: <span class="hljs-subst">${radius.value}</span>, Step: <span class="hljs-subst">${step.value}</span>, Passes: <span class="hljs-subst">${passes.value}</span>
     Opacity: <span class="hljs-subst">${opacity.value}</span>`</span>;
     };
@@ -830,7 +830,7 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</p
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-animation&quot;</span>,
     <span class="hljs-attr">target</span>: canvas,
@@ -851,12 +851,12 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</p
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.observeAndUpdate({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
 
     <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
     <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,
 
-    <span class="hljs-attr">target</span>: blurFilters.blurFilter,
+    <span class="hljs-attr">target</span>: blurFilters.<span class="hljs-property">blurFilter</span>,
 
     <span class="hljs-attr">useNativeListener</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">preventDefault</span>: <span class="hljs-literal">true</span>,
@@ -876,7 +876,7 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</p
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        passes: [<span class="hljs-string">&#x27;passes&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">passes</span>: [<span class="hljs-string">&#x27;passes&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
         <span class="hljs-attr">step</span>: [<span class="hljs-string">&#x27;step&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
 
         <span class="hljs-attr">includeRed</span>: [<span class="hljs-string">&#x27;includeRed&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
@@ -904,42 +904,42 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</p
             <div class="content"><div class='highlight'><pre>    },
 });
 
-scrawl.addNativeListener([<span class="hljs-string">&#x27;update&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;update&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
 
-    e.preventDefault();
-    e.stopPropagation();
+    e.<span class="hljs-title function_">preventDefault</span>();
+    e.<span class="hljs-title function_">stopPropagation</span>();
 
-    piccy.set({
-        <span class="hljs-attr">filters</span>: [blurFilters[e.target.value].name],
+    piccy.<span class="hljs-title function_">set</span>({
+        <span class="hljs-attr">filters</span>: [blurFilters[e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>].<span class="hljs-property">name</span>],
     })
 
 }, <span class="hljs-string">&#x27;#blurFilter&#x27;</span>);
 
-scrawl.addNativeListener([<span class="hljs-string">&#x27;update&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;update&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
 
-    e.preventDefault();
-    e.stopPropagation();
+    e.<span class="hljs-title function_">preventDefault</span>();
+    e.<span class="hljs-title function_">stopPropagation</span>();
 
     <span class="hljs-keyword">const</span> args = {
-        <span class="hljs-attr">radius</span>: <span class="hljs-built_in">parseFloat</span>(e.target.value),
+        <span class="hljs-attr">radius</span>: <span class="hljs-built_in">parseFloat</span>(e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>),
     }
 
-    blurFilters.blurFilter.set(args);
-    blurFilters.gaussianBlurFilter.set(args);
+    blurFilters.<span class="hljs-property">blurFilter</span>.<span class="hljs-title function_">set</span>(args);
+    blurFilters.<span class="hljs-property">gaussianBlurFilter</span>.<span class="hljs-title function_">set</span>(args);
 
 }, <span class="hljs-string">&#x27;#radius&#x27;</span>);
 
-scrawl.addNativeListener([<span class="hljs-string">&#x27;update&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;update&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
 
-    e.preventDefault();
-    e.stopPropagation();
+    e.<span class="hljs-title function_">preventDefault</span>();
+    e.<span class="hljs-title function_">stopPropagation</span>();
 
     <span class="hljs-keyword">const</span> args = {
-        <span class="hljs-attr">opacity</span>: <span class="hljs-built_in">parseFloat</span>(e.target.value),
+        <span class="hljs-attr">opacity</span>: <span class="hljs-built_in">parseFloat</span>(e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>),
     }
 
-    blurFilters.blurFilter.set(args);
-    blurFilters.gaussianBlurFilter.set(args);
+    blurFilters.<span class="hljs-property">blurFilter</span>.<span class="hljs-title function_">set</span>(args);
+    blurFilters.<span class="hljs-property">gaussianBlurFilter</span>.<span class="hljs-title function_">set</span>(args);
 
 }, <span class="hljs-string">&#x27;#opacity&#x27;</span>);</pre></div></div>
             
@@ -956,18 +956,18 @@ scrawl.addNativeListener([<span class="hljs-string">&#x27;update&#x27;</span>, <
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#blurFilter&#x27;</span>).options.selectedIndex = <span class="hljs-number">1</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#radius&#x27;</span>).value = <span class="hljs-number">10</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#passes&#x27;</span>).value = <span class="hljs-number">1</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#step&#x27;</span>).value = <span class="hljs-number">1</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#includeRed&#x27;</span>).options.selectedIndex = <span class="hljs-number">1</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#includeGreen&#x27;</span>).options.selectedIndex = <span class="hljs-number">1</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#includeBlue&#x27;</span>).options.selectedIndex = <span class="hljs-number">1</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#includeAlpha&#x27;</span>).options.selectedIndex = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#processHorizontal&#x27;</span>).options.selectedIndex = <span class="hljs-number">1</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#processVertical&#x27;</span>).options.selectedIndex = <span class="hljs-number">1</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#excludeTransparentPixels&#x27;</span>).options.selectedIndex = <span class="hljs-number">1</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#opacity&#x27;</span>).value = <span class="hljs-number">1</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#blurFilter&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#radius&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">10</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#passes&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#step&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#includeRed&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#includeGreen&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#includeBlue&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#includeAlpha&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#processHorizontal&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#processVertical&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#excludeTransparentPixels&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#opacity&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
             
         </li>
         
@@ -982,7 +982,7 @@ scrawl.addNativeListener([<span class="hljs-string">&#x27;update&#x27;</span>, <
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

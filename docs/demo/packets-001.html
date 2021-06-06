@@ -707,7 +707,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.library.canvas.mycanvas;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
             
         </li>
         
@@ -722,8 +722,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.addListener(<span class="hljs-string">&#x27;move&#x27;</span>, <span class="hljs-function">() =&gt;</span> canvas.cascadeEventAction(<span class="hljs-string">&#x27;move&#x27;</span>), canvas.domElement);
-scrawl.addListener(<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-function">() =&gt;</span> canvas.cascadeEventAction(<span class="hljs-string">&#x27;up&#x27;</span>), canvas.domElement);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-string">&#x27;move&#x27;</span>, <span class="hljs-function">() =&gt;</span> canvas.<span class="hljs-title function_">cascadeEventAction</span>(<span class="hljs-string">&#x27;move&#x27;</span>), canvas.<span class="hljs-property">domElement</span>);
+scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-function">() =&gt;</span> canvas.<span class="hljs-title function_">cascadeEventAction</span>(<span class="hljs-string">&#x27;up&#x27;</span>), canvas.<span class="hljs-property">domElement</span>);</pre></div></div>
             
         </li>
         
@@ -738,7 +738,7 @@ scrawl.addListener(<span class="hljs-string">&#x27;up&#x27;</span>, <span class=
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> box = scrawl.makeBlock({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> box = scrawl.<span class="hljs-title function_">makeBlock</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-box&#x27;</span>,
 
@@ -750,26 +750,26 @@ scrawl.addListener(<span class="hljs-string">&#x27;up&#x27;</span>, <span class=
 
     <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
 
-    <span class="hljs-attr">onEnter</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-        <span class="hljs-built_in">this</span>.set({
+    <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;pink&#x27;</span>,
         });
     },
 
-    <span class="hljs-attr">onLeave</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-        <span class="hljs-built_in">this</span>.set({
+    <span class="hljs-attr">onLeave</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
         });
     },
 
-    <span class="hljs-attr">onUp</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-built_in">this</span>.clickAnchor() },
+    <span class="hljs-attr">onUp</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">clickAnchor</span>() },
 
     <span class="hljs-attr">anchor</span>: {
         <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;wikipedia-box-link&#x27;</span>,
         <span class="hljs-attr">href</span>: <span class="hljs-string">&#x27;https://en.wikipedia.org/wiki/Box&#x27;</span>,
         <span class="hljs-attr">description</span>: <span class="hljs-string">&#x27;Link to the Wikipedia article on boxes (opens in new tab)&#x27;</span>,
 
-        <span class="hljs-attr">clickAction</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-string">`console.log(&#x27;box clicked&#x27;)`</span> },
+        <span class="hljs-attr">clickAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { <span class="hljs-keyword">return</span> <span class="hljs-string">`console.log(&#x27;box clicked&#x27;)`</span> },
     },
 });</pre></div></div>
             
@@ -782,12 +782,12 @@ scrawl.addListener(<span class="hljs-string">&#x27;up&#x27;</span>, <span class=
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <pre><code>Test <span class="hljs-number">1</span> - no argument supplied
+              <pre><code><span class="hljs-title class_">Test</span> <span class="hljs-number">1</span> - no argument supplied
 </code></pre>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> boxPacket1 = box.saveAsPacket();</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> boxPacket1 = box.<span class="hljs-title function_">saveAsPacket</span>();</pre></div></div>
             
         </li>
         
@@ -798,12 +798,12 @@ scrawl.addListener(<span class="hljs-string">&#x27;up&#x27;</span>, <span class=
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <pre><code>Test <span class="hljs-number">2</span> - argument === <span class="hljs-literal">true</span>
+              <pre><code><span class="hljs-title class_">Test</span> <span class="hljs-number">2</span> - argument === <span class="hljs-literal">true</span>
 </code></pre>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> boxPacket2 = box.saveAsPacket(<span class="hljs-literal">true</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> boxPacket2 = box.<span class="hljs-title function_">saveAsPacket</span>(<span class="hljs-literal">true</span>);</pre></div></div>
             
         </li>
         
@@ -814,12 +814,12 @@ scrawl.addListener(<span class="hljs-string">&#x27;up&#x27;</span>, <span class=
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <pre><code>Test <span class="hljs-number">3</span> - argument.includeDefaults === <span class="hljs-literal">true</span>
+              <pre><code><span class="hljs-title class_">Test</span> <span class="hljs-number">3</span> - argument.<span class="hljs-property">includeDefaults</span> === <span class="hljs-literal">true</span>
 </code></pre>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> boxPacket3 = box.saveAsPacket({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> boxPacket3 = box.<span class="hljs-title function_">saveAsPacket</span>({
     <span class="hljs-attr">includeDefaults</span>: <span class="hljs-literal">true</span>,
 });</pre></div></div>
             
@@ -832,19 +832,19 @@ scrawl.addListener(<span class="hljs-string">&#x27;up&#x27;</span>, <span class=
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <pre><code>Test <span class="hljs-number">4</span> - argument.includeDefaults === <span class="hljs-built_in">Array</span>
+              <pre><code><span class="hljs-title class_">Test</span> <span class="hljs-number">4</span> - argument.<span class="hljs-property">includeDefaults</span> === <span class="hljs-title class_">Array</span>
 </code></pre>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> boxPacket4 = box.saveAsPacket({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> boxPacket4 = box.<span class="hljs-title function_">saveAsPacket</span>({
     <span class="hljs-attr">includeDefaults</span>: [<span class="hljs-string">&#x27;handle&#x27;</span>, <span class="hljs-string">&#x27;miterLimit&#x27;</span>, <span class="hljs-string">&#x27;onUp&#x27;</span>, <span class="hljs-string">&#x27;useMimicScale&#x27;</span>, <span class="hljs-string">&#x27;anchor&#x27;</span>],
 });
 
-<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;Save test 1 result: &#x27;</span>, boxPacket1);
-<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;Save test 2 result: &#x27;</span>, boxPacket2);
-<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;Save test 3 result: &#x27;</span>, boxPacket3);
-<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;Save test 4 result: &#x27;</span>, boxPacket4);</pre></div></div>
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Save test 1 result: &#x27;</span>, boxPacket1);
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Save test 2 result: &#x27;</span>, boxPacket2);
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Save test 3 result: &#x27;</span>, boxPacket3);
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Save test 4 result: &#x27;</span>, boxPacket4);</pre></div></div>
             
         </li>
         
@@ -856,7 +856,7 @@ scrawl.addListener(<span class="hljs-string">&#x27;up&#x27;</span>, <span class=
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>Save tests - expected results</p>
-<pre><code>TEST <span class="hljs-number">1</span>
+<pre><code><span class="hljs-variable constant_">TEST</span> <span class="hljs-number">1</span>
 [
     <span class="hljs-string">&quot;my-box&quot;</span>,
     <span class="hljs-string">&quot;Block&quot;</span>,
@@ -880,7 +880,7 @@ scrawl.addListener(<span class="hljs-string">&#x27;up&#x27;</span>, <span class=
     }
 ]
    
-TEST <span class="hljs-number">2</span>, TEST <span class="hljs-number">3</span>
+<span class="hljs-variable constant_">TEST</span> <span class="hljs-number">2</span>, <span class="hljs-variable constant_">TEST</span> <span class="hljs-number">3</span>
 [
     <span class="hljs-string">&quot;my-box&quot;</span>,
     <span class="hljs-string">&quot;Block&quot;</span>,
@@ -974,7 +974,7 @@ TEST <span class="hljs-number">2</span>, TEST <span class="hljs-number">3</span>
     }
 ]
    
-TEST <span class="hljs-number">4</span>
+<span class="hljs-variable constant_">TEST</span> <span class="hljs-number">4</span>
 [
     <span class="hljs-string">&quot;my-box&quot;</span>,
     <span class="hljs-string">&quot;Block&quot;</span>,
@@ -1017,8 +1017,8 @@ TEST <span class="hljs-number">4</span>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>box.kill();
-<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;Import test setup - check to see if entity has been deleted&#x27;</span>, <span class="hljs-built_in">Object</span>.keys(scrawl.library.entity));</pre></div></div>
+            <div class="content"><div class='highlight'><pre>box.<span class="hljs-title function_">kill</span>();
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Import test setup - check to see if entity has been deleted&#x27;</span>, <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">entity</span>));</pre></div></div>
             
         </li>
         
@@ -1033,9 +1033,9 @@ TEST <span class="hljs-number">4</span>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>canvas.importPacket(boxPacket1.substring(<span class="hljs-number">0</span>, <span class="hljs-number">50</span>))
-.then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;Import test 1 success -&#x27;</span>, res))
-.catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;Import test 1 error -&#x27;</span>, err));</pre></div></div>
+            <div class="content"><div class='highlight'><pre>canvas.<span class="hljs-title function_">importPacket</span>(boxPacket1.<span class="hljs-title function_">substring</span>(<span class="hljs-number">0</span>, <span class="hljs-number">50</span>))
+.<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Import test 1 success -&#x27;</span>, res))
+.<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Import test 1 error -&#x27;</span>, err));</pre></div></div>
             
         </li>
         
@@ -1050,9 +1050,9 @@ TEST <span class="hljs-number">4</span>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>canvas.importPacket(boxPacket1)
-.then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;Import test 2 success -&#x27;</span>, res))
-.catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;Import test 2 error -&#x27;</span>, err));
+            <div class="content"><div class='highlight'><pre>canvas.<span class="hljs-title function_">importPacket</span>(boxPacket1)
+.<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Import test 2 success -&#x27;</span>, res))
+.<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Import test 2 error -&#x27;</span>, err));
 
 <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {</pre></div></div>
             
@@ -1069,9 +1069,9 @@ TEST <span class="hljs-number">4</span>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    canvas.importPacket(<span class="hljs-string">&#x27;./packets/packets-003-block&#x27;</span>)
-    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;Import test 3 success -&#x27;</span>, res))
-    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;Import test 3 error -&#x27;</span>, err));</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    canvas.<span class="hljs-title function_">importPacket</span>(<span class="hljs-string">&#x27;./packets/packets-003-block&#x27;</span>)
+    .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Import test 3 success -&#x27;</span>, res))
+    .<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Import test 3 error -&#x27;</span>, err));</pre></div></div>
             
         </li>
         
@@ -1086,9 +1086,9 @@ TEST <span class="hljs-number">4</span>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    canvas.importPacket(<span class="hljs-string">&#x27;./packets/packets-003-block.txt&#x27;</span>)
-    .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;Import test 4 success -&#x27;</span>, res))
-    .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;Import test 4 error -&#x27;</span>, err));
+            <div class="content"><div class='highlight'><pre>    canvas.<span class="hljs-title function_">importPacket</span>(<span class="hljs-string">&#x27;./packets/packets-003-block.txt&#x27;</span>)
+    .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Import test 4 success -&#x27;</span>, res))
+    .<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Import test 4 error -&#x27;</span>, err));
 
     <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {</pre></div></div>
             
@@ -1105,9 +1105,9 @@ TEST <span class="hljs-number">4</span>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        canvas.importPacket(<span class="hljs-string">&#x27;./packets/packets-003-block-updated.txt&#x27;</span>)
-        .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;Import test 5 success -&#x27;</span>, res))
-        .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;Import test 5 error -&#x27;</span>, err));
+            <div class="content"><div class='highlight'><pre>        canvas.<span class="hljs-title function_">importPacket</span>(<span class="hljs-string">&#x27;./packets/packets-003-block-updated.txt&#x27;</span>)
+        .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Import test 5 success -&#x27;</span>, res))
+        .<span class="hljs-title function_">catch</span>(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Import test 5 error -&#x27;</span>, err));
     }, <span class="hljs-number">5000</span>);
 }, <span class="hljs-number">5000</span>);</pre></div></div>
             
@@ -1121,41 +1121,41 @@ TEST <span class="hljs-number">4</span>
                 <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>Import tests - expected results (result order may vary due to asynchronous fetch/promise resolve)</p>
-<pre><code>SETUP
-Import test setup - check to see <span class="hljs-keyword">if</span> entity has been deleted |&gt; []
+<pre><code><span class="hljs-variable constant_">SETUP</span>
+<span class="hljs-title class_">Import</span> test setup - check to see <span class="hljs-keyword">if</span> entity has been deleted |&gt; []
 
-TEST <span class="hljs-number">1</span>
-Import test <span class="hljs-number">1</span> error - <span class="hljs-built_in">Error</span>: Failed to process packet due to <span class="hljs-built_in">JSON</span> parsing error - Unexpected end <span class="hljs-keyword">of</span> <span class="hljs-built_in">JSON</span> input
+<span class="hljs-variable constant_">TEST</span> <span class="hljs-number">1</span>
+<span class="hljs-title class_">Import</span> test <span class="hljs-number">1</span> error - <span class="hljs-title class_">Error</span>: <span class="hljs-title class_">Failed</span> to process packet due to <span class="hljs-variable constant_">JSON</span> parsing error - <span class="hljs-title class_">Unexpected</span> end <span class="hljs-keyword">of</span> <span class="hljs-variable constant_">JSON</span> input
 
-TEST <span class="hljs-number">2</span>
-Import test <span class="hljs-number">2</span> success - |&gt; Block
+<span class="hljs-variable constant_">TEST</span> <span class="hljs-number">2</span>
+<span class="hljs-title class_">Import</span> test <span class="hljs-number">2</span> success - |&gt; <span class="hljs-title class_">Block</span>
 
-TEST <span class="hljs-number">3</span>
-Import test <span class="hljs-number">3</span> error - <span class="hljs-built_in">Error</span>: Packet <span class="hljs-keyword">import</span> <span class="hljs-keyword">from</span> server failed - <span class="hljs-number">404</span>: Not Found - http:<span class="hljs-comment">//localhost:8080/demo/packets/packets-003-block</span>
+<span class="hljs-variable constant_">TEST</span> <span class="hljs-number">3</span>
+<span class="hljs-title class_">Import</span> test <span class="hljs-number">3</span> error - <span class="hljs-title class_">Error</span>: <span class="hljs-title class_">Packet</span> <span class="hljs-keyword">import</span> <span class="hljs-keyword">from</span> server failed - <span class="hljs-number">404</span>: <span class="hljs-title class_">Not</span> <span class="hljs-title class_">Found</span> - <span class="hljs-attr">http</span>:<span class="hljs-comment">//localhost:8080/demo/packets/packets-003-block</span>
 
-TEST <span class="hljs-number">4</span>
-Import test <span class="hljs-number">4</span> success - |&gt; Block
+<span class="hljs-variable constant_">TEST</span> <span class="hljs-number">4</span>
+<span class="hljs-title class_">Import</span> test <span class="hljs-number">4</span> success - |&gt; <span class="hljs-title class_">Block</span>
 
-TEST <span class="hljs-number">5</span>
-Import test <span class="hljs-number">5</span> success - |&gt; Block
+<span class="hljs-variable constant_">TEST</span> <span class="hljs-number">5</span>
+<span class="hljs-title class_">Import</span> test <span class="hljs-number">5</span> success - |&gt; <span class="hljs-title class_">Block</span>
 </code></pre>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>
-<span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+<span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
     };
 }();</pre></div></div>
             
@@ -1173,14 +1173,14 @@ Import test <span class="hljs-number">5</span> success - |&gt; Block
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
     <span class="hljs-attr">target</span>: canvas,
     <span class="hljs-attr">afterShow</span>: report,
 });
 
-<span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

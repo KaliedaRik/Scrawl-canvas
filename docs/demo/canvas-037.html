@@ -726,9 +726,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.library.canvas.mycanvas, 
-    base = canvas.base,
-    baseGroup = scrawl.library.group[base.name];</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>, 
+    base = canvas.<span class="hljs-property">base</span>,
+    baseGroup = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">group</span>[base.<span class="hljs-property">name</span>];</pre></div></div>
             
         </li>
         
@@ -743,7 +743,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>canvas.set({
+            <div class="content"><div class='highlight'><pre>canvas.<span class="hljs-title function_">set</span>({
 
     <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;honeydew&#x27;</span>,
 
@@ -753,7 +753,7 @@
     <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">baseMatchesCanvasDimensions</span>: <span class="hljs-literal">true</span>,
 
-}).setAsCurrentCanvas();</pre></div></div>
+}).<span class="hljs-title function_">setAsCurrentCanvas</span>();</pre></div></div>
             
         </li>
         
@@ -768,7 +768,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> piccie = scrawl.makePicture({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> piccie = scrawl.<span class="hljs-title function_">makePicture</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;river-pic&#x27;</span>,
 
@@ -798,19 +798,19 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
     };
 }();</pre></div></div>
             
@@ -827,7 +827,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-animation&quot;</span>,
     <span class="hljs-attr">target</span>: canvas,
@@ -853,24 +853,24 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.addNativeListener(<span class="hljs-string">&#x27;wheel&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;wheel&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
 
-    e.preventDefault();
+    e.<span class="hljs-title function_">preventDefault</span>();
 
     <span class="hljs-keyword">let</span> oldScale = currentScale,
-        here = canvas.here;
+        here = canvas.<span class="hljs-property">here</span>;
 
-    currentScale += (e.deltaY * -<span class="hljs-number">0.0005</span>);
+    currentScale += (e.<span class="hljs-property">deltaY</span> * -<span class="hljs-number">0.0005</span>);
 
     <span class="hljs-keyword">if</span> (currentScale &gt; maxScale) currentScale = maxScale;
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (currentScale &lt; minScale) currentScale = minScale;
 
     <span class="hljs-keyword">let</span> delta = (frameDimension * oldScale) - (frameDimension * currentScale);
 
-    fromLeft += delta * here.normX;
-    fromTop += delta * here.normY;
+    fromLeft += delta * here.<span class="hljs-property">normX</span>;
+    fromTop += delta * here.<span class="hljs-property">normY</span>;
 
-    piccie.set({
+    piccie.<span class="hljs-title function_">set</span>({
 
         <span class="hljs-attr">copyWidth</span>: currentScale * frameDimension,
         <span class="hljs-attr">copyHeight</span>: currentScale * frameDimension,
@@ -878,7 +878,7 @@
         <span class="hljs-attr">copyStartX</span>: fromLeft,
         <span class="hljs-attr">copyStartY</span>: fromTop,
     });
-}, canvas.domElement);</pre></div></div>
+}, canvas.<span class="hljs-property">domElement</span>);</pre></div></div>
             
         </li>
         
@@ -910,32 +910,32 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.addListener(<span class="hljs-string">&#x27;down&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-string">&#x27;down&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
 
-    <span class="hljs-keyword">let</span> here = base.here,
-        target = baseGroup.getArtefactAt(base.here);
+    <span class="hljs-keyword">let</span> here = base.<span class="hljs-property">here</span>,
+        target = baseGroup.<span class="hljs-title function_">getArtefactAt</span>(base.<span class="hljs-property">here</span>);
 
-    draggingArtefact = (target &amp;&amp; target.artefact &amp;&amp; target.artefact.type == <span class="hljs-string">&#x27;Picture&#x27;</span>) ? 
-        target.artefact : 
+    draggingArtefact = (target &amp;&amp; target.<span class="hljs-property">artefact</span> &amp;&amp; target.<span class="hljs-property">artefact</span>.<span class="hljs-property">type</span> == <span class="hljs-string">&#x27;Picture&#x27;</span>) ? 
+        target.<span class="hljs-property">artefact</span> : 
         <span class="hljs-literal">false</span>; 
 
     <span class="hljs-keyword">if</span> (draggingArtefact) {
-        currentDragX = here.x;
-        currentDragY = here.y;
+        currentDragX = here.<span class="hljs-property">x</span>;
+        currentDragY = here.<span class="hljs-property">y</span>;
     }
-}, canvas.domElement);
+}, canvas.<span class="hljs-property">domElement</span>);
 
-scrawl.addListener(<span class="hljs-string">&#x27;move&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-string">&#x27;move&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
 
-    <span class="hljs-keyword">let</span> here = base.here;
+    <span class="hljs-keyword">let</span> here = base.<span class="hljs-property">here</span>;
 
     <span class="hljs-keyword">if</span> (draggingArtefact) {
 
-        fromLeft += (currentDragX - here.x) * currentScale;
-        fromTop += (currentDragY - here.y) * currentScale;
+        fromLeft += (currentDragX - here.<span class="hljs-property">x</span>) * currentScale;
+        fromTop += (currentDragY - here.<span class="hljs-property">y</span>) * currentScale;
 
-        currentDragX = here.x,
-        currentDragY = here.y;
+        currentDragX = here.<span class="hljs-property">x</span>,
+        currentDragY = here.<span class="hljs-property">y</span>;
 
         <span class="hljs-keyword">if</span> (fromLeft &lt; <span class="hljs-number">0</span>) fromLeft = <span class="hljs-number">0</span>;
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (fromLeft &gt; naturalWidth - frameDimension) fromLeft = naturalWidth - frameDimension;
@@ -943,20 +943,20 @@ scrawl.addListener(<span class="hljs-string">&#x27;move&#x27;</span>, <span clas
         <span class="hljs-keyword">if</span> (fromTop &lt; <span class="hljs-number">0</span>) fromTop = <span class="hljs-number">0</span>;
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (fromTop &gt; naturalHeight - frameDimension) fromTop = naturalHeight - frameDimension;
 
-        piccie.set({
+        piccie.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">copyStartX</span>: fromLeft,
             <span class="hljs-attr">copyStartY</span>: fromTop,
         });
     }
-}, canvas.domElement);
+}, canvas.<span class="hljs-property">domElement</span>);
 
-scrawl.addListener([<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-string">&#x27;leave&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+scrawl.<span class="hljs-title function_">addListener</span>([<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-string">&#x27;leave&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
 
     draggingArtefact = <span class="hljs-literal">false</span>;
     currentDragX = <span class="hljs-number">0</span>;
     currentDragY = <span class="hljs-number">0</span>;
 
-}, canvas.domElement);</pre></div></div>
+}, canvas.<span class="hljs-property">domElement</span>);</pre></div></div>
             
         </li>
         
@@ -971,7 +971,7 @@ scrawl.addListener([<span class="hljs-string">&#x27;up&#x27;</span>, <span class
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

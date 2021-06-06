@@ -707,9 +707,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.library.canvas.mycanvas;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
 
-scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</pre></div></div>
+scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -724,7 +724,7 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</p
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> piccy = scrawl.makePicture({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> piccy = scrawl.<span class="hljs-title function_">makePicture</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;base-piccy&#x27;</span>,
 
@@ -752,8 +752,8 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</p
               </div>
               <h4 id="svg-filter">SVG filter</h4>
 <p>We create the filter in the HTML script, not here:</p>
-<pre><code>&lt;svg xmlns=<span class="hljs-string">&quot;http://www.w3.org/2000/svg&quot;</span> xmlns:xlink=<span class="hljs-string">&quot;http://www.w3.org/1999/xlink&quot;</span>&gt;
-  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">filter</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;svg-noise&quot;</span>&gt;</span>
+<pre><code>&lt;svg xmlns=<span class="hljs-string">&quot;http://www.w3.org/2000/svg&quot;</span> <span class="hljs-attr">xmlns</span>:xlink=<span class="hljs-string">&quot;http://www.w3.org/1999/xlink&quot;</span>&gt;
+  <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">filter</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;svg-noise&quot;</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">feTurbulence</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;fractalNoise&quot;</span> <span class="hljs-attr">baseFrequency</span>=<span class="hljs-string">&quot;0.01 0.04&quot;</span> <span class="hljs-attr">result</span>=<span class="hljs-string">&quot;NOISE&quot;</span> <span class="hljs-attr">numOctaves</span>=<span class="hljs-string">&quot;2&quot;</span> /&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">feDisplacementMap</span> <span class="hljs-attr">in</span>=<span class="hljs-string">&quot;SourceGraphic&quot;</span> <span class="hljs-attr">in2</span>=<span class="hljs-string">&quot;NOISE&quot;</span> <span class="hljs-attr">scale</span>=<span class="hljs-string">&quot;20&quot;</span> <span class="hljs-attr">xChannelSelector</span>=<span class="hljs-string">&quot;R&quot;</span> <span class="hljs-attr">yChannelSelector</span>=<span class="hljs-string">&quot;R&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">feDisplacementMap</span>&gt;</span>
   <span class="hljs-tag">&lt;/<span class="hljs-name">filter</span>&gt;</span></span>
@@ -762,21 +762,21 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</p
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> bfx = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#bfx&#x27;</span>),
-    bfy = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#bfy&#x27;</span>),
-    octaves = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#octaves&#x27;</span>),
-    scale = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#scale&#x27;</span>),
-    xChannelSelector = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#xChannelSelector&#x27;</span>),
-    yChannelSelector = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#yChannelSelector&#x27;</span>),
-    feTurbulence = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;feTurbulence&#x27;</span>),
-    feDisplacementMap = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;feDisplacementMap&#x27;</span>);
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> bfx = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#bfx&#x27;</span>),
+    bfy = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#bfy&#x27;</span>),
+    octaves = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#octaves&#x27;</span>),
+    scale = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#scale&#x27;</span>),
+    xChannelSelector = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#xChannelSelector&#x27;</span>),
+    yChannelSelector = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#yChannelSelector&#x27;</span>),
+    feTurbulence = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;feTurbulence&#x27;</span>),
+    feDisplacementMap = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;feDisplacementMap&#x27;</span>);
 
-bfx.value = <span class="hljs-number">0.01</span>;
-bfy.value = <span class="hljs-number">0.04</span>;
-octaves.value = <span class="hljs-number">2</span>;
-scale.value = <span class="hljs-number">20</span>;
-xChannelSelector.options.selectedIndex = <span class="hljs-number">0</span>;
-yChannelSelector.options.selectedIndex = <span class="hljs-number">0</span>;</pre></div></div>
+bfx.<span class="hljs-property">value</span> = <span class="hljs-number">0.01</span>;
+bfy.<span class="hljs-property">value</span> = <span class="hljs-number">0.04</span>;
+octaves.<span class="hljs-property">value</span> = <span class="hljs-number">2</span>;
+scale.<span class="hljs-property">value</span> = <span class="hljs-number">20</span>;
+xChannelSelector.<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
+yChannelSelector.<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
             
         </li>
         
@@ -792,19 +792,19 @@ yChannelSelector.options.selectedIndex = <span class="hljs-number">0</span>;</pr
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
 
 &lt;filter id=&quot;svg-noise&quot;&gt;
   &lt;feTurbulence type=&quot;fractalNoise&quot; baseFrequency=&quot;<span class="hljs-subst">${bfx.value}</span> <span class="hljs-subst">${bfy.value}</span>&quot; result=&quot;NOISE&quot; numOctaves=&quot;<span class="hljs-subst">${octaves.value}</span>&quot; /&gt;
@@ -826,7 +826,7 @@ yChannelSelector.options.selectedIndex = <span class="hljs-number">0</span>;</pr
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-animation&quot;</span>,
     <span class="hljs-attr">target</span>: canvas,
@@ -847,20 +847,20 @@ yChannelSelector.options.selectedIndex = <span class="hljs-number">0</span>;</pr
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> baseFrequency = <span class="hljs-function">() =&gt;</span> feTurbulence.setAttribute(<span class="hljs-string">&#x27;baseFrequency&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${bfx.value}</span> <span class="hljs-subst">${bfy.value}</span>`</span>);
-scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], baseFrequency, <span class="hljs-string">&#x27;.baseFreq&#x27;</span>);
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> <span class="hljs-title function_">baseFrequency</span> = (<span class="hljs-params"></span>) =&gt; feTurbulence.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;baseFrequency&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${bfx.value}</span> <span class="hljs-subst">${bfy.value}</span>`</span>);
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], baseFrequency, <span class="hljs-string">&#x27;.baseFreq&#x27;</span>);
 
-<span class="hljs-keyword">let</span> numOctaves = <span class="hljs-function">() =&gt;</span> feTurbulence.setAttribute(<span class="hljs-string">&#x27;numOctaves&#x27;</span>, octaves.value);
-scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], numOctaves, <span class="hljs-string">&#x27;#octaves&#x27;</span>);
+<span class="hljs-keyword">let</span> <span class="hljs-title function_">numOctaves</span> = (<span class="hljs-params"></span>) =&gt; feTurbulence.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;numOctaves&#x27;</span>, octaves.<span class="hljs-property">value</span>);
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], numOctaves, <span class="hljs-string">&#x27;#octaves&#x27;</span>);
 
-<span class="hljs-keyword">let</span> dmScale = <span class="hljs-function">() =&gt;</span> feDisplacementMap.setAttribute(<span class="hljs-string">&#x27;scale&#x27;</span>, scale.value);
-scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], dmScale, <span class="hljs-string">&#x27;#scale&#x27;</span>);
+<span class="hljs-keyword">let</span> <span class="hljs-title function_">dmScale</span> = (<span class="hljs-params"></span>) =&gt; feDisplacementMap.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;scale&#x27;</span>, scale.<span class="hljs-property">value</span>);
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], dmScale, <span class="hljs-string">&#x27;#scale&#x27;</span>);
 
-<span class="hljs-keyword">let</span> dmX = <span class="hljs-function">() =&gt;</span> feDisplacementMap.setAttribute(<span class="hljs-string">&#x27;xChannelSelector&#x27;</span>, xChannelSelector.value);
-scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], dmX, <span class="hljs-string">&#x27;#xChannelSelector&#x27;</span>);
+<span class="hljs-keyword">let</span> <span class="hljs-title function_">dmX</span> = (<span class="hljs-params"></span>) =&gt; feDisplacementMap.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;xChannelSelector&#x27;</span>, xChannelSelector.<span class="hljs-property">value</span>);
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], dmX, <span class="hljs-string">&#x27;#xChannelSelector&#x27;</span>);
 
-<span class="hljs-keyword">let</span> dmY = <span class="hljs-function">() =&gt;</span> feDisplacementMap.setAttribute(<span class="hljs-string">&#x27;yChannelSelector&#x27;</span>, yChannelSelector.value);
-scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], dmY, <span class="hljs-string">&#x27;#yChannelSelector&#x27;</span>);</pre></div></div>
+<span class="hljs-keyword">let</span> <span class="hljs-title function_">dmY</span> = (<span class="hljs-params"></span>) =&gt; feDisplacementMap.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;yChannelSelector&#x27;</span>, yChannelSelector.<span class="hljs-property">value</span>);
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], dmY, <span class="hljs-string">&#x27;#yChannelSelector&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -875,7 +875,7 @@ scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

@@ -707,9 +707,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.importDomImage(<span class="hljs-string">&#x27;.ohara-koson&#x27;</span>)
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.ohara-koson&#x27;</span>)
 
-<span class="hljs-keyword">const</span> canvas = scrawl.library.canvas.mycanvas;</pre></div></div>
+<span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
             
         </li>
         
@@ -724,15 +724,15 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> spinFactory = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name, radius, order, duration, clockwise</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> spinFactory = <span class="hljs-keyword">function</span> (<span class="hljs-params">name, radius, order, duration, clockwise</span>) {
 
-    scrawl.makeGroup({
+    scrawl.<span class="hljs-title function_">makeGroup</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-group`</span>,
-        <span class="hljs-attr">host</span>: canvas.base.name,
+        <span class="hljs-attr">host</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
         order,
     });
 
-    <span class="hljs-keyword">const</span> clipper = scrawl.makeWheel({
+    <span class="hljs-keyword">const</span> clipper = scrawl.<span class="hljs-title function_">makeWheel</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-clip-<span class="hljs-subst">${radius}</span>`</span>,
         <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-group`</span>,
         <span class="hljs-attr">start</span>: [<span class="hljs-number">200</span>, <span class="hljs-number">250</span>],
@@ -740,16 +740,16 @@
         radius,
         <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;clip&#x27;</span>,
 
-        <span class="hljs-attr">onEnter</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-            <span class="hljs-keyword">if</span> (!tween.isRunning()) tween.run();
+        <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <span class="hljs-keyword">if</span> (!tween.<span class="hljs-title function_">isRunning</span>()) tween.<span class="hljs-title function_">run</span>();
         },
 
-        <span class="hljs-attr">onLeave</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-            <span class="hljs-keyword">if</span> (!tween.isRunning()) tween.run();
+        <span class="hljs-attr">onLeave</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <span class="hljs-keyword">if</span> (!tween.<span class="hljs-title function_">isRunning</span>()) tween.<span class="hljs-title function_">run</span>();
         },
     });
 
-    <span class="hljs-keyword">const</span> tween = scrawl.makeTween({
+    <span class="hljs-keyword">const</span> tween = scrawl.<span class="hljs-title function_">makeTween</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-tween-<span class="hljs-subst">${radius}</span>`</span>,
         <span class="hljs-attr">targets</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-clip-<span class="hljs-subst">${radius}</span>`</span>,
         duration,
@@ -763,7 +763,7 @@
         ],
     });
 
-    scrawl.makePicture({
+    scrawl.<span class="hljs-title function_">makePicture</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-hoop-<span class="hljs-subst">${radius}</span>`</span>,
         <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-group`</span>,
         <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;songbird&#x27;</span>,
@@ -780,11 +780,11 @@
     <span class="hljs-keyword">return</span> clipper;
 }
 
-<span class="hljs-keyword">const</span> outer = spinFactory(<span class="hljs-string">&#x27;outer-ring&#x27;</span>, <span class="hljs-number">170</span>, <span class="hljs-number">1</span>, <span class="hljs-string">&#x27;4s&#x27;</span>, <span class="hljs-literal">true</span>);
-<span class="hljs-keyword">const</span> middleThin = spinFactory(<span class="hljs-string">&#x27;thin-ring&#x27;</span>, <span class="hljs-number">130</span>, <span class="hljs-number">2</span>, <span class="hljs-string">&#x27;2.6s&#x27;</span>, <span class="hljs-literal">true</span>);
-<span class="hljs-keyword">const</span> middleThick = spinFactory(<span class="hljs-string">&#x27;thick-ring&#x27;</span>, <span class="hljs-number">120</span>, <span class="hljs-number">3</span>, <span class="hljs-string">&#x27;5.3s&#x27;</span>, <span class="hljs-literal">false</span>);
-<span class="hljs-keyword">const</span> inner = spinFactory(<span class="hljs-string">&#x27;inner-ring&#x27;</span>, <span class="hljs-number">60</span>, <span class="hljs-number">4</span>, <span class="hljs-string">&#x27;4s&#x27;</span>, <span class="hljs-literal">true</span>);
-<span class="hljs-keyword">const</span> center = spinFactory(<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-number">20</span>, <span class="hljs-number">5</span>, <span class="hljs-string">&#x27;4s&#x27;</span>, <span class="hljs-literal">false</span>);</pre></div></div>
+<span class="hljs-keyword">const</span> outer = <span class="hljs-title function_">spinFactory</span>(<span class="hljs-string">&#x27;outer-ring&#x27;</span>, <span class="hljs-number">170</span>, <span class="hljs-number">1</span>, <span class="hljs-string">&#x27;4s&#x27;</span>, <span class="hljs-literal">true</span>);
+<span class="hljs-keyword">const</span> middleThin = <span class="hljs-title function_">spinFactory</span>(<span class="hljs-string">&#x27;thin-ring&#x27;</span>, <span class="hljs-number">130</span>, <span class="hljs-number">2</span>, <span class="hljs-string">&#x27;2.6s&#x27;</span>, <span class="hljs-literal">true</span>);
+<span class="hljs-keyword">const</span> middleThick = <span class="hljs-title function_">spinFactory</span>(<span class="hljs-string">&#x27;thick-ring&#x27;</span>, <span class="hljs-number">120</span>, <span class="hljs-number">3</span>, <span class="hljs-string">&#x27;5.3s&#x27;</span>, <span class="hljs-literal">false</span>);
+<span class="hljs-keyword">const</span> inner = <span class="hljs-title function_">spinFactory</span>(<span class="hljs-string">&#x27;inner-ring&#x27;</span>, <span class="hljs-number">60</span>, <span class="hljs-number">4</span>, <span class="hljs-string">&#x27;4s&#x27;</span>, <span class="hljs-literal">true</span>);
+<span class="hljs-keyword">const</span> center = <span class="hljs-title function_">spinFactory</span>(<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-number">20</span>, <span class="hljs-number">5</span>, <span class="hljs-string">&#x27;4s&#x27;</span>, <span class="hljs-literal">false</span>);</pre></div></div>
             
         </li>
         
@@ -799,7 +799,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makePhrase({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makePhrase</span>({
   <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;painting-details&#x27;</span>,
   <span class="hljs-attr">text</span>: <span class="hljs-string">`Songbird and flowering camellia §GRAY§(1910 - 1930)
 §ITALIC§Ohara Koson (Japanese, 1877-1945)`</span>,
@@ -808,9 +808,9 @@
   <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;80%&#x27;</span>,
   <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0</span>,
   <span class="hljs-attr">order</span>: <span class="hljs-number">8</span>,
-}).addSectionClass(<span class="hljs-string">&#x27;GRAY&#x27;</span>, { <span class="hljs-attr">fill</span>: <span class="hljs-string">&#x27;gray&#x27;</span> });
+}).<span class="hljs-title function_">addSectionClass</span>(<span class="hljs-string">&#x27;GRAY&#x27;</span>, { <span class="hljs-attr">fill</span>: <span class="hljs-string">&#x27;gray&#x27;</span> });
 
-<span class="hljs-keyword">const</span> detailsTween = scrawl.makeTween({
+<span class="hljs-keyword">const</span> detailsTween = scrawl.<span class="hljs-title function_">makeTween</span>({
   <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;show-details&#x27;</span>,
   <span class="hljs-attr">targets</span>: <span class="hljs-string">&#x27;painting-details&#x27;</span>,
   <span class="hljs-attr">duration</span>: <span class="hljs-number">5000</span>,
@@ -826,13 +826,13 @@
   ],
 });
 
-scrawl.makeBlock({
+scrawl.<span class="hljs-title function_">makeBlock</span>({
   <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;details-trigger&#x27;</span>,
   <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;72%&#x27;</span>, <span class="hljs-string">&#x27;76%&#x27;</span>],
   <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;12%&#x27;</span>, <span class="hljs-string">&#x27;16%&#x27;</span>],
   <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;none&#x27;</span>,
-  <span class="hljs-attr">onEnter</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ 
-    <span class="hljs-keyword">if</span> (!detailsTween.isRunning()) detailsTween.run();
+  <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { 
+    <span class="hljs-keyword">if</span> (!detailsTween.<span class="hljs-title function_">isRunning</span>()) detailsTween.<span class="hljs-title function_">run</span>();
   },
 });</pre></div></div>
             
@@ -849,7 +849,7 @@ scrawl.makeBlock({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makePicture({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makePicture</span>({
   <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;koson-songbird&#x27;</span>,
   <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;songbird&#x27;</span>,
   <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
@@ -872,19 +872,19 @@ scrawl.makeBlock({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
     };
 }();</pre></div></div>
             
@@ -901,7 +901,7 @@ scrawl.makeBlock({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-animation&quot;</span>,
     <span class="hljs-attr">target</span>: canvas,
@@ -921,7 +921,7 @@ scrawl.makeBlock({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.addListener(<span class="hljs-string">&#x27;move&#x27;</span>, <span class="hljs-function">() =&gt;</span> canvas.cascadeEventAction(<span class="hljs-string">&#x27;move&#x27;</span>), canvas.domElement);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-string">&#x27;move&#x27;</span>, <span class="hljs-function">() =&gt;</span> canvas.<span class="hljs-title function_">cascadeEventAction</span>(<span class="hljs-string">&#x27;move&#x27;</span>), canvas.<span class="hljs-property">domElement</span>);</pre></div></div>
             
         </li>
         
@@ -936,7 +936,7 @@ scrawl.makeBlock({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

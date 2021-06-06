@@ -542,7 +542,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">artefact</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, artefact } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { mergeOver, addStrings, pushUnique, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { makeCoordinate } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./coordinate.js&#x27;</span>;
@@ -564,24 +564,24 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Bezier = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">Bezier</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-built_in">this</span>.startControl = makeCoordinate();
-    <span class="hljs-built_in">this</span>.endControl = makeCoordinate();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">startControl</span> = <span class="hljs-title function_">makeCoordinate</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">endControl</span> = <span class="hljs-title function_">makeCoordinate</span>();
 
-    <span class="hljs-built_in">this</span>.currentStartControl = makeCoordinate();
-    <span class="hljs-built_in">this</span>.currentEndControl = makeCoordinate();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStartControl</span> = <span class="hljs-title function_">makeCoordinate</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEndControl</span> = <span class="hljs-title function_">makeCoordinate</span>();
 
-    <span class="hljs-built_in">this</span>.startControlLockTo = <span class="hljs-string">&#x27;coord&#x27;</span>;
-    <span class="hljs-built_in">this</span>.endControlLockTo = <span class="hljs-string">&#x27;coord&#x27;</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">startControlLockTo</span> = <span class="hljs-string">&#x27;coord&#x27;</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">endControlLockTo</span> = <span class="hljs-string">&#x27;coord&#x27;</span>;
 
-    <span class="hljs-built_in">this</span>.curveInit(items);
-    <span class="hljs-built_in">this</span>.shapeInit(items);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">curveInit</span>(items);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">shapeInit</span>(items);
 
-    <span class="hljs-built_in">this</span>.dirtyStartControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.dirtyEndControl = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStartControl</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyEndControl</span> = <span class="hljs-literal">true</span>;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -597,11 +597,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Bezier.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">&#x27;Bezier&#x27;</span>;
-P.lib = <span class="hljs-string">&#x27;entity&#x27;</span>;
-P.isArtefact = <span class="hljs-literal">true</span>;
-P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">Bezier</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
+P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Bezier&#x27;</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;entity&#x27;</span>;
+P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">true</span>;
+P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -621,9 +621,9 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = baseMix(P);
-P = shapeMix(P);
-P = curveMix(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);
+P = <span class="hljs-title function_">shapeMix</span>(P);
+P = <span class="hljs-title function_">curveMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -669,7 +669,7 @@ P = curveMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    startControl: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">startControl</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -687,7 +687,7 @@ P = curveMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    startControlPivot: <span class="hljs-string">&#x27;&#x27;</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">startControlPivot</span>: <span class="hljs-string">&#x27;&#x27;</span>,
     <span class="hljs-attr">startControlPivotCorner</span>: <span class="hljs-string">&#x27;&#x27;</span>,
     <span class="hljs-attr">addStartControlPivotHandle</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">addStartControlPivotOffset</span>: <span class="hljs-literal">false</span>,</pre></div></div>
@@ -708,7 +708,7 @@ P = curveMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    startControlPath: <span class="hljs-string">&#x27;&#x27;</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">startControlPath</span>: <span class="hljs-string">&#x27;&#x27;</span>,
     <span class="hljs-attr">startControlPathPosition</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">addStartControlPathHandle</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">addStartControlPathOffset</span>: <span class="hljs-literal">true</span>,</pre></div></div>
@@ -726,7 +726,7 @@ P = curveMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    startControlParticle: <span class="hljs-string">&#x27;&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">startControlParticle</span>: <span class="hljs-string">&#x27;&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -744,7 +744,7 @@ P = curveMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    endControl: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">endControl</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -762,7 +762,7 @@ P = curveMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    endControlPivot: <span class="hljs-string">&#x27;&#x27;</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">endControlPivot</span>: <span class="hljs-string">&#x27;&#x27;</span>,
     <span class="hljs-attr">endControlPivotCorner</span>: <span class="hljs-string">&#x27;&#x27;</span>,
     <span class="hljs-attr">addEndControlPivotHandle</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">addEndControlPivotOffset</span>: <span class="hljs-literal">false</span>,</pre></div></div>
@@ -783,7 +783,7 @@ P = curveMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    endControlPath: <span class="hljs-string">&#x27;&#x27;</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">endControlPath</span>: <span class="hljs-string">&#x27;&#x27;</span>,
     <span class="hljs-attr">endControlPathPosition</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">addEndControlPathHandle</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">addEndControlPathOffset</span>: <span class="hljs-literal">true</span>,</pre></div></div>
@@ -801,7 +801,7 @@ P = curveMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    endControlParticle: <span class="hljs-string">&#x27;&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">endControlParticle</span>: <span class="hljs-string">&#x27;&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -821,10 +821,10 @@ P = curveMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    startControlLockTo: <span class="hljs-string">&#x27;&#x27;</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">startControlLockTo</span>: <span class="hljs-string">&#x27;&#x27;</span>,
     <span class="hljs-attr">endControlLockTo</span>: <span class="hljs-string">&#x27;&#x27;</span>,
 };
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
+P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -839,11 +839,11 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.packetExclusions = pushUnique(P.packetExclusions, []);
-P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-P.packetCoordinates = pushUnique(P.packetCoordinates, [<span class="hljs-string">&#x27;startControl&#x27;</span>, <span class="hljs-string">&#x27;endControl&#x27;</span>]);
-P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">&#x27;startControlPivot&#x27;</span>, <span class="hljs-string">&#x27;startControlPath&#x27;</span>, <span class="hljs-string">&#x27;endControlPivot&#x27;</span>, <span class="hljs-string">&#x27;endControlPath&#x27;</span>]);
-P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">packetExclusions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusions</span>, []);
+P.<span class="hljs-property">packetExclusionsByRegex</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusionsByRegex</span>, []);
+P.<span class="hljs-property">packetCoordinates</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetCoordinates</span>, [<span class="hljs-string">&#x27;startControl&#x27;</span>, <span class="hljs-string">&#x27;endControl&#x27;</span>]);
+P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetObjects</span>, [<span class="hljs-string">&#x27;startControlPivot&#x27;</span>, <span class="hljs-string">&#x27;startControlPath&#x27;</span>, <span class="hljs-string">&#x27;endControlPivot&#x27;</span>, <span class="hljs-string">&#x27;endControlPath&#x27;</span>]);
+P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetFunctions</span>, []);</pre></div></div>
             
         </li>
         
@@ -886,9 +886,9 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.getters,
-    S = P.setters,
-    D = P.deltaSetters;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.<span class="hljs-property">getters</span>,
+    S = P.<span class="hljs-property">setters</span>,
+    D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
             
         </li>
         
@@ -903,11 +903,11 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.endControlPivot = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">endControlPivot</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setControlHelper(item, <span class="hljs-string">&#x27;endControlPivot&#x27;</span>, <span class="hljs-string">&#x27;endControl&#x27;</span>);
-    <span class="hljs-built_in">this</span>.updateDirty();
-    <span class="hljs-built_in">this</span>.dirtyEndControl = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setControlHelper</span>(item, <span class="hljs-string">&#x27;endControlPivot&#x27;</span>, <span class="hljs-string">&#x27;endControl&#x27;</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyEndControl</span> = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -923,11 +923,11 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.endControlParticle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">endControlParticle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setControlHelper(item, <span class="hljs-string">&#x27;endControlParticle&#x27;</span>, <span class="hljs-string">&#x27;endControl&#x27;</span>);
-    <span class="hljs-built_in">this</span>.updateDirty();
-    <span class="hljs-built_in">this</span>.dirtyEndControl = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setControlHelper</span>(item, <span class="hljs-string">&#x27;endControlParticle&#x27;</span>, <span class="hljs-string">&#x27;endControl&#x27;</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyEndControl</span> = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -943,12 +943,12 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.endControlPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">endControlPath</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setControlHelper(item, <span class="hljs-string">&#x27;endControlPath&#x27;</span>, <span class="hljs-string">&#x27;endControl&#x27;</span>);
-    <span class="hljs-built_in">this</span>.updateDirty();
-    <span class="hljs-built_in">this</span>.dirtyEndControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.currentEndControlPathData = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setControlHelper</span>(item, <span class="hljs-string">&#x27;endControlPath&#x27;</span>, <span class="hljs-string">&#x27;endControl&#x27;</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyEndControl</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEndControlPathData</span> = <span class="hljs-literal">false</span>;
 };</pre></div></div>
             
         </li>
@@ -964,17 +964,17 @@ P.packetFunctions = pushUnique(P.packetFunctions, []);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.endControlPathPosition = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">endControlPathPosition</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.endControlPathPosition = item;
-    <span class="hljs-built_in">this</span>.dirtyEndControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.currentEndControlPathData = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">endControlPathPosition</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyEndControl</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEndControlPathData</span> = <span class="hljs-literal">false</span>;
 };
-D.endControlPathPosition = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">endControlPathPosition</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.endControlPathPosition += item;
-    <span class="hljs-built_in">this</span>.dirtyEndControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.currentEndControlPathData = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">endControlPathPosition</span> += item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyEndControl</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEndControlPathData</span> = <span class="hljs-literal">false</span>;
 };</pre></div></div>
             
         </li>
@@ -990,11 +990,11 @@ D.endControlPathPosition = <span class="hljs-function"><span class="hljs-keyword
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.startControlPivot = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">startControlPivot</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setControlHelper(item, <span class="hljs-string">&#x27;startControlPivot&#x27;</span>, <span class="hljs-string">&#x27;startControl&#x27;</span>);
-    <span class="hljs-built_in">this</span>.updateDirty();
-    <span class="hljs-built_in">this</span>.dirtyStartControl = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setControlHelper</span>(item, <span class="hljs-string">&#x27;startControlPivot&#x27;</span>, <span class="hljs-string">&#x27;startControl&#x27;</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStartControl</span> = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1010,11 +1010,11 @@ D.endControlPathPosition = <span class="hljs-function"><span class="hljs-keyword
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.startControlParticle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">startControlParticle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setControlHelper(item, <span class="hljs-string">&#x27;startControlParticle&#x27;</span>, <span class="hljs-string">&#x27;startControl&#x27;</span>);
-    <span class="hljs-built_in">this</span>.updateDirty();
-    <span class="hljs-built_in">this</span>.dirtyStartControl = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setControlHelper</span>(item, <span class="hljs-string">&#x27;startControlParticle&#x27;</span>, <span class="hljs-string">&#x27;startControl&#x27;</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStartControl</span> = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1030,12 +1030,12 @@ D.endControlPathPosition = <span class="hljs-function"><span class="hljs-keyword
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.startControlPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">startControlPath</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setControlHelper(item, <span class="hljs-string">&#x27;startControlPath&#x27;</span>, <span class="hljs-string">&#x27;startControl&#x27;</span>);
-    <span class="hljs-built_in">this</span>.updateDirty();
-    <span class="hljs-built_in">this</span>.dirtyStartControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.currentStartControlPathData = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setControlHelper</span>(item, <span class="hljs-string">&#x27;startControlPath&#x27;</span>, <span class="hljs-string">&#x27;startControl&#x27;</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStartControl</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStartControlPathData</span> = <span class="hljs-literal">false</span>;
 };</pre></div></div>
             
         </li>
@@ -1051,17 +1051,17 @@ D.endControlPathPosition = <span class="hljs-function"><span class="hljs-keyword
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.startControlPathPosition = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">startControlPathPosition</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.startControlPathPosition = item;
-    <span class="hljs-built_in">this</span>.dirtyStartControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.currentStartControlPathData = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">startControlPathPosition</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStartControl</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStartControlPathData</span> = <span class="hljs-literal">false</span>;
 };
-D.startControlPathPosition = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">startControlPathPosition</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.startControlPathPosition += item;
-    <span class="hljs-built_in">this</span>.dirtyStartControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.currentStartControlPathData = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">startControlPathPosition</span> += item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStartControl</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStartControlPathData</span> = <span class="hljs-literal">false</span>;
 };</pre></div></div>
             
         </li>
@@ -1080,55 +1080,55 @@ D.startControlPathPosition = <span class="hljs-function"><span class="hljs-keywo
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.startControlX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">startControlX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
 
     <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
 
-        <span class="hljs-built_in">this</span>.startControl[<span class="hljs-number">0</span>] = coord;
-        <span class="hljs-built_in">this</span>.updateDirty();
-        <span class="hljs-built_in">this</span>.dirtyStartControl = <span class="hljs-literal">true</span>;
-        <span class="hljs-built_in">this</span>.currentStartControlPathData = <span class="hljs-literal">false</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">startControl</span>[<span class="hljs-number">0</span>] = coord;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStartControl</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStartControlPathData</span> = <span class="hljs-literal">false</span>;
     }
 };
-S.startControlY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
+S.<span class="hljs-property">startControlY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
 
     <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
 
-        <span class="hljs-built_in">this</span>.startControl[<span class="hljs-number">1</span>] = coord;
-        <span class="hljs-built_in">this</span>.updateDirty();
-        <span class="hljs-built_in">this</span>.dirtyStartControl = <span class="hljs-literal">true</span>;
-        <span class="hljs-built_in">this</span>.currentStartControlPathData = <span class="hljs-literal">false</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">startControl</span>[<span class="hljs-number">1</span>] = coord;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStartControl</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStartControlPathData</span> = <span class="hljs-literal">false</span>;
     }
 };
-S.startControl = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
+S.<span class="hljs-property">startControl</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) {
 
-    <span class="hljs-built_in">this</span>.setCoordinateHelper(<span class="hljs-string">&#x27;startControl&#x27;</span>, x, y);
-    <span class="hljs-built_in">this</span>.updateDirty();
-    <span class="hljs-built_in">this</span>.dirtyStartControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.currentStartControlPathData = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setCoordinateHelper</span>(<span class="hljs-string">&#x27;startControl&#x27;</span>, x, y);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStartControl</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStartControlPathData</span> = <span class="hljs-literal">false</span>;
 };
-D.startControlX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
+D.<span class="hljs-property">startControlX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
 
-    <span class="hljs-keyword">let</span> c = <span class="hljs-built_in">this</span>.startControl;
-    c[<span class="hljs-number">0</span>] = addStrings(c[<span class="hljs-number">0</span>], coord);
-    <span class="hljs-built_in">this</span>.updateDirty();
-    <span class="hljs-built_in">this</span>.dirtyStartControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.currentStartControlPathData = <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">let</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">startControl</span>;
+    c[<span class="hljs-number">0</span>] = <span class="hljs-title function_">addStrings</span>(c[<span class="hljs-number">0</span>], coord);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStartControl</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStartControlPathData</span> = <span class="hljs-literal">false</span>;
 };
-D.startControlY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
+D.<span class="hljs-property">startControlY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
 
-    <span class="hljs-keyword">let</span> c = <span class="hljs-built_in">this</span>.startControl;
-    c[<span class="hljs-number">1</span>] = addStrings(c[<span class="hljs-number">1</span>], coord);
-    <span class="hljs-built_in">this</span>.updateDirty();
-    <span class="hljs-built_in">this</span>.dirtyStartControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.currentStartControlPathData = <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">let</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">startControl</span>;
+    c[<span class="hljs-number">1</span>] = <span class="hljs-title function_">addStrings</span>(c[<span class="hljs-number">1</span>], coord);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStartControl</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStartControlPathData</span> = <span class="hljs-literal">false</span>;
 };
-D.startControl = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
+D.<span class="hljs-property">startControl</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) {
 
-    <span class="hljs-built_in">this</span>.setDeltaCoordinateHelper(<span class="hljs-string">&#x27;startControl&#x27;</span>, x, y);
-    <span class="hljs-built_in">this</span>.updateDirty();
-    <span class="hljs-built_in">this</span>.dirtyStartControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.currentStartControlPathData = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setDeltaCoordinateHelper</span>(<span class="hljs-string">&#x27;startControl&#x27;</span>, x, y);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStartControl</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStartControlPathData</span> = <span class="hljs-literal">false</span>;
 };</pre></div></div>
             
         </li>
@@ -1147,55 +1147,55 @@ D.startControl = <span class="hljs-function"><span class="hljs-keyword">function
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.endControlX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">endControlX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
 
     <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
 
-        <span class="hljs-built_in">this</span>.endControl[<span class="hljs-number">0</span>] = coord;
-        <span class="hljs-built_in">this</span>.updateDirty();
-        <span class="hljs-built_in">this</span>.dirtyEndControl = <span class="hljs-literal">true</span>;
-        <span class="hljs-built_in">this</span>.currentEndControlPathData = <span class="hljs-literal">false</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">endControl</span>[<span class="hljs-number">0</span>] = coord;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyEndControl</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEndControlPathData</span> = <span class="hljs-literal">false</span>;
     }
 };
-S.endControlY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
+S.<span class="hljs-property">endControlY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
 
     <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
 
-        <span class="hljs-built_in">this</span>.endControl[<span class="hljs-number">1</span>] = coord;
-        <span class="hljs-built_in">this</span>.updateDirty();
-        <span class="hljs-built_in">this</span>.dirtyEndControl = <span class="hljs-literal">true</span>;
-        <span class="hljs-built_in">this</span>.currentEndControlPathData = <span class="hljs-literal">false</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">endControl</span>[<span class="hljs-number">1</span>] = coord;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyEndControl</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEndControlPathData</span> = <span class="hljs-literal">false</span>;
     }
 };
-S.endControl = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
+S.<span class="hljs-property">endControl</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) {
 
-    <span class="hljs-built_in">this</span>.setCoordinateHelper(<span class="hljs-string">&#x27;endControl&#x27;</span>, x, y);
-    <span class="hljs-built_in">this</span>.updateDirty();
-    <span class="hljs-built_in">this</span>.dirtyEndControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.currentEndControlPathData = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setCoordinateHelper</span>(<span class="hljs-string">&#x27;endControl&#x27;</span>, x, y);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyEndControl</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEndControlPathData</span> = <span class="hljs-literal">false</span>;
 };
-D.endControlX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
+D.<span class="hljs-property">endControlX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
 
-    <span class="hljs-keyword">let</span> c = <span class="hljs-built_in">this</span>.endControl;
-    c[<span class="hljs-number">0</span>] = addStrings(c[<span class="hljs-number">0</span>], coord);
-    <span class="hljs-built_in">this</span>.updateDirty();
-    <span class="hljs-built_in">this</span>.dirtyEndControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.currentEndControlPathData = <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">let</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">endControl</span>;
+    c[<span class="hljs-number">0</span>] = <span class="hljs-title function_">addStrings</span>(c[<span class="hljs-number">0</span>], coord);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyEndControl</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEndControlPathData</span> = <span class="hljs-literal">false</span>;
 };
-D.endControlY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) </span>{
+D.<span class="hljs-property">endControlY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
 
-    <span class="hljs-keyword">let</span> c = <span class="hljs-built_in">this</span>.endControl;
-    c[<span class="hljs-number">1</span>] = addStrings(c[<span class="hljs-number">1</span>], coord);
-    <span class="hljs-built_in">this</span>.updateDirty();
-    <span class="hljs-built_in">this</span>.dirtyEndControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.currentEndControlPathData = <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">let</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">endControl</span>;
+    c[<span class="hljs-number">1</span>] = <span class="hljs-title function_">addStrings</span>(c[<span class="hljs-number">1</span>], coord);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyEndControl</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEndControlPathData</span> = <span class="hljs-literal">false</span>;
 };
-D.endControl = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>{
+D.<span class="hljs-property">endControl</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) {
 
-    <span class="hljs-built_in">this</span>.setDeltaCoordinateHelper(<span class="hljs-string">&#x27;endControl&#x27;</span>, x, y);
-    <span class="hljs-built_in">this</span>.updateDirty();
-    <span class="hljs-built_in">this</span>.dirtyEndControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.currentEndControlPathData = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setDeltaCoordinateHelper</span>(<span class="hljs-string">&#x27;endControl&#x27;</span>, x, y);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyEndControl</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEndControlPathData</span> = <span class="hljs-literal">false</span>;
 };</pre></div></div>
             
         </li>
@@ -1211,11 +1211,11 @@ D.endControl = <span class="hljs-function"><span class="hljs-keyword">function</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.startControlLockTo = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">startControlLockTo</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.startControlLockTo = item;
-    <span class="hljs-built_in">this</span>.updateDirty();
-    <span class="hljs-built_in">this</span>.dirtyStartControlLock = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">startControlLockTo</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStartControlLock</span> = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1231,12 +1231,12 @@ D.endControl = <span class="hljs-function"><span class="hljs-keyword">function</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.endControlLockTo = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">endControlLockTo</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.endControlLockTo = item;
-    <span class="hljs-built_in">this</span>.updateDirty();
-    <span class="hljs-built_in">this</span>.dirtyEndControlLock = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.currentEndControlPathData = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">endControlLockTo</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyEndControlLock</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEndControlPathData</span> = <span class="hljs-literal">false</span>;
 };</pre></div></div>
             
         </li>
@@ -1265,15 +1265,15 @@ D.endControl = <span class="hljs-function"><span class="hljs-keyword">function</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.cleanSpecies = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">cleanSpecies</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-built_in">this</span>.dirtySpecies = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtySpecies</span> = <span class="hljs-literal">false</span>;
 
     <span class="hljs-keyword">let</span> p = <span class="hljs-string">&#x27;M0,0&#x27;</span>;
 
-    p = <span class="hljs-built_in">this</span>.makeBezierPath();
+    p = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeBezierPath</span>();
     
-    <span class="hljs-built_in">this</span>.pathDefinition = p;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span> = p;
 };</pre></div></div>
             
         </li>
@@ -1289,19 +1289,19 @@ D.endControl = <span class="hljs-function"><span class="hljs-keyword">function</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.makeBezierPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">makeBezierPath</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
     
-    <span class="hljs-keyword">let</span> [startX, startY] = <span class="hljs-built_in">this</span>.currentStampPosition;
-    <span class="hljs-keyword">let</span> [startControlX, startControlY] = <span class="hljs-built_in">this</span>.currentStartControl;
-    <span class="hljs-keyword">let</span> [endControlX, endControlY] = <span class="hljs-built_in">this</span>.currentEndControl;
-    <span class="hljs-keyword">let</span> [endX, endY] = <span class="hljs-built_in">this</span>.currentEnd;
+    <span class="hljs-keyword">let</span> [startX, startY] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>;
+    <span class="hljs-keyword">let</span> [startControlX, startControlY] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStartControl</span>;
+    <span class="hljs-keyword">let</span> [endControlX, endControlY] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEndControl</span>;
+    <span class="hljs-keyword">let</span> [endX, endY] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEnd</span>;
 
-    <span class="hljs-keyword">let</span> scx = (startControlX - startX).toFixed(<span class="hljs-number">2</span>),
-        scy = (startControlY - startY).toFixed(<span class="hljs-number">2</span>),
-        ecx = (endControlX - startX).toFixed(<span class="hljs-number">2</span>),
-        ecy = (endControlY - startY).toFixed(<span class="hljs-number">2</span>),
-        ex = (endX - startX).toFixed(<span class="hljs-number">2</span>),
-        ey = (endY - startY).toFixed(<span class="hljs-number">2</span>);
+    <span class="hljs-keyword">let</span> scx = (startControlX - startX).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">2</span>),
+        scy = (startControlY - startY).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">2</span>),
+        ecx = (endControlX - startX).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">2</span>),
+        ecy = (endControlY - startY).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">2</span>),
+        ex = (endX - startX).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">2</span>),
+        ey = (endY - startY).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">2</span>);
 
     <span class="hljs-keyword">return</span> <span class="hljs-string">`m0,0c<span class="hljs-subst">${scx}</span>,<span class="hljs-subst">${scy}</span> <span class="hljs-subst">${ecx}</span>,<span class="hljs-subst">${ecy}</span> <span class="hljs-subst">${ex}</span>,<span class="hljs-subst">${ey}</span>`</span>;
 };</pre></div></div>
@@ -1322,51 +1322,51 @@ D.endControl = <span class="hljs-function"><span class="hljs-keyword">function</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.cleanDimensions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">cleanDimensions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-built_in">this</span>.dirtyDimensions = <span class="hljs-literal">false</span>;
-    <span class="hljs-built_in">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.dirtyOffset = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHandle</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOffset</span> = <span class="hljs-literal">true</span>;
 
-    <span class="hljs-built_in">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.dirtyStartControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.dirtyEndControl = <span class="hljs-literal">true</span>;
-    <span class="hljs-built_in">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStart</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStartControl</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyEndControl</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyEnd</span> = <span class="hljs-literal">true</span>;
 };
 
-P.preparePinsForStamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+P.<span class="hljs-property">preparePinsForStamp</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">const</span> dirtyPins = <span class="hljs-built_in">this</span>.dirtyPins,
-        ePivot = <span class="hljs-built_in">this</span>.endPivot,
-        ePath = <span class="hljs-built_in">this</span>.endPath,
-        scPivot = <span class="hljs-built_in">this</span>.startControlPivot,
-        scPath = <span class="hljs-built_in">this</span>.startControlPath,
-        ecPivot = <span class="hljs-built_in">this</span>.endControlPivot,
-        ecPath = <span class="hljs-built_in">this</span>.endControlPath;
+    <span class="hljs-keyword">const</span> dirtyPins = <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPins</span>,
+        ePivot = <span class="hljs-variable language_">this</span>.<span class="hljs-property">endPivot</span>,
+        ePath = <span class="hljs-variable language_">this</span>.<span class="hljs-property">endPath</span>,
+        scPivot = <span class="hljs-variable language_">this</span>.<span class="hljs-property">startControlPivot</span>,
+        scPath = <span class="hljs-variable language_">this</span>.<span class="hljs-property">startControlPath</span>,
+        ecPivot = <span class="hljs-variable language_">this</span>.<span class="hljs-property">endControlPivot</span>,
+        ecPath = <span class="hljs-variable language_">this</span>.<span class="hljs-property">endControlPath</span>;
 
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = dirtyPins.length, name; i &lt; iz; i++) {
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = dirtyPins.<span class="hljs-property">length</span>, name; i &lt; iz; i++) {
 
         name = dirtyPins[i];
 
-        <span class="hljs-keyword">if</span> ((scPivot &amp;&amp; scPivot.name == name) || (scPath &amp;&amp; scPath.name == name)) {
+        <span class="hljs-keyword">if</span> ((scPivot &amp;&amp; scPivot.<span class="hljs-property">name</span> == name) || (scPath &amp;&amp; scPath.<span class="hljs-property">name</span> == name)) {
 
-            <span class="hljs-built_in">this</span>.dirtyStartControl = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.startControlLockTo.includes(<span class="hljs-string">&#x27;path&#x27;</span>)) <span class="hljs-built_in">this</span>.currentStartControlPathData = <span class="hljs-literal">false</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStartControl</span> = <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">startControlLockTo</span>.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;path&#x27;</span>)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStartControlPathData</span> = <span class="hljs-literal">false</span>;
         }
 
-        <span class="hljs-keyword">if</span> ((ecPivot &amp;&amp; ecPivot.name == name) || (ecPath &amp;&amp; ecPath.name == name)) {
+        <span class="hljs-keyword">if</span> ((ecPivot &amp;&amp; ecPivot.<span class="hljs-property">name</span> == name) || (ecPath &amp;&amp; ecPath.<span class="hljs-property">name</span> == name)) {
 
-            <span class="hljs-built_in">this</span>.dirtyEndControl = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.endControlLockTo.includes(<span class="hljs-string">&#x27;path&#x27;</span>)) <span class="hljs-built_in">this</span>.currentEndControlPathData = <span class="hljs-literal">false</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyEndControl</span> = <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">endControlLockTo</span>.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;path&#x27;</span>)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEndControlPathData</span> = <span class="hljs-literal">false</span>;
         }
 
-        <span class="hljs-keyword">if</span> ((ePivot &amp;&amp; ePivot.name == name) || (ePath &amp;&amp; ePath.name == name)) {
+        <span class="hljs-keyword">if</span> ((ePivot &amp;&amp; ePivot.<span class="hljs-property">name</span> == name) || (ePath &amp;&amp; ePath.<span class="hljs-property">name</span> == name)) {
 
-            <span class="hljs-built_in">this</span>.dirtyEnd = <span class="hljs-literal">true</span>;
-            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.endLockTo.includes(<span class="hljs-string">&#x27;path&#x27;</span>)) <span class="hljs-built_in">this</span>.currentEndPathData = <span class="hljs-literal">false</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyEnd</span> = <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">endLockTo</span>.<span class="hljs-title function_">includes</span>(<span class="hljs-string">&#x27;path&#x27;</span>)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEndPathData</span> = <span class="hljs-literal">false</span>;
         }
     }
-    dirtyPins.length = <span class="hljs-number">0</span>;
+    dirtyPins.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
 };</pre></div></div>
             
         </li>
@@ -1396,14 +1396,14 @@ P.preparePinsForStamp = <span class="hljs-function"><span class="hljs-keyword">f
 <ul>
 <li><strong>start</strong> (<em><strong>startX</strong></em>, <em><strong>startY</strong></em>) Coordinate, or <strong>pivot</strong>/<strong>mimic</strong>/<strong>path</strong> reference artefact (required)</li>
 <li><strong>startControl</strong> (<em><strong>startControlX</strong></em>, <em><strong>startControlY</strong></em>) Coordinate, or <strong>startControlPivot</strong>/<strong>startControlPath</strong> reference artefact (required) </li>
-<li><strong>endControl</strong> (<strong>endCcontrolX_</strong>, <strong>endCcontrolY_</strong>) Coordinate, or <strong>endControlPivot</strong>/<strong>endControlPath</strong> reference artefact (required) </li>
+<li><strong>endControl</strong> (<strong>endCcontrolX</strong><em>, <strong>endCcontrolY</strong></em>) Coordinate, or <strong>endControlPivot</strong>/<strong>endControlPath</strong> reference artefact (required) </li>
 <li><strong>end</strong> (<em><strong>endX</strong></em>, <em><strong>endY</strong></em>) Coordinate, or <strong>endPivot</strong>/<strong>endPath</strong> reference artefact (required) </li>
 <li>If using reference artefacts, may also need to set the <strong>lockTo</strong> (<em><strong>lockXTo</strong></em>, <em><strong>lockYTo</strong></em>), <strong>startControlLockTo</strong>, <strong>endControlLockTo</strong> and <strong>endLockTo</strong> lock attributes</li>
 <li>additional reference-linked attributes for the <code>startControl</code> coordinate: <strong>startControlPivotCorner</strong>, <strong>addStartControlPivotHandle</strong>, <strong>addStartControlPivotOffset</strong>, <strong>startControlPathPosition</strong>, <strong>addStartControlPathHandle</strong>, <strong>addStartControlPathOffset</strong></li>
 <li>additional reference-linked attributes for the <code>endControl</code> coordinate: <strong>endControlPivotCorner</strong>, <strong>addEndControlPivotHandle</strong>, <strong>addEndControlPivotOffset</strong>, <strong>endControlPathPosition</strong>, <strong>addEndControlPathHandle</strong>, <strong>addEndControlPathOffset</strong></li>
 <li>additional reference-linked attributes for the <code>end</code> coordinate: <strong>endPivotCorner</strong>, <strong>addEndPivotHandle</strong>, <strong>addEndPivotOffset</strong>, <strong>endPathPosition</strong>, <strong>addEndPathHandle</strong>, <strong>addEndPathOffset</strong></li>
 </ul>
-<pre><code>scrawl.makeBezier({
+<pre><code>scrawl.<span class="hljs-title function_">makeBezier</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;bezier-curve&#x27;</span>,
 
@@ -1431,14 +1431,14 @@ P.preparePinsForStamp = <span class="hljs-function"><span class="hljs-keyword">f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeBezier = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeBezier = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    items.species = <span class="hljs-string">&#x27;bezier&#x27;</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Bezier(items);
+    items.<span class="hljs-property">species</span> = <span class="hljs-string">&#x27;bezier&#x27;</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Bezier</span>(items);
 };
 
-<span class="hljs-title">constructors</span>.<span class="hljs-title">Bezier</span> = <span class="hljs-title">Bezier</span>;</pre></div></div>
+constructors.<span class="hljs-property">Bezier</span> = <span class="hljs-title class_">Bezier</span>;</pre></div></div>
             
         </li>
         

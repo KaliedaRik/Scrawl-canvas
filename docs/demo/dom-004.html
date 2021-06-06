@@ -707,11 +707,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> library = scrawl.library,
-    artefact = library.artefact,
-    stack = artefact.mystack;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> library = scrawl.<span class="hljs-property">library</span>,
+    artefact = library.<span class="hljs-property">artefact</span>,
+    stack = artefact.<span class="hljs-property">mystack</span>;
 
-stack.set({
+stack.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">width</span>: <span class="hljs-number">300</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-number">600</span>,
     <span class="hljs-attr">css</span>: {
@@ -719,10 +719,10 @@ stack.set({
     }
 });
 
-stack.addExistingDomElements(<span class="hljs-string">&#x27;#rocket&#x27;</span>);
-<span class="hljs-keyword">let</span> rocket = artefact.rocket;
+stack.<span class="hljs-title function_">addExistingDomElements</span>(<span class="hljs-string">&#x27;#rocket&#x27;</span>);
+<span class="hljs-keyword">let</span> rocket = artefact.<span class="hljs-property">rocket</span>;
 
-rocket.set({
+rocket.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">startX</span>: <span class="hljs-number">600</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-number">540</span>,
     <span class="hljs-attr">width</span>: <span class="hljs-number">50</span>,
@@ -744,7 +744,7 @@ rocket.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> tween = scrawl.makeTween({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> tween = scrawl.<span class="hljs-title function_">makeTween</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;template&#x27;</span>,
 
@@ -760,20 +760,20 @@ rocket.set({
         }
     ],
 
-    <span class="hljs-attr">commenceAction</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-attr">commenceAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-built_in">this</span>.set({
-            <span class="hljs-attr">targets</span>: rocket.clone({
-                <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span>-element`</span>,
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
+            <span class="hljs-attr">targets</span>: rocket.<span class="hljs-title function_">clone</span>({
+                <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>-element`</span>,
             })
         });
     },
 
-    <span class="hljs-attr">completeAction</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-attr">completeAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        artefact[<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span>-element`</span>].kill();
+        artefact[<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>-element`</span>].<span class="hljs-title function_">kill</span>();
     },
-}).removeFromTicker();</pre></div></div>
+}).<span class="hljs-title function_">removeFromTicker</span>();</pre></div></div>
             
         </li>
         
@@ -789,25 +789,25 @@ rocket.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        <span class="hljs-keyword">let</span> t = <span class="hljs-built_in">Object</span>.keys(library.tween),
-            a = <span class="hljs-built_in">Object</span>.keys(artefact),
-            n = <span class="hljs-built_in">Object</span>.keys(library.animation),
-            k = <span class="hljs-built_in">Object</span>.keys(library.animationtickers),
-            e = <span class="hljs-built_in">Object</span>.keys(library.element);
+        <span class="hljs-keyword">let</span> t = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(library.<span class="hljs-property">tween</span>),
+            a = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(artefact),
+            n = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(library.<span class="hljs-property">animation</span>),
+            k = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(library.<span class="hljs-property">animationtickers</span>),
+            e = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(library.<span class="hljs-property">element</span>);
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
 tween - <span class="hljs-subst">${t.length}</span>, <span class="hljs-subst">${library.tweennames.length}</span>: <span class="hljs-subst">${t.join(<span class="hljs-string">&#x27;, &#x27;</span>)}</span>
 artefact - <span class="hljs-subst">${a.length}</span>, <span class="hljs-subst">${library.artefactnames.length}</span>: <span class="hljs-subst">${a.join(<span class="hljs-string">&#x27;, &#x27;</span>)}</span>
 element - <span class="hljs-subst">${e.length}</span>, <span class="hljs-subst">${library.elementnames.length}</span>: <span class="hljs-subst">${e.join(<span class="hljs-string">&#x27;, &#x27;</span>)}</span>
@@ -829,7 +829,7 @@ animation - <span class="hljs-subst">${n.length}</span>, <span class="hljs-subst
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
     <span class="hljs-attr">target</span>: stack,
@@ -851,18 +851,18 @@ animation - <span class="hljs-subst">${n.length}</span>, <span class="hljs-subst
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> counter = <span class="hljs-number">0</span>;
-<span class="hljs-keyword">let</span> flyRocket = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">e</span>) </span>{
+<span class="hljs-keyword">let</span> flyRocket = <span class="hljs-keyword">function</span>(<span class="hljs-params">e</span>) {
 
-    e.preventDefault();
-    e.returnValue = <span class="hljs-literal">false</span>;
+    e.<span class="hljs-title function_">preventDefault</span>();
+    e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
 
-    tween.clone({
+    tween.<span class="hljs-title function_">clone</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-string">`rocket-<span class="hljs-subst">${counter}</span>`</span>,
-    }).run();
+    }).<span class="hljs-title function_">run</span>();
 
     counter ++;
 };
-scrawl.addNativeListener(<span class="hljs-string">&#x27;click&#x27;</span>, flyRocket, stack.domElement);</pre></div></div>
+scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;click&#x27;</span>, flyRocket, stack.<span class="hljs-property">domElement</span>);</pre></div></div>
             
         </li>
         
@@ -877,7 +877,7 @@ scrawl.addNativeListener(<span class="hljs-string">&#x27;click&#x27;</span>, fly
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         
@@ -892,36 +892,36 @@ scrawl.addNativeListener(<span class="hljs-string">&#x27;click&#x27;</span>, fly
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> killTicker = <span class="hljs-function">(<span class="hljs-params">name, time</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> <span class="hljs-title function_">killTicker</span> = (<span class="hljs-params">name, time</span>) =&gt; {
 
     <span class="hljs-keyword">let</span> packet;
 
     <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
 
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${name}</span> alive
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`<span class="hljs-subst">${name}</span> alive
     removed from tickers: <span class="hljs-subst">${(scrawl.library.animationtickers[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>`</span>);
 
-        packet = scrawl.library.animationtickers[name].saveAsPacket();
+        packet = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">animationtickers</span>[name].<span class="hljs-title function_">saveAsPacket</span>();
 
-        scrawl.library.animationtickers[name].kill();
+        scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">animationtickers</span>[name].<span class="hljs-title function_">kill</span>();
 
         <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
 
-            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${name}</span> killed
+            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`<span class="hljs-subst">${name}</span> killed
     removed from tickers: <span class="hljs-subst">${(scrawl.library.animationtickers[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>`</span>);
 
-            stack.actionPacket(packet);
+            stack.<span class="hljs-title function_">actionPacket</span>(packet);
 
             <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
 
-                <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${name}</span> resurrected
+                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`<span class="hljs-subst">${name}</span> resurrected
     removed from tickers: <span class="hljs-subst">${(scrawl.library.animationtickers[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>`</span>);
             }, <span class="hljs-number">100</span>);
         }, <span class="hljs-number">100</span>);
     }, time);
 };
 
-killTicker(<span class="hljs-string">&#x27;template_ticker&#x27;</span>, <span class="hljs-number">4000</span>);</pre></div></div>
+<span class="hljs-title function_">killTicker</span>(<span class="hljs-string">&#x27;template_ticker&#x27;</span>, <span class="hljs-number">4000</span>);</pre></div></div>
             
         </li>
         

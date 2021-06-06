@@ -707,9 +707,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.library.canvas.mycanvas;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
 
-canvas.setBase({
+canvas.<span class="hljs-title function_">setBase</span>({
     <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;navy&#x27;</span>,
     <span class="hljs-attr">compileOrder</span>: <span class="hljs-number">1</span>,
 });</pre></div></div>
@@ -728,7 +728,7 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> tree = scrawl.makeShape({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> tree = scrawl.<span class="hljs-title function_">makeShape</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-tree&#x27;</span>,
 
@@ -761,7 +761,7 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeQuadratic({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeQuadratic</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;text-arch&#x27;</span>,
 
@@ -778,7 +778,7 @@ canvas.setBase({
     <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
 });
 
-scrawl.makePhrase({
+scrawl.<span class="hljs-title function_">makePhrase</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;message&#x27;</span>,
 
@@ -816,7 +816,7 @@ scrawl.makePhrase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myWorld = scrawl.makeWorld({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myWorld = scrawl.<span class="hljs-title function_">makeWorld</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-world&#x27;</span>,
     <span class="hljs-attr">tickMultiplier</span>: <span class="hljs-number">2</span>,
@@ -839,7 +839,7 @@ scrawl.makePhrase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeEmitter({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeEmitter</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;star-particles&#x27;</span>,
     <span class="hljs-attr">world</span>: myWorld,
@@ -876,7 +876,7 @@ scrawl.makePhrase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    artefact: scrawl.makeStar({
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">artefact</span>: scrawl.<span class="hljs-title function_">makeStar</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;particle-star-entity&#x27;</span>,
 
@@ -896,9 +896,9 @@ scrawl.makePhrase({
         <span class="hljs-attr">noDeltaUpdates</span>: <span class="hljs-literal">true</span>,
     }),
 
-    <span class="hljs-attr">stampAction</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) </span>{
+    <span class="hljs-attr">stampAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) {
 
-        <span class="hljs-keyword">let</span> history = particle.history,
+        <span class="hljs-keyword">let</span> history = particle.<span class="hljs-property">history</span>,
             remaining, globalAlpha, scale, start, z, roll;</pre></div></div>
             
         </li>
@@ -914,7 +914,7 @@ scrawl.makePhrase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (history.length) {
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (history.<span class="hljs-property">length</span>) {
 
             [remaining, z, ...start] = history[<span class="hljs-number">0</span>];
             globalAlpha = remaining / <span class="hljs-number">6</span>;
@@ -922,11 +922,11 @@ scrawl.makePhrase({
 
             <span class="hljs-keyword">if</span> (globalAlpha &gt; <span class="hljs-number">0</span> &amp;&amp; scale &gt; <span class="hljs-number">0</span>) {
 
-                artefact.simpleStamp(host, {
+                artefact.<span class="hljs-title function_">simpleStamp</span>(host, {
                     start, 
                     scale, 
                     globalAlpha, 
-                    <span class="hljs-attr">fillStyle</span>: particle.fill,
+                    <span class="hljs-attr">fillStyle</span>: particle.<span class="hljs-property">fill</span>,
                 });
             }
         }
@@ -946,7 +946,7 @@ scrawl.makePhrase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeStar({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeStar</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;main-star&#x27;</span>,
 
@@ -983,7 +983,7 @@ scrawl.makePhrase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeEmitter({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeEmitter</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;spangles-particles&#x27;</span>,
 
@@ -1014,7 +1014,7 @@ scrawl.makePhrase({
     <span class="hljs-attr">fillMinimumColor</span>: <span class="hljs-string">&#x27;lightgray&#x27;</span>,
     <span class="hljs-attr">fillMaximumColor</span>: <span class="hljs-string">&#x27;white&#x27;</span>,
 
-    <span class="hljs-attr">artefact</span>: scrawl.makeStar({
+    <span class="hljs-attr">artefact</span>: scrawl.<span class="hljs-title function_">makeStar</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;particle-spangle-entity&#x27;</span>,
 
@@ -1037,9 +1037,9 @@ scrawl.makePhrase({
         <span class="hljs-attr">noFilters</span>: <span class="hljs-literal">true</span>,
     }),
 
-    <span class="hljs-attr">stampAction</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) </span>{
+    <span class="hljs-attr">stampAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) {
 
-        <span class="hljs-keyword">let</span> history = particle.history;</pre></div></div>
+        <span class="hljs-keyword">let</span> history = particle.<span class="hljs-property">history</span>;</pre></div></div>
             
         </li>
         
@@ -1054,7 +1054,7 @@ scrawl.makePhrase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (history.length) {
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (history.<span class="hljs-property">length</span>) {
 
             <span class="hljs-keyword">let</span> [remaining, z, ...start] = history[<span class="hljs-number">0</span>];</pre></div></div>
             
@@ -1144,9 +1144,9 @@ scrawl.makePhrase({
                 <span class="hljs-keyword">else</span> radius1 = <span class="hljs-number">6</span> + (remaining * <span class="hljs-number">5</span>);
             }
 
-            artefact.simpleStamp(host, {
+            artefact.<span class="hljs-title function_">simpleStamp</span>(host, {
                 start, 
-                <span class="hljs-attr">fillStyle</span>: particle.fill,
+                <span class="hljs-attr">fillStyle</span>: particle.<span class="hljs-property">fill</span>,
                 globalAlpha,
                 radius1,
             });
@@ -1181,7 +1181,7 @@ scrawl.makePhrase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>canvas.buildCell({
+            <div class="content"><div class='highlight'><pre>canvas.<span class="hljs-title function_">buildCell</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;candle-cell&#x27;</span>,
 
@@ -1204,7 +1204,7 @@ scrawl.makePhrase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeFilter({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;blur&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;blur&#x27;</span>,
@@ -1225,7 +1225,7 @@ scrawl.makePhrase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myEmitter = scrawl.makeEmitter({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myEmitter = scrawl.<span class="hljs-title function_">makeEmitter</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;flame&#x27;</span>,
     <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;candle-cell&#x27;</span>,
@@ -1251,20 +1251,20 @@ scrawl.makePhrase({
 
     <span class="hljs-attr">filters</span>: <span class="hljs-string">&#x27;blur&#x27;</span>,
 
-    <span class="hljs-attr">stampAction</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) </span>{
+    <span class="hljs-attr">stampAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) {
 
-        <span class="hljs-keyword">let</span> engine = host.engine,
-            history = particle.history,
-            len = history.length,
+        <span class="hljs-keyword">let</span> engine = host.<span class="hljs-property">engine</span>,
+            history = particle.<span class="hljs-property">history</span>,
+            len = history.<span class="hljs-property">length</span>,
             remaining, radius, alpha, x, y, z,
-            endRad = <span class="hljs-built_in">Math</span>.PI * <span class="hljs-number">2</span>;
+            endRad = <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span> * <span class="hljs-number">2</span>;
 
-        <span class="hljs-keyword">let</span> colorFactory = <span class="hljs-built_in">this</span>.fillColorFactory;
+        <span class="hljs-keyword">let</span> colorFactory = <span class="hljs-variable language_">this</span>.<span class="hljs-property">fillColorFactory</span>;
 
-        engine.save();
-        engine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+        engine.<span class="hljs-title function_">save</span>();
+        engine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
 
-        history.forEach(<span class="hljs-function">(<span class="hljs-params">p, index</span>) =&gt;</span> {
+        history.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">p, index</span>) =&gt;</span> {
 
             [remaining, z, x, y] = p;
             radius = <span class="hljs-number">2</span> + z;
@@ -1285,15 +1285,15 @@ scrawl.makePhrase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                engine.beginPath();
-                engine.moveTo(x, y);
-                engine.arc(x, y, radius, <span class="hljs-number">0</span>, endRad);
-                engine.globalAlpha = alpha;
-                engine.fillStyle = colorFactory.get(alpha);
-                engine.fill();
+            <div class="content"><div class='highlight'><pre>                engine.<span class="hljs-title function_">beginPath</span>();
+                engine.<span class="hljs-title function_">moveTo</span>(x, y);
+                engine.<span class="hljs-title function_">arc</span>(x, y, radius, <span class="hljs-number">0</span>, endRad);
+                engine.<span class="hljs-property">globalAlpha</span> = alpha;
+                engine.<span class="hljs-property">fillStyle</span> = colorFactory.<span class="hljs-title function_">get</span>(alpha);
+                engine.<span class="hljs-title function_">fill</span>();
             }
         });
-        engine.restore();
+        engine.<span class="hljs-title function_">restore</span>();
     },
 });</pre></div></div>
             
@@ -1310,7 +1310,7 @@ scrawl.makePhrase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeBlock({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeBlock</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;candle&#x27;</span>,
     <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;candle-cell&#x27;</span>,
@@ -1339,7 +1339,7 @@ scrawl.makePhrase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makePicture({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makePicture</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;candle-1&#x27;</span>,
 
@@ -1370,47 +1370,47 @@ scrawl.makePhrase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>}).clone({
+            <div class="content"><div class='highlight'><pre>}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;candle-2&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.793</span>,
     
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;candle-3&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.272</span>,
     
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;candle-4&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.696</span>,
     
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;candle-5&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.352</span>,
     
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;candle-6&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.616</span>,
     
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;candle-7&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.413</span>,
     
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;candle-8&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.555</span>,
     
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;candle-9&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.459</span>,
     
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;candle-10&#x27;</span>,
     <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.509</span>,
@@ -1430,19 +1430,19 @@ scrawl.makePhrase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow, dragging,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
     };
 }();</pre></div></div>
             
@@ -1459,7 +1459,7 @@ scrawl.makePhrase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-animation&quot;</span>,
     <span class="hljs-attr">target</span>: canvas,
@@ -1479,7 +1479,7 @@ scrawl.makePhrase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         
