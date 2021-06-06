@@ -184,9 +184,9 @@
 <h5 id="usage-example">Usage example:</h5>
 <pre><code><span class="hljs-keyword">import</span> panImage <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./relative/or/absolute/path/to/this/file.js&#x27;</span>;
 
-<span class="hljs-keyword">let</span> myElements = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">&#x27;.some-class&#x27;</span>);
+<span class="hljs-keyword">let</span> myElements = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.some-class&#x27;</span>);
 
-myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> panImage(el));
+myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">panImage</span>(el));
 </code></pre>
 
             </div>
@@ -226,7 +226,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">el</span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">el</span>) {</pre></div></div>
             
         </li>
         
@@ -241,7 +241,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> snippet = scrawl.makeSnippet({
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> snippet = scrawl.<span class="hljs-title function_">makeSnippet</span>({
         <span class="hljs-attr">domElement</span>: el,
     });
 
@@ -260,10 +260,10 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> canvas = snippet.canvas,
-            animation = snippet.animation,
-            group = canvas.base.name,
-            name = snippet.element.name;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> canvas = snippet.<span class="hljs-property">canvas</span>,
+            animation = snippet.<span class="hljs-property">animation</span>,
+            group = canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
+            name = snippet.<span class="hljs-property">element</span>.<span class="hljs-property">name</span>;</pre></div></div>
             
         </li>
         
@@ -278,7 +278,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        el.style.backgroundColor = <span class="hljs-string">&#x27;transparent&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        el.<span class="hljs-property">style</span>.<span class="hljs-property">backgroundColor</span> = <span class="hljs-string">&#x27;transparent&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -293,7 +293,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> images = el.querySelectorAll(<span class="hljs-string">&#x27;img&#x27;</span>),
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> images = el.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;img&#x27;</span>),
             imgName = <span class="hljs-string">`<span class="hljs-subst">${name}</span>-image`</span>;</pre></div></div>
             
         </li>
@@ -309,7 +309,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        imgName = imgName.replace(<span class="hljs-string">&#x27;.&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        imgName = imgName.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;.&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -329,17 +329,17 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        images.forEach(<span class="hljs-function">(<span class="hljs-params">img, index</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>        images.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">img, index</span>) =&gt;</span> {
 
-            <span class="hljs-keyword">let</span> classes = img.getAttribute(<span class="hljs-string">&#x27;class&#x27;</span>)
+            <span class="hljs-keyword">let</span> classes = img.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;class&#x27;</span>)
 
             <span class="hljs-keyword">if</span> (!classes) classes = <span class="hljs-string">&#x27;&#x27;</span>;
             classes += <span class="hljs-string">` <span class="hljs-subst">${imgName}</span>`</span>;
 
-            img.setAttribute(<span class="hljs-string">&#x27;class&#x27;</span>, classes);
-            img.id = <span class="hljs-string">`<span class="hljs-subst">${imgName}</span>-<span class="hljs-subst">${index}</span>`</span>;
+            img.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;class&#x27;</span>, classes);
+            img.<span class="hljs-property">id</span> = <span class="hljs-string">`<span class="hljs-subst">${imgName}</span>-<span class="hljs-subst">${index}</span>`</span>;
 
-            img.style.display = <span class="hljs-string">&#x27;none&#x27;</span>;
+            img.<span class="hljs-property">style</span>.<span class="hljs-property">display</span> = <span class="hljs-string">&#x27;none&#x27;</span>;
         });</pre></div></div>
             
         </li>
@@ -355,7 +355,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        scrawl.importDomImage(<span class="hljs-string">`.<span class="hljs-subst">${imgName}</span>`</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">`.<span class="hljs-subst">${imgName}</span>`</span>);</pre></div></div>
             
         </li>
         
@@ -370,8 +370,8 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> copyStartX = el.dataset.x || <span class="hljs-number">0</span>,
-            copyStartY = el.dataset.y || <span class="hljs-number">0</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> copyStartX = el.<span class="hljs-property">dataset</span>.<span class="hljs-property">x</span> || <span class="hljs-number">0</span>,
+            copyStartY = el.<span class="hljs-property">dataset</span>.<span class="hljs-property">y</span> || <span class="hljs-number">0</span>;</pre></div></div>
             
         </li>
         
@@ -386,11 +386,11 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> [w, h] = canvas.get(<span class="hljs-string">&#x27;dimensions&#x27;</span>);
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> [w, h] = canvas.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;dimensions&#x27;</span>);
 
-        <span class="hljs-keyword">const</span> asset = scrawl.library.asset[<span class="hljs-string">`<span class="hljs-subst">${imgName}</span>-0`</span>];
+        <span class="hljs-keyword">const</span> asset = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">asset</span>[<span class="hljs-string">`<span class="hljs-subst">${imgName}</span>-0`</span>];
 
-        <span class="hljs-keyword">const</span> panImage = scrawl.makePicture({
+        <span class="hljs-keyword">const</span> panImage = scrawl.<span class="hljs-title function_">makePicture</span>({
 
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${imgName}</span>-panimage`</span>,
             group,
@@ -423,14 +423,14 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        scrawl.addListener(<span class="hljs-string">&#x27;down&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>        scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-string">&#x27;down&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
 
-            <span class="hljs-keyword">let</span> here = canvas.here;
+            <span class="hljs-keyword">let</span> here = canvas.<span class="hljs-property">here</span>;
 
-            <span class="hljs-keyword">if</span> (here.active &amp;&amp; <span class="hljs-string">&#x27;grab&#x27;</span> === cursor) {
+            <span class="hljs-keyword">if</span> (here.<span class="hljs-property">active</span> &amp;&amp; <span class="hljs-string">&#x27;grab&#x27;</span> === cursor) {
 
                 cursor = <span class="hljs-string">&#x27;grabbing&#x27;</span>;
-                el.style.cursor = cursor;
+                el.<span class="hljs-property">style</span>.<span class="hljs-property">cursor</span> = cursor;
 
                 <span class="hljs-keyword">let</span> {x, y} = here;
 
@@ -439,16 +439,16 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
             }
         }, el);
 
-        scrawl.addListener(<span class="hljs-string">&#x27;move&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+        scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-string">&#x27;move&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
 
             <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;grabbing&#x27;</span> === cursor) {
 
-                <span class="hljs-keyword">let</span> {x, y} = canvas.here;
+                <span class="hljs-keyword">let</span> {x, y} = canvas.<span class="hljs-property">here</span>;
 
                 <span class="hljs-keyword">let</span> dx = lastX - x,
                     dy = lastY - y;
 
-                panImage.setDelta({
+                panImage.<span class="hljs-title function_">setDelta</span>({
                     <span class="hljs-attr">copyStartX</span>: dx * aspectWidth,
                     <span class="hljs-attr">copyStartY</span>: dy * aspectHeight,
                 });
@@ -458,19 +458,19 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
              }
         }, el);
 
-        scrawl.addListener([<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-string">&#x27;leave&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+        scrawl.<span class="hljs-title function_">addListener</span>([<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-string">&#x27;leave&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
 
             <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;grabbing&#x27;</span> === cursor) {
 
                 cursor = <span class="hljs-string">&#x27;grab&#x27;</span>;
-                el.style.cursor = cursor;
+                el.<span class="hljs-property">style</span>.<span class="hljs-property">cursor</span> = cursor;
 
-                <span class="hljs-keyword">let</span> {x, y} = canvas.here;
+                <span class="hljs-keyword">let</span> {x, y} = canvas.<span class="hljs-property">here</span>;
 
                 <span class="hljs-keyword">let</span> dx = lastX - x,
                     dy = lastY - y;
 
-                panImage.setDelta({
+                panImage.<span class="hljs-title function_">setDelta</span>({
                     <span class="hljs-attr">copyStartX</span>: dx * aspectWidth,
                     <span class="hljs-attr">copyStartY</span>: dy * aspectHeight,
                 });
@@ -493,10 +493,10 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> checkDimensions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">const</span> checkDimensions = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-            <span class="hljs-keyword">let</span> [canvasWidth, canvasHeight] = canvas.get(<span class="hljs-string">&#x27;dimensions&#x27;</span>);
-            <span class="hljs-keyword">let</span> [imageWidth, imageHeight] = panImage.get(<span class="hljs-string">&#x27;dimensions&#x27;</span>);</pre></div></div>
+            <span class="hljs-keyword">let</span> [canvasWidth, canvasHeight] = canvas.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;dimensions&#x27;</span>);
+            <span class="hljs-keyword">let</span> [imageWidth, imageHeight] = panImage.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;dimensions&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -513,7 +513,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
             
             <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (canvasWidth !== imageWidth || canvasHeight !== imageHeight) {
 
-                <span class="hljs-keyword">let</span> [sourceWidth, sourceHeight] = panImage.get(<span class="hljs-string">&#x27;sourceDimensions&#x27;</span>);</pre></div></div>
+                <span class="hljs-keyword">let</span> [sourceWidth, sourceHeight] = panImage.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;sourceDimensions&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -549,7 +549,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
                 <span class="hljs-keyword">let</span> ratioWidth = aspectWidth * setToHalfWidth * <span class="hljs-number">100</span>,
                     ratioHeight = aspectHeight * setToHalfWidth * <span class="hljs-number">100</span>;
 
-                panImage.set({
+                panImage.<span class="hljs-title function_">set</span>({
                     <span class="hljs-attr">width</span>: canvasWidth,
                     <span class="hljs-attr">height</span>: canvasHeight,
                     <span class="hljs-attr">copyWidth</span>: ratioWidth + <span class="hljs-string">&#x27;%&#x27;</span>,
@@ -571,7 +571,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        animation.set({
+            <div class="content"><div class='highlight'><pre>        animation.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">commence</span>: checkDimensions,
         });
     }</pre></div></div>

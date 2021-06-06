@@ -46,7 +46,7 @@ export default function (P = Ωempty) {
 // + `largest`
 //
 // The values assigned to the breakpoints are Float numbers for the displayed Canvas element's pixel area (`width * height`).
-// + Useful for dynamic Cells - for example Canvas base Cells, where the canvas `isComponent` flag has been set to `true`; in these situations we can use the area breakpoints to adjust entity dimensions and scales, and text font sizes, to better match the changed environment.
+// + Useful for dynamic Cells - for example Canvas base Cells, where the canvas `baseMatchesCanvasDimensions` flag has been set to `true`; in these situations we can use the area breakpoints to adjust entity dimensions and scales, and text font sizes, to better match the changed environment.
 // + The other option - to set the base Cell's dimensions to known, static values and set the canvas's `fit` attribute - suffers from image degredation when the canvas and its base cell's dimensions are excessively different. 
         breakToSmallest: 20000,
         breakToSmaller: 80000,

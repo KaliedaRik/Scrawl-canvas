@@ -165,6 +165,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/lineSpiral.html">
+                  ./source/factory/lineSpiral.js
+                </a>
+              
+                
                 <a class="source" href="../factory/loom.html">
                   ./source/factory/loom.js
                 </a>
@@ -257,6 +262,11 @@
                 
                 <a class="source" href="../factory/radialGradient.html">
                   ./source/factory/radialGradient.js
+                </a>
+              
+                
+                <a class="source" href="../factory/rawAsset.html">
+                  ./source/factory/rawAsset.js
                 </a>
               
                 
@@ -493,7 +503,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">P = Ωempty</span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">P = Ωempty</span>) {</pre></div></div>
             
         </li>
         
@@ -523,7 +533,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        groups: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">groups</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -538,7 +548,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        groupBuckets: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">groupBuckets</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -553,9 +563,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        batchResort: <span class="hljs-literal">true</span>,
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">batchResort</span>: <span class="hljs-literal">true</span>,
     };
-    P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
+    P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -612,8 +622,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> G = P.getters,
-        S = P.setters;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> G = P.<span class="hljs-property">getters</span>,
+        S = P.<span class="hljs-property">setters</span>;</pre></div></div>
             
         </li>
         
@@ -628,15 +638,15 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    G.groups = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>    G.<span class="hljs-property">groups</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-keyword">return</span> [].concat(<span class="hljs-built_in">this</span>.groups);
+        <span class="hljs-keyword">return</span> [].<span class="hljs-title function_">concat</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">groups</span>);
     };
 
-    S.groups = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+    S.<span class="hljs-property">groups</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-        <span class="hljs-built_in">this</span>.groups = [];
-        <span class="hljs-built_in">this</span>.addGroups(item);
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">groups</span> = [];
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">addGroups</span>(item);
     };</pre></div></div>
             
         </li>
@@ -665,28 +675,28 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.sortGroups = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">force = <span class="hljs-literal">false</span></span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">sortGroups</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">force = <span class="hljs-literal">false</span></span>) {
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.batchResort) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">batchResort</span>) {
 
-            <span class="hljs-built_in">this</span>.batchResort = <span class="hljs-literal">false</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">batchResort</span> = <span class="hljs-literal">false</span>;
 
-            <span class="hljs-keyword">let</span> floor = <span class="hljs-built_in">Math</span>.floor,
-                groupnames = <span class="hljs-built_in">this</span>.groups,
+            <span class="hljs-keyword">let</span> floor = <span class="hljs-title class_">Math</span>.<span class="hljs-property">floor</span>,
+                groupnames = <span class="hljs-variable language_">this</span>.<span class="hljs-property">groups</span>,
                 buckets = [],
                 mygroup, order;
 
-            groupnames.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
+            groupnames.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
                 mygroup = group[name];
-                order = (mygroup) ? floor(mygroup.order) : <span class="hljs-number">0</span>;
+                order = (mygroup) ? <span class="hljs-title function_">floor</span>(mygroup.<span class="hljs-property">order</span>) : <span class="hljs-number">0</span>;
 
                 <span class="hljs-keyword">if</span> (!buckets[order]) buckets[order] = [];
 
-                buckets[order].push(mygroup);
+                buckets[order].<span class="hljs-title function_">push</span>(mygroup);
             });
 
-            <span class="hljs-built_in">this</span>.groupBuckets = buckets.reduce(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a.concat(v), []);
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">groupBuckets</span> = buckets.<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a.<span class="hljs-title function_">concat</span>(v), []);
         }
     };</pre></div></div>
             
@@ -703,10 +713,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.initializeCascade = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">initializeCascade</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-built_in">this</span>.groups = [];
-        <span class="hljs-built_in">this</span>.groupBuckets = [];
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">groups</span> = [];
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">groupBuckets</span> = [];
     };</pre></div></div>
             
         </li>
@@ -736,17 +746,17 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.addGroups = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">addGroups</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) {
 
-        args.forEach( <span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
+        args.<span class="hljs-title function_">forEach</span>( <span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
 
-            <span class="hljs-keyword">if</span> (item &amp;&amp; item.substring) pushUnique(<span class="hljs-built_in">this</span>.groups, item);
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (group[item]) pushUnique(<span class="hljs-built_in">this</span>.groups, item.name);
+            <span class="hljs-keyword">if</span> (item &amp;&amp; item.<span class="hljs-property">substring</span>) <span class="hljs-title function_">pushUnique</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">groups</span>, item);
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (group[item]) <span class="hljs-title function_">pushUnique</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">groups</span>, item.<span class="hljs-property">name</span>);
 
-        }, <span class="hljs-built_in">this</span>);
+        }, <span class="hljs-variable language_">this</span>);
 
-        <span class="hljs-built_in">this</span>.batchResort = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">batchResort</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
     };</pre></div></div>
             
         </li>
@@ -762,17 +772,17 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.removeGroups = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">removeGroups</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) {
 
-        args.forEach( <span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
+        args.<span class="hljs-title function_">forEach</span>( <span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
 
-            <span class="hljs-keyword">if</span> (item &amp;&amp; item.substring) removeItem(<span class="hljs-built_in">this</span>.groups, item);
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (group[item]) removeItem(<span class="hljs-built_in">this</span>.groups, item.name);
+            <span class="hljs-keyword">if</span> (item &amp;&amp; item.<span class="hljs-property">substring</span>) <span class="hljs-title function_">removeItem</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">groups</span>, item);
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (group[item]) <span class="hljs-title function_">removeItem</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">groups</span>, item.<span class="hljs-property">name</span>);
 
-        }, <span class="hljs-built_in">this</span>);
+        }, <span class="hljs-variable language_">this</span>);
 
-        <span class="hljs-built_in">this</span>.batchResort = <span class="hljs-literal">true</span>;
-        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">batchResort</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
     };</pre></div></div>
             
         </li>
@@ -788,21 +798,21 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.cascadeAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items, action</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">cascadeAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items, action</span>) {
 
         <span class="hljs-keyword">let</span> grp;
 
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;cascadeAction&#x27;</span>)
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;cascadeAction&#x27;</span>)
 
-        <span class="hljs-built_in">this</span>.groups.forEach( <span class="hljs-function"><span class="hljs-params">groupname</span> =&gt;</span> {
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">groups</span>.<span class="hljs-title function_">forEach</span>( <span class="hljs-function"><span class="hljs-params">groupname</span> =&gt;</span> {
 
             grp = group[groupname];
 
             <span class="hljs-keyword">if</span> (grp) grp[action](items);
 
-        }, <span class="hljs-built_in">this</span>);
+        }, <span class="hljs-variable language_">this</span>);
 
-        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
     };</pre></div></div>
             
         </li>
@@ -818,10 +828,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.updateArtefacts = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">updateArtefacts</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
-        <span class="hljs-built_in">this</span>.cascadeAction(items, <span class="hljs-string">&#x27;updateArtefacts&#x27;</span>);
-        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cascadeAction</span>(items, <span class="hljs-string">&#x27;updateArtefacts&#x27;</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
     };</pre></div></div>
             
         </li>
@@ -837,10 +847,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.setArtefacts = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">setArtefacts</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
-        <span class="hljs-built_in">this</span>.cascadeAction(items, <span class="hljs-string">&#x27;setArtefacts&#x27;</span>);
-        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cascadeAction</span>(items, <span class="hljs-string">&#x27;setArtefacts&#x27;</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
     };</pre></div></div>
             
         </li>
@@ -856,10 +866,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.addArtefactClasses = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">addArtefactClasses</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
-        <span class="hljs-built_in">this</span>.cascadeAction(items, <span class="hljs-string">&#x27;addArtefactClasses&#x27;</span>);
-        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cascadeAction</span>(items, <span class="hljs-string">&#x27;addArtefactClasses&#x27;</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
     };</pre></div></div>
             
         </li>
@@ -875,10 +885,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.removeArtefactClasses = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">removeArtefactClasses</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
-        <span class="hljs-built_in">this</span>.cascadeAction(items, <span class="hljs-string">&#x27;removeArtefactClasses&#x27;</span>);
-        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cascadeAction</span>(items, <span class="hljs-string">&#x27;removeArtefactClasses&#x27;</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
     };</pre></div></div>
             
         </li>
@@ -894,10 +904,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.updateByDelta = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">updateByDelta</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-built_in">this</span>.cascadeAction(<span class="hljs-literal">false</span>, <span class="hljs-string">&#x27;updateByDelta&#x27;</span>);
-        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cascadeAction</span>(<span class="hljs-literal">false</span>, <span class="hljs-string">&#x27;updateByDelta&#x27;</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
     };</pre></div></div>
             
         </li>
@@ -913,10 +923,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.reverseByDelta = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">reverseByDelta</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-built_in">this</span>.cascadeAction(<span class="hljs-literal">false</span>, <span class="hljs-string">&#x27;reverseByDelta&#x27;</span>);
-        <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cascadeAction</span>(<span class="hljs-literal">false</span>, <span class="hljs-string">&#x27;reverseByDelta&#x27;</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
     };</pre></div></div>
             
         </li>
@@ -939,21 +949,21 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.getArtefactAt = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">getArtefactAt</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
-        items = xtGet(items, <span class="hljs-built_in">this</span>.here, <span class="hljs-literal">false</span>);
+        items = <span class="hljs-title function_">xtGet</span>(items, <span class="hljs-variable language_">this</span>.<span class="hljs-property">here</span>, <span class="hljs-literal">false</span>);
 
         <span class="hljs-keyword">if</span> (items) {
 
             <span class="hljs-keyword">let</span> grp, result;
 
-            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-built_in">this</span>.groups.length - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) {
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-variable language_">this</span>.<span class="hljs-property">groups</span>.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) {
 
-                grp = group[<span class="hljs-built_in">this</span>.groups[i]];
+                grp = group[<span class="hljs-variable language_">this</span>.<span class="hljs-property">groups</span>[i]];
 
                 <span class="hljs-keyword">if</span> (grp) {
 
-                    result = grp.getArtefactAt(items);
+                    result = grp.<span class="hljs-title function_">getArtefactAt</span>(items);
 
                     <span class="hljs-keyword">if</span> (result) <span class="hljs-keyword">return</span> result;
                 }
@@ -979,24 +989,24 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.getAllArtefactsAt = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">getAllArtefactsAt</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
-        items = xtGet(items, <span class="hljs-built_in">this</span>.here, <span class="hljs-literal">false</span>);
+        items = <span class="hljs-title function_">xtGet</span>(items, <span class="hljs-variable language_">this</span>.<span class="hljs-property">here</span>, <span class="hljs-literal">false</span>);
 
         <span class="hljs-keyword">if</span> (items) {
 
             <span class="hljs-keyword">let</span> grp, result,
                 results = [];
 
-            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-built_in">this</span>.groups.length - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) {
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-variable language_">this</span>.<span class="hljs-property">groups</span>.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) {
 
-                grp = group[<span class="hljs-built_in">this</span>.groups[i]];
+                grp = group[<span class="hljs-variable language_">this</span>.<span class="hljs-property">groups</span>[i]];
 
                 <span class="hljs-keyword">if</span> (grp) {
 
-                    result = grp.getAllArtefactsAt(items);
+                    result = grp.<span class="hljs-title function_">getAllArtefactsAt</span>(items);
 
-                    <span class="hljs-keyword">if</span>(result) results = results.concat(result);
+                    <span class="hljs-keyword">if</span>(result) results = results.<span class="hljs-title function_">concat</span>(result);
                 }
             }
             <span class="hljs-keyword">return</span> results;

@@ -165,6 +165,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/lineSpiral.html">
+                  ./source/factory/lineSpiral.js
+                </a>
+              
+                
                 <a class="source" href="../factory/loom.html">
                   ./source/factory/loom.js
                 </a>
@@ -257,6 +262,11 @@
                 
                 <a class="source" href="../factory/radialGradient.html">
                   ./source/factory/radialGradient.js
+                </a>
+              
+                
+                <a class="source" href="../factory/rawAsset.html">
+                  ./source/factory/rawAsset.js
                 </a>
               
                 
@@ -488,7 +498,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">P = Ωempty</span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">P = Ωempty</span>) {</pre></div></div>
             
         </li>
         
@@ -518,7 +528,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        pivot: <span class="hljs-string">&#x27;&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -533,7 +543,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        pivotCorner: <span class="hljs-string">&#x27;&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">pivotCorner</span>: <span class="hljs-string">&#x27;&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -548,7 +558,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        pivotPin: <span class="hljs-number">0</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">pivotPin</span>: <span class="hljs-number">0</span>,</pre></div></div>
             
         </li>
         
@@ -563,12 +573,12 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        addPivotHandle: <span class="hljs-literal">false</span>,
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">addPivotHandle</span>: <span class="hljs-literal">false</span>,
         <span class="hljs-attr">addPivotOffset</span>: <span class="hljs-literal">true</span>,
         <span class="hljs-attr">addPivotRotation</span>: <span class="hljs-literal">false</span>,
     };
-    P.defs = mergeOver(P.defs, defaultAttributes);
-    mergeOver(P, defaultAttributes);</pre></div></div>
+    P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);
+    <span class="hljs-title function_">mergeOver</span>(P, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -583,7 +593,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">&#x27;pivot&#x27;</span>]);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetObjects</span>, [<span class="hljs-string">&#x27;pivot&#x27;</span>]);</pre></div></div>
             
         </li>
         
@@ -626,9 +636,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> G = P.getters,
-        S = P.setters,
-        D = P.deltaSetters;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> G = P.<span class="hljs-property">getters</span>,
+        S = P.<span class="hljs-property">setters</span>,
+        D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
             
         </li>
         
@@ -656,41 +666,41 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    S.pivot = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">pivot</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-        <span class="hljs-keyword">if</span> (isa_boolean(item) &amp;&amp; !item) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_boolean</span>(item) &amp;&amp; !item) {
 
-            <span class="hljs-built_in">this</span>.pivot = <span class="hljs-literal">null</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">pivot</span> = <span class="hljs-literal">null</span>;
 
-            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.lockTo[<span class="hljs-number">0</span>] === <span class="hljs-string">&#x27;pivot&#x27;</span>) <span class="hljs-built_in">this</span>.lockTo[<span class="hljs-number">0</span>] = <span class="hljs-string">&#x27;start&#x27;</span>;
-            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.lockTo[<span class="hljs-number">1</span>] === <span class="hljs-string">&#x27;pivot&#x27;</span>) <span class="hljs-built_in">this</span>.lockTo[<span class="hljs-number">1</span>] = <span class="hljs-string">&#x27;start&#x27;</span>;
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>[<span class="hljs-number">0</span>] === <span class="hljs-string">&#x27;pivot&#x27;</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>[<span class="hljs-number">0</span>] = <span class="hljs-string">&#x27;start&#x27;</span>;
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>[<span class="hljs-number">1</span>] === <span class="hljs-string">&#x27;pivot&#x27;</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>[<span class="hljs-number">1</span>] = <span class="hljs-string">&#x27;start&#x27;</span>;
 
-            <span class="hljs-built_in">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
-            <span class="hljs-built_in">this</span>.dirtyStampHandlePositions = <span class="hljs-literal">true</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampPositions</span> = <span class="hljs-literal">true</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampHandlePositions</span> = <span class="hljs-literal">true</span>;
         }
         <span class="hljs-keyword">else</span> {
 
-            <span class="hljs-keyword">let</span> oldPivot = <span class="hljs-built_in">this</span>.pivot,
-                name = <span class="hljs-built_in">this</span>.name;
+            <span class="hljs-keyword">let</span> oldPivot = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pivot</span>,
+                name = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;
 
-            <span class="hljs-keyword">let</span> newPivot = (item.substring) ? artefact[item] : item;
+            <span class="hljs-keyword">let</span> newPivot = (item.<span class="hljs-property">substring</span>) ? artefact[item] : item;
 
             <span class="hljs-keyword">if</span> (!newPivot) {
 
                 newPivot = asset[item];
 
-                <span class="hljs-keyword">if</span> (newPivot &amp;&amp; newPivot.type !== <span class="hljs-string">&#x27;Cell&#x27;</span>) newPivot = <span class="hljs-literal">false</span>;
+                <span class="hljs-keyword">if</span> (newPivot &amp;&amp; newPivot.<span class="hljs-property">type</span> !== <span class="hljs-string">&#x27;Cell&#x27;</span>) newPivot = <span class="hljs-literal">false</span>;
             }
 
-            <span class="hljs-keyword">if</span> (newPivot &amp;&amp; newPivot.name) {
+            <span class="hljs-keyword">if</span> (newPivot &amp;&amp; newPivot.<span class="hljs-property">name</span>) {
 
-                <span class="hljs-keyword">if</span> (oldPivot &amp;&amp; oldPivot.name !== newPivot.name) removeItem(oldPivot.pivoted, name);
+                <span class="hljs-keyword">if</span> (oldPivot &amp;&amp; oldPivot.<span class="hljs-property">name</span> !== newPivot.<span class="hljs-property">name</span>) <span class="hljs-title function_">removeItem</span>(oldPivot.<span class="hljs-property">pivoted</span>, name);
 
-                pushUnique(newPivot.pivoted, name);
+                <span class="hljs-title function_">pushUnique</span>(newPivot.<span class="hljs-property">pivoted</span>, name);
 
-                <span class="hljs-built_in">this</span>.pivot = newPivot;
-                <span class="hljs-built_in">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
-                <span class="hljs-built_in">this</span>.dirtyStampHandlePositions = <span class="hljs-literal">true</span>;
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">pivot</span> = newPivot;
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampPositions</span> = <span class="hljs-literal">true</span>;
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampHandlePositions</span> = <span class="hljs-literal">true</span>;
             }
         }
     };</pre></div></div>
@@ -708,10 +718,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.pivotCorners = [<span class="hljs-string">&#x27;topLeft&#x27;</span>, <span class="hljs-string">&#x27;topRight&#x27;</span>, <span class="hljs-string">&#x27;bottomRight&#x27;</span>, <span class="hljs-string">&#x27;bottomLeft&#x27;</span>];
-    S.pivotCorner = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">pivotCorners</span> = [<span class="hljs-string">&#x27;topLeft&#x27;</span>, <span class="hljs-string">&#x27;topRight&#x27;</span>, <span class="hljs-string">&#x27;bottomRight&#x27;</span>, <span class="hljs-string">&#x27;bottomLeft&#x27;</span>];
+    S.<span class="hljs-property">pivotCorner</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.pivotCorners.indexOf(item) &gt;= <span class="hljs-number">0</span>) <span class="hljs-built_in">this</span>.pivotCorner = item;
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">pivotCorners</span>.<span class="hljs-title function_">indexOf</span>(item) &gt;= <span class="hljs-number">0</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">pivotCorner</span> = item;
     };</pre></div></div>
             
         </li>
@@ -727,20 +737,20 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    S.addPivotHandle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">addPivotHandle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-        <span class="hljs-built_in">this</span>.addPivotHandle = item;
-        <span class="hljs-built_in">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">addPivotHandle</span> = item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHandle</span> = <span class="hljs-literal">true</span>;
     };
-    S.addPivotOffset = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+    S.<span class="hljs-property">addPivotOffset</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-        <span class="hljs-built_in">this</span>.addPivotOffset = item;
-        <span class="hljs-built_in">this</span>.dirtyOffset = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">addPivotOffset</span> = item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOffset</span> = <span class="hljs-literal">true</span>;
     };
-    S.addPivotRotation = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+    S.<span class="hljs-property">addPivotRotation</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-        <span class="hljs-built_in">this</span>.addPivotRotation = item;
-        <span class="hljs-built_in">this</span>.dirtyRotation = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">addPivotRotation</span> = item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyRotation</span> = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -769,9 +779,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.updatePivotSubscribers = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">updatePivotSubscribers</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-built_in">this</span>.pivoted.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">pivoted</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
             <span class="hljs-keyword">let</span> instance = artefact[name];
 
@@ -779,20 +789,20 @@
 
                 instance = asset[name];
 
-                <span class="hljs-keyword">if</span> (!instance || instance.type !== <span class="hljs-string">&#x27;Cell&#x27;</span>) instance = <span class="hljs-literal">false</span>;
+                <span class="hljs-keyword">if</span> (!instance || instance.<span class="hljs-property">type</span> !== <span class="hljs-string">&#x27;Cell&#x27;</span>) instance = <span class="hljs-literal">false</span>;
             }
 
             <span class="hljs-keyword">if</span> (instance) {
 
-                instance.dirtyStart = <span class="hljs-literal">true</span>;
-                <span class="hljs-keyword">if</span> (instance.addPivotHandle) instance.dirtyHandle = <span class="hljs-literal">true</span>;
-                <span class="hljs-keyword">if</span> (instance.addPivotOffset) instance.dirtyOffset = <span class="hljs-literal">true</span>;
-                <span class="hljs-keyword">if</span> (instance.addPivotRotation) instance.dirtyRotation = <span class="hljs-literal">true</span>;
+                instance.<span class="hljs-property">dirtyStart</span> = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">if</span> (instance.<span class="hljs-property">addPivotHandle</span>) instance.<span class="hljs-property">dirtyHandle</span> = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">if</span> (instance.<span class="hljs-property">addPivotOffset</span>) instance.<span class="hljs-property">dirtyOffset</span> = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">if</span> (instance.<span class="hljs-property">addPivotRotation</span>) instance.<span class="hljs-property">dirtyRotation</span> = <span class="hljs-literal">true</span>;
 
-                <span class="hljs-keyword">if</span> (instance.type === <span class="hljs-string">&#x27;Polyline&#x27;</span>) instance.dirtyPins = <span class="hljs-literal">true</span>;
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (instance.type === <span class="hljs-string">&#x27;Line&#x27;</span> || instance.type === <span class="hljs-string">&#x27;Quadratic&#x27;</span> || instance.type === <span class="hljs-string">&#x27;Bezier&#x27;</span>) instance.dirtyPins.push(<span class="hljs-built_in">this</span>.name);
+                <span class="hljs-keyword">if</span> (instance.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Polyline&#x27;</span>) instance.<span class="hljs-property">dirtyPins</span> = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (instance.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Line&#x27;</span> || instance.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Quadratic&#x27;</span> || instance.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Bezier&#x27;</span>) instance.<span class="hljs-property">dirtyPins</span>.<span class="hljs-title function_">push</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
             }
-        }, <span class="hljs-built_in">this</span>);
+        }, <span class="hljs-variable language_">this</span>);
     };</pre></div></div>
             
         </li>

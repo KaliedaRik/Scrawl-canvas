@@ -44,9 +44,8 @@ scrawl.makeFilter({
 
 scrawl.makeFilter({
     name: 'blur',
-    method: 'blur',
+    method: 'gaussianBlur',
     radius: 5,
-    passes: 1,
 });
 
 scrawl.makeFilter({

@@ -165,6 +165,11 @@
                 </a>
               
                 
+                <a class="source" href="lineSpiral.html">
+                  ./source/factory/lineSpiral.js
+                </a>
+              
+                
                 <a class="source" href="loom.html">
                   ./source/factory/loom.js
                 </a>
@@ -257,6 +262,11 @@
                 
                 <a class="source" href="radialGradient.html">
                   ./source/factory/radialGradient.js
+                </a>
+              
+                
+                <a class="source" href="rawAsset.html">
+                  ./source/factory/rawAsset.js
                 </a>
               
                 
@@ -514,7 +524,7 @@
 <li><a href="../../demo/canvas-030.html">Canvas-030</a> - Polyline entity functionality</li>
 <li><a href="../../demo/canvas-038.html">Canvas-038</a> - Responsive Shape-based entitys</li>
 <li><a href="../../demo/dom-015.html">DOM-015</a> - Use stacked DOM artefact corners as pivot points</li>
-<li><a href="../../demo/component-004.html">Component-004</a> - Scrawl-canvas packets - save and load a range of different entitys</li>
+<li><a href="../../demo/packets-002.html">Packets-002</a> - Scrawl-canvas packets - save and load a range of different entitys</li>
 </ul>
 
             </div>
@@ -532,7 +542,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { mergeOver, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
@@ -551,10 +561,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Shape = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">Shape</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-built_in">this</span>.shapeInit(items);
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">shapeInit</span>(items);
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -570,11 +580,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Shape.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">&#x27;Shape&#x27;</span>;
-P.lib = <span class="hljs-string">&#x27;entity&#x27;</span>;
-P.isArtefact = <span class="hljs-literal">true</span>;
-P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">Shape</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
+P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Shape&#x27;</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;entity&#x27;</span>;
+P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">true</span>;
+P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -593,8 +603,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = baseMix(P);
-P = shapeMix(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);
+P = <span class="hljs-title function_">shapeMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -623,7 +633,7 @@ P = shapeMix(P);</pre></div></div>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> defaultAttributes = {};
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
+P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -707,15 +717,15 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.cleanSpecies = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">cleanSpecies</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-built_in">this</span>.dirtySpecies = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtySpecies</span> = <span class="hljs-literal">false</span>;
 };
 
-P.cleanStampHandlePositionsAdditionalActions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+P.<span class="hljs-property">cleanStampHandlePositionsAdditionalActions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> box = <span class="hljs-built_in">this</span>.localBox,
-    	stampHandle = <span class="hljs-built_in">this</span>.currentStampHandlePosition;
+    <span class="hljs-keyword">let</span> box = <span class="hljs-variable language_">this</span>.<span class="hljs-property">localBox</span>,
+    	stampHandle = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampHandlePosition</span>;
 
     stampHandle[<span class="hljs-number">0</span>] += box[<span class="hljs-number">0</span>];
     stampHandle[<span class="hljs-number">1</span>] += box[<span class="hljs-number">1</span>];
@@ -748,7 +758,7 @@ P.cleanStampHandlePositionsAdditionalActions = <span class="hljs-function"><span
 <ul>
 <li><code>pathDefinition</code> (required) - an <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d">SVG <code>d</code> attribute</a> String</li>
 </ul>
-<pre><code>scrawl.makeShape({
+<pre><code>scrawl.<span class="hljs-title function_">makeShape</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myArrow&#x27;</span>,
 
@@ -770,13 +780,13 @@ P.cleanStampHandlePositionsAdditionalActions = <span class="hljs-function"><span
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeShape = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeShape = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Shape(items);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Shape</span>(items);
 };
 
-<span class="hljs-title">constructors</span>.<span class="hljs-title">Shape</span> = <span class="hljs-title">Shape</span>;</pre></div></div>
+constructors.<span class="hljs-property">Shape</span> = <span class="hljs-title class_">Shape</span>;</pre></div></div>
             
         </li>
         

@@ -165,6 +165,11 @@
                 </a>
               
                 
+                <a class="source" href="lineSpiral.html">
+                  ./source/factory/lineSpiral.js
+                </a>
+              
+                
                 <a class="source" href="loom.html">
                   ./source/factory/loom.js
                 </a>
@@ -257,6 +262,11 @@
                 
                 <a class="source" href="radialGradient.html">
                   ./source/factory/radialGradient.js
+                </a>
+              
+                
+                <a class="source" href="rawAsset.html">
+                  ./source/factory/rawAsset.js
                 </a>
               
                 
@@ -494,8 +504,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">canvas</span>, <span class="hljs-title">cell</span>, <span class="hljs-title">group</span>, <span class="hljs-title">artefact</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
-<span class="hljs-keyword">import</span> { mergeOver, isa_obj, λ<span class="hljs-built_in">this</span>, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, canvas, cell, group, artefact } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { mergeOver, isa_obj, λ<span class="hljs-variable language_">this</span>, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 <span class="hljs-keyword">import</span> assetMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/asset.js&#x27;</span>;</pre></div></div>
@@ -513,9 +523,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> ImageAsset = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">ImageAsset</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.assetConstructor(items);
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">assetConstructor</span>(items);
 };</pre></div></div>
             
         </li>
@@ -531,11 +541,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = ImageAsset.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">&#x27;Image&#x27;</span>;
-P.lib = <span class="hljs-string">&#x27;asset&#x27;</span>;
-P.isArtefact = <span class="hljs-literal">false</span>;
-P.isAsset = <span class="hljs-literal">true</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">ImageAsset</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
+P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Image&#x27;</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;asset&#x27;</span>;
+P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">false</span>;
+P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">true</span>;</pre></div></div>
             
         </li>
         
@@ -550,8 +560,8 @@ P.isAsset = <span class="hljs-literal">true</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = baseMix(P);
-P = assetMix(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);
+P = <span class="hljs-title function_">assetMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -582,7 +592,7 @@ P = assetMix(P);</pre></div></div>
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p><strong>intrinsicDimensions</strong> - Javascript object which defines the intrinsic dimensions of each image contributing to an &lt;img&gt; element’s <code>srcset</code> attribute. Can also be set in Javascript code:</p>
-<pre><code>filename-<span class="hljs-built_in">String</span>: [width-<span class="hljs-built_in">Number</span>, height-<span class="hljs-built_in">Number</span>]
+<pre><code>filename-<span class="hljs-title class_">String</span>: [width-<span class="hljs-title class_">Number</span>, height-<span class="hljs-title class_">Number</span>]
 {
     <span class="hljs-string">&#x27;river-300.jpg&#x27;</span>: [<span class="hljs-number">300</span>, <span class="hljs-number">225</span>], 
     <span class="hljs-string">&#x27;river-600.jpg&#x27;</span>: [<span class="hljs-number">600</span>, <span class="hljs-number">450</span>], 
@@ -592,9 +602,9 @@ P = assetMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    intrinsicDimensions: <span class="hljs-literal">null</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">intrinsicDimensions</span>: <span class="hljs-literal">null</span>,
 };
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
+P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -610,13 +620,13 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.saveAsPacket = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">return</span> [<span class="hljs-built_in">this</span>.name, <span class="hljs-built_in">this</span>.type, <span class="hljs-built_in">this</span>.lib, {}];
+    <span class="hljs-keyword">return</span> [<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">type</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">lib</span>, {}];
 };
-P.stringifyFunction = λ<span class="hljs-literal">null</span>;
-P.processPacketOut = λ<span class="hljs-literal">null</span>;
-P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div>
+P.<span class="hljs-property">stringifyFunction</span> = λ<span class="hljs-literal">null</span>;
+P.<span class="hljs-property">processPacketOut</span> = λ<span class="hljs-literal">null</span>;
+P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
@@ -631,7 +641,7 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.clone = λ<span class="hljs-built_in">this</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">clone</span> = λ<span class="hljs-variable language_">this</span>;</pre></div></div>
             
         </li>
         
@@ -660,9 +670,9 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.getters,
-    S = P.setters,
-    D = P.deltaSetters;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.<span class="hljs-property">getters</span>,
+    S = P.<span class="hljs-property">setters</span>,
+    D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
             
         </li>
         
@@ -677,7 +687,7 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.source = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">source</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-keyword">if</span> (item) {</pre></div></div>
             
@@ -694,15 +704,15 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> ([<span class="hljs-string">&#x27;IMG&#x27;</span>, <span class="hljs-string">&#x27;PICTURE&#x27;</span>].indexOf(item.tagName.toUpperCase()) &gt;= <span class="hljs-number">0</span>) {
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> ([<span class="hljs-string">&#x27;IMG&#x27;</span>, <span class="hljs-string">&#x27;PICTURE&#x27;</span>].<span class="hljs-title function_">indexOf</span>(item.<span class="hljs-property">tagName</span>.<span class="hljs-title function_">toUpperCase</span>()) &gt;= <span class="hljs-number">0</span>) {
 
-            <span class="hljs-built_in">this</span>.source = item;
-            <span class="hljs-built_in">this</span>.sourceNaturalWidth = item.naturalWidth;
-            <span class="hljs-built_in">this</span>.sourceNaturalHeight = item.naturalHeight;
-            <span class="hljs-built_in">this</span>.sourceLoaded = item.complete;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span> = item;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span> = item.<span class="hljs-property">naturalWidth</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span> = item.<span class="hljs-property">naturalHeight</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceLoaded</span> = item.<span class="hljs-property">complete</span>;
         }
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.sourceLoaded) <span class="hljs-built_in">this</span>.notifySubscribers();
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceLoaded</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">notifySubscribers</span>();
     }
 };</pre></div></div>
             
@@ -719,10 +729,10 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.currentSrc = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">currentSrc</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.currentSrc = item;
-    <span class="hljs-built_in">this</span>.currentFile = <span class="hljs-built_in">this</span>.currentSrc.split(<span class="hljs-string">&quot;/&quot;</span>).pop();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentSrc</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFile</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentSrc</span>.<span class="hljs-title function_">split</span>(<span class="hljs-string">&quot;/&quot;</span>).<span class="hljs-title function_">pop</span>();
 };</pre></div></div>
             
         </li>
@@ -751,22 +761,22 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.checkSource = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">width, height</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">checkSource</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">width, height</span>) {
 
-    <span class="hljs-keyword">let</span> el = <span class="hljs-built_in">this</span>.source,
+    <span class="hljs-keyword">let</span> el = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>,
         action = <span class="hljs-string">&#x27;element&#x27;</span>;
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.sourceLoaded) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceLoaded</span>) {
 
-        <span class="hljs-keyword">let</span> iDims = <span class="hljs-built_in">this</span>.intrinsicDimensions[<span class="hljs-built_in">this</span>.currentFile];
+        <span class="hljs-keyword">let</span> iDims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">intrinsicDimensions</span>[<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFile</span>];
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.currentSrc !== el.currentSrc) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentSrc</span> !== el.<span class="hljs-property">currentSrc</span>) {
 
-            <span class="hljs-built_in">this</span>.set({
-                <span class="hljs-attr">currentSrc</span>: el.currentSrc
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
+                <span class="hljs-attr">currentSrc</span>: el.<span class="hljs-property">currentSrc</span>
             });
 
-            iDims = <span class="hljs-built_in">this</span>.intrinsicDimensions[<span class="hljs-built_in">this</span>.currentFile];
+            iDims = <span class="hljs-variable language_">this</span>.<span class="hljs-property">intrinsicDimensions</span>[<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFile</span>];
             
             <span class="hljs-keyword">if</span> (iDims) action = <span class="hljs-string">&#x27;intrinsic&#x27;</span>;
             <span class="hljs-keyword">else</span> action = <span class="hljs-string">&#x27;zero&#x27;</span>;
@@ -777,34 +787,34 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;zero&#x27;</span> :
 
-                <span class="hljs-built_in">this</span>.sourceNaturalWidth = <span class="hljs-number">0</span>;
-                <span class="hljs-built_in">this</span>.sourceNaturalHeight = <span class="hljs-number">0</span>;
-                <span class="hljs-built_in">this</span>.notifySubscribers();
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span> = <span class="hljs-number">0</span>;
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span> = <span class="hljs-number">0</span>;
+                <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">notifySubscribers</span>();
                 <span class="hljs-keyword">break</span>;
 
             <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;intrinsic&#x27;</span> :
 
-                <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.sourceNaturalWidth !== iDims[<span class="hljs-number">0</span>] || 
-                        <span class="hljs-built_in">this</span>.sourceNaturalHeight !== iDims[<span class="hljs-number">1</span>]) {
+                <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span> !== iDims[<span class="hljs-number">0</span>] || 
+                        <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span> !== iDims[<span class="hljs-number">1</span>]) {
 
-                    <span class="hljs-built_in">this</span>.sourceNaturalWidth = iDims[<span class="hljs-number">0</span>];
-                    <span class="hljs-built_in">this</span>.sourceNaturalHeight = iDims[<span class="hljs-number">1</span>];
+                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span> = iDims[<span class="hljs-number">0</span>];
+                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span> = iDims[<span class="hljs-number">1</span>];
 
-                    <span class="hljs-built_in">this</span>.notifySubscribers();
+                    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">notifySubscribers</span>();
                 }
                 <span class="hljs-keyword">break</span>;
 
-            <span class="hljs-keyword">default</span>:
+            <span class="hljs-attr">default</span>:
 
-                <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.sourceNaturalWidth !== el.naturalWidth || 
-                        <span class="hljs-built_in">this</span>.sourceNaturalHeight !== el.naturalHeight || 
-                        <span class="hljs-built_in">this</span>.sourceNaturalWidth !== width ||
-                        <span class="hljs-built_in">this</span>.sourceNaturalHeight !== height) {
+                <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span> !== el.<span class="hljs-property">naturalWidth</span> || 
+                        <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span> !== el.<span class="hljs-property">naturalHeight</span> || 
+                        <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span> !== width ||
+                        <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span> !== height) {
 
-                    <span class="hljs-built_in">this</span>.sourceNaturalWidth = el.naturalWidth;
-                    <span class="hljs-built_in">this</span>.sourceNaturalHeight = el.naturalHeight;
+                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span> = el.<span class="hljs-property">naturalWidth</span>;
+                    <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span> = el.<span class="hljs-property">naturalHeight</span>;
 
-                    <span class="hljs-built_in">this</span>.notifySubscribers();
+                    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">notifySubscribers</span>();
                 }
         };
     }
@@ -866,21 +876,21 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> importImage = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> importImage = <span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) {
 
     <span class="hljs-keyword">let</span> reg = <span class="hljs-regexp">/.*\/(.*?)\./</span>,
         results = [];
 
-    args.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
+    args.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
 
         <span class="hljs-keyword">let</span> name, url, className, visibility, 
             parent = <span class="hljs-literal">false</span>;
 
         <span class="hljs-keyword">let</span> flag = <span class="hljs-literal">false</span>;
 
-        <span class="hljs-keyword">if</span> (item.substring) {
+        <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) {
 
-            <span class="hljs-keyword">let</span> match = reg.exec(item);
+            <span class="hljs-keyword">let</span> match = reg.<span class="hljs-title function_">exec</span>(item);
 
             name = (match &amp;&amp; match[<span class="hljs-number">1</span>]) ? match[<span class="hljs-number">1</span>] : <span class="hljs-string">&#x27;&#x27;</span>;
             url = item;
@@ -891,16 +901,16 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
         }
         <span class="hljs-keyword">else</span> {
 
-            item = (isa_obj(item)) ? item : <span class="hljs-literal">false</span>;
+            item = (<span class="hljs-title function_">isa_obj</span>(item)) ? item : <span class="hljs-literal">false</span>;
 
-            <span class="hljs-keyword">if</span> (item &amp;&amp; item.src) {
+            <span class="hljs-keyword">if</span> (item &amp;&amp; item.<span class="hljs-property">src</span>) {
 
-                name = item.name || <span class="hljs-string">&#x27;&#x27;</span>;
+                name = item.<span class="hljs-property">name</span> || <span class="hljs-string">&#x27;&#x27;</span>;
 
-                url = item.src;
-                className = item.className || <span class="hljs-string">&#x27;&#x27;</span>;
-                visibility = item.visibility || <span class="hljs-literal">false</span>;
-                <span class="hljs-keyword">if</span> (item.parent) parent = <span class="hljs-built_in">document</span>.querySelector(item.parent);
+                url = item.<span class="hljs-property">src</span>;
+                className = item.<span class="hljs-property">className</span> || <span class="hljs-string">&#x27;&#x27;</span>;
+                visibility = item.<span class="hljs-property">visibility</span> || <span class="hljs-literal">false</span>;
+                <span class="hljs-keyword">if</span> (item.<span class="hljs-property">parent</span>) parent = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(item.<span class="hljs-property">parent</span>);
 
                 flag = <span class="hljs-literal">true</span>;
             }
@@ -908,37 +918,37 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
         <span class="hljs-keyword">if</span> (flag) {
 
-            <span class="hljs-keyword">let</span> image = makeImageAsset({
+            <span class="hljs-keyword">let</span> image = <span class="hljs-title function_">makeImageAsset</span>({
                 <span class="hljs-attr">name</span>: name,
                 <span class="hljs-attr">intrinsicDimensions</span>: {},
             });
 
-            <span class="hljs-keyword">let</span> img = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;img&#x27;</span>);
+            <span class="hljs-keyword">let</span> img = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;img&#x27;</span>);
 
-            img.name = name;
-            img.className = className;
-            img.crossorigin = <span class="hljs-string">&#x27;anonymous&#x27;</span>;
+            img.<span class="hljs-property">name</span> = name;
+            img.<span class="hljs-property">className</span> = className;
+            img.<span class="hljs-property">crossorigin</span> = <span class="hljs-string">&#x27;anonymous&#x27;</span>;
 
-            img.style.display = (visibility) ? <span class="hljs-string">&#x27;block&#x27;</span> : <span class="hljs-string">&#x27;none&#x27;</span>;
+            img.<span class="hljs-property">style</span>.<span class="hljs-property">display</span> = (visibility) ? <span class="hljs-string">&#x27;block&#x27;</span> : <span class="hljs-string">&#x27;none&#x27;</span>;
 
-            <span class="hljs-keyword">if</span> (parent) parent.appendChild(img);
+            <span class="hljs-keyword">if</span> (parent) parent.<span class="hljs-title function_">appendChild</span>(img);
             
-            img.onload = <span class="hljs-function">() =&gt;</span> {
+            img.<span class="hljs-property">onload</span> = <span class="hljs-function">() =&gt;</span> {
 
-                image.set({
+                image.<span class="hljs-title function_">set</span>({
                     <span class="hljs-attr">source</span>: img,
                 });
             };
             
-            img.src = url;
+            img.<span class="hljs-property">src</span> = url;
 
-            image.set({
+            image.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">source</span>: img,
             });
 
-            results.push(name);
+            results.<span class="hljs-title function_">push</span>(name);
         }
-        <span class="hljs-keyword">else</span> results.push(<span class="hljs-literal">false</span>);
+        <span class="hljs-keyword">else</span> results.<span class="hljs-title function_">push</span>(<span class="hljs-literal">false</span>);
     });
     <span class="hljs-keyword">return</span> results;
 };</pre></div></div>
@@ -961,38 +971,38 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> importDomImage = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">query</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> importDomImage = <span class="hljs-keyword">function</span> (<span class="hljs-params">query</span>) {
 
     <span class="hljs-keyword">let</span> reg = <span class="hljs-regexp">/.*\/(.*?)\./</span>;
 
-    <span class="hljs-keyword">let</span> items = <span class="hljs-built_in">document</span>.querySelectorAll(query);
+    <span class="hljs-keyword">let</span> items = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(query);
 
-    items.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
+    items.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
 
         <span class="hljs-keyword">let</span> name;
 
-        <span class="hljs-keyword">if</span> ([<span class="hljs-string">&#x27;IMG&#x27;</span>, <span class="hljs-string">&#x27;PICTURE&#x27;</span>].indexOf(item.tagName.toUpperCase()) &gt;= <span class="hljs-number">0</span>) {
+        <span class="hljs-keyword">if</span> ([<span class="hljs-string">&#x27;IMG&#x27;</span>, <span class="hljs-string">&#x27;PICTURE&#x27;</span>].<span class="hljs-title function_">indexOf</span>(item.<span class="hljs-property">tagName</span>.<span class="hljs-title function_">toUpperCase</span>()) &gt;= <span class="hljs-number">0</span>) {
 
-            <span class="hljs-keyword">if</span> (item.id || item.name) name = item.id || item.name;
+            <span class="hljs-keyword">if</span> (item.<span class="hljs-property">id</span> || item.<span class="hljs-property">name</span>) name = item.<span class="hljs-property">id</span> || item.<span class="hljs-property">name</span>;
             <span class="hljs-keyword">else</span> {
 
-                <span class="hljs-keyword">let</span> match = reg.exec(item.src);
+                <span class="hljs-keyword">let</span> match = reg.<span class="hljs-title function_">exec</span>(item.<span class="hljs-property">src</span>);
                 name = (match &amp;&amp; match[<span class="hljs-number">1</span>]) ? match[<span class="hljs-number">1</span>] : <span class="hljs-string">&#x27;&#x27;</span>;
             }
 
-            <span class="hljs-keyword">let</span> intrinsics = item.dataset.dimensions || {};
-            <span class="hljs-keyword">if</span> (intrinsics.substring) intrinsics = <span class="hljs-built_in">JSON</span>.parse(intrinsics);
+            <span class="hljs-keyword">let</span> intrinsics = item.<span class="hljs-property">dataset</span>.<span class="hljs-property">dimensions</span> || {};
+            <span class="hljs-keyword">if</span> (intrinsics.<span class="hljs-property">substring</span>) intrinsics = <span class="hljs-variable constant_">JSON</span>.<span class="hljs-title function_">parse</span>(intrinsics);
 
-            <span class="hljs-keyword">let</span> image = makeImageAsset({
+            <span class="hljs-keyword">let</span> image = <span class="hljs-title function_">makeImageAsset</span>({
                 <span class="hljs-attr">name</span>: name,
                 <span class="hljs-attr">source</span>: item,
                 <span class="hljs-attr">intrinsicDimensions</span>: intrinsics,
-                <span class="hljs-attr">currentSrc</span>: item.currentSrc,
+                <span class="hljs-attr">currentSrc</span>: item.<span class="hljs-property">currentSrc</span>,
             });
 
-            item.onload = <span class="hljs-function">() =&gt;</span> {
+            item.<span class="hljs-property">onload</span> = <span class="hljs-function">() =&gt;</span> {
 
-                image.set({
+                image.<span class="hljs-title function_">set</span>({
                     <span class="hljs-attr">source</span>: item,
                 });
             };
@@ -1026,17 +1036,17 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> createImageFromCell = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item, stashAsAsset = <span class="hljs-literal">false</span></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> createImageFromCell = <span class="hljs-keyword">function</span> (<span class="hljs-params">item, stashAsAsset = <span class="hljs-literal">false</span></span>) {
 
-    <span class="hljs-keyword">let</span> mycell = (item.substring) ? cell[item] || canvas[item] : item;
+    <span class="hljs-keyword">let</span> mycell = (item.<span class="hljs-property">substring</span>) ? cell[item] || canvas[item] : item;
 
-    <span class="hljs-keyword">if</span> (mycell.type === <span class="hljs-string">&#x27;Canvas&#x27;</span>) mycell = mycell.base;
+    <span class="hljs-keyword">if</span> (mycell.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Canvas&#x27;</span>) mycell = mycell.<span class="hljs-property">base</span>;
 
-    <span class="hljs-keyword">if</span> (mycell.type === <span class="hljs-string">&#x27;Cell&#x27;</span>) {
+    <span class="hljs-keyword">if</span> (mycell.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Cell&#x27;</span>) {
 
-        mycell.stashOutput = <span class="hljs-literal">true</span>;
+        mycell.<span class="hljs-property">stashOutput</span> = <span class="hljs-literal">true</span>;
 
-        <span class="hljs-keyword">if</span> (stashAsAsset) mycell.stashOutputAsAsset = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (stashAsAsset) mycell.<span class="hljs-property">stashOutputAsAsset</span> = <span class="hljs-literal">true</span>;
     }
 };</pre></div></div>
             
@@ -1053,23 +1063,23 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> createImageFromGroup = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item, stashAsAsset = <span class="hljs-literal">false</span></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> createImageFromGroup = <span class="hljs-keyword">function</span> (<span class="hljs-params">item, stashAsAsset = <span class="hljs-literal">false</span></span>) {
 
     <span class="hljs-keyword">let</span> mygroup;
 
-    <span class="hljs-keyword">if</span> (item &amp;&amp; !item.substring) {
+    <span class="hljs-keyword">if</span> (item &amp;&amp; !item.<span class="hljs-property">substring</span>) {
 
-        <span class="hljs-keyword">if</span> (item.type === <span class="hljs-string">&#x27;Group&#x27;</span>) mygroup = item;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.type === <span class="hljs-string">&#x27;Cell&#x27;</span>) mygroup = group[item.name];
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.type === <span class="hljs-string">&#x27;Canvas&#x27;</span>) mygroup = group[item.base.name];
+        <span class="hljs-keyword">if</span> (item.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Group&#x27;</span>) mygroup = item;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Cell&#x27;</span>) mygroup = group[item.<span class="hljs-property">name</span>];
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Canvas&#x27;</span>) mygroup = group[item.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>];
     }
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item &amp;&amp; item.substring) mygroup = group[item];
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item &amp;&amp; item.<span class="hljs-property">substring</span>) mygroup = group[item];
 
     <span class="hljs-keyword">if</span> (mygroup) {
 
-        mygroup.stashOutput = <span class="hljs-literal">true</span>;
+        mygroup.<span class="hljs-property">stashOutput</span> = <span class="hljs-literal">true</span>;
 
-        <span class="hljs-keyword">if</span> (stashAsAsset) mygroup.stashOutputAsAsset = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (stashAsAsset) mygroup.<span class="hljs-property">stashOutputAsAsset</span> = <span class="hljs-literal">true</span>;
     }
 };</pre></div></div>
             
@@ -1086,15 +1096,15 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> createImageFromEntity = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item, stashAsAsset = <span class="hljs-literal">false</span></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> createImageFromEntity = <span class="hljs-keyword">function</span> (<span class="hljs-params">item, stashAsAsset = <span class="hljs-literal">false</span></span>) {
 
-    <span class="hljs-keyword">let</span> myentity = (item.substring) ? artefact[item] : item;
+    <span class="hljs-keyword">let</span> myentity = (item.<span class="hljs-property">substring</span>) ? artefact[item] : item;
 
-    <span class="hljs-keyword">if</span> (myentity.isArtefact) {
+    <span class="hljs-keyword">if</span> (myentity.<span class="hljs-property">isArtefact</span>) {
 
-        myentity.stashOutput = <span class="hljs-literal">true</span>;
+        myentity.<span class="hljs-property">stashOutput</span> = <span class="hljs-literal">true</span>;
 
-        <span class="hljs-keyword">if</span> (stashAsAsset) myentity.stashOutputAsAsset = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (stashAsAsset) myentity.<span class="hljs-property">stashOutputAsAsset</span> = <span class="hljs-literal">true</span>;
     }
 };</pre></div></div>
             
@@ -1111,13 +1121,13 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeImageAsset = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeImageAsset = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> ImageAsset(items);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ImageAsset</span>(items);
 };
 
-<span class="hljs-title">constructors</span>.<span class="hljs-title">ImageAsset</span> = <span class="hljs-title">ImageAsset</span>;</pre></div></div>
+constructors.<span class="hljs-property">ImageAsset</span> = <span class="hljs-title class_">ImageAsset</span>;</pre></div></div>
             
         </li>
         

@@ -280,6 +280,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-051.html">
+                  ./demo/canvas-051.js
+                </a>
+              
+                
                 <a class="source" href="core-001.html">
                   ./demo/core-001.js
                 </a>
@@ -644,6 +649,16 @@
                   ./demo/temp-inkscapeSvgFilters.js
                 </a>
               
+                
+                <a class="source" href="tensorflow-001.html">
+                  ./demo/tensorflow-001.js
+                </a>
+              
+                
+                <a class="source" href="tensorflow-002.html">
+                  ./demo/tensorflow-002.js
+                </a>
+              
             </div>
           </div>
         </li>
@@ -692,40 +707,40 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.importDomImage(<span class="hljs-string">&#x27;.angels&#x27;</span>);
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.angels&#x27;</span>);
 
-<span class="hljs-keyword">let</span> canvas = scrawl.library.canvas.mycanvas;
+<span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
 
-canvas.set({
+canvas.<span class="hljs-title function_">set</span>({
 
     <span class="hljs-attr">fit</span>: <span class="hljs-string">&#x27;cover&#x27;</span>,
     <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,
 
-}).setBase({
+}).<span class="hljs-title function_">setBase</span>({
 
     <span class="hljs-attr">width</span>: <span class="hljs-number">800</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-number">400</span>,
 
-}).setAsCurrentCanvas();
+}).<span class="hljs-title function_">setAsCurrentCanvas</span>();
 
-<span class="hljs-keyword">let</span> magnifier = scrawl.makeGroup({
+<span class="hljs-keyword">let</span> magnifier = scrawl.<span class="hljs-title function_">makeGroup</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;magnifier-group&#x27;</span>,
-    <span class="hljs-attr">host</span>: canvas.base.name,
+    <span class="hljs-attr">host</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
     <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
 
 });
 
-scrawl.makeGroup({
+scrawl.<span class="hljs-title function_">makeGroup</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;background-group&#x27;</span>,
-    <span class="hljs-attr">host</span>: canvas.base.name,
+    <span class="hljs-attr">host</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
     <span class="hljs-attr">order</span>: <span class="hljs-number">2</span>
 });
 
 <span class="hljs-keyword">let</span> myradius = <span class="hljs-number">80</span>;
 
-<span class="hljs-keyword">let</span> mybackground = scrawl.makePicture({
+<span class="hljs-keyword">let</span> mybackground = scrawl.<span class="hljs-title function_">makePicture</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;background&#x27;</span>,
     <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;background-group&#x27;</span>,
@@ -741,7 +756,7 @@ scrawl.makeGroup({
     <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;destination-over&#x27;</span>,
 });
 
-scrawl.makeWheel({
+scrawl.<span class="hljs-title function_">makeWheel</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;magnifier&#x27;</span>,
     <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;magnifier-group&#x27;</span>,
@@ -757,7 +772,7 @@ scrawl.makeWheel({
 
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;magnifier-rim&#x27;</span>,
 
@@ -769,7 +784,7 @@ scrawl.makeWheel({
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
 });
 
-<span class="hljs-keyword">let</span> myMagnifierImage = scrawl.makePicture({
+<span class="hljs-keyword">let</span> myMagnifierImage = scrawl.<span class="hljs-title function_">makePicture</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;enlarged&#x27;</span>,
     <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;magnifier-group&#x27;</span>,
@@ -792,27 +807,27 @@ scrawl.makeWheel({
     <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;source-in&#x27;</span>,
 });
 
-<span class="hljs-keyword">let</span> checkMagnifier = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+<span class="hljs-keyword">let</span> checkMagnifier = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">let</span> display, base;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-keyword">if</span> (!display) display = canvas.here;
-        <span class="hljs-keyword">if</span> (!base) base = canvas.base.here;
+        <span class="hljs-keyword">if</span> (!display) display = canvas.<span class="hljs-property">here</span>;
+        <span class="hljs-keyword">if</span> (!base) base = canvas.<span class="hljs-property">base</span>.<span class="hljs-property">here</span>;
 
-        <span class="hljs-keyword">let</span> active = display.active;
+        <span class="hljs-keyword">let</span> active = display.<span class="hljs-property">active</span>;
 
-        magnifier.set({
+        magnifier.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">visibility</span>: (active) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>,
         });
 
         <span class="hljs-keyword">if</span> (active) {
 
-            myMagnifierImage.set({
+            myMagnifierImage.<span class="hljs-title function_">set</span>({
 
-                <span class="hljs-attr">copyStartX</span>: (base.x * <span class="hljs-number">3</span>) - myradius,
-                <span class="hljs-attr">copyStartY</span>: (base.y * <span class="hljs-number">3</span>) - myradius,
+                <span class="hljs-attr">copyStartX</span>: (base.<span class="hljs-property">x</span> * <span class="hljs-number">3</span>) - myradius,
+                <span class="hljs-attr">copyStartY</span>: (base.<span class="hljs-property">y</span> * <span class="hljs-number">3</span>) - myradius,
             });
         }
     };
@@ -832,23 +847,23 @@ scrawl.makeWheel({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow,
 
-        displayed = canvas.here,
-        hidden = canvas.base.here,
+        displayed = canvas.<span class="hljs-property">here</span>,
+        hidden = canvas.<span class="hljs-property">base</span>.<span class="hljs-property">here</span>,
 
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
 Display canvas mouse - x: <span class="hljs-subst">${displayed.x}</span>, y: <span class="hljs-subst">${displayed.y}</span>
 Base canvas mouse - x: <span class="hljs-subst">${hidden.x}</span>, y: <span class="hljs-subst">${hidden.y}</span>`</span>;
     };
@@ -867,7 +882,7 @@ Base canvas mouse - x: <span class="hljs-subst">${hidden.x}</span>, y: <span cla
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
     <span class="hljs-attr">target</span>: canvas,
 
@@ -888,7 +903,7 @@ Base canvas mouse - x: <span class="hljs-subst">${hidden.x}</span>, y: <span cla
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.observeAndUpdate({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
 
     <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
     <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.control-item&#x27;</span>,
@@ -902,7 +917,7 @@ Base canvas mouse - x: <span class="hljs-subst">${hidden.x}</span>, y: <span cla
         <span class="hljs-attr">composite</span>: [<span class="hljs-string">&#x27;globalCompositeOperation&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
     },
 });
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#composite&#x27;</span>).value = <span class="hljs-string">&#x27;destination-over&#x27;</span>;</pre></div></div>
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#composite&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;destination-over&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -917,7 +932,7 @@ Base canvas mouse - x: <span class="hljs-subst">${hidden.x}</span>, y: <span cla
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

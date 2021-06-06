@@ -9,7 +9,7 @@ const canvas = scrawl.library.canvas.mycanvas;
 
 canvas.set({
 
-    isComponent: true,
+    baseMatchesCanvasDimensions: true,
     checkForResize: true,
 
 }).setAsCurrentCanvas();

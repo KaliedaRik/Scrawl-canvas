@@ -280,6 +280,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-051.html">
+                  ./demo/canvas-051.js
+                </a>
+              
+                
                 <a class="source" href="core-001.html">
                   ./demo/core-001.js
                 </a>
@@ -644,6 +649,16 @@
                   ./demo/temp-inkscapeSvgFilters.js
                 </a>
               
+                
+                <a class="source" href="tensorflow-001.html">
+                  ./demo/tensorflow-001.js
+                </a>
+              
+                
+                <a class="source" href="tensorflow-002.html">
+                  ./demo/tensorflow-002.js
+                </a>
+              
             </div>
           </div>
         </li>
@@ -695,9 +710,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.library.artefact.mycanvas;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;
 
-canvas.setBase({
+canvas.<span class="hljs-title function_">setBase</span>({
     <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;aliceblue&#x27;</span>
 });</pre></div></div>
             
@@ -731,9 +746,9 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>absoluteCoords.forEach(<span class="hljs-function">(<span class="hljs-params">item, index</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>absoluteCoords.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">item, index</span>) =&gt;</span> {
 
-    scrawl.makeWheel({
+    scrawl.<span class="hljs-title function_">makeWheel</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`pin-<span class="hljs-subst">${index}</span>`</span>,
 
@@ -765,7 +780,7 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeWheel({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeWheel</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pivot-wheel&#x27;</span>,
 
@@ -794,7 +809,7 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myline = scrawl.makePolyline({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myline = scrawl.<span class="hljs-title function_">makePolyline</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-polyline&#x27;</span>,</pre></div></div>
             
@@ -817,7 +832,7 @@ pins: absoluteCoords,</li>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    pins: absoluteCoords,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">pins</span>: absoluteCoords,</pre></div></div>
             
         </li>
         
@@ -838,7 +853,7 @@ pins: absoluteCoords,</li>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    tension: <span class="hljs-number">0</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">tension</span>: <span class="hljs-number">0</span>,</pre></div></div>
             
         </li>
         
@@ -853,7 +868,7 @@ pins: absoluteCoords,</li>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    closed: <span class="hljs-literal">false</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">closed</span>: <span class="hljs-literal">false</span>,</pre></div></div>
             
         </li>
         
@@ -871,7 +886,7 @@ pins: absoluteCoords,</li>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    startX: <span class="hljs-number">0</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">startX</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">startY</span>: <span class="hljs-number">0</span>,</pre></div></div>
             
         </li>
@@ -891,7 +906,7 @@ pins: absoluteCoords,</li>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    precision: <span class="hljs-number">0.05</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">precision</span>: <span class="hljs-number">0.05</span>,
 
     <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;pivot-wheel&#x27;</span>,
     <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;start&#x27;</span>,
@@ -921,7 +936,7 @@ pins: absoluteCoords,</li>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    showBoundingBox: <span class="hljs-literal">true</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">showBoundingBox</span>: <span class="hljs-literal">true</span>,</pre></div></div>
             
         </li>
         
@@ -939,7 +954,7 @@ pins: absoluteCoords,</li>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    useAsPath: <span class="hljs-literal">true</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
 });</pre></div></div>
             
         </li>
@@ -955,9 +970,9 @@ pins: absoluteCoords,</li>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>absoluteCoords.forEach(<span class="hljs-function">(<span class="hljs-params">item, index</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>absoluteCoords.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">item, index</span>) =&gt;</span> {
 
-    scrawl.makeBlock({
+    scrawl.<span class="hljs-title function_">makeBlock</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`block-<span class="hljs-subst">${index}</span>`</span>,
 
@@ -995,7 +1010,7 @@ pins: absoluteCoords,</li>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++) {
 
-    scrawl.makeWheel({
+    scrawl.<span class="hljs-title function_">makeWheel</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`normal-ball-<span class="hljs-subst">${i}</span>`</span>,
         <span class="hljs-attr">order</span>: <span class="hljs-number">2</span>,
@@ -1015,15 +1030,15 @@ pins: absoluteCoords,</li>
             <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0.001</span>,
         },
 
-    }).clone({
+    }).<span class="hljs-title function_">clone</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`constant-ball-<span class="hljs-subst">${i}</span>`</span>,
         <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;yellow&#x27;</span>,
-        <span class="hljs-attr">strokeStyle</span> :<span class="hljs-string">&#x27;blue&#x27;</span>,
+        strokeStyle :<span class="hljs-string">&#x27;blue&#x27;</span>,
 
         <span class="hljs-attr">pathPosition</span>: (i / <span class="hljs-number">100</span>) + <span class="hljs-number">0.5</span>,
 
-        <span class="hljs-attr">constantPathSpeed</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">constantSpeedAlongPath</span>: <span class="hljs-literal">true</span>,
     });
 }</pre></div></div>
             
@@ -1041,9 +1056,9 @@ pins: absoluteCoords,</li>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeDragZone({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeDragZone</span>({
     <span class="hljs-attr">zone</span>: canvas,
-    <span class="hljs-attr">collisionGroup</span>: canvas.base.name,
+    <span class="hljs-attr">collisionGroup</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
     <span class="hljs-attr">endOn</span>: [<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-string">&#x27;leave&#x27;</span>],
 
     <span class="hljs-attr">updateOnStart</span>: {
@@ -1073,19 +1088,19 @@ pins: absoluteCoords,</li>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
 Bounding box: <span class="hljs-subst">${myline.getBoundingBox().join(<span class="hljs-string">&#x27;, &#x27;</span>)}</span>`</span>;
     };
 }();</pre></div></div>
@@ -1103,7 +1118,7 @@ Bounding box: <span class="hljs-subst">${myline.getBoundingBox().join(<span clas
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
     <span class="hljs-attr">target</span>: canvas,
@@ -1123,7 +1138,7 @@ Bounding box: <span class="hljs-subst">${myline.getBoundingBox().join(<span clas
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.observeAndUpdate({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
 
     <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
     <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,
@@ -1160,18 +1175,18 @@ Bounding box: <span class="hljs-subst">${myline.getBoundingBox().join(<span clas
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> updatePins = <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> <span class="hljs-title function_">updatePins</span> = (<span class="hljs-params">e</span>) =&gt; {
 
-    e.preventDefault();
-    e.returnValue = <span class="hljs-literal">false</span>;
+    e.<span class="hljs-title function_">preventDefault</span>();
+    e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> val = e.target.value;
+    <span class="hljs-keyword">let</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
 
-    <span class="hljs-keyword">if</span> (val === <span class="hljs-string">&#x27;absolute&#x27;</span>) myline.set({ <span class="hljs-attr">pins</span>: absoluteCoords });
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (val === <span class="hljs-string">&#x27;relative&#x27;</span>) myline.set({ <span class="hljs-attr">pins</span>: relativeCoords });
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (val === <span class="hljs-string">&#x27;artefacts&#x27;</span>) myline.set({ <span class="hljs-attr">pins</span>: pivotCoords });
+    <span class="hljs-keyword">if</span> (val === <span class="hljs-string">&#x27;absolute&#x27;</span>) myline.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">pins</span>: absoluteCoords });
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (val === <span class="hljs-string">&#x27;relative&#x27;</span>) myline.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">pins</span>: relativeCoords });
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (val === <span class="hljs-string">&#x27;artefacts&#x27;</span>) myline.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">pins</span>: pivotCoords });
 };
-scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updatePins, <span class="hljs-string">&#x27;#pins&#x27;</span>);</pre></div></div>
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updatePins, <span class="hljs-string">&#x27;#pins&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1186,16 +1201,16 @@ scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#tension&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#pivot&#x27;</span>).value = <span class="hljs-string">&#x27;start&#x27;</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#closed&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#path&#x27;</span>).value = <span class="hljs-number">1</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#map&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#pins&#x27;</span>).value = <span class="hljs-string">&#x27;absolute&#x27;</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reverse&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#upend&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#roll&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#scale&#x27;</span>).value = <span class="hljs-number">1</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#tension&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#pivot&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;start&#x27;</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#closed&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#path&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#map&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#pins&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;absolute&#x27;</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reverse&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#upend&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#roll&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#scale&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
             
         </li>
         
@@ -1210,7 +1225,7 @@ scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library.entity);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">entity</span>);</pre></div></div>
             
         </li>
         
@@ -1225,28 +1240,28 @@ scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> killArtefact = <span class="hljs-function">(<span class="hljs-params">name, time, restore</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> <span class="hljs-title function_">killArtefact</span> = (<span class="hljs-params">name, time, restore</span>) =&gt; {
 
     <span class="hljs-keyword">let</span> groupname = <span class="hljs-string">&#x27;mycanvas_base&#x27;</span>,
         packet;
 
-    <span class="hljs-keyword">let</span> checkGroupBucket = <span class="hljs-function">(<span class="hljs-params">name, groupname</span>) =&gt;</span> {
+    <span class="hljs-keyword">let</span> <span class="hljs-title function_">checkGroupBucket</span> = (<span class="hljs-params">name, groupname</span>) =&gt; {
 
-        <span class="hljs-keyword">let</span> res = scrawl.library.group[groupname].artefactBuckets.filter(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e.name === name );
-        <span class="hljs-keyword">return</span> (res.length) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>;
+        <span class="hljs-keyword">let</span> res = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">group</span>[groupname].<span class="hljs-property">artefactBuckets</span>.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e.<span class="hljs-property">name</span> === name );
+        <span class="hljs-keyword">return</span> (res.<span class="hljs-property">length</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>;
     };
 
-    <span class="hljs-keyword">let</span> checkPinsArray = <span class="hljs-function">(<span class="hljs-params">name</span>) =&gt;</span> {
+    <span class="hljs-keyword">let</span> <span class="hljs-title function_">checkPinsArray</span> = (<span class="hljs-params">name</span>) =&gt; {
 
-        <span class="hljs-keyword">if</span> (myline.pins.indexOf(name) &gt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;no&#x27;</span>;
+        <span class="hljs-keyword">if</span> (myline.<span class="hljs-property">pins</span>.<span class="hljs-title function_">indexOf</span>(name) &gt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;no&#x27;</span>;
 
-        <span class="hljs-keyword">let</span> res = myline.pins.filter(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e &amp;&amp; e.name === name );
-        <span class="hljs-keyword">return</span> (res.length) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>;
+        <span class="hljs-keyword">let</span> res = myline.<span class="hljs-property">pins</span>.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e &amp;&amp; e.<span class="hljs-property">name</span> === name );
+        <span class="hljs-keyword">return</span> (res.<span class="hljs-property">length</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>;
     };
 
     <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
 
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${name}</span> alive
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`<span class="hljs-subst">${name}</span> alive
     removed from artefact: <span class="hljs-subst">${(scrawl.library.artefact[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
     removed from artefactnames: <span class="hljs-subst">${(scrawl.library.artefactnames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
     removed from entity: <span class="hljs-subst">${(scrawl.library.entity[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
@@ -1255,13 +1270,13 @@ scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <s
     removed from group.artefacts: <span class="hljs-subst">${(scrawl.library.group[groupname].artefacts.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
     removed from group.artefactBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>`</span>);
 
-        packet = scrawl.library.artefact[name].saveAsPacket();
+        packet = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>[name].<span class="hljs-title function_">saveAsPacket</span>();
 
-        scrawl.library.artefact[name].kill();
+        scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>[name].<span class="hljs-title function_">kill</span>();
 
         <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
 
-            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${name}</span> killed
+            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`<span class="hljs-subst">${name}</span> killed
     removed from artefact: <span class="hljs-subst">${(scrawl.library.artefact[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
     removed from artefactnames: <span class="hljs-subst">${(scrawl.library.artefactnames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
     removed from entity: <span class="hljs-subst">${(scrawl.library.entity[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
@@ -1270,13 +1285,13 @@ scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <s
     removed from group.artefacts: <span class="hljs-subst">${(scrawl.library.group[groupname].artefacts.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
     removed from group.artefactBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>`</span>);
 
-            canvas.actionPacket(packet);
+            canvas.<span class="hljs-title function_">actionPacket</span>(packet);
 
             <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
 
-                <span class="hljs-keyword">if</span> (restore) restore();
+                <span class="hljs-keyword">if</span> (restore) <span class="hljs-title function_">restore</span>();
 
-                <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${name}</span> resurrected
+                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`<span class="hljs-subst">${name}</span> resurrected
     removed from artefact: <span class="hljs-subst">${(scrawl.library.artefact[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
     removed from artefactnames: <span class="hljs-subst">${(scrawl.library.artefactnames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
     removed from entity: <span class="hljs-subst">${(scrawl.library.entity[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
@@ -1285,14 +1300,14 @@ scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <s
     removed from group.artefacts: <span class="hljs-subst">${(scrawl.library.group[groupname].artefacts.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
     removed from group.artefactBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>`</span>);
 
-                <span class="hljs-built_in">console</span>.log(myline.saveAsPacket());
+                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(myline.<span class="hljs-title function_">saveAsPacket</span>());
 
             }, <span class="hljs-number">500</span>);
         }, <span class="hljs-number">500</span>);
     }, time);
 };
 
-killArtefact(<span class="hljs-string">&#x27;pin-2&#x27;</span>, <span class="hljs-number">3000</span>, <span class="hljs-function">() =&gt;</span> myline.updatePinAt(<span class="hljs-string">&#x27;pin-2&#x27;</span>, <span class="hljs-number">2</span>));</pre></div></div>
+<span class="hljs-title function_">killArtefact</span>(<span class="hljs-string">&#x27;pin-2&#x27;</span>, <span class="hljs-number">3000</span>, <span class="hljs-function">() =&gt;</span> myline.<span class="hljs-title function_">updatePinAt</span>(<span class="hljs-string">&#x27;pin-2&#x27;</span>, <span class="hljs-number">2</span>));</pre></div></div>
             
         </li>
         

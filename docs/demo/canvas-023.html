@@ -280,6 +280,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-051.html">
+                  ./demo/canvas-051.js
+                </a>
+              
+                
                 <a class="source" href="core-001.html">
                   ./demo/core-001.js
                 </a>
@@ -644,6 +649,16 @@
                   ./demo/temp-inkscapeSvgFilters.js
                 </a>
               
+                
+                <a class="source" href="tensorflow-001.html">
+                  ./demo/tensorflow-001.js
+                </a>
+              
+                
+                <a class="source" href="tensorflow-002.html">
+                  ./demo/tensorflow-002.js
+                </a>
+              
             </div>
           </div>
         </li>
@@ -692,7 +707,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.library.artefact.mycanvas;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
             
         </li>
         
@@ -707,11 +722,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.importDomVideo(<span class="hljs-string">&#x27;.myvideo&#x27;</span>);
-scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);
-scrawl.importSprite(<span class="hljs-string">&#x27;img/cat-sprite.png&#x27;</span>);
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">importDomVideo</span>(<span class="hljs-string">&#x27;.myvideo&#x27;</span>);
+scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);
+scrawl.<span class="hljs-title function_">importSprite</span>(<span class="hljs-string">&#x27;img/cat-sprite.png&#x27;</span>);
 
-canvas.set({
+canvas.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;aliceblue&#x27;</span>,
     <span class="hljs-attr">css</span>: {
         <span class="hljs-attr">border</span>: <span class="hljs-string">&#x27;1px solid black&#x27;</span>
@@ -731,7 +746,7 @@ canvas.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makePicture({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makePicture</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myFlower&#x27;</span>,
     <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;iris&#x27;</span>,
@@ -748,7 +763,7 @@ canvas.set({
     <span class="hljs-attr">copyStartY</span>: <span class="hljs-number">100</span>,
 });
 
-<span class="hljs-keyword">let</span> viddyOne = scrawl.makePicture({
+<span class="hljs-keyword">let</span> viddyOne = scrawl.<span class="hljs-title function_">makePicture</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;first-video&#x27;</span>,
     <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;waves&#x27;</span>,
@@ -765,7 +780,7 @@ canvas.set({
     <span class="hljs-attr">copyStartY</span>: <span class="hljs-number">100</span>,
 });
 
-scrawl.makePicture({
+scrawl.<span class="hljs-title function_">makePicture</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;walking-cat&#x27;</span>,
     <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;cat-sprite&#x27;</span>,
@@ -778,7 +793,7 @@ scrawl.makePicture({
     <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
 
-}).playSprite();</pre></div></div>
+}).<span class="hljs-title function_">playSprite</span>();</pre></div></div>
             
         </li>
         
@@ -836,7 +851,7 @@ scrawl.makePicture({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myGrid = scrawl.makeGrid({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myGrid = scrawl.<span class="hljs-title function_">makeGrid</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;test-grid&#x27;</span>,
 
@@ -874,15 +889,15 @@ scrawl.makePicture({
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> hitReport = <span class="hljs-string">&#x27;&#x27;</span>;
-<span class="hljs-keyword">let</span> checkHitTiles = <span class="hljs-function">() =&gt;</span> {
+<span class="hljs-keyword">let</span> <span class="hljs-title function_">checkHitTiles</span> = (<span class="hljs-params"></span>) =&gt; {
 
-    <span class="hljs-keyword">let</span> hits = myGrid.checkHit(canvas.here);
+    <span class="hljs-keyword">let</span> hits = myGrid.<span class="hljs-title function_">checkHit</span>(canvas.<span class="hljs-property">here</span>);
 
-    myGrid.setAllTilesTo(<span class="hljs-number">0</span>);
+    myGrid.<span class="hljs-title function_">setAllTilesTo</span>(<span class="hljs-number">0</span>);
 
     <span class="hljs-keyword">if</span> (hits) {
 
-        myGrid.setTilesTo(hits.tiles, <span class="hljs-number">1</span>);
+        myGrid.<span class="hljs-title function_">setTilesTo</span>(hits.<span class="hljs-property">tiles</span>, <span class="hljs-number">1</span>);
         hitReport = <span class="hljs-string">`Hits - x: <span class="hljs-subst">${hits.x}</span>, y: <span class="hljs-subst">${hits.y}</span>, tiles: <span class="hljs-subst">${hits.tiles.join(<span class="hljs-string">&#x27;, &#x27;</span>)}</span>`</span>;
     }
     <span class="hljs-keyword">else</span> hitReport = <span class="hljs-string">&#x27;Hits - none reported&#x27;</span>;
@@ -901,22 +916,27 @@ scrawl.makePicture({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Columns - <span class="hljs-subst">${myGrid.columns}</span>; Rows - <span class="hljs-subst">${myGrid.rows}</span>
-canvas.here - x: <span class="hljs-subst">${canvas.here.x}</span>, y: <span class="hljs-subst">${canvas.here.y}</span>
-<span class="hljs-subst">${hitReport}</span>
-Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
+    Grid - columns: <span class="hljs-subst">${myGrid.columns.toFixed(<span class="hljs-number">0</span>)}</span>; rows: <span class="hljs-subst">${myGrid.rows.toFixed(<span class="hljs-number">0</span>)}</span>
+    Grid dimensions - width: <span class="hljs-subst">${myGrid.dimensions[<span class="hljs-number">0</span>]}</span>; height: <span class="hljs-subst">${myGrid.dimensions[<span class="hljs-number">1</span>]}</span>
+    Grid gutter widths - column: <span class="hljs-subst">${myGrid.columnGutterWidth.toFixed(<span class="hljs-number">0</span>)}</span>; row: <span class="hljs-subst">${myGrid.rowGutterWidth.toFixed(<span class="hljs-number">0</span>)}</span>
+    Start - x: <span class="hljs-subst">${myGrid.start[<span class="hljs-number">0</span>]}</span>, y: <span class="hljs-subst">${myGrid.start[<span class="hljs-number">1</span>]}</span>
+    Handle - x: <span class="hljs-subst">${myGrid.handle[<span class="hljs-number">0</span>]}</span>, y: <span class="hljs-subst">${myGrid.handle[<span class="hljs-number">1</span>]}</span>
+    Offset - x: <span class="hljs-subst">${myGrid.offset[<span class="hljs-number">0</span>]}</span>, y: <span class="hljs-subst">${myGrid.offset[<span class="hljs-number">1</span>]}</span>
+    Roll: <span class="hljs-subst">${myGrid.roll}</span>; Scale: <span class="hljs-subst">${myGrid.scale}</span>
+    canvas.here - x: <span class="hljs-subst">${canvas.here.x.toFixed(<span class="hljs-number">0</span>)}</span>, y: <span class="hljs-subst">${canvas.here.y.toFixed(<span class="hljs-number">0</span>)}</span>; <span class="hljs-subst">${hitReport}</span>`</span>;
     };
 }();</pre></div></div>
             
@@ -933,7 +953,7 @@ Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
     <span class="hljs-attr">target</span>: canvas,
@@ -955,7 +975,7 @@ Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.observeAndUpdate({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
 
     <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
     <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,
@@ -1022,78 +1042,78 @@ Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> updateBaseFill = <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> <span class="hljs-title function_">updateBaseFill</span> = (<span class="hljs-params">e</span>) =&gt; {
 
-    e.preventDefault();
-    e.returnValue = <span class="hljs-literal">false</span>;
+    e.<span class="hljs-title function_">preventDefault</span>();
+    e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> val = e.target.value;
-
-    <span class="hljs-keyword">switch</span> (val) {
-
-        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;imageGrid&#x27;</span> :
-            myGrid.setTileSourceTo(<span class="hljs-number">0</span>, imageGrid);
-            <span class="hljs-keyword">break</span>;
-
-        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;imageTile&#x27;</span> :
-            myGrid.setTileSourceTo(<span class="hljs-number">0</span>, imageTile);
-            <span class="hljs-keyword">break</span>;
-
-        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;videoGrid&#x27;</span> :
-            myGrid.setTileSourceTo(<span class="hljs-number">0</span>, videoGrid);
-            <span class="hljs-keyword">break</span>;
-
-        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;videoTile&#x27;</span> :
-            myGrid.setTileSourceTo(<span class="hljs-number">0</span>, videoTile);
-            <span class="hljs-keyword">break</span>;
-
-        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;spriteGrid&#x27;</span> :
-            myGrid.setTileSourceTo(<span class="hljs-number">0</span>, spriteGrid);
-            <span class="hljs-keyword">break</span>;
-
-        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;spriteTile&#x27;</span> :
-            myGrid.setTileSourceTo(<span class="hljs-number">0</span>, spriteTile);
-            <span class="hljs-keyword">break</span>;
-    }
-};
-scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updateBaseFill, <span class="hljs-string">&#x27;#baseFill&#x27;</span>);
-
-
-<span class="hljs-keyword">let</span> updateHighlightFill = <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
-
-    e.preventDefault();
-    e.returnValue = <span class="hljs-literal">false</span>;
-
-    <span class="hljs-keyword">let</span> val = e.target.value;
+    <span class="hljs-keyword">let</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
 
     <span class="hljs-keyword">switch</span> (val) {
 
         <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;imageGrid&#x27;</span> :
-            myGrid.setTileSourceTo(<span class="hljs-number">1</span>, imageGrid);
+            myGrid.<span class="hljs-title function_">setTileSourceTo</span>(<span class="hljs-number">0</span>, imageGrid);
             <span class="hljs-keyword">break</span>;
 
         <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;imageTile&#x27;</span> :
-            myGrid.setTileSourceTo(<span class="hljs-number">1</span>, imageTile);
+            myGrid.<span class="hljs-title function_">setTileSourceTo</span>(<span class="hljs-number">0</span>, imageTile);
             <span class="hljs-keyword">break</span>;
 
         <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;videoGrid&#x27;</span> :
-            myGrid.setTileSourceTo(<span class="hljs-number">1</span>, videoGrid);
+            myGrid.<span class="hljs-title function_">setTileSourceTo</span>(<span class="hljs-number">0</span>, videoGrid);
             <span class="hljs-keyword">break</span>;
 
         <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;videoTile&#x27;</span> :
-            myGrid.setTileSourceTo(<span class="hljs-number">1</span>, videoTile);
+            myGrid.<span class="hljs-title function_">setTileSourceTo</span>(<span class="hljs-number">0</span>, videoTile);
             <span class="hljs-keyword">break</span>;
 
         <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;spriteGrid&#x27;</span> :
-            myGrid.setTileSourceTo(<span class="hljs-number">1</span>, spriteGrid);
+            myGrid.<span class="hljs-title function_">setTileSourceTo</span>(<span class="hljs-number">0</span>, spriteGrid);
             <span class="hljs-keyword">break</span>;
 
         <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;spriteTile&#x27;</span> :
-            myGrid.setTileSourceTo(<span class="hljs-number">1</span>, spriteTile);
+            myGrid.<span class="hljs-title function_">setTileSourceTo</span>(<span class="hljs-number">0</span>, spriteTile);
             <span class="hljs-keyword">break</span>;
     }
 };
-scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updateHighlightFill, <span class="hljs-string">&#x27;#highlightFill&#x27;</span>);</pre></div></div>
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updateBaseFill, <span class="hljs-string">&#x27;#baseFill&#x27;</span>);
+
+
+<span class="hljs-keyword">let</span> <span class="hljs-title function_">updateHighlightFill</span> = (<span class="hljs-params">e</span>) =&gt; {
+
+    e.<span class="hljs-title function_">preventDefault</span>();
+    e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
+
+    <span class="hljs-keyword">let</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
+
+    <span class="hljs-keyword">switch</span> (val) {
+
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;imageGrid&#x27;</span> :
+            myGrid.<span class="hljs-title function_">setTileSourceTo</span>(<span class="hljs-number">1</span>, imageGrid);
+            <span class="hljs-keyword">break</span>;
+
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;imageTile&#x27;</span> :
+            myGrid.<span class="hljs-title function_">setTileSourceTo</span>(<span class="hljs-number">1</span>, imageTile);
+            <span class="hljs-keyword">break</span>;
+
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;videoGrid&#x27;</span> :
+            myGrid.<span class="hljs-title function_">setTileSourceTo</span>(<span class="hljs-number">1</span>, videoGrid);
+            <span class="hljs-keyword">break</span>;
+
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;videoTile&#x27;</span> :
+            myGrid.<span class="hljs-title function_">setTileSourceTo</span>(<span class="hljs-number">1</span>, videoTile);
+            <span class="hljs-keyword">break</span>;
+
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;spriteGrid&#x27;</span> :
+            myGrid.<span class="hljs-title function_">setTileSourceTo</span>(<span class="hljs-number">1</span>, spriteGrid);
+            <span class="hljs-keyword">break</span>;
+
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;spriteTile&#x27;</span> :
+            myGrid.<span class="hljs-title function_">setTileSourceTo</span>(<span class="hljs-number">1</span>, spriteTile);
+            <span class="hljs-keyword">break</span>;
+    }
+};
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updateHighlightFill, <span class="hljs-string">&#x27;#highlightFill&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1108,70 +1128,70 @@ scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> updateGridStroke = <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> <span class="hljs-title function_">updateGridStroke</span> = (<span class="hljs-params">e</span>) =&gt; {
 
-    e.preventDefault();
-    e.returnValue = <span class="hljs-literal">false</span>;
+    e.<span class="hljs-title function_">preventDefault</span>();
+    e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> val = e.target.value;
+    <span class="hljs-keyword">let</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>;
 
     <span class="hljs-keyword">switch</span> (val) {
 
         <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;base&#x27;</span> :
-            myGrid.set({
+            myGrid.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">gutterColor</span>: <span class="hljs-number">0</span>
             });
             <span class="hljs-keyword">break</span>;
 
         <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;highlight&#x27;</span> :
-            myGrid.set({
+            myGrid.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">gutterColor</span>: <span class="hljs-number">1</span>
             });
             <span class="hljs-keyword">break</span>;
 
         <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;imageGrid&#x27;</span> :
-            myGrid.set({
+            myGrid.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">gutterColor</span>: imageGrid
             });
             <span class="hljs-keyword">break</span>;
 
         <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;imageTile&#x27;</span> :
-            myGrid.set({
+            myGrid.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">gutterColor</span>: imageTile
             });
             <span class="hljs-keyword">break</span>;
 
         <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;videoGrid&#x27;</span> :
-            myGrid.set({
+            myGrid.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">gutterColor</span>: videoGrid
             });
             <span class="hljs-keyword">break</span>;
 
         <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;videoTile&#x27;</span> :
-            myGrid.set({
+            myGrid.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">gutterColor</span>: videoTile
             });
             <span class="hljs-keyword">break</span>;
 
         <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;spriteGrid&#x27;</span> :
-            myGrid.set({
+            myGrid.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">gutterColor</span>: spriteGrid
             });
             <span class="hljs-keyword">break</span>;
 
         <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;spriteTile&#x27;</span> :
-            myGrid.set({
+            myGrid.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">gutterColor</span>: spriteTile
             });
             <span class="hljs-keyword">break</span>;
 
         <span class="hljs-keyword">default</span> :
-            myGrid.set({
+            myGrid.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">gutterColor</span>: <span class="hljs-string">&#x27;#808080&#x27;</span>
             });
     }
 };
-scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updateGridStroke, <span class="hljs-string">&#x27;#gridStroke&#x27;</span>);</pre></div></div>
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updateGridStroke, <span class="hljs-string">&#x27;#gridStroke&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1189,13 +1209,13 @@ scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.addListener([<span class="hljs-string">&#x27;move&#x27;</span>, <span class="hljs-string">&#x27;up&#x27;</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addListener</span>([<span class="hljs-string">&#x27;move&#x27;</span>, <span class="hljs-string">&#x27;up&#x27;</span>], <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    viddyOne.set({
+    viddyOne.<span class="hljs-title function_">set</span>({
         <span class="hljs-attr">video_muted</span>: <span class="hljs-literal">true</span>,
         <span class="hljs-attr">video_loop</span>: <span class="hljs-literal">true</span>,
-    }).videoPlay();
-}, canvas.domElement);</pre></div></div>
+    }).<span class="hljs-title function_">videoPlay</span>();
+}, canvas.<span class="hljs-property">domElement</span>);</pre></div></div>
             
         </li>
         
@@ -1210,37 +1230,37 @@ scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#columns&#x27;</span>).value = <span class="hljs-number">6</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#rows&#x27;</span>).value = <span class="hljs-number">6</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#columnGutter&#x27;</span>).value = <span class="hljs-number">1</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#rowGutter&#x27;</span>).value = <span class="hljs-number">1</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#relativeWidth&#x27;</span>).value = <span class="hljs-number">50</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#absoluteWidth&#x27;</span>).value = <span class="hljs-number">300</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#relativeHeight&#x27;</span>).value = <span class="hljs-number">50</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#absoluteHeight&#x27;</span>).value = <span class="hljs-number">200</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#baseFill&#x27;</span>).options.selectedIndex = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#highlightFill&#x27;</span>).options.selectedIndex = <span class="hljs-number">1</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#gridStroke&#x27;</span>).options.selectedIndex = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#start_xPercent&#x27;</span>).value = <span class="hljs-number">50</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#start_yPercent&#x27;</span>).value = <span class="hljs-number">50</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#handle_xPercent&#x27;</span>).value = <span class="hljs-number">50</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#handle_yPercent&#x27;</span>).value = <span class="hljs-number">50</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#start_xAbsolute&#x27;</span>).value = <span class="hljs-number">300</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#start_yAbsolute&#x27;</span>).value = <span class="hljs-number">200</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#handle_xAbsolute&#x27;</span>).value = <span class="hljs-number">150</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#handle_yAbsolute&#x27;</span>).value = <span class="hljs-number">100</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#start_xString&#x27;</span>).options.selectedIndex = <span class="hljs-number">1</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#start_yString&#x27;</span>).options.selectedIndex = <span class="hljs-number">1</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#handle_xString&#x27;</span>).options.selectedIndex = <span class="hljs-number">1</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#handle_yString&#x27;</span>).options.selectedIndex = <span class="hljs-number">1</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#offset_xPercent&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#offset_yPercent&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#offset_xAbsolute&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#offset_yAbsolute&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#roll&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#scale&#x27;</span>).value = <span class="hljs-number">1</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#upend&#x27;</span>).options.selectedIndex = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reverse&#x27;</span>).options.selectedIndex = <span class="hljs-number">0</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#columns&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">6</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#rows&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">6</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#columnGutter&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#rowGutter&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#relativeWidth&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#absoluteWidth&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">300</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#relativeHeight&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#absoluteHeight&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">200</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#baseFill&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#highlightFill&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#gridStroke&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#start_xPercent&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#start_yPercent&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#handle_xPercent&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#handle_yPercent&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#start_xAbsolute&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">300</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#start_yAbsolute&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">200</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#handle_xAbsolute&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">150</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#handle_yAbsolute&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">100</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#start_xString&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#start_yString&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#handle_xString&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#handle_yString&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#offset_xPercent&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#offset_yPercent&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#offset_xAbsolute&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#offset_yAbsolute&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#roll&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#scale&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#upend&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reverse&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
             
         </li>
         

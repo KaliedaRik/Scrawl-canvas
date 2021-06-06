@@ -165,6 +165,11 @@
                 </a>
               
                 
+                <a class="source" href="lineSpiral.html">
+                  ./source/factory/lineSpiral.js
+                </a>
+              
+                
                 <a class="source" href="loom.html">
                   ./source/factory/loom.js
                 </a>
@@ -257,6 +262,11 @@
                 
                 <a class="source" href="radialGradient.html">
                   ./source/factory/radialGradient.js
+                </a>
+              
+                
+                <a class="source" href="rawAsset.html">
+                  ./source/factory/rawAsset.js
                 </a>
               
                 
@@ -491,8 +501,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
-<span class="hljs-keyword">import</span> { generateUniqueString, xt, λ<span class="hljs-built_in">this</span>, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { generateUniqueString, xt, λ<span class="hljs-variable language_">this</span>, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
 <span class="hljs-keyword">import</span> assetMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/asset.js&#x27;</span>;</pre></div></div>
@@ -510,9 +520,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> VideoAsset = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">VideoAsset</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.assetConstructor(items);
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">assetConstructor</span>(items);
 };</pre></div></div>
             
         </li>
@@ -528,11 +538,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = VideoAsset.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">&#x27;Video&#x27;</span>;
-P.lib = <span class="hljs-string">&#x27;asset&#x27;</span>;
-P.isArtefact = <span class="hljs-literal">false</span>;
-P.isAsset = <span class="hljs-literal">true</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">VideoAsset</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
+P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Video&#x27;</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;asset&#x27;</span>;
+P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">false</span>;
+P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">true</span>;</pre></div></div>
             
         </li>
         
@@ -547,8 +557,8 @@ P.isAsset = <span class="hljs-literal">true</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = baseMix(P);
-P = assetMix(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);
+P = <span class="hljs-title function_">assetMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -582,13 +592,13 @@ P = assetMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.saveAsPacket = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">return</span> [<span class="hljs-built_in">this</span>.name, <span class="hljs-built_in">this</span>.type, <span class="hljs-built_in">this</span>.lib, {}];
+    <span class="hljs-keyword">return</span> [<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">type</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">lib</span>, {}];
 };
-P.stringifyFunction = λ<span class="hljs-literal">null</span>;
-P.processPacketOut = λ<span class="hljs-literal">null</span>;
-P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div>
+P.<span class="hljs-property">stringifyFunction</span> = λ<span class="hljs-literal">null</span>;
+P.<span class="hljs-property">processPacketOut</span> = λ<span class="hljs-literal">null</span>;
+P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
@@ -603,7 +613,7 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.clone = λ<span class="hljs-built_in">this</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">clone</span> = λ<span class="hljs-variable language_">this</span>;</pre></div></div>
             
         </li>
         
@@ -632,9 +642,9 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.getters,
-    S = P.setters,
-    D = P.deltaSetters;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.<span class="hljs-property">getters</span>,
+    S = P.<span class="hljs-property">setters</span>,
+    D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
             
         </li>
         
@@ -649,19 +659,19 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.source = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">source</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-keyword">if</span> (item) {
 
-        <span class="hljs-keyword">if</span> (item.tagName.toUpperCase() === <span class="hljs-string">&#x27;VIDEO&#x27;</span>) {
+        <span class="hljs-keyword">if</span> (item.<span class="hljs-property">tagName</span>.<span class="hljs-title function_">toUpperCase</span>() === <span class="hljs-string">&#x27;VIDEO&#x27;</span>) {
 
-            <span class="hljs-built_in">this</span>.source = item;
-            <span class="hljs-built_in">this</span>.sourceNaturalWidth = item.videoWidth || <span class="hljs-number">0</span>;
-            <span class="hljs-built_in">this</span>.sourceNaturalHeight = item.videoHeight || <span class="hljs-number">0</span>;
-            <span class="hljs-built_in">this</span>.sourceLoaded = (item.readyState &gt; <span class="hljs-number">2</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span> = item;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span> = item.<span class="hljs-property">videoWidth</span> || <span class="hljs-number">0</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span> = item.<span class="hljs-property">videoHeight</span> || <span class="hljs-number">0</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceLoaded</span> = (item.<span class="hljs-property">readyState</span> &gt; <span class="hljs-number">2</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
         }
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.sourceLoaded) <span class="hljs-built_in">this</span>.notifySubscribers();
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceLoaded</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">notifySubscribers</span>();
     }
 };</pre></div></div>
             
@@ -696,26 +706,26 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.checkSource = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">width, height</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">checkSource</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">width, height</span>) {
 
-    <span class="hljs-keyword">let</span> source = <span class="hljs-built_in">this</span>.source;
+    <span class="hljs-keyword">let</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
 
-    <span class="hljs-keyword">if</span> (source &amp;&amp; source.readyState &gt; <span class="hljs-number">2</span>) {
+    <span class="hljs-keyword">if</span> (source &amp;&amp; source.<span class="hljs-property">readyState</span> &gt; <span class="hljs-number">2</span>) {
 
-        <span class="hljs-built_in">this</span>.sourceLoaded = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceLoaded</span> = <span class="hljs-literal">true</span>;
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.sourceNaturalWidth !== source.videoWidth || 
-                <span class="hljs-built_in">this</span>.sourceNaturalHeight !== source.videoHeight || 
-                <span class="hljs-built_in">this</span>.sourceNaturalWidth !== width ||
-                <span class="hljs-built_in">this</span>.sourceNaturalHeight !== height) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span> !== source.<span class="hljs-property">videoWidth</span> || 
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span> !== source.<span class="hljs-property">videoHeight</span> || 
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span> !== width ||
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span> !== height) {
 
-            <span class="hljs-built_in">this</span>.sourceNaturalWidth = source.videoWidth;
-            <span class="hljs-built_in">this</span>.sourceNaturalHeight = source.videoHeight;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span> = source.<span class="hljs-property">videoWidth</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span> = source.<span class="hljs-property">videoHeight</span>;
 
-            <span class="hljs-built_in">this</span>.notifySubscribers();
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">notifySubscribers</span>();
         }
     }
-    <span class="hljs-keyword">else</span> <span class="hljs-built_in">this</span>.sourceLoaded = <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceLoaded</span> = <span class="hljs-literal">false</span>;
 };</pre></div></div>
             
         </li>
@@ -749,11 +759,11 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.addTextTrack = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">kind, label, language</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">addTextTrack</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">kind, label, language</span>) {
 
-    <span class="hljs-keyword">let</span> source = <span class="hljs-built_in">this</span>.source;
+    <span class="hljs-keyword">let</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
 
-    <span class="hljs-keyword">if</span> (source &amp;&amp; source.addTextTrack) source.addTextTrack(kind, label, language);
+    <span class="hljs-keyword">if</span> (source &amp;&amp; source.<span class="hljs-property">addTextTrack</span>) source.<span class="hljs-title function_">addTextTrack</span>(kind, label, language);
 };</pre></div></div>
             
         </li>
@@ -769,11 +779,11 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.captureStream = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">captureStream</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> source = <span class="hljs-built_in">this</span>.source;
+    <span class="hljs-keyword">let</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
 
-    <span class="hljs-keyword">if</span> (source &amp;&amp; source.captureStream) <span class="hljs-keyword">return</span> source.captureStream();
+    <span class="hljs-keyword">if</span> (source &amp;&amp; source.<span class="hljs-property">captureStream</span>) <span class="hljs-keyword">return</span> source.<span class="hljs-title function_">captureStream</span>();
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 };</pre></div></div>
             
@@ -790,11 +800,11 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.canPlayType = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">mytype</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">canPlayType</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">mytype</span>) {
 
-    <span class="hljs-keyword">let</span> source = <span class="hljs-built_in">this</span>.source;
+    <span class="hljs-keyword">let</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
 
-    <span class="hljs-keyword">if</span> (source) <span class="hljs-keyword">return</span> source.canPlayType(mytype);
+    <span class="hljs-keyword">if</span> (source) <span class="hljs-keyword">return</span> source.<span class="hljs-title function_">canPlayType</span>(mytype);
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;maybe&#x27;</span>;
 };</pre></div></div>
             
@@ -811,11 +821,11 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.fastSeek = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">time</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">fastSeek</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">time</span>) {
 
-    <span class="hljs-keyword">let</span> source = <span class="hljs-built_in">this</span>.source;
+    <span class="hljs-keyword">let</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
 
-    <span class="hljs-keyword">if</span> (source &amp;&amp; source.fastSeek) source.fastSeek(time);
+    <span class="hljs-keyword">if</span> (source &amp;&amp; source.<span class="hljs-property">fastSeek</span>) source.<span class="hljs-title function_">fastSeek</span>(time);
 };</pre></div></div>
             
         </li>
@@ -831,11 +841,11 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.load = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">load</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> source = <span class="hljs-built_in">this</span>.source;
+    <span class="hljs-keyword">let</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
 
-    <span class="hljs-keyword">if</span> (source) source.load();
+    <span class="hljs-keyword">if</span> (source) source.<span class="hljs-title function_">load</span>();
 };</pre></div></div>
             
         </li>
@@ -851,11 +861,11 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.pause = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">pause</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> source = <span class="hljs-built_in">this</span>.source;
+    <span class="hljs-keyword">let</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
 
-    <span class="hljs-keyword">if</span> (source) source.pause();
+    <span class="hljs-keyword">if</span> (source) source.<span class="hljs-title function_">pause</span>();
 };</pre></div></div>
             
         </li>
@@ -871,12 +881,12 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.play = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">play</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> source = <span class="hljs-built_in">this</span>.source;
+    <span class="hljs-keyword">let</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
 
-    <span class="hljs-keyword">if</span> (source) <span class="hljs-keyword">return</span> source.play().catch(<span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(e.code, e.name, e.message));
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.reject(<span class="hljs-string">&#x27;Source not defined&#x27;</span>);
+    <span class="hljs-keyword">if</span> (source) <span class="hljs-keyword">return</span> source.<span class="hljs-title function_">play</span>().<span class="hljs-title function_">catch</span>(<span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(e.<span class="hljs-property">code</span>, e.<span class="hljs-property">name</span>, e.<span class="hljs-property">message</span>));
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">reject</span>(<span class="hljs-string">&#x27;Source not defined&#x27;</span>);
 };</pre></div></div>
             
         </li>
@@ -892,16 +902,16 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.setMediaKeys = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">keys</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">setMediaKeys</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">keys</span>) {
 
-    <span class="hljs-keyword">let</span> source = <span class="hljs-built_in">this</span>.source;
+    <span class="hljs-keyword">let</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
 
     <span class="hljs-keyword">if</span> (source) {
 
-        <span class="hljs-keyword">if</span> (source.setMediaKeys) <span class="hljs-keyword">return</span> source.setMediaKeys(keys);
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.reject(<span class="hljs-string">&#x27;setMediaKeys not supported&#x27;</span>);
+        <span class="hljs-keyword">if</span> (source.<span class="hljs-property">setMediaKeys</span>) <span class="hljs-keyword">return</span> source.<span class="hljs-title function_">setMediaKeys</span>(keys);
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">reject</span>(<span class="hljs-string">&#x27;setMediaKeys not supported&#x27;</span>);
     }
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.reject(<span class="hljs-string">&#x27;Source not defined&#x27;</span>);
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">reject</span>(<span class="hljs-string">&#x27;Source not defined&#x27;</span>);
 };</pre></div></div>
             
         </li>
@@ -917,16 +927,16 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.setSinkId = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">setSinkId</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> source = <span class="hljs-built_in">this</span>.source;
+    <span class="hljs-keyword">let</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
 
     <span class="hljs-keyword">if</span> (source) {
 
-        <span class="hljs-keyword">if</span> (source.setSinkId) <span class="hljs-keyword">return</span> source.setSinkId();
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.reject(<span class="hljs-string">&#x27;setSinkId not supported&#x27;</span>);
+        <span class="hljs-keyword">if</span> (source.<span class="hljs-property">setSinkId</span>) <span class="hljs-keyword">return</span> source.<span class="hljs-title function_">setSinkId</span>();
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">reject</span>(<span class="hljs-string">&#x27;setSinkId not supported&#x27;</span>);
     }
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.reject(<span class="hljs-string">&#x27;Source not defined&#x27;</span>);
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">reject</span>(<span class="hljs-string">&#x27;Source not defined&#x27;</span>);
 };</pre></div></div>
             
         </li>
@@ -1028,35 +1038,35 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> importDomVideo = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">query</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> importDomVideo = <span class="hljs-keyword">function</span> (<span class="hljs-params">query</span>) {
 
     <span class="hljs-keyword">let</span> reg = <span class="hljs-regexp">/.*\/(.*?)\./</span>;
 
-    <span class="hljs-keyword">let</span> items = <span class="hljs-built_in">document</span>.querySelectorAll(query);
+    <span class="hljs-keyword">let</span> items = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(query);
 
-    items.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
+    items.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
 
         <span class="hljs-keyword">let</span> name;
 
-        <span class="hljs-keyword">if</span> (item.tagName.toUpperCase() === <span class="hljs-string">&#x27;VIDEO&#x27;</span>) {
+        <span class="hljs-keyword">if</span> (item.<span class="hljs-property">tagName</span>.<span class="hljs-title function_">toUpperCase</span>() === <span class="hljs-string">&#x27;VIDEO&#x27;</span>) {
 
-            <span class="hljs-keyword">if</span> (item.id || item.name) name = item.id || item.name;
+            <span class="hljs-keyword">if</span> (item.<span class="hljs-property">id</span> || item.<span class="hljs-property">name</span>) name = item.<span class="hljs-property">id</span> || item.<span class="hljs-property">name</span>;
             <span class="hljs-keyword">else</span> {
 
-                <span class="hljs-keyword">let</span> match = reg.exec(item.src);
+                <span class="hljs-keyword">let</span> match = reg.<span class="hljs-title function_">exec</span>(item.<span class="hljs-property">src</span>);
                 name = (match &amp;&amp; match[<span class="hljs-number">1</span>]) ? match[<span class="hljs-number">1</span>] : <span class="hljs-string">&#x27;&#x27;</span>;
             }
 
-            <span class="hljs-keyword">let</span> vid = makeVideoAsset({
+            <span class="hljs-keyword">let</span> vid = <span class="hljs-title function_">makeVideoAsset</span>({
                 <span class="hljs-attr">name</span>: name,
                 <span class="hljs-attr">source</span>: item,
             });
 
-            <span class="hljs-keyword">if</span> (item.readyState &lt;= <span class="hljs-number">2</span>) {
+            <span class="hljs-keyword">if</span> (item.<span class="hljs-property">readyState</span> &lt;= <span class="hljs-number">2</span>) {
 
-                item.oncanplay = <span class="hljs-function">() =&gt;</span> {
+                item.<span class="hljs-property">oncanplay</span> = <span class="hljs-function">() =&gt;</span> {
 
-                    vid.set({
+                    vid.<span class="hljs-title function_">set</span>({
                         <span class="hljs-attr">source</span>: item,
                     });
                 };
@@ -1082,7 +1092,7 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> importMediaStream = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> importMediaStream = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {</pre></div></div>
             
         </li>
         
@@ -1112,7 +1122,7 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    constraints.audio = (xt(items.audio)) ? items.audio : <span class="hljs-literal">true</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    constraints.<span class="hljs-property">audio</span> = (<span class="hljs-title function_">xt</span>(items.<span class="hljs-property">audio</span>)) ? items.<span class="hljs-property">audio</span> : <span class="hljs-literal">true</span>;</pre></div></div>
             
         </li>
         
@@ -1127,17 +1137,17 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    constraints.video = {};
+            <div class="content"><div class='highlight'><pre>    constraints.<span class="hljs-property">video</span> = {};
     
-    <span class="hljs-keyword">let</span> width = constraints.video.width = {};
-    <span class="hljs-keyword">if</span> (items.minWidth) width.min = items.minWidth;
-    <span class="hljs-keyword">if</span> (items.maxWidth) width.max = items.maxWidth;
-    width.ideal = (items.width) ? items.width : <span class="hljs-number">1280</span>;
+    <span class="hljs-keyword">let</span> width = constraints.<span class="hljs-property">video</span>.<span class="hljs-property">width</span> = {};
+    <span class="hljs-keyword">if</span> (items.<span class="hljs-property">minWidth</span>) width.<span class="hljs-property">min</span> = items.<span class="hljs-property">minWidth</span>;
+    <span class="hljs-keyword">if</span> (items.<span class="hljs-property">maxWidth</span>) width.<span class="hljs-property">max</span> = items.<span class="hljs-property">maxWidth</span>;
+    width.<span class="hljs-property">ideal</span> = (items.<span class="hljs-property">width</span>) ? items.<span class="hljs-property">width</span> : <span class="hljs-number">1280</span>;
     
-    <span class="hljs-keyword">let</span> height = constraints.video.height = {};
-    <span class="hljs-keyword">if</span> (items.minHeight) height.min = items.minHeight;
-    <span class="hljs-keyword">if</span> (items.maxHeight) height.max = items.maxHeight;
-    height.ideal = (items.height) ? items.height : <span class="hljs-number">720</span>;</pre></div></div>
+    <span class="hljs-keyword">let</span> height = constraints.<span class="hljs-property">video</span>.<span class="hljs-property">height</span> = {};
+    <span class="hljs-keyword">if</span> (items.<span class="hljs-property">minHeight</span>) height.<span class="hljs-property">min</span> = items.<span class="hljs-property">minHeight</span>;
+    <span class="hljs-keyword">if</span> (items.<span class="hljs-property">maxHeight</span>) height.<span class="hljs-property">max</span> = items.<span class="hljs-property">maxHeight</span>;
+    height.<span class="hljs-property">ideal</span> = (items.<span class="hljs-property">height</span>) ? items.<span class="hljs-property">height</span> : <span class="hljs-number">720</span>;</pre></div></div>
             
         </li>
         
@@ -1152,7 +1162,7 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (items.facing) constraints.video.facingMode = items.facing;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (items.<span class="hljs-property">facing</span>) constraints.<span class="hljs-property">video</span>.<span class="hljs-property">facingMode</span> = items.<span class="hljs-property">facing</span>;</pre></div></div>
             
         </li>
         
@@ -1167,51 +1177,51 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> name = items.name || generateUniqueString();
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> name = items.<span class="hljs-property">name</span> || <span class="hljs-title function_">generateUniqueString</span>();
 
-    <span class="hljs-keyword">let</span> el = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;video&#x27;</span>);
+    <span class="hljs-keyword">let</span> el = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;video&#x27;</span>);
 
-    <span class="hljs-keyword">let</span> vid = makeVideoAsset({
+    <span class="hljs-keyword">let</span> vid = <span class="hljs-title function_">makeVideoAsset</span>({
         <span class="hljs-attr">name</span>: name,
         <span class="hljs-attr">source</span>: el,
     });
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {
 
-        <span class="hljs-keyword">if</span> (navigator &amp;&amp; navigator.mediaDevices) {
+        <span class="hljs-keyword">if</span> (navigator &amp;&amp; navigator.<span class="hljs-property">mediaDevices</span>) {
 
-            navigator.mediaDevices.getUserMedia(constraints)
-            .then(<span class="hljs-function"><span class="hljs-params">mediaStream</span> =&gt;</span> {
+            navigator.<span class="hljs-property">mediaDevices</span>.<span class="hljs-title function_">getUserMedia</span>(constraints)
+            .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">mediaStream</span> =&gt;</span> {
 
-                <span class="hljs-keyword">let</span> actuals = mediaStream.getVideoTracks(),
+                <span class="hljs-keyword">let</span> actuals = mediaStream.<span class="hljs-title function_">getVideoTracks</span>(),
                     data;
 
-                <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(actuals) &amp;&amp; actuals[<span class="hljs-number">0</span>]) data = actuals[<span class="hljs-number">0</span>].getConstraints();
+                <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(actuals) &amp;&amp; actuals[<span class="hljs-number">0</span>]) data = actuals[<span class="hljs-number">0</span>].<span class="hljs-title function_">getConstraints</span>();
 
-                el.id = vid.name;
+                el.<span class="hljs-property">id</span> = vid.<span class="hljs-property">name</span>;
 
                 <span class="hljs-keyword">if</span> (data) {
 
-                    el.width = data.width;
-                    el.height = data.height;
+                    el.<span class="hljs-property">width</span> = data.<span class="hljs-property">width</span>;
+                    el.<span class="hljs-property">height</span> = data.<span class="hljs-property">height</span>;
                 }
 
-                el.srcObject = mediaStream;
+                el.<span class="hljs-property">srcObject</span> = mediaStream;
 
-                el.onloadedmetadata = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>{
+                el.<span class="hljs-property">onloadedmetadata</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
 
-                    el.play();
+                    el.<span class="hljs-title function_">play</span>();
                 }
 
-                resolve(vid);
+                <span class="hljs-title function_">resolve</span>(vid);
             })
-            .catch (<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> {
+            .<span class="hljs-property">catch</span> (<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> {
 
-                <span class="hljs-built_in">console</span>.log(err.message);
-                resolve(vid);
+                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(err.<span class="hljs-property">message</span>);
+                <span class="hljs-title function_">resolve</span>(vid);
             });
         }
-        <span class="hljs-keyword">else</span> reject(<span class="hljs-string">&#x27;Navigator.mediaDevices object not found&#x27;</span>);
+        <span class="hljs-keyword">else</span> <span class="hljs-title function_">reject</span>(<span class="hljs-string">&#x27;Navigator.mediaDevices object not found&#x27;</span>);
     });
 };</pre></div></div>
             
@@ -1246,12 +1256,12 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> importVideo = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> importVideo = <span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) {
 
     <span class="hljs-keyword">let</span> reg = <span class="hljs-regexp">/.*\/(.*?)\./</span>,
         result = <span class="hljs-string">&#x27;&#x27;</span>;
 
-    <span class="hljs-keyword">if</span> (args.length) {
+    <span class="hljs-keyword">if</span> (args.<span class="hljs-property">length</span>) {
 
         <span class="hljs-keyword">let</span> name, className, visibility, parent, sources, preload;
 
@@ -1275,9 +1285,9 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (firstArg.substring) {
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (firstArg.<span class="hljs-property">substring</span>) {
 
-            <span class="hljs-keyword">let</span> match = reg.exec(firstArg);
+            <span class="hljs-keyword">let</span> match = reg.<span class="hljs-title function_">exec</span>(firstArg);
             name = (match &amp;&amp; match[<span class="hljs-number">1</span>]) ? match[<span class="hljs-number">1</span>] : <span class="hljs-string">&#x27;&#x27;</span>;
 
             sources = [...args];
@@ -1305,15 +1315,15 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (firstArg &amp;&amp; firstArg.src) {
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (firstArg &amp;&amp; firstArg.<span class="hljs-property">src</span>) {
 
-            name = firstArg.name || <span class="hljs-string">&#x27;&#x27;</span>;
+            name = firstArg.<span class="hljs-property">name</span> || <span class="hljs-string">&#x27;&#x27;</span>;
 
-            sources = [...firstArg.src];
-            className = firstArg.className || <span class="hljs-string">&#x27;&#x27;</span>;
-            visibility = firstArg.visibility || <span class="hljs-literal">false</span>;
-            parent = <span class="hljs-built_in">document</span>.querySelector(parent);
-            preload = firstArg.preload || <span class="hljs-string">&#x27;auto&#x27;</span>;
+            sources = [...firstArg.<span class="hljs-property">src</span>];
+            className = firstArg.<span class="hljs-property">className</span> || <span class="hljs-string">&#x27;&#x27;</span>;
+            visibility = firstArg.<span class="hljs-property">visibility</span> || <span class="hljs-literal">false</span>;
+            parent = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(parent);
+            preload = firstArg.<span class="hljs-property">preload</span> || <span class="hljs-string">&#x27;auto&#x27;</span>;
 
             flag = <span class="hljs-literal">true</span>;
         }</pre></div></div>
@@ -1331,43 +1341,43 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> video = makeVideoAsset({
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> video = <span class="hljs-title function_">makeVideoAsset</span>({
             <span class="hljs-attr">name</span>: name,
         });
 
 
         <span class="hljs-keyword">if</span> (flag) {
 
-            <span class="hljs-keyword">let</span> vid = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;video&#x27;</span>);
+            <span class="hljs-keyword">let</span> vid = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;video&#x27;</span>);
 
-            vid.name = name;
-            vid.className = className;
+            vid.<span class="hljs-property">name</span> = name;
+            vid.<span class="hljs-property">className</span> = className;
 
-            vid.style.display = (visibility) ? <span class="hljs-string">&#x27;block&#x27;</span> : <span class="hljs-string">&#x27;none&#x27;</span>;
+            vid.<span class="hljs-property">style</span>.<span class="hljs-property">display</span> = (visibility) ? <span class="hljs-string">&#x27;block&#x27;</span> : <span class="hljs-string">&#x27;none&#x27;</span>;
 
-            vid.crossOrigin = <span class="hljs-string">&#x27;anonymous&#x27;</span>;
+            vid.<span class="hljs-property">crossOrigin</span> = <span class="hljs-string">&#x27;anonymous&#x27;</span>;
 
-            vid.preload = preload;
+            vid.<span class="hljs-property">preload</span> = preload;
 
-            sources.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
+            sources.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
 
-                <span class="hljs-keyword">let</span> el = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">&#x27;source&#x27;</span>);
+                <span class="hljs-keyword">let</span> el = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;source&#x27;</span>);
 
-                el.src = item;
+                el.<span class="hljs-property">src</span> = item;
 
-                vid.appendChild(el);
+                vid.<span class="hljs-title function_">appendChild</span>(el);
             });
 
-            vid.onload = <span class="hljs-function">() =&gt;</span> {
+            vid.<span class="hljs-property">onload</span> = <span class="hljs-function">() =&gt;</span> {
 
-                video.set({
+                video.<span class="hljs-title function_">set</span>({
                     <span class="hljs-attr">source</span>: vid,
                 });
 
-                <span class="hljs-keyword">if</span> (parent) parent.appendChild(vid);
+                <span class="hljs-keyword">if</span> (parent) parent.<span class="hljs-title function_">appendChild</span>(vid);
             };
 
-            video.set({
+            video.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">source</span>: vid,
             });
 
@@ -1391,13 +1401,13 @@ P.finalizePacketOut = λ<span class="hljs-literal">null</span>;</pre></div></div
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeVideoAsset = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeVideoAsset = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> VideoAsset(items);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">VideoAsset</span>(items);
 };
 
-<span class="hljs-title">constructors</span>.<span class="hljs-title">VideoAsset</span> = <span class="hljs-title">VideoAsset</span>;</pre></div></div>
+constructors.<span class="hljs-property">VideoAsset</span> = <span class="hljs-title class_">VideoAsset</span>;</pre></div></div>
             
         </li>
         

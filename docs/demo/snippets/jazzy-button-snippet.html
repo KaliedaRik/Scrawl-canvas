@@ -177,9 +177,9 @@
 <h5 id="usage-example">Usage example:</h5>
 <pre><code><span class="hljs-keyword">import</span> jazzyButton <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./relative/or/absolute/path/to/this/file.js&#x27;</span>;
 
-<span class="hljs-keyword">let</span> myElements = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">&#x27;.some-class&#x27;</span>);
+<span class="hljs-keyword">let</span> myElements = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.some-class&#x27;</span>);
 
-myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> jazzyButton(el));
+myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">jazzyButton</span>(el));
 </code></pre>
 
             </div>
@@ -218,7 +218,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">el</span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">el</span>) {</pre></div></div>
             
         </li>
         
@@ -233,7 +233,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> snippet = scrawl.makeSnippet({
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> snippet = scrawl.<span class="hljs-title function_">makeSnippet</span>({
         <span class="hljs-attr">domElement</span>: el,
     });
 
@@ -252,12 +252,12 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> canvas = snippet.canvas;
-        canvas.setAsCurrentCanvas();
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> canvas = snippet.<span class="hljs-property">canvas</span>;
+        canvas.<span class="hljs-title function_">setAsCurrentCanvas</span>();
 
-        <span class="hljs-keyword">let</span> wrapper = snippet.element,
-            name = wrapper.name,
-            styles = wrapper.elementComputedStyles;</pre></div></div>
+        <span class="hljs-keyword">let</span> wrapper = snippet.<span class="hljs-property">element</span>,
+            name = wrapper.<span class="hljs-property">name</span>,
+            styles = wrapper.<span class="hljs-property">elementComputedStyles</span>;</pre></div></div>
             
         </li>
         
@@ -275,10 +275,10 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> color = styles.color || <span class="hljs-string">&#x27;black&#x27;</span>,
-            font = styles.font || <span class="hljs-string">`<span class="hljs-subst">${(styles.fontStyle != <span class="hljs-string">&#x27;normal&#x27;</span>) ? styles.fontStyle + <span class="hljs-string">&#x27; &#x27;</span> : <span class="hljs-string">&#x27;&#x27;</span>}</span><span class="hljs-subst">${(styles.fontVariant != <span class="hljs-string">&#x27;normal&#x27;</span>) ? styles.fontVariant + <span class="hljs-string">&#x27; &#x27;</span> : <span class="hljs-string">&#x27;&#x27;</span>}</span><span class="hljs-subst">${styles.fontSize}</span> <span class="hljs-subst">${styles.fontFamily}</span>`</span> || <span class="hljs-string">&#x27;20px sans-serif&#x27;</span>;
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> color = styles.<span class="hljs-property">color</span> || <span class="hljs-string">&#x27;black&#x27;</span>,
+            font = styles.<span class="hljs-property">font</span> || <span class="hljs-string">`<span class="hljs-subst">${(styles.fontStyle != <span class="hljs-string">&#x27;normal&#x27;</span>) ? styles.fontStyle + <span class="hljs-string">&#x27; &#x27;</span> : <span class="hljs-string">&#x27;&#x27;</span>}</span><span class="hljs-subst">${(styles.fontVariant != <span class="hljs-string">&#x27;normal&#x27;</span>) ? styles.fontVariant + <span class="hljs-string">&#x27; &#x27;</span> : <span class="hljs-string">&#x27;&#x27;</span>}</span><span class="hljs-subst">${styles.fontSize}</span> <span class="hljs-subst">${styles.fontFamily}</span>`</span> || <span class="hljs-string">&#x27;20px sans-serif&#x27;</span>;
 
-        canvas.set({
+        canvas.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;#f2f2f2&#x27;</span>,
         })</pre></div></div>
             
@@ -296,7 +296,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
             </div>
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> counter = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">let</span> setClickText = <span class="hljs-function">() =&gt;</span> (counter === <span class="hljs-number">1</span>) ? <span class="hljs-string">`<span class="hljs-subst">${counter}</span> click`</span> : <span class="hljs-string">`<span class="hljs-subst">${counter}</span> clicks`</span>;</pre></div></div>
+        <span class="hljs-keyword">let</span> <span class="hljs-title function_">setClickText</span> = (<span class="hljs-params"></span>) =&gt; (counter === <span class="hljs-number">1</span>) ? <span class="hljs-string">`<span class="hljs-subst">${counter}</span> click`</span> : <span class="hljs-string">`<span class="hljs-subst">${counter}</span> clicks`</span>;</pre></div></div>
             
         </li>
         
@@ -311,18 +311,18 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> lineGradient = scrawl.makeGradient({
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> lineGradient = scrawl.<span class="hljs-title function_">makeGradient</span>({
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-gradient`</span>,
             <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
             <span class="hljs-attr">cyclePalette</span>: <span class="hljs-literal">true</span>
         })
-        .updateColor(<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;blue&#x27;</span>)
-        .updateColor(<span class="hljs-number">650</span>, <span class="hljs-string">&#x27;green&#x27;</span>)
-        .updateColor(<span class="hljs-number">700</span>, <span class="hljs-string">&#x27;gold&#x27;</span>)
-        .updateColor(<span class="hljs-number">750</span>, <span class="hljs-string">&#x27;green&#x27;</span>)
-        .updateColor(<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;blue&#x27;</span>);
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;blue&#x27;</span>)
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">650</span>, <span class="hljs-string">&#x27;green&#x27;</span>)
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">700</span>, <span class="hljs-string">&#x27;gold&#x27;</span>)
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">750</span>, <span class="hljs-string">&#x27;green&#x27;</span>)
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;blue&#x27;</span>);
 
-        <span class="hljs-keyword">let</span> trackLine = scrawl.makeLine({
+        <span class="hljs-keyword">let</span> trackLine = scrawl.<span class="hljs-title function_">makeLine</span>({
 
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-line`</span>,
             <span class="hljs-attr">startX</span>: <span class="hljs-number">20</span>,
@@ -355,7 +355,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> label = scrawl.makePhrase({
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> label = scrawl.<span class="hljs-title function_">makePhrase</span>({
 
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${wrapper.name}</span>-label`</span>,
 
@@ -397,7 +397,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> textTween = scrawl.makeTween({
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> textTween = scrawl.<span class="hljs-title function_">makeTween</span>({
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-textTween`</span>,
             <span class="hljs-attr">duration</span>: <span class="hljs-number">2500</span>,
             <span class="hljs-attr">targets</span>: label,
@@ -430,7 +430,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> gradientTween = scrawl.makeTween({
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> gradientTween = scrawl.<span class="hljs-title function_">makeTween</span>({
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-gradientTween`</span>,
             <span class="hljs-attr">targets</span>: lineGradient,
             <span class="hljs-attr">duration</span>: <span class="hljs-number">2500</span>,
@@ -451,7 +451,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
             ]
         });
 
-        <span class="hljs-keyword">let</span> clickAction = <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {</pre></div></div>
+        <span class="hljs-keyword">let</span> <span class="hljs-title function_">clickAction</span> = (<span class="hljs-params">e</span>) =&gt; {</pre></div></div>
             
         </li>
         
@@ -468,7 +468,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
             
             <div class="content"><div class='highlight'><pre>            counter++;
 
-            label.set({
+            label.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">text</span>: <span class="hljs-string">`Hello - <span class="hljs-subst">${setClickText()}</span>`</span>,
             });</pre></div></div>
             
@@ -485,30 +485,30 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (textTween.isRunning()) {
-                textTween.halt();
-                textTween.seekTo(<span class="hljs-number">0</span>);
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (textTween.<span class="hljs-title function_">isRunning</span>()) {
+                textTween.<span class="hljs-title function_">halt</span>();
+                textTween.<span class="hljs-title function_">seekTo</span>(<span class="hljs-number">0</span>);
             }
-            textTween.run();
+            textTween.<span class="hljs-title function_">run</span>();
 
-            <span class="hljs-keyword">if</span> (gradientTween.isRunning()) {
-                gradientTween.halt();
-                gradientTween.seekTo(<span class="hljs-number">0</span>);
+            <span class="hljs-keyword">if</span> (gradientTween.<span class="hljs-title function_">isRunning</span>()) {
+                gradientTween.<span class="hljs-title function_">halt</span>();
+                gradientTween.<span class="hljs-title function_">seekTo</span>(<span class="hljs-number">0</span>);
             }
-            gradientTween.run();
+            gradientTween.<span class="hljs-title function_">run</span>();
         }
-        scrawl.addNativeListener(<span class="hljs-string">&#x27;click&#x27;</span>, clickAction, el);
+        scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;click&#x27;</span>, clickAction, el);
 
-        snippet.artefacts = {
+        snippet.<span class="hljs-property">artefacts</span> = {
             <span class="hljs-attr">trackLine</span>: trackLine,
             <span class="hljs-attr">label</span>: label,
         };
 
-        snippet.assets = {
+        snippet.<span class="hljs-property">assets</span> = {
             <span class="hljs-attr">lineGradient</span>: lineGradient,
         };
 
-        snippet.functions = {
+        snippet.<span class="hljs-property">functions</span> = {
             <span class="hljs-attr">setClickText</span>: setClickText,
             <span class="hljs-attr">textTween</span>: textTween,
             <span class="hljs-attr">gradientTween</span>: gradientTween,

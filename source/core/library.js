@@ -9,7 +9,7 @@
 
 
 // Current version
-const version = '8.5.2';
+const version = '8.5.3';
 
 
 // Objects created using the __makeAnchor__ factory
@@ -90,6 +90,22 @@ const springnames = [];
 const world = {};
 const worldnames = [];
     
+// Section classes are used with Phrase entitys - we store the class definitions in the library so that they can be easily shared between Phrases
+const sectionClasses = {
+    'DEFAULTS': { defaults: true },
+    'BOLD': { weight: 'bold' },
+    'ITALIC': { style: 'italic' },
+    'SMALL-CAPS': { variant: 'small-caps' },
+    'HIGHLIGHT': { highlight: true },
+    'UNDERLINE': { underline: true },
+    'OVERLINE': { overline: true },
+    '/BOLD': { weight: 'normal' },
+    '/ITALIC': { style: 'normal' },
+    '/SMALL-CAPS': { variant: 'normal' },
+    '/HIGHLIGHT': { highlight: false },
+    '/UNDERLINE': { underline: false },
+    '/OVERLINE': { overline: false }
+};
 
 // Stack element wrappers created during Scrawl-canvas initialization, and created using the __makeStack__ and __addStack__ factories
 const stack = {};
@@ -159,6 +175,7 @@ export {
     palettenames,
     particle,
     particlenames,
+    sectionClasses,
     spring,
     springnames,
     stack,

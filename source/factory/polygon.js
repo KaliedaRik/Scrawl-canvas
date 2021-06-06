@@ -35,7 +35,7 @@
 // + [Canvas-030](../../demo/canvas-030.html) - Polyline entity functionality
 // + [Canvas-038](../../demo/canvas-038.html) - Responsive Shape-based entitys
 // + [DOM-015](../../demo/dom-015.html) - Use stacked DOM artefact corners as pivot points
-// + [Component-004](../../demo/component-004.html) - Scrawl-canvas packets - save and load a range of different entitys
+// + [Packets-002](../../demo/packets-002.html) - Scrawl-canvas packets - save and load a range of different entitys
 
 
 // #### Imports
@@ -85,6 +85,9 @@ P = shapeMix(P);
 let defaultAttributes = {
 
     sides: 0,
+    sideLength: 0,
+
+    // DEPRECATED - this is the (misleading) old name for the sideLength attribute
     radius: 0,
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
@@ -119,6 +122,18 @@ D.sides = function (item) {
 };
 
 // __sideLength__
+S.sideLength = function (item) {
+
+    this.sideLength = item;
+    this.updateDirty();
+};
+D.sideLength = function (item) {
+
+    this.sideLength += item;
+    this.updateDirty();
+};
+
+// DEPRECATED - this is the (misleading) old name for the sideLength attribute
 S.radius = function (item) {
 
     this.radius = item;
@@ -148,7 +163,8 @@ P.cleanSpecies = function () {
 // `makePolygonPath` - internal helper function - called by `cleanSpecies`
 P.makePolygonPath = function () {
 
-    let radius = this.radius,
+    // `radius` attribute is deprecated!
+    let sideLength = this.sideLength || this.radius,
         sides = this.sides,
         turn = 360 / sides,
         myPath = ``,
@@ -156,7 +172,7 @@ P.makePolygonPath = function () {
         currentY = 0,
         myMax, myMin, myYoffset;
 
-    let v = requestVector({x: 0, y: -radius});
+    let v = requestVector({x: 0, y: -sideLength});
 
     for (let i = 0; i < sides; i++) {
 
@@ -170,7 +186,7 @@ P.makePolygonPath = function () {
 
     myMin = Math.min(...yPts);
     myMax = Math.max(...yPts);
-    myYoffset = (((Math.abs(myMin) + Math.abs(myMax)) - radius) / 2).toFixed(1);
+    myYoffset = (((Math.abs(myMin) + Math.abs(myMax)) - sideLength) / 2).toFixed(1);
 
     myPath = `m0,${myYoffset}l${myPath}z`;
 
@@ -183,7 +199,7 @@ P.makePolygonPath = function () {
 // ##### makePolygon
 // Accepts argument with attributes:
 // + __sides__ (required) - integer positive Number (greater than 2) representing the number of sides the Shape will have
-// + __radius__ (required) - float Number representing the distance (in px) from the center of the Shape to the first angle on the Shape's circumference.
+// + __sideLength__ (required) - float Number representing the length (in px) of each of the shape's sides.
 //
 // ```
 // scrawl.makePolygon({
@@ -193,7 +209,7 @@ P.makePolygonPath = function () {
 //     startX: 20,
 //     startY: 935,
 //
-//     radius: 60,
+//     sideLength: 60,
 //     sides: 3,
 //
 //     fillStyle: 'lightblue',

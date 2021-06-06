@@ -184,9 +184,9 @@
 <h5 id="usage-example">Usage example:</h5>
 <pre><code><span class="hljs-keyword">import</span> hoverGradient <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./relative/or/absolute/path/to/this/file.js&#x27;</span>;
 
-<span class="hljs-keyword">let</span> myElements = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">&#x27;.some-class&#x27;</span>);
+<span class="hljs-keyword">let</span> myElements = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.some-class&#x27;</span>);
 
-myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> hoverGradient(el));
+myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">hoverGradient</span>(el));
 </code></pre>
 
             </div>
@@ -226,7 +226,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">el, args = {}</span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">el, args = {}</span>) {</pre></div></div>
             
         </li>
         
@@ -241,7 +241,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> snippet = scrawl.makeSnippet({
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> snippet = scrawl.<span class="hljs-title function_">makeSnippet</span>({
         <span class="hljs-attr">domElement</span>: el,
     });
 
@@ -260,13 +260,13 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> canvas = snippet.canvas,
-            group = canvas.base.name,
-            animation = snippet.animation,
-            wrapper = snippet.element,
-            name = wrapper.name;
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> canvas = snippet.<span class="hljs-property">canvas</span>,
+            group = canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
+            animation = snippet.<span class="hljs-property">animation</span>,
+            wrapper = snippet.<span class="hljs-property">element</span>,
+            name = wrapper.<span class="hljs-property">name</span>;
 
-        <span class="hljs-keyword">const</span> animatedGradient = scrawl.makeRadialGradient({
+        <span class="hljs-keyword">const</span> animatedGradient = scrawl.<span class="hljs-title function_">makeRadialGradient</span>({
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-gradient`</span>,
             <span class="hljs-attr">start</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>],
             <span class="hljs-attr">end</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>],
@@ -279,20 +279,20 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
             },
             <span class="hljs-attr">cyclePalette</span>: <span class="hljs-literal">true</span>,
         })
-        .updateColor(<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;orange&#x27;</span>)
-        .updateColor(<span class="hljs-number">99</span>, <span class="hljs-string">&#x27;orange&#x27;</span>)
-        .updateColor(<span class="hljs-number">100</span>, <span class="hljs-string">&#x27;red&#x27;</span>)
-        .updateColor(<span class="hljs-number">299</span>, <span class="hljs-string">&#x27;red&#x27;</span>)
-        .updateColor(<span class="hljs-number">300</span>, <span class="hljs-string">&#x27;lightblue&#x27;</span>)
-        .updateColor(<span class="hljs-number">499</span>, <span class="hljs-string">&#x27;lightblue&#x27;</span>)
-        .updateColor(<span class="hljs-number">500</span>, <span class="hljs-string">&#x27;gold&#x27;</span>)
-        .updateColor(<span class="hljs-number">699</span>, <span class="hljs-string">&#x27;gold&#x27;</span>)
-        .updateColor(<span class="hljs-number">700</span>, <span class="hljs-string">&#x27;green&#x27;</span>)
-        .updateColor(<span class="hljs-number">899</span>, <span class="hljs-string">&#x27;green&#x27;</span>)
-        .updateColor(<span class="hljs-number">900</span>, <span class="hljs-string">&#x27;orange&#x27;</span>)
-        .updateColor(<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;orange&#x27;</span>);
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;orange&#x27;</span>)
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">99</span>, <span class="hljs-string">&#x27;orange&#x27;</span>)
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">100</span>, <span class="hljs-string">&#x27;red&#x27;</span>)
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">299</span>, <span class="hljs-string">&#x27;red&#x27;</span>)
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">300</span>, <span class="hljs-string">&#x27;lightblue&#x27;</span>)
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">499</span>, <span class="hljs-string">&#x27;lightblue&#x27;</span>)
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">500</span>, <span class="hljs-string">&#x27;gold&#x27;</span>)
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">699</span>, <span class="hljs-string">&#x27;gold&#x27;</span>)
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">700</span>, <span class="hljs-string">&#x27;green&#x27;</span>)
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">899</span>, <span class="hljs-string">&#x27;green&#x27;</span>)
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">900</span>, <span class="hljs-string">&#x27;orange&#x27;</span>)
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;orange&#x27;</span>);
         
-        scrawl.makeBlock({
+        scrawl.<span class="hljs-title function_">makeBlock</span>({
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-block`</span>,
             group,
             <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
@@ -300,9 +300,9 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
             <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
         });
 
-        animation.set({
-            <span class="hljs-attr">commence</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-                <span class="hljs-keyword">if</span> (canvas.here.active) animatedGradient.updateByDelta();
+        animation.<span class="hljs-title function_">set</span>({
+            <span class="hljs-attr">commence</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+                <span class="hljs-keyword">if</span> (canvas.<span class="hljs-property">here</span>.<span class="hljs-property">active</span>) animatedGradient.<span class="hljs-title function_">updateByDelta</span>();
             },
         });
     }</pre></div></div>

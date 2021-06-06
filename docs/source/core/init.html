@@ -165,6 +165,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/lineSpiral.html">
+                  ./source/factory/lineSpiral.js
+                </a>
+              
+                
                 <a class="source" href="../factory/loom.html">
                   ./source/factory/loom.js
                 </a>
@@ -257,6 +262,11 @@
                 
                 <a class="source" href="../factory/radialGradient.html">
                   ./source/factory/radialGradient.js
+                </a>
+              
+                
+                <a class="source" href="../factory/rawAsset.html">
+                  ./source/factory/rawAsset.js
                 </a>
               
                 
@@ -477,7 +487,7 @@
 <span class="hljs-keyword">import</span> { startCoreListeners, applyCoreResizeListener, applyCoreScrollListener } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./userInteraction.js&#x27;</span>;
 
 
-<span class="hljs-keyword">const</span> init = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
+<span class="hljs-keyword">const</span> init = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
             
         </li>
         
@@ -518,7 +528,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">window</span>.scrawlEnvironmentTouchSupported = (<span class="hljs-string">&#x27;ontouchstart&#x27;</span> <span class="hljs-keyword">in</span> <span class="hljs-built_in">window</span> || (<span class="hljs-built_in">window</span>.DocumentTouch &amp;&amp; <span class="hljs-built_in">document</span> <span class="hljs-keyword">instanceof</span> DocumentTouch)) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">window</span>.<span class="hljs-property">scrawlEnvironmentTouchSupported</span> = (<span class="hljs-string">&#x27;ontouchstart&#x27;</span> <span class="hljs-keyword">in</span> <span class="hljs-variable language_">window</span> || (<span class="hljs-variable language_">window</span>.<span class="hljs-property">DocumentTouch</span> &amp;&amp; <span class="hljs-variable language_">document</span> <span class="hljs-keyword">instanceof</span> <span class="hljs-title class_">DocumentTouch</span>)) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -546,8 +556,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    getStacks();
-    getCanvases();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">getStacks</span>();
+    <span class="hljs-title function_">getCanvases</span>();</pre></div></div>
             
         </li>
         
@@ -562,7 +572,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    startCoreAnimationLoop();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">startCoreAnimationLoop</span>();</pre></div></div>
             
         </li>
         
@@ -577,9 +587,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    applyCoreResizeListener();
-    applyCoreScrollListener();
-    startCoreListeners();
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">applyCoreResizeListener</span>();
+    <span class="hljs-title function_">applyCoreScrollListener</span>();
+    <span class="hljs-title function_">startCoreListeners</span>();
 };</pre></div></div>
             
         </li>

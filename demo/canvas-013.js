@@ -227,7 +227,7 @@ scrawl.makePolygon({
     name: 'equiTriangle',
     startX: 20,
     startY: 935,
-    radius: 60,
+    sideLength: 60,
     sides: 3,
     fillStyle: 'lightblue',
     method: 'fillAndDraw',
@@ -248,7 +248,7 @@ scrawl.makePolygon({
 }).clone({
     name: '11sides',
     startX: 420,
-    radius: 30,
+    sideLength: 30,
     sides: 11,
 });
 

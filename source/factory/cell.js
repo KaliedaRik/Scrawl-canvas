@@ -32,7 +32,7 @@
 
 
 // #### Demos:
-// + All canvas and component demos, and a few of the stack demos, include Cell wrapper functionality - most of which happens behind the scenes and does not need to be directly coded. 
+// + All canvas and packets demos, and a few of the stack demos, include Cell wrapper functionality - most of which happens behind the scenes and does not need to be directly coded. 
 // + [Canvas-009](../../demo/canvas-009.html) - Pattern styles; Entity web link anchors; Dynamic accessibility
 // + [Canvas-031](../../demo/canvas-031.html) - Cell generation and processing order - kaleidoscope clock
 // + [Canvas-036](../../demo/canvas-036.html) - Cell artefact-like positional functionality
@@ -528,7 +528,8 @@ P.cleanDimensionsAdditionalActions = function() {
             current = this.currentDimensions,
             base = this.isBase;
 
-        if (base && control && control.isComponent) {
+        // DEPRECATED (because it is a really bad name) __isComponent__ replaced by __baseMatchesCanvasDimensions__
+        if (base && control && (control.baseMatchesCanvasDimensions || control.isComponent)) {
 
             let controlDims = this.controller.currentDimensions,
                 dims = this.dimensions;
@@ -950,7 +951,6 @@ P.show = function () {
             destHeight = floor(hostDimensions[1]);
 
         // Cannot draw to the destination canvas if either of its dimensions === 0
-        // - Test on Demo component-002
         if (!destWidth || !destHeight) return false;
 
         let { currentScale:scale, currentDimensions, composite, alpha, controller, element, isBase, currentStampHandlePosition:handle, currentStampPosition:stamp } = this;

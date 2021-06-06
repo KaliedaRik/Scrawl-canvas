@@ -109,10 +109,15 @@ let report = function () {
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = `Columns - ${myGrid.columns}; Rows - ${myGrid.rows}
-canvas.here - x: ${canvas.here.x}, y: ${canvas.here.y}
-${hitReport}
-Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
+    Grid - columns: ${myGrid.columns.toFixed(0)}; rows: ${myGrid.rows.toFixed(0)}
+    Grid dimensions - width: ${myGrid.dimensions[0]}; height: ${myGrid.dimensions[1]}
+    Grid gutter widths - column: ${myGrid.columnGutterWidth.toFixed(0)}; row: ${myGrid.rowGutterWidth.toFixed(0)}
+    Start - x: ${myGrid.start[0]}, y: ${myGrid.start[1]}
+    Handle - x: ${myGrid.handle[0]}, y: ${myGrid.handle[1]}
+    Offset - x: ${myGrid.offset[0]}, y: ${myGrid.offset[1]}
+    Roll: ${myGrid.roll}; Scale: ${myGrid.scale}
+    canvas.here - x: ${canvas.here.x.toFixed(0)}, y: ${canvas.here.y.toFixed(0)}; ${hitReport}`;
     };
 }();
 

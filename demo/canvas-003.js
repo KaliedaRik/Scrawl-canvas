@@ -54,8 +54,8 @@ let report = function () {
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
 Palette - start: ${graddy.get('paletteStart')}; end: ${graddy.get('paletteEnd')}
-Start - x: ${graddy.get('startX')}; y: ${graddy.get('startY')}
-End - x: ${graddy.get('endX')}; y: ${graddy.get('endY')}`;
+Start - x: ${graddy.get('startX').toFixed(0)}; y: ${graddy.get('startY').toFixed(0)}
+End - x: ${graddy.get('endX').toFixed(0)}; y: ${graddy.get('endY').toFixed(0)}`;
     };
 }();
 

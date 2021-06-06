@@ -280,6 +280,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-051.html">
+                  ./demo/canvas-051.js
+                </a>
+              
+                
                 <a class="source" href="core-001.html">
                   ./demo/core-001.js
                 </a>
@@ -644,6 +649,16 @@
                   ./demo/temp-inkscapeSvgFilters.js
                 </a>
               
+                
+                <a class="source" href="tensorflow-001.html">
+                  ./demo/tensorflow-001.js
+                </a>
+              
+                
+                <a class="source" href="tensorflow-002.html">
+                  ./demo/tensorflow-002.js
+                </a>
+              
             </div>
           </div>
         </li>
@@ -692,10 +707,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> library = scrawl.library,
-    artefact = library.artefact,
-    canvasnames = library.canvasnames,
-    mystack = artefact.mystack;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> library = scrawl.<span class="hljs-property">library</span>,
+    artefact = library.<span class="hljs-property">artefact</span>,
+    canvasnames = library.<span class="hljs-property">canvasnames</span>,
+    mystack = artefact.<span class="hljs-property">mystack</span>;</pre></div></div>
             
         </li>
         
@@ -710,33 +725,33 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow, text,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">let</span> artefactnames = library.artefactnames,
-        stacknames = library.stacknames,
-        cellnames = library.cellnames,
-        stack = library.stack,
-        canvas = library.canvas,
-        cell = library.cell;
+    <span class="hljs-keyword">let</span> artefactnames = library.<span class="hljs-property">artefactnames</span>,
+        stacknames = library.<span class="hljs-property">stacknames</span>,
+        cellnames = library.<span class="hljs-property">cellnames</span>,
+        stack = library.<span class="hljs-property">stack</span>,
+        canvas = library.<span class="hljs-property">canvas</span>,
+        cell = library.<span class="hljs-property">cell</span>;
 
     <span class="hljs-keyword">let</span> a, s, el, c;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        a = <span class="hljs-built_in">Object</span>.keys(artefact);
-        s = <span class="hljs-built_in">Object</span>.keys(stack);
-        el = <span class="hljs-built_in">Object</span>.keys(canvas);
-        c = <span class="hljs-built_in">Object</span>.keys(cell);
+        a = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(artefact);
+        s = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(stack);
+        el = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(canvas);
+        c = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(cell);
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
 artefact - <span class="hljs-subst">${a.length}</span>, <span class="hljs-subst">${artefactnames.length}</span>: [<span class="hljs-subst">${(artefactnames).join(<span class="hljs-string">&#x27;, &#x27;</span>)}</span>] 
 stack - <span class="hljs-subst">${s.length}</span>, <span class="hljs-subst">${stacknames.length}</span>: [<span class="hljs-subst">${(stacknames).join(<span class="hljs-string">&#x27;, &#x27;</span>)}</span>] 
 canvas - <span class="hljs-subst">${el.length}</span>, <span class="hljs-subst">${canvasnames.length}</span>: [<span class="hljs-subst">${(canvasnames).join(<span class="hljs-string">&#x27;, &#x27;</span>)}</span>]
@@ -758,10 +773,10 @@ cell - <span class="hljs-subst">${c.length}</span>, <span class="hljs-subst">${c
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeAnimation({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeAnimation</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
-    <span class="hljs-attr">fn</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ scrawl.render() },
+    <span class="hljs-attr">fn</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) { scrawl.<span class="hljs-title function_">render</span>() },
 });</pre></div></div>
             
         </li>
@@ -777,7 +792,7 @@ cell - <span class="hljs-subst">${c.length}</span>, <span class="hljs-subst">${c
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> controls = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> controls = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
             
         </li>
         
@@ -792,15 +807,15 @@ cell - <span class="hljs-subst">${c.length}</span>, <span class="hljs-subst">${c
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> b1 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#action_1&#x27;</span>),
-        b2 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#action_2&#x27;</span>),
-        b3 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#action_3&#x27;</span>),
-        b4 = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#action_4&#x27;</span>);
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> b1 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#action_1&#x27;</span>),
+        b2 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#action_2&#x27;</span>),
+        b3 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#action_3&#x27;</span>),
+        b4 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#action_4&#x27;</span>);
 
-    b1.disabled = <span class="hljs-string">&#x27;&#x27;</span>;
-    b2.disabled = <span class="hljs-string">&#x27;disabled&#x27;</span>;
-    b3.disabled = <span class="hljs-string">&#x27;&#x27;</span>;
-    b4.disabled = <span class="hljs-string">&#x27;&#x27;</span>;
+    b1.<span class="hljs-property">disabled</span> = <span class="hljs-string">&#x27;&#x27;</span>;
+    b2.<span class="hljs-property">disabled</span> = <span class="hljs-string">&#x27;disabled&#x27;</span>;
+    b3.<span class="hljs-property">disabled</span> = <span class="hljs-string">&#x27;&#x27;</span>;
+    b4.<span class="hljs-property">disabled</span> = <span class="hljs-string">&#x27;&#x27;</span>;
 
     <span class="hljs-keyword">let</span> stackCanvas, divCanvas;</pre></div></div>
             
@@ -817,7 +832,7 @@ cell - <span class="hljs-subst">${c.length}</span>, <span class="hljs-subst">${c
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    scrawl.makeColor({
+            <div class="content"><div class='highlight'><pre>    scrawl.<span class="hljs-title function_">makeColor</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;templateColor&#x27;</span>,
         <span class="hljs-attr">rMax</span>: <span class="hljs-number">200</span>,
         <span class="hljs-attr">gMax</span>: <span class="hljs-number">50</span>,
@@ -837,11 +852,11 @@ cell - <span class="hljs-subst">${c.length}</span>, <span class="hljs-subst">${c
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> colorFactory = scrawl.library.styles.templateColor.clone({
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> colorFactory = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">styles</span>.<span class="hljs-property">templateColor</span>.<span class="hljs-title function_">clone</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myColorObject&#x27;</span>,
     });
 
-    <span class="hljs-built_in">console</span>.log(colorFactory.saveAsPacket());</pre></div></div>
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(colorFactory.<span class="hljs-title function_">saveAsPacket</span>());</pre></div></div>
             
         </li>
         
@@ -852,7 +867,7 @@ cell - <span class="hljs-subst">${c.length}</span>, <span class="hljs-subst">${c
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <pre><code>RESULTS:
+              <pre><code><span class="hljs-attr">RESULTS</span>:
 [
     <span class="hljs-string">&quot;myColorObject&quot;</span>,
     <span class="hljs-string">&quot;Color&quot;</span>,
@@ -869,18 +884,18 @@ cell - <span class="hljs-subst">${c.length}</span>, <span class="hljs-subst">${c
             </div>
             
             <div class="content"><div class='highlight'><pre>
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
 
-        e.preventDefault();
-        e.returnValue = <span class="hljs-literal">false</span>;
+        e.<span class="hljs-title function_">preventDefault</span>();
+        e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
         
-        <span class="hljs-keyword">switch</span> (e.target.id) {
+        <span class="hljs-keyword">switch</span> (e.<span class="hljs-property">target</span>.<span class="hljs-property">id</span>) {
 
             <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;action_1&#x27;</span>:
-                b1.disabled = <span class="hljs-string">&#x27;disabled&#x27;</span>;
-                b2.disabled = <span class="hljs-string">&#x27;&#x27;</span>;
+                b1.<span class="hljs-property">disabled</span> = <span class="hljs-string">&#x27;disabled&#x27;</span>;
+                b2.<span class="hljs-property">disabled</span> = <span class="hljs-string">&#x27;&#x27;</span>;
 
-                stackCanvas = scrawl.addCanvas({</pre></div></div>
+                stackCanvas = scrawl.<span class="hljs-title function_">addCanvas</span>({</pre></div></div>
             
         </li>
         
@@ -895,7 +910,7 @@ cell - <span class="hljs-subst">${c.length}</span>, <span class="hljs-subst">${c
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                    host: (<span class="hljs-built_in">Math</span>.random() &gt; <span class="hljs-number">0.5</span>) ? mystack : <span class="hljs-string">&#x27;#mystack&#x27;</span>,
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-attr">host</span>: (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() &gt; <span class="hljs-number">0.5</span>) ? mystack : <span class="hljs-string">&#x27;#mystack&#x27;</span>,
 
                     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;my-new-canvas&#x27;</span>,
                     <span class="hljs-attr">width</span>: <span class="hljs-number">300</span>,
@@ -907,39 +922,39 @@ cell - <span class="hljs-subst">${c.length}</span>, <span class="hljs-subst">${c
 
             <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;action_2&#x27;</span>:
 
-                b1.disabled = <span class="hljs-string">&#x27;&#x27;</span>;
-                b2.disabled = <span class="hljs-string">&#x27;disabled&#x27;</span>;
+                b1.<span class="hljs-property">disabled</span> = <span class="hljs-string">&#x27;&#x27;</span>;
+                b2.<span class="hljs-property">disabled</span> = <span class="hljs-string">&#x27;disabled&#x27;</span>;
 
-                <span class="hljs-keyword">if</span> (stackCanvas) stackCanvas.kill();
+                <span class="hljs-keyword">if</span> (stackCanvas) stackCanvas.<span class="hljs-title function_">kill</span>();
 
                 <span class="hljs-keyword">break</span>;
 
             <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;action_3&#x27;</span>:
 
-                b1.disabled = <span class="hljs-string">&#x27;&#x27;</span>;
-                b2.disabled = <span class="hljs-string">&#x27;disabled&#x27;</span>;
-                b3.disabled = <span class="hljs-string">&#x27;disabled&#x27;</span>;
+                b1.<span class="hljs-property">disabled</span> = <span class="hljs-string">&#x27;&#x27;</span>;
+                b2.<span class="hljs-property">disabled</span> = <span class="hljs-string">&#x27;disabled&#x27;</span>;
+                b3.<span class="hljs-property">disabled</span> = <span class="hljs-string">&#x27;disabled&#x27;</span>;
 
-                mystack.kill();
+                mystack.<span class="hljs-title function_">kill</span>();
                 mystack = <span class="hljs-literal">false</span>;
 
                 <span class="hljs-keyword">break</span>;
                 
             <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;action_4&#x27;</span>:
 
-                scrawl.addCanvas({
+                scrawl.<span class="hljs-title function_">addCanvas</span>({
                     <span class="hljs-attr">name</span>: <span class="hljs-string">`extra-canvas-<span class="hljs-subst">${canvasnames.length}</span>`</span>,
-                    <span class="hljs-attr">host</span>: (<span class="hljs-built_in">Math</span>.random() &gt; <span class="hljs-number">0.5</span>) ? <span class="hljs-string">&#x27;#not-a-stack&#x27;</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+                    <span class="hljs-attr">host</span>: (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() &gt; <span class="hljs-number">0.5</span>) ? <span class="hljs-string">&#x27;#not-a-stack&#x27;</span> : <span class="hljs-string">&#x27;&#x27;</span>,
                     <span class="hljs-attr">width</span>: <span class="hljs-number">300</span>,
                     <span class="hljs-attr">height</span>: <span class="hljs-number">50</span>,
-                    <span class="hljs-attr">backgroundColor</span>: colorFactory.get(<span class="hljs-string">&#x27;random&#x27;</span>),
+                    <span class="hljs-attr">backgroundColor</span>: colorFactory.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;random&#x27;</span>),
                 });
 
                 <span class="hljs-keyword">break</span>;
         }
     };
 }();
-scrawl.addListener(<span class="hljs-string">&#x27;up&#x27;</span>, controls, <span class="hljs-string">&#x27;.control_button&#x27;</span>);</pre></div></div>
+scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-string">&#x27;up&#x27;</span>, controls, <span class="hljs-string">&#x27;.control_button&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -954,7 +969,7 @@ scrawl.addListener(<span class="hljs-string">&#x27;up&#x27;</span>, controls, <s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

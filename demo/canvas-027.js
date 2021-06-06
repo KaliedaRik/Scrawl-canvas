@@ -18,7 +18,7 @@ canvas.set({
     // + TODO: issues with Phrase positioning picking up on canvas dimensions changes
     // + On the positive side, text doesn't distort
 
-    // isComponent: true,
+    // baseMatchesCanvasDimensions: true,
 
     // The __fit-base-into-display__ approach
     // + Positives - collision detection is a lot better

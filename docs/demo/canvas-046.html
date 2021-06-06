@@ -280,6 +280,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-051.html">
+                  ./demo/canvas-051.js
+                </a>
+              
+                
                 <a class="source" href="core-001.html">
                   ./demo/core-001.js
                 </a>
@@ -644,6 +649,16 @@
                   ./demo/temp-inkscapeSvgFilters.js
                 </a>
               
+                
+                <a class="source" href="tensorflow-001.html">
+                  ./demo/tensorflow-001.js
+                </a>
+              
+                
+                <a class="source" href="tensorflow-002.html">
+                  ./demo/tensorflow-002.js
+                </a>
+              
             </div>
           </div>
         </li>
@@ -713,7 +728,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> colorMaker = scrawl.makeColor({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> colorMaker = scrawl.<span class="hljs-title function_">makeColor</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;color-maker&#x27;</span>,
     <span class="hljs-attr">minimumColor</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
     <span class="hljs-attr">maximumColor</span>: <span class="hljs-string">&#x27;green&#x27;</span>,
@@ -747,7 +762,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> buildSmokeRing = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">namespace, canvasWrapper, color</span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> buildSmokeRing = <span class="hljs-keyword">function</span> (<span class="hljs-params">namespace, canvasWrapper, color</span>) {</pre></div></div>
             
         </li>
         
@@ -762,7 +777,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> cell = canvasWrapper.buildCell({
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> cell = canvasWrapper.<span class="hljs-title function_">buildCell</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-cell`</span>,
         <span class="hljs-attr">width</span>: <span class="hljs-number">600</span>,
         <span class="hljs-attr">height</span>: <span class="hljs-number">600</span>,
@@ -784,14 +799,14 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> v = scrawl.requestVector(<span class="hljs-number">0</span>, <span class="hljs-number">200</span>),
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> v = scrawl.<span class="hljs-title function_">requestVector</span>(<span class="hljs-number">0</span>, <span class="hljs-number">200</span>),
         pins = [];
 
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">120</span>; i++) {
-        v.rotate((<span class="hljs-built_in">Math</span>.random() * <span class="hljs-number">45</span>) - <span class="hljs-number">10</span>);
-        pins.push([v.x + ((<span class="hljs-built_in">Math</span>.random() * <span class="hljs-number">120</span>) - <span class="hljs-number">60</span>) + <span class="hljs-number">300</span>, v.y + ((<span class="hljs-built_in">Math</span>.random() * <span class="hljs-number">120</span>) - <span class="hljs-number">60</span>) + <span class="hljs-number">300</span>])
+        v.<span class="hljs-title function_">rotate</span>((<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * <span class="hljs-number">45</span>) - <span class="hljs-number">10</span>);
+        pins.<span class="hljs-title function_">push</span>([v.<span class="hljs-property">x</span> + ((<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * <span class="hljs-number">120</span>) - <span class="hljs-number">60</span>) + <span class="hljs-number">300</span>, v.<span class="hljs-property">y</span> + ((<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * <span class="hljs-number">120</span>) - <span class="hljs-number">60</span>) + <span class="hljs-number">300</span>])
     }
-    scrawl.releaseVector(v);</pre></div></div>
+    scrawl.<span class="hljs-title function_">releaseVector</span>(v);</pre></div></div>
             
         </li>
         
@@ -806,7 +821,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> snake = scrawl.makePolyline({
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> snake = scrawl.<span class="hljs-title function_">makePolyline</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-snake`</span>,
         <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-cell`</span>,
@@ -837,11 +852,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    cell.clear();
-    scrawl.createImageFromCell(cell, <span class="hljs-literal">true</span>);
-    cell.compile();
-    snake.kill();
-    cell.kill();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    cell.<span class="hljs-title function_">clear</span>();
+    scrawl.<span class="hljs-title function_">createImageFromCell</span>(cell, <span class="hljs-literal">true</span>);
+    cell.<span class="hljs-title function_">compile</span>();
+    snake.<span class="hljs-title function_">kill</span>();
+    cell.<span class="hljs-title function_">kill</span>();</pre></div></div>
             
         </li>
         
@@ -856,9 +871,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> img = scrawl.makePicture({
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> img = scrawl.<span class="hljs-title function_">makePicture</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-smokering`</span>,
-        <span class="hljs-attr">group</span>: canvasWrapper.base.name,
+        <span class="hljs-attr">group</span>: canvasWrapper.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
 
         <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
         <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
@@ -878,7 +893,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        removeAssetOnKill: <span class="hljs-string">&#x27;dom&#x27;</span>,
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">removeAssetOnKill</span>: <span class="hljs-string">&#x27;dom&#x27;</span>,
 
         <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">600</span>, <span class="hljs-number">600</span>],
         <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-number">600</span>, <span class="hljs-number">600</span>],
@@ -897,7 +912,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    scrawl.makeTween({
+            <div class="content"><div class='highlight'><pre>    scrawl.<span class="hljs-title function_">makeTween</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-tween`</span>,
         <span class="hljs-attr">duration</span>: <span class="hljs-string">&#x27;16s&#x27;</span>,
@@ -916,14 +931,14 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        cycles: <span class="hljs-number">1</span>,
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">cycles</span>: <span class="hljs-number">1</span>,
         <span class="hljs-attr">killOnComplete</span>: <span class="hljs-literal">true</span>,
         <span class="hljs-attr">completeAction</span>: <span class="hljs-function">() =&gt;</span> {
 
-            img.kill(<span class="hljs-literal">true</span>);
+            img.<span class="hljs-title function_">kill</span>(<span class="hljs-literal">true</span>);
 
             counter++;
-            buildSmokeRing(<span class="hljs-string">`ring<span class="hljs-subst">${counter}</span>`</span>, canvas, colorMaker.getRangeColor(<span class="hljs-built_in">Math</span>.random()));
+            <span class="hljs-title function_">buildSmokeRing</span>(<span class="hljs-string">`ring<span class="hljs-subst">${counter}</span>`</span>, canvas, colorMaker.<span class="hljs-title function_">getRangeColor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>()));
         },
 
         <span class="hljs-attr">definitions</span>: [
@@ -941,11 +956,11 @@
             {
                 <span class="hljs-attr">attribute</span>: <span class="hljs-string">&#x27;roll&#x27;</span>,
                 <span class="hljs-attr">start</span>: <span class="hljs-number">0</span>,
-                <span class="hljs-attr">end</span>: (<span class="hljs-built_in">Math</span>.random() * <span class="hljs-number">180</span>) - <span class="hljs-number">90</span>,
+                <span class="hljs-attr">end</span>: (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * <span class="hljs-number">180</span>) - <span class="hljs-number">90</span>,
                 <span class="hljs-attr">engine</span>: <span class="hljs-string">&#x27;easeIn&#x27;</span>,
             },
         ]
-    }).run();
+    }).<span class="hljs-title function_">run</span>();
 };</pre></div></div>
             
         </li>
@@ -961,7 +976,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.library.canvas.mycanvas;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
             
         </li>
         
@@ -976,7 +991,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>canvas.setBase({
+            <div class="content"><div class='highlight'><pre>canvas.<span class="hljs-title function_">setBase</span>({
     <span class="hljs-attr">clearAlpha</span>: <span class="hljs-number">0.985</span>,
 })</pre></div></div>
             
@@ -994,19 +1009,19 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
 Cells: <span class="hljs-subst">${scrawl.library.cellnames.join(<span class="hljs-string">&#x27;, &#x27;</span>)}</span>
 Groups: <span class="hljs-subst">${scrawl.library.groupnames.join(<span class="hljs-string">&#x27;, &#x27;</span>)}</span>
 Assets: <span class="hljs-subst">${scrawl.library.assetnames.join(<span class="hljs-string">&#x27;, &#x27;</span>)}</span>
@@ -1029,7 +1044,7 @@ Tweens: <span class="hljs-subst">${scrawl.library.tweennames.join(<span class="h
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> render = scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> render = scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
     <span class="hljs-attr">target</span>: canvas,
@@ -1049,10 +1064,10 @@ Tweens: <span class="hljs-subst">${scrawl.library.tweennames.join(<span class="h
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> buildSmokeRing(<span class="hljs-string">`initRingFirst`</span>, canvas, colorMaker.getRangeColor(<span class="hljs-built_in">Math</span>.random())), <span class="hljs-number">0</span>);
-<span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> buildSmokeRing(<span class="hljs-string">`initRingSecond`</span>, canvas, colorMaker.getRangeColor(<span class="hljs-built_in">Math</span>.random())), <span class="hljs-number">3700</span>);
-<span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> buildSmokeRing(<span class="hljs-string">`initRingThird`</span>, canvas, colorMaker.getRangeColor(<span class="hljs-built_in">Math</span>.random())), <span class="hljs-number">8100</span>);
-<span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> buildSmokeRing(<span class="hljs-string">`initRingFourth`</span>, canvas, colorMaker.getRangeColor(<span class="hljs-built_in">Math</span>.random())), <span class="hljs-number">12300</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">buildSmokeRing</span>(<span class="hljs-string">`initRingFirst`</span>, canvas, colorMaker.<span class="hljs-title function_">getRangeColor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>())), <span class="hljs-number">0</span>);
+<span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">buildSmokeRing</span>(<span class="hljs-string">`initRingSecond`</span>, canvas, colorMaker.<span class="hljs-title function_">getRangeColor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>())), <span class="hljs-number">3700</span>);
+<span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">buildSmokeRing</span>(<span class="hljs-string">`initRingThird`</span>, canvas, colorMaker.<span class="hljs-title function_">getRangeColor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>())), <span class="hljs-number">8100</span>);
+<span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">buildSmokeRing</span>(<span class="hljs-string">`initRingFourth`</span>, canvas, colorMaker.<span class="hljs-title function_">getRangeColor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>())), <span class="hljs-number">12300</span>);</pre></div></div>
             
         </li>
         
@@ -1071,14 +1086,14 @@ Tweens: <span class="hljs-subst">${scrawl.library.tweennames.join(<span class="h
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">window</span>.addEventListener(<span class="hljs-string">&#x27;blur&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
-    scrawl.library.animationtickersnames.forEach(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> {
-        <span class="hljs-keyword">if</span> (t.indexOf(<span class="hljs-string">&#x27;ring&#x27;</span>) === <span class="hljs-number">0</span>) {
-            <span class="hljs-keyword">let</span> ticker = scrawl.library.animationtickers[t];
-            <span class="hljs-keyword">if</span> (ticker) ticker.halt();
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">window</span>.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;blur&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
+    scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">animationtickersnames</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> {
+        <span class="hljs-keyword">if</span> (t.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;ring&#x27;</span>) === <span class="hljs-number">0</span>) {
+            <span class="hljs-keyword">let</span> ticker = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">animationtickers</span>[t];
+            <span class="hljs-keyword">if</span> (ticker) ticker.<span class="hljs-title function_">halt</span>();
         }
     });
-    render.halt();
+    render.<span class="hljs-title function_">halt</span>();
 });</pre></div></div>
             
         </li>
@@ -1094,15 +1109,15 @@ Tweens: <span class="hljs-subst">${scrawl.library.tweennames.join(<span class="h
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.addNativeListener(<span class="hljs-string">&#x27;focus&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
-    scrawl.library.animationtickersnames.forEach(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> {
-        <span class="hljs-keyword">if</span>(t.indexOf(<span class="hljs-string">&#x27;ring&#x27;</span>) === <span class="hljs-number">0</span>) {
-            <span class="hljs-keyword">let</span> ticker = scrawl.library.animationtickers[t];
-            <span class="hljs-keyword">if</span> (ticker) ticker.resume();
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;focus&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
+    scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">animationtickersnames</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> {
+        <span class="hljs-keyword">if</span>(t.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;ring&#x27;</span>) === <span class="hljs-number">0</span>) {
+            <span class="hljs-keyword">let</span> ticker = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">animationtickers</span>[t];
+            <span class="hljs-keyword">if</span> (ticker) ticker.<span class="hljs-title function_">resume</span>();
         }
     });
-    render.run();
-}, <span class="hljs-built_in">window</span>);</pre></div></div>
+    render.<span class="hljs-title function_">run</span>();
+}, <span class="hljs-variable language_">window</span>);</pre></div></div>
             
         </li>
         
@@ -1117,7 +1132,7 @@ Tweens: <span class="hljs-subst">${scrawl.library.tweennames.join(<span class="h
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

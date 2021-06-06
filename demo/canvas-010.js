@@ -143,7 +143,11 @@ let report = function () {
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
+    Copy - x: ${viddyOne.copyStart[0]}, y: ${viddyOne.copyStart[1]}, w: ${viddyOne.copyDimensions[0]}, h:${viddyOne.copyDimensions[1]}
+    Paste - x: ${viddyOne.start[0]}, y: ${viddyOne.start[1]}, w: ${viddyOne.dimensions[0]}, h:${viddyOne.dimensions[1]}
+    Handle - x: ${viddyOne.handle[0]}, y: ${viddyOne.handle[1]}
+    Roll: ${viddyOne.roll}; Scale: ${viddyOne.scale}`;
     };
 }();
 

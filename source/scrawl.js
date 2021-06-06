@@ -1,6 +1,6 @@
 // # Scrawl-canvas
 //
-// #### Version 8.5.2 - 11 Mar 2021
+// #### Version 8.5.3 - 6 Jun 2021
 //
 // ---------------------------------------------------------------------------------
 // The MIT License (MIT)
@@ -167,6 +167,11 @@ import {
 
 
 import { 
+    makeLineSpiral,
+} from './factory/lineSpiral.js';
+
+
+import { 
     makeLoom,
 } from './factory/loom.js';
 
@@ -230,6 +235,11 @@ import {
 import { 
     makeRadialGradient,
 } from './factory/radialGradient.js';
+
+
+import { 
+    makeRawAsset,
+} from './factory/rawAsset.js';
 
 
 import { 
@@ -436,6 +446,10 @@ export default {
     makeLine,
 
 
+    // factory/lineSpiral.js
+    makeLineSpiral,
+
+
     // factory/loom.js
     makeLoom,
 
@@ -487,6 +501,10 @@ export default {
 
     // factory/radialGradient.js
     makeRadialGradient,
+
+
+    // factory/rawAsset.js
+    makeRawAsset,
 
 
     // factory/rectangle.js

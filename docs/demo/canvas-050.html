@@ -280,6 +280,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-051.html">
+                  ./demo/canvas-051.js
+                </a>
+              
+                
                 <a class="source" href="core-001.html">
                   ./demo/core-001.js
                 </a>
@@ -644,6 +649,16 @@
                   ./demo/temp-inkscapeSvgFilters.js
                 </a>
               
+                
+                <a class="source" href="tensorflow-001.html">
+                  ./demo/tensorflow-001.js
+                </a>
+              
+                
+                <a class="source" href="tensorflow-002.html">
+                  ./demo/tensorflow-002.js
+                </a>
+              
             </div>
           </div>
         </li>
@@ -692,7 +707,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.library.artefact.mycanvas;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
             
         </li>
         
@@ -707,7 +722,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myWheel = scrawl.makeWheel({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myWheel = scrawl.<span class="hljs-title function_">makeWheel</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;ball&#x27;</span>,
 
@@ -746,19 +761,19 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
     };
 }();</pre></div></div>
             
@@ -775,7 +790,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
     <span class="hljs-attr">target</span>: canvas,
@@ -794,9 +809,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    afterCreated: <span class="hljs-function">() =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">afterCreated</span>: <span class="hljs-function">() =&gt;</span> {
 
-        myWheel.set({
+        myWheel.<span class="hljs-title function_">set</span>({
 
             <span class="hljs-attr">deltaConstraints</span>: {
                 <span class="hljs-attr">startX</span>: [<span class="hljs-number">50</span>, <span class="hljs-number">550</span>, <span class="hljs-string">&#x27;reverse&#x27;</span>],
@@ -821,15 +836,15 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
 
-    e.preventDefault();
-    e.returnValue = <span class="hljs-literal">false</span>;
+    e.<span class="hljs-title function_">preventDefault</span>();
+    e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">switch</span> (e.target.value) {
+    <span class="hljs-keyword">switch</span> (e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>) {
 
         <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;reverse&#x27;</span> :
-            myWheel.set({
+            myWheel.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">deltaConstraints</span>: {
                     <span class="hljs-attr">startX</span>: [<span class="hljs-number">50</span>, <span class="hljs-number">550</span>, <span class="hljs-string">&#x27;reverse&#x27;</span>],
                     <span class="hljs-attr">startY</span>: [<span class="hljs-string">&#x27;10%&#x27;</span>, <span class="hljs-string">&#x27;90%&#x27;</span>, <span class="hljs-string">&#x27;reverse&#x27;</span>],
@@ -839,7 +854,7 @@
             <span class="hljs-keyword">break</span>;
 
         <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;loop&#x27;</span> :
-            myWheel.set({
+            myWheel.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">deltaConstraints</span>: {
                     <span class="hljs-attr">startX</span>: [<span class="hljs-number">50</span>, <span class="hljs-number">550</span>, <span class="hljs-string">&#x27;loop&#x27;</span>],
                     <span class="hljs-attr">startY</span>: [<span class="hljs-string">&#x27;10%&#x27;</span>, <span class="hljs-string">&#x27;90%&#x27;</span>, <span class="hljs-string">&#x27;loop&#x27;</span>],
@@ -850,30 +865,30 @@
     }
 }, <span class="hljs-string">&#x27;#constraintAction&#x27;</span>);
 
-scrawl.addNativeListener(<span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
 
-    e.preventDefault();
-    e.returnValue = <span class="hljs-literal">false</span>;
+    e.<span class="hljs-title function_">preventDefault</span>();
+    e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> target = e.target;
+    <span class="hljs-keyword">let</span> target = e.<span class="hljs-property">target</span>;
 
     <span class="hljs-keyword">if</span> (target) {
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">parseInt</span>(target.value, <span class="hljs-number">10</span>)) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">parseInt</span>(target.<span class="hljs-property">value</span>, <span class="hljs-number">10</span>)) {
 
-            target.value = <span class="hljs-string">&#x27;0&#x27;</span>;
-            target.innerHTML = <span class="hljs-string">&#x27;Add scaling&#x27;</span>;
+            target.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;0&#x27;</span>;
+            target.<span class="hljs-property">innerHTML</span> = <span class="hljs-string">&#x27;Add scaling&#x27;</span>;
 
-            myWheel.setDeltaValues({
+            myWheel.<span class="hljs-title function_">setDeltaValues</span>({
                 <span class="hljs-attr">scale</span>: <span class="hljs-string">&#x27;remove&#x27;</span>,
             });
         }
         <span class="hljs-keyword">else</span> {
 
-            target.value = <span class="hljs-string">&#x27;1&#x27;</span>;
-            target.innerHTML = <span class="hljs-string">&#x27;Remove scaling&#x27;</span>;
+            target.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;1&#x27;</span>;
+            target.<span class="hljs-property">innerHTML</span> = <span class="hljs-string">&#x27;Remove scaling&#x27;</span>;
 
-            myWheel.setDeltaValues({
+            myWheel.<span class="hljs-title function_">setDeltaValues</span>({
                 <span class="hljs-attr">scale</span>: <span class="hljs-string">&#x27;newNumber:0.01&#x27;</span>,
             });
         }
@@ -881,9 +896,9 @@ scrawl.addNativeListener(<span class="hljs-string">&#x27;click&#x27;</span>, <sp
 
 }, <span class="hljs-string">&#x27;#scaling&#x27;</span>);
 
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#scaling&#x27;</span>).value = <span class="hljs-string">&#x27;0&#x27;</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#scaling&#x27;</span>).innerHTML = <span class="hljs-string">&#x27;Add scaling&#x27;</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#constraintAction&#x27;</span>).value = <span class="hljs-string">&#x27;reverse&#x27;</span>;</pre></div></div>
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#scaling&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;0&#x27;</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#scaling&#x27;</span>).<span class="hljs-property">innerHTML</span> = <span class="hljs-string">&#x27;Add scaling&#x27;</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#constraintAction&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;reverse&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -898,7 +913,7 @@ scrawl.addNativeListener(<span class="hljs-string">&#x27;click&#x27;</span>, <sp
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

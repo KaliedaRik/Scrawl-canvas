@@ -280,6 +280,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-051.html">
+                  ./demo/canvas-051.js
+                </a>
+              
+                
                 <a class="source" href="core-001.html">
                   ./demo/core-001.js
                 </a>
@@ -644,6 +649,16 @@
                   ./demo/temp-inkscapeSvgFilters.js
                 </a>
               
+                
+                <a class="source" href="tensorflow-001.html">
+                  ./demo/tensorflow-001.js
+                </a>
+              
+                
+                <a class="source" href="tensorflow-002.html">
+                  ./demo/tensorflow-002.js
+                </a>
+              
             </div>
           </div>
         </li>
@@ -692,9 +707,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.library.artefact.mycanvas;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;
 
-canvas.setBase({
+canvas.<span class="hljs-title function_">setBase</span>({
     <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;beige&#x27;</span>,
 });</pre></div></div>
             
@@ -711,7 +726,7 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeBlock({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeBlock</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;field-block&#x27;</span>,
 
@@ -747,7 +762,7 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myWorld = scrawl.makeWorld({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myWorld = scrawl.<span class="hljs-title function_">makeWorld</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-world&#x27;</span>,
     <span class="hljs-attr">tickMultiplier</span>: <span class="hljs-number">2</span>,
@@ -760,7 +775,7 @@ canvas.setBase({
     ],
 });
 
-<span class="hljs-keyword">const</span> myEmitter = scrawl.makeEmitter({
+<span class="hljs-keyword">const</span> myEmitter = scrawl.<span class="hljs-title function_">makeEmitter</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;field-emitter&#x27;</span>,
     <span class="hljs-attr">world</span>: myWorld,
@@ -780,7 +795,7 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    particleCount: <span class="hljs-number">50</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">particleCount</span>: <span class="hljs-number">50</span>,
 
     <span class="hljs-attr">generateInArea</span>: <span class="hljs-string">&#x27;field-block&#x27;</span>,
     <span class="hljs-attr">killBeyondCanvas</span>: <span class="hljs-literal">true</span>,</pre></div></div>
@@ -798,13 +813,13 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    rangeX: <span class="hljs-number">12</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">rangeX</span>: <span class="hljs-number">12</span>,
     <span class="hljs-attr">rangeFromX</span>: -<span class="hljs-number">6</span>,
 
     <span class="hljs-attr">rangeY</span>: <span class="hljs-number">8</span>,
     <span class="hljs-attr">rangeFromY</span>: -<span class="hljs-number">4</span>,
 
-    <span class="hljs-attr">artefact</span>: scrawl.makeStar({
+    <span class="hljs-attr">artefact</span>: scrawl.<span class="hljs-title function_">makeStar</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;particle-star-entity&#x27;</span>,
 
@@ -840,57 +855,57 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    preAction: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">preAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) {
 
-        <span class="hljs-keyword">let</span> particles = <span class="hljs-built_in">this</span>.particleStore,
-            engine = host.engine,
-            radius = <span class="hljs-built_in">this</span>.world.connectionRadius;
+        <span class="hljs-keyword">let</span> particles = <span class="hljs-variable language_">this</span>.<span class="hljs-property">particleStore</span>,
+            engine = host.<span class="hljs-property">engine</span>,
+            radius = <span class="hljs-variable language_">this</span>.<span class="hljs-property">world</span>.<span class="hljs-property">connectionRadius</span>;
 
-        engine.save();
+        engine.<span class="hljs-title function_">save</span>();
 
-        engine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+        engine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
 
-        engine.strokeStyle = <span class="hljs-string">&#x27;midnightblue&#x27;</span>;
+        engine.<span class="hljs-property">strokeStyle</span> = <span class="hljs-string">&#x27;midnightblue&#x27;</span>;
 
-        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = particles.length; i &lt; iz; i++) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = particles.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
             <span class="hljs-keyword">let</span> fromParticle = particles[i],
-                fromHistory = fromParticle.history;
+                fromHistory = fromParticle.<span class="hljs-property">history</span>;
 
             <span class="hljs-keyword">if</span> (fromHistory &amp;&amp; fromHistory[<span class="hljs-number">0</span>]) {
 
                 <span class="hljs-keyword">let</span> [fr, fz, fx, fy] = fromHistory[<span class="hljs-number">0</span>];
 
-                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j = i + <span class="hljs-number">1</span>, jz = particles.length; j &lt; jz; j ++) {
+                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j = i + <span class="hljs-number">1</span>, jz = particles.<span class="hljs-property">length</span>; j &lt; jz; j ++) {
 
                     <span class="hljs-keyword">let</span> toParticle = particles[j],
-                        toHistory = toParticle.history;
+                        toHistory = toParticle.<span class="hljs-property">history</span>;
 
                     <span class="hljs-keyword">if</span> (toHistory &amp;&amp; toHistory[<span class="hljs-number">0</span>]) {
 
                         <span class="hljs-keyword">let</span> [tr, tz, tx, ty] = toHistory[<span class="hljs-number">0</span>];
 
-                        <span class="hljs-keyword">let</span> test = scrawl.requestVector(fx, fy).vectorSubtractArray([tx, ty]),
-                            mag = test.getMagnitude();
+                        <span class="hljs-keyword">let</span> test = scrawl.<span class="hljs-title function_">requestVector</span>(fx, fy).<span class="hljs-title function_">vectorSubtractArray</span>([tx, ty]),
+                            mag = test.<span class="hljs-title function_">getMagnitude</span>();
 
-                        scrawl.releaseVector(test);
+                        scrawl.<span class="hljs-title function_">releaseVector</span>(test);
  
                          <span class="hljs-keyword">if</span> (mag &lt; radius) {
 
                             <span class="hljs-keyword">let</span> opacity = (radius - mag) / radius;
 
-                            engine.globalAlpha = opacity;
+                            engine.<span class="hljs-property">globalAlpha</span> = opacity;
 
-                            engine.beginPath();
-                            engine.moveTo(fx, fy);
-                            engine.lineTo(tx, ty);
-                            engine.stroke();
+                            engine.<span class="hljs-title function_">beginPath</span>();
+                            engine.<span class="hljs-title function_">moveTo</span>(fx, fy);
+                            engine.<span class="hljs-title function_">lineTo</span>(tx, ty);
+                            engine.<span class="hljs-title function_">stroke</span>();
                         }
                    }
                 }
             }
         }
-        engine.restore();
+        engine.<span class="hljs-title function_">restore</span>();
     },</pre></div></div>
             
         </li>
@@ -906,10 +921,10 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    stampAction: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">stampAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) {
 
-        <span class="hljs-keyword">let</span> [r, z, ...start] = particle.history[<span class="hljs-number">0</span>];
-        artefact.simpleStamp(host, {start});
+        <span class="hljs-keyword">let</span> [r, z, ...start] = particle.<span class="hljs-property">history</span>[<span class="hljs-number">0</span>];
+        artefact.<span class="hljs-title function_">simpleStamp</span>(host, {start});
     },</pre></div></div>
             
         </li>
@@ -925,48 +940,48 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    postAction: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) </span>{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">postAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">host</span>) {
 
-        <span class="hljs-keyword">let</span> particles = <span class="hljs-built_in">this</span>.particleStore,
-            engine = host.engine,
-            here = host.here;
+        <span class="hljs-keyword">let</span> particles = <span class="hljs-variable language_">this</span>.<span class="hljs-property">particleStore</span>,
+            engine = host.<span class="hljs-property">engine</span>,
+            here = host.<span class="hljs-property">here</span>;
 
-        <span class="hljs-keyword">if</span> (here.active) {
+        <span class="hljs-keyword">if</span> (here.<span class="hljs-property">active</span>) {
 
             <span class="hljs-keyword">let</span> {x, y} = here;
 
-            engine.save();
-            engine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-            engine.strokeStyle = <span class="hljs-string">&#x27;red&#x27;</span>;
+            engine.<span class="hljs-title function_">save</span>();
+            engine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+            engine.<span class="hljs-property">strokeStyle</span> = <span class="hljs-string">&#x27;red&#x27;</span>;
 
-            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = particles.length; i &lt; iz; i++) {
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = particles.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
                 <span class="hljs-keyword">let</span> fromParticle = particles[i],
-                    fromHistory = fromParticle.history;
+                    fromHistory = fromParticle.<span class="hljs-property">history</span>;
 
                 <span class="hljs-keyword">if</span> (fromHistory &amp;&amp; fromHistory[<span class="hljs-number">0</span>]) {
 
                     <span class="hljs-keyword">let</span> [fr, fz, fx, fy] = fromHistory[<span class="hljs-number">0</span>];
 
-                    <span class="hljs-keyword">let</span> test = scrawl.requestVector(fx, fy).vectorSubtractArray([x, y]),
-                        mag = test.getMagnitude();
+                    <span class="hljs-keyword">let</span> test = scrawl.<span class="hljs-title function_">requestVector</span>(fx, fy).<span class="hljs-title function_">vectorSubtractArray</span>([x, y]),
+                        mag = test.<span class="hljs-title function_">getMagnitude</span>();
 
-                    scrawl.releaseVector(test);
+                    scrawl.<span class="hljs-title function_">releaseVector</span>(test);
 
                     <span class="hljs-keyword">if</span> (mag &lt; <span class="hljs-number">100</span>) {
 
                         <span class="hljs-keyword">let</span> opacity = (<span class="hljs-number">100</span> - mag) / <span class="hljs-number">100</span>;
 
-                        engine.globalAlpha = opacity;
+                        engine.<span class="hljs-property">globalAlpha</span> = opacity;
 
-                        engine.beginPath();
-                        engine.moveTo(fx, fy);
-                        engine.lineTo(x, y);
-                        engine.stroke();
+                        engine.<span class="hljs-title function_">beginPath</span>();
+                        engine.<span class="hljs-title function_">moveTo</span>(fx, fy);
+                        engine.<span class="hljs-title function_">lineTo</span>(x, y);
+                        engine.<span class="hljs-title function_">stroke</span>();
                     }
                 }
             }
-            engine.restore();
+            engine.<span class="hljs-title function_">restore</span>();
         }
     },
 });</pre></div></div>
@@ -985,30 +1000,30 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow, dragging,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">let</span> particlenames = scrawl.library.particlenames,
-        particle = scrawl.library.particle,
+    <span class="hljs-keyword">let</span> particlenames = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">particlenames</span>,
+        particle = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">particle</span>,
         historyCount;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
         historyCount = <span class="hljs-number">0</span>;
-        particlenames.forEach(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> {
+        particlenames.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> {
 
             <span class="hljs-keyword">let</span> p = particle[n];
-            <span class="hljs-keyword">if</span> (p) historyCount += p.history.length;
+            <span class="hljs-keyword">if</span> (p) historyCount += p.<span class="hljs-property">history</span>.<span class="hljs-property">length</span>;
         });
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
     Particles: <span class="hljs-subst">${particlenames.length}</span>
     Stamps per display: <span class="hljs-subst">${historyCount}</span> + all the connecting lines`</span>;
     };
@@ -1027,7 +1042,7 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
     <span class="hljs-attr">target</span>: canvas,
@@ -1048,7 +1063,7 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.observeAndUpdate({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
 
     <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
     <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,
@@ -1064,7 +1079,7 @@ canvas.setBase({
     },
 });
 
-scrawl.observeAndUpdate({
+scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
 
     <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
     <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,
@@ -1093,7 +1108,7 @@ scrawl.observeAndUpdate({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

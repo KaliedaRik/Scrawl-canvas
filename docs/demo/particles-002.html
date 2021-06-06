@@ -280,6 +280,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-051.html">
+                  ./demo/canvas-051.js
+                </a>
+              
+                
                 <a class="source" href="core-001.html">
                   ./demo/core-001.js
                 </a>
@@ -644,6 +649,16 @@
                   ./demo/temp-inkscapeSvgFilters.js
                 </a>
               
+                
+                <a class="source" href="tensorflow-001.html">
+                  ./demo/tensorflow-001.js
+                </a>
+              
+                
+                <a class="source" href="tensorflow-002.html">
+                  ./demo/tensorflow-002.js
+                </a>
+              
             </div>
           </div>
         </li>
@@ -692,11 +707,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.library.artefact.mycanvas;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;
 
-scrawl.importDomImage(<span class="hljs-string">&#x27;#bunny&#x27;</span>);
+scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;#bunny&#x27;</span>);
 
-canvas.setBase({
+canvas.<span class="hljs-title function_">setBase</span>({
     <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;#000040&#x27;</span>,
 });</pre></div></div>
             
@@ -729,41 +744,41 @@ canvas.setBase({
     <span class="hljs-attr">noDeltaUpdates</span>: <span class="hljs-literal">true</span>,
 };
 
-<span class="hljs-keyword">let</span> wheel = scrawl.makeWheel({ 
+<span class="hljs-keyword">let</span> wheel = scrawl.<span class="hljs-title function_">makeWheel</span>({ 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;particle-wheel-entity&#x27;</span>,
     <span class="hljs-attr">radius</span>: <span class="hljs-number">16</span>, 
     <span class="hljs-attr">startAngle</span>: <span class="hljs-number">20</span>,
     <span class="hljs-attr">endAngle</span>: -<span class="hljs-number">20</span>,
     <span class="hljs-attr">includeCenter</span>: <span class="hljs-literal">true</span>,
-}).set(commonValues);
+}).<span class="hljs-title function_">set</span>(commonValues);
 
-<span class="hljs-keyword">let</span> block = scrawl.makeBlock({ 
+<span class="hljs-keyword">let</span> block = scrawl.<span class="hljs-title function_">makeBlock</span>({ 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;particle-block-entity&#x27;</span>,
     <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">30</span>, <span class="hljs-number">20</span>],
-}).set(commonValues);
+}).<span class="hljs-title function_">set</span>(commonValues);
 
-<span class="hljs-keyword">let</span> star = scrawl.makeStar({
+<span class="hljs-keyword">let</span> star = scrawl.<span class="hljs-title function_">makeStar</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;particle-star-entity&#x27;</span>,
     <span class="hljs-attr">radius1</span>: <span class="hljs-number">18</span>,
     <span class="hljs-attr">radius2</span>: <span class="hljs-number">12</span>,
     <span class="hljs-attr">points</span>: <span class="hljs-number">5</span>,
-}).set(commonValues);
+}).<span class="hljs-title function_">set</span>(commonValues);
 
-<span class="hljs-keyword">let</span> picture = scrawl.makePicture({
+<span class="hljs-keyword">let</span> picture = scrawl.<span class="hljs-title function_">makePicture</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;particle-image-entity&#x27;</span>,
     <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;bunny&#x27;</span>,
     <span class="hljs-attr">width</span>: <span class="hljs-number">26</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-number">37</span>,
     <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
     <span class="hljs-attr">copyHeight</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-}).set(commonValues);
+}).<span class="hljs-title function_">set</span>(commonValues);
 
-<span class="hljs-keyword">let</span> phrase = scrawl.makePhrase({
+<span class="hljs-keyword">let</span> phrase = scrawl.<span class="hljs-title function_">makePhrase</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;particle-phrase-entity&#x27;</span>,
     <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;Hello&#x27;</span>,
     <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;bold 40px Garamond, serif&#x27;</span>,
     <span class="hljs-attr">exposeText</span>: <span class="hljs-literal">false</span>,
-}).set(commonValues);</pre></div></div>
+}).<span class="hljs-title function_">set</span>(commonValues);</pre></div></div>
             
         </li>
         
@@ -791,7 +806,7 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myWorld = scrawl.makeWorld({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myWorld = scrawl.<span class="hljs-title function_">makeWorld</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-world&#x27;</span>,
 
@@ -826,7 +841,7 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myemitter = scrawl.makeEmitter({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myemitter = scrawl.<span class="hljs-title function_">makeEmitter</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;use-artefact&#x27;</span>,
     <span class="hljs-attr">world</span>: myWorld,
@@ -851,7 +866,7 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    killRadius: <span class="hljs-number">50</span>, 
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">killRadius</span>: <span class="hljs-number">50</span>, 
     <span class="hljs-attr">killRadiusVariation</span>: <span class="hljs-number">0</span>,</pre></div></div>
             
         </li>
@@ -867,7 +882,7 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    artefact: star,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">artefact</span>: star,
 
     <span class="hljs-attr">rangeX</span>: <span class="hljs-number">40</span>,
     <span class="hljs-attr">rangeFromX</span>: -<span class="hljs-number">20</span>,
@@ -891,7 +906,7 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    stampAction: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">stampAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) {</pre></div></div>
             
         </li>
         
@@ -937,7 +952,7 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        history.forEach(<span class="hljs-function">(<span class="hljs-params">p, index</span>) =&gt;</span> {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        history.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">p, index</span>) =&gt;</span> {</pre></div></div>
             
         </li>
         
@@ -1003,7 +1018,7 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                artefact.simpleStamp(host, {
+            <div class="content"><div class='highlight'><pre>                artefact.<span class="hljs-title function_">simpleStamp</span>(host, {
                     start, 
                     scale, 
                     roll, 
@@ -1030,44 +1045,44 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow, dragging,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">let</span> particlenames = scrawl.library.particlenames,
-        particle = scrawl.library.particle,
+    <span class="hljs-keyword">let</span> particlenames = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">particlenames</span>,
+        particle = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">particle</span>,
         historyCount, kr, krv;
 
-    <span class="hljs-keyword">let</span> worldSpeed = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#world-speed&#x27;</span>),
-        minFill = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#min-fill&#x27;</span>),
-        maxFill = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#max-fill&#x27;</span>),
-        background = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#background&#x27;</span>),
-        outlineColor = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#outline-color&#x27;</span>),
-        opacity = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#opacity&#x27;</span>),
-        killRadius = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#kill-radius&#x27;</span>),
-        killRadiusVariation = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#kill-radius-variation&#x27;</span>),
-        historyLength = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#historyLength&#x27;</span>),
-        generationRate = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#generationRate&#x27;</span>);
+    <span class="hljs-keyword">let</span> worldSpeed = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#world-speed&#x27;</span>),
+        minFill = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#min-fill&#x27;</span>),
+        maxFill = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#max-fill&#x27;</span>),
+        background = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#background&#x27;</span>),
+        outlineColor = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#outline-color&#x27;</span>),
+        opacity = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#opacity&#x27;</span>),
+        killRadius = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#kill-radius&#x27;</span>),
+        killRadiusVariation = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#kill-radius-variation&#x27;</span>),
+        historyLength = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#historyLength&#x27;</span>),
+        generationRate = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#generationRate&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
         historyCount = <span class="hljs-number">0</span>;
-        particlenames.forEach(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> {
+        particlenames.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> {
 
             <span class="hljs-keyword">let</span> p = particle[n];
-            <span class="hljs-keyword">if</span> (p) historyCount += p.history.length;
+            <span class="hljs-keyword">if</span> (p) historyCount += p.<span class="hljs-property">history</span>.<span class="hljs-property">length</span>;
         });
 
-        kr = <span class="hljs-built_in">parseFloat</span>(killRadius.value);
-        krv = <span class="hljs-built_in">parseFloat</span>(killRadiusVariation.value) / <span class="hljs-number">2</span>;
+        kr = <span class="hljs-built_in">parseFloat</span>(killRadius.<span class="hljs-property">value</span>);
+        krv = <span class="hljs-built_in">parseFloat</span>(killRadiusVariation.<span class="hljs-property">value</span>) / <span class="hljs-number">2</span>;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
     Particles: <span class="hljs-subst">${particlenames.length}</span>, generationRate: <span class="hljs-subst">${generationRate.value}</span>, historyLength: <span class="hljs-subst">${historyLength.value}</span>
     Stamps per display: <span class="hljs-subst">${historyCount}</span>
 
@@ -1078,17 +1093,17 @@ canvas.setBase({
     };
 }();
 
-<span class="hljs-keyword">let</span> mouseCheck = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+<span class="hljs-keyword">let</span> mouseCheck = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">let</span> active = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-keyword">if</span> (canvas.here.active !== active) {
+        <span class="hljs-keyword">if</span> (canvas.<span class="hljs-property">here</span>.<span class="hljs-property">active</span> !== active) {
 
-            active = canvas.here.active;
+            active = canvas.<span class="hljs-property">here</span>.<span class="hljs-property">active</span>;
 
-            myemitter.set({
+            myemitter.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">lockTo</span>: (active) ? <span class="hljs-string">&#x27;mouse&#x27;</span> : <span class="hljs-string">&#x27;start&#x27;</span>
             });
         }
@@ -1108,7 +1123,7 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
     <span class="hljs-attr">target</span>: canvas,
@@ -1130,29 +1145,29 @@ canvas.setBase({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> setLowColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> setLowColor = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">const</span> selector = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#min-fill&#x27;</span>),
-        colorFactory = myemitter.fillColorFactory;
+    <span class="hljs-keyword">const</span> selector = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#min-fill&#x27;</span>),
+        colorFactory = myemitter.<span class="hljs-property">fillColorFactory</span>;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        colorFactory.setMinimumColor(selector.value);
+        colorFactory.<span class="hljs-title function_">setMinimumColor</span>(selector.<span class="hljs-property">value</span>);
     }
 }();
-scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], setLowColor, <span class="hljs-string">&#x27;#min-fill&#x27;</span>);
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], setLowColor, <span class="hljs-string">&#x27;#min-fill&#x27;</span>);
 
-<span class="hljs-keyword">const</span> setHighColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+<span class="hljs-keyword">const</span> setHighColor = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">const</span> selector = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#max-fill&#x27;</span>),
-        colorFactory = myemitter.fillColorFactory;
+    <span class="hljs-keyword">const</span> selector = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#max-fill&#x27;</span>),
+        colorFactory = myemitter.<span class="hljs-property">fillColorFactory</span>;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        colorFactory.setMaximumColor(selector.value);
+        colorFactory.<span class="hljs-title function_">setMaximumColor</span>(selector.<span class="hljs-property">value</span>);
     }
 }();
-scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], setHighColor, <span class="hljs-string">&#x27;#max-fill&#x27;</span>);</pre></div></div>
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], setHighColor, <span class="hljs-string">&#x27;#max-fill&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1167,15 +1182,15 @@ scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> useArtefact = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> useArtefact = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">const</span> selector = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#artefact&#x27;</span>);
+    <span class="hljs-keyword">const</span> selector = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#artefact&#x27;</span>);
 
     <span class="hljs-keyword">let</span> choice, val;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        val = selector.value;
+        val = selector.<span class="hljs-property">value</span>;
         choice = <span class="hljs-literal">false</span>;
 
         <span class="hljs-keyword">switch</span> (val) {
@@ -1203,13 +1218,13 @@ scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <s
 
         <span class="hljs-keyword">if</span> (choice) {
 
-            myemitter.set({
+            myemitter.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">artefact</span>: choice,
             });
         }
     }
 }();
-scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], useArtefact, <span class="hljs-string">&#x27;#artefact&#x27;</span>);</pre></div></div>
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], useArtefact, <span class="hljs-string">&#x27;#artefact&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1224,7 +1239,7 @@ scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.observeAndUpdate({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
 
     <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
     <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,
@@ -1242,7 +1257,7 @@ scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <s
     },
 });
 
-scrawl.observeAndUpdate({
+scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
 
     <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
     <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,
@@ -1261,7 +1276,7 @@ scrawl.observeAndUpdate({
     },
 });
 
-scrawl.observeAndUpdate({
+scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
 
     <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
     <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,
@@ -1277,17 +1292,17 @@ scrawl.observeAndUpdate({
     },
 });
 
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#min-fill&#x27;</span>).value = <span class="hljs-string">&#x27;#000000&#x27;</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#max-fill&#x27;</span>).value = <span class="hljs-string">&#x27;#ffffff&#x27;</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#outline-color&#x27;</span>).value = <span class="hljs-string">&#x27;#F0F8FF&#x27;</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#background&#x27;</span>).value = <span class="hljs-string">&#x27;#000040&#x27;</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#world-speed&#x27;</span>).value = <span class="hljs-number">2</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#opacity&#x27;</span>).value = <span class="hljs-number">0.2</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#generationRate&#x27;</span>).value = <span class="hljs-number">10</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#historyLength&#x27;</span>).value = <span class="hljs-number">20</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#kill-radius&#x27;</span>).value = <span class="hljs-number">50</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#kill-radius-variation&#x27;</span>).value = <span class="hljs-number">0</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#artefact&#x27;</span>).value = <span class="hljs-string">&#x27;star&#x27;</span>;</pre></div></div>
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#min-fill&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;#000000&#x27;</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#max-fill&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;#ffffff&#x27;</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#outline-color&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;#F0F8FF&#x27;</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#background&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;#000040&#x27;</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#world-speed&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">2</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#opacity&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0.2</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#generationRate&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">10</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#historyLength&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">20</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#kill-radius&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#kill-radius-variation&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#artefact&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;star&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -1302,7 +1317,7 @@ scrawl.observeAndUpdate({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

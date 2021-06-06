@@ -165,6 +165,11 @@
                 </a>
               
                 
+                <a class="source" href="lineSpiral.html">
+                  ./source/factory/lineSpiral.js
+                </a>
+              
+                
                 <a class="source" href="loom.html">
                   ./source/factory/loom.js
                 </a>
@@ -257,6 +262,11 @@
                 
                 <a class="source" href="radialGradient.html">
                   ./source/factory/radialGradient.js
+                </a>
+              
+                
+                <a class="source" href="rawAsset.html">
+                  ./source/factory/rawAsset.js
                 </a>
               
                 
@@ -514,7 +524,7 @@
 <li><a href="../../demo/canvas-030.html">Canvas-030</a> - Polyline entity functionality</li>
 <li><a href="../../demo/canvas-038.html">Canvas-038</a> - Responsive Shape-based entitys</li>
 <li><a href="../../demo/dom-015.html">DOM-015</a> - Use stacked DOM artefact corners as pivot points</li>
-<li><a href="../../demo/component-004.html">Component-004</a> - Scrawl-canvas packets - save and load a range of different entitys</li>
+<li><a href="../../demo/packets-002.html">Packets-002</a> - Scrawl-canvas packets - save and load a range of different entitys</li>
 </ul>
 
             </div>
@@ -532,7 +542,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { mergeOver, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
@@ -551,10 +561,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Oval = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">Oval</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-built_in">this</span>.shapeInit(items);
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">shapeInit</span>(items);
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -570,11 +580,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Oval.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">&#x27;Oval&#x27;</span>;
-P.lib = <span class="hljs-string">&#x27;entity&#x27;</span>;
-P.isArtefact = <span class="hljs-literal">true</span>;
-P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">Oval</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
+P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Oval&#x27;</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;entity&#x27;</span>;
+P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">true</span>;
+P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -593,8 +603,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = baseMix(P);
-P = shapeMix(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);
+P = <span class="hljs-title function_">shapeMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -630,7 +640,7 @@ P = shapeMix(P);</pre></div></div>
     <span class="hljs-attr">offshootA</span>: <span class="hljs-number">0.55</span>,
     <span class="hljs-attr">offshootB</span>: <span class="hljs-number">0</span>,
 };
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
+P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -687,85 +697,85 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> S = P.setters,
-    D = P.deltaSetters;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> S = P.<span class="hljs-property">setters</span>,
+    D = P.<span class="hljs-property">deltaSetters</span>;
 
-S.radius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">radius</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusX&#x27;</span>, <span class="hljs-string">&#x27;radiusY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusX&#x27;</span>, <span class="hljs-string">&#x27;radiusY&#x27;</span>]);
 };
-S.radiusX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">radiusX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusX&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusX&#x27;</span>]);
 };
-S.radiusY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">radiusY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusY&#x27;</span>]);
 };
-D.radius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">radius</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusX&#x27;</span>, <span class="hljs-string">&#x27;radiusY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deltaRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusX&#x27;</span>, <span class="hljs-string">&#x27;radiusY&#x27;</span>]);
 };
-D.radiusX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">radiusX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusX&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deltaRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusX&#x27;</span>]);
 };
-D.radiusY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">radiusY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deltaRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusY&#x27;</span>]);
 };
 
-S.offshootA = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">offshootA</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.offshootA = item;
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">offshootA</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };
-S.offshootB = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">offshootB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.offshootB = item;
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">offshootB</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };
-D.offshootA = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">offshootA</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (item.toFixed) {
+    <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span>) {
 
-        <span class="hljs-built_in">this</span>.offshootA += item;
-        <span class="hljs-built_in">this</span>.updateDirty();
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">offshootA</span> += item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
     }
 };
-D.offshootB = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">offshootB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (item.toFixed) {
+    <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span>) {
 
-        <span class="hljs-built_in">this</span>.offshootB += item;
-        <span class="hljs-built_in">this</span>.updateDirty();
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">offshootB</span> += item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
     }
 };
 
-S.intersectA = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">intersectA</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.intersectA = item;
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">intersectA</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };
-S.intersectB = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">intersectB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.intersectB = item;
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">intersectB</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };
-D.intersectA = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">intersectA</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (item.toFixed) {
+    <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span>) {
 
-        <span class="hljs-built_in">this</span>.intersectA += item;
-        <span class="hljs-built_in">this</span>.updateDirty();
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">intersectA</span> += item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
     }
 };
-D.intersectB = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">intersectB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (item.toFixed) {
+    <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span>) {
 
-        <span class="hljs-built_in">this</span>.intersectB += item;
-        <span class="hljs-built_in">this</span>.updateDirty();
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">intersectB</span> += item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
     }
 };</pre></div></div>
             
@@ -795,14 +805,14 @@ D.intersectB = <span class="hljs-function"><span class="hljs-keyword">function</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.setRectHelper = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item, corners</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">setRectHelper</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item, corners</span>) {
 
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 
-    corners.forEach(<span class="hljs-function"><span class="hljs-params">corner</span> =&gt;</span> {
+    corners.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">corner</span> =&gt;</span> {
 
-        <span class="hljs-built_in">this</span>[corner] = item;
-    }, <span class="hljs-built_in">this</span>);
+        <span class="hljs-variable language_">this</span>[corner] = item;
+    }, <span class="hljs-variable language_">this</span>);
 };</pre></div></div>
             
         </li>
@@ -818,14 +828,14 @@ D.intersectB = <span class="hljs-function"><span class="hljs-keyword">function</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.deltaRectHelper = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item, corners</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">deltaRectHelper</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item, corners</span>) {
 
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 
-    corners.forEach(<span class="hljs-function"><span class="hljs-params">corner</span> =&gt;</span> {
+    corners.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">corner</span> =&gt;</span> {
 
-        <span class="hljs-built_in">this</span>[corner] = addStrings(<span class="hljs-built_in">this</span>[corner], item);
-    }, <span class="hljs-built_in">this</span>);
+        <span class="hljs-variable language_">this</span>[corner] = <span class="hljs-title function_">addStrings</span>(<span class="hljs-variable language_">this</span>[corner], item);
+    }, <span class="hljs-variable language_">this</span>);
 };</pre></div></div>
             
         </li>
@@ -841,14 +851,14 @@ D.intersectB = <span class="hljs-function"><span class="hljs-keyword">function</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.cleanSpecies = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">cleanSpecies</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-built_in">this</span>.dirtySpecies = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtySpecies</span> = <span class="hljs-literal">false</span>;
 
     <span class="hljs-keyword">let</span> p = <span class="hljs-string">&#x27;M0,0&#x27;</span>;
-    p = <span class="hljs-built_in">this</span>.makeOvalPath();
+    p = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeOvalPath</span>();
 
-    <span class="hljs-built_in">this</span>.pathDefinition = p;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span> = p;
 };</pre></div></div>
             
         </li>
@@ -864,15 +874,15 @@ D.intersectB = <span class="hljs-function"><span class="hljs-keyword">function</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.makeOvalPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">makeOvalPath</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> A = <span class="hljs-built_in">parseFloat</span>(<span class="hljs-built_in">this</span>.offshootA.toFixed(<span class="hljs-number">6</span>)),
-        B = <span class="hljs-built_in">parseFloat</span>(<span class="hljs-built_in">this</span>.offshootB.toFixed(<span class="hljs-number">6</span>)),
-        radiusX = <span class="hljs-built_in">this</span>.radiusX,
-        radiusY = <span class="hljs-built_in">this</span>.radiusY,
+    <span class="hljs-keyword">let</span> A = <span class="hljs-built_in">parseFloat</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">offshootA</span>.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">6</span>)),
+        B = <span class="hljs-built_in">parseFloat</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">offshootB</span>.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">6</span>)),
+        radiusX = <span class="hljs-variable language_">this</span>.<span class="hljs-property">radiusX</span>,
+        radiusY = <span class="hljs-variable language_">this</span>.<span class="hljs-property">radiusY</span>,
         width, height;
 
-    <span class="hljs-keyword">if</span> (radiusX.substring || radiusY.substring) {</pre></div></div>
+    <span class="hljs-keyword">if</span> (radiusX.<span class="hljs-property">substring</span> || radiusY.<span class="hljs-property">substring</span>) {</pre></div></div>
             
         </li>
         
@@ -916,14 +926,14 @@ height = ry * 2;</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>
-        <span class="hljs-keyword">let</span> host = <span class="hljs-built_in">this</span>.getHost();
+        <span class="hljs-keyword">let</span> host = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getHost</span>();
 
         <span class="hljs-keyword">if</span> (host) {
 
-            <span class="hljs-keyword">let</span> [hW, hH] = host.currentDimensions;
+            <span class="hljs-keyword">let</span> [hW, hH] = host.<span class="hljs-property">currentDimensions</span>;
 
-            <span class="hljs-keyword">let</span> rx = (radiusX.substring) ? (<span class="hljs-built_in">parseFloat</span>(radiusX) / <span class="hljs-number">100</span>) * hW : radiusX,
-                ry = (radiusY.substring) ? (<span class="hljs-built_in">parseFloat</span>(radiusY) / <span class="hljs-number">100</span>) * hH : radiusY;
+            <span class="hljs-keyword">let</span> rx = (radiusX.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(radiusX) / <span class="hljs-number">100</span>) * hW : radiusX,
+                ry = (radiusY.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(radiusY) / <span class="hljs-number">100</span>) * hH : radiusY;
 
             width = rx * <span class="hljs-number">2</span>;
             height = ry * <span class="hljs-number">2</span>;
@@ -935,10 +945,10 @@ height = ry * 2;</p>
         height = radiusY * <span class="hljs-number">2</span>;
     }
 
-    <span class="hljs-keyword">let</span> port = <span class="hljs-built_in">parseFloat</span>((width * <span class="hljs-built_in">this</span>.intersectX).toFixed(<span class="hljs-number">2</span>)),
-        starboard = <span class="hljs-built_in">parseFloat</span>((width - port).toFixed(<span class="hljs-number">2</span>)),
-        fore = <span class="hljs-built_in">parseFloat</span>((height * <span class="hljs-built_in">this</span>.intersectY).toFixed(<span class="hljs-number">2</span>)),
-        aft = <span class="hljs-built_in">parseFloat</span>((height - fore).toFixed(<span class="hljs-number">2</span>));
+    <span class="hljs-keyword">let</span> port = <span class="hljs-built_in">parseFloat</span>((width * <span class="hljs-variable language_">this</span>.<span class="hljs-property">intersectX</span>).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">2</span>)),
+        starboard = <span class="hljs-built_in">parseFloat</span>((width - port).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">2</span>)),
+        fore = <span class="hljs-built_in">parseFloat</span>((height * <span class="hljs-variable language_">this</span>.<span class="hljs-property">intersectY</span>).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">2</span>)),
+        aft = <span class="hljs-built_in">parseFloat</span>((height - fore).<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">2</span>));
 
     <span class="hljs-keyword">let</span> myData = <span class="hljs-string">`m0,0`</span>;
 
@@ -950,13 +960,13 @@ height = ry * 2;</p>
     <span class="hljs-keyword">return</span> myData;
 };
 
-P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+P.<span class="hljs-property">calculateLocalPathAdditionalActions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-built_in">this</span>.localBox;
+    <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">localBox</span>;
 
-    <span class="hljs-built_in">this</span>.pathDefinition = <span class="hljs-built_in">this</span>.pathDefinition.replace(<span class="hljs-string">&#x27;m0,0&#x27;</span>, <span class="hljs-string">`m<span class="hljs-subst">${-x}</span>,<span class="hljs-subst">${-y}</span>`</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span>.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;m0,0&#x27;</span>, <span class="hljs-string">`m<span class="hljs-subst">${-x}</span>,<span class="hljs-subst">${-y}</span>`</span>);
 
-    <span class="hljs-built_in">this</span>.pathCalculatedOnce = <span class="hljs-literal">false</span>;</pre></div></div>
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathCalculatedOnce</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -974,7 +984,7 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.calculateLocalPath(<span class="hljs-built_in">this</span>.pathDefinition, <span class="hljs-literal">true</span>);
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">calculateLocalPath</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span>, <span class="hljs-literal">true</span>);
 };</pre></div></div>
             
         </li>
@@ -1009,7 +1019,7 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
 <li><code>intersectX</code> (default: <code>0.5</code>) represents the point at which the <code>y</code> diameter crosses the <code>x</code> diameter, with <code>0</code> being the left end and <code>1</code> being the right end.</li>
 <li><code>intersectY</code> (default: <code>0.5</code>) represents the point at which the <code>x</code> diameter crosses the <code>y</code> diameter, with <code>0</code> being the top end and <code>1</code> being the bottom end.</li>
 </ul>
-<pre><code>scrawl.makeOval({
+<pre><code>scrawl.<span class="hljs-title function_">makeOval</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;egg&#x27;</span>,
 
@@ -1028,14 +1038,14 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeOval = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeOval = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    items.species = <span class="hljs-string">&#x27;oval&#x27;</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Oval(items);
+    items.<span class="hljs-property">species</span> = <span class="hljs-string">&#x27;oval&#x27;</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Oval</span>(items);
 };
 
-<span class="hljs-title">constructors</span>.<span class="hljs-title">Oval</span> = <span class="hljs-title">Oval</span>;</pre></div></div>
+constructors.<span class="hljs-property">Oval</span> = <span class="hljs-title class_">Oval</span>;</pre></div></div>
             
         </li>
         

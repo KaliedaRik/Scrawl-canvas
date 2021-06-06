@@ -280,6 +280,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-051.html">
+                  ./demo/canvas-051.js
+                </a>
+              
+                
                 <a class="source" href="core-001.html">
                   ./demo/core-001.js
                 </a>
@@ -644,6 +649,16 @@
                   ./demo/temp-inkscapeSvgFilters.js
                 </a>
               
+                
+                <a class="source" href="tensorflow-001.html">
+                  ./demo/tensorflow-001.js
+                </a>
+              
+                
+                <a class="source" href="tensorflow-002.html">
+                  ./demo/tensorflow-002.js
+                </a>
+              
             </div>
           </div>
         </li>
@@ -695,9 +710,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> buildClockface = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">canvas, namespace</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> buildClockface = <span class="hljs-keyword">function</span> (<span class="hljs-params">canvas, namespace</span>) {
 
-    <span class="hljs-keyword">let</span> entity = scrawl.library.entity;</pre></div></div>
+    <span class="hljs-keyword">let</span> entity = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">entity</span>;</pre></div></div>
             
         </li>
         
@@ -712,7 +727,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> myFace = canvas.buildCell({
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> myFace = canvas.<span class="hljs-title function_">buildCell</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-face`</span>,
 
@@ -733,7 +748,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    scrawl.makeWheel({
+            <div class="content"><div class='highlight'><pre>    scrawl.<span class="hljs-title function_">makeWheel</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-clock-frame`</span>,
         <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-face`</span>,
@@ -747,7 +762,7 @@
         <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;black&#x27;</span>,
         <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
 
-    }).clone({
+    }).<span class="hljs-title function_">clone</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-center-pin`</span>,
 
@@ -779,7 +794,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    scrawl.makeLine({
+            <div class="content"><div class='highlight'><pre>    scrawl.<span class="hljs-title function_">makeLine</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-hour-hand`</span>,
         <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-face`</span>,
@@ -801,7 +816,7 @@
         <span class="hljs-attr">shadowColor</span>: <span class="hljs-string">&#x27;black&#x27;</span>,
         <span class="hljs-attr">shadowBlur</span>: <span class="hljs-number">3</span>,
 
-    }).clone({
+    }).<span class="hljs-title function_">clone</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-minute-hand`</span>,
 
@@ -809,7 +824,7 @@
         <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
         <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">6</span>,
 
-    }).clone({
+    }).<span class="hljs-title function_">clone</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-second-hand`</span>,
 
@@ -831,30 +846,30 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> updateClockHands = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> updateClockHands = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
         <span class="hljs-keyword">const</span> hourHand = entity[<span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-hour-hand`</span>],
             minuteHand = entity[<span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-minute-hand`</span>],
             secondHand = entity[<span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-second-hand`</span>];
 
-        <span class="hljs-keyword">const</span> secondsSinceMidnight = <span class="hljs-function">() =&gt;</span> {
+        <span class="hljs-keyword">const</span> <span class="hljs-title function_">secondsSinceMidnight</span> = (<span class="hljs-params"></span>) =&gt; {
 
-            <span class="hljs-keyword">let</span> now = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(),
-                then = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(now.getFullYear(), now.getMonth(), now.getDate(), <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+            <span class="hljs-keyword">let</span> now = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(),
+                then = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(now.<span class="hljs-title function_">getFullYear</span>(), now.<span class="hljs-title function_">getMonth</span>(), now.<span class="hljs-title function_">getDate</span>(), <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
 
-            <span class="hljs-keyword">return</span> (now.getTime() - then.getTime()) / <span class="hljs-number">1000</span>;
+            <span class="hljs-keyword">return</span> (now.<span class="hljs-title function_">getTime</span>() - then.<span class="hljs-title function_">getTime</span>()) / <span class="hljs-number">1000</span>;
         };
 
-        <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-            <span class="hljs-keyword">let</span> time = secondsSinceMidnight(),
+            <span class="hljs-keyword">let</span> time = <span class="hljs-title function_">secondsSinceMidnight</span>(),
                 hour = ((time % <span class="hljs-number">43200</span>) / <span class="hljs-number">12</span>) * (<span class="hljs-number">360</span> / <span class="hljs-number">3600</span>),
                 minute = ((time % <span class="hljs-number">3600</span>)) * (<span class="hljs-number">360</span> / <span class="hljs-number">3600</span>),
                 second = ((time % <span class="hljs-number">60</span>)) * (<span class="hljs-number">360</span> / <span class="hljs-number">60</span>);
 
-            hourHand.set({ <span class="hljs-attr">roll</span>: hour });
-            minuteHand.set({ <span class="hljs-attr">roll</span>: minute });
-            secondHand.set({ <span class="hljs-attr">roll</span>: second });
+            hourHand.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">roll</span>: hour });
+            minuteHand.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">roll</span>: minute });
+            secondHand.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">roll</span>: second });
         }
 
     }();</pre></div></div>
@@ -896,8 +911,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.library.canvas.mycanvas,
-    base = canvas.base,
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>,
+    base = canvas.<span class="hljs-property">base</span>,
     namespace = <span class="hljs-string">&#x27;kaliedoscope-clock&#x27;</span>;</pre></div></div>
             
         </li>
@@ -913,7 +928,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>canvas.set({
+            <div class="content"><div class='highlight'><pre>canvas.<span class="hljs-title function_">set</span>({
 
     <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;honeydew&#x27;</span>,
     <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,
@@ -933,7 +948,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myBackground = canvas.buildCell({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myBackground = canvas.<span class="hljs-title function_">buildCell</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-background`</span>,
 
@@ -954,7 +969,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeWheel({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeWheel</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-clock-stencil`</span>,
     <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-background`</span>,
@@ -986,7 +1001,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myColorFactory = scrawl.makeColor({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> myColorFactory = scrawl.<span class="hljs-title function_">makeColor</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-color-factory`</span>,
 
@@ -1010,7 +1025,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">50</span>; i++) {
 
-    scrawl.makeBlock({
+    scrawl.<span class="hljs-title function_">makeBlock</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-decoration-block-<span class="hljs-subst">${i}</span>`</span>,
         <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-background`</span>,
@@ -1028,12 +1043,12 @@
 
         <span class="hljs-attr">width</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-number">10</span> + (<span class="hljs-built_in">Math</span>.random() * <span class="hljs-number">15</span>)}</span>%`</span>,
         <span class="hljs-attr">height</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-number">2</span> + (<span class="hljs-built_in">Math</span>.random() * <span class="hljs-number">10</span>)}</span>%`</span>,
-        <span class="hljs-attr">roll</span>: <span class="hljs-built_in">Math</span>.floor(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">Math</span>.random() * <span class="hljs-number">360</span>}</span>`</span>),
+        <span class="hljs-attr">roll</span>: <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">Math</span>.random() * <span class="hljs-number">360</span>}</span>`</span>),
 
-        <span class="hljs-attr">fillStyle</span>: myColorFactory.get(<span class="hljs-string">&#x27;random&#x27;</span>),
+        <span class="hljs-attr">fillStyle</span>: myColorFactory.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;random&#x27;</span>),
 
         <span class="hljs-attr">delta</span>: {
-            <span class="hljs-attr">roll</span>: ((<span class="hljs-built_in">Math</span>.random() * <span class="hljs-number">2</span>) - <span class="hljs-number">1</span>) / <span class="hljs-number">4</span>,
+            <span class="hljs-attr">roll</span>: ((<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * <span class="hljs-number">2</span>) - <span class="hljs-number">1</span>) / <span class="hljs-number">4</span>,
         },
     });
 }</pre></div></div>
@@ -1051,10 +1066,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makePicture({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makePicture</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-segment-0`</span>,
-    <span class="hljs-attr">group</span>: canvas.base.name,
+    <span class="hljs-attr">group</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
 
     <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
@@ -1067,27 +1082,27 @@
 
     <span class="hljs-attr">asset</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-background`</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-segment-1`</span>,
     <span class="hljs-attr">roll</span>: <span class="hljs-number">120</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-segment-2`</span>,
     <span class="hljs-attr">roll</span>: <span class="hljs-number">240</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-segment-3`</span>,
     <span class="hljs-attr">flipReverse</span>: <span class="hljs-literal">true</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-segment-4`</span>,
     <span class="hljs-attr">roll</span>: <span class="hljs-number">120</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-segment-5`</span>,
     <span class="hljs-attr">roll</span>: <span class="hljs-number">0</span>,
@@ -1106,7 +1121,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> clock = buildClockface(canvas, namespace);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> clock = <span class="hljs-title function_">buildClockface</span>(canvas, namespace);</pre></div></div>
             
         </li>
         
@@ -1121,12 +1136,12 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>myBackground.set({
+            <div class="content"><div class='highlight'><pre>myBackground.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">compileOrder</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span>,
 });
 
-canvas.base.set({
+canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">compileOrder</span>: <span class="hljs-number">1</span>,
 });</pre></div></div>
             
@@ -1144,19 +1159,19 @@ canvas.base.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
     };
 }();</pre></div></div>
             
@@ -1173,12 +1188,12 @@ canvas.base.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myAnimation = scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> myAnimation = scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-animation`</span>,
     <span class="hljs-attr">target</span>: canvas,
 
-    <span class="hljs-attr">commence</span>: clock.update,
+    <span class="hljs-attr">commence</span>: clock.<span class="hljs-property">update</span>,
     <span class="hljs-attr">afterShow</span>: report,
 });</pre></div></div>
             

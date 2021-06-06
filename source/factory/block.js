@@ -14,7 +14,7 @@
 // + [Canvas-005](../../demo/canvas-005.html) - Cell-locked, and Entity-locked, gradients; animating gradients by delta, and by tween
 // + [Canvas-007](../../demo/canvas-007.html) - Apply filters at the entity, group and cell level
 // + [Canvas-009](../../demo/canvas-009.html) - Pattern styles; Entity web link anchors; Dynamic accessibility
-// + [Component-003](../../demo/component-003.html) - Save and load Scrawl-canvas entity using text packets
+// + [Packets-001](../../demo/packets-001.html) - Save and load Scrawl-canvas entity using text packets
 
 
 // #### Imports

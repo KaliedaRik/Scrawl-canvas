@@ -165,6 +165,11 @@
                 </a>
               
                 
+                <a class="source" href="lineSpiral.html">
+                  ./source/factory/lineSpiral.js
+                </a>
+              
+                
                 <a class="source" href="loom.html">
                   ./source/factory/loom.js
                 </a>
@@ -257,6 +262,11 @@
                 
                 <a class="source" href="radialGradient.html">
                   ./source/factory/radialGradient.js
+                </a>
+              
+                
+                <a class="source" href="rawAsset.html">
+                  ./source/factory/rawAsset.js
                 </a>
               
                 
@@ -517,7 +527,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { mergeOver, pushUnique, λ<span class="hljs-literal">null</span>, isa_fn, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { requestVector, releaseVector } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./vector.js&#x27;</span>;
@@ -537,18 +547,18 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Force = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">Force</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-built_in">this</span>.makeName(items.name);
-    <span class="hljs-built_in">this</span>.register();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(items.<span class="hljs-property">name</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
 
-    <span class="hljs-built_in">this</span>.set(<span class="hljs-built_in">this</span>.defs);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);
 
-    <span class="hljs-built_in">this</span>.set(items);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
 
-    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.action) <span class="hljs-built_in">this</span>.action = λ<span class="hljs-literal">null</span>;
+    <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">action</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">action</span> = λ<span class="hljs-literal">null</span>;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -564,11 +574,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Force.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">&#x27;Force&#x27;</span>;
-P.lib = <span class="hljs-string">&#x27;force&#x27;</span>;
-P.isArtefact = <span class="hljs-literal">false</span>;
-P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">Force</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
+P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Force&#x27;</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;force&#x27;</span>;
+P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">false</span>;
+P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -583,7 +593,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = baseMix(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -605,7 +615,7 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
     <span class="hljs-attr">action</span>: <span class="hljs-literal">null</span>,
 };
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
+P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -620,7 +630,7 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.packetFunctions = pushUnique(P.packetFunctions, [<span class="hljs-string">&#x27;action&#x27;</span>]);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetFunctions</span>, [<span class="hljs-string">&#x27;action&#x27;</span>]);</pre></div></div>
             
         </li>
         
@@ -649,9 +659,9 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.kill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">kill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-built_in">this</span>.deregister();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deregister</span>();
 
     <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
 };</pre></div></div>
@@ -669,12 +679,12 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> S = P.setters;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> S = P.<span class="hljs-property">setters</span>;
 
-S.action = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">action</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (isa_fn(item)) <span class="hljs-built_in">this</span>.action = item;
-    <span class="hljs-keyword">else</span> <span class="hljs-built_in">this</span>.action = λ<span class="hljs-literal">null</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">action</span> = item;
+    <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">action</span> = λ<span class="hljs-literal">null</span>;
 }</pre></div></div>
             
         </li>
@@ -687,59 +697,59 @@ S.action = <span class="hljs-function"><span class="hljs-keyword">function</span
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
-<pre><code><span class="hljs-keyword">let</span> myRepellorBall = scrawl.makeWheel({
+<pre><code><span class="hljs-keyword">let</span> myRepellorBall = scrawl.<span class="hljs-title function_">makeWheel</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;big-ball&#x27;</span>,
     <span class="hljs-attr">radius</span>: <span class="hljs-number">30</span>,
 });
 
-scrawl.makeForce({
+scrawl.<span class="hljs-title function_">makeForce</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;example-repellor&#x27;</span>,
     <span class="hljs-attr">action</span>: <span class="hljs-function">(<span class="hljs-params">particle, world, host</span>) =&gt;</span> {
 
         <span class="hljs-keyword">let</span> {load, position} = particle;
 
-        <span class="hljs-keyword">let</span> ballPosition = myRepellorBall.get(<span class="hljs-string">&#x27;position&#x27;</span>);
+        <span class="hljs-keyword">let</span> ballPosition = myRepellorBall.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;position&#x27;</span>);
 
-        <span class="hljs-keyword">let</span> tempVector = scrawl.requestVector(ballPosition).vectorSubtract(position);
+        <span class="hljs-keyword">let</span> tempVector = scrawl.<span class="hljs-title function_">requestVector</span>(ballPosition).<span class="hljs-title function_">vectorSubtract</span>(position);
 
-        <span class="hljs-keyword">let</span> magnitude = tempVector.getMagnitude();
+        <span class="hljs-keyword">let</span> magnitude = tempVector.<span class="hljs-title function_">getMagnitude</span>();
 
-        <span class="hljs-keyword">if</span> (magnitude &amp;&amp; magnitude &lt; myRepellorBall.get(<span class="hljs-string">&#x27;radius&#x27;</span>)) {
+        <span class="hljs-keyword">if</span> (magnitude &amp;&amp; magnitude &lt; myRepellorBall.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;radius&#x27;</span>)) {
 
-            tempVector.scalarMultiply(<span class="hljs-number">1</span> / (magnitude / <span class="hljs-number">1000</span>));
-            load.vectorSubtract(tempVector)
+            tempVector.<span class="hljs-title function_">scalarMultiply</span>(<span class="hljs-number">1</span> / (magnitude / <span class="hljs-number">1000</span>));
+            load.<span class="hljs-title function_">vectorSubtract</span>(tempVector)
         }
-        scrawl.releaseVector(tempVector);
+        scrawl.<span class="hljs-title function_">releaseVector</span>(tempVector);
     },
 });
 </code></pre>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeForce = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeForce = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Force(items);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Force</span>(items);
 };
 
-<span class="hljs-title">constructors</span>.<span class="hljs-title">Force</span> = <span class="hljs-title">Force</span>;
+constructors.<span class="hljs-property">Force</span> = <span class="hljs-title class_">Force</span>;
 
 
-makeForce({
+<span class="hljs-title function_">makeForce</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;gravity&#x27;</span>,
     <span class="hljs-attr">action</span>: <span class="hljs-function">(<span class="hljs-params">particle, world, host</span>) =&gt;</span> {
 
         <span class="hljs-keyword">let</span> {mass, load} = particle;
 
-        <span class="hljs-keyword">let</span> c = requestVector();
+        <span class="hljs-keyword">let</span> c = <span class="hljs-title function_">requestVector</span>();
 
-        c.setFromVector(world.gravity).scalarMultiply(mass);
-        load.vectorAdd(c);
+        c.<span class="hljs-title function_">setFromVector</span>(world.<span class="hljs-property">gravity</span>).<span class="hljs-title function_">scalarMultiply</span>(mass);
+        load.<span class="hljs-title function_">vectorAdd</span>(c);
 
-        releaseVector(c);
+        <span class="hljs-title function_">releaseVector</span>(c);
     },
 });</pre></div></div>
             

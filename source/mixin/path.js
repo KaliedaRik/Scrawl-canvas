@@ -24,7 +24,9 @@ export default function (P = Ωempty) {
         addPathHandle: false,
         addPathOffset: true,
         addPathRotation: false,
-        constantPathSpeed: false,
+
+        // DEPRECATION WARNING: `constantSpeedAlongPath` replaces the old attribute `constantPathSpeed` which clashes with the attribute set by the ShapeBasic mixin.
+        constantSpeedAlongPath: false,
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
     mergeOver(P, defaultAttributes);
@@ -137,7 +139,10 @@ export default function (P = Ωempty) {
 
         if (path) {
 
-            currentPathData = path.getPathPositionData(pathPos, this.constantPathSpeed);
+            // Note: the old attribute `constantPathSpeed` has been deprecated because the ShapeBasic mixin adds that attributes to shapes where it has different functionality. This code is temporary until Scrawl-canvas v9 is released
+            let speed = this.constantSpeedAlongPath || this.constantPathSpeed || false;
+
+            currentPathData = path.getPathPositionData(pathPos, speed);
 
             if (this.addPathRotation) this.dirtyRotation = true;
 

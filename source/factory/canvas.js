@@ -21,11 +21,10 @@
 
 
 // #### Demos:
-// + All canvas and component demos, and a few of the stack demos, include Canvas wrapper functionality - most of which happens behind the scenes and does not need to be directly coded. 
+// + All canvas and packets demos, and a few of the stack demos, include Canvas wrapper functionality - most of which happens behind the scenes and does not need to be directly coded. 
 // + [Canvas-009](../../demo/canvas-009.html) - Pattern styles; Entity web link anchors; Dynamic accessibility
 // + [DOM-011](../../demo/dom-011.html) - Canvas controller `fit` attribute; Cell positioning (mouse)
 // + [DOM-012](../../demo/dom-012.html) - Add and remove (kill) Scrawl-canvas canvas elements programmatically
-// + [Component-001](../../demo/component-001.html) - Scrawl-canvas DOM element components
 
 
 // #### Imports
@@ -213,8 +212,9 @@ let defaultAttributes = {
 // The aim of this functionality is to replicate the CSS `object-fit` property - [detailed here](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit) - for &lt;canvas> elements. Unlike the CSS property, we apply the fit attribute to the Canvas wrapper, not the element itself or its parent element.
     fit: 'none',
 
-// __isComponent__ - set to true if canvas is being used as part of a Scrawl-canvas component.
+// DEPRECATED (because it is a really bad name) __isComponent__ replaced by __baseMatchesCanvasDimensions__ - set to true if, for example, canvas is being used as part of a Scrawl-canvas snippet.
     isComponent: false,
+    baseMatchesCanvasDimensions: false,
 
 // __renderOnResize__ - perform an additional render of the scene following a change in the canvas's dimensions
     renderOnResize: true,

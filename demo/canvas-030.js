@@ -174,7 +174,7 @@ for (let i = 0; i < 10; i++) {
 
         pathPosition: (i / 100) + 0.5,
 
-        constantPathSpeed: true,
+        constantSpeedAlongPath: true,
     });
 }
 

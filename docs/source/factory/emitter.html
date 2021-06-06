@@ -165,6 +165,11 @@
                 </a>
               
                 
+                <a class="source" href="lineSpiral.html">
+                  ./source/factory/lineSpiral.js
+                </a>
+              
+                
                 <a class="source" href="loom.html">
                   ./source/factory/loom.js
                 </a>
@@ -257,6 +262,11 @@
                 
                 <a class="source" href="radialGradient.html">
                   ./source/factory/radialGradient.js
+                </a>
+              
+                
+                <a class="source" href="rawAsset.html">
+                  ./source/factory/rawAsset.js
                 </a>
               
                 
@@ -508,7 +518,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span>, <span class="hljs-title">tween</span>, <span class="hljs-title">artefact</span>, <span class="hljs-title">group</span>, <span class="hljs-title">world</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, tween, artefact, group, world } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { pushUnique, mergeOver, λ<span class="hljs-literal">null</span>, isa_fn, isa_obj, xt, xta, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { currentGroup } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/document.js&#x27;</span>;
 
@@ -534,12 +544,12 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Emitter = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">Emitter</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-built_in">this</span>.makeName(items.name);
-    <span class="hljs-built_in">this</span>.register();
-    <span class="hljs-built_in">this</span>.initializePositions();
-    <span class="hljs-built_in">this</span>.set(<span class="hljs-built_in">this</span>.defs);</pre></div></div>
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(items.<span class="hljs-property">name</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">initializePositions</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);</pre></div></div>
             
         </li>
         
@@ -554,10 +564,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.onEnter = λ<span class="hljs-literal">null</span>;
-    <span class="hljs-built_in">this</span>.onLeave = λ<span class="hljs-literal">null</span>;
-    <span class="hljs-built_in">this</span>.onDown = λ<span class="hljs-literal">null</span>;
-    <span class="hljs-built_in">this</span>.onUp = λ<span class="hljs-literal">null</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">onEnter</span> = λ<span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">onLeave</span> = λ<span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">onDown</span> = λ<span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">onUp</span> = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
@@ -572,8 +582,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.fillColorFactory = makeColor({ <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span>-fillColorFactory`</span>});
-    <span class="hljs-built_in">this</span>.strokeColorFactory = makeColor({ <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span>-strokeColorFactory`</span>});</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">fillColorFactory</span> = <span class="hljs-title function_">makeColor</span>({ <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>-fillColorFactory`</span>});
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">strokeColorFactory</span> = <span class="hljs-title function_">makeColor</span>({ <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span>-strokeColorFactory`</span>});</pre></div></div>
             
         </li>
         
@@ -588,8 +598,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.range = makeVector();
-    <span class="hljs-built_in">this</span>.rangeFrom = makeVector();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">range</span> = <span class="hljs-title function_">makeVector</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">rangeFrom</span> = <span class="hljs-title function_">makeVector</span>();</pre></div></div>
             
         </li>
         
@@ -604,9 +614,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.preAction = λ<span class="hljs-literal">null</span>;
-    <span class="hljs-built_in">this</span>.stampAction = λ<span class="hljs-literal">null</span>;
-    <span class="hljs-built_in">this</span>.postAction = λ<span class="hljs-literal">null</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">preAction</span> = λ<span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">stampAction</span> = λ<span class="hljs-literal">null</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">postAction</span> = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
@@ -621,17 +631,17 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.particleStore = [];
-    <span class="hljs-built_in">this</span>.deadParticles = [];
-    <span class="hljs-built_in">this</span>.liveParticles = [];
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">particleStore</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">deadParticles</span> = [];
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">liveParticles</span> = [];
 
-    <span class="hljs-keyword">if</span> (!items.group) items.group = currentGroup;
+    <span class="hljs-keyword">if</span> (!items.<span class="hljs-property">group</span>) items.<span class="hljs-property">group</span> = currentGroup;
 
-    <span class="hljs-built_in">this</span>.set(items);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.purge) <span class="hljs-built_in">this</span>.purgeArtefact(<span class="hljs-built_in">this</span>.purge);
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">purge</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">purgeArtefact</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">purge</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -647,12 +657,12 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Emitter.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">Emitter</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
 
-P.type = <span class="hljs-string">&#x27;Emitter&#x27;</span>;
-P.lib = <span class="hljs-string">&#x27;entity&#x27;</span>;
-P.isArtefact = <span class="hljs-literal">true</span>;
-P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
+P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Emitter&#x27;</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;entity&#x27;</span>;
+P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">true</span>;
+P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -667,8 +677,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = baseMix(P);
-P = entityMix(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);
+P = <span class="hljs-title function_">entityMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -709,7 +719,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    world: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">world</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -727,7 +737,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    artefact: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">artefact</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -748,7 +758,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    range: <span class="hljs-literal">null</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">range</span>: <span class="hljs-literal">null</span>,
     <span class="hljs-attr">rangeFrom</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
@@ -764,7 +774,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    generationRate: <span class="hljs-number">0</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">generationRate</span>: <span class="hljs-number">0</span>,</pre></div></div>
             
         </li>
         
@@ -779,7 +789,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    particleCount: <span class="hljs-number">0</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">particleCount</span>: <span class="hljs-number">0</span>,</pre></div></div>
             
         </li>
         
@@ -800,7 +810,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    generateAlongPath: <span class="hljs-literal">false</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">generateAlongPath</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">generateInArea</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">generateFromExistingParticles</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">generateFromExistingParticleHistories</span>: <span class="hljs-literal">false</span>,
@@ -819,7 +829,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    generationChoke: <span class="hljs-number">15</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">generationChoke</span>: <span class="hljs-number">15</span>,</pre></div></div>
             
         </li>
         
@@ -839,7 +849,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    killAfterTime: <span class="hljs-number">0</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">killAfterTime</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">killAfterTimeVariation</span>: <span class="hljs-number">0</span>,
 
     <span class="hljs-attr">killRadius</span>: <span class="hljs-number">0</span>,
@@ -860,7 +870,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    historyLength: <span class="hljs-number">1</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">historyLength</span>: <span class="hljs-number">1</span>,</pre></div></div>
             
         </li>
         
@@ -878,7 +888,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    forces: <span class="hljs-literal">null</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">forces</span>: <span class="hljs-literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -896,7 +906,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    mass: <span class="hljs-number">1</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">mass</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">massVariation</span>: <span class="hljs-number">0</span>,</pre></div></div>
             
         </li>
@@ -912,7 +922,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    engine: <span class="hljs-string">&#x27;euler&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">engine</span>: <span class="hljs-string">&#x27;euler&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -930,7 +940,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    hitRadius: <span class="hljs-number">10</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">hitRadius</span>: <span class="hljs-number">10</span>,</pre></div></div>
             
         </li>
         
@@ -945,7 +955,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    showHitRadius: <span class="hljs-literal">false</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">showHitRadius</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">hitRadiusColor</span>: <span class="hljs-string">&#x27;#000000&#x27;</span>,</pre></div></div>
             
         </li>
@@ -961,7 +971,7 @@ P = entityMix(P);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    resetAfterBlur: <span class="hljs-number">3</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">resetAfterBlur</span>: <span class="hljs-number">3</span>,</pre></div></div>
             
         </li>
         
@@ -1021,7 +1031,7 @@ P = entityMix(P);</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>
 };
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
+P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -1036,29 +1046,29 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.packetExclusions = pushUnique(P.packetExclusions, [<span class="hljs-string">&#x27;forces&#x27;</span>, <span class="hljs-string">&#x27;particleStore&#x27;</span>, <span class="hljs-string">&#x27;deadParticles&#x27;</span>, <span class="hljs-string">&#x27;liveParticles&#x27;</span>, <span class="hljs-string">&#x27;fillColorFactory&#x27;</span>, <span class="hljs-string">&#x27;strokeColorFactory&#x27;</span>]);
-P.packetExclusionsByRegex = pushUnique(P.packetExclusionsByRegex, []);
-P.packetCoordinates = pushUnique(P.packetCoordinates, []);
-P.packetObjects = pushUnique(P.packetObjects, [<span class="hljs-string">&#x27;world&#x27;</span>, <span class="hljs-string">&#x27;artefact&#x27;</span>, <span class="hljs-string">&#x27;generateInArea&#x27;</span>, <span class="hljs-string">&#x27;generateAlongPath&#x27;</span>]);
-P.packetFunctions = pushUnique(P.packetFunctions, [<span class="hljs-string">&#x27;preAction&#x27;</span>, <span class="hljs-string">&#x27;stampAction&#x27;</span>, <span class="hljs-string">&#x27;postAction&#x27;</span>]);
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">packetExclusions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusions</span>, [<span class="hljs-string">&#x27;forces&#x27;</span>, <span class="hljs-string">&#x27;particleStore&#x27;</span>, <span class="hljs-string">&#x27;deadParticles&#x27;</span>, <span class="hljs-string">&#x27;liveParticles&#x27;</span>, <span class="hljs-string">&#x27;fillColorFactory&#x27;</span>, <span class="hljs-string">&#x27;strokeColorFactory&#x27;</span>]);
+P.<span class="hljs-property">packetExclusionsByRegex</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetExclusionsByRegex</span>, []);
+P.<span class="hljs-property">packetCoordinates</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetCoordinates</span>, []);
+P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetObjects</span>, [<span class="hljs-string">&#x27;world&#x27;</span>, <span class="hljs-string">&#x27;artefact&#x27;</span>, <span class="hljs-string">&#x27;generateInArea&#x27;</span>, <span class="hljs-string">&#x27;generateAlongPath&#x27;</span>]);
+P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetFunctions</span>, [<span class="hljs-string">&#x27;preAction&#x27;</span>, <span class="hljs-string">&#x27;stampAction&#x27;</span>, <span class="hljs-string">&#x27;postAction&#x27;</span>]);
 
-P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) </span>{
+P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">copy, items</span>) {
 
-    <span class="hljs-keyword">let</span> forces = items.forces || <span class="hljs-built_in">this</span>.forces || <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">let</span> forces = items.<span class="hljs-property">forces</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">forces</span> || <span class="hljs-literal">false</span>;
     <span class="hljs-keyword">if</span> (forces) {
 
         <span class="hljs-keyword">let</span> tempForces = [];
-        forces.forEach(<span class="hljs-function"><span class="hljs-params">f</span> =&gt;</span> {
+        forces.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">f</span> =&gt;</span> {
 
-            <span class="hljs-keyword">if</span> (f.substring) tempForces.push(f);
-            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isa_obj(f) &amp;&amp; f.name) tempForces.push(f.name);
+            <span class="hljs-keyword">if</span> (f.<span class="hljs-property">substring</span>) tempForces.<span class="hljs-title function_">push</span>(f);
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(f) &amp;&amp; f.<span class="hljs-property">name</span>) tempForces.<span class="hljs-title function_">push</span>(f.<span class="hljs-property">name</span>);
         });
-        copy.forces = tempForces;
+        copy.<span class="hljs-property">forces</span> = tempForces;
     }
 
     <span class="hljs-keyword">let</span> tempParticles = [];
-    <span class="hljs-built_in">this</span>.particleStore.forEach(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> tempParticles.push(p.saveAsPacket()));
-    copy.particleStore = tempParticles;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">particleStore</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> tempParticles.<span class="hljs-title function_">push</span>(p.<span class="hljs-title function_">saveAsPacket</span>()));
+    copy.<span class="hljs-property">particleStore</span> = tempParticles;
 
     <span class="hljs-keyword">return</span> copy;
 };</pre></div></div>
@@ -1076,7 +1086,7 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.postCloneAction = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">clone, items</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">postCloneAction</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params">clone, items</span>) {
 
     <span class="hljs-keyword">return</span> clone;
 };</pre></div></div>
@@ -1094,20 +1104,20 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.factoryKill = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">killArtefact, killWorld</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">factoryKill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">killArtefact, killWorld</span>) {
 
-    <span class="hljs-built_in">this</span>.isRunning = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">isRunning</span> = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">if</span> (killArtefact) <span class="hljs-built_in">this</span>.artefact.kill();
+    <span class="hljs-keyword">if</span> (killArtefact) <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefact</span>.<span class="hljs-title function_">kill</span>();
 
-    <span class="hljs-keyword">if</span> (killWorld) <span class="hljs-built_in">this</span>.world.kill();
+    <span class="hljs-keyword">if</span> (killWorld) <span class="hljs-variable language_">this</span>.<span class="hljs-property">world</span>.<span class="hljs-title function_">kill</span>();
 
-    <span class="hljs-built_in">this</span>.fillColorFactory.kill();
-    <span class="hljs-built_in">this</span>.strokeColorFactory.kill();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">fillColorFactory</span>.<span class="hljs-title function_">kill</span>();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">strokeColorFactory</span>.<span class="hljs-title function_">kill</span>();
     
-    <span class="hljs-built_in">this</span>.deadParticles.forEach(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.kill());
-    <span class="hljs-built_in">this</span>.liveParticles.forEach(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.kill());
-    <span class="hljs-built_in">this</span>.particleStore.forEach(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.kill());
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">deadParticles</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.<span class="hljs-title function_">kill</span>());
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">liveParticles</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.<span class="hljs-title function_">kill</span>());
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">particleStore</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.<span class="hljs-title function_">kill</span>());
 };</pre></div></div>
             
         </li>
@@ -1123,52 +1133,52 @@ P.finalizePacketOut = <span class="hljs-function"><span class="hljs-keyword">fun
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.getters,
-    S = P.setters,
-    D = P.deltaSetters;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.<span class="hljs-property">getters</span>,
+    S = P.<span class="hljs-property">setters</span>,
+    D = P.<span class="hljs-property">deltaSetters</span>;
 
-S.rangeX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{ <span class="hljs-built_in">this</span>.range.x = val; };
-S.rangeY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{ <span class="hljs-built_in">this</span>.range.y = val; };
-S.rangeZ = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{ <span class="hljs-built_in">this</span>.range.z = val; };
-S.range = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{ <span class="hljs-built_in">this</span>.range.set(item); };
+S.<span class="hljs-property">rangeX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-property">range</span>.<span class="hljs-property">x</span> = val; };
+S.<span class="hljs-property">rangeY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-property">range</span>.<span class="hljs-property">y</span> = val; };
+S.<span class="hljs-property">rangeZ</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-property">range</span>.<span class="hljs-property">z</span> = val; };
+S.<span class="hljs-property">range</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-property">range</span>.<span class="hljs-title function_">set</span>(item); };
 
-S.rangeFromX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{ <span class="hljs-built_in">this</span>.rangeFrom.x = val; };
-S.rangeFromY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{ <span class="hljs-built_in">this</span>.rangeFrom.y = val; };
-S.rangeFromZ = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{ <span class="hljs-built_in">this</span>.rangeFrom.z = val; };
-S.rangeFrom = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{ <span class="hljs-built_in">this</span>.rangeFrom.set(item); };
+S.<span class="hljs-property">rangeFromX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-property">rangeFrom</span>.<span class="hljs-property">x</span> = val; };
+S.<span class="hljs-property">rangeFromY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-property">rangeFrom</span>.<span class="hljs-property">y</span> = val; };
+S.<span class="hljs-property">rangeFromZ</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-property">rangeFrom</span>.<span class="hljs-property">z</span> = val; };
+S.<span class="hljs-property">rangeFrom</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) { <span class="hljs-variable language_">this</span>.<span class="hljs-property">rangeFrom</span>.<span class="hljs-title function_">set</span>(item); };
 
-S.preAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">preAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (isa_fn(item)) <span class="hljs-built_in">this</span>.preAction = item;
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">preAction</span> = item;
 };
-S.stampAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">stampAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (isa_fn(item)) <span class="hljs-built_in">this</span>.stampAction = item;
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">stampAction</span> = item;
 };
-S.postAction = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">postAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (isa_fn(item)) <span class="hljs-built_in">this</span>.postAction = item;
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">postAction</span> = item;
 };
 
 
-S.world = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">world</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-keyword">let</span> w;
 
-    <span class="hljs-keyword">if</span> (item.substring) w = world[item];
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isa_obj(item) &amp;&amp; item.type === <span class="hljs-string">&#x27;World&#x27;</span>) w = item;
+    <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) w = world[item];
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(item) &amp;&amp; item.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;World&#x27;</span>) w = item;
 
-    <span class="hljs-keyword">if</span> (w) <span class="hljs-built_in">this</span>.world = w;
+    <span class="hljs-keyword">if</span> (w) <span class="hljs-variable language_">this</span>.<span class="hljs-property">world</span> = w;
 };
 
-S.artefact = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">artefact</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-keyword">let</span> art;
 
-    <span class="hljs-keyword">if</span> (item.substring) art = artefact[item];
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isa_obj(item) &amp;&amp; item.isArtefact) art = item;
+    <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) art = artefact[item];
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(item) &amp;&amp; item.<span class="hljs-property">isArtefact</span>) art = item;
 
-    <span class="hljs-keyword">if</span> (art) <span class="hljs-built_in">this</span>.artefact = art;
+    <span class="hljs-keyword">if</span> (art) <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefact</span> = art;
 };</pre></div></div>
             
         </li>
@@ -1184,26 +1194,26 @@ S.artefact = <span class="hljs-function"><span class="hljs-keyword">function</sp
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.generateAlongPath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">generateAlongPath</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-keyword">let</span> art;
 
-    <span class="hljs-keyword">if</span> (item.substring) art = artefact[item];
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isa_obj(item) &amp;&amp; item.isArtefact) art = item;
+    <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) art = artefact[item];
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(item) &amp;&amp; item.<span class="hljs-property">isArtefact</span>) art = item;
 
-    <span class="hljs-keyword">if</span> (art &amp;&amp; art.useAsPath) <span class="hljs-built_in">this</span>.generateAlongPath = art;
-    <span class="hljs-keyword">else</span> <span class="hljs-built_in">this</span>.generateAlongPath = <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">if</span> (art &amp;&amp; art.<span class="hljs-property">useAsPath</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">generateAlongPath</span> = art;
+    <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">generateAlongPath</span> = <span class="hljs-literal">false</span>;
 };
 
-S.generateInArea = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">generateInArea</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-keyword">let</span> art;
 
-    <span class="hljs-keyword">if</span> (item.substring) art = artefact[item];
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isa_obj(item) &amp;&amp; item.isArtefact) art = item;
+    <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) art = artefact[item];
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(item) &amp;&amp; item.<span class="hljs-property">isArtefact</span>) art = item;
 
-    <span class="hljs-keyword">if</span> (art) <span class="hljs-built_in">this</span>.generateInArea = art;
-    <span class="hljs-keyword">else</span> <span class="hljs-built_in">this</span>.generateInArea = <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">if</span> (art) <span class="hljs-variable language_">this</span>.<span class="hljs-property">generateInArea</span> = art;
+    <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">generateInArea</span> = <span class="hljs-literal">false</span>;
 };</pre></div></div>
             
         </li>
@@ -1219,66 +1229,66 @@ S.generateInArea = <span class="hljs-function"><span class="hljs-keyword">functi
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.fillColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">fillColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.fillColorFactory.set({<span class="hljs-attr">color</span>: item});
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">fillColorFactory</span>.<span class="hljs-title function_">set</span>({<span class="hljs-attr">color</span>: item});
 };
-S.fillMinimumColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">fillMinimumColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.fillColorFactory.set({<span class="hljs-attr">minimumColor</span>: item});
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">fillColorFactory</span>.<span class="hljs-title function_">set</span>({<span class="hljs-attr">minimumColor</span>: item});
 };
-S.fillMaximumColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">fillMaximumColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.fillColorFactory.set({<span class="hljs-attr">maximumColor</span>: item});
-};
-
-S.strokeColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-built_in">this</span>.strokeColorFactory.set({<span class="hljs-attr">color</span>: item});
-};
-S.strokeMinimumColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-built_in">this</span>.strokeColorFactory.set({<span class="hljs-attr">minimumColor</span>: item});
-};
-S.strokeMaximumColor = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
-
-    <span class="hljs-built_in">this</span>.strokeColorFactory.set({<span class="hljs-attr">maximumColor</span>: item});
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">fillColorFactory</span>.<span class="hljs-title function_">set</span>({<span class="hljs-attr">maximumColor</span>: item});
 };
 
-S.hitRadius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">strokeColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (item.toFixed) {
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">strokeColorFactory</span>.<span class="hljs-title function_">set</span>({<span class="hljs-attr">color</span>: item});
+};
+S.<span class="hljs-property">strokeMinimumColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-        <span class="hljs-built_in">this</span>.hitRadius = item;
-        <span class="hljs-built_in">this</span>.width = <span class="hljs-built_in">this</span>.height = item * <span class="hljs-number">2</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">strokeColorFactory</span>.<span class="hljs-title function_">set</span>({<span class="hljs-attr">minimumColor</span>: item});
+};
+S.<span class="hljs-property">strokeMaximumColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">strokeColorFactory</span>.<span class="hljs-title function_">set</span>({<span class="hljs-attr">maximumColor</span>: item});
+};
+
+S.<span class="hljs-property">hitRadius</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span>) {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">hitRadius</span> = item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">width</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">height</span> = item * <span class="hljs-number">2</span>;
     }
 };
-D.hitRadius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">hitRadius</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (item.toFixed) {
+    <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span>) {
 
-        <span class="hljs-built_in">this</span>.hitRadius += item;
-        <span class="hljs-built_in">this</span>.width = <span class="hljs-built_in">this</span>.height = <span class="hljs-built_in">this</span>.hitRadius * <span class="hljs-number">2</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">hitRadius</span> += item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">width</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">height</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">hitRadius</span> * <span class="hljs-number">2</span>;
     }
 };
-S.width = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">width</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (item.toFixed) {
+    <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span>) {
 
-        <span class="hljs-built_in">this</span>.hitRadius = item / <span class="hljs-number">2</span>;
-        <span class="hljs-built_in">this</span>.width = <span class="hljs-built_in">this</span>.height = item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">hitRadius</span> = item / <span class="hljs-number">2</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">width</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">height</span> = item;
     }
 };
-D.width = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">width</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (item.toFixed) {
+    <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span>) {
 
-        <span class="hljs-built_in">this</span>.hitRadius = item / <span class="hljs-number">2</span>;
-        <span class="hljs-built_in">this</span>.width = <span class="hljs-built_in">this</span>.height = item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">hitRadius</span> = item / <span class="hljs-number">2</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">width</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">height</span> = item;
     }
 };
-S.height = S.width;
-D.height = D.width;</pre></div></div>
+S.<span class="hljs-property">height</span> = S.<span class="hljs-property">width</span>;
+D.<span class="hljs-property">height</span> = D.<span class="hljs-property">width</span>;</pre></div></div>
             
         </li>
         
@@ -1306,38 +1316,38 @@ D.height = D.width;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.prepareStamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">prepareStamp</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyHost) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHost</span>) {
 
-        <span class="hljs-built_in">this</span>.dirtyHost = <span class="hljs-literal">false</span>;
-        <span class="hljs-built_in">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHost</span> = <span class="hljs-literal">false</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
     }
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyScale || <span class="hljs-built_in">this</span>.dirtyDimensions || <span class="hljs-built_in">this</span>.dirtyStart || <span class="hljs-built_in">this</span>.dirtyOffset || <span class="hljs-built_in">this</span>.dirtyHandle) <span class="hljs-built_in">this</span>.dirtyPathObject = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScale</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStart</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOffset</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHandle</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyScale) <span class="hljs-built_in">this</span>.cleanScale();
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScale</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanScale</span>();
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyDimensions) <span class="hljs-built_in">this</span>.cleanDimensions();
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanDimensions</span>();
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyLock) <span class="hljs-built_in">this</span>.cleanLock();
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyLock</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanLock</span>();
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyStart) <span class="hljs-built_in">this</span>.cleanStart();
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStart</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanStart</span>();
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyOffset) <span class="hljs-built_in">this</span>.cleanOffset();
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOffset</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanOffset</span>();
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyHandle) <span class="hljs-built_in">this</span>.cleanHandle();
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHandle</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanHandle</span>();
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyRotation) <span class="hljs-built_in">this</span>.cleanRotation();
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyRotation</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanRotation</span>();
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.lockTo.indexOf(<span class="hljs-string">&#x27;mouse&#x27;</span>) &gt;= <span class="hljs-number">0</span> || <span class="hljs-built_in">this</span>.lockTo.indexOf(<span class="hljs-string">&#x27;particle&#x27;</span>) &gt;= <span class="hljs-number">0</span>) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;mouse&#x27;</span>) &gt;= <span class="hljs-number">0</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;particle&#x27;</span>) &gt;= <span class="hljs-number">0</span>) {
 
-        <span class="hljs-built_in">this</span>.dirtyStampPositions = <span class="hljs-literal">true</span>;
-        <span class="hljs-built_in">this</span>.dirtyStampHandlePositions = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampPositions</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampHandlePositions</span> = <span class="hljs-literal">true</span>;
     }
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyStampPositions) <span class="hljs-built_in">this</span>.cleanStampPositions();
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyStampHandlePositions) <span class="hljs-built_in">this</span>.cleanStampHandlePositions();</pre></div></div>
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampPositions</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanStampPositions</span>();
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampHandlePositions</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanStampHandlePositions</span>();</pre></div></div>
             
         </li>
         
@@ -1352,9 +1362,9 @@ D.height = D.width;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> now = <span class="hljs-built_in">Date</span>.now();
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> now = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
 
-    <span class="hljs-keyword">let</span> {particleStore, deadParticles, liveParticles, particleCount, generationRate, generatorChoke, resetAfterBlur} = <span class="hljs-built_in">this</span>;</pre></div></div>
+    <span class="hljs-keyword">let</span> {particleStore, deadParticles, liveParticles, particleCount, generationRate, generatorChoke, resetAfterBlur} = <span class="hljs-variable language_">this</span>;</pre></div></div>
             
         </li>
         
@@ -1371,7 +1381,7 @@ D.height = D.width;</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!generatorChoke) {
 
-        <span class="hljs-built_in">this</span>.generatorChoke = generatorChoke = now;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">generatorChoke</span> = generatorChoke = now;
     }</pre></div></div>
             
         </li>
@@ -1387,18 +1397,18 @@ D.height = D.width;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    particleStore.forEach(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>    particleStore.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> {
 
-        <span class="hljs-keyword">if</span> (p.isRunning) liveParticles.push(p);
-        <span class="hljs-keyword">else</span> deadParticles.push(p);
+        <span class="hljs-keyword">if</span> (p.<span class="hljs-property">isRunning</span>) liveParticles.<span class="hljs-title function_">push</span>(p);
+        <span class="hljs-keyword">else</span> deadParticles.<span class="hljs-title function_">push</span>(p);
     });
-    particleStore.length = <span class="hljs-number">0</span>;
+    particleStore.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
 
-    deadParticles.forEach(<span class="hljs-function"><span class="hljs-params">d</span> =&gt;</span> releaseParticle(d));
-    deadParticles.length = <span class="hljs-number">0</span>;
+    deadParticles.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">d</span> =&gt;</span> <span class="hljs-title function_">releaseParticle</span>(d));
+    deadParticles.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
 
-    particleStore.push(...liveParticles);
-    liveParticles.length = <span class="hljs-number">0</span>;</pre></div></div>
+    particleStore.<span class="hljs-title function_">push</span>(...liveParticles);
+    liveParticles.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;</pre></div></div>
             
         </li>
         
@@ -1431,16 +1441,16 @@ D.height = D.width;</pre></div></div>
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> ((elapsed / <span class="hljs-number">1000</span>) &gt; resetAfterBlur) {
 
         elapsed = <span class="hljs-number">0</span>;
-        <span class="hljs-built_in">this</span>.generatorChoke = now;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">generatorChoke</span> = now;
     }
 
     <span class="hljs-keyword">if</span> (elapsed &gt; <span class="hljs-number">0</span> &amp;&amp; generationRate) {
 
-        <span class="hljs-keyword">let</span> canGenerate = <span class="hljs-built_in">Math</span>.floor((generationRate / <span class="hljs-number">1000</span>) * elapsed);
+        <span class="hljs-keyword">let</span> canGenerate = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>((generationRate / <span class="hljs-number">1000</span>) * elapsed);
 
         <span class="hljs-keyword">if</span> (particleCount) {
 
-            <span class="hljs-keyword">let</span> reqParticles = particleCount - particleStore.length;
+            <span class="hljs-keyword">let</span> reqParticles = particleCount - particleStore.<span class="hljs-property">length</span>;
             
             <span class="hljs-keyword">if</span> (reqParticles &lt;= <span class="hljs-number">0</span>) canGenerate = <span class="hljs-number">0</span>;
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (reqParticles &lt; canGenerate) canGenerate = reqParticles;
@@ -1448,7 +1458,7 @@ D.height = D.width;</pre></div></div>
 
         <span class="hljs-keyword">if</span> (canGenerate) {
 
-            <span class="hljs-built_in">this</span>.addParticles(canGenerate);</pre></div></div>
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">addParticles</span>(canGenerate);</pre></div></div>
             
         </li>
         
@@ -1466,7 +1476,7 @@ D.height = D.width;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-built_in">this</span>.generatorChoke = now;
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-variable language_">this</span>.<span class="hljs-property">generatorChoke</span> = now;
         }
     }
 };</pre></div></div>
@@ -1497,9 +1507,9 @@ D.height = D.width;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.addParticles = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">addParticles</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">req</span>) {
 
-    <span class="hljs-keyword">const</span> rnd = <span class="hljs-built_in">Math</span>.random;</pre></div></div>
+    <span class="hljs-keyword">const</span> rnd = <span class="hljs-title class_">Math</span>.<span class="hljs-property">random</span>;</pre></div></div>
             
         </li>
         
@@ -1514,16 +1524,16 @@ D.height = D.width;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> calc = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item, itemVar</span>) </span>{
-        <span class="hljs-keyword">return</span> item + ((rnd() * itemVar * <span class="hljs-number">2</span>) - itemVar);
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">const</span> calc = <span class="hljs-keyword">function</span> (<span class="hljs-params">item, itemVar</span>) {
+        <span class="hljs-keyword">return</span> item + ((<span class="hljs-title function_">rnd</span>() * itemVar * <span class="hljs-number">2</span>) - itemVar);
     };
 
-    <span class="hljs-keyword">const</span> velocityCalc = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item, itemVar</span>) </span>{
-        <span class="hljs-keyword">return</span> item + (rnd() * itemVar);
+    <span class="hljs-keyword">const</span> velocityCalc = <span class="hljs-keyword">function</span> (<span class="hljs-params">item, itemVar</span>) {
+        <span class="hljs-keyword">return</span> item + (<span class="hljs-title function_">rnd</span>() * itemVar);
     };
 
     <span class="hljs-keyword">let</span> i, p, cx, cy,
-        timeChoke = <span class="hljs-built_in">Date</span>.now();</pre></div></div>
+        timeChoke = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();</pre></div></div>
             
         </li>
         
@@ -1538,7 +1548,7 @@ D.height = D.width;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> {historyLength, engine, forces, mass, massVariation, fillColorFactory, strokeColorFactory, range, rangeFrom, currentStampPosition, particleStore, killAfterTime, killAfterTimeVariation, killRadius, killRadiusVariation, killBeyondCanvas, currentRotation, generateAlongPath, generateInArea, generateFromExistingParticles, generateFromExistingParticleHistories, limitDirectionToAngleMultiples, generationChoke} = <span class="hljs-built_in">this</span>;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> {historyLength, engine, forces, mass, massVariation, fillColorFactory, strokeColorFactory, range, rangeFrom, currentStampPosition, particleStore, killAfterTime, killAfterTimeVariation, killRadius, killRadiusVariation, killBeyondCanvas, currentRotation, generateAlongPath, generateInArea, generateFromExistingParticles, generateFromExistingParticleHistories, limitDirectionToAngleMultiples, generationChoke} = <span class="hljs-variable language_">this</span>;
 
     <span class="hljs-keyword">let</span> {x, y, z} = range;
     <span class="hljs-keyword">let</span> {<span class="hljs-attr">x</span>:fx, <span class="hljs-attr">y</span>:fy, <span class="hljs-attr">z</span>:fz} = rangeFrom;</pre></div></div>
@@ -1558,72 +1568,72 @@ D.height = D.width;</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (generateInArea) {
 
-        <span class="hljs-keyword">let</span> host = <span class="hljs-built_in">this</span>.currentHost;
+        <span class="hljs-keyword">let</span> host = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>;
 
         <span class="hljs-keyword">if</span> (host) {
 
-            <span class="hljs-keyword">const</span> hostCanvas = host.element;
+            <span class="hljs-keyword">const</span> hostCanvas = host.<span class="hljs-property">element</span>;
 
             <span class="hljs-keyword">const</span> {width, height} = hostCanvas;
 
-            <span class="hljs-keyword">if</span> (!generateInArea.pathObject || generateInArea.dirtyPathObject) generateInArea.cleanPathObject();
+            <span class="hljs-keyword">if</span> (!generateInArea.<span class="hljs-property">pathObject</span> || generateInArea.<span class="hljs-property">dirtyPathObject</span>) generateInArea.<span class="hljs-title function_">cleanPathObject</span>();
 
-            <span class="hljs-keyword">const</span> testCell = requestCell(),
-                testEngine = testCell.engine,
-                coord = requestCoordinate();
+            <span class="hljs-keyword">const</span> testCell = <span class="hljs-title function_">requestCell</span>(),
+                testEngine = testCell.<span class="hljs-property">engine</span>,
+                coord = <span class="hljs-title function_">requestCoordinate</span>();
 
             <span class="hljs-keyword">let</span> {pathObject, winding, currentStart} = generateInArea;
 
             [cx, cy] = currentStart;
 
-            <span class="hljs-keyword">const</span> test = <span class="hljs-function">(<span class="hljs-params">item</span>) =&gt;</span> testEngine.isPointInPath(pathObject, ...item, winding);
+            <span class="hljs-keyword">const</span> <span class="hljs-title function_">test</span> = (<span class="hljs-params">item</span>) =&gt; testEngine.<span class="hljs-title function_">isPointInPath</span>(pathObject, ...item, winding);
 
-            testCell.rotateDestination(testEngine, cx, cy, generateInArea);
+            testCell.<span class="hljs-title function_">rotateDestination</span>(testEngine, cx, cy, generateInArea);
             
-            GenerateInAreaLoops:    
+            <span class="hljs-title class_">GenerateInAreaLoops</span>:    
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; req; i++) {
 
                 <span class="hljs-keyword">let</span> coordFlag = <span class="hljs-literal">false</span>;
 
                 <span class="hljs-keyword">while</span> (!coordFlag) {
 
-                    <span class="hljs-keyword">if</span> (timeChoke + generationChoke &lt; <span class="hljs-built_in">Date</span>.now()) <span class="hljs-keyword">break</span> GenerateInAreaLoops;
+                    <span class="hljs-keyword">if</span> (timeChoke + generationChoke &lt; <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>()) <span class="hljs-keyword">break</span> <span class="hljs-title class_">GenerateInAreaLoops</span>;
 
-                    coord.set(rnd() * width, rnd() * height);
+                    coord.<span class="hljs-title function_">set</span>(<span class="hljs-title function_">rnd</span>() * width, <span class="hljs-title function_">rnd</span>() * height);
 
-                    <span class="hljs-keyword">if</span> (test(coord)) coordFlag = <span class="hljs-literal">true</span>;
+                    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">test</span>(coord)) coordFlag = <span class="hljs-literal">true</span>;
                 }
 
-                p = requestParticle();
+                p = <span class="hljs-title function_">requestParticle</span>();
 
-                p.set({
+                p.<span class="hljs-title function_">set</span>({
                     <span class="hljs-attr">positionX</span>: coord[<span class="hljs-number">0</span>],
                     <span class="hljs-attr">positionY</span>: coord[<span class="hljs-number">1</span>],
                     <span class="hljs-attr">positionZ</span>: <span class="hljs-number">0</span>,
 
-                    <span class="hljs-attr">velocityX</span>: velocityCalc(fx, x),
-                    <span class="hljs-attr">velocityY</span>: velocityCalc(fy, y),
-                    <span class="hljs-attr">velocityZ</span>: velocityCalc(fz, z),
+                    <span class="hljs-attr">velocityX</span>: <span class="hljs-title function_">velocityCalc</span>(fx, x),
+                    <span class="hljs-attr">velocityY</span>: <span class="hljs-title function_">velocityCalc</span>(fy, y),
+                    <span class="hljs-attr">velocityZ</span>: <span class="hljs-title function_">velocityCalc</span>(fz, z),
 
                     historyLength, 
                     engine, 
                     forces, 
 
-                    <span class="hljs-attr">mass</span>: calc(mass, massVariation), 
+                    <span class="hljs-attr">mass</span>: <span class="hljs-title function_">calc</span>(mass, massVariation), 
 
-                    <span class="hljs-attr">fill</span>: fillColorFactory.get(<span class="hljs-string">&#x27;random&#x27;</span>),
-                    <span class="hljs-attr">stroke</span>: strokeColorFactory.get(<span class="hljs-string">&#x27;random&#x27;</span>),
+                    <span class="hljs-attr">fill</span>: fillColorFactory.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;random&#x27;</span>),
+                    <span class="hljs-attr">stroke</span>: strokeColorFactory.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;random&#x27;</span>),
                 });
 
-                <span class="hljs-keyword">let</span> timeKill = <span class="hljs-built_in">Math</span>.abs(calc(killAfterTime, killAfterTimeVariation));
-                <span class="hljs-keyword">let</span> radiusKill = <span class="hljs-built_in">Math</span>.abs(calc(killRadius, killRadiusVariation));
+                <span class="hljs-keyword">let</span> timeKill = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(<span class="hljs-title function_">calc</span>(killAfterTime, killAfterTimeVariation));
+                <span class="hljs-keyword">let</span> radiusKill = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(<span class="hljs-title function_">calc</span>(killRadius, killRadiusVariation));
 
-                p.run(timeKill, radiusKill, killBeyondCanvas);
+                p.<span class="hljs-title function_">run</span>(timeKill, radiusKill, killBeyondCanvas);
 
-                particleStore.push(p);
+                particleStore.<span class="hljs-title function_">push</span>(p);
             }
-            releaseCell(testCell);
-            releaseCoordinate(coord);
+            <span class="hljs-title function_">releaseCell</span>(testCell);
+            <span class="hljs-title function_">releaseCoordinate</span>(coord);
         }
     }</pre></div></div>
             
@@ -1642,11 +1652,11 @@ D.height = D.width;</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (generateAlongPath) {
 
-        <span class="hljs-keyword">if</span> (generateAlongPath.useAsPath) {
+        <span class="hljs-keyword">if</span> (generateAlongPath.<span class="hljs-property">useAsPath</span>) {
 
-            <span class="hljs-keyword">if</span> (!generateAlongPath.pathObject || generateAlongPath.dirtyPathObject) generateAlongPath.cleanPathObject();
+            <span class="hljs-keyword">if</span> (!generateAlongPath.<span class="hljs-property">pathObject</span> || generateAlongPath.<span class="hljs-property">dirtyPathObject</span>) generateAlongPath.<span class="hljs-title function_">cleanPathObject</span>();
 
-            GenerateAlongPathLoops:
+            <span class="hljs-title class_">GenerateAlongPathLoops</span>:
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; req; i++) {
 
                 <span class="hljs-keyword">let</span> coord = <span class="hljs-literal">false</span>,
@@ -1654,40 +1664,40 @@ D.height = D.width;</pre></div></div>
 
                 <span class="hljs-keyword">while</span> (!coordFlag) {
 
-                    <span class="hljs-keyword">if</span> (timeChoke + generationChoke &lt; <span class="hljs-built_in">Date</span>.now()) <span class="hljs-keyword">break</span> GenerateAlongPathLoops;
+                    <span class="hljs-keyword">if</span> (timeChoke + generationChoke &lt; <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>()) <span class="hljs-keyword">break</span> <span class="hljs-title class_">GenerateAlongPathLoops</span>;
 
-                    coord = generateAlongPath.getPathPositionData(rnd(), <span class="hljs-literal">true</span>);
+                    coord = generateAlongPath.<span class="hljs-title function_">getPathPositionData</span>(<span class="hljs-title function_">rnd</span>(), <span class="hljs-literal">true</span>);
                     
                     <span class="hljs-keyword">if</span> (coord) coordFlag = <span class="hljs-literal">true</span>;
                 }
 
-                p = requestParticle();
+                p = <span class="hljs-title function_">requestParticle</span>();
 
-                p.set({
-                    <span class="hljs-attr">positionX</span>: coord.x,
-                    <span class="hljs-attr">positionY</span>: coord.y,
+                p.<span class="hljs-title function_">set</span>({
+                    <span class="hljs-attr">positionX</span>: coord.<span class="hljs-property">x</span>,
+                    <span class="hljs-attr">positionY</span>: coord.<span class="hljs-property">y</span>,
                     <span class="hljs-attr">positionZ</span>: <span class="hljs-number">0</span>,
 
-                    <span class="hljs-attr">velocityX</span>: velocityCalc(fx, x),
-                    <span class="hljs-attr">velocityY</span>: velocityCalc(fy, y),
-                    <span class="hljs-attr">velocityZ</span>: velocityCalc(fz, z),
+                    <span class="hljs-attr">velocityX</span>: <span class="hljs-title function_">velocityCalc</span>(fx, x),
+                    <span class="hljs-attr">velocityY</span>: <span class="hljs-title function_">velocityCalc</span>(fy, y),
+                    <span class="hljs-attr">velocityZ</span>: <span class="hljs-title function_">velocityCalc</span>(fz, z),
 
                     historyLength, 
                     engine, 
                     forces, 
 
-                    <span class="hljs-attr">mass</span>: calc(mass, massVariation), 
+                    <span class="hljs-attr">mass</span>: <span class="hljs-title function_">calc</span>(mass, massVariation), 
  
-                    <span class="hljs-attr">fill</span>: fillColorFactory.get(<span class="hljs-string">&#x27;random&#x27;</span>),
-                    <span class="hljs-attr">stroke</span>: strokeColorFactory.get(<span class="hljs-string">&#x27;random&#x27;</span>),
+                    <span class="hljs-attr">fill</span>: fillColorFactory.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;random&#x27;</span>),
+                    <span class="hljs-attr">stroke</span>: strokeColorFactory.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;random&#x27;</span>),
                 });
 
-                <span class="hljs-keyword">let</span> timeKill = <span class="hljs-built_in">Math</span>.abs(calc(killAfterTime, killAfterTimeVariation));
-                <span class="hljs-keyword">let</span> radiusKill = <span class="hljs-built_in">Math</span>.abs(calc(killRadius, killRadiusVariation));
+                <span class="hljs-keyword">let</span> timeKill = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(<span class="hljs-title function_">calc</span>(killAfterTime, killAfterTimeVariation));
+                <span class="hljs-keyword">let</span> radiusKill = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(<span class="hljs-title function_">calc</span>(killRadius, killRadiusVariation));
 
-                p.run(timeKill, radiusKill, killBeyondCanvas);
+                p.<span class="hljs-title function_">run</span>(timeKill, radiusKill, killBeyondCanvas);
 
-                particleStore.push(p);
+                particleStore.<span class="hljs-title function_">push</span>(p);
             }
         }
     }</pre></div></div>
@@ -1706,76 +1716,76 @@ D.height = D.width;</pre></div></div>
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (generateFromExistingParticleHistories) {
-        <span class="hljs-keyword">let</span> len = particleStore.length,
+        <span class="hljs-keyword">let</span> len = particleStore.<span class="hljs-property">length</span>,
             v, r, parent, history, ignore1, ignore2, startval,
-            res = requestVector();
+            res = <span class="hljs-title function_">requestVector</span>();
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; req; i++) {
 
             <span class="hljs-keyword">if</span> (len) {
 
-                parent = particleStore[<span class="hljs-built_in">Math</span>.floor(<span class="hljs-built_in">Math</span>.random() * len)];
-                history = parent.history;
+                parent = particleStore[<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * len)];
+                history = parent.<span class="hljs-property">history</span>;
 
-                <span class="hljs-keyword">if</span> (history &amp;&amp; history.length &gt; <span class="hljs-number">1</span>) {
+                <span class="hljs-keyword">if</span> (history &amp;&amp; history.<span class="hljs-property">length</span> &gt; <span class="hljs-number">1</span>) {
 
-                    [ignore1, ignore2, ...startval] = history[<span class="hljs-built_in">Math</span>.floor(<span class="hljs-built_in">Math</span>.random() * history.length)];
+                    [ignore1, ignore2, ...startval] = history[<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * history.<span class="hljs-property">length</span>)];
 
-                    <span class="hljs-keyword">if</span> (startval) res.setFromArray(startval);
-                    <span class="hljs-keyword">else</span> res.setFromVector(parent.position);
+                    <span class="hljs-keyword">if</span> (startval) res.<span class="hljs-title function_">setFromArray</span>(startval);
+                    <span class="hljs-keyword">else</span> res.<span class="hljs-title function_">setFromVector</span>(parent.<span class="hljs-property">position</span>);
                 }
-                <span class="hljs-keyword">else</span> res.setFromVector(parent.position);
+                <span class="hljs-keyword">else</span> res.<span class="hljs-title function_">setFromVector</span>(parent.<span class="hljs-property">position</span>);
             }
-            <span class="hljs-keyword">else</span> res.setFromArray(currentStampPosition);
+            <span class="hljs-keyword">else</span> res.<span class="hljs-title function_">setFromArray</span>(currentStampPosition);
 
-            p = requestParticle();
+            p = <span class="hljs-title function_">requestParticle</span>();
 
-            p.set({
-                <span class="hljs-attr">positionX</span>: res.x,
-                <span class="hljs-attr">positionY</span>: res.y,
-                <span class="hljs-attr">positionZ</span>: res.z,
+            p.<span class="hljs-title function_">set</span>({
+                <span class="hljs-attr">positionX</span>: res.<span class="hljs-property">x</span>,
+                <span class="hljs-attr">positionY</span>: res.<span class="hljs-property">y</span>,
+                <span class="hljs-attr">positionZ</span>: res.<span class="hljs-property">z</span>,
 
                 historyLength, 
                 engine, 
                 forces, 
 
-                <span class="hljs-attr">mass</span>: calc(mass, massVariation), 
+                <span class="hljs-attr">mass</span>: <span class="hljs-title function_">calc</span>(mass, massVariation), 
 
-                <span class="hljs-attr">fill</span>: fillColorFactory.get(<span class="hljs-string">&#x27;random&#x27;</span>),
-                <span class="hljs-attr">stroke</span>: strokeColorFactory.get(<span class="hljs-string">&#x27;random&#x27;</span>),
+                <span class="hljs-attr">fill</span>: fillColorFactory.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;random&#x27;</span>),
+                <span class="hljs-attr">stroke</span>: strokeColorFactory.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;random&#x27;</span>),
             });
 
             <span class="hljs-keyword">if</span> (limitDirectionToAngleMultiples) {
 
-                res.zero();
-                r = <span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">360</span> / limitDirectionToAngleMultiples)
-                res.x = velocityCalc(fx, x);
-                res.rotate((<span class="hljs-built_in">Math</span>.floor(<span class="hljs-built_in">Math</span>.random() * r)) * limitDirectionToAngleMultiples);
+                res.<span class="hljs-title function_">zero</span>();
+                r = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-number">360</span> / limitDirectionToAngleMultiples)
+                res.<span class="hljs-property">x</span> = <span class="hljs-title function_">velocityCalc</span>(fx, x);
+                res.<span class="hljs-title function_">rotate</span>((<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * r)) * limitDirectionToAngleMultiples);
 
-                p.set({
-                    <span class="hljs-attr">velocityX</span>: res.x,
-                    <span class="hljs-attr">velocityY</span>: res.y,
-                    <span class="hljs-attr">velocityZ</span>: velocityCalc(fz, z),
+                p.<span class="hljs-title function_">set</span>({
+                    <span class="hljs-attr">velocityX</span>: res.<span class="hljs-property">x</span>,
+                    <span class="hljs-attr">velocityY</span>: res.<span class="hljs-property">y</span>,
+                    <span class="hljs-attr">velocityZ</span>: <span class="hljs-title function_">velocityCalc</span>(fz, z),
                 });
             }
             <span class="hljs-keyword">else</span> {
 
-                p.set({
-                    <span class="hljs-attr">velocityX</span>: velocityCalc(fx, x),
-                    <span class="hljs-attr">velocityY</span>: velocityCalc(fy, y),
-                    <span class="hljs-attr">velocityZ</span>: velocityCalc(fz, z),
+                p.<span class="hljs-title function_">set</span>({
+                    <span class="hljs-attr">velocityX</span>: <span class="hljs-title function_">velocityCalc</span>(fx, x),
+                    <span class="hljs-attr">velocityY</span>: <span class="hljs-title function_">velocityCalc</span>(fy, y),
+                    <span class="hljs-attr">velocityZ</span>: <span class="hljs-title function_">velocityCalc</span>(fz, z),
                 });
             }
-            releaseVector(res);
+            <span class="hljs-title function_">releaseVector</span>(res);
 
-            p.velocity.rotate(currentRotation);
+            p.<span class="hljs-property">velocity</span>.<span class="hljs-title function_">rotate</span>(currentRotation);
 
-            <span class="hljs-keyword">let</span> timeKill = <span class="hljs-built_in">Math</span>.abs(calc(killAfterTime, killAfterTimeVariation));
-            <span class="hljs-keyword">let</span> radiusKill = <span class="hljs-built_in">Math</span>.abs(calc(killRadius, killRadiusVariation));
+            <span class="hljs-keyword">let</span> timeKill = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(<span class="hljs-title function_">calc</span>(killAfterTime, killAfterTimeVariation));
+            <span class="hljs-keyword">let</span> radiusKill = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(<span class="hljs-title function_">calc</span>(killRadius, killRadiusVariation));
 
-            p.run(timeKill, radiusKill, killBeyondCanvas);
+            p.<span class="hljs-title function_">run</span>(timeKill, radiusKill, killBeyondCanvas);
 
-            particleStore.push(p);
+            particleStore.<span class="hljs-title function_">push</span>(p);
         }
     }</pre></div></div>
             
@@ -1794,67 +1804,67 @@ D.height = D.width;</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (generateFromExistingParticles) {
 
-        <span class="hljs-keyword">let</span> len = particleStore.length,
+        <span class="hljs-keyword">let</span> len = particleStore.<span class="hljs-property">length</span>,
             v, r, parent,
-            res = requestVector();
+            res = <span class="hljs-title function_">requestVector</span>();
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; req; i++) {
 
             <span class="hljs-keyword">if</span> (len) {
 
-                parent = particleStore[<span class="hljs-built_in">Math</span>.floor(<span class="hljs-built_in">Math</span>.random() * len)];
-                res.setFromVector(parent.position);
+                parent = particleStore[<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * len)];
+                res.<span class="hljs-title function_">setFromVector</span>(parent.<span class="hljs-property">position</span>);
             }
-            <span class="hljs-keyword">else</span> res.setFromArray(currentStampPosition);
+            <span class="hljs-keyword">else</span> res.<span class="hljs-title function_">setFromArray</span>(currentStampPosition);
 
-            p = requestParticle();
+            p = <span class="hljs-title function_">requestParticle</span>();
 
-            p.set({
-                <span class="hljs-attr">positionX</span>: res.x,
-                <span class="hljs-attr">positionY</span>: res.y,
-                <span class="hljs-attr">positionZ</span>: res.z,
+            p.<span class="hljs-title function_">set</span>({
+                <span class="hljs-attr">positionX</span>: res.<span class="hljs-property">x</span>,
+                <span class="hljs-attr">positionY</span>: res.<span class="hljs-property">y</span>,
+                <span class="hljs-attr">positionZ</span>: res.<span class="hljs-property">z</span>,
 
                 historyLength, 
                 engine, 
                 forces, 
 
-                <span class="hljs-attr">mass</span>: calc(mass, massVariation), 
+                <span class="hljs-attr">mass</span>: <span class="hljs-title function_">calc</span>(mass, massVariation), 
 
-                <span class="hljs-attr">fill</span>: fillColorFactory.get(<span class="hljs-string">&#x27;random&#x27;</span>),
-                <span class="hljs-attr">stroke</span>: strokeColorFactory.get(<span class="hljs-string">&#x27;random&#x27;</span>),
+                <span class="hljs-attr">fill</span>: fillColorFactory.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;random&#x27;</span>),
+                <span class="hljs-attr">stroke</span>: strokeColorFactory.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;random&#x27;</span>),
             });
 
             <span class="hljs-keyword">if</span> (limitDirectionToAngleMultiples) {
 
-                res.zero();
-                r = <span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">360</span> / limitDirectionToAngleMultiples)
-                res.x = velocityCalc(fx, x);
-                res.rotate((<span class="hljs-built_in">Math</span>.floor(<span class="hljs-built_in">Math</span>.random() * r)) * limitDirectionToAngleMultiples);
+                res.<span class="hljs-title function_">zero</span>();
+                r = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-number">360</span> / limitDirectionToAngleMultiples)
+                res.<span class="hljs-property">x</span> = <span class="hljs-title function_">velocityCalc</span>(fx, x);
+                res.<span class="hljs-title function_">rotate</span>((<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * r)) * limitDirectionToAngleMultiples);
 
-                p.set({
-                    <span class="hljs-attr">velocityX</span>: res.x,
-                    <span class="hljs-attr">velocityY</span>: res.y,
-                    <span class="hljs-attr">velocityZ</span>: velocityCalc(fz, z),
+                p.<span class="hljs-title function_">set</span>({
+                    <span class="hljs-attr">velocityX</span>: res.<span class="hljs-property">x</span>,
+                    <span class="hljs-attr">velocityY</span>: res.<span class="hljs-property">y</span>,
+                    <span class="hljs-attr">velocityZ</span>: <span class="hljs-title function_">velocityCalc</span>(fz, z),
                 });
             }
             <span class="hljs-keyword">else</span> {
 
-                p.set({
-                    <span class="hljs-attr">velocityX</span>: velocityCalc(fx, x),
-                    <span class="hljs-attr">velocityY</span>: velocityCalc(fy, y),
-                    <span class="hljs-attr">velocityZ</span>: velocityCalc(fz, z),
+                p.<span class="hljs-title function_">set</span>({
+                    <span class="hljs-attr">velocityX</span>: <span class="hljs-title function_">velocityCalc</span>(fx, x),
+                    <span class="hljs-attr">velocityY</span>: <span class="hljs-title function_">velocityCalc</span>(fy, y),
+                    <span class="hljs-attr">velocityZ</span>: <span class="hljs-title function_">velocityCalc</span>(fz, z),
                 });
             }
-            releaseVector(res);
+            <span class="hljs-title function_">releaseVector</span>(res);
 
-            p.velocity.rotate(currentRotation);
+            p.<span class="hljs-property">velocity</span>.<span class="hljs-title function_">rotate</span>(currentRotation);
 
-            <span class="hljs-keyword">let</span> timeKill = <span class="hljs-built_in">Math</span>.abs(calc(killAfterTime, killAfterTimeVariation));
-            <span class="hljs-keyword">let</span> radiusKill = <span class="hljs-built_in">Math</span>.abs(calc(killRadius, killRadiusVariation));
+            <span class="hljs-keyword">let</span> timeKill = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(<span class="hljs-title function_">calc</span>(killAfterTime, killAfterTimeVariation));
+            <span class="hljs-keyword">let</span> radiusKill = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(<span class="hljs-title function_">calc</span>(killRadius, killRadiusVariation));
 
-            p.run(timeKill, radiusKill, killBeyondCanvas);
+            p.<span class="hljs-title function_">run</span>(timeKill, radiusKill, killBeyondCanvas);
 
-            particleStore.push(p);
+            particleStore.<span class="hljs-title function_">push</span>(p);
         }
     }</pre></div></div>
             
@@ -1877,35 +1887,35 @@ D.height = D.width;</pre></div></div>
         
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; req; i++) {
 
-            p = requestParticle();
+            p = <span class="hljs-title function_">requestParticle</span>();
 
-            p.set({
+            p.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">positionX</span>: cx,
                 <span class="hljs-attr">positionY</span>: cy,
                 <span class="hljs-attr">positionZ</span>: <span class="hljs-number">0</span>,
 
-                <span class="hljs-attr">velocityX</span>: velocityCalc(fx, x),
-                <span class="hljs-attr">velocityY</span>: velocityCalc(fy, y),
-                <span class="hljs-attr">velocityZ</span>: velocityCalc(fz, z),
+                <span class="hljs-attr">velocityX</span>: <span class="hljs-title function_">velocityCalc</span>(fx, x),
+                <span class="hljs-attr">velocityY</span>: <span class="hljs-title function_">velocityCalc</span>(fy, y),
+                <span class="hljs-attr">velocityZ</span>: <span class="hljs-title function_">velocityCalc</span>(fz, z),
 
                 historyLength, 
                 engine, 
                 forces, 
 
-                <span class="hljs-attr">mass</span>: calc(mass, massVariation), 
+                <span class="hljs-attr">mass</span>: <span class="hljs-title function_">calc</span>(mass, massVariation), 
 
-                <span class="hljs-attr">fill</span>: fillColorFactory.get(<span class="hljs-string">&#x27;random&#x27;</span>),
-                <span class="hljs-attr">stroke</span>: strokeColorFactory.get(<span class="hljs-string">&#x27;random&#x27;</span>),
+                <span class="hljs-attr">fill</span>: fillColorFactory.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;random&#x27;</span>),
+                <span class="hljs-attr">stroke</span>: strokeColorFactory.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;random&#x27;</span>),
             });
 
-            p.velocity.rotate(currentRotation);
+            p.<span class="hljs-property">velocity</span>.<span class="hljs-title function_">rotate</span>(currentRotation);
 
-            <span class="hljs-keyword">let</span> timeKill = <span class="hljs-built_in">Math</span>.abs(calc(killAfterTime, killAfterTimeVariation));
-            <span class="hljs-keyword">let</span> radiusKill = <span class="hljs-built_in">Math</span>.abs(calc(killRadius, killRadiusVariation));
+            <span class="hljs-keyword">let</span> timeKill = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(<span class="hljs-title function_">calc</span>(killAfterTime, killAfterTimeVariation));
+            <span class="hljs-keyword">let</span> radiusKill = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(<span class="hljs-title function_">calc</span>(killRadius, killRadiusVariation));
 
-            p.run(timeKill, radiusKill, killBeyondCanvas);
+            p.<span class="hljs-title function_">run</span>(timeKill, radiusKill, killBeyondCanvas);
 
-            particleStore.push(p);
+            particleStore.<span class="hljs-title function_">push</span>(p);
         }
     }
 };</pre></div></div>
@@ -1923,14 +1933,14 @@ D.height = D.width;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.regularStamp = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">regularStamp</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> {world, artefact, particleStore, preAction, stampAction, postAction, lastUpdated, resetAfterBlur, showHitRadius, hitRadius, hitRadiusColor, currentStampPosition} = <span class="hljs-built_in">this</span>;
+    <span class="hljs-keyword">let</span> {world, artefact, particleStore, preAction, stampAction, postAction, lastUpdated, resetAfterBlur, showHitRadius, hitRadius, hitRadiusColor, currentStampPosition} = <span class="hljs-variable language_">this</span>;
 
-    <span class="hljs-keyword">let</span> host = <span class="hljs-built_in">this</span>.currentHost;
+    <span class="hljs-keyword">let</span> host = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentHost</span>;
 
     <span class="hljs-keyword">let</span> deltaTime = <span class="hljs-number">16</span> / <span class="hljs-number">1000</span>,
-        now = <span class="hljs-built_in">Date</span>.now();
+        now = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
 
     <span class="hljs-keyword">if</span> (lastUpdated) deltaTime = (now - lastUpdated) / <span class="hljs-number">1000</span>;</pre></div></div>
             
@@ -1949,13 +1959,13 @@ D.height = D.width;</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (deltaTime &gt; resetAfterBlur) {
 
-        particleStore.forEach(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> releaseParticle(p));
-        particleStore.length = <span class="hljs-number">0</span>;
+        particleStore.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> <span class="hljs-title function_">releaseParticle</span>(p));
+        particleStore.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
         deltaTime = <span class="hljs-number">16</span> / <span class="hljs-number">1000</span>;
     }
 
-    particleStore.forEach(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.applyForces(world, host));
-    particleStore.forEach(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.update(deltaTime, world));</pre></div></div>
+    particleStore.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.<span class="hljs-title function_">applyForces</span>(world, host));
+    particleStore.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.<span class="hljs-title function_">update</span>(deltaTime, world));</pre></div></div>
             
         </li>
         
@@ -1970,12 +1980,12 @@ D.height = D.width;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    preAction.call(<span class="hljs-built_in">this</span>, host);
+            <div class="content"><div class='highlight'><pre>    preAction.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, host);
 
-    particleStore.forEach(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> {
+    particleStore.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> {
 
-        p.manageHistory(deltaTime, host);
-        stampAction.call(<span class="hljs-built_in">this</span>, artefact, p, host);
+        p.<span class="hljs-title function_">manageHistory</span>(deltaTime, host);
+        stampAction.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, artefact, p, host);
     });</pre></div></div>
             
         </li>
@@ -1991,25 +2001,25 @@ D.height = D.width;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    postAction.call(<span class="hljs-built_in">this</span>, host);
+            <div class="content"><div class='highlight'><pre>    postAction.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, host);
 
     <span class="hljs-keyword">if</span> (showHitRadius) {
 
-        <span class="hljs-keyword">let</span> engine = host.engine;
+        <span class="hljs-keyword">let</span> engine = host.<span class="hljs-property">engine</span>;
 
-        engine.save();
-        engine.lineWidth = <span class="hljs-number">1</span>;
-        engine.strokeStyle = hitRadiusColor;
+        engine.<span class="hljs-title function_">save</span>();
+        engine.<span class="hljs-property">lineWidth</span> = <span class="hljs-number">1</span>;
+        engine.<span class="hljs-property">strokeStyle</span> = hitRadiusColor;
 
-        engine.setTransform(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
-        engine.beginPath();
-        engine.arc(currentStampPosition[<span class="hljs-number">0</span>], currentStampPosition[<span class="hljs-number">1</span>], hitRadius, <span class="hljs-number">0</span>, <span class="hljs-built_in">Math</span>.PI * <span class="hljs-number">2</span>);
-        engine.stroke();
+        engine.<span class="hljs-title function_">setTransform</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+        engine.<span class="hljs-title function_">beginPath</span>();
+        engine.<span class="hljs-title function_">arc</span>(currentStampPosition[<span class="hljs-number">0</span>], currentStampPosition[<span class="hljs-number">1</span>], hitRadius, <span class="hljs-number">0</span>, <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span> * <span class="hljs-number">2</span>);
+        engine.<span class="hljs-title function_">stroke</span>();
 
-        engine.restore();
+        engine.<span class="hljs-title function_">restore</span>();
     }
 
-    <span class="hljs-built_in">this</span>.lastUpdated = now;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">lastUpdated</span> = now;
 };</pre></div></div>
             
         </li>
@@ -2029,43 +2039,43 @@ D.height = D.width;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.checkHit = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = [], mycell</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">checkHit</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = [], mycell</span>) {
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.noUserInteraction) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">noUserInteraction</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> tests = (!<span class="hljs-built_in">Array</span>.isArray(items)) ?  [items] : items;
+    <span class="hljs-keyword">let</span> tests = (!<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(items)) ?  [items] : items;
 
-    <span class="hljs-keyword">let</span> currentStampPosition = <span class="hljs-built_in">this</span>.currentStampPosition,
+    <span class="hljs-keyword">let</span> currentStampPosition = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>,
         res = <span class="hljs-literal">false</span>,
         tx, ty;
 
-    <span class="hljs-keyword">if</span> (tests.some(<span class="hljs-function"><span class="hljs-params">test</span> =&gt;</span> {
+    <span class="hljs-keyword">if</span> (tests.<span class="hljs-title function_">some</span>(<span class="hljs-function"><span class="hljs-params">test</span> =&gt;</span> {
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(test)) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(test)) {
 
             tx = test[<span class="hljs-number">0</span>];
             ty = test[<span class="hljs-number">1</span>];
         }
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (xta(test, test.x, test.y)) {
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xta</span>(test, test.<span class="hljs-property">x</span>, test.<span class="hljs-property">y</span>)) {
 
-            tx = test.x;
-            ty = test.y;
+            tx = test.<span class="hljs-property">x</span>;
+            ty = test.<span class="hljs-property">y</span>;
         }
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 
-        <span class="hljs-keyword">if</span> (!tx.toFixed || !ty.toFixed || <span class="hljs-built_in">isNaN</span>(tx) || <span class="hljs-built_in">isNaN</span>(ty)) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">if</span> (!tx.<span class="hljs-property">toFixed</span> || !ty.<span class="hljs-property">toFixed</span> || <span class="hljs-built_in">isNaN</span>(tx) || <span class="hljs-built_in">isNaN</span>(ty)) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 
-        <span class="hljs-keyword">let</span> v = requestVector(currentStampPosition).vectorSubtract(test);
+        <span class="hljs-keyword">let</span> v = <span class="hljs-title function_">requestVector</span>(currentStampPosition).<span class="hljs-title function_">vectorSubtract</span>(test);
 
-        <span class="hljs-keyword">if</span> (v.getMagnitude() &lt; <span class="hljs-built_in">this</span>.hitRadius) res = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (v.<span class="hljs-title function_">getMagnitude</span>() &lt; <span class="hljs-variable language_">this</span>.<span class="hljs-property">hitRadius</span>) res = <span class="hljs-literal">true</span>;
 
-        releaseVector(v);
+        <span class="hljs-title function_">releaseVector</span>(v);
 
         <span class="hljs-keyword">return</span> res;
 
-    }, <span class="hljs-built_in">this</span>)) {
+    }, <span class="hljs-variable language_">this</span>)) {
 
-        <span class="hljs-keyword">let</span> r = <span class="hljs-built_in">this</span>.checkHitReturn(tx, ty, mycell);
+        <span class="hljs-keyword">let</span> r = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkHitReturn</span>(tx, ty, mycell);
 
         <span class="hljs-keyword">return</span> r;
     }
@@ -2082,7 +2092,7 @@ D.height = D.width;</pre></div></div>
                 <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
-<pre><code><span class="hljs-keyword">let</span> myWorld = scrawl.makeWorld({
+<pre><code><span class="hljs-keyword">let</span> myWorld = scrawl.<span class="hljs-title function_">makeWorld</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-world&#x27;</span>,
     <span class="hljs-attr">tickMultiplier</span>: <span class="hljs-number">2</span>,
@@ -2098,7 +2108,7 @@ D.height = D.width;</pre></div></div>
     ],
 });
 
-scrawl.makeEmitter({
+scrawl.<span class="hljs-title function_">makeEmitter</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;use-raw-2d-context&#x27;</span>,
     <span class="hljs-attr">world</span>: myWorld,
@@ -2116,41 +2126,41 @@ scrawl.makeEmitter({
     <span class="hljs-attr">rangeZ</span>: -<span class="hljs-number">1</span>,
     <span class="hljs-attr">rangeFromZ</span>: -<span class="hljs-number">0.2</span>,
 
-    <span class="hljs-attr">stampAction</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) </span>{
+    <span class="hljs-attr">stampAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">artefact, particle, host</span>) {
 
-        <span class="hljs-keyword">let</span> engine = host.engine,
-            history = particle.history,
+        <span class="hljs-keyword">let</span> engine = host.<span class="hljs-property">engine</span>,
+            history = particle.<span class="hljs-property">history</span>,
             remaining, radius, alpha, x, y, z,
-            endRad = <span class="hljs-built_in">Math</span>.PI * <span class="hljs-number">2</span>;
+            endRad = <span class="hljs-title class_">Math</span>.<span class="hljs-property">PI</span> * <span class="hljs-number">2</span>;
 
-        engine.save();
-        engine.fillStyle = myWorld.get(<span class="hljs-string">&#x27;particleColor&#x27;</span>);
-        engine.beginPath();
-        history.forEach(<span class="hljs-function">(<span class="hljs-params">p, index</span>) =&gt;</span> {
+        engine.<span class="hljs-title function_">save</span>();
+        engine.<span class="hljs-property">fillStyle</span> = myWorld.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;particleColor&#x27;</span>);
+        engine.<span class="hljs-title function_">beginPath</span>();
+        history.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">p, index</span>) =&gt;</span> {
             [remaining, z, x, y] = p;
             radius = <span class="hljs-number">6</span> * (<span class="hljs-number">1</span> + (z / <span class="hljs-number">3</span>));
-            alpha = remaining / myWorld.alphaDecay;
+            alpha = remaining / myWorld.<span class="hljs-property">alphaDecay</span>;
             <span class="hljs-keyword">if</span> (radius &gt; <span class="hljs-number">0</span> &amp;&amp; alpha &gt; <span class="hljs-number">0</span>) {
-                engine.moveTo(x, y);
-                engine.arc(x, y, radius, <span class="hljs-number">0</span>, endRad);
+                engine.<span class="hljs-title function_">moveTo</span>(x, y);
+                engine.<span class="hljs-title function_">arc</span>(x, y, radius, <span class="hljs-number">0</span>, endRad);
             }
         });
-        engine.globalAlpha = alpha;
-        engine.fill();
-        engine.restore();
+        engine.<span class="hljs-property">globalAlpha</span> = alpha;
+        engine.<span class="hljs-title function_">fill</span>();
+        engine.<span class="hljs-title function_">restore</span>();
     },
 });
 </code></pre>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeEmitter = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeEmitter = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Emitter(items);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Emitter</span>(items);
 };
 
-<span class="hljs-title">constructors</span>.<span class="hljs-title">Emitter</span> = <span class="hljs-title">Emitter</span>;</pre></div></div>
+constructors.<span class="hljs-property">Emitter</span> = <span class="hljs-title class_">Emitter</span>;</pre></div></div>
             
         </li>
         

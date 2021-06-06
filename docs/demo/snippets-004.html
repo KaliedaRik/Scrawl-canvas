@@ -280,6 +280,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-051.html">
+                  ./demo/canvas-051.js
+                </a>
+              
+                
                 <a class="source" href="core-001.html">
                   ./demo/core-001.js
                 </a>
@@ -644,6 +649,16 @@
                   ./demo/temp-inkscapeSvgFilters.js
                 </a>
               
+                
+                <a class="source" href="tensorflow-001.html">
+                  ./demo/tensorflow-001.js
+                </a>
+              
+                
+                <a class="source" href="tensorflow-002.html">
+                  ./demo/tensorflow-002.js
+                </a>
+              
             </div>
           </div>
         </li>
@@ -683,55 +698,55 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> rippleEffect <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./snippets/ripple-effect-snippet.js&#x27;</span>;
-rippleEffect(<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&#x27;ripple-01&#x27;</span>));
-rippleEffect(<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#ripple-02&#x27;</span>));
-rippleEffect(<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#ripple-04&#x27;</span>));
+<span class="hljs-title function_">rippleEffect</span>(<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">&#x27;ripple-01&#x27;</span>));
+<span class="hljs-title function_">rippleEffect</span>(<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#ripple-02&#x27;</span>));
+<span class="hljs-title function_">rippleEffect</span>(<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#ripple-04&#x27;</span>));
 
-rippleEffect(<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#ripple-03&#x27;</span>), {
+<span class="hljs-title function_">rippleEffect</span>(<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#ripple-03&#x27;</span>), {
 	<span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;rgb(255, 170, 170)&#x27;</span>,
 	<span class="hljs-attr">rippleColor</span>: <span class="hljs-string">&#x27;rgb(255, 220, 220)&#x27;</span>,
 });
 
 <span class="hljs-keyword">import</span> greenBox <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./snippets/green-box-snippet.js&#x27;</span>;
-<span class="hljs-keyword">let</span> greenBoxElements = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">&#x27;.green-box&#x27;</span>);
-greenBoxElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> greenBox(el));
+<span class="hljs-keyword">let</span> greenBoxElements = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.green-box&#x27;</span>);
+greenBoxElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">greenBox</span>(el));
 
 <span class="hljs-keyword">import</span> jazzyButton <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./snippets/jazzy-button-snippet.js&#x27;</span>;
-<span class="hljs-keyword">let</span> jazzyButtonElements = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">&#x27;.jazzy-button&#x27;</span>);
-jazzyButtonElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> jazzyButton(el));
+<span class="hljs-keyword">let</span> jazzyButtonElements = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.jazzy-button&#x27;</span>);
+jazzyButtonElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">jazzyButton</span>(el));
 
 <span class="hljs-keyword">import</span> spotlight <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./snippets/spotlight-text-snippet.js&#x27;</span>;
-spotlight(<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#spotlight-01&#x27;</span>));
+<span class="hljs-title function_">spotlight</span>(<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#spotlight-01&#x27;</span>));
 
-spotlight(<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#spotlight-02&#x27;</span>), {
+<span class="hljs-title function_">spotlight</span>(<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#spotlight-02&#x27;</span>), {
 	<span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;gold&#x27;</span>,
 	<span class="hljs-attr">spotlightColor</span>: <span class="hljs-string">&#x27;yellow&#x27;</span>,
 });
 
 <span class="hljs-keyword">import</span> pagePerformance <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./snippets/page-performance-snippet.js&#x27;</span>;
-<span class="hljs-keyword">let</span> performanceElements = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">&#x27;.page-performance&#x27;</span>);
-performanceElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> pagePerformance(el));
+<span class="hljs-keyword">let</span> performanceElements = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.page-performance&#x27;</span>);
+performanceElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">pagePerformance</span>(el));
 
 <span class="hljs-keyword">import</span> placeholder <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./snippets/placeholder-effect-snippet.js&#x27;</span>;
-<span class="hljs-keyword">let</span> placeholderElements = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">&#x27;.placeholder&#x27;</span>);
-placeholderElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> placeholder(el));
+<span class="hljs-keyword">let</span> placeholderElements = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.placeholder&#x27;</span>);
+placeholderElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">placeholder</span>(el));
 
 <span class="hljs-keyword">import</span> wordHighlighter <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./snippets/word-highlighter-snippet.js&#x27;</span>;
-<span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">&#x27;.default-highlighter&#x27;</span>).forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> wordHighlighter(el));
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.default-highlighter&#x27;</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">wordHighlighter</span>(el));
 
-<span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">&#x27;.thick-orange-highlighter&#x27;</span>).forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> wordHighlighter(el, {
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.thick-orange-highlighter&#x27;</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">wordHighlighter</span>(el, {
 	<span class="hljs-attr">highlightColor</span>: <span class="hljs-string">&#x27;orange&#x27;</span>,
 	<span class="hljs-attr">thickness</span>: <span class="hljs-number">6</span>,
 }));
 
 <span class="hljs-keyword">import</span> animatedHoverGradient <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./snippets/animated-hover-gradient-snippet.js&#x27;</span>;
-<span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">&#x27;.animated-hover-gradient&#x27;</span>).forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> animatedHoverGradient(el));
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.animated-hover-gradient&#x27;</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">animatedHoverGradient</span>(el));
 
 <span class="hljs-keyword">import</span> animatedWordGradient <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./snippets/animated-word-gradient-snippet.js&#x27;</span>;
-<span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">&#x27;.animated-word-gradient&#x27;</span>).forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> animatedWordGradient(el));
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.animated-word-gradient&#x27;</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">animatedWordGradient</span>(el));
 
 <span class="hljs-keyword">import</span> panImage <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./snippets/pan-image-snippet.js&#x27;</span>;
-<span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">&#x27;.pan-image&#x27;</span>).forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> panImage(el));</pre></div></div>
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.pan-image&#x27;</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">panImage</span>(el));</pre></div></div>
             
         </li>
         

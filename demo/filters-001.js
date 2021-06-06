@@ -18,20 +18,30 @@ canvas.set({
 scrawl.importDomImage('.flowers');
 
 
-// Create the filter
-let blurFilter = scrawl.makeFilter({
+// Create the filters
+const blurFilters = {
 
-    name: 'blur',
-    method: 'blur',
-    radius: 10,
-    includeAlpha: false,
-    passes: 1,
-    step: 1,
-});
+    blurFilter: scrawl.makeFilter({
+
+        name: 'blur',
+        method: 'blur',
+        radius: 10,
+        includeAlpha: false,
+        passes: 1,
+        step: 1,
+    }),
+
+    gaussianBlurFilter: scrawl.makeFilter({
+
+        name: 'gaussian-blur',
+        method: 'gaussianBlur',
+        radius: 10,
+    }),
+}
 
 
 // Create the target entity
-let piccy = scrawl.makePicture({
+const piccy = scrawl.makePicture({
 
     asset: 'iris',
 
@@ -43,7 +53,7 @@ let piccy = scrawl.makePicture({
 
     method: 'fill',
 
-    filters: ['blur'],
+    filters: ['gaussian-blur'],
 });
 
 
@@ -89,14 +99,14 @@ scrawl.observeAndUpdate({
     event: ['input', 'change'],
     origin: '.controlItem',
 
-    target: blurFilter,
+    target: blurFilters.blurFilter,
 
     useNativeListener: true,
     preventDefault: true,
 
     updates: {
 
-        radius: ['radius', 'round'],
+        // radius: ['radius', 'round'],
         passes: ['passes', 'round'],
         step: ['step', 'round'],
 
@@ -109,11 +119,51 @@ scrawl.observeAndUpdate({
         processVertical: ['processVertical', 'boolean'],
         excludeTransparentPixels: ['excludeTransparentPixels', 'boolean'],
 
-        opacity: ['opacity', 'float'],
+        // opacity: ['opacity', 'float'],
     },
 });
 
+scrawl.addNativeListener(['update', 'change'], (e) => {
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    piccy.set({
+        filters: [blurFilters[e.target.value].name],
+    })
+
+}, '#blurFilter');
+
+scrawl.addNativeListener(['update', 'change'], (e) => {
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const args = {
+        radius: parseFloat(e.target.value),
+    }
+
+    blurFilters.blurFilter.set(args);
+    blurFilters.gaussianBlurFilter.set(args);
+
+}, '#radius');
+
+scrawl.addNativeListener(['update', 'change'], (e) => {
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const args = {
+        opacity: parseFloat(e.target.value),
+    }
+
+    blurFilters.blurFilter.set(args);
+    blurFilters.gaussianBlurFilter.set(args);
+
+}, '#opacity');
+
 // Setup form
+document.querySelector('#blurFilter').options.selectedIndex = 1;
 document.querySelector('#radius').value = 10;
 document.querySelector('#passes').value = 1;
 document.querySelector('#step').value = 1;

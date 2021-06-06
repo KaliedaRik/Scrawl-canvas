@@ -280,6 +280,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-051.html">
+                  ./demo/canvas-051.js
+                </a>
+              
+                
                 <a class="source" href="core-001.html">
                   ./demo/core-001.js
                 </a>
@@ -644,6 +649,16 @@
                   ./demo/temp-inkscapeSvgFilters.js
                 </a>
               
+                
+                <a class="source" href="tensorflow-001.html">
+                  ./demo/tensorflow-001.js
+                </a>
+              
+                
+                <a class="source" href="tensorflow-002.html">
+                  ./demo/tensorflow-002.js
+                </a>
+              
             </div>
           </div>
         </li>
@@ -693,7 +708,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> ga = <span class="hljs-built_in">window</span>[<span class="hljs-built_in">window</span>[<span class="hljs-string">&#x27;GoogleAnalyticsObject&#x27;</span>] || <span class="hljs-string">&#x27;ga&#x27;</span>],
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> ga = <span class="hljs-variable language_">window</span>[<span class="hljs-variable language_">window</span>[<span class="hljs-string">&#x27;GoogleAnalyticsObject&#x27;</span>] || <span class="hljs-string">&#x27;ga&#x27;</span>],
     myTracker;</pre></div></div>
             
         </li>
@@ -709,7 +724,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>ga(<span class="hljs-string">&#x27;create&#x27;</span>, <span class="hljs-string">&#x27;UA-000000-0&#x27;</span>, <span class="hljs-string">&#x27;auto&#x27;</span>, <span class="hljs-string">&#x27;demoCanvasTracker&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">ga</span>(<span class="hljs-string">&#x27;create&#x27;</span>, <span class="hljs-string">&#x27;UA-000000-0&#x27;</span>, <span class="hljs-string">&#x27;auto&#x27;</span>, <span class="hljs-string">&#x27;demoCanvasTracker&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -724,13 +739,13 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>ga(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">ga</span>(<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> ga = <span class="hljs-built_in">window</span>[<span class="hljs-built_in">window</span>[<span class="hljs-string">&#x27;GoogleAnalyticsObject&#x27;</span>] || <span class="hljs-string">&#x27;ga&#x27;</span>];
+    <span class="hljs-keyword">let</span> ga = <span class="hljs-variable language_">window</span>[<span class="hljs-variable language_">window</span>[<span class="hljs-string">&#x27;GoogleAnalyticsObject&#x27;</span>] || <span class="hljs-string">&#x27;ga&#x27;</span>];
 
-    myTracker = ga.getByName(<span class="hljs-string">&#x27;demoCanvasTracker&#x27;</span>);
-    myTracker.set(<span class="hljs-string">&#x27;transport&#x27;</span>, <span class="hljs-string">&#x27;beacon&#x27;</span>);
-    myTracker.set(<span class="hljs-string">&#x27;campaignKeyword&#x27;</span>, <span class="hljs-string">&#x27;Scrawl-canvas demo&#x27;</span>);</pre></div></div>
+    myTracker = ga.<span class="hljs-title function_">getByName</span>(<span class="hljs-string">&#x27;demoCanvasTracker&#x27;</span>);
+    myTracker.<span class="hljs-title function_">set</span>(<span class="hljs-string">&#x27;transport&#x27;</span>, <span class="hljs-string">&#x27;beacon&#x27;</span>);
+    myTracker.<span class="hljs-title function_">set</span>(<span class="hljs-string">&#x27;campaignKeyword&#x27;</span>, <span class="hljs-string">&#x27;Scrawl-canvas demo&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -745,7 +760,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    myTracker.set(<span class="hljs-string">&#x27;sendHitTask&#x27;</span>, <span class="hljs-literal">null</span>);
+            <div class="content"><div class='highlight'><pre>    myTracker.<span class="hljs-title function_">set</span>(<span class="hljs-string">&#x27;sendHitTask&#x27;</span>, <span class="hljs-literal">null</span>);
 });</pre></div></div>
             
         </li>
@@ -761,7 +776,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.library.artefact.mycanvas;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
             
         </li>
         
@@ -776,7 +791,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.importDomImage(<span class="hljs-string">&#x27;.mypatterns&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.mypatterns&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -791,12 +806,12 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makePattern({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makePattern</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;brick-pattern&#x27;</span>,
     <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;brick&#x27;</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;leaves-pattern&#x27;</span>,
     <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;leaves&#x27;</span>,
@@ -816,12 +831,12 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makePattern({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makePattern</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;water-pattern&#x27;</span>,
     <span class="hljs-attr">imageSource</span>: <span class="hljs-string">&#x27;img/water.png&#x27;</span>,
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;marble-pattern&#x27;</span>,
     <span class="hljs-attr">imageSource</span>: <span class="hljs-string">&#x27;img/marble.png&#x27;</span>,
@@ -841,7 +856,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>canvas.buildCell({
+            <div class="content"><div class='highlight'><pre>canvas.<span class="hljs-title function_">buildCell</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;cell-pattern&#x27;</span>,
 
@@ -853,7 +868,7 @@
     <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span>,
 });
 
-canvas.base.set({
+canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_">set</span>({
 
     <span class="hljs-attr">compileOrder</span>: <span class="hljs-number">1</span>,
 });</pre></div></div>
@@ -871,7 +886,7 @@ canvas.base.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeBlock({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeBlock</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;cell-pattern-block&#x27;</span>,
     <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;cell-pattern&#x27;</span>,
@@ -907,10 +922,10 @@ canvas.base.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeBlock({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeBlock</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;water-in-leaves&#x27;</span>,
-    <span class="hljs-attr">group</span>: canvas.base.name,
+    <span class="hljs-attr">group</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
 
     <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;40%&#x27;</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;40%&#x27;</span>,
@@ -960,7 +975,7 @@ canvas.base.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    anchor: {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">anchor</span>: {
         <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;wikipedia-water-link&#x27;</span>,
         <span class="hljs-attr">href</span>: <span class="hljs-string">&#x27;https://en.wikipedia.org/wiki/Water&#x27;</span>,
         <span class="hljs-attr">description</span>: <span class="hljs-string">&#x27;Link to the Wikipedia article on water (opens in new tab)&#x27;</span>,</pre></div></div>
@@ -991,9 +1006,9 @@ canvas.base.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        clickAction: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">clickAction</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-            <span class="hljs-keyword">return</span> <span class="hljs-string">`ga(&#x27;demoCanvasTracker.send&#x27;, &#x27;event&#x27;, &#x27;Outbound link&#x27;, &#x27;click&#x27;, &#x27;<span class="hljs-subst">${<span class="hljs-built_in">this</span>.href}</span>&#x27;)`</span>;
+            <span class="hljs-keyword">return</span> <span class="hljs-string">`ga(&#x27;demoCanvasTracker.send&#x27;, &#x27;event&#x27;, &#x27;Outbound link&#x27;, &#x27;click&#x27;, &#x27;<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.href}</span>&#x27;)`</span>;
         },</pre></div></div>
             
         </li>
@@ -1009,7 +1024,7 @@ canvas.base.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        focusAction: <span class="hljs-literal">true</span>,
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">focusAction</span>: <span class="hljs-literal">true</span>,
         <span class="hljs-attr">blurAction</span>: <span class="hljs-literal">true</span>,
     },</pre></div></div>
             
@@ -1026,7 +1041,7 @@ canvas.base.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    onEnter: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
             
         </li>
         
@@ -1041,7 +1056,7 @@ canvas.base.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-built_in">this</span>.set({
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">30</span>,
         });</pre></div></div>
             
@@ -1058,9 +1073,9 @@ canvas.base.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        canvas.set({
-            <span class="hljs-attr">title</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> tile`</span>,
-            <span class="hljs-attr">label</span>: <span class="hljs-built_in">this</span>.get(<span class="hljs-string">&#x27;anchorDescription&#x27;</span>),
+            <div class="content"><div class='highlight'><pre>        canvas.<span class="hljs-title function_">set</span>({
+            <span class="hljs-attr">title</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> tile`</span>,
+            <span class="hljs-attr">label</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;anchorDescription&#x27;</span>),
         });</pre></div></div>
             
         </li>
@@ -1076,10 +1091,10 @@ canvas.base.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        myTracker.send(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Canvas Entity&#x27;</span>, <span class="hljs-string">&#x27;hover start&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> <span class="hljs-subst">${<span class="hljs-built_in">this</span>.type}</span>`</span>);
+            <div class="content"><div class='highlight'><pre>        myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Canvas Entity&#x27;</span>, <span class="hljs-string">&#x27;hover start&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.type}</span>`</span>);
     },
 
-    <span class="hljs-attr">onLeave</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
+    <span class="hljs-attr">onLeave</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
             
         </li>
         
@@ -1094,7 +1109,7 @@ canvas.base.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-built_in">this</span>.set({
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">20</span>,
         });</pre></div></div>
             
@@ -1111,7 +1126,7 @@ canvas.base.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        canvas.set({
+            <div class="content"><div class='highlight'><pre>        canvas.<span class="hljs-title function_">set</span>({
             <span class="hljs-attr">title</span>: <span class="hljs-string">&#x27;&#x27;</span>,
             <span class="hljs-attr">label</span>: <span class="hljs-string">`<span class="hljs-subst">${canvas.name}</span> canvas element`</span>,
         });</pre></div></div>
@@ -1129,7 +1144,7 @@ canvas.base.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        myTracker.send(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Canvas Entity&#x27;</span>, <span class="hljs-string">&#x27;hover end&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> <span class="hljs-subst">${<span class="hljs-built_in">this</span>.type}</span>`</span>);
+            <div class="content"><div class='highlight'><pre>        myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Canvas Entity&#x27;</span>, <span class="hljs-string">&#x27;hover end&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.type}</span>`</span>);
     },</pre></div></div>
             
         </li>
@@ -1145,7 +1160,7 @@ canvas.base.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    onUp: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">onUp</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
             
         </li>
         
@@ -1160,7 +1175,7 @@ canvas.base.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        myTracker.send(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Canvas Entity Link&#x27;</span>, <span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> <span class="hljs-subst">${<span class="hljs-built_in">this</span>.type}</span> <span class="hljs-subst">${<span class="hljs-built_in">this</span>.anchor.href}</span>`</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Canvas Entity Link&#x27;</span>, <span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.type}</span> <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.anchor.href}</span>`</span>);</pre></div></div>
             
         </li>
         
@@ -1175,10 +1190,10 @@ canvas.base.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-built_in">this</span>.clickAnchor();
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">clickAnchor</span>();
     },
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;leaves-in-brick&#x27;</span>,
 
@@ -1193,7 +1208,7 @@ canvas.base.set({
         <span class="hljs-attr">description</span>: <span class="hljs-string">&#x27;Link to the Wikipedia article on leaves (opens in new tab)&#x27;</span>,
     },
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;brick-in-marble&#x27;</span>,
 
@@ -1208,7 +1223,7 @@ canvas.base.set({
         <span class="hljs-attr">description</span>: <span class="hljs-string">&#x27;Link to the Wikipedia article on bricks (opens in new tab)&#x27;</span>,
     },
 
-}).clone({
+}).<span class="hljs-title function_">clone</span>({
     
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;marble-in-water&#x27;</span>,
 
@@ -1245,12 +1260,12 @@ canvas.base.set({
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> interactionResults = <span class="hljs-string">&#x27;&#x27;</span>;
-<span class="hljs-keyword">let</span> interactions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+<span class="hljs-keyword">let</span> interactions = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">if</span> (canvas.here.active) interactionResults = canvas.cascadeEventAction(<span class="hljs-string">&#x27;move&#x27;</span>);
+    <span class="hljs-keyword">if</span> (canvas.<span class="hljs-property">here</span>.<span class="hljs-property">active</span>) interactionResults = canvas.<span class="hljs-title function_">cascadeEventAction</span>(<span class="hljs-string">&#x27;move&#x27;</span>);
     <span class="hljs-keyword">else</span> interactionResults = <span class="hljs-string">&#x27;&#x27;</span>;
 };
-scrawl.addListener(<span class="hljs-string">&#x27;move&#x27;</span>, interactions, canvas.domElement);</pre></div></div>
+scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-string">&#x27;move&#x27;</span>, interactions, canvas.<span class="hljs-property">domElement</span>);</pre></div></div>
             
         </li>
         
@@ -1266,11 +1281,11 @@ scrawl.addListener(<span class="hljs-string">&#x27;move&#x27;</span>, interactio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> mylinks = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> mylinks = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">if</span> (canvas.here.active) canvas.cascadeEventAction(<span class="hljs-string">&#x27;up&#x27;</span>);
+    <span class="hljs-keyword">if</span> (canvas.<span class="hljs-property">here</span>.<span class="hljs-property">active</span>) canvas.<span class="hljs-title function_">cascadeEventAction</span>(<span class="hljs-string">&#x27;up&#x27;</span>);
 };
-scrawl.addListener(<span class="hljs-string">&#x27;up&#x27;</span>, mylinks, canvas.domElement);</pre></div></div>
+scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-string">&#x27;up&#x27;</span>, mylinks, canvas.<span class="hljs-property">domElement</span>);</pre></div></div>
             
         </li>
         
@@ -1286,19 +1301,19 @@ scrawl.addListener(<span class="hljs-string">&#x27;up&#x27;</span>, mylinks, can
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
 Hits: <span class="hljs-subst">${interactionResults}</span>`</span>;
     };
 }();</pre></div></div>
@@ -1316,7 +1331,7 @@ Hits: <span class="hljs-subst">${interactionResults}</span>`</span>;
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
     <span class="hljs-attr">target</span>: canvas,
@@ -1336,7 +1351,7 @@ Hits: <span class="hljs-subst">${interactionResults}</span>`</span>;
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         
@@ -1351,20 +1366,20 @@ Hits: <span class="hljs-subst">${interactionResults}</span>`</span>;
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> killArtefact = <span class="hljs-function">(<span class="hljs-params">name, anchorname, time, finishResurrection</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> <span class="hljs-title function_">killArtefact</span> = (<span class="hljs-params">name, anchorname, time, finishResurrection</span>) =&gt; {
 
     <span class="hljs-keyword">let</span> groupname = <span class="hljs-string">&#x27;mycanvas_base&#x27;</span>,
         packet;
 
-    <span class="hljs-keyword">let</span> checkGroupBucket = <span class="hljs-function">(<span class="hljs-params">name, groupname</span>) =&gt;</span> {
+    <span class="hljs-keyword">let</span> <span class="hljs-title function_">checkGroupBucket</span> = (<span class="hljs-params">name, groupname</span>) =&gt; {
 
-        <span class="hljs-keyword">let</span> res = scrawl.library.group[groupname].artefactBuckets.filter(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e.name === name );
-        <span class="hljs-keyword">return</span> (res.length) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>;
+        <span class="hljs-keyword">let</span> res = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">group</span>[groupname].<span class="hljs-property">artefactBuckets</span>.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e.<span class="hljs-property">name</span> === name );
+        <span class="hljs-keyword">return</span> (res.<span class="hljs-property">length</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>;
     };
 
     <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
 
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${name}</span> alive
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`<span class="hljs-subst">${name}</span> alive
     removed from artefact: <span class="hljs-subst">${(scrawl.library.artefact[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
     removed from artefactnames: <span class="hljs-subst">${(scrawl.library.artefactnames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
     removed from entity: <span class="hljs-subst">${(scrawl.library.entity[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
@@ -1373,13 +1388,13 @@ Hits: <span class="hljs-subst">${interactionResults}</span>`</span>;
     removed from group.artefactBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>
     anchor removed: <span class="hljs-subst">${(scrawl.library.anchor[anchorname]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>`</span>);
 
-        packet = scrawl.library.artefact[name].saveAsPacket();
+        packet = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>[name].<span class="hljs-title function_">saveAsPacket</span>();
 
-        scrawl.library.artefact[name].kill();
+        scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>[name].<span class="hljs-title function_">kill</span>();
 
         <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
 
-            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${name}</span> killed
+            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`<span class="hljs-subst">${name}</span> killed
     removed from artefact: <span class="hljs-subst">${(scrawl.library.artefact[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
     removed from artefactnames: <span class="hljs-subst">${(scrawl.library.artefactnames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
     removed from entity: <span class="hljs-subst">${(scrawl.library.entity[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
@@ -1388,11 +1403,11 @@ Hits: <span class="hljs-subst">${interactionResults}</span>`</span>;
     removed from group.artefactBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>
     anchor removed: <span class="hljs-subst">${(scrawl.library.anchor[anchorname]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>`</span>);
 
-            canvas.actionPacket(packet);
+            canvas.<span class="hljs-title function_">actionPacket</span>(packet);
 
             <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
 
-                <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${name}</span> resurrected
+                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`<span class="hljs-subst">${name}</span> resurrected
     removed from artefact: <span class="hljs-subst">${(scrawl.library.artefact[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
     removed from artefactnames: <span class="hljs-subst">${(scrawl.library.artefactnames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
     removed from entity: <span class="hljs-subst">${(scrawl.library.entity[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
@@ -1401,7 +1416,7 @@ Hits: <span class="hljs-subst">${interactionResults}</span>`</span>;
     removed from group.artefactBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>
     anchor removed: <span class="hljs-subst">${(scrawl.library.anchor[anchorname]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>`</span>);
 
-                finishResurrection();
+                <span class="hljs-title function_">finishResurrection</span>();
 
             }, <span class="hljs-number">100</span>);
         }, <span class="hljs-number">100</span>);
@@ -1421,29 +1436,29 @@ Hits: <span class="hljs-subst">${interactionResults}</span>`</span>;
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>killArtefact(<span class="hljs-string">&#x27;brick-in-marble&#x27;</span>, <span class="hljs-string">&#x27;wikipedia-brick-link&#x27;</span>, <span class="hljs-number">2000</span>, <span class="hljs-function">() =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">killArtefact</span>(<span class="hljs-string">&#x27;brick-in-marble&#x27;</span>, <span class="hljs-string">&#x27;wikipedia-brick-link&#x27;</span>, <span class="hljs-number">2000</span>, <span class="hljs-function">() =&gt;</span> {
 
-    scrawl.library.artefact[<span class="hljs-string">&#x27;brick-in-marble&#x27;</span>].set({
+    scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>[<span class="hljs-string">&#x27;brick-in-marble&#x27;</span>].<span class="hljs-title function_">set</span>({
 
-        <span class="hljs-attr">onEnter</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-            <span class="hljs-built_in">this</span>.set({ <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">30</span> });
-            canvas.set({
-                <span class="hljs-attr">title</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> tile`</span>,
-                <span class="hljs-attr">label</span>: <span class="hljs-built_in">this</span>.get(<span class="hljs-string">&#x27;anchorDescription&#x27;</span>),
+        <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">30</span> });
+            canvas.<span class="hljs-title function_">set</span>({
+                <span class="hljs-attr">title</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> tile`</span>,
+                <span class="hljs-attr">label</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;anchorDescription&#x27;</span>),
             });
-            myTracker.send(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Canvas Entity&#x27;</span>, <span class="hljs-string">&#x27;hover start&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> <span class="hljs-subst">${<span class="hljs-built_in">this</span>.type}</span>`</span>);
+            myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Canvas Entity&#x27;</span>, <span class="hljs-string">&#x27;hover start&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.type}</span>`</span>);
         },
-        <span class="hljs-attr">onLeave</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-            <span class="hljs-built_in">this</span>.set({ <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">20</span> });
-            canvas.set({
+        <span class="hljs-attr">onLeave</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">20</span> });
+            canvas.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">title</span>: <span class="hljs-string">&#x27;&#x27;</span>,
                 <span class="hljs-attr">label</span>: <span class="hljs-string">`<span class="hljs-subst">${canvas.name}</span> canvas element`</span>,
             });
-            myTracker.send(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Canvas Entity&#x27;</span>, <span class="hljs-string">&#x27;hover end&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> <span class="hljs-subst">${<span class="hljs-built_in">this</span>.type}</span>`</span>);
+            myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Canvas Entity&#x27;</span>, <span class="hljs-string">&#x27;hover end&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.type}</span>`</span>);
         },
-        <span class="hljs-attr">onUp</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-            myTracker.send(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Canvas Entity Link&#x27;</span>, <span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span> <span class="hljs-subst">${<span class="hljs-built_in">this</span>.type}</span> <span class="hljs-subst">${<span class="hljs-built_in">this</span>.anchor.href}</span>`</span>);
-            <span class="hljs-built_in">this</span>.clickAnchor();
+        <span class="hljs-attr">onUp</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            myTracker.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;event&#x27;</span>, <span class="hljs-string">&#x27;Canvas Entity Link&#x27;</span>, <span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.name}</span> <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.type}</span> <span class="hljs-subst">${<span class="hljs-variable language_">this</span>.anchor.href}</span>`</span>);
+            <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">clickAnchor</span>();
         },
     });
 });</pre></div></div>
@@ -1461,44 +1476,44 @@ Hits: <span class="hljs-subst">${interactionResults}</span>`</span>;
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> killStyle = <span class="hljs-function">(<span class="hljs-params">name, time, finishResurrection</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> <span class="hljs-title function_">killStyle</span> = (<span class="hljs-params">name, time, finishResurrection</span>) =&gt; {
 
     <span class="hljs-keyword">let</span> packet;
 
     <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
 
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${name}</span> alive
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`<span class="hljs-subst">${name}</span> alive
     removed from styles: <span class="hljs-subst">${(scrawl.library.styles[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
     removed from stylesnames: <span class="hljs-subst">${(scrawl.library.stylesnames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>`</span>);
 
-        packet = scrawl.library.styles[name].saveAsPacket();
+        packet = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">styles</span>[name].<span class="hljs-title function_">saveAsPacket</span>();
 
-        <span class="hljs-built_in">console</span>.log(packet);
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(packet);
 
-        scrawl.library.styles[name].kill();
+        scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">styles</span>[name].<span class="hljs-title function_">kill</span>();
 
         <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
 
-            <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${name}</span> killed
+            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`<span class="hljs-subst">${name}</span> killed
     removed from styles: <span class="hljs-subst">${(scrawl.library.styles[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
     removed from stylesnames: <span class="hljs-subst">${(scrawl.library.stylesnames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>`</span>);
 
-            canvas.actionPacket(packet);
+            canvas.<span class="hljs-title function_">actionPacket</span>(packet);
 
             <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
 
-                <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${name}</span> resurrected
+                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`<span class="hljs-subst">${name}</span> resurrected
     removed from styles: <span class="hljs-subst">${(scrawl.library.styles[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
     removed from stylesnames: <span class="hljs-subst">${(scrawl.library.stylesnames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>`</span>);
 
-                finishResurrection();
+                <span class="hljs-title function_">finishResurrection</span>();
 
             }, <span class="hljs-number">100</span>);
         }, <span class="hljs-number">100</span>);
     }, time);
 };
 
-killStyle(<span class="hljs-string">&#x27;marble-pattern&#x27;</span>, <span class="hljs-number">3000</span>, <span class="hljs-function">() =&gt;</span> {</pre></div></div>
+<span class="hljs-title function_">killStyle</span>(<span class="hljs-string">&#x27;marble-pattern&#x27;</span>, <span class="hljs-number">3000</span>, <span class="hljs-function">() =&gt;</span> {</pre></div></div>
             
         </li>
         
@@ -1513,11 +1528,11 @@ killStyle(<span class="hljs-string">&#x27;marble-pattern&#x27;</span>, <span cla
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    scrawl.library.entity[<span class="hljs-string">&#x27;brick-in-marble&#x27;</span>].set({
+            <div class="content"><div class='highlight'><pre>    scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">entity</span>[<span class="hljs-string">&#x27;brick-in-marble&#x27;</span>].<span class="hljs-title function_">set</span>({
         <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;marble-pattern&#x27;</span>,
     });
 
-    scrawl.library.entity[<span class="hljs-string">&#x27;marble-in-water&#x27;</span>].set({
+    scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">entity</span>[<span class="hljs-string">&#x27;marble-in-water&#x27;</span>].<span class="hljs-title function_">set</span>({
         <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;marble-pattern&#x27;</span>,
     });
 });</pre></div></div>

@@ -149,13 +149,20 @@ const report = function () {
         testTime, testNow,
         testMessage = document.querySelector('#reportmessage');
 
+    let matrix, matrixVals = '';
+
     return function () {
+
+        if (!matrix) matrix = videoPattern.patternMatrix;matrixVals
+
+        if (matrix) matrixVals = `A: ${matrix.a}, B: ${matrix.b}, C: ${matrix.c}, D: ${matrix.d}, E: ${matrix.e}, F: ${matrix.f}`;
 
         testNow = Date.now();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
+    Matrix - ${matrixVals}`;
     };
 }();
 

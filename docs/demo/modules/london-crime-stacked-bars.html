@@ -226,18 +226,18 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> getRawData = <span class="hljs-function">(<span class="hljs-params">file</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">getRawData</span> = (<span class="hljs-params">file</span>) =&gt; {
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span> (<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span> (<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> {
 
-        fetch (<span class="hljs-keyword">new</span> Request(file))
-        .then (<span class="hljs-function"><span class="hljs-params">response</span> =&gt;</span> {
+        fetch (<span class="hljs-keyword">new</span> <span class="hljs-title class_">Request</span>(file))
+        .<span class="hljs-property">then</span> (<span class="hljs-function"><span class="hljs-params">response</span> =&gt;</span> {
 
-            <span class="hljs-keyword">if</span> (!response.ok) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`Network Error <span class="hljs-subst">${response.status}</span>: <span class="hljs-subst">${response.statusText}</span>`</span>);
-            <span class="hljs-keyword">return</span> response.json();
+            <span class="hljs-keyword">if</span> (!response.<span class="hljs-property">ok</span>) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`Network Error <span class="hljs-subst">${response.status}</span>: <span class="hljs-subst">${response.statusText}</span>`</span>);
+            <span class="hljs-keyword">return</span> response.<span class="hljs-title function_">json</span>();
         })
-        .then (<span class="hljs-function"><span class="hljs-params">rawData</span> =&gt;</span> resolve(rawData))
-        .catch (<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> reject(e));
+        .<span class="hljs-property">then</span> (<span class="hljs-function"><span class="hljs-params">rawData</span> =&gt;</span> <span class="hljs-title function_">resolve</span>(rawData))
+        .<span class="hljs-property">catch</span> (<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> <span class="hljs-title function_">reject</span>(e));
     });
 }</pre></div></div>
             
@@ -258,22 +258,22 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> extractDataByYear = <span class="hljs-function">(<span class="hljs-params">yearLabels, categoryLabels, categoryData</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">extractDataByYear</span> = (<span class="hljs-params">yearLabels, categoryLabels, categoryData</span>) =&gt; {
 
     <span class="hljs-keyword">let</span> d = {};
 
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; yearLabels.length; i++) {
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; yearLabels.<span class="hljs-property">length</span>; i++) {
 
         d[yearLabels[i]] = [];
     }
 
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; categoryLabels.length; i++) {
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; categoryLabels.<span class="hljs-property">length</span>; i++) {
 
         <span class="hljs-keyword">let</span> cData = categoryData[categoryLabels[i]];
 
-        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j = <span class="hljs-number">0</span>; j &lt; yearLabels.length; j++) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j = <span class="hljs-number">0</span>; j &lt; yearLabels.<span class="hljs-property">length</span>; j++) {
 
-            d[yearLabels[j]].push(cData[j]);
+            d[yearLabels[j]].<span class="hljs-title function_">push</span>(cData[j]);
         }
     }
     <span class="hljs-keyword">return</span> d;
@@ -292,10 +292,10 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> build = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">namespace, canvas, dataSource</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> build = <span class="hljs-keyword">function</span> (<span class="hljs-params">namespace, canvas, dataSource</span>) {
 
     getRawData (dataSource)
-    .then (<span class="hljs-function"><span class="hljs-params">rawData</span> =&gt;</span> {</pre></div></div>
+    .<span class="hljs-property">then</span> (<span class="hljs-function"><span class="hljs-params">rawData</span> =&gt;</span> {</pre></div></div>
             
         </li>
         
@@ -310,11 +310,11 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> area = rawData.area,
-            yearLabels = rawData.years,
-            categoryData = rawData.crimesByCategory,
-            categoryLabels = <span class="hljs-built_in">Object</span>.keys(categoryData),
-            yearData = extractDataByYear(yearLabels, categoryLabels, categoryData);
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> area = rawData.<span class="hljs-property">area</span>,
+            yearLabels = rawData.<span class="hljs-property">years</span>,
+            categoryData = rawData.<span class="hljs-property">crimesByCategory</span>,
+            categoryLabels = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(categoryData),
+            yearData = <span class="hljs-title function_">extractDataByYear</span>(yearLabels, categoryLabels, categoryData);
 
         <span class="hljs-keyword">let</span> data = {
             area,
@@ -336,7 +336,7 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        graph.build(namespace, canvas, data);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        graph.<span class="hljs-title function_">build</span>(namespace, canvas, data);</pre></div></div>
             
         </li>
         
@@ -351,10 +351,10 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        frame.updateTitle(<span class="hljs-string">`<span class="hljs-subst">${data.area}</span> Crime Statistics - Overview`</span>);
-        frame.updateBackground(data.area);
+            <div class="content"><div class='highlight'><pre>        frame.<span class="hljs-title function_">updateTitle</span>(<span class="hljs-string">`<span class="hljs-subst">${data.area}</span> Crime Statistics - Overview`</span>);
+        frame.<span class="hljs-title function_">updateBackground</span>(data.<span class="hljs-property">area</span>);
     })
-    .catch (<span class="hljs-function"><span class="hljs-params">error</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(error.message));
+    .<span class="hljs-property">catch</span> (<span class="hljs-function"><span class="hljs-params">error</span> =&gt;</span> <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(error.<span class="hljs-property">message</span>));
 };</pre></div></div>
             
         </li>
@@ -373,9 +373,9 @@ Data supplied to graph module as Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> kill = graph.kill;
-<span class="hljs-keyword">const</span> hide = graph.hide;
-<span class="hljs-keyword">const</span> show = graph.show;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> kill = graph.<span class="hljs-property">kill</span>;
+<span class="hljs-keyword">const</span> hide = graph.<span class="hljs-property">hide</span>;
+<span class="hljs-keyword">const</span> show = graph.<span class="hljs-property">show</span>;
 
 <span class="hljs-keyword">export</span> {
     build,

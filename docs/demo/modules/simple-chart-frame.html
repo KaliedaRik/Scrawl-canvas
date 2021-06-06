@@ -158,7 +158,7 @@
             <div class="content"><div class='highlight'><pre>
 <span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../../source/scrawl.js&#x27;</span>;
 
-scrawl.importDomImage(<span class="hljs-string">&#x27;.crime&#x27;</span>);
+scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.crime&#x27;</span>);
 
 <span class="hljs-keyword">let</span> background, 
     title, subtitle, 
@@ -184,17 +184,17 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.crime&#x27;</span>);
 <span class="hljs-keyword">const</span> graphBottom = <span class="hljs-number">95</span>;
 <span class="hljs-keyword">const</span> graphLeft = <span class="hljs-number">10</span>;
 
-<span class="hljs-keyword">const</span> build = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">namespace, canvas, backgroundImage</span>) </span>{
+<span class="hljs-keyword">const</span> build = <span class="hljs-keyword">function</span> (<span class="hljs-params">namespace, canvas, backgroundImage</span>) {
 
-    group = scrawl.makeGroup({
+    group = scrawl.<span class="hljs-title function_">makeGroup</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-group`</span>,
-        <span class="hljs-attr">host</span>: canvas.base.name,
+        <span class="hljs-attr">host</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
         <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
         <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
     });
 
-    background = scrawl.makePicture({
+    background = scrawl.<span class="hljs-title function_">makePicture</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-background`</span>,
         <span class="hljs-attr">group</span>: group,
@@ -211,7 +211,7 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.crime&#x27;</span>);
         <span class="hljs-attr">asset</span>: backgroundImage,
     });
 
-    title = scrawl.makePhrase({
+    title = scrawl.<span class="hljs-title function_">makePhrase</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-title`</span>,
         <span class="hljs-attr">group</span>: group,
@@ -232,7 +232,7 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.crime&#x27;</span>);
         <span class="hljs-attr">shadowBlur</span>: <span class="hljs-number">6</span>,
     });
 
-    subtitle = title.clone({
+    subtitle = title.<span class="hljs-title function_">clone</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-subtitle`</span>,
         <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;No data selected&#x27;</span>,
@@ -240,9 +240,9 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.crime&#x27;</span>);
         <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;9%&#x27;</span>,
         <span class="hljs-attr">size</span>: <span class="hljs-string">&#x27;1.2rem&#x27;</span>,
     });
-    subtitle.addSectionClass(<span class="hljs-string">&#x27;RED&#x27;</span>, { <span class="hljs-attr">fill</span>: <span class="hljs-string">&#x27;darkred&#x27;</span> });
+    subtitle.<span class="hljs-title function_">addSectionClass</span>(<span class="hljs-string">&#x27;RED&#x27;</span>, { <span class="hljs-attr">fill</span>: <span class="hljs-string">&#x27;darkred&#x27;</span> });
 
-    yLabelTop = scrawl.makePhrase({
+    yLabelTop = scrawl.<span class="hljs-title function_">makePhrase</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-y-top`</span>,
         <span class="hljs-attr">group</span>: group,
@@ -261,26 +261,26 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.crime&#x27;</span>);
         <span class="hljs-attr">shadowBlur</span>: <span class="hljs-number">6</span>,
     });
 
-    yLabelBottom = yLabelTop.clone({
+    yLabelBottom = yLabelTop.<span class="hljs-title function_">clone</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-y-bottom`</span>,
         <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;92%&#x27;</span>,
     });
 
-    xLabelLeft = yLabelTop.clone({
+    xLabelLeft = yLabelTop.<span class="hljs-title function_">clone</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-x-left`</span>,
         <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;10%&#x27;</span>,
         <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;96%&#x27;</span>,
     });
 
-    xLabelRight = xLabelLeft.clone({
+    xLabelRight = xLabelLeft.<span class="hljs-title function_">clone</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-x-right`</span>,
         <span class="hljs-attr">startX</span>: <span class="hljs-string">&#x27;89%&#x27;</span>,
     });
 
-    scrawl.makeLine({
+    scrawl.<span class="hljs-title function_">makeLine</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-upperline`</span>,
         <span class="hljs-attr">group</span>: group,
@@ -297,14 +297,14 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.crime&#x27;</span>);
 
         <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">1</span>,
 
-    }).clone({
+    }).<span class="hljs-title function_">clone</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-lowerline`</span>,
 
         <span class="hljs-attr">startY</span>: <span class="hljs-string">`<span class="hljs-subst">${graphBottom}</span>%`</span>,
         <span class="hljs-attr">endY</span>: <span class="hljs-string">`<span class="hljs-subst">${graphBottom}</span>%`</span>,
 
-    }).clone({
+    }).<span class="hljs-title function_">clone</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-leftline`</span>,
 
@@ -315,31 +315,31 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.crime&#x27;</span>);
         <span class="hljs-attr">endY</span>: <span class="hljs-string">`<span class="hljs-subst">${graphBottom}</span>%`</span>,
     });
 
-    show();
+    <span class="hljs-title function_">show</span>();
 };
 
-<span class="hljs-keyword">const</span> kill = <span class="hljs-function">() =&gt;</span> group.kill(<span class="hljs-literal">true</span>);
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">kill</span> = (<span class="hljs-params"></span>) =&gt; group.<span class="hljs-title function_">kill</span>(<span class="hljs-literal">true</span>);
 
-<span class="hljs-keyword">const</span> hide = <span class="hljs-function">() =&gt;</span> group.visibility = <span class="hljs-literal">false</span>;
-<span class="hljs-keyword">const</span> show = <span class="hljs-function">() =&gt;</span> group.visibility = <span class="hljs-literal">true</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">hide</span> = (<span class="hljs-params"></span>) =&gt; group.<span class="hljs-property">visibility</span> = <span class="hljs-literal">false</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">show</span> = (<span class="hljs-params"></span>) =&gt; group.<span class="hljs-property">visibility</span> = <span class="hljs-literal">true</span>;
 
-<span class="hljs-keyword">const</span> updateTextHelper = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item, text</span>) </span>{
+<span class="hljs-keyword">const</span> updateTextHelper = <span class="hljs-keyword">function</span> (<span class="hljs-params">item, text</span>) {
 
-    item.set({
+    item.<span class="hljs-title function_">set</span>({
         <span class="hljs-attr">text</span>: text,
     });
 };
 
-<span class="hljs-keyword">const</span> updateTitle = <span class="hljs-function">(<span class="hljs-params">text</span>) =&gt;</span> updateTextHelper(title, text);
-<span class="hljs-keyword">const</span> updateSubtitle = <span class="hljs-function">(<span class="hljs-params">text</span>) =&gt;</span> updateTextHelper(subtitle, text);
-<span class="hljs-keyword">const</span> updateYTop = <span class="hljs-function">(<span class="hljs-params">text</span>) =&gt;</span> updateTextHelper(yLabelTop, text);
-<span class="hljs-keyword">const</span> updateYBottom = <span class="hljs-function">(<span class="hljs-params">text</span>) =&gt;</span> updateTextHelper(yLabelBottom, text);
-<span class="hljs-keyword">const</span> updateXLeft = <span class="hljs-function">(<span class="hljs-params">text</span>) =&gt;</span> updateTextHelper(xLabelLeft, text);
-<span class="hljs-keyword">const</span> updateXRight = <span class="hljs-function">(<span class="hljs-params">text</span>) =&gt;</span> updateTextHelper(xLabelRight, text);
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">updateTitle</span> = (<span class="hljs-params">text</span>) =&gt; <span class="hljs-title function_">updateTextHelper</span>(title, text);
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">updateSubtitle</span> = (<span class="hljs-params">text</span>) =&gt; <span class="hljs-title function_">updateTextHelper</span>(subtitle, text);
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">updateYTop</span> = (<span class="hljs-params">text</span>) =&gt; <span class="hljs-title function_">updateTextHelper</span>(yLabelTop, text);
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">updateYBottom</span> = (<span class="hljs-params">text</span>) =&gt; <span class="hljs-title function_">updateTextHelper</span>(yLabelBottom, text);
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">updateXLeft</span> = (<span class="hljs-params">text</span>) =&gt; <span class="hljs-title function_">updateTextHelper</span>(xLabelLeft, text);
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">updateXRight</span> = (<span class="hljs-params">text</span>) =&gt; <span class="hljs-title function_">updateTextHelper</span>(xLabelRight, text);
 
-<span class="hljs-keyword">const</span> updateBackground = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">asset</span>) </span>{
+<span class="hljs-keyword">const</span> updateBackground = <span class="hljs-keyword">function</span> (<span class="hljs-params">asset</span>) {
 
-    background.set({
+    background.<span class="hljs-title function_">set</span>({
         <span class="hljs-attr">asset</span>: asset,
     });
 };

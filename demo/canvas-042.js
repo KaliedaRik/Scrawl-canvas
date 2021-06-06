@@ -73,7 +73,7 @@ scrawl.makeOval({
 
 scrawl.makePolygon({
     name: 'polygon-clipper',
-    radius: 150,
+    sideLength: 150,
     sides: 6,
 }).set(generics);
 

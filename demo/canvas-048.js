@@ -34,7 +34,7 @@ scrawl.makeFilter({
         },
         {
             lineIn: 'top-filter-1',
-            action: 'blur',
+            action: 'gaussian-blur',
             radius: 1,
             lineOut: 'top-filter-1',
         },

@@ -165,6 +165,11 @@
                 </a>
               
                 
+                <a class="source" href="lineSpiral.html">
+                  ./source/factory/lineSpiral.js
+                </a>
+              
+                
                 <a class="source" href="loom.html">
                   ./source/factory/loom.js
                 </a>
@@ -257,6 +262,11 @@
                 
                 <a class="source" href="radialGradient.html">
                   ./source/factory/radialGradient.js
+                </a>
+              
+                
+                <a class="source" href="rawAsset.html">
+                  ./source/factory/rawAsset.js
                 </a>
               
                 
@@ -496,7 +506,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { mergeOver, pushUnique, xt, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> { requestCell, releaseCell } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./cell.js&#x27;</span>;
@@ -516,13 +526,13 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> FontAttributes = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">FontAttributes</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-built_in">this</span>.makeName(items.name);
-    <span class="hljs-built_in">this</span>.set(<span class="hljs-built_in">this</span>.defs);
-    <span class="hljs-built_in">this</span>.set(items);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(items.<span class="hljs-property">name</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">defs</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -538,9 +548,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = FontAttributes.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">&#x27;FontAttributes&#x27;</span>;
-P.lib = <span class="hljs-string">&#x27;fontattribute&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">FontAttributes</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
+P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;FontAttributes&#x27;</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;fontattribute&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -555,7 +565,7 @@ P.lib = <span class="hljs-string">&#x27;fontattribute&#x27;</span>;</pre></div><
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = baseMix(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -607,7 +617,7 @@ P.lib = <span class="hljs-string">&#x27;fontattribute&#x27;</span>;</pre></div><
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    style: <span class="hljs-string">&#x27;normal&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">style</span>: <span class="hljs-string">&#x27;normal&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -622,7 +632,7 @@ P.lib = <span class="hljs-string">&#x27;fontattribute&#x27;</span>;</pre></div><
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    variant: <span class="hljs-string">&#x27;normal&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">variant</span>: <span class="hljs-string">&#x27;normal&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -640,7 +650,7 @@ P.lib = <span class="hljs-string">&#x27;fontattribute&#x27;</span>;</pre></div><
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    weight: <span class="hljs-string">&#x27;normal&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">weight</span>: <span class="hljs-string">&#x27;normal&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -658,7 +668,7 @@ P.lib = <span class="hljs-string">&#x27;fontattribute&#x27;</span>;</pre></div><
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    stretch: <span class="hljs-string">&#x27;normal&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">stretch</span>: <span class="hljs-string">&#x27;normal&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -720,7 +730,7 @@ P.lib = <span class="hljs-string">&#x27;fontattribute&#x27;</span>;</pre></div><
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    sizeValue: <span class="hljs-number">12</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">sizeValue</span>: <span class="hljs-number">12</span>,
     <span class="hljs-attr">sizeMetric</span>: <span class="hljs-string">&#x27;px&#x27;</span>,</pre></div></div>
             
         </li>
@@ -740,10 +750,10 @@ P.lib = <span class="hljs-string">&#x27;fontattribute&#x27;</span>;</pre></div><
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    family: <span class="hljs-string">&#x27;sans-serif&#x27;</span>,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">family</span>: <span class="hljs-string">&#x27;sans-serif&#x27;</span>,
 
 };
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
+P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -801,9 +811,9 @@ P.packetExclusions = pushUnique(P.packetExclusions, [‘font’]);</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.getters,
-    S = P.setters,
-    D = P.deltaSetters;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> G = P.<span class="hljs-property">getters</span>,
+    S = P.<span class="hljs-property">setters</span>,
+    D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
             
         </li>
         
@@ -821,9 +831,9 @@ P.packetExclusions = pushUnique(P.packetExclusions, [‘font’]);</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>G.size = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>G.<span class="hljs-property">size</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">return</span> (<span class="hljs-built_in">this</span>.sizeValue) ? <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.sizeValue}</span><span class="hljs-subst">${<span class="hljs-built_in">this</span>.sizeMetric}</span>`</span> : <span class="hljs-built_in">this</span>.sizeMetric;
+    <span class="hljs-keyword">return</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">sizeValue</span>) ? <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.sizeValue}</span><span class="hljs-subst">${<span class="hljs-variable language_">this</span>.sizeMetric}</span>`</span> : <span class="hljs-variable language_">this</span>.<span class="hljs-property">sizeMetric</span>;
 };</pre></div></div>
             
         </li>
@@ -841,24 +851,24 @@ P.packetExclusions = pushUnique(P.packetExclusions, [‘font’]);</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.size = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">size</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (xt(item)) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(item)) {
 
         <span class="hljs-keyword">let</span> res, 
             size = <span class="hljs-number">0</span>, 
             metric = <span class="hljs-string">&#x27;medium&#x27;</span>;
 
-        <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;xx-small&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;xx-small&#x27;</span>;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;x-small&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;x-small&#x27;</span>;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;smaller&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;smaller&#x27;</span>;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;small&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;small&#x27;</span>;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;medium&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;medium&#x27;</span>;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;xxx-large&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;xxx-large&#x27;</span>;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;xx-large&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;xx-large&#x27;</span>;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;x-large&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;x-large&#x27;</span>;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;larger&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;larger&#x27;</span>;
-        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.indexOf(<span class="hljs-string">&#x27;large&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;large&#x27;</span>;
+        <span class="hljs-keyword">if</span> (item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;xx-small&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;xx-small&#x27;</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;x-small&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;x-small&#x27;</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;smaller&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;smaller&#x27;</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;small&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;small&#x27;</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;medium&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;medium&#x27;</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;xxx-large&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;xxx-large&#x27;</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;xx-large&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;xx-large&#x27;</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;x-large&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;x-large&#x27;</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;larger&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;larger&#x27;</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;large&#x27;</span>) &gt;= <span class="hljs-number">0</span>) metric = <span class="hljs-string">&#x27;large&#x27;</span>;
 
         <span class="hljs-keyword">else</span> {
             size = <span class="hljs-number">12</span>;
@@ -867,9 +877,9 @@ P.packetExclusions = pushUnique(P.packetExclusions, [‘font’]);</p>
 
         <span class="hljs-keyword">let</span> full, val, suffix;
 
-        <span class="hljs-keyword">let</span> r = item.match(<span class="hljs-regexp">/(\d+\.\d+|\d+|\.\d+)(rem|em|rlh|lh|ex|cap|ch|ic|%|vw|vh|vmax|vmin|vi|vb|in|cm|mm|Q|pc|pt|px)?/i</span>);
+        <span class="hljs-keyword">let</span> r = item.<span class="hljs-title function_">match</span>(<span class="hljs-regexp">/(\d+\.\d+|\d+|\.\d+)(rem|em|rlh|lh|ex|cap|ch|ic|%|vw|vh|vmax|vmin|vi|vb|in|cm|mm|Q|pc|pt|px)?/i</span>);
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(r)) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(r)) {
 
             [full, val, suffix] = r;
 
@@ -881,9 +891,9 @@ P.packetExclusions = pushUnique(P.packetExclusions, [‘font’]);</p>
         }
         <span class="hljs-keyword">else</span> {
 
-            r = item.match(<span class="hljs-regexp">/\/(\d+\.\d+|\d+|\.\d+)(rem|em|rlh|lh|ex|cap|ch|ic|%|vw|vh|vmax|vmin|vi|vb|in|cm|mm|Q|pc|pt|px)?/i</span>);
+            r = item.<span class="hljs-title function_">match</span>(<span class="hljs-regexp">/\/(\d+\.\d+|\d+|\.\d+)(rem|em|rlh|lh|ex|cap|ch|ic|%|vw|vh|vmax|vmin|vi|vb|in|cm|mm|Q|pc|pt|px)?/i</span>);
 
-            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(r)) {
+            <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(r)) {
 
                 [full, val, suffix] = r;
 
@@ -894,34 +904,34 @@ P.packetExclusions = pushUnique(P.packetExclusions, [‘font’]);</p>
                 }
             }
         }
-        <span class="hljs-keyword">if</span> (size !== <span class="hljs-built_in">this</span>.sizeValue) {
+        <span class="hljs-keyword">if</span> (size !== <span class="hljs-variable language_">this</span>.<span class="hljs-property">sizeValue</span>) {
 
-            <span class="hljs-built_in">this</span>.sizeValue = size;
-            <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">sizeValue</span> = size;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFont</span> = <span class="hljs-literal">true</span>;
         }
-        <span class="hljs-keyword">if</span> (metric !== <span class="hljs-built_in">this</span>.sizeMetric) {
+        <span class="hljs-keyword">if</span> (metric !== <span class="hljs-variable language_">this</span>.<span class="hljs-property">sizeMetric</span>) {
 
-            <span class="hljs-built_in">this</span>.sizeMetric = metric;
-            <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">sizeMetric</span> = metric;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFont</span> = <span class="hljs-literal">true</span>;
         }
     }
 };
 
-S.sizeValue = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">sizeValue</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (xt(item) &amp;&amp; item !== <span class="hljs-built_in">this</span>.sizeValue) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(item) &amp;&amp; item !== <span class="hljs-variable language_">this</span>.<span class="hljs-property">sizeValue</span>) {
 
-        <span class="hljs-built_in">this</span>.sizeValue = item;
-        <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">sizeValue</span> = item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFont</span> = <span class="hljs-literal">true</span>;
     }
 }
 
-S.sizeMetric = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">sizeMetric</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (xt(item) &amp;&amp; item !== <span class="hljs-built_in">this</span>.sizeMetric) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(item) &amp;&amp; item !== <span class="hljs-variable language_">this</span>.<span class="hljs-property">sizeMetric</span>) {
 
-        <span class="hljs-built_in">this</span>.sizeMetric = item;
-        <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">sizeMetric</span> = item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFont</span> = <span class="hljs-literal">true</span>;
     }
 }</pre></div></div>
             
@@ -938,16 +948,16 @@ S.sizeMetric = <span class="hljs-function"><span class="hljs-keyword">function</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.font = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">font</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (xt(item)) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(item)) {
 
-        S.style.call(<span class="hljs-built_in">this</span>, item);
-        S.variant.call(<span class="hljs-built_in">this</span>, item);
-        S.weight.call(<span class="hljs-built_in">this</span>, item);
-        S.stretch.call(<span class="hljs-built_in">this</span>, item);
-        S.size.call(<span class="hljs-built_in">this</span>, item);
-        S.family.call(<span class="hljs-built_in">this</span>, item);
+        S.<span class="hljs-property">style</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, item);
+        S.<span class="hljs-property">variant</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, item);
+        S.<span class="hljs-property">weight</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, item);
+        S.<span class="hljs-property">stretch</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, item);
+        S.<span class="hljs-property">size</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, item);
+        S.<span class="hljs-property">family</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, item);
     }
 };</pre></div></div>
             
@@ -964,19 +974,19 @@ S.sizeMetric = <span class="hljs-function"><span class="hljs-keyword">function</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.style = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">style</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (xt(item)) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(item)) {
 
         <span class="hljs-keyword">let</span> v = <span class="hljs-string">&#x27;normal&#x27;</span>;
 
-        v = (item.indexOf(<span class="hljs-string">&#x27;italic&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;italic&#x27;</span> : v;
-        v = (item.indexOf(<span class="hljs-string">&#x27;oblique&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;oblique&#x27;</span> : v;
+        v = (item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;italic&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;italic&#x27;</span> : v;
+        v = (item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;oblique&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;oblique&#x27;</span> : v;
 
-        <span class="hljs-keyword">if</span> (v !== <span class="hljs-built_in">this</span>.style) {
+        <span class="hljs-keyword">if</span> (v !== <span class="hljs-variable language_">this</span>.<span class="hljs-property">style</span>) {
 
-            <span class="hljs-built_in">this</span>.style = v;
-            <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">style</span> = v;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFont</span> = <span class="hljs-literal">true</span>;
         }
     }
 };</pre></div></div>
@@ -994,18 +1004,18 @@ S.sizeMetric = <span class="hljs-function"><span class="hljs-keyword">function</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.variant = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">variant</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (xt(item)) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(item)) {
 
         <span class="hljs-keyword">let</span> v = <span class="hljs-string">&#x27;normal&#x27;</span>;
 
-        v = (item.indexOf(<span class="hljs-string">&#x27;small-caps&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;small-caps&#x27;</span> : v;
+        v = (item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;small-caps&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;small-caps&#x27;</span> : v;
 
-        <span class="hljs-keyword">if</span> (v !== <span class="hljs-built_in">this</span>.variant) {
+        <span class="hljs-keyword">if</span> (v !== <span class="hljs-variable language_">this</span>.<span class="hljs-property">variant</span>) {
 
-            <span class="hljs-built_in">this</span>.variant = v;
-            <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">variant</span> = v;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFont</span> = <span class="hljs-literal">true</span>;
         }
     }
 };</pre></div></div>
@@ -1023,9 +1033,9 @@ S.sizeMetric = <span class="hljs-function"><span class="hljs-keyword">function</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.weight = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">weight</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (xt(item)) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(item)) {
 
         <span class="hljs-keyword">let</span> v = <span class="hljs-string">&#x27;normal&#x27;</span>;</pre></div></div>
             
@@ -1042,12 +1052,12 @@ S.sizeMetric = <span class="hljs-function"><span class="hljs-keyword">function</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (item.toFixed) v = item;
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span>) v = item;
         <span class="hljs-keyword">else</span> {
 
-            v = (item.indexOf(<span class="hljs-string">&#x27;bold&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;bold&#x27;</span> : v;
-            v = (item.indexOf(<span class="hljs-string">&#x27;lighter&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;lighter&#x27;</span> : v;
-            v = (item.indexOf(<span class="hljs-string">&#x27;bolder&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;bolder&#x27;</span> : v;</pre></div></div>
+            v = (item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;bold&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;bold&#x27;</span> : v;
+            v = (item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;lighter&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;lighter&#x27;</span> : v;
+            v = (item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;bolder&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;bolder&#x27;</span> : v;</pre></div></div>
             
         </li>
         
@@ -1062,15 +1072,15 @@ S.sizeMetric = <span class="hljs-function"><span class="hljs-keyword">function</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            v = (item.indexOf(<span class="hljs-string">&#x27; 100 &#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;100&#x27;</span> : v;
-            v = (item.indexOf(<span class="hljs-string">&#x27; 200 &#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;200&#x27;</span> : v;
-            v = (item.indexOf(<span class="hljs-string">&#x27; 300 &#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;300&#x27;</span> : v;
-            v = (item.indexOf(<span class="hljs-string">&#x27; 400 &#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;400&#x27;</span> : v;
-            v = (item.indexOf(<span class="hljs-string">&#x27; 500 &#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;500&#x27;</span> : v;
-            v = (item.indexOf(<span class="hljs-string">&#x27; 600 &#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;600&#x27;</span> : v;
-            v = (item.indexOf(<span class="hljs-string">&#x27; 700 &#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;700&#x27;</span> : v;
-            v = (item.indexOf(<span class="hljs-string">&#x27; 800 &#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;800&#x27;</span> : v;
-            v = (item.indexOf(<span class="hljs-string">&#x27; 900 &#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;900&#x27;</span> : v;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            v = (item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27; 100 &#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;100&#x27;</span> : v;
+            v = (item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27; 200 &#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;200&#x27;</span> : v;
+            v = (item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27; 300 &#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;300&#x27;</span> : v;
+            v = (item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27; 400 &#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;400&#x27;</span> : v;
+            v = (item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27; 500 &#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;500&#x27;</span> : v;
+            v = (item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27; 600 &#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;600&#x27;</span> : v;
+            v = (item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27; 700 &#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;700&#x27;</span> : v;
+            v = (item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27; 800 &#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;800&#x27;</span> : v;
+            v = (item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27; 900 &#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;900&#x27;</span> : v;</pre></div></div>
             
         </li>
         
@@ -1085,13 +1095,13 @@ S.sizeMetric = <span class="hljs-function"><span class="hljs-keyword">function</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            v = (<span class="hljs-regexp">/^\d00$/</span>.test(item)) ? item : v;
+            <div class="content"><div class='highlight'><pre>            v = (<span class="hljs-regexp">/^\d00$/</span>.<span class="hljs-title function_">test</span>(item)) ? item : v;
         }
 
-        <span class="hljs-keyword">if</span> (v !== <span class="hljs-built_in">this</span>.weight) {
+        <span class="hljs-keyword">if</span> (v !== <span class="hljs-variable language_">this</span>.<span class="hljs-property">weight</span>) {
 
-            <span class="hljs-built_in">this</span>.weight = v;
-            <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">weight</span> = v;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFont</span> = <span class="hljs-literal">true</span>;
         }
     }
 };</pre></div></div>
@@ -1109,25 +1119,25 @@ S.sizeMetric = <span class="hljs-function"><span class="hljs-keyword">function</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.stretch = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">stretch</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (xt(item)) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(item)) {
 
         <span class="hljs-keyword">let</span> v = <span class="hljs-string">&#x27;normal&#x27;</span>;
 
-        v = (item.indexOf(<span class="hljs-string">&#x27;semi-condensed&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;semi-condensed&#x27;</span> : v;
-        v = (item.indexOf(<span class="hljs-string">&#x27;condensed&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;condensed&#x27;</span> : v;
-        v = (item.indexOf(<span class="hljs-string">&#x27;extra-condensed&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;extra-condensed&#x27;</span> : v;
-        v = (item.indexOf(<span class="hljs-string">&#x27;ultra-condensed&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;ultra-condensed&#x27;</span> : v;
-        v = (item.indexOf(<span class="hljs-string">&#x27;semi-expanded&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;semi-expanded&#x27;</span> : v;
-        v = (item.indexOf(<span class="hljs-string">&#x27;expanded&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;expanded&#x27;</span> : v;
-        v = (item.indexOf(<span class="hljs-string">&#x27;extra-expanded&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;extra-expanded&#x27;</span> : v;
-        v = (item.indexOf(<span class="hljs-string">&#x27;ultra-expanded&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;ultra-expanded&#x27;</span> : v;
+        v = (item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;semi-condensed&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;semi-condensed&#x27;</span> : v;
+        v = (item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;condensed&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;condensed&#x27;</span> : v;
+        v = (item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;extra-condensed&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;extra-condensed&#x27;</span> : v;
+        v = (item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;ultra-condensed&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;ultra-condensed&#x27;</span> : v;
+        v = (item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;semi-expanded&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;semi-expanded&#x27;</span> : v;
+        v = (item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;expanded&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;expanded&#x27;</span> : v;
+        v = (item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;extra-expanded&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;extra-expanded&#x27;</span> : v;
+        v = (item.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;ultra-expanded&#x27;</span>) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;ultra-expanded&#x27;</span> : v;
 
-        <span class="hljs-keyword">if</span> (v !== <span class="hljs-built_in">this</span>.stretch) {
+        <span class="hljs-keyword">if</span> (v !== <span class="hljs-variable language_">this</span>.<span class="hljs-property">stretch</span>) {
 
-            <span class="hljs-built_in">this</span>.stretch = v;
-            <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">stretch</span> = v;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFont</span> = <span class="hljs-literal">true</span>;
         }
     }
 };</pre></div></div>
@@ -1145,16 +1155,16 @@ S.sizeMetric = <span class="hljs-function"><span class="hljs-keyword">function</
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.rfsTestArray1 = [<span class="hljs-string">&#x27;italic&#x27;</span>,<span class="hljs-string">&#x27;oblique&#x27;</span>,<span class="hljs-string">&#x27;small-caps&#x27;</span>,<span class="hljs-string">&#x27;normal&#x27;</span>,<span class="hljs-string">&#x27;bold&#x27;</span>,<span class="hljs-string">&#x27;lighter&#x27;</span>,<span class="hljs-string">&#x27;bolder&#x27;</span>,<span class="hljs-string">&#x27;ultra-condensed&#x27;</span>,<span class="hljs-string">&#x27;extra-condensed&#x27;</span>,<span class="hljs-string">&#x27;semi-condensed&#x27;</span>,<span class="hljs-string">&#x27;condensed&#x27;</span>,<span class="hljs-string">&#x27;ultra-expanded&#x27;</span>,<span class="hljs-string">&#x27;extra-expanded&#x27;</span>,<span class="hljs-string">&#x27;semi-expanded&#x27;</span>,<span class="hljs-string">&#x27;expanded&#x27;</span>,<span class="hljs-string">&#x27;xx-small&#x27;</span>,<span class="hljs-string">&#x27;x-small&#x27;</span>,<span class="hljs-string">&#x27;small&#x27;</span>,<span class="hljs-string">&#x27;medium&#x27;</span>,<span class="hljs-string">&#x27;xxx-large&#x27;</span>,<span class="hljs-string">&#x27;xx-large&#x27;</span>,<span class="hljs-string">&#x27;x-large&#x27;</span>,<span class="hljs-string">&#x27;large&#x27;</span>];
-P.rfsTestArray2 = [<span class="hljs-string">&#x27;0&#x27;</span>,<span class="hljs-string">&#x27;1&#x27;</span>,<span class="hljs-string">&#x27;2&#x27;</span>,<span class="hljs-string">&#x27;3&#x27;</span>,<span class="hljs-string">&#x27;4&#x27;</span>,<span class="hljs-string">&#x27;5&#x27;</span>,<span class="hljs-string">&#x27;6&#x27;</span>,<span class="hljs-string">&#x27;7&#x27;</span>,<span class="hljs-string">&#x27;8&#x27;</span>,<span class="hljs-string">&#x27;9&#x27;</span>];
-S.family = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">rfsTestArray1</span> = [<span class="hljs-string">&#x27;italic&#x27;</span>,<span class="hljs-string">&#x27;oblique&#x27;</span>,<span class="hljs-string">&#x27;small-caps&#x27;</span>,<span class="hljs-string">&#x27;normal&#x27;</span>,<span class="hljs-string">&#x27;bold&#x27;</span>,<span class="hljs-string">&#x27;lighter&#x27;</span>,<span class="hljs-string">&#x27;bolder&#x27;</span>,<span class="hljs-string">&#x27;ultra-condensed&#x27;</span>,<span class="hljs-string">&#x27;extra-condensed&#x27;</span>,<span class="hljs-string">&#x27;semi-condensed&#x27;</span>,<span class="hljs-string">&#x27;condensed&#x27;</span>,<span class="hljs-string">&#x27;ultra-expanded&#x27;</span>,<span class="hljs-string">&#x27;extra-expanded&#x27;</span>,<span class="hljs-string">&#x27;semi-expanded&#x27;</span>,<span class="hljs-string">&#x27;expanded&#x27;</span>,<span class="hljs-string">&#x27;xx-small&#x27;</span>,<span class="hljs-string">&#x27;x-small&#x27;</span>,<span class="hljs-string">&#x27;small&#x27;</span>,<span class="hljs-string">&#x27;medium&#x27;</span>,<span class="hljs-string">&#x27;xxx-large&#x27;</span>,<span class="hljs-string">&#x27;xx-large&#x27;</span>,<span class="hljs-string">&#x27;x-large&#x27;</span>,<span class="hljs-string">&#x27;large&#x27;</span>];
+P.<span class="hljs-property">rfsTestArray2</span> = [<span class="hljs-string">&#x27;0&#x27;</span>,<span class="hljs-string">&#x27;1&#x27;</span>,<span class="hljs-string">&#x27;2&#x27;</span>,<span class="hljs-string">&#x27;3&#x27;</span>,<span class="hljs-string">&#x27;4&#x27;</span>,<span class="hljs-string">&#x27;5&#x27;</span>,<span class="hljs-string">&#x27;6&#x27;</span>,<span class="hljs-string">&#x27;7&#x27;</span>,<span class="hljs-string">&#x27;8&#x27;</span>,<span class="hljs-string">&#x27;9&#x27;</span>];
+S.<span class="hljs-property">family</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (xt(item)) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(item)) {
 
         <span class="hljs-keyword">let</span> v = <span class="hljs-string">&#x27;sans-serif&#x27;</span>;
 
-        <span class="hljs-keyword">let</span> itemArray = item.split(<span class="hljs-string">&#x27; &#x27;</span>),
-            len = itemArray.length;
+        <span class="hljs-keyword">let</span> itemArray = item.<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27; &#x27;</span>),
+            len = itemArray.<span class="hljs-property">length</span>;
 
         <span class="hljs-keyword">if</span> (len === <span class="hljs-number">1</span>) v = item;
 
@@ -1168,18 +1178,18 @@ S.family = <span class="hljs-function"><span class="hljs-keyword">function</span
 
                 <span class="hljs-keyword">let</span> el = itemArray[counter];
 
-                <span class="hljs-keyword">if</span> (!el.length) counter++;
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.rfsTestArray1.indexOf(el) &gt;= <span class="hljs-number">0</span>) counter++;
-                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.rfsTestArray2.indexOf(el[<span class="hljs-number">0</span>]) &gt;= <span class="hljs-number">0</span>) counter++;
+                <span class="hljs-keyword">if</span> (!el.<span class="hljs-property">length</span>) counter++;
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">rfsTestArray1</span>.<span class="hljs-title function_">indexOf</span>(el) &gt;= <span class="hljs-number">0</span>) counter++;
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">rfsTestArray2</span>.<span class="hljs-title function_">indexOf</span>(el[<span class="hljs-number">0</span>]) &gt;= <span class="hljs-number">0</span>) counter++;
                 <span class="hljs-keyword">else</span> flag = <span class="hljs-literal">false</span>;
             }
         }
-        <span class="hljs-keyword">if</span> (counter &lt; len) v = itemArray.slice(counter).join(<span class="hljs-string">&#x27; &#x27;</span>);
+        <span class="hljs-keyword">if</span> (counter &lt; len) v = itemArray.<span class="hljs-title function_">slice</span>(counter).<span class="hljs-title function_">join</span>(<span class="hljs-string">&#x27; &#x27;</span>);
 
-        <span class="hljs-keyword">if</span> (v !== <span class="hljs-built_in">this</span>.family) {
+        <span class="hljs-keyword">if</span> (v !== <span class="hljs-variable language_">this</span>.<span class="hljs-property">family</span>) {
 
-            <span class="hljs-built_in">this</span>.family = v;
-            <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">family</span> = v;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFont</span> = <span class="hljs-literal">true</span>;
         }
     }
 };</pre></div></div>
@@ -1197,54 +1207,54 @@ S.family = <span class="hljs-function"><span class="hljs-keyword">function</span
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.getFontString = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getFontString</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>.dirtyFont &amp;&amp; <span class="hljs-built_in">this</span>.temperedFontString) <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.temperedFontString;
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.buildFont();
+    <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFont</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">temperedFontString</span>) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">temperedFontString</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildFont</span>();
 }
 
-P.updateMetadata = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">scale, lineHeight, host</span>) </span>{
+P.<span class="hljs-property">updateMetadata</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">scale, lineHeight, host</span>) {
 
-    <span class="hljs-keyword">if</span> (scale &amp;&amp; scale.toFixed &amp;&amp; scale &gt; <span class="hljs-number">0</span> &amp;&amp; scale !== <span class="hljs-built_in">this</span>.scale) {
+    <span class="hljs-keyword">if</span> (scale &amp;&amp; scale.<span class="hljs-property">toFixed</span> &amp;&amp; scale &gt; <span class="hljs-number">0</span> &amp;&amp; scale !== <span class="hljs-variable language_">this</span>.<span class="hljs-property">scale</span>) {
 
-        <span class="hljs-built_in">this</span>.scale = scale;
-        <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">scale</span> = scale;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFont</span> = <span class="hljs-literal">true</span>;
     }
 
-    <span class="hljs-keyword">if</span> (lineHeight &amp;&amp; lineHeight.toFixed &amp;&amp; lineHeight &gt; <span class="hljs-number">0</span> &amp;&amp; lineHeight !== <span class="hljs-built_in">this</span>.lineHeight) {
+    <span class="hljs-keyword">if</span> (lineHeight &amp;&amp; lineHeight.<span class="hljs-property">toFixed</span> &amp;&amp; lineHeight &gt; <span class="hljs-number">0</span> &amp;&amp; lineHeight !== <span class="hljs-variable language_">this</span>.<span class="hljs-property">lineHeight</span>) {
 
-        <span class="hljs-built_in">this</span>.lineHeight = lineHeight;
-        <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">lineHeight</span> = lineHeight;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFont</span> = <span class="hljs-literal">true</span>;
     }
     
-    <span class="hljs-keyword">let</span> currentHost = (<span class="hljs-built_in">this</span>.host &amp;&amp; <span class="hljs-built_in">this</span>.host.type &amp;&amp; <span class="hljs-built_in">this</span>.host.type === <span class="hljs-string">&#x27;Cell&#x27;</span>) ? <span class="hljs-built_in">this</span>.host.name : <span class="hljs-string">&#x27;&#x27;</span>;
-    <span class="hljs-keyword">if</span> (host &amp;&amp; host.type &amp;&amp; host.type === <span class="hljs-string">&#x27;Cell&#x27;</span> &amp;&amp; host.name !== currentHost) {
+    <span class="hljs-keyword">let</span> currentHost = (<span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span>.<span class="hljs-property">type</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span>.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Cell&#x27;</span>) ? <span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span>.<span class="hljs-property">name</span> : <span class="hljs-string">&#x27;&#x27;</span>;
+    <span class="hljs-keyword">if</span> (host &amp;&amp; host.<span class="hljs-property">type</span> &amp;&amp; host.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Cell&#x27;</span> &amp;&amp; host.<span class="hljs-property">name</span> !== currentHost) {
 
-        <span class="hljs-built_in">this</span>.host = host;
-        <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span> = host;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFont</span> = <span class="hljs-literal">true</span>;
     }
 };
 
-P.calculateSize = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+P.<span class="hljs-property">calculateSize</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.host) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span>) {
 
-        <span class="hljs-keyword">let</span> {scale, lineHeight, host, sizeValue, sizeMetric} = <span class="hljs-built_in">this</span>;
+        <span class="hljs-keyword">let</span> {scale, lineHeight, host, sizeValue, sizeMetric} = <span class="hljs-variable language_">this</span>;
 
-        <span class="hljs-keyword">let</span> gcfs = host.getComputedFontSizes(),
+        <span class="hljs-keyword">let</span> gcfs = host.<span class="hljs-title function_">getComputedFontSizes</span>(),
             parentSize, rootSize, viewportWidth, viewportHeight;
 
         <span class="hljs-keyword">if</span> (!gcfs) {
 
-            <span class="hljs-keyword">if</span> ([<span class="hljs-string">&#x27;in&#x27;</span>, <span class="hljs-string">&#x27;cm&#x27;</span>, <span class="hljs-string">&#x27;mm&#x27;</span>, <span class="hljs-string">&#x27;Q&#x27;</span>, <span class="hljs-string">&#x27;pc&#x27;</span>, <span class="hljs-string">&#x27;pt&#x27;</span>, <span class="hljs-string">&#x27;px&#x27;</span>].indexOf(sizeMetric) &lt; <span class="hljs-number">0</span>) {
+            <span class="hljs-keyword">if</span> ([<span class="hljs-string">&#x27;in&#x27;</span>, <span class="hljs-string">&#x27;cm&#x27;</span>, <span class="hljs-string">&#x27;mm&#x27;</span>, <span class="hljs-string">&#x27;Q&#x27;</span>, <span class="hljs-string">&#x27;pc&#x27;</span>, <span class="hljs-string">&#x27;pt&#x27;</span>, <span class="hljs-string">&#x27;px&#x27;</span>].<span class="hljs-title function_">indexOf</span>(sizeMetric) &lt; <span class="hljs-number">0</span>) {
 
-                <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">true</span>;
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFont</span> = <span class="hljs-literal">true</span>;
                 <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;12px&#x27;</span>;
             }
         }
         <span class="hljs-keyword">else</span> {
 
-            [parentSize, rootSize, viewportWidth, viewportHeight] = host.getComputedFontSizes();
+            [parentSize, rootSize, viewportWidth, viewportHeight] = host.<span class="hljs-title function_">getComputedFontSizes</span>();
         }
 
         <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(sizeValue)) sizeValue = <span class="hljs-number">12</span>;
@@ -1298,11 +1308,11 @@ P.calculateSize = <span class="hljs-function"><span class="hljs-keyword">functio
                 <span class="hljs-keyword">break</span>;
 
             <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;vmax&#x27;</span> :
-                res = (<span class="hljs-built_in">Math</span>.max(viewportWidth, viewportHeight) / <span class="hljs-number">100</span>) * sizeValue;
+                res = (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(viewportWidth, viewportHeight) / <span class="hljs-number">100</span>) * sizeValue;
                 <span class="hljs-keyword">break</span>;
 
             <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;vmin&#x27;</span> :
-                res = (<span class="hljs-built_in">Math</span>.min(viewportWidth, viewportHeight) / <span class="hljs-number">100</span>) * sizeValue;
+                res = (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">min</span>(viewportWidth, viewportHeight) / <span class="hljs-number">100</span>) * sizeValue;
                 <span class="hljs-keyword">break</span>;
 
             <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;vi&#x27;</span> :
@@ -1398,20 +1408,20 @@ P.calculateSize = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.buildFont = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">buildFont</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-built_in">this</span>.dirtyFont = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFont</span> = <span class="hljs-literal">false</span>;
 
     <span class="hljs-keyword">let</span> font = <span class="hljs-string">&#x27;&#x27;</span>
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.style !== <span class="hljs-string">&#x27;normal&#x27;</span>) font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.style}</span> `</span>;
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.variant !== <span class="hljs-string">&#x27;normal&#x27;</span>) font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.variant}</span> `</span>;
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.weight !== <span class="hljs-string">&#x27;normal&#x27;</span>) font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.weight}</span> `</span>;
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.stretch !== <span class="hljs-string">&#x27;normal&#x27;</span>) font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.stretch}</span> `</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">style</span> !== <span class="hljs-string">&#x27;normal&#x27;</span>) font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.style}</span> `</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">variant</span> !== <span class="hljs-string">&#x27;normal&#x27;</span>) font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.variant}</span> `</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">weight</span> !== <span class="hljs-string">&#x27;normal&#x27;</span>) font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.weight}</span> `</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">stretch</span> !== <span class="hljs-string">&#x27;normal&#x27;</span>) font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.stretch}</span> `</span>;
 
-    font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.calculateSize()}</span> `</span>;
+    font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.calculateSize()}</span> `</span>;
 
-    font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-built_in">this</span>.family}</span>`</span>;</pre></div></div>
+    font += <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.family}</span>`</span>;</pre></div></div>
             
         </li>
         
@@ -1426,12 +1436,12 @@ P.calculateSize = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> myCell = requestCell();
-    myCell.engine.font = font;
-    font = myCell.engine.font;
-    releaseCell(myCell);
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> myCell = <span class="hljs-title function_">requestCell</span>();
+    myCell.<span class="hljs-property">engine</span>.<span class="hljs-property">font</span> = font;
+    font = myCell.<span class="hljs-property">engine</span>.<span class="hljs-property">font</span>;
+    <span class="hljs-title function_">releaseCell</span>(myCell);
 
-    <span class="hljs-built_in">this</span>.temperedFontString = font;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">temperedFontString</span> = font;
 
     <span class="hljs-keyword">return</span> font;
 };</pre></div></div>
@@ -1449,10 +1459,10 @@ P.calculateSize = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.update = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">update</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
-    <span class="hljs-keyword">if</span> (items) <span class="hljs-built_in">this</span>.set(items);
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.getFontString();
+    <span class="hljs-keyword">if</span> (items) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>(items);
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getFontString</span>();
 };</pre></div></div>
             
         </li>
@@ -1468,13 +1478,13 @@ P.calculateSize = <span class="hljs-function"><span class="hljs-keyword">functio
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeFontAttributes = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeFontAttributes = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> FontAttributes(items);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">FontAttributes</span>(items);
 };
 
-<span class="hljs-title">constructors</span>.<span class="hljs-title">FontAttributes</span> = <span class="hljs-title">FontAttributes</span>;</pre></div></div>
+constructors.<span class="hljs-property">FontAttributes</span> = <span class="hljs-title class_">FontAttributes</span>;</pre></div></div>
             
         </li>
         

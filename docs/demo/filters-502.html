@@ -280,6 +280,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-051.html">
+                  ./demo/canvas-051.js
+                </a>
+              
+                
                 <a class="source" href="core-001.html">
                   ./demo/core-001.js
                 </a>
@@ -644,6 +649,16 @@
                   ./demo/temp-inkscapeSvgFilters.js
                 </a>
               
+                
+                <a class="source" href="tensorflow-001.html">
+                  ./demo/tensorflow-001.js
+                </a>
+              
+                
+                <a class="source" href="tensorflow-002.html">
+                  ./demo/tensorflow-002.js
+                </a>
+              
             </div>
           </div>
         </li>
@@ -692,9 +707,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.library.canvas.mycanvas;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
 
-scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</pre></div></div>
+scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -709,7 +724,7 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</p
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> piccy = scrawl.makePicture({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> piccy = scrawl.<span class="hljs-title function_">makePicture</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;base-piccy&#x27;</span>,
 
@@ -737,8 +752,8 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</p
               </div>
               <h4 id="svg-filter">SVG filter</h4>
 <p>We create the filter in the HTML script, not here:</p>
-<pre><code>&lt;svg xmlns=<span class="hljs-string">&quot;http://www.w3.org/2000/svg&quot;</span> xmlns:xlink=<span class="hljs-string">&quot;http://www.w3.org/1999/xlink&quot;</span>&gt;
-  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">filter</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;svg-blur&quot;</span>&gt;</span>
+<pre><code>&lt;svg xmlns=<span class="hljs-string">&quot;http://www.w3.org/2000/svg&quot;</span> <span class="hljs-attr">xmlns</span>:xlink=<span class="hljs-string">&quot;http://www.w3.org/1999/xlink&quot;</span>&gt;
+  <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">filter</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;svg-blur&quot;</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">feGaussianBlur</span> <span class="hljs-attr">in</span>=<span class="hljs-string">&quot;SourceGraphic&quot;</span> <span class="hljs-attr">stdDeviation</span>=<span class="hljs-string">&quot;5&quot;</span> <span class="hljs-attr">edgeMode</span>=<span class="hljs-string">&quot;duplicate&quot;</span> /&gt;</span>
   <span class="hljs-tag">&lt;/<span class="hljs-name">filter</span>&gt;</span></span>
 &lt;/svg&gt;
@@ -746,7 +761,7 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</p
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> feGaussianBlur = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;feGaussianBlur&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> feGaussianBlur = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;feGaussianBlur&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -762,19 +777,19 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</p
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
 
 &lt;filter id=&quot;svg-blur&quot;&gt;
   &lt;feGaussianBlur in=&quot;SourceGraphic&quot; stdDeviation=&quot;<span class="hljs-subst">${feGaussianBlur.getAttribute(<span class="hljs-string">&#x27;stdDeviation&#x27;</span>)}</span>&quot; edgeMode=&quot;<span class="hljs-subst">${feGaussianBlur.getAttribute(<span class="hljs-string">&#x27;edgeMode&#x27;</span>)}</span>&quot; /&gt;
@@ -795,7 +810,7 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</p
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> demoAnimation = scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-animation&quot;</span>,
     <span class="hljs-attr">target</span>: canvas,
@@ -816,26 +831,26 @@ scrawl.importDomImage(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</p
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> updateStdDeviation = <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> <span class="hljs-title function_">updateStdDeviation</span> = (<span class="hljs-params">e</span>) =&gt; {
 
-    e.preventDefault();
-    e.returnValue = <span class="hljs-literal">false</span>;
+    e.<span class="hljs-title function_">preventDefault</span>();
+    e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
 
-    feGaussianBlur.setAttribute(<span class="hljs-string">&#x27;stdDeviation&#x27;</span>, <span class="hljs-built_in">parseFloat</span>(e.target.value));
+    feGaussianBlur.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;stdDeviation&#x27;</span>, <span class="hljs-built_in">parseFloat</span>(e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>));
 };
-scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updateStdDeviation, <span class="hljs-string">&#x27;#stdDeviation&#x27;</span>);
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updateStdDeviation, <span class="hljs-string">&#x27;#stdDeviation&#x27;</span>);
 
-<span class="hljs-keyword">let</span> updateEdgeMode = <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+<span class="hljs-keyword">let</span> <span class="hljs-title function_">updateEdgeMode</span> = (<span class="hljs-params">e</span>) =&gt; {
 
-    e.preventDefault();
-    e.returnValue = <span class="hljs-literal">false</span>;
+    e.<span class="hljs-title function_">preventDefault</span>();
+    e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
 
-    feGaussianBlur.setAttribute(<span class="hljs-string">`edgeMode`</span>, e.target.value);
+    feGaussianBlur.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">`edgeMode`</span>, e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>);
 };
-scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updateEdgeMode, <span class="hljs-string">&#x27;#edgeMode&#x27;</span>);
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], updateEdgeMode, <span class="hljs-string">&#x27;#edgeMode&#x27;</span>);
 
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#stdDeviation&#x27;</span>).value = <span class="hljs-number">5</span>;
-<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#edgeMode&#x27;</span>).options.selectedIndex = <span class="hljs-number">0</span>;</pre></div></div>
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#stdDeviation&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">5</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#edgeMode&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
             
         </li>
         
@@ -850,7 +865,7 @@ scrawl.addNativeListener([<span class="hljs-string">&#x27;input&#x27;</span>, <s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

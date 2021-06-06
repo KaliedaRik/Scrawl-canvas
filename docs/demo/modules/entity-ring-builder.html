@@ -179,40 +179,40 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">items = {}</span>) {
 
-    <span class="hljs-keyword">if</span> (!items.canvas || !items.entity || !items.name) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">if</span> (!items.<span class="hljs-property">canvas</span> || !items.<span class="hljs-property">entity</span> || !items.<span class="hljs-property">name</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> canvas = items.canvas,
-        name = items.name,
-        entity = items.entity,
-        dimensions = items.dimensions || <span class="hljs-number">400</span>,
-        buildStartAngle = items.buildStartAngle || -<span class="hljs-number">45</span>,
-        buildEndAngle = items.buildEndAngle || <span class="hljs-number">225</span>,
-        buildStepAngle = items.buildStepAngle || <span class="hljs-number">15</span>,
-        buildOffset = items.buildOffset || <span class="hljs-number">0</span>,
-        reflectOnly = items.reflectOnly || <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">let</span> canvas = items.<span class="hljs-property">canvas</span>,
+        name = items.<span class="hljs-property">name</span>,
+        entity = items.<span class="hljs-property">entity</span>,
+        dimensions = items.<span class="hljs-property">dimensions</span> || <span class="hljs-number">400</span>,
+        buildStartAngle = items.<span class="hljs-property">buildStartAngle</span> || -<span class="hljs-number">45</span>,
+        buildEndAngle = items.<span class="hljs-property">buildEndAngle</span> || <span class="hljs-number">225</span>,
+        buildStepAngle = items.<span class="hljs-property">buildStepAngle</span> || <span class="hljs-number">15</span>,
+        buildOffset = items.<span class="hljs-property">buildOffset</span> || <span class="hljs-number">0</span>,
+        reflectOnly = items.<span class="hljs-property">reflectOnly</span> || <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">const</span> cell = canvas.buildCell({
+    <span class="hljs-keyword">const</span> cell = canvas.<span class="hljs-title function_">buildCell</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-cell`</span>,
         <span class="hljs-attr">dimensions</span>: [dimensions, dimensions],
         <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span>,
         <span class="hljs-attr">compileOrder</span>: <span class="hljs-number">0</span>,
     });
 
-    <span class="hljs-keyword">const</span> clip = scrawl.makeGroup({
+    <span class="hljs-keyword">const</span> clip = scrawl.<span class="hljs-title function_">makeGroup</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-clip-group`</span>,
         <span class="hljs-attr">host</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-cell`</span>,
         <span class="hljs-attr">order</span>: <span class="hljs-number">0</span>,
     });
 
-    <span class="hljs-keyword">const</span> reflect = scrawl.makeGroup({
+    <span class="hljs-keyword">const</span> reflect = scrawl.<span class="hljs-title function_">makeGroup</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-reflect-group`</span>,
         <span class="hljs-attr">host</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-cell`</span>,
         <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
     });
 
-    scrawl.makeBlock({
+    scrawl.<span class="hljs-title function_">makeBlock</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-clipper`</span>,
         <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-clip-group`</span>,
         <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;left&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
@@ -220,24 +220,24 @@
         <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;clip&#x27;</span>
     });
 
-    <span class="hljs-keyword">let</span> v = scrawl.requestVector(<span class="hljs-number">0</span>, buildOffset);
-    v.rotate(buildStartAngle);
+    <span class="hljs-keyword">let</span> v = scrawl.<span class="hljs-title function_">requestVector</span>(<span class="hljs-number">0</span>, buildOffset);
+    v.<span class="hljs-title function_">rotate</span>(buildStartAngle);
 
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = buildStartAngle; i &lt;= buildEndAngle; i += buildStepAngle) {
 
-        entity.clone({
+        entity.<span class="hljs-title function_">clone</span>({
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-ringitem-<span class="hljs-subst">${i}</span>`</span>,
             <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-clip-group`</span>,
             <span class="hljs-attr">roll</span>: i,
-            <span class="hljs-attr">offset</span>: [v.x, v.y],
+            <span class="hljs-attr">offset</span>: [v.<span class="hljs-property">x</span>, v.<span class="hljs-property">y</span>],
         });
 
-        v.rotate(buildStepAngle);
+        v.<span class="hljs-title function_">rotate</span>(buildStepAngle);
     }
 
-    scrawl.releaseVector(v);
+    scrawl.<span class="hljs-title function_">releaseVector</span>(v);
 
-    scrawl.makePicture({
+    scrawl.<span class="hljs-title function_">makePicture</span>({
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-reflection`</span>,
         <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-reflect-group`</span>,
         <span class="hljs-attr">asset</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-cell`</span>,
@@ -254,7 +254,7 @@
         <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
     });
 
-    entity.set({
+    entity.<span class="hljs-title function_">set</span>({
         <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
     });
 
@@ -262,9 +262,9 @@
         cell,
         <span class="hljs-attr">kill</span>: <span class="hljs-function">() =&gt;</span> {
 
-            clip.kill(<span class="hljs-literal">true</span>);
-            reflect.kill(<span class="hljs-literal">true</span>);
-            cell.kill();
+            clip.<span class="hljs-title function_">kill</span>(<span class="hljs-literal">true</span>);
+            reflect.<span class="hljs-title function_">kill</span>(<span class="hljs-literal">true</span>);
+            cell.<span class="hljs-title function_">kill</span>();
         },
     }
 };</pre></div></div>

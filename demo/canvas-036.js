@@ -16,7 +16,7 @@ canvas.set({
     checkForResize: true,
 
     // Cascade changes in the Canvas dimensions down to its base Cell
-    isComponent: true,
+    baseMatchesCanvasDimensions: true,
 });
 
 
@@ -372,7 +372,10 @@ let report = function () {
 Canvas dimensions: ${canvas.currentDimensions}
 Base dimensions: ${canvas.base.currentDimensions}
 Cell 1 dimensions: ${cell1.currentDimensions}
-Cell 2 dimensions: ${cell2.currentDimensions}`;
+Cell 2 dimensions: ${cell2.currentDimensions}
+Cell 3 dimensions: ${cell3.currentDimensions}
+Cell 4 dimensions: ${cell4.currentDimensions}
+Cell 5 dimensions: ${cell5.currentDimensions}`;
     };
 }();
 

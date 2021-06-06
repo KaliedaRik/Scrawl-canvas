@@ -280,6 +280,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-051.html">
+                  ./demo/canvas-051.js
+                </a>
+              
+                
                 <a class="source" href="core-001.html">
                   ./demo/core-001.js
                 </a>
@@ -644,6 +649,16 @@
                   ./demo/temp-inkscapeSvgFilters.js
                 </a>
               
+                
+                <a class="source" href="tensorflow-001.html">
+                  ./demo/tensorflow-001.js
+                </a>
+              
+                
+                <a class="source" href="tensorflow-002.html">
+                  ./demo/tensorflow-002.js
+                </a>
+              
             </div>
           </div>
         </li>
@@ -692,10 +707,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> artefact = scrawl.library.artefact,
-    stack = artefact.mystack;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> artefact = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>,
+    stack = artefact.<span class="hljs-property">mystack</span>;
 
-stack.set({
+stack.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">width</span>: <span class="hljs-number">600</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-number">600</span>,
 });</pre></div></div>
@@ -713,10 +728,10 @@ stack.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> circleGroup = scrawl.makeGroup({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> circleGroup = scrawl.<span class="hljs-title function_">makeGroup</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;circles&#x27;</span>,
     <span class="hljs-attr">host</span>: <span class="hljs-string">&#x27;mystack&#x27;</span>,
-}).moveArtefactsIntoGroup(<span class="hljs-string">&#x27;f_0&#x27;</span>, <span class="hljs-string">&#x27;f_1&#x27;</span>, <span class="hljs-string">&#x27;f_2&#x27;</span>, <span class="hljs-string">&#x27;f_3&#x27;</span>, <span class="hljs-string">&#x27;f_4&#x27;</span>, <span class="hljs-string">&#x27;f_5&#x27;</span>, <span class="hljs-string">&#x27;f_6&#x27;</span>, <span class="hljs-string">&#x27;f_7&#x27;</span>, <span class="hljs-string">&#x27;f_8&#x27;</span>, <span class="hljs-string">&#x27;f_9&#x27;</span>, <span class="hljs-string">&#x27;f_10&#x27;</span>, <span class="hljs-string">&#x27;f_11&#x27;</span>, <span class="hljs-string">&#x27;f_12&#x27;</span>, <span class="hljs-string">&#x27;f_13&#x27;</span>, <span class="hljs-string">&#x27;f_14&#x27;</span>, <span class="hljs-string">&#x27;f_15&#x27;</span>, <span class="hljs-string">&#x27;f_16&#x27;</span>, <span class="hljs-string">&#x27;f_17&#x27;</span>, <span class="hljs-string">&#x27;f_18&#x27;</span>, <span class="hljs-string">&#x27;f_19&#x27;</span>, <span class="hljs-string">&#x27;f_20&#x27;</span>, <span class="hljs-string">&#x27;f_21&#x27;</span>, <span class="hljs-string">&#x27;f_22&#x27;</span>, <span class="hljs-string">&#x27;f_23&#x27;</span>, <span class="hljs-string">&#x27;f_24&#x27;</span>, <span class="hljs-string">&#x27;f_25&#x27;</span>, <span class="hljs-string">&#x27;f_26&#x27;</span>, <span class="hljs-string">&#x27;f_27&#x27;</span>, <span class="hljs-string">&#x27;f_28&#x27;</span>, <span class="hljs-string">&#x27;f_29&#x27;</span>, <span class="hljs-string">&#x27;f_30&#x27;</span>, <span class="hljs-string">&#x27;f_31&#x27;</span>, <span class="hljs-string">&#x27;f_32&#x27;</span>, <span class="hljs-string">&#x27;f_33&#x27;</span>, <span class="hljs-string">&#x27;f_34&#x27;</span>, <span class="hljs-string">&#x27;f_35&#x27;</span>, <span class="hljs-string">&#x27;f_36&#x27;</span>, <span class="hljs-string">&#x27;f_37&#x27;</span>, <span class="hljs-string">&#x27;f_38&#x27;</span>, <span class="hljs-string">&#x27;f_39&#x27;</span>, <span class="hljs-string">&#x27;f_40&#x27;</span>, <span class="hljs-string">&#x27;f_41&#x27;</span>, <span class="hljs-string">&#x27;f_42&#x27;</span>, <span class="hljs-string">&#x27;f_43&#x27;</span>, <span class="hljs-string">&#x27;f_44&#x27;</span>, <span class="hljs-string">&#x27;f_45&#x27;</span>, <span class="hljs-string">&#x27;f_46&#x27;</span>, <span class="hljs-string">&#x27;f_47&#x27;</span>, <span class="hljs-string">&#x27;f_48&#x27;</span>, <span class="hljs-string">&#x27;f_49&#x27;</span>);</pre></div></div>
+}).<span class="hljs-title function_">moveArtefactsIntoGroup</span>(<span class="hljs-string">&#x27;f_0&#x27;</span>, <span class="hljs-string">&#x27;f_1&#x27;</span>, <span class="hljs-string">&#x27;f_2&#x27;</span>, <span class="hljs-string">&#x27;f_3&#x27;</span>, <span class="hljs-string">&#x27;f_4&#x27;</span>, <span class="hljs-string">&#x27;f_5&#x27;</span>, <span class="hljs-string">&#x27;f_6&#x27;</span>, <span class="hljs-string">&#x27;f_7&#x27;</span>, <span class="hljs-string">&#x27;f_8&#x27;</span>, <span class="hljs-string">&#x27;f_9&#x27;</span>, <span class="hljs-string">&#x27;f_10&#x27;</span>, <span class="hljs-string">&#x27;f_11&#x27;</span>, <span class="hljs-string">&#x27;f_12&#x27;</span>, <span class="hljs-string">&#x27;f_13&#x27;</span>, <span class="hljs-string">&#x27;f_14&#x27;</span>, <span class="hljs-string">&#x27;f_15&#x27;</span>, <span class="hljs-string">&#x27;f_16&#x27;</span>, <span class="hljs-string">&#x27;f_17&#x27;</span>, <span class="hljs-string">&#x27;f_18&#x27;</span>, <span class="hljs-string">&#x27;f_19&#x27;</span>, <span class="hljs-string">&#x27;f_20&#x27;</span>, <span class="hljs-string">&#x27;f_21&#x27;</span>, <span class="hljs-string">&#x27;f_22&#x27;</span>, <span class="hljs-string">&#x27;f_23&#x27;</span>, <span class="hljs-string">&#x27;f_24&#x27;</span>, <span class="hljs-string">&#x27;f_25&#x27;</span>, <span class="hljs-string">&#x27;f_26&#x27;</span>, <span class="hljs-string">&#x27;f_27&#x27;</span>, <span class="hljs-string">&#x27;f_28&#x27;</span>, <span class="hljs-string">&#x27;f_29&#x27;</span>, <span class="hljs-string">&#x27;f_30&#x27;</span>, <span class="hljs-string">&#x27;f_31&#x27;</span>, <span class="hljs-string">&#x27;f_32&#x27;</span>, <span class="hljs-string">&#x27;f_33&#x27;</span>, <span class="hljs-string">&#x27;f_34&#x27;</span>, <span class="hljs-string">&#x27;f_35&#x27;</span>, <span class="hljs-string">&#x27;f_36&#x27;</span>, <span class="hljs-string">&#x27;f_37&#x27;</span>, <span class="hljs-string">&#x27;f_38&#x27;</span>, <span class="hljs-string">&#x27;f_39&#x27;</span>, <span class="hljs-string">&#x27;f_40&#x27;</span>, <span class="hljs-string">&#x27;f_41&#x27;</span>, <span class="hljs-string">&#x27;f_42&#x27;</span>, <span class="hljs-string">&#x27;f_43&#x27;</span>, <span class="hljs-string">&#x27;f_44&#x27;</span>, <span class="hljs-string">&#x27;f_45&#x27;</span>, <span class="hljs-string">&#x27;f_46&#x27;</span>, <span class="hljs-string">&#x27;f_47&#x27;</span>, <span class="hljs-string">&#x27;f_48&#x27;</span>, <span class="hljs-string">&#x27;f_49&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -731,7 +746,7 @@ stack.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> getRandom = <span class="hljs-function">(<span class="hljs-params">n</span>) =&gt;</span> <span class="hljs-built_in">Math</span>.round(<span class="hljs-built_in">Math</span>.random() * n);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> <span class="hljs-title function_">getRandom</span> = (<span class="hljs-params">n</span>) =&gt; <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() * n);</pre></div></div>
             
         </li>
         
@@ -746,37 +761,37 @@ stack.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> colorFactory = scrawl.makeColor({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> colorFactory = scrawl.<span class="hljs-title function_">makeColor</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myColorObject&#x27;</span>,
     <span class="hljs-attr">rMax</span>: <span class="hljs-number">200</span>,
     <span class="hljs-attr">gMax</span>: <span class="hljs-number">50</span>,
     <span class="hljs-attr">bMax</span>: <span class="hljs-number">10</span>,
 });
 
-circleGroup.artefacts.forEach(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
+circleGroup.<span class="hljs-property">artefacts</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">name</span> =&gt;</span> {
 
-    <span class="hljs-keyword">let</span> d = getRandom(<span class="hljs-number">50</span>) + <span class="hljs-number">50</span>;
+    <span class="hljs-keyword">let</span> d = <span class="hljs-title function_">getRandom</span>(<span class="hljs-number">50</span>) + <span class="hljs-number">50</span>;
 
     <span class="hljs-keyword">let</span> art = artefact[name];
 
-    art.set({
+    art.<span class="hljs-title function_">set</span>({
         <span class="hljs-attr">width</span>: d,
         <span class="hljs-attr">height</span>: d,
 
         <span class="hljs-attr">startX</span>: <span class="hljs-string">`<span class="hljs-subst">${getRandom(<span class="hljs-number">20</span>) + <span class="hljs-number">40</span>}</span>%`</span>,
         <span class="hljs-attr">startY</span>: <span class="hljs-string">`<span class="hljs-subst">${getRandom(<span class="hljs-number">20</span>) + <span class="hljs-number">40</span>}</span>%`</span>,
-        <span class="hljs-attr">handleX</span>: getRandom(<span class="hljs-number">500</span>) - <span class="hljs-number">250</span>,
-        <span class="hljs-attr">handleY</span>: getRandom(<span class="hljs-number">500</span>) - <span class="hljs-number">250</span>,
+        <span class="hljs-attr">handleX</span>: <span class="hljs-title function_">getRandom</span>(<span class="hljs-number">500</span>) - <span class="hljs-number">250</span>,
+        <span class="hljs-attr">handleY</span>: <span class="hljs-title function_">getRandom</span>(<span class="hljs-number">500</span>) - <span class="hljs-number">250</span>,
 
-        <span class="hljs-attr">roll</span>: getRandom(<span class="hljs-number">360</span>),
+        <span class="hljs-attr">roll</span>: <span class="hljs-title function_">getRandom</span>(<span class="hljs-number">360</span>),
         <span class="hljs-attr">collides</span>: <span class="hljs-literal">true</span>,
 
         <span class="hljs-attr">delta</span>: {
-            <span class="hljs-attr">roll</span>: (getRandom(<span class="hljs-number">5</span>) / <span class="hljs-number">20</span>) + <span class="hljs-number">0.15</span>
+            <span class="hljs-attr">roll</span>: (<span class="hljs-title function_">getRandom</span>(<span class="hljs-number">5</span>) / <span class="hljs-number">20</span>) + <span class="hljs-number">0.15</span>
         },
 
         <span class="hljs-attr">css</span>: {
-            <span class="hljs-attr">backgroundColor</span>: colorFactory.get(<span class="hljs-string">&#x27;random&#x27;</span>),
+            <span class="hljs-attr">backgroundColor</span>: colorFactory.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;random&#x27;</span>),
             <span class="hljs-attr">border</span>: <span class="hljs-string">&#x27;1px solid black&#x27;</span>,
         }
     });
@@ -795,7 +810,7 @@ circleGroup.artefacts.forEach(<span class="hljs-function"><span class="hljs-para
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(circleGroup.saveAsPacket());</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(circleGroup.<span class="hljs-title function_">saveAsPacket</span>());</pre></div></div>
             
         </li>
         
@@ -806,7 +821,7 @@ circleGroup.artefacts.forEach(<span class="hljs-function"><span class="hljs-para
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <pre><code>RESULTS:
+              <pre><code><span class="hljs-attr">RESULTS</span>:
 [
     <span class="hljs-string">&quot;circles&quot;</span>,
     <span class="hljs-string">&quot;Group&quot;</span>,
@@ -834,11 +849,11 @@ circleGroup.artefacts.forEach(<span class="hljs-function"><span class="hljs-para
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> buttonGroup = circleGroup.clone({
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> buttonGroup = circleGroup.<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;buttons&#x27;</span>,
-}).clearArtefacts().moveArtefactsIntoGroup(<span class="hljs-string">&#x27;start_animation&#x27;</span>, <span class="hljs-string">&#x27;stop_animation&#x27;</span>, <span class="hljs-string">&#x27;start_listeners&#x27;</span>, <span class="hljs-string">&#x27;stop_listeners&#x27;</span>);
+}).<span class="hljs-title function_">clearArtefacts</span>().<span class="hljs-title function_">moveArtefactsIntoGroup</span>(<span class="hljs-string">&#x27;start_animation&#x27;</span>, <span class="hljs-string">&#x27;stop_animation&#x27;</span>, <span class="hljs-string">&#x27;start_listeners&#x27;</span>, <span class="hljs-string">&#x27;stop_listeners&#x27;</span>);
 
-<span class="hljs-built_in">console</span>.log(buttonGroup.saveAsPacket());</pre></div></div>
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(buttonGroup.<span class="hljs-title function_">saveAsPacket</span>());</pre></div></div>
             
         </li>
         
@@ -849,7 +864,7 @@ circleGroup.artefacts.forEach(<span class="hljs-function"><span class="hljs-para
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <pre><code>RESULTS:
+              <pre><code><span class="hljs-attr">RESULTS</span>:
 [
     <span class="hljs-string">&quot;buttons&quot;</span>,
     <span class="hljs-string">&quot;Group&quot;</span>,
@@ -877,7 +892,7 @@ circleGroup.artefacts.forEach(<span class="hljs-function"><span class="hljs-para
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>buttonGroup.setArtefacts({
+            <div class="content"><div class='highlight'><pre>buttonGroup.<span class="hljs-title function_">setArtefacts</span>({
     <span class="hljs-attr">width</span>: <span class="hljs-number">240</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-number">28</span>,
     <span class="hljs-attr">css</span>: {
@@ -888,19 +903,19 @@ circleGroup.artefacts.forEach(<span class="hljs-function"><span class="hljs-para
     },
 });
 
-artefact.start_animation.set({
+artefact.<span class="hljs-property">start_animation</span>.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">startY</span>: <span class="hljs-number">0</span>,
 });
-artefact.stop_animation.set({
+artefact.<span class="hljs-property">stop_animation</span>.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">startY</span>: <span class="hljs-number">30</span>,
     <span class="hljs-attr">domAttributes</span>: {
         <span class="hljs-attr">disabled</span>: <span class="hljs-string">&#x27;disabled&#x27;</span>,
     },
 });
-artefact.start_listeners.set({
+artefact.<span class="hljs-property">start_listeners</span>.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">startY</span>: <span class="hljs-number">60</span>,
 });
-artefact.stop_listeners.set({
+artefact.<span class="hljs-property">stop_listeners</span>.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">startY</span>: <span class="hljs-number">90</span>,
     <span class="hljs-attr">domAttributes</span>: {
         <span class="hljs-attr">disabled</span>: <span class="hljs-string">&#x27;disabled&#x27;</span>,
@@ -920,7 +935,7 @@ artefact.stop_listeners.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>stack.apply();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>stack.<span class="hljs-title function_">apply</span>();</pre></div></div>
             
         </li>
         
@@ -951,11 +966,11 @@ artefact.stop_listeners.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> reviewCircleClasses = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> reviewCircleClasses = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">let</span> firstRun = <span class="hljs-literal">true</span>;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{</pre></div></div>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
             
         </li>
         
@@ -972,7 +987,7 @@ artefact.stop_listeners.set({
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span>(firstRun){
             firstRun = <span class="hljs-literal">false</span>;
-            scrawl.stopCoreAnimationLoop();
+            scrawl.<span class="hljs-title function_">stopCoreAnimationLoop</span>();
         }</pre></div></div>
             
         </li>
@@ -988,7 +1003,7 @@ artefact.stop_listeners.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        circleGroup.removeArtefactClasses(<span class="hljs-string">&#x27;make_opaque&#x27;</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        circleGroup.<span class="hljs-title function_">removeArtefactClasses</span>(<span class="hljs-string">&#x27;make_opaque&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1003,7 +1018,7 @@ artefact.stop_listeners.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> targets = circleGroup.getAllArtefactsAt(stack.here);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> targets = circleGroup.<span class="hljs-title function_">getAllArtefactsAt</span>(stack.<span class="hljs-property">here</span>);</pre></div></div>
             
         </li>
         
@@ -1018,25 +1033,25 @@ artefact.stop_listeners.set({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        targets.forEach(<span class="hljs-function"><span class="hljs-params">target</span> =&gt;</span> target.artefact.addClasses(<span class="hljs-string">&#x27;make_opaque&#x27;</span>));
-        targetsLength = targets.length;
+            <div class="content"><div class='highlight'><pre>        targets.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">target</span> =&gt;</span> target.<span class="hljs-property">artefact</span>.<span class="hljs-title function_">addClasses</span>(<span class="hljs-string">&#x27;make_opaque&#x27;</span>));
+        targetsLength = targets.<span class="hljs-property">length</span>;
     };
 }();
 
 
-<span class="hljs-keyword">let</span> report = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+<span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-built_in">Date</span>.now(),
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
         testTime, testNow, text,
-        testMessage = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        testNow = <span class="hljs-built_in">Date</span>.now();
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
+        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
 Hits: <span class="hljs-subst">${targetsLength}</span>`</span>;
     };
 }();</pre></div></div>
@@ -1054,7 +1069,7 @@ Hits: <span class="hljs-subst">${targetsLength}</span>`</span>;
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.makeRender({
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
     <span class="hljs-attr">target</span>: stack,
@@ -1076,13 +1091,13 @@ Hits: <span class="hljs-subst">${targetsLength}</span>`</span>;
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> buttonControls = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> buttonControls = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
     <span class="hljs-keyword">let</span> spinListener = <span class="hljs-literal">false</span>,
-        startAnimationButton = artefact.start_animation, 
-        stopAnimationButton = artefact.stop_animation, 
-        startListenersButton = artefact.start_listeners, 
-        stopListenersButton = artefact.stop_listeners;</pre></div></div>
+        startAnimationButton = artefact.<span class="hljs-property">start_animation</span>, 
+        stopAnimationButton = artefact.<span class="hljs-property">stop_animation</span>, 
+        startListenersButton = artefact.<span class="hljs-property">start_listeners</span>, 
+        stopListenersButton = artefact.<span class="hljs-property">stop_listeners</span>;</pre></div></div>
             
         </li>
         
@@ -1097,28 +1112,28 @@ Hits: <span class="hljs-subst">${targetsLength}</span>`</span>;
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> spin = <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> <span class="hljs-title function_">spin</span> = (<span class="hljs-params">e</span>) =&gt; {
 
-        e.preventDefault();
-        e.returnValue = <span class="hljs-literal">false</span>;
+        e.<span class="hljs-title function_">preventDefault</span>();
+        e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
 
-        <span class="hljs-keyword">if</span> (e.target.id == <span class="hljs-string">&#x27;mystack&#x27;</span>) {
+        <span class="hljs-keyword">if</span> (e.<span class="hljs-property">target</span>.<span class="hljs-property">id</span> == <span class="hljs-string">&#x27;mystack&#x27;</span>) {
 
-            circleGroup.setDeltaValues({
+            circleGroup.<span class="hljs-title function_">setDeltaValues</span>({
                 <span class="hljs-attr">roll</span>: <span class="hljs-string">&#x27;reverse&#x27;</span>
             });
         }
     };
 
-    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
 
-        e.preventDefault();
-        e.returnValue = <span class="hljs-literal">false</span>;
+        e.<span class="hljs-title function_">preventDefault</span>();
+        e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
 
-        <span class="hljs-keyword">switch</span> (e.target.id) {
+        <span class="hljs-keyword">switch</span> (e.<span class="hljs-property">target</span>.<span class="hljs-property">id</span>) {
 
             <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;start_animation&#x27;</span>:
-                scrawl.startCoreAnimationLoop();</pre></div></div>
+                scrawl.<span class="hljs-title function_">startCoreAnimationLoop</span>();</pre></div></div>
             
         </li>
         
@@ -1133,15 +1148,15 @@ Hits: <span class="hljs-subst">${targetsLength}</span>`</span>;
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                startAnimationButton.updateDomAttributes(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;disabled&#x27;</span>);
-                stopAnimationButton.updateDomAttributes(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
+            <div class="content"><div class='highlight'><pre>                startAnimationButton.<span class="hljs-title function_">updateDomAttributes</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;disabled&#x27;</span>);
+                stopAnimationButton.<span class="hljs-title function_">updateDomAttributes</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
                 <span class="hljs-keyword">break</span>;
 
             <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;stop_animation&#x27;</span>:
-                scrawl.stopCoreAnimationLoop();
+                scrawl.<span class="hljs-title function_">stopCoreAnimationLoop</span>();
 
-                startAnimationButton.updateDomAttributes(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-                stopAnimationButton.updateDomAttributes(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;disabled&#x27;</span>);
+                startAnimationButton.<span class="hljs-title function_">updateDomAttributes</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
+                stopAnimationButton.<span class="hljs-title function_">updateDomAttributes</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;disabled&#x27;</span>);
                 <span class="hljs-keyword">break</span>;
 
             <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;start_listeners&#x27;</span>:</pre></div></div>
@@ -1159,10 +1174,10 @@ Hits: <span class="hljs-subst">${targetsLength}</span>`</span>;
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                spinListener = scrawl.addListener(<span class="hljs-string">&#x27;up&#x27;</span>, spin, stack.domElement);
+            <div class="content"><div class='highlight'><pre>                spinListener = scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-string">&#x27;up&#x27;</span>, spin, stack.<span class="hljs-property">domElement</span>);
 
-                startListenersButton.updateDomAttributes(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;disabled&#x27;</span>);
-                stopListenersButton.updateDomAttributes(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
+                startListenersButton.<span class="hljs-title function_">updateDomAttributes</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;disabled&#x27;</span>);
+                stopListenersButton.<span class="hljs-title function_">updateDomAttributes</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
                 <span class="hljs-keyword">break</span>;
 
             <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;stop_listeners&#x27;</span>:</pre></div></div>
@@ -1180,17 +1195,17 @@ Hits: <span class="hljs-subst">${targetsLength}</span>`</span>;
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (spinListener) spinListener();
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (spinListener) <span class="hljs-title function_">spinListener</span>();
                 spinListener = <span class="hljs-literal">false</span>;
 
-                startListenersButton.updateDomAttributes(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
-                stopListenersButton.updateDomAttributes(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;disabled&#x27;</span>);
+                startListenersButton.<span class="hljs-title function_">updateDomAttributes</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>);
+                stopListenersButton.<span class="hljs-title function_">updateDomAttributes</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;disabled&#x27;</span>);
                 <span class="hljs-keyword">break</span>;
         }
     };
 }();
 
-scrawl.addListener(<span class="hljs-string">&#x27;up&#x27;</span>, buttonControls, <span class="hljs-string">&#x27;.controls&#x27;</span>);</pre></div></div>
+scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-string">&#x27;up&#x27;</span>, buttonControls, <span class="hljs-string">&#x27;.controls&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1205,7 +1220,7 @@ scrawl.addListener(<span class="hljs-string">&#x27;up&#x27;</span>, buttonContro
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">console</span>.log(scrawl.library);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
             
         </li>
         

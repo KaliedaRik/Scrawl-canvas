@@ -47,7 +47,7 @@
 // + [DOM-004](../../demo/dom-004.html) - Limitless rockets (clone and destroy elements, tweens, tickers)
 // + [DOM-005](../../demo/dom-005.html) - DOM tween stress test
 // + [DOM-006](../../demo/dom-006.html) - Tween actions on a DOM element; tracking tween and ticker activity (analytics)
-// + [Component-001](../../demo/component-001.html) - Scrawl-canvas DOM element components
+// + [Snippets-001](../../demo/snippets-001.html) - Scrawl-canvas DOM element snippets
 
 
 // #### Imports

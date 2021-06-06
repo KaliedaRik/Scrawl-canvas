@@ -39,7 +39,7 @@ canvas.set({
     height: frameDimension,
 
     checkForResize: true,
-    isComponent: true,
+    baseMatchesCanvasDimensions: true,
 
 }).setAsCurrentCanvas();
 

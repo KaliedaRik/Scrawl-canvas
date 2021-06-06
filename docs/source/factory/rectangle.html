@@ -165,6 +165,11 @@
                 </a>
               
                 
+                <a class="source" href="lineSpiral.html">
+                  ./source/factory/lineSpiral.js
+                </a>
+              
+                
                 <a class="source" href="loom.html">
                   ./source/factory/loom.js
                 </a>
@@ -257,6 +262,11 @@
                 
                 <a class="source" href="radialGradient.html">
                   ./source/factory/radialGradient.js
+                </a>
+              
+                
+                <a class="source" href="rawAsset.html">
+                  ./source/factory/rawAsset.js
                 </a>
               
                 
@@ -514,7 +524,7 @@
 <li><a href="../../demo/canvas-030.html">Canvas-030</a> - Polyline entity functionality</li>
 <li><a href="../../demo/canvas-038.html">Canvas-038</a> - Responsive Shape-based entitys</li>
 <li><a href="../../demo/dom-015.html">DOM-015</a> - Use stacked DOM artefact corners as pivot points</li>
-<li><a href="../../demo/component-004.html">Component-004</a> - Scrawl-canvas packets - save and load a range of different entitys</li>
+<li><a href="../../demo/packets-002.html">Packets-002</a> - Scrawl-canvas packets - save and load a range of different entitys</li>
 </ul>
 
             </div>
@@ -532,7 +542,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { <span class="hljs-title">constructors</span> } <span class="hljs-title">from</span> &#x27;../<span class="hljs-title">core</span>/<span class="hljs-title">library</span>.<span class="hljs-title">js</span>&#x27;;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { mergeOver, addStrings, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
@@ -551,14 +561,14 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> Rectangle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title class_">Rectangle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-built_in">this</span>.shapeInit(items);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">shapeInit</span>(items);
 
-    <span class="hljs-built_in">this</span>.currentRectangleWidth = <span class="hljs-number">1</span>;
-    <span class="hljs-built_in">this</span>.currentRectangleHeight = <span class="hljs-number">1</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentRectangleWidth</span> = <span class="hljs-number">1</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentRectangleHeight</span> = <span class="hljs-number">1</span>;
 
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             
         </li>
@@ -574,11 +584,11 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = Rectangle.prototype = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);
-P.type = <span class="hljs-string">&#x27;Rectangle&#x27;</span>;
-P.lib = <span class="hljs-string">&#x27;entity&#x27;</span>;
-P.isArtefact = <span class="hljs-literal">true</span>;
-P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> P = <span class="hljs-title class_">Rectangle</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>);
+P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Rectangle&#x27;</span>;
+P.<span class="hljs-property">lib</span> = <span class="hljs-string">&#x27;entity&#x27;</span>;
+P.<span class="hljs-property">isArtefact</span> = <span class="hljs-literal">true</span>;
+P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -597,8 +607,8 @@ P.isAsset = <span class="hljs-literal">false</span>;</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P = baseMix(P);
-P = shapeMix(P);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>P = <span class="hljs-title function_">baseMix</span>(P);
+P = <span class="hljs-title function_">shapeMix</span>(P);</pre></div></div>
             
         </li>
         
@@ -640,7 +650,7 @@ P = shapeMix(P);</pre></div></div>
     <span class="hljs-attr">offshootA</span>: <span class="hljs-number">0.55</span>,
     <span class="hljs-attr">offshootB</span>: <span class="hljs-number">0</span>,
 };
-P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
+P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -697,278 +707,278 @@ P.defs = mergeOver(P.defs, defaultAttributes);</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> S = P.setters,
-    D = P.deltaSetters;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> S = P.<span class="hljs-property">setters</span>,
+    D = P.<span class="hljs-property">deltaSetters</span>;
 
-S.radius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">radius</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusTLX&#x27;</span>, <span class="hljs-string">&#x27;radiusTRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBLX&#x27;</span>, <span class="hljs-string">&#x27;radiusX&#x27;</span>, <span class="hljs-string">&#x27;radiusTLY&#x27;</span>, <span class="hljs-string">&#x27;radiusTRY&#x27;</span>, <span class="hljs-string">&#x27;radiusBRY&#x27;</span>, <span class="hljs-string">&#x27;radiusBLY&#x27;</span>, <span class="hljs-string">&#x27;radiusY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTLX&#x27;</span>, <span class="hljs-string">&#x27;radiusTRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBLX&#x27;</span>, <span class="hljs-string">&#x27;radiusX&#x27;</span>, <span class="hljs-string">&#x27;radiusTLY&#x27;</span>, <span class="hljs-string">&#x27;radiusTRY&#x27;</span>, <span class="hljs-string">&#x27;radiusBRY&#x27;</span>, <span class="hljs-string">&#x27;radiusBLY&#x27;</span>, <span class="hljs-string">&#x27;radiusY&#x27;</span>]);
 };
-S.radiusX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">radiusX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusTLX&#x27;</span>, <span class="hljs-string">&#x27;radiusTRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBLX&#x27;</span>, <span class="hljs-string">&#x27;radiusX&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTLX&#x27;</span>, <span class="hljs-string">&#x27;radiusTRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBLX&#x27;</span>, <span class="hljs-string">&#x27;radiusX&#x27;</span>]);
 };
-S.radiusY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">radiusY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusTLY&#x27;</span>, <span class="hljs-string">&#x27;radiusTRY&#x27;</span>, <span class="hljs-string">&#x27;radiusBRY&#x27;</span>, <span class="hljs-string">&#x27;radiusBLY&#x27;</span>, <span class="hljs-string">&#x27;radiusY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTLY&#x27;</span>, <span class="hljs-string">&#x27;radiusTRY&#x27;</span>, <span class="hljs-string">&#x27;radiusBRY&#x27;</span>, <span class="hljs-string">&#x27;radiusBLY&#x27;</span>, <span class="hljs-string">&#x27;radiusY&#x27;</span>]);
 };
-S.radiusT = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">radiusT</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusTLX&#x27;</span>, <span class="hljs-string">&#x27;radiusTLY&#x27;</span>, <span class="hljs-string">&#x27;radiusTRX&#x27;</span>, <span class="hljs-string">&#x27;radiusTRY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTLX&#x27;</span>, <span class="hljs-string">&#x27;radiusTLY&#x27;</span>, <span class="hljs-string">&#x27;radiusTRX&#x27;</span>, <span class="hljs-string">&#x27;radiusTRY&#x27;</span>]);
 };
-S.radiusB = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">radiusB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusBRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBRY&#x27;</span>, <span class="hljs-string">&#x27;radiusBLX&#x27;</span>, <span class="hljs-string">&#x27;radiusBLY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusBRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBRY&#x27;</span>, <span class="hljs-string">&#x27;radiusBLX&#x27;</span>, <span class="hljs-string">&#x27;radiusBLY&#x27;</span>]);
 };
-S.radiusL = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">radiusL</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusTLX&#x27;</span>, <span class="hljs-string">&#x27;radiusTLY&#x27;</span>, <span class="hljs-string">&#x27;radiusBLX&#x27;</span>, <span class="hljs-string">&#x27;radiusBLY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTLX&#x27;</span>, <span class="hljs-string">&#x27;radiusTLY&#x27;</span>, <span class="hljs-string">&#x27;radiusBLX&#x27;</span>, <span class="hljs-string">&#x27;radiusBLY&#x27;</span>]);
 };
-S.radiusR = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">radiusR</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusTRX&#x27;</span>, <span class="hljs-string">&#x27;radiusTRY&#x27;</span>, <span class="hljs-string">&#x27;radiusBRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBRY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTRX&#x27;</span>, <span class="hljs-string">&#x27;radiusTRY&#x27;</span>, <span class="hljs-string">&#x27;radiusBRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBRY&#x27;</span>]);
 };
-S.radiusTX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">radiusTX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusTLX&#x27;</span>, <span class="hljs-string">&#x27;radiusTRX&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTLX&#x27;</span>, <span class="hljs-string">&#x27;radiusTRX&#x27;</span>]);
 };
-S.radiusBX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">radiusBX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusBRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBLX&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusBRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBLX&#x27;</span>]);
 };
-S.radiusLX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">radiusLX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusTLX&#x27;</span>, <span class="hljs-string">&#x27;radiusBLX&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTLX&#x27;</span>, <span class="hljs-string">&#x27;radiusBLX&#x27;</span>]);
 };
-S.radiusRX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">radiusRX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusTRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBRX&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBRX&#x27;</span>]);
 };
-S.radiusTY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">radiusTY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusTLY&#x27;</span>, <span class="hljs-string">&#x27;radiusTRY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTLY&#x27;</span>, <span class="hljs-string">&#x27;radiusTRY&#x27;</span>]);
 };
-S.radiusBY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">radiusBY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusBRY&#x27;</span>, <span class="hljs-string">&#x27;radiusBLY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusBRY&#x27;</span>, <span class="hljs-string">&#x27;radiusBLY&#x27;</span>]);
 };
-S.radiusLY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">radiusLY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusTLY&#x27;</span>, <span class="hljs-string">&#x27;radiusBLY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTLY&#x27;</span>, <span class="hljs-string">&#x27;radiusBLY&#x27;</span>]);
 };
-S.radiusRY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">radiusRY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusTRY&#x27;</span>, <span class="hljs-string">&#x27;radiusBRY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTRY&#x27;</span>, <span class="hljs-string">&#x27;radiusBRY&#x27;</span>]);
 };
-S.radiusTL = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">radiusTL</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusTLX&#x27;</span>, <span class="hljs-string">&#x27;radiusTLY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTLX&#x27;</span>, <span class="hljs-string">&#x27;radiusTLY&#x27;</span>]);
 };
-S.radiusTR = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">radiusTR</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusTRX&#x27;</span>, <span class="hljs-string">&#x27;radiusTRY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTRX&#x27;</span>, <span class="hljs-string">&#x27;radiusTRY&#x27;</span>]);
 };
-S.radiusBL = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">radiusBL</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusBLX&#x27;</span>, <span class="hljs-string">&#x27;radiusBLY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusBLX&#x27;</span>, <span class="hljs-string">&#x27;radiusBLY&#x27;</span>]);
 };
-S.radiusBR = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">radiusBR</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusBRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBRY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusBRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBRY&#x27;</span>]);
 };
-S.radiusTLX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">radiusTLX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusTLX&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTLX&#x27;</span>]);
 };
-S.radiusTLY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">radiusTLY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusTLY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTLY&#x27;</span>]);
 };
-S.radiusTRX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">radiusTRX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusTRX&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTRX&#x27;</span>]);
 };
-S.radiusTRY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">radiusTRY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusTRY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTRY&#x27;</span>]);
 };
-S.radiusBRX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">radiusBRX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusBRX&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusBRX&#x27;</span>]);
 };
-S.radiusBRY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">radiusBRY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusBRY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusBRY&#x27;</span>]);
 };
-S.radiusBLX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">radiusBLX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusBLX&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusBLX&#x27;</span>]);
 };
-S.radiusBLY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">radiusBLY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.setRectHelper(item, [<span class="hljs-string">&#x27;radiusBLY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusBLY&#x27;</span>]);
 };
-D.radius = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">radius</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusTLX&#x27;</span>, <span class="hljs-string">&#x27;radiusTRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBLX&#x27;</span>, <span class="hljs-string">&#x27;radiusX&#x27;</span>, <span class="hljs-string">&#x27;radiusTLY&#x27;</span>, <span class="hljs-string">&#x27;radiusTRY&#x27;</span>, <span class="hljs-string">&#x27;radiusBRY&#x27;</span>, <span class="hljs-string">&#x27;radiusBLY&#x27;</span>, <span class="hljs-string">&#x27;radiusY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deltaRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTLX&#x27;</span>, <span class="hljs-string">&#x27;radiusTRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBLX&#x27;</span>, <span class="hljs-string">&#x27;radiusX&#x27;</span>, <span class="hljs-string">&#x27;radiusTLY&#x27;</span>, <span class="hljs-string">&#x27;radiusTRY&#x27;</span>, <span class="hljs-string">&#x27;radiusBRY&#x27;</span>, <span class="hljs-string">&#x27;radiusBLY&#x27;</span>, <span class="hljs-string">&#x27;radiusY&#x27;</span>]);
 };
-D.radiusX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">radiusX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusTLX&#x27;</span>, <span class="hljs-string">&#x27;radiusTRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBLX&#x27;</span>, <span class="hljs-string">&#x27;radiusX&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deltaRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTLX&#x27;</span>, <span class="hljs-string">&#x27;radiusTRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBLX&#x27;</span>, <span class="hljs-string">&#x27;radiusX&#x27;</span>]);
 };
-D.radiusY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">radiusY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusTLY&#x27;</span>, <span class="hljs-string">&#x27;radiusTRY&#x27;</span>, <span class="hljs-string">&#x27;radiusBRY&#x27;</span>, <span class="hljs-string">&#x27;radiusBLY&#x27;</span>, <span class="hljs-string">&#x27;radiusY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deltaRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTLY&#x27;</span>, <span class="hljs-string">&#x27;radiusTRY&#x27;</span>, <span class="hljs-string">&#x27;radiusBRY&#x27;</span>, <span class="hljs-string">&#x27;radiusBLY&#x27;</span>, <span class="hljs-string">&#x27;radiusY&#x27;</span>]);
 };
-D.radiusT = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">radiusT</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusTLX&#x27;</span>, <span class="hljs-string">&#x27;radiusTLY&#x27;</span>, <span class="hljs-string">&#x27;radiusTRX&#x27;</span>, <span class="hljs-string">&#x27;radiusTRY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deltaRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTLX&#x27;</span>, <span class="hljs-string">&#x27;radiusTLY&#x27;</span>, <span class="hljs-string">&#x27;radiusTRX&#x27;</span>, <span class="hljs-string">&#x27;radiusTRY&#x27;</span>]);
 };
-D.radiusB = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">radiusB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusBRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBRY&#x27;</span>, <span class="hljs-string">&#x27;radiusBLX&#x27;</span>, <span class="hljs-string">&#x27;radiusBLY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deltaRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusBRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBRY&#x27;</span>, <span class="hljs-string">&#x27;radiusBLX&#x27;</span>, <span class="hljs-string">&#x27;radiusBLY&#x27;</span>]);
 };
-D.radiusL = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">radiusL</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusTLX&#x27;</span>, <span class="hljs-string">&#x27;radiusTLY&#x27;</span>, <span class="hljs-string">&#x27;radiusBLX&#x27;</span>, <span class="hljs-string">&#x27;radiusBLY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deltaRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTLX&#x27;</span>, <span class="hljs-string">&#x27;radiusTLY&#x27;</span>, <span class="hljs-string">&#x27;radiusBLX&#x27;</span>, <span class="hljs-string">&#x27;radiusBLY&#x27;</span>]);
 };
-D.radiusR = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">radiusR</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusTRX&#x27;</span>, <span class="hljs-string">&#x27;radiusTRY&#x27;</span>, <span class="hljs-string">&#x27;radiusBRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBRY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deltaRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTRX&#x27;</span>, <span class="hljs-string">&#x27;radiusTRY&#x27;</span>, <span class="hljs-string">&#x27;radiusBRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBRY&#x27;</span>]);
 };
-D.radiusTX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">radiusTX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusTLX&#x27;</span>, <span class="hljs-string">&#x27;radiusTRX&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deltaRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTLX&#x27;</span>, <span class="hljs-string">&#x27;radiusTRX&#x27;</span>]);
 };
-D.radiusBX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">radiusBX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusBRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBLX&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deltaRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusBRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBLX&#x27;</span>]);
 };
-D.radiusLX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">radiusLX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusTLX&#x27;</span>, <span class="hljs-string">&#x27;radiusBLX&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deltaRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTLX&#x27;</span>, <span class="hljs-string">&#x27;radiusBLX&#x27;</span>]);
 };
-D.radiusRX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">radiusRX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusTRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBRX&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deltaRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBRX&#x27;</span>]);
 };
-D.radiusTY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">radiusTY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusTLY&#x27;</span>, <span class="hljs-string">&#x27;radiusTRY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deltaRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTLY&#x27;</span>, <span class="hljs-string">&#x27;radiusTRY&#x27;</span>]);
 };
-D.radiusBY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">radiusBY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusBRY&#x27;</span>, <span class="hljs-string">&#x27;radiusBLY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deltaRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusBRY&#x27;</span>, <span class="hljs-string">&#x27;radiusBLY&#x27;</span>]);
 };
-D.radiusLY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">radiusLY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusTLY&#x27;</span>, <span class="hljs-string">&#x27;radiusBLY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deltaRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTLY&#x27;</span>, <span class="hljs-string">&#x27;radiusBLY&#x27;</span>]);
 };
-D.radiusRY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">radiusRY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusTRY&#x27;</span>, <span class="hljs-string">&#x27;radiusBRY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deltaRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTRY&#x27;</span>, <span class="hljs-string">&#x27;radiusBRY&#x27;</span>]);
 };
-D.radiusTL = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">radiusTL</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusTLX&#x27;</span>, <span class="hljs-string">&#x27;radiusTLY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deltaRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTLX&#x27;</span>, <span class="hljs-string">&#x27;radiusTLY&#x27;</span>]);
 };
-D.radiusTR = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">radiusTR</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusTRX&#x27;</span>, <span class="hljs-string">&#x27;radiusTRY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deltaRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTRX&#x27;</span>, <span class="hljs-string">&#x27;radiusTRY&#x27;</span>]);
 };
-D.radiusBL = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">radiusBL</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusBLX&#x27;</span>, <span class="hljs-string">&#x27;radiusBLY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deltaRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusBLX&#x27;</span>, <span class="hljs-string">&#x27;radiusBLY&#x27;</span>]);
 };
-D.radiusBR = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">radiusBR</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusBRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBRY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deltaRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusBRX&#x27;</span>, <span class="hljs-string">&#x27;radiusBRY&#x27;</span>]);
 };
-D.radiusTLX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">radiusTLX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusTLX&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deltaRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTLX&#x27;</span>]);
 };
-D.radiusTLY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">radiusTLY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusTLY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deltaRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTLY&#x27;</span>]);
 };
-D.radiusTRX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">radiusTRX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusTRX&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deltaRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTRX&#x27;</span>]);
 };
-D.radiusTRY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">radiusTRY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusTRY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deltaRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusTRY&#x27;</span>]);
 };
-D.radiusBRX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">radiusBRX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusBRX&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deltaRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusBRX&#x27;</span>]);
 };
-D.radiusBRY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">radiusBRY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusBRY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deltaRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusBRY&#x27;</span>]);
 };
-D.radiusBLX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">radiusBLX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusBLX&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deltaRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusBLX&#x27;</span>]);
 };
-D.radiusBLY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">radiusBLY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.deltaRectHelper(item, [<span class="hljs-string">&#x27;radiusBLY&#x27;</span>]);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">deltaRectHelper</span>(item, [<span class="hljs-string">&#x27;radiusBLY&#x27;</span>]);
 };
 
-S.offshootA = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">offshootA</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.offshootA = item;
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">offshootA</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };
-S.offshootB = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+S.<span class="hljs-property">offshootB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-built_in">this</span>.offshootB = item;
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">offshootB</span> = item;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 };
-D.offshootA = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">offshootA</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (item.toFixed) {
+    <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span>) {
 
-        <span class="hljs-built_in">this</span>.offshootA += item;
-        <span class="hljs-built_in">this</span>.updateDirty();
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">offshootA</span> += item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
     }
 };
-D.offshootB = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+D.<span class="hljs-property">offshootB</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (item.toFixed) {
+    <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span>) {
 
-        <span class="hljs-built_in">this</span>.offshootB += item;
-        <span class="hljs-built_in">this</span>.updateDirty();
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">offshootB</span> += item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
     }
 };
 
-S.rectangleWidth = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{
+S.<span class="hljs-property">rectangleWidth</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
 
     <span class="hljs-keyword">if</span> (val != <span class="hljs-literal">null</span>) {
 
-        <span class="hljs-built_in">this</span>.rectangleWidth = val;
-        <span class="hljs-built_in">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">rectangleWidth</span> = val;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
     }
 };
-S.rectangleHeight = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{
+S.<span class="hljs-property">rectangleHeight</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
 
     <span class="hljs-keyword">if</span> (val != <span class="hljs-literal">null</span>) {
 
-        <span class="hljs-built_in">this</span>.rectangleHeight = val;
-        <span class="hljs-built_in">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">rectangleHeight</span> = val;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
     }
 };
-D.rectangleWidth = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{
+D.<span class="hljs-property">rectangleWidth</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
 
-    <span class="hljs-built_in">this</span>.rectangleWidth = addStrings(<span class="hljs-built_in">this</span>.rectangleWidth, val);
-    <span class="hljs-built_in">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">rectangleWidth</span> = <span class="hljs-title function_">addStrings</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">rectangleWidth</span>, val);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
 };
-D.rectangleHeight = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{
+D.<span class="hljs-property">rectangleHeight</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
 
-    <span class="hljs-built_in">this</span>.rectangleHeight = addStrings(<span class="hljs-built_in">this</span>.rectangleHeight, val);
-    <span class="hljs-built_in">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">rectangleHeight</span> = <span class="hljs-title function_">addStrings</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">rectangleHeight</span>, val);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -997,14 +1007,14 @@ D.rectangleHeight = <span class="hljs-function"><span class="hljs-keyword">funct
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.setRectHelper = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item, corners</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">setRectHelper</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item, corners</span>) {
 
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 
-    corners.forEach(<span class="hljs-function"><span class="hljs-params">corner</span> =&gt;</span> {
+    corners.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">corner</span> =&gt;</span> {
 
-        <span class="hljs-built_in">this</span>[corner] = item;
-    }, <span class="hljs-built_in">this</span>);
+        <span class="hljs-variable language_">this</span>[corner] = item;
+    }, <span class="hljs-variable language_">this</span>);
 };</pre></div></div>
             
         </li>
@@ -1020,14 +1030,14 @@ D.rectangleHeight = <span class="hljs-function"><span class="hljs-keyword">funct
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.deltaRectHelper = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item, corners</span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">deltaRectHelper</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item, corners</span>) {
 
-    <span class="hljs-built_in">this</span>.updateDirty();
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDirty</span>();
 
-    corners.forEach(<span class="hljs-function"><span class="hljs-params">corner</span> =&gt;</span> {
+    corners.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">corner</span> =&gt;</span> {
 
-        <span class="hljs-built_in">this</span>[corner] = addStrings(<span class="hljs-built_in">this</span>[corner], item);
-    }, <span class="hljs-built_in">this</span>);
+        <span class="hljs-variable language_">this</span>[corner] = <span class="hljs-title function_">addStrings</span>(<span class="hljs-variable language_">this</span>[corner], item);
+    }, <span class="hljs-variable language_">this</span>);
 };</pre></div></div>
             
         </li>
@@ -1043,14 +1053,14 @@ D.rectangleHeight = <span class="hljs-function"><span class="hljs-keyword">funct
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.cleanSpecies = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">cleanSpecies</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-built_in">this</span>.dirtySpecies = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtySpecies</span> = <span class="hljs-literal">false</span>;
 
     <span class="hljs-keyword">let</span> p = <span class="hljs-string">&#x27;M0,0&#x27;</span>;
-    p = <span class="hljs-built_in">this</span>.makeRectanglePath();
+    p = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeRectanglePath</span>();
 
-    <span class="hljs-built_in">this</span>.pathDefinition = p;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span> = p;
 };</pre></div></div>
             
         </li>
@@ -1069,53 +1079,53 @@ D.rectangleHeight = <span class="hljs-function"><span class="hljs-keyword">funct
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.cleanDimensions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">cleanDimensions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-built_in">this</span>.dirtyDimensions = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">false</span>;
 
-    <span class="hljs-keyword">let</span> host = <span class="hljs-built_in">this</span>.getHost();
+    <span class="hljs-keyword">let</span> host = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getHost</span>();
 
     <span class="hljs-keyword">if</span> (host) {
 
-        <span class="hljs-keyword">let</span> hostDims = (host.currentDimensions) ? host.currentDimensions : [host.w, host.h];
+        <span class="hljs-keyword">let</span> hostDims = (host.<span class="hljs-property">currentDimensions</span>) ? host.<span class="hljs-property">currentDimensions</span> : [host.<span class="hljs-property">w</span>, host.<span class="hljs-property">h</span>];
 
-        <span class="hljs-keyword">let</span> w = <span class="hljs-built_in">this</span>.rectangleWidth,
-            h = <span class="hljs-built_in">this</span>.rectangleHeight,
-            oldW = <span class="hljs-built_in">this</span>.currentRectangleWidth || <span class="hljs-number">1</span>,
-            oldH = <span class="hljs-built_in">this</span>.currentRectangleHeight || <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">let</span> w = <span class="hljs-variable language_">this</span>.<span class="hljs-property">rectangleWidth</span>,
+            h = <span class="hljs-variable language_">this</span>.<span class="hljs-property">rectangleHeight</span>,
+            oldW = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentRectangleWidth</span> || <span class="hljs-number">1</span>,
+            oldH = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentRectangleHeight</span> || <span class="hljs-number">1</span>;
 
-        <span class="hljs-keyword">if</span> (w.substring) w = (<span class="hljs-built_in">parseFloat</span>(w) / <span class="hljs-number">100</span>) * hostDims[<span class="hljs-number">0</span>];
+        <span class="hljs-keyword">if</span> (w.<span class="hljs-property">substring</span>) w = (<span class="hljs-built_in">parseFloat</span>(w) / <span class="hljs-number">100</span>) * hostDims[<span class="hljs-number">0</span>];
 
-        <span class="hljs-keyword">if</span> (h.substring) h = (<span class="hljs-built_in">parseFloat</span>(h) / <span class="hljs-number">100</span>) * hostDims[<span class="hljs-number">1</span>];
+        <span class="hljs-keyword">if</span> (h.<span class="hljs-property">substring</span>) h = (<span class="hljs-built_in">parseFloat</span>(h) / <span class="hljs-number">100</span>) * hostDims[<span class="hljs-number">1</span>];
 
-        <span class="hljs-keyword">let</span> mimic = <span class="hljs-built_in">this</span>.mimic,
+        <span class="hljs-keyword">let</span> mimic = <span class="hljs-variable language_">this</span>.<span class="hljs-property">mimic</span>,
             mimicDims;
 
-        <span class="hljs-keyword">if</span> (mimic &amp;&amp; mimic.name &amp;&amp; <span class="hljs-built_in">this</span>.useMimicDimensions) mimicDims = mimic.currentDimensions;
+        <span class="hljs-keyword">if</span> (mimic &amp;&amp; mimic.<span class="hljs-property">name</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">useMimicDimensions</span>) mimicDims = mimic.<span class="hljs-property">currentDimensions</span>;
 
         <span class="hljs-keyword">if</span> (mimicDims) {
 
-            <span class="hljs-built_in">this</span>.currentRectangleWidth = (<span class="hljs-built_in">this</span>.addOwnDimensionsToMimic) ? mimicDims[<span class="hljs-number">0</span>] + w : mimicDims[<span class="hljs-number">0</span>];
-            <span class="hljs-built_in">this</span>.currentRectangleHeight = (<span class="hljs-built_in">this</span>.addOwnDimensionsToMimic) ? mimicDims[<span class="hljs-number">1</span>] + h : mimicDims[<span class="hljs-number">1</span>];
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentRectangleWidth</span> = (<span class="hljs-variable language_">this</span>.<span class="hljs-property">addOwnDimensionsToMimic</span>) ? mimicDims[<span class="hljs-number">0</span>] + w : mimicDims[<span class="hljs-number">0</span>];
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentRectangleHeight</span> = (<span class="hljs-variable language_">this</span>.<span class="hljs-property">addOwnDimensionsToMimic</span>) ? mimicDims[<span class="hljs-number">1</span>] + h : mimicDims[<span class="hljs-number">1</span>];
         }
         <span class="hljs-keyword">else</span> {
 
-            <span class="hljs-built_in">this</span>.currentRectangleWidth = w;
-            <span class="hljs-built_in">this</span>.currentRectangleHeight = h;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentRectangleWidth</span> = w;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentRectangleHeight</span> = h;
         }
 
-        <span class="hljs-built_in">this</span>.currentDimensions[<span class="hljs-number">0</span>] = <span class="hljs-built_in">this</span>.currentRectangleWidth;
-        <span class="hljs-built_in">this</span>.currentDimensions[<span class="hljs-number">1</span>] = <span class="hljs-built_in">this</span>.currentRectangleHeight;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>[<span class="hljs-number">0</span>] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentRectangleWidth</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentDimensions</span>[<span class="hljs-number">1</span>] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentRectangleHeight</span>;
 
-        <span class="hljs-built_in">this</span>.dirtyStart = <span class="hljs-literal">true</span>;
-        <span class="hljs-built_in">this</span>.dirtyHandle = <span class="hljs-literal">true</span>;
-        <span class="hljs-built_in">this</span>.dirtyOffset = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStart</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHandle</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOffset</span> = <span class="hljs-literal">true</span>;
 
-        <span class="hljs-keyword">if</span> (oldW !== <span class="hljs-built_in">this</span>.currentRectangleWidth || oldH !== <span class="hljs-built_in">this</span>.currentRectangleHeight) <span class="hljs-built_in">this</span>.dirtyPositionSubscribers = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (oldW !== <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentRectangleWidth</span> || oldH !== <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentRectangleHeight</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPositionSubscribers</span> = <span class="hljs-literal">true</span>;
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.mimicked &amp;&amp; <span class="hljs-built_in">this</span>.mimicked.length) <span class="hljs-built_in">this</span>.dirtyMimicDimensions = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">mimicked</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">mimicked</span>.<span class="hljs-property">length</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyMimicDimensions</span> = <span class="hljs-literal">true</span>;
     }
-    <span class="hljs-keyword">else</span> <span class="hljs-built_in">this</span>.dirtyDimensions = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1131,35 +1141,35 @@ D.rectangleHeight = <span class="hljs-function"><span class="hljs-keyword">funct
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.makeRectanglePath = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">makeRectanglePath</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.dirtyDimensions) <span class="hljs-built_in">this</span>.cleanDimensions()
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanDimensions</span>()
 
-    <span class="hljs-keyword">let</span> width = <span class="hljs-built_in">this</span>.currentRectangleWidth,
-        height = <span class="hljs-built_in">this</span>.currentRectangleHeight;
+    <span class="hljs-keyword">let</span> width = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentRectangleWidth</span>,
+        height = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentRectangleHeight</span>;
 
-    <span class="hljs-keyword">let</span> A = <span class="hljs-built_in">this</span>.offshootA,
-        B = <span class="hljs-built_in">this</span>.offshootB;
+    <span class="hljs-keyword">let</span> A = <span class="hljs-variable language_">this</span>.<span class="hljs-property">offshootA</span>,
+        B = <span class="hljs-variable language_">this</span>.<span class="hljs-property">offshootB</span>;
 
-    <span class="hljs-keyword">let</span> _tlx = <span class="hljs-built_in">this</span>.radiusTLX,
-        _tly = <span class="hljs-built_in">this</span>.radiusTLY,
-        _trx = <span class="hljs-built_in">this</span>.radiusTRX,
-        _try = <span class="hljs-built_in">this</span>.radiusTRY,
-        _brx = <span class="hljs-built_in">this</span>.radiusBRX,
-        _bry = <span class="hljs-built_in">this</span>.radiusBRY,
-        _blx = <span class="hljs-built_in">this</span>.radiusBLX,
-        _bly = <span class="hljs-built_in">this</span>.radiusBLY;
+    <span class="hljs-keyword">let</span> _tlx = <span class="hljs-variable language_">this</span>.<span class="hljs-property">radiusTLX</span>,
+        _tly = <span class="hljs-variable language_">this</span>.<span class="hljs-property">radiusTLY</span>,
+        _trx = <span class="hljs-variable language_">this</span>.<span class="hljs-property">radiusTRX</span>,
+        _try = <span class="hljs-variable language_">this</span>.<span class="hljs-property">radiusTRY</span>,
+        _brx = <span class="hljs-variable language_">this</span>.<span class="hljs-property">radiusBRX</span>,
+        _bry = <span class="hljs-variable language_">this</span>.<span class="hljs-property">radiusBRY</span>,
+        _blx = <span class="hljs-variable language_">this</span>.<span class="hljs-property">radiusBLX</span>,
+        _bly = <span class="hljs-variable language_">this</span>.<span class="hljs-property">radiusBLY</span>;
 
-    <span class="hljs-keyword">if</span> (_tlx.substring || _tly.substring || _trx.substring || _try.substring || _brx.substring || _bry.substring || _blx.substring || _bly.substring) {
+    <span class="hljs-keyword">if</span> (_tlx.<span class="hljs-property">substring</span> || _tly.<span class="hljs-property">substring</span> || _trx.<span class="hljs-property">substring</span> || _try.<span class="hljs-property">substring</span> || _brx.<span class="hljs-property">substring</span> || _bry.<span class="hljs-property">substring</span> || _blx.<span class="hljs-property">substring</span> || _bly.<span class="hljs-property">substring</span>) {
 
-        _tlx = (_tlx.substring) ? (<span class="hljs-built_in">parseFloat</span>(_tlx) / <span class="hljs-number">100</span>) * width : _tlx;
-        _tly = (_tly.substring) ? (<span class="hljs-built_in">parseFloat</span>(_tly) / <span class="hljs-number">100</span>) * height : _tly;
-        _trx = (_trx.substring) ? (<span class="hljs-built_in">parseFloat</span>(_trx) / <span class="hljs-number">100</span>) * width : _trx;
-        _try = (_try.substring) ? (<span class="hljs-built_in">parseFloat</span>(_try) / <span class="hljs-number">100</span>) * height : _try;
-        _brx = (_brx.substring) ? (<span class="hljs-built_in">parseFloat</span>(_brx) / <span class="hljs-number">100</span>) * width : _brx;
-        _bry = (_bry.substring) ? (<span class="hljs-built_in">parseFloat</span>(_bry) / <span class="hljs-number">100</span>) * height : _bry;
-        _blx = (_blx.substring) ? (<span class="hljs-built_in">parseFloat</span>(_blx) / <span class="hljs-number">100</span>) * width : _blx;
-        _bly = (_bly.substring) ? (<span class="hljs-built_in">parseFloat</span>(_bly) / <span class="hljs-number">100</span>) * height : _bly;
+        _tlx = (_tlx.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(_tlx) / <span class="hljs-number">100</span>) * width : _tlx;
+        _tly = (_tly.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(_tly) / <span class="hljs-number">100</span>) * height : _tly;
+        _trx = (_trx.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(_trx) / <span class="hljs-number">100</span>) * width : _trx;
+        _try = (_try.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(_try) / <span class="hljs-number">100</span>) * height : _try;
+        _brx = (_brx.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(_brx) / <span class="hljs-number">100</span>) * width : _brx;
+        _bry = (_bry.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(_bry) / <span class="hljs-number">100</span>) * height : _bry;
+        _blx = (_blx.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(_blx) / <span class="hljs-number">100</span>) * width : _blx;
+        _bly = (_bly.<span class="hljs-property">substring</span>) ? (<span class="hljs-built_in">parseFloat</span>(_bly) / <span class="hljs-number">100</span>) * height : _bly;
     }
 
     <span class="hljs-keyword">let</span> myData = <span class="hljs-string">&#x27;m0,0&#x27;</span>;
@@ -1185,13 +1195,13 @@ D.rectangleHeight = <span class="hljs-function"><span class="hljs-keyword">funct
     <span class="hljs-keyword">return</span> myData;
 };
 
-P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+P.<span class="hljs-property">calculateLocalPathAdditionalActions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-built_in">this</span>.localBox;
+    <span class="hljs-keyword">let</span> [x, y, w, h] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">localBox</span>;
 
-    <span class="hljs-built_in">this</span>.pathDefinition = <span class="hljs-built_in">this</span>.pathDefinition.replace(<span class="hljs-string">&#x27;m0,0&#x27;</span>, <span class="hljs-string">`m<span class="hljs-subst">${-x}</span>,<span class="hljs-subst">${-y}</span>`</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span>.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;m0,0&#x27;</span>, <span class="hljs-string">`m<span class="hljs-subst">${-x}</span>,<span class="hljs-subst">${-y}</span>`</span>);
 
-    <span class="hljs-built_in">this</span>.pathCalculatedOnce = <span class="hljs-literal">false</span>;</pre></div></div>
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathCalculatedOnce</span> = <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -1209,7 +1219,7 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">this</span>.calculateLocalPath(<span class="hljs-built_in">this</span>.pathDefinition, <span class="hljs-literal">true</span>);
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">calculateLocalPath</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span>, <span class="hljs-literal">true</span>);
 };</pre></div></div>
             
         </li>
@@ -1271,7 +1281,7 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
 <li><em><strong>radiusBL</strong></em> - both radius values for the <code>bottom left</code> corner</li>
 <li><em><strong>radiusBR</strong></em> - both radius values for the <code>bottom right</code> corner</li>
 </ul>
-<pre><code>scrawl.makeRectangle({
+<pre><code>scrawl.<span class="hljs-title function_">makeRectangle</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;tab&#x27;</span>,
 
@@ -1291,14 +1301,14 @@ P.calculateLocalPathAdditionalActions = <span class="hljs-function"><span class=
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeRectangle = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeRectangle = <span class="hljs-keyword">function</span> (<span class="hljs-params">items</span>) {
 
     <span class="hljs-keyword">if</span> (!items) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    items.species = <span class="hljs-string">&#x27;rectangle&#x27;</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Rectangle(items);
+    items.<span class="hljs-property">species</span> = <span class="hljs-string">&#x27;rectangle&#x27;</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Rectangle</span>(items);
 };
 
-<span class="hljs-title">constructors</span>.<span class="hljs-title">Rectangle</span> = <span class="hljs-title">Rectangle</span>;</pre></div></div>
+constructors.<span class="hljs-property">Rectangle</span> = <span class="hljs-title class_">Rectangle</span>;</pre></div></div>
             
         </li>
         

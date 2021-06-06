@@ -165,7 +165,7 @@ scrawl.makePolygon({
 
     name: 'hex',
     sides: 6,
-    radius: 90,
+    sideLength: 90,
     roll: 30,
     start: [470, 140],
     lineWidth: 2,

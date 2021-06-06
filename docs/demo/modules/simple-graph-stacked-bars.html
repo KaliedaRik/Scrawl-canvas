@@ -204,16 +204,16 @@ Data format requirements - a Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> extractHighestAnnualMaximum = <span class="hljs-function">(<span class="hljs-params">yearLabels, yearData</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">extractHighestAnnualMaximum</span> = (<span class="hljs-params">yearLabels, yearData</span>) =&gt; {
 
     <span class="hljs-keyword">let</span> max = <span class="hljs-number">0</span>;
 
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; yearLabels.length; i++) {
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; yearLabels.<span class="hljs-property">length</span>; i++) {
 
-        <span class="hljs-keyword">let</span> total = yearData[yearLabels[i]].reduce(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a + v, <span class="hljs-number">0</span>);
+        <span class="hljs-keyword">let</span> total = yearData[yearLabels[i]].<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">a, v</span>) =&gt;</span> a + v, <span class="hljs-number">0</span>);
         <span class="hljs-keyword">if</span> (total &gt; max) max = total;
     }
-    <span class="hljs-keyword">return</span> ((<span class="hljs-built_in">Math</span>.floor(max / <span class="hljs-number">1000</span>)) * <span class="hljs-number">1000</span>) + <span class="hljs-number">1000</span>;
+    <span class="hljs-keyword">return</span> ((<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(max / <span class="hljs-number">1000</span>)) * <span class="hljs-number">1000</span>) + <span class="hljs-number">1000</span>;
 };</pre></div></div>
             
         </li>
@@ -244,7 +244,7 @@ Data format requirements - a Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> build = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">namespace, canvas, data</span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> build = <span class="hljs-keyword">function</span> (<span class="hljs-params">namespace, canvas, data</span>) {</pre></div></div>
             
         </li>
         
@@ -259,10 +259,10 @@ Data format requirements - a Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> area = data.area,
-        yearLabels = data.yearLabels, 
-        categoryLabels = data.categoryLabels, 
-        yearData = data.yearData,
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> area = data.<span class="hljs-property">area</span>,
+        yearLabels = data.<span class="hljs-property">yearLabels</span>, 
+        categoryLabels = data.<span class="hljs-property">categoryLabels</span>, 
+        yearData = data.<span class="hljs-property">yearData</span>,
 
         gap = <span class="hljs-number">1</span>,</pre></div></div>
             
@@ -279,10 +279,10 @@ Data format requirements - a Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        graphWidth = frame.graphWidth,
-        graphHeight = frame.graphHeight,
-        graphBottom = frame.graphBottom,
-        graphLeft = frame.graphLeft + (gap / <span class="hljs-number">2</span>),</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        graphWidth = frame.<span class="hljs-property">graphWidth</span>,
+        graphHeight = frame.<span class="hljs-property">graphHeight</span>,
+        graphBottom = frame.<span class="hljs-property">graphBottom</span>,
+        graphLeft = frame.<span class="hljs-property">graphLeft</span> + (gap / <span class="hljs-number">2</span>),</pre></div></div>
             
         </li>
         
@@ -297,8 +297,8 @@ Data format requirements - a Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        maximumBarTotal = extractHighestAnnualMaximum(yearLabels, yearData),
-        numberOfYears = yearLabels.length,
+            <div class="content"><div class='highlight'><pre>        maximumBarTotal = <span class="hljs-title function_">extractHighestAnnualMaximum</span>(yearLabels, yearData),
+        numberOfYears = yearLabels.<span class="hljs-property">length</span>,
         barDistance = graphWidth / numberOfYears,
         barWidth = <span class="hljs-string">`<span class="hljs-subst">${barDistance - gap}</span>%`</span>,
         singleCrimeHeight = graphHeight / maximumBarTotal;</pre></div></div>
@@ -316,10 +316,10 @@ Data format requirements - a Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    group = scrawl.makeGroup({
+            <div class="content"><div class='highlight'><pre>    group = scrawl.<span class="hljs-title function_">makeGroup</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-bargroup`</span>,
-        <span class="hljs-attr">host</span>: canvas.base.name,
+        <span class="hljs-attr">host</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
         <span class="hljs-attr">order</span>: <span class="hljs-number">2</span>,
         <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
     });</pre></div></div>
@@ -337,21 +337,21 @@ Data format requirements - a Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    yearLabels.forEach(<span class="hljs-function">(<span class="hljs-params">year, yearIndex</span>) =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>    yearLabels.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">year, yearIndex</span>) =&gt;</span> {
 
         <span class="hljs-keyword">let</span> xPosition = (barDistance * yearIndex) + graphLeft,
             localHeight = <span class="hljs-number">0</span>;
 
-        categoryLabels.forEach(<span class="hljs-function">(<span class="hljs-params">category, categoryIndex</span>) =&gt;</span> {
+        categoryLabels.<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">category, categoryIndex</span>) =&gt;</span> {
 
             <span class="hljs-keyword">let</span> categoryItem = yearData[year][categoryIndex],
                 crimeHeight = categoryItem * singleCrimeHeight,
-                localSaturation = <span class="hljs-number">30</span> + ((<span class="hljs-number">50</span> / categoryLabels.length) * categoryIndex),
+                localSaturation = <span class="hljs-number">30</span> + ((<span class="hljs-number">50</span> / categoryLabels.<span class="hljs-property">length</span>) * categoryIndex),
                 localColor = categoryIndex % <span class="hljs-number">2</span>;
 
             localHeight += crimeHeight;
 
-            scrawl.makeBlock({
+            scrawl.<span class="hljs-title function_">makeBlock</span>({
 
                 <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${namespace}</span>-<span class="hljs-subst">${year}</span>-<span class="hljs-subst">${category}</span>`</span>,
                 <span class="hljs-attr">group</span>: group,
@@ -368,14 +368,14 @@ Data format requirements - a Javascript object with structure:
                 <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">`hsla(<span class="hljs-subst">${localColor ? <span class="hljs-number">243</span> : <span class="hljs-number">0</span>}</span>, 100%, <span class="hljs-subst">${localSaturation}</span>%, 1)`</span>,
                 <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
 
-                <span class="hljs-attr">onEnter</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+                <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-                    group.setArtefacts({
+                    group.<span class="hljs-title function_">setArtefacts</span>({
                         <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
                         <span class="hljs-attr">order</span>: <span class="hljs-number">0</span>,
                     });
 
-                    <span class="hljs-built_in">this</span>.set({
+                    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
                         <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
                         <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
                     });</pre></div></div>
@@ -397,9 +397,9 @@ Data format requirements - a Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                    group.batchResort = <span class="hljs-literal">true</span>;
+            <div class="content"><div class='highlight'><pre>                    group.<span class="hljs-property">batchResort</span> = <span class="hljs-literal">true</span>;
 
-                    frame.updateSubtitle(<span class="hljs-string">`<span class="hljs-subst">${category}</span> in <span class="hljs-subst">${year}</span>: §RED§<span class="hljs-subst">${categoryItem.toLocaleString()}</span>`</span>);
+                    frame.<span class="hljs-title function_">updateSubtitle</span>(<span class="hljs-string">`<span class="hljs-subst">${category}</span> in <span class="hljs-subst">${year}</span>: §RED§<span class="hljs-subst">${categoryItem.toLocaleString()}</span>`</span>);
                 },
             });
         });
@@ -418,12 +418,12 @@ Data format requirements - a Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    frame.updateSubtitle(<span class="hljs-string">&#x27;No data selected&#x27;</span>);
-    frame.updateXLeft(yearLabels[<span class="hljs-number">0</span>]);
-    frame.updateXRight(yearLabels[numberOfYears - <span class="hljs-number">1</span>]);
-    frame.updateYTop(maximumBarTotal.toLocaleString());
+            <div class="content"><div class='highlight'><pre>    frame.<span class="hljs-title function_">updateSubtitle</span>(<span class="hljs-string">&#x27;No data selected&#x27;</span>);
+    frame.<span class="hljs-title function_">updateXLeft</span>(yearLabels[<span class="hljs-number">0</span>]);
+    frame.<span class="hljs-title function_">updateXRight</span>(yearLabels[numberOfYears - <span class="hljs-number">1</span>]);
+    frame.<span class="hljs-title function_">updateYTop</span>(maximumBarTotal.<span class="hljs-title function_">toLocaleString</span>());
 
-    show();
+    <span class="hljs-title function_">show</span>();
 };</pre></div></div>
             
         </li>
@@ -439,9 +439,9 @@ Data format requirements - a Javascript object with structure:
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> kill = <span class="hljs-function">() =&gt;</span> group.kill(<span class="hljs-literal">true</span>);
-<span class="hljs-keyword">const</span> hide = <span class="hljs-function">() =&gt;</span> group.visibility = <span class="hljs-literal">false</span>;
-<span class="hljs-keyword">const</span> show = <span class="hljs-function">() =&gt;</span> group.visibility = <span class="hljs-literal">true</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">kill</span> = (<span class="hljs-params"></span>) =&gt; group.<span class="hljs-title function_">kill</span>(<span class="hljs-literal">true</span>);
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">hide</span> = (<span class="hljs-params"></span>) =&gt; group.<span class="hljs-property">visibility</span> = <span class="hljs-literal">false</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">show</span> = (<span class="hljs-params"></span>) =&gt; group.<span class="hljs-property">visibility</span> = <span class="hljs-literal">true</span>;
 
 <span class="hljs-keyword">export</span> {
     build,

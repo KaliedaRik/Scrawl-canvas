@@ -185,9 +185,9 @@
 <h5 id="usage-example">Usage example:</h5>
 <pre><code><span class="hljs-keyword">import</span> highlightText <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./relative/or/absolute/path/to/this/file.js&#x27;</span>;
 
-<span class="hljs-keyword">let</span> myElements = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">&#x27;.some-class&#x27;</span>);
+<span class="hljs-keyword">let</span> myElements = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.some-class&#x27;</span>);
 
-myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> highlightText(el));
+myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> <span class="hljs-title function_">highlightText</span>(el));
 </code></pre>
 
             </div>
@@ -227,7 +227,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">el, args = {}</span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">el, args = {}</span>) {</pre></div></div>
             
         </li>
         
@@ -245,8 +245,8 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> highlightColor = args.highlightColor || <span class="hljs-string">&#x27;red&#x27;</span>,
-        thickness = args.thickness || <span class="hljs-number">3</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> highlightColor = args.<span class="hljs-property">highlightColor</span> || <span class="hljs-string">&#x27;red&#x27;</span>,
+        thickness = args.<span class="hljs-property">thickness</span> || <span class="hljs-number">3</span>;</pre></div></div>
             
         </li>
         
@@ -261,7 +261,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> snippet = scrawl.makeSnippet({
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> snippet = scrawl.<span class="hljs-title function_">makeSnippet</span>({
         <span class="hljs-attr">domElement</span>: el,
     });
 
@@ -280,24 +280,24 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> canvas = snippet.canvas,
-            group = canvas.base.name,
-            wrapper = snippet.element,
-            name = wrapper.name;
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> canvas = snippet.<span class="hljs-property">canvas</span>,
+            group = canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
+            wrapper = snippet.<span class="hljs-property">element</span>,
+            name = wrapper.<span class="hljs-property">name</span>;
 
-        scrawl.makeBlock({
+        scrawl.<span class="hljs-title function_">makeBlock</span>({
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-pin1`</span>,
             group,
             <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>],
             <span class="hljs-attr">display</span>: <span class="hljs-string">&#x27;none&#x27;</span>,
             <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;5%&#x27;</span>, <span class="hljs-string">&#x27;10%&#x27;</span>],
-        }).clone({
+        }).<span class="hljs-title function_">clone</span>({
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-pin2`</span>,
             <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;90%&#x27;</span>, <span class="hljs-string">&#x27;40%&#x27;</span>],
-        }).clone({
+        }).<span class="hljs-title function_">clone</span>({
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-pin3`</span>,
             <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;10%&#x27;</span>, <span class="hljs-string">&#x27;70%&#x27;</span>],
-        }).clone({
+        }).<span class="hljs-title function_">clone</span>({
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-pin4`</span>,
             <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;95%&#x27;</span>, <span class="hljs-string">&#x27;90%&#x27;</span>],
         })</pre></div></div>
@@ -315,7 +315,7 @@ myElements.forEach(<span class="hljs-function"><span class="hljs-params">el</spa
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        scrawl.makePolyline({
+            <div class="content"><div class='highlight'><pre>        scrawl.<span class="hljs-title function_">makePolyline</span>({
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-highlight`</span>,
             group,
             <span class="hljs-attr">pins</span>: [<span class="hljs-string">`<span class="hljs-subst">${name}</span>-pin1`</span>, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-pin2`</span>, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-pin3`</span>, <span class="hljs-string">`<span class="hljs-subst">${name}</span>-pin4`</span>],

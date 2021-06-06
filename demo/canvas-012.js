@@ -114,7 +114,11 @@ let report = function () {
         testTicker = testNow;
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-Shape path length: ${arrow.length}`;
+    Arrow path length: ${arrow.length}
+    Start - x: ${arrow.start[0]}, y: ${arrow.start[1]}
+    Handle - x: ${arrow.handle[0]}, y: ${arrow.handle[1]}
+    Offset - x: ${arrow.offset[0]}, y: ${arrow.offset[1]}
+    Roll: ${arrow.roll}; Scale: ${arrow.scale}`;
     };
 }();
 
