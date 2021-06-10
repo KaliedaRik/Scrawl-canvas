@@ -1,5 +1,5 @@
 // # Demo Mediapipe 002
-// MediaPipe Selfie Segmentation - model image output
+// MediaPipe Face Mesh - model image output
 
 // [Run code](../../demo/mediapipe-002.html)
 import scrawl from '../source/scrawl.js'
@@ -107,7 +107,6 @@ scrawl.importMediaStream({
 
     video = mycamera;
 
-    // This fixes the issue in Firefox where the media stream will crash Tensorflow if the stream's video element's dimensions have not been set
     video.source.width = width;
     video.source.height = height;
 

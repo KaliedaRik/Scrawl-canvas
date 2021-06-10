@@ -525,6 +525,11 @@
                 </a>
               
                 
+                <a class="source" href="mediapipe-003.html">
+                  ./demo/mediapipe-003.js
+                </a>
+              
+                
                 <a class="source" href="modules-001.html">
                   ./demo/modules-001.js
                 </a>
@@ -630,6 +635,11 @@
                 </a>
               
                 
+                <a class="source" href="rapier-001.html">
+                  ./demo/rapier-001.js
+                </a>
+              
+                
                 <a class="source" href="snippets-001.html">
                   ./demo/snippets-001.js
                 </a>
@@ -685,7 +695,7 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="demo-mediapipe-002">Demo Mediapipe 002</h1>
-<p>MediaPipe Selfie Segmentation - model image output</p>
+<p>MediaPipe Face Mesh - model image output</p>
 
             </div>
             
@@ -910,22 +920,9 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
 })
 .<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">mycamera</span> =&gt;</span> {
 
-    video = mycamera;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-12">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
-              </div>
-              <p>This fixes the issue in Firefox where the media stream will crash Tensorflow if the stream’s video element’s dimensions have not been set</p>
+    video = mycamera;
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    video.<span class="hljs-property">source</span>.<span class="hljs-property">width</span> = width;
+    video.<span class="hljs-property">source</span>.<span class="hljs-property">width</span> = width;
     video.<span class="hljs-property">source</span>.<span class="hljs-property">height</span> = height;
 
     scrawl.<span class="hljs-title function_">makePicture</span>({
@@ -942,11 +939,11 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>Start the MediaPipe model</p>
 
@@ -967,11 +964,11 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Use MediaPipe’s camera functionality to get updates to the forever loop</p>
 
@@ -995,11 +992,11 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
         </li>
         
         
-        <li id="section-15">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1025,11 +1022,11 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1045,11 +1042,11 @@ engine.drawImage(stuff.image, 0, 0, width, height);</li>
         </li>
         
         
-        <li id="section-17">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 
