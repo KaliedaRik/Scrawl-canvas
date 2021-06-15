@@ -101,7 +101,7 @@ let report = function () {
         hueRange = document.querySelector('#hueRange'),
         saturation = document.querySelector('#saturation'),
         luminosity = document.querySelector('#luminosity'),
-        modularAmplitude = document.querySelector('#modularAmplitude');
+        sumAmplitude = document.querySelector('#sumAmplitude');
 
     return function () {
 
@@ -110,7 +110,7 @@ Color (monochrome): start: ${monochromeStart.value}; range: ${monochromeRange.va
 Color (hue): start: ${hueStart.value}; range: ${hueRange.value}; saturation: ${saturation.value}; luminosity: ${luminosity.value}
 Scale: ${scale.value}; Size: ${size.value}
 Octaves: ${octaves.value}; Sine frequency coefficient: ${sineFrequencyCoeff.value}
-Persistence: ${persistence.value}; Lacunarity: ${lacunarity.value}; Modular amplitude: ${modularAmplitude.value}`;
+Persistence: ${persistence.value}; Lacunarity: ${lacunarity.value}; Sum amplitude: ${sumAmplitude.value}`;
     };
 }();
 
@@ -154,7 +154,7 @@ scrawl.observeAndUpdate({
         seed: ['seed', 'raw'],
         persistence: ['persistence', 'float'],
         lacunarity: ['lacunarity', 'round'],
-        modularAmplitude: ['modularAmplitude', 'float'],
+        sumAmplitude: ['sumAmplitude', 'float'],
         monochromeStart: ['monochromeStart', 'round'],
         monochromeRange: ['monochromeRange', 'round'],
         hueStart: ['hueStart', 'float'],
@@ -168,14 +168,14 @@ scrawl.addNativeListener(['input', 'change'], function (e) {
 
     let val = e.target.value,
         sfc = document.querySelector('#sineFrequencyCoeff'),
-        ma = document.querySelector('#modularAmplitude');
+        ma = document.querySelector('#sumAmplitude');
 
     if (val === 'sine' || val === 'sine-x' || val === 'sine-y') {
 
         sfc.removeAttribute('disabled');
         ma.setAttribute('disabled', 'true');
     }
-    else if (val === 'modular') {
+    else if (val === 'modular' || val === 'random') {
 
         sfc.setAttribute('disabled', 'true');
         ma.removeAttribute('disabled');
@@ -275,7 +275,7 @@ document.querySelector('#size').value = 256;
 document.querySelector('#seed').value = 'noize';
 document.querySelector('#persistence').value = 0.5;
 document.querySelector('#lacunarity').value = 2;
-document.querySelector('#modularAmplitude').value = 5;
+document.querySelector('#sumAmplitude').value = 5;
 document.querySelector('#monochromeStart').value = 0;
 document.querySelector('#monochromeRange').value = 255;
 document.querySelector('#hueStart').value = 0;

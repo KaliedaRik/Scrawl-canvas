@@ -853,7 +853,7 @@ scrawl.<span class="hljs-title function_">makePicture</span>({
         hueRange = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#hueRange&#x27;</span>),
         saturation = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#saturation&#x27;</span>),
         luminosity = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#luminosity&#x27;</span>),
-        modularAmplitude = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#modularAmplitude&#x27;</span>);
+        sumAmplitude = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#sumAmplitude&#x27;</span>);
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
@@ -862,7 +862,7 @@ Color (monochrome): start: <span class="hljs-subst">${monochromeStart.value}</sp
 Color (hue): start: <span class="hljs-subst">${hueStart.value}</span>; range: <span class="hljs-subst">${hueRange.value}</span>; saturation: <span class="hljs-subst">${saturation.value}</span>; luminosity: <span class="hljs-subst">${luminosity.value}</span>
 Scale: <span class="hljs-subst">${scale.value}</span>; Size: <span class="hljs-subst">${size.value}</span>
 Octaves: <span class="hljs-subst">${octaves.value}</span>; Sine frequency coefficient: <span class="hljs-subst">${sineFrequencyCoeff.value}</span>
-Persistence: <span class="hljs-subst">${persistence.value}</span>; Lacunarity: <span class="hljs-subst">${lacunarity.value}</span>; Modular amplitude: <span class="hljs-subst">${modularAmplitude.value}</span>`</span>;
+Persistence: <span class="hljs-subst">${persistence.value}</span>; Lacunarity: <span class="hljs-subst">${lacunarity.value}</span>; Sum amplitude: <span class="hljs-subst">${sumAmplitude.value}</span>`</span>;
     };
 }();</pre></div></div>
             
@@ -928,7 +928,7 @@ Persistence: <span class="hljs-subst">${persistence.value}</span>; Lacunarity: <
         <span class="hljs-attr">seed</span>: [<span class="hljs-string">&#x27;seed&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
         <span class="hljs-attr">persistence</span>: [<span class="hljs-string">&#x27;persistence&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
         <span class="hljs-attr">lacunarity</span>: [<span class="hljs-string">&#x27;lacunarity&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
-        <span class="hljs-attr">modularAmplitude</span>: [<span class="hljs-string">&#x27;modularAmplitude&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
+        <span class="hljs-attr">sumAmplitude</span>: [<span class="hljs-string">&#x27;sumAmplitude&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
         <span class="hljs-attr">monochromeStart</span>: [<span class="hljs-string">&#x27;monochromeStart&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
         <span class="hljs-attr">monochromeRange</span>: [<span class="hljs-string">&#x27;monochromeRange&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
         <span class="hljs-attr">hueStart</span>: [<span class="hljs-string">&#x27;hueStart&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
@@ -942,14 +942,14 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 
     <span class="hljs-keyword">let</span> val = e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>,
         sfc = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#sineFrequencyCoeff&#x27;</span>),
-        ma = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#modularAmplitude&#x27;</span>);
+        ma = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#sumAmplitude&#x27;</span>);
 
     <span class="hljs-keyword">if</span> (val === <span class="hljs-string">&#x27;sine&#x27;</span> || val === <span class="hljs-string">&#x27;sine-x&#x27;</span> || val === <span class="hljs-string">&#x27;sine-y&#x27;</span>) {
 
         sfc.<span class="hljs-title function_">removeAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>);
         ma.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;true&#x27;</span>);
     }
-    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (val === <span class="hljs-string">&#x27;modular&#x27;</span>) {
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (val === <span class="hljs-string">&#x27;modular&#x27;</span> || val === <span class="hljs-string">&#x27;random&#x27;</span>) {
 
         sfc.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>, <span class="hljs-string">&#x27;true&#x27;</span>);
         ma.<span class="hljs-title function_">removeAttribute</span>(<span class="hljs-string">&#x27;disabled&#x27;</span>);
@@ -1061,7 +1061,7 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#seed&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;noize&#x27;</span>;
 <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#persistence&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0.5</span>;
 <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#lacunarity&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">2</span>;
-<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#modularAmplitude&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">5</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#sumAmplitude&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">5</span>;
 <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#monochromeStart&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
 <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#monochromeRange&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">255</span>;
 <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#hueStart&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;

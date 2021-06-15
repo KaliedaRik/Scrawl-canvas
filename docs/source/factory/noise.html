@@ -514,6 +514,7 @@
 <li><a href="https://en.wikipedia.org/wiki/Bilinear_interpolation">Bilinear interpolation</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Bicubic_interpolation">Bicubic interpolation</a> - and see also (this blog post)[<a href="https://jobtalle.com/cubic_noise.html%5D">https://jobtalle.com/cubic_noise.html]</a></li>
 <li>Using non-rectangular <a href="https://en.wikipedia.org/wiki/Types_of_mesh">grids or meshes</a> as a starting point for generating noise. For instance: <a href="https://www.sciencemag.org/news/2016/05/sunflowers-show-complex-fibonacci-sequences">sunflower pattern</a></li>
+<li><a href="https://github.com/topics/reaction-diffusion?l=javascript">Reaction-diuffusion systems</a></li>
 </ul>
 
             </div>
@@ -859,7 +860,7 @@ P = <span class="hljs-title function_">patternMix</span>(P);</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">sumFunction</span>: <span class="hljs-string">&#x27;none&#x27;</span>,
     <span class="hljs-attr">sineFrequencyCoeff</span>: <span class="hljs-number">1</span>,
-    <span class="hljs-attr">modularAmplitude</span>: <span class="hljs-number">5</span>,
+    <span class="hljs-attr">sumAmplitude</span>: <span class="hljs-number">5</span>,
 
 
 };
@@ -1144,13 +1145,36 @@ S.<span class="hljs-property">sineFrequencyCoeff</span> = <span class="hljs-keyw
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyNoise</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">true</span>;
     }
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-27">&#x00a7;</a>
+              </div>
+              <p><code>modularAmplitude</code> - name changed to <code>sumAmplitude</code></p>
 
-S.<span class="hljs-property">modularAmplitude</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">modularAmplitude</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span>) {
 
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">modularAmplitude</span> = item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">sumAmplitude</span> = item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyNoise</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">true</span>;
+    }
+};
+
+S.<span class="hljs-property">sumAmplitude</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span>) {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">sumAmplitude</span> = item;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyNoise</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">true</span>;
     }
@@ -1181,11 +1205,11 @@ S.<span class="hljs-property">height</span> = <span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-27">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 <p><code>installElement</code> - internal function, used by the constructor</p>
@@ -1203,11 +1227,11 @@ S.<span class="hljs-property">height</span> = <span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p><code>checkSource</code></p>
 <ul>
@@ -1225,11 +1249,11 @@ S.<span class="hljs-property">height</span> = <span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p><code>getData</code> function called by Cell objects when calculating required updates to its CanvasRenderingContext2D engine, specifically for an entity’s <strong>fillStyle</strong>, <strong>strokeStyle</strong> and <strong>shadowColor</strong> attributes.</p>
 <ul>
@@ -1243,11 +1267,11 @@ S.<span class="hljs-property">height</span> = <span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p>this.checkSource(this.width, this.height);</p>
 
@@ -1261,11 +1285,11 @@ S.<span class="hljs-property">height</span> = <span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p><code>notifySubscribers</code>, <code>notifySubscriber</code> - overwrites the functions defined in mixin/asset.js</p>
 
@@ -1293,11 +1317,11 @@ P.<span class="hljs-property">notifySubscriber</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-32">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p><code>cleanOutput</code> - internal function called by the <code>notifySubscribers</code> function</p>
 
@@ -1312,11 +1336,11 @@ P.<span class="hljs-property">notifySubscriber</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-33">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p><code>cleanNoise</code> - internal function called by the <code>cleanOutput</code> function</p>
 
@@ -1335,11 +1359,11 @@ P.<span class="hljs-property">notifySubscriber</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p>Seed our pseudo-random number generator</p>
 
@@ -1350,11 +1374,11 @@ P.<span class="hljs-property">notifySubscriber</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-35">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p>Generate the permutations table(s)</p>
 
@@ -1365,11 +1389,11 @@ P.<span class="hljs-property">notifySubscriber</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-36">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p>Initialize the appropriate noise function</p>
 
@@ -1385,11 +1409,11 @@ P.<span class="hljs-property">notifySubscriber</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p>Prepare the noiseValues 2d array</p>
 
@@ -1407,11 +1431,11 @@ P.<span class="hljs-property">notifySubscriber</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-38">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p>Calculate a relative scale, and setup min/max variables</p>
 
@@ -1425,11 +1449,11 @@ P.<span class="hljs-property">notifySubscriber</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-39">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p>This is the core of the calculation, performed for each cell in the noiseValues 2d array</p>
 
@@ -1441,11 +1465,11 @@ P.<span class="hljs-property">notifySubscriber</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p>We can modify the output by scaling it</p>
 <ul>
@@ -1460,11 +1484,11 @@ P.<span class="hljs-property">notifySubscriber</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-41">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p>Amplitude and frequency will update once per octave calculation; totalNoise is the sum of all octave results</p>
 
@@ -1477,11 +1501,11 @@ P.<span class="hljs-property">notifySubscriber</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-42">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p>The calculation will be performed at least once</p>
 <ul>
@@ -1495,11 +1519,11 @@ P.<span class="hljs-property">notifySubscriber</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p>Call the appropriate getNoiseValue function</p>
 <ul>
@@ -1513,11 +1537,11 @@ P.<span class="hljs-property">notifySubscriber</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-44">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p>Update octave with a post-calculation octaveFunction, if required</p>
 
@@ -1528,11 +1552,11 @@ P.<span class="hljs-property">notifySubscriber</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-45">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p>Modify result by the current amplitude, and add to the running total</p>
 
@@ -1544,11 +1568,11 @@ P.<span class="hljs-property">notifySubscriber</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-46">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p>Update the variables that change over multiple octave loops</p>
 
@@ -1561,11 +1585,11 @@ P.<span class="hljs-property">notifySubscriber</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p>Update the noise value in its array</p>
 
@@ -1576,11 +1600,11 @@ P.<span class="hljs-property">notifySubscriber</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p>… and check for max/min spread of the generated values</p>
 
@@ -1594,11 +1618,11 @@ P.<span class="hljs-property">notifySubscriber</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p>Calculate the span of numbers generated - we need to get all the results in the range 0 to 1</p>
 
@@ -1615,11 +1639,11 @@ P.<span class="hljs-property">notifySubscriber</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p>Clamp the cell’s noise value to between 0 and 1, then update it with the post-calculation sumFunction, if required</p>
 
@@ -1633,11 +1657,11 @@ P.<span class="hljs-property">notifySubscriber</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-51">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p>Update the cached noise values arrays</p>
 
@@ -1652,11 +1676,11 @@ P.<span class="hljs-property">notifySubscriber</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-52">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p><code>paintCanvas</code> - internal function called by the <code>cleanOutput</code> function</p>
 
@@ -1673,11 +1697,11 @@ P.<span class="hljs-property">notifySubscriber</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-53">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p>Noise values will be calculated in the cleanNoise function, but just in case this function gets invoked directly before the 2d array has been created …</p>
 
@@ -1688,11 +1712,11 @@ P.<span class="hljs-property">notifySubscriber</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-54">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p>Update the Canvas element’s dimensions - this will also clear the canvas display</p>
 
@@ -1704,11 +1728,11 @@ P.<span class="hljs-property">notifySubscriber</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-55">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p>Rebuild the display, pixel-by-pixel</p>
 
@@ -1741,11 +1765,11 @@ P.<span class="hljs-property">notifySubscriber</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-56">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p>The default color preference is monochrome</p>
 
@@ -1781,11 +1805,11 @@ P.<span class="hljs-property">notifySubscriber</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-57">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <h4 id="noise-generator-functionality">Noise generator functionality</h4>
 
@@ -1794,11 +1818,11 @@ P.<span class="hljs-property">notifySubscriber</span> = <span class="hljs-keywor
         </li>
         
         
-        <li id="section-58">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p>Convenience constants
 P.F = 0.5 * (Math.sqrt(3) - 1);
@@ -1814,11 +1838,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-59">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <p><code>noiseEngines</code> - a {key:object} object. Each named object contains two functions:</p>
 <ul>
@@ -1828,9 +1852,22 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">noiseEngines</span> = {
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">noiseEngines</span> = {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-61">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-61">&#x00a7;</a>
+              </div>
+              <p>The classic Perlin noise generator</p>
 
-    <span class="hljs-string">&#x27;perlin&#x27;</span>: {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;perlin&#x27;</span>: {
 
         <span class="hljs-attr">init</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
@@ -1888,9 +1925,22 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
             
             <span class="hljs-keyword">return</span> <span class="hljs-number">0.5</span> * (<span class="hljs-number">1</span> + <span class="hljs-title function_">interpolate</span>(sy, a, b));
         },
-    },
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-62">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-62">&#x00a7;</a>
+              </div>
+              <p>An improved Perlin noise generator</p>
 
-    <span class="hljs-string">&#x27;improved-perlin&#x27;</span>: {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;improved-perlin&#x27;</span>: {
 
         <span class="hljs-attr">init</span>: λ<span class="hljs-literal">null</span>,
 
@@ -1933,9 +1983,22 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
 
             <span class="hljs-keyword">return</span> <span class="hljs-number">0.5</span> * (<span class="hljs-number">1</span> + <span class="hljs-title function_">interpolate</span>(sy, a, b));
         }
-    },
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-63">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-63">&#x00a7;</a>
+              </div>
+              <p>A successor to Perlin noise generation, by the person who invented it</p>
 
-    <span class="hljs-string">&#x27;simplex&#x27;</span>: {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;simplex&#x27;</span>: {
 
         <span class="hljs-attr">init</span>: λ<span class="hljs-literal">null</span>,
 
@@ -1982,9 +2045,22 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
 
             <span class="hljs-keyword">return</span> <span class="hljs-number">0.5</span> + (<span class="hljs-number">35</span> * noise);
         },
-    },
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-64">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-64">&#x00a7;</a>
+              </div>
+              <p>A simplified form of Perlin noise</p>
 
-    <span class="hljs-string">&#x27;value&#x27;</span>: {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;value&#x27;</span>: {
 
         <span class="hljs-attr">init</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
@@ -2021,17 +2097,71 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
 
             <span class="hljs-keyword">return</span> <span class="hljs-title function_">interpolate</span>(sy, i1, i2);
         },
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-65">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-65">&#x00a7;</a>
+              </div>
+              <p>For generating repeated stripe gradients, set the sum function to <code>modular</code> and vary the canvas width/height attributes to set the stripe direction; stripe spacing can be varied using the modular amplitude value. Other sum function values can also produce interesting effects</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;stripes&#x27;</span>: {
+
+        <span class="hljs-attr">init</span>: λ<span class="hljs-literal">null</span>,
+
+        <span class="hljs-attr">getNoiseValue</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) {
+
+            <span class="hljs-keyword">return</span> (x / <span class="hljs-number">5</span>) + (y / <span class="hljs-number">5</span>);
+        }
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-66">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-66">&#x00a7;</a>
+              </div>
+              <p>As for stripes, but can apply smoothing function to the output</p>
+<ul>
+<li>interesting things start to happen when scale is set to on/around 100 and canvas dimensions are roughly equal, alongside a higher value for sumAmplitude. Best viewed with a modular sum function</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;smoothed-stripes&#x27;</span>: {
+
+        <span class="hljs-attr">init</span>: λ<span class="hljs-literal">null</span>,
+
+        <span class="hljs-attr">getNoiseValue</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) {
+
+            <span class="hljs-keyword">const</span> {smoothing} = <span class="hljs-variable language_">this</span>;
+
+            <span class="hljs-keyword">let</span> sx = <span class="hljs-title function_">smoothing</span>(x),
+                sy = <span class="hljs-title function_">smoothing</span>(y);
+
+            <span class="hljs-keyword">return</span> (sx / <span class="hljs-number">5</span>) + (sy / <span class="hljs-number">5</span>);
+        }
     },
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-60">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <p><code>generatePermutationTable</code> - internal function called by the <code>cleanNoise</code> function</p>
 <ul>
@@ -2073,11 +2203,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-61">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <p><code>octaveFunctions</code> - a {key:functions} object holding functions used to modify octave loop results</p>
 <ul>
@@ -2095,11 +2225,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-62">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <p><code>sumFunctions</code> - a {key:functions} object holding functions used to modify noise values after their calculation has completed (post-processing)</p>
 <ul>
@@ -2110,30 +2240,81 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">sumFunctions</span> = {
 
-    <span class="hljs-attr">none</span>: λfirstArg,
+    <span class="hljs-attr">none</span>: λfirstArg,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-70">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-70">&#x00a7;</a>
+              </div>
+              <p>These functions modify the final output using a sine frequency calculation based on the pixel position within the canvas</p>
 
-    <span class="hljs-string">&#x27;sine-x&#x27;</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">v, sx, sy</span>) { <span class="hljs-keyword">return</span> <span class="hljs-number">0.5</span> + (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sin</span>((sx * <span class="hljs-variable language_">this</span>.<span class="hljs-property">sineFrequencyCoeff</span>) + v) / <span class="hljs-number">2</span>) },
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;sine-x&#x27;</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">v, sx, sy</span>) { <span class="hljs-keyword">return</span> <span class="hljs-number">0.5</span> + (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sin</span>((sx * <span class="hljs-variable language_">this</span>.<span class="hljs-property">sineFrequencyCoeff</span>) + v) / <span class="hljs-number">2</span>) },
     <span class="hljs-string">&#x27;sine-y&#x27;</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">v, sx, sy</span>) { <span class="hljs-keyword">return</span> <span class="hljs-number">0.5</span> + (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sin</span>((sy * <span class="hljs-variable language_">this</span>.<span class="hljs-property">sineFrequencyCoeff</span>) + v) / <span class="hljs-number">2</span>) },
-    <span class="hljs-attr">sine</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">v, sx, sy</span>) { <span class="hljs-keyword">return</span> <span class="hljs-number">0.5</span> + (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sin</span>((sx * <span class="hljs-variable language_">this</span>.<span class="hljs-property">sineFrequencyCoeff</span>) + v) / <span class="hljs-number">4</span>) + (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sin</span>((sy * <span class="hljs-variable language_">this</span>.<span class="hljs-property">sineFrequencyCoeff</span>) + v) / <span class="hljs-number">4</span>) },
+    <span class="hljs-attr">sine</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">v, sx, sy</span>) { <span class="hljs-keyword">return</span> <span class="hljs-number">0.5</span> + (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sin</span>((sx * <span class="hljs-variable language_">this</span>.<span class="hljs-property">sineFrequencyCoeff</span>) + v) / <span class="hljs-number">4</span>) + (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sin</span>((sy * <span class="hljs-variable language_">this</span>.<span class="hljs-property">sineFrequencyCoeff</span>) + v) / <span class="hljs-number">4</span>) },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-71">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-71">&#x00a7;</a>
+              </div>
+              <p>This function creates repeating bands, the frequency of which depends on the sumAmplitude attribute</p>
 
-    <span class="hljs-attr">modular</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params">v</span>) {
-        <span class="hljs-keyword">let</span> g = v * <span class="hljs-variable language_">this</span>.<span class="hljs-property">modularAmplitude</span>;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">modular</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params">v</span>) {
+        <span class="hljs-keyword">let</span> g = v * <span class="hljs-variable language_">this</span>.<span class="hljs-property">sumAmplitude</span>;
         <span class="hljs-keyword">return</span> g - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(g);
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-72">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-72">&#x00a7;</a>
+              </div>
+              <p>This function adds random interference to the final output, the strength of which depends on the sumAmplitude attribute (lower values create a stronger effect)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">random</span>: <span class="hljs-keyword">function</span>(<span class="hljs-params">v</span>) {
+        <span class="hljs-keyword">let</span> a = <span class="hljs-variable language_">this</span>.<span class="hljs-property">sumAmplitude</span>;
+        <span class="hljs-keyword">let</span> r = (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>() / a) - (<span class="hljs-number">0.5</span> / a);
+        <span class="hljs-keyword">let</span> g = v + r;
+
+        <span class="hljs-keyword">if</span> (g &gt; <span class="hljs-number">1</span>) g = <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (g &lt; <span class="hljs-number">0</span>) g = <span class="hljs-number">0</span>;
+
+        <span class="hljs-keyword">return</span> g;
     },
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-63">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-73">&#x00a7;</a>
               </div>
               <p><code>smoothingFunctions</code> - a {key:function} object containing various <em><strong>fade functions</strong></em> which can be used to smooth calculated coordinate values so that they will ease towards integral values.</p>
 <ul>
 <li>Used by the “perlin_classic”, “perlin_improved” and “value” getNoiseValue functions; the “simplex” getNoiseValue function does away with the need for a smoothing operation.</li>
+<li>Also used by the “smoothed-stripes” getNoiseValue function.</li>
 <li>calling signature: <code>smoothing(value)</code></li>
 </ul>
 
@@ -2144,11 +2325,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-64">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-74">&#x00a7;</a>
               </div>
               <p><strong>none</strong> - effectively linear - no smoothing gets performed</p>
 
@@ -2190,11 +2371,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-65">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-75">&#x00a7;</a>
               </div>
               <p><strong>cosine</strong> - a cosine-based interpolator</p>
 
@@ -2205,11 +2386,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-66">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-76">&#x00a7;</a>
               </div>
               <p><strong>hermite</strong> - a cubic Hermite interpolator</p>
 
@@ -2220,11 +2401,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-67">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-77">&#x00a7;</a>
               </div>
               <p><strong>quintic</strong> - the original ease function used by Perlin</p>
 
@@ -2236,11 +2417,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-68">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-78">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.<span class="hljs-title function_">makeNoise</span>({
@@ -2266,11 +2447,11 @@ constructors.<span class="hljs-property">Noise</span> = <span class="hljs-title 
         </li>
         
         
-        <li id="section-69">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-79">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

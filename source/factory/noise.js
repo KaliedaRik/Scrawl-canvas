@@ -26,6 +26,7 @@
 // + [Bilinear interpolation](https://en.wikipedia.org/wiki/Bilinear_interpolation)
 // + [Bicubic interpolation](https://en.wikipedia.org/wiki/Bicubic_interpolation) - and see also (this blog post)[https://jobtalle.com/cubic_noise.html]
 // + Using non-rectangular [grids or meshes](https://en.wikipedia.org/wiki/Types_of_mesh) as a starting point for generating noise. For instance: [sunflower pattern](https://www.sciencemag.org/news/2016/05/sunflowers-show-complex-fibonacci-sequences)
+// + [Reaction-diuffusion systems](https://github.com/topics/reaction-diffusion?l=javascript)
 
 
 // #### Demos:
@@ -157,7 +158,7 @@ let defaultAttributes = {
     // + __modularAmplitude__ - a Number - is used by the modular sum function
     sumFunction: 'none',
     sineFrequencyCoeff: 1,
-    modularAmplitude: 5,
+    sumAmplitude: 5,
 
 
 };
@@ -376,11 +377,22 @@ S.sineFrequencyCoeff = function (item) {
     }
 };
 
+// `modularAmplitude` - name changed to `sumAmplitude`
 S.modularAmplitude = function (item) {
 
     if (item.toFixed) {
 
-        this.modularAmplitude = item;
+        this.sumAmplitude = item;
+        this.dirtyNoise = true;
+        this.dirtyOutput = true;
+    }
+};
+
+S.sumAmplitude = function (item) {
+
+    if (item.toFixed) {
+
+        this.sumAmplitude = item;
         this.dirtyNoise = true;
         this.dirtyOutput = true;
     }
@@ -652,6 +664,7 @@ P.perlinGrad = [[1, 1], [-1, 1], [1, -1], [-1, -1], [1, 0], [-1, 0], [0, 1], [0,
 // + __getNoiseValue__ - a function called on a per-pixel basis, which calculates the noise value for that pixel
 P.noiseEngines = {
 
+    // The classic Perlin noise generator
     'perlin': {
 
         init: function () {
@@ -712,6 +725,7 @@ P.noiseEngines = {
         },
     },
 
+    // An improved Perlin noise generator
     'improved-perlin': {
 
         init: λnull,
@@ -757,6 +771,7 @@ P.noiseEngines = {
         }
     },
 
+    // A successor to Perlin noise generation, by the person who invented it
     'simplex': {
 
         init: λnull,
@@ -806,6 +821,7 @@ P.noiseEngines = {
         },
     },
 
+    // A simplified form of Perlin noise
     'value': {
 
         init: function () {
@@ -843,6 +859,34 @@ P.noiseEngines = {
 
             return interpolate(sy, i1, i2);
         },
+    },
+
+    // For generating repeated stripe gradients, set the sum function to `modular` and vary the canvas width/height attributes to set the stripe direction; stripe spacing can be varied using the modular amplitude value. Other sum function values can also produce interesting effects
+    'stripes': {
+
+        init: λnull,
+
+        getNoiseValue: function (x, y) {
+
+            return (x / 5) + (y / 5);
+        }
+    },
+
+    // As for stripes, but can apply smoothing function to the output
+    // + interesting things start to happen when scale is set to on/around 100 and canvas dimensions are roughly equal, alongside a higher value for sumAmplitude. Best viewed with a modular sum function
+    'smoothed-stripes': {
+
+        init: λnull,
+
+        getNoiseValue: function (x, y) {
+
+            const {smoothing} = this;
+
+            let sx = smoothing(x),
+                sy = smoothing(y);
+
+            return (sx / 5) + (sy / 5);
+        }
     },
 };
 
@@ -892,18 +936,33 @@ P.sumFunctions = {
 
     none: λfirstArg,
 
+    // These functions modify the final output using a sine frequency calculation based on the pixel position within the canvas
     'sine-x': function (v, sx, sy) { return 0.5 + (Math.sin((sx * this.sineFrequencyCoeff) + v) / 2) },
     'sine-y': function (v, sx, sy) { return 0.5 + (Math.sin((sy * this.sineFrequencyCoeff) + v) / 2) },
     sine: function (v, sx, sy) { return 0.5 + (Math.sin((sx * this.sineFrequencyCoeff) + v) / 4) + (Math.sin((sy * this.sineFrequencyCoeff) + v) / 4) },
 
+    // This function creates repeating bands, the frequency of which depends on the sumAmplitude attribute
     modular: function(v) {
-        let g = v * this.modularAmplitude;
+        let g = v * this.sumAmplitude;
         return g - Math.floor(g);
+    },
+
+    // This function adds random interference to the final output, the strength of which depends on the sumAmplitude attribute (lower values create a stronger effect)
+    random: function(v) {
+        let a = this.sumAmplitude;
+        let r = (Math.random() / a) - (0.5 / a);
+        let g = v + r;
+
+        if (g > 1) g = 1;
+        else if (g < 0) g = 0;
+
+        return g;
     },
 };
 
 // `smoothingFunctions` - a {key:function} object containing various ___fade functions___ which can be used to smooth calculated coordinate values so that they will ease towards integral values.
 // + Used by the "perlin_classic", "perlin_improved" and "value" getNoiseValue functions; the "simplex" getNoiseValue function does away with the need for a smoothing operation.
+// + Also used by the "smoothed-stripes" getNoiseValue function.
 // + calling signature: `smoothing(value)`
 P.smoothingFunctions = {
 
