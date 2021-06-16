@@ -11,7 +11,7 @@ const canvas = scrawl.library.canvas.mycanvas,
 scrawl.importDomImage('.flowers');
 
 
-let noiseAsset = scrawl.makeNoise({
+let noiseAsset = scrawl.makeNoiseAsset({
 
     name: 'my-noise-generator',
     width: 400,

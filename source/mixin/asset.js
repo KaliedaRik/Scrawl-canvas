@@ -169,7 +169,8 @@ export default function (P = Ωempty) {
 // + __imageAsset__ - needs to update its subscribers when an image completes loading - or, for &lt;img> sources with srcset (and sizes) attributes, when the image completes a reload of its source data.
 // + __spriteAsset__ - will also update its subscribers each time it moves to a new sprite image frame, if the sprite is being animated
 // + __videoAsset__ - will update its subscribers for every RAF tick while the video is playing, or if the video is halted and seeks to a different time in the video play stream.
-// + __Noise__ - will update its subscribers when any of its attributes changes (Note: factory/noise.js overwrites these functions).
+// + __noiseAsset__ - will update its subscribers when any of its attributes changes (Note: factory/noiseAsset.js overwrites these functions).
+// + __reactionDiffusionAsset__ - will update its subscribers when any of its attributes changes (Note: factory/reactionDiffusionAsset.js overwrites these functions).
 //
 // All notifications are push; the notification is achieved by setting various attributes and flags in each subscriber.
     P.notifySubscribers = function () {

@@ -68,7 +68,7 @@ scrawl.makeBlock({
 // STEP 2. Apply a Noise-based displacement filter to our pattern Cell. We can then animate this filter to make it more interesting
 
 // Create the Noise asset
-scrawl.makeNoise({
+scrawl.makeNoiseAsset({
 
     name: 'my-noise-generator',
     width: 50,

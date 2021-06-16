@@ -1,13 +1,17 @@
-// # Noise factory
-// The purpose of the Noise asset is to give us a resource for generating noisy (semi-regular) maps. These can then be used directly as Picture or Pattern images, or uploaded to the filter engine as part of a filter that uses displacement map functionality.
+// # NoiseAsset factory
+// The purpose of the NoiseAsset asset is to give us a resource for generating noisy (semi-regular) maps. These can then be used directly as Picture or Pattern images, or uploaded to the filter engine as part of a filter that uses displacement map functionality.
 
 
 // #### Current functionality
-// At the moment the Noise asset can generate Perlin-type noise, with engines supplied for:
+// At the moment the NoiseAsset asset can generate Perlin-type noise, with engines supplied for:
 // + Perlin (classic)
 // + Perlin (improved)
 // + Simplex - the default engine
 // + Value
+//
+// Additional engines include:
+// + Stripes
+// + Smoothed stripes
 //
 // These engines are supported by a number of settable (and thus animatable) attributes, including special functions for smoothing the engine output. Demo [Filters-019](../../demo/filters-019.html) has been set up to allow for experimenting with these attributes
 //
@@ -17,16 +21,6 @@
 // + __Hue__ - where the engine output for each pixel is interpreted as the hue component of an HSL color
 //
 // (___NOTE:___ Perlin, Simplex and Value noise generator code based on code found in the [canvas-noise GitHub repository](https://github.com/lencinhaus/canvas-noise) written by [lencinhaus](https://github.com/lencinhaus).
-
-
-// #### Possible future functionality
-// There's no reason why the Noise asset cannot be extended to output other types of (semi-regular) noise data. For instance:
-// + [Nearest neighbour interpolation](https://en.wikipedia.org/wiki/Nearest-neighbor_interpolation) - for tesselations, particularly with [unstructured grids](https://en.wikipedia.org/wiki/Unstructured_grid)
-// + [Linear interpolation](https://en.wikipedia.org/wiki/Linear_interpolation) 
-// + [Bilinear interpolation](https://en.wikipedia.org/wiki/Bilinear_interpolation)
-// + [Bicubic interpolation](https://en.wikipedia.org/wiki/Bicubic_interpolation) - and see also (this blog post)[https://jobtalle.com/cubic_noise.html]
-// + Using non-rectangular [grids or meshes](https://en.wikipedia.org/wiki/Types_of_mesh) as a starting point for generating noise. For instance: [sunflower pattern](https://www.sciencemag.org/news/2016/05/sunflowers-show-complex-fibonacci-sequences)
-// + [Reaction-diuffusion systems](https://github.com/topics/reaction-diffusion?l=javascript)
 
 
 // #### Demos:
@@ -45,8 +39,8 @@ import assetMix from '../mixin/asset.js';
 import patternMix from '../mixin/pattern.js';
 
 
-// #### Noise constructor
-const Noise = function (items = Ωempty) {
+// #### NoiseAsset constructor
+const NoiseAsset = function (items = Ωempty) {
 
     this.makeName(items.name);
     this.register();
@@ -79,9 +73,9 @@ const Noise = function (items = Ωempty) {
 };
 
 
-// #### Noise prototype
-let P = Noise.prototype = Object.create(Object.prototype);
-P.type = 'Noise';
+// #### NoiseAsset prototype
+let P = NoiseAsset.prototype = Object.create(Object.prototype);
+P.type = 'NoiseAsset';
 P.lib = 'asset';
 P.isArtefact = false;
 P.isAsset = true;
@@ -96,7 +90,7 @@ P = assetMix(P);
 P = patternMix(P);
 
 
-// #### Noise attributes
+// #### NoiseAsset attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 // + Attributes defined in the [asset mixin](../mixin/asset.html): __source, subscribers__.
 // + Attributes defined in the [pattern mixin](../mixin/pattern.html): __repeat, patternMatrix, matrixA, matrixB, matrixC, matrixD, matrixE, matrixF__.
@@ -433,7 +427,7 @@ P.installElement = function (element) {
 
 // `checkSource`
 // + Gets invoked by subscribers (who have a handle to the asset instance object) as part of the display cycle.
-// + Noise assets will automatically pass this call onto `notifySubscribers`, where dirty flags get checked and rectified
+// + NoiseAsset assets will automatically pass this call onto `notifySubscribers`, where dirty flags get checked and rectified
 P.checkSource = function (width, height) {
 
     this.notifySubscribers();
@@ -589,7 +583,7 @@ P.paintCanvas = function () {
 
         let {noiseValues, element, engine, width, height, color, colorFactory, monochromeStart, monochromeRange, hueStart, hueRange, saturation, luminosity} = this;
 
-        // Noise values will be calculated in the cleanNoise function, but just in case this function gets invoked directly before the 2d array has been created ...
+        // NoiseAsset values will be calculated in the cleanNoise function, but just in case this function gets invoked directly before the 2d array has been created ...
         if (null != noiseValues) {
 
             // Update the Canvas element's dimensions - this will also clear the canvas display
@@ -649,7 +643,7 @@ P.paintCanvas = function () {
     }
 };
 
-// #### Noise generator functionality
+// #### NoiseAsset generator functionality
 
 // Convenience constants
 // P.F = 0.5 * (Math.sqrt(3) - 1);
@@ -1013,7 +1007,7 @@ P.smoothingFunctions = {
 
 // #### Factory
 // ```
-// scrawl.makeNoise({
+// scrawl.makeNoiseAsset({
 //     name: 'my-noise-generator',
 //     width: 50,
 //     height: 50,
@@ -1022,16 +1016,20 @@ P.smoothingFunctions = {
 //     noiseFunction: 'simplex',
 // });
 // ```
-const makeNoise = function (items) {
+const makeNoiseAsset = function (items) {
 
     if (!items) return false;
-    return new Noise(items);
+    return new NoiseAsset(items);
 };
 
-constructors.Noise = Noise;
+// Deprecated - old name
+const makeNoise = makeNoiseAsset;
+
+constructors.NoiseAsset = NoiseAsset;
 
 
 // #### Exports
 export {
+    makeNoiseAsset,
     makeNoise,
 };

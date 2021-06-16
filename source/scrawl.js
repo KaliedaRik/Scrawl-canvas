@@ -188,7 +188,8 @@ import {
 
 import { 
     makeNoise,
-} from './factory/noise.js';
+    makeNoiseAsset,
+} from './factory/noiseAsset.js';
 
 
 import { 
@@ -462,8 +463,9 @@ export default {
     makeNet,
 
 
-    // factory/noise.js
+    // factory/noiseAsset.js
     makeNoise,
+    makeNoiseAsset,
 
 
     // factory/oval.js
