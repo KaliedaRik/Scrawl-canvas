@@ -50,10 +50,6 @@ const ReactionDiffusionAsset = function (items = Ωempty) {
     this.dirtyData = true;
     this.dirtyOutput = true;
 
-    // this.isRunning = false;
-    // this.animationChoke = 16;
-    // this.lastRun = 0;
-
     return this;
 };
 
