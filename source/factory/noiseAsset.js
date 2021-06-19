@@ -100,6 +100,7 @@ let defaultAttributes = {
     width: 300,
     height: 150,
 
+    // SHARED BETWEEN noiseAsset, reactionDiffusionAsset
     // __color__ - String value determining how the generated noise will be output on the canvas. Currently recognised values are: `monochrome` (default), `gradient` and `hue`
     color: 'monochrome',
 
@@ -123,6 +124,7 @@ let defaultAttributes = {
     hueRange: 120,
     saturation: 100,
     luminosity: 50,
+    // END SHARED BETWEEN noiseAsset, reactionDiffusionAsset
 
     // __noiseEngine__ - String - the currently supported noise engines String values are: `perlin`, `improved-perlin`, `simplex`, `value`
     noiseEngine: 'simplex',
@@ -239,52 +241,13 @@ S.seed = function (item) {
     }
 };
 
+// SHARED BETWEEN noiseAsset, reactionDiffusionAsset
 P.supportedColorSchemes = ['monochrome', 'gradient', 'hue'];
 S.color = function (item) {
 
     if (this.supportedColorSchemes.indexOf(item) >= 0) {
 
         this.color = item;
-        this.dirtyOutput = true;
-    }
-};
-
-S.scale = function (item) {
-
-    if (item.toFixed) {
-
-        this.scale = item;
-        this.dirtyNoise = true;
-        this.dirtyOutput = true;
-    }
-};
-
-S.size = function (item) {
-
-    if (item.toFixed) {
-
-        this.size = item;
-        this.dirtyNoise = true;
-        this.dirtyOutput = true;
-    }
-};
-
-S.persistence = function (item) {
-
-    if (item.toFixed) {
-
-        this.persistence = item;
-        this.dirtyNoise = true;
-        this.dirtyOutput = true;
-    }
-};
-
-S.lacunarity = function (item) {
-
-    if (item.toFixed) {
-
-        this.lacunarity = item;
-        this.dirtyNoise = true;
         this.dirtyOutput = true;
     }
 };
@@ -357,6 +320,47 @@ S.luminosity = function (item) {
     if (item.toFixed && item >= 0 && item <= 100) {
 
         this.luminosity = Math.floor(item);
+        this.dirtyOutput = true;
+    }
+};
+// END SHARED BETWEEN noiseAsset, reactionDiffusionAsset
+
+S.scale = function (item) {
+
+    if (item.toFixed) {
+
+        this.scale = item;
+        this.dirtyNoise = true;
+        this.dirtyOutput = true;
+    }
+};
+
+S.size = function (item) {
+
+    if (item.toFixed) {
+
+        this.size = item;
+        this.dirtyNoise = true;
+        this.dirtyOutput = true;
+    }
+};
+
+S.persistence = function (item) {
+
+    if (item.toFixed) {
+
+        this.persistence = item;
+        this.dirtyNoise = true;
+        this.dirtyOutput = true;
+    }
+};
+
+S.lacunarity = function (item) {
+
+    if (item.toFixed) {
+
+        this.lacunarity = item;
+        this.dirtyNoise = true;
         this.dirtyOutput = true;
     }
 };
@@ -1013,7 +1017,7 @@ P.smoothingFunctions = {
 //     height: 50,
 //     octaves: 5,
 //     scale: 2,
-//     noiseFunction: 'simplex',
+//     noiseEngine: 'simplex',
 // });
 // ```
 const makeNoiseAsset = function (items) {
