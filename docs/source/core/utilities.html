@@ -185,8 +185,8 @@
                 </a>
               
                 
-                <a class="source" href="../factory/noise.html">
-                  ./source/factory/noise.js
+                <a class="source" href="../factory/noiseAsset.html">
+                  ./source/factory/noiseAsset.js
                 </a>
               
                 
@@ -1682,7 +1682,9 @@ using any of these functions.</p>
         <span class="hljs-keyword">else</span> res = n1 * (t -= <span class="hljs-number">2.625</span> / d1) * t + <span class="hljs-number">0.984375</span>;
         <span class="hljs-keyword">return</span> (<span class="hljs-number">1</span> + res) / <span class="hljs-number">2</span>;
     }
-};</pre></div></div>
+};
+
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">getArrayType</span> = someObject =&gt; someObject &amp;&amp; someObject.<span class="hljs-property">constructor</span> &amp;&amp; someObject.<span class="hljs-property">constructor</span>.<span class="hljs-property">name</span> &amp;&amp; someObject.<span class="hljs-property">constructor</span>.<span class="hljs-property">name</span> || <span class="hljs-literal">null</span>;</pre></div></div>
             
         </li>
         
@@ -1757,6 +1759,8 @@ using any of these functions.</p>
     easeOutBounce,
     easeInBounce,
     easeOutInBounce,
+
+    getArrayType,
 };</pre></div></div>
             
         </li>

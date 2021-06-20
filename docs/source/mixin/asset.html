@@ -185,8 +185,8 @@
                 </a>
               
                 
-                <a class="source" href="../factory/noise.html">
-                  ./source/factory/noise.js
+                <a class="source" href="../factory/noiseAsset.html">
+                  ./source/factory/noiseAsset.js
                 </a>
               
                 
@@ -871,7 +871,8 @@
 <li><strong>imageAsset</strong> - needs to update its subscribers when an image completes loading - or, for &lt;img&gt; sources with srcset (and sizes) attributes, when the image completes a reload of its source data.</li>
 <li><strong>spriteAsset</strong> - will also update its subscribers each time it moves to a new sprite image frame, if the sprite is being animated</li>
 <li><strong>videoAsset</strong> - will update its subscribers for every RAF tick while the video is playing, or if the video is halted and seeks to a different time in the video play stream.</li>
-<li><strong>Noise</strong> - will update its subscribers when any of its attributes changes (Note: factory/noise.js overwrites these functions).</li>
+<li><strong>noiseAsset</strong> - will update its subscribers when any of its attributes changes (Note: factory/noiseAsset.js overwrites these functions).</li>
+<li><strong>reactionDiffusionAsset</strong> - will update its subscribers when any of its attributes changes (Note: factory/reactionDiffusionAsset.js overwrites these functions).</li>
 </ul>
 <p>All notifications are push; the notification is achieved by setting various attributes and flags in each subscriber.</p>
 

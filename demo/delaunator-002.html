@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Delaunator 002</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    img {
+      display: none;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    .canvas-container {
+      overflow: hidden;
+      resize: both;
+      border: 1px solid black;
+      width: 400px;
+      height: 400px;
+      min-height: 200px;
+      min-width: 200px;
+      max-height: 600px;
+      max-width: 600px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Delaunator test 002</h1>
+  <h2>Responsive Voronoi cells in a RawAsset wrapper</h2>
+  <h3>Drag the bottom right corner of the canvas to resize it</h3>
+
+  <div class="canvas-container">
+    <canvas id="mycanvas"></canvas>
+  </div>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Check that we can load the <a href="https://github.com/mapbox/delaunator">Delaunator JS library</a> into a module from a remote CMS.</li>
+      <li>...</li>
+    </ul>
+    <p><a href="../docs/demo/delaunator-002.html">Annotated code</a></p>
+  </div>
+
+  <img id="iris" src="img/iris.png" class="flowers" />
+
+  <script src="delaunator-002.js" type="module"></script>
+
+</body>
+
+</html>

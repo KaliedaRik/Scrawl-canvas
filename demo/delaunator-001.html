@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Delaunator 001</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Delaunator test 001</h1>
+  <h2>Delauney triangulation and Voronoi cell visualisation</h2>
+
+  <canvas id="mycanvas" width="600" height="400"></canvas>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Check that we can load the <a href="https://github.com/mapbox/delaunator">Delaunator JS library</a> into a module from a remote CMS.</li>
+      <li>Create a scene using a particle emitter.</li>
+      <li>Use the emitter particles as the source points for thge Delaunay triangulation calculations.</li>
+      <li>Render Delauney triangulation lines using Delaunator data.</li>
+      <li>Render Voronoi cell lines using Delaunator data.</li>
+      <li>Animate the scene.</li>
+      <li>Check that we can include mouse coordinates in the Delaunay calculations.</li>
+    </ul>
+    <p><a href="../docs/demo/delaunator-001.html">Annotated code</a></p>
+  </div>
+
+  <script src="delaunator-001.js" type="module"></script>
+
+</body>
+
+</html>
