@@ -19,58 +19,11 @@ const pointsOfTriangle = (del, t) => {
 
 const triangleOfEdge = (e) => Math.floor(e / 3);
 
-const nextHalfedge = (e) => (e % 3 === 2) ? e - 2 : e + 1;
-
-const prevHalfedge = (e) => (e % 3 === 0) ? e + 2 : e - 1;
-
-const forEachTriangleEdge = (pts, del, cb) => {
-
-    let { triangles, halfedges } = del;
-
-    let len = triangles.length;
-
-    for (let e = 0; e < len; e++) {
-
-        if (e > halfedges[e]) {
-
-            const p = pts[triangles[e]];
-            const q = pts[triangles[nextHalfedge(e)]];
-
-            cb(e, p, q);
-        }
-    }
-};
-
-const forEachTriangle = (pts, del, cb) => {
-
-    let len = del.triangles.length / 3;
-
-    for (let t = 0; t < len; t++) {
-
-        cb(t, pointsOfTriangle(del, t).map(p => pts[p]));
-    }
-};
-
 const triangleCenter = (pts, del, t) => {
 
     const vertices = pointsOfTriangle(del, t).map(p => pts[p]);
 
     return circumcenter(vertices[0], vertices[1], vertices[2]);
-};
-
-const trianglesAdjacentToTriangle = (del, t) => {
-
-    let { halfedges } = del;
-
-    const adjacent = [];
-
-    for (const e of edgesOfTriangle(t)) {
-
-        const opposite = halfedges[e];
-
-        if (opposite >= 0) adjacent.push(triangleOfEdge(opposite));
-    }
-    return adjacent;
 };
 
 const circumcenter = (a, b, c) => {
@@ -111,62 +64,14 @@ const forEachVoronoiEdge = (pts, del, cb) => {
     }
 };
 
-const edgesAroundPoint = (del, start) => {
-
-    let { halfedges } = del;
-
-    const result = [];
-
-    let incoming = start;
-
-    do {
-
-        result.push(incoming);
-        const outgoing = nextHalfedge(incoming);
-        incoming = halfedges[outgoing];
-
-    } while (incoming !== -1 && incoming !== start);
-
-    return result;
-};
-
-const forEachVoronoiCell = (pts, del, cb) => {
-
-    const index = new Map();
-
-    let { triangles, halfedges } = del;
-
-    let tLen = triangles.length,
-        pLen = pts.length;
-
-    for (let e = 0; e < tLen; e++) {
-
-        const endpoint = triangles[nextHalfedge(e)];
-
-        if (!index.has(endpoint) || halfedges[e] === -1) index.set(endpoint, e);
-    }
-
-    for (let p = 0; p < pLen; p++) {
-
-        const incoming = index.get(p);
-
-        const E = edgesAroundPoint(del, incoming);
-
-        const T = E.map(triangleOfEdge);
-
-        const V = T.map(t => triangleCenter(pts, del, t));
-
-        cb(p, V);
-    }
-};
-
-
 // #### Scene setup
 const canvas = scrawl.library.artefact.mycanvas;
 
-
 // Import image from DOM, and create Picture entity using it
 scrawl.importDomImage('.flowers');
+
+// Magic number - base Cell dimensions
+const baseDimension = 400;
 
 canvas.set({
 
@@ -176,16 +81,17 @@ canvas.set({
 
 }).setBase({
 
-    width: 600,
-    height: 600,
-    compileOrder: 2,
+    // Set the base Cell
+    width: baseDimension,
+    height: baseDimension,
+    backgroundColor: 'black',
 });
 
 
-// Create the coordinates to be used as the Voronoi web's points
+// Create the coordinates to be used as the Voronoi web's points - for this deo these coordinates will be static, except for the first point which will track the mouse cursor position over the canvas
 const coordArray = [],
     coord = scrawl.requestCoordinate(),
-    center = [300, 300];
+    center = [baseDimension/2, baseDimension/2];
 
 coordArray.push(center);
 
@@ -208,6 +114,8 @@ let myAsset = scrawl.makeRawAsset({
 
     userAttributes: [{
 
+        // __points__ - an array holding the coordinate arrays we generate elsewhere
+        // + For this demo, we will be updating the first coordinate point with the mouse cursor's position when it is over the canvas element
         key: 'points', 
         defaultValue: [],
         setter: function (item) {
@@ -215,19 +123,22 @@ let myAsset = scrawl.makeRawAsset({
             this.points = [...item];
         },
     },{
+        // __here__ - a handle to our Canvas wrapper's base Cell's `here` object, which gives us the current mouse cursor coordinates
         key: 'here', 
         defaultValue: null,
     },{
+        // __delaunay__ - a handle to the current Delaunator object we recreate on each update
         key: 'delaunay', 
         defaultValue: null,
     },{
+        // __canvasWidth__, __canvasHeight__ - make the RawAsset's dimensions the same as our canvas base Cell's dimensions
         key: 'canvasWidth', 
-        defaultValue: 600,
+        defaultValue: baseDimension,
     },{
         key: 'canvasHeight', 
-        defaultValue: 600,
+        defaultValue: baseDimension,
     },{
-        // We update the RawAsset at the start of each Display cycle by setting its `trigger` attribute
+        // __trigger__ - we update the RawAsset at the start of each Display cycle by setting its `trigger` attribute. All the work with recreating the Delaunator object happens here
         key: 'trigger', 
         defaultValue: false,
         setter: function (item) {
@@ -244,6 +155,7 @@ let myAsset = scrawl.makeRawAsset({
     }],
 
     // `assetWrapper` is the same as `this` when function is declared with the function keyword
+    // + We clear the RawAsset's canvas, then draw the updated Voronoi web onto it
     updateSource: function (assetWrapper) {
 
         const { element, engine, points, delaunay, canvasWidth, canvasHeight } = assetWrapper;
@@ -251,8 +163,8 @@ let myAsset = scrawl.makeRawAsset({
         element.width = canvasWidth;
         if (!element.height) element.height = canvasHeight;
 
-        engine.strokeStyle = 'red';
-        engine.lineWidth = 4;
+        engine.strokeStyle = 'black';
+        engine.lineWidth = 2;
 
         engine.beginPath();
 
@@ -269,12 +181,87 @@ let myAsset = scrawl.makeRawAsset({
     },
 });
 
-
+// Initialize the RawAsset with relevant data
 myAsset.set({
     points: coordArray,
     here: canvas.base.here,
 });
 
+// The RawAsset needs a subscriber to make it active - currently filters do not subscribe to assets so we need to do it via an otherwise unused Picture entity
+scrawl.makePicture({
+
+    name: 'temp',
+    asset: 'voronoi-web',
+    display: 'none',
+});
+
+// We apply the mosaic effect over our image using a Scrawl-canvas filter
+scrawl.makeFilter({
+
+    name: 'mosaic-filter',
+
+    actions: [{
+        // Load our RawAsset's output - the Voronoi web - into the filter
+        action: 'process-image',
+        lineOut: 'web',
+        asset: 'voronoi-web',
+        width: baseDimension,
+        height: baseDimension,
+        copyWidth: '100%',
+        copyHeight: '100%',
+    },{
+        // Create the tiles from the Voronoi web
+        action: 'flood',
+        lineOut: 'white-background',
+        red: 255,
+        green: 255,
+        blue: 255,
+        alpha: 255,
+    },{
+        action: 'compose',
+        lineIn: 'web',
+        lineMix: 'white-background',
+        lineOut: 'webbed-background',
+    },{
+        action: 'channels-to-alpha',
+        lineIn: 'webbed-background',
+        lineOut: 'webbed-background',
+        includeRed: true,
+        includeGreen: false,
+        includeBlue: false,
+    },{
+        // Apply our image over the tiles
+        action: 'compose',
+        lineIn: 'source',
+        lineMix: 'webbed-background',
+        compose: 'source-atop',
+    },{
+        // Tile shadows - blur the voronoi web then apply it, offset up and left, to the image 
+        action: 'gaussian-blur',
+        lineIn: 'web',
+        lineOut: 'blurred-web',
+        radius: 3,
+    },{
+        action: 'compose',
+        lineMix: 'blurred-web',
+        offsetX: -2,
+        offsetY: -2,
+        compose: 'destination-atop',
+    },{
+        // Tile highlights - invert the blurred web then apply it, offset down and right, to the image 
+        action: 'invert-channels',
+        lineIn: 'blurred-web',
+        lineOut: 'blurred-web',
+    },{
+        action: 'compose',
+        lineMix: 'blurred-web',
+        offsetX: 2,
+        offsetY: 2,
+        compose: 'destination-atop',
+    }],
+});
+
+// Display our image in a Picture entity - the filter is applied here 
 scrawl.makePicture({
 
     name: 'myFlower',
@@ -283,14 +270,8 @@ scrawl.makePicture({
     dimensions: ['100%', '100%'],
     copyDimensions: ['100%', '100%'],
 
-}).clone({
-
-    name: 'temporary-for-development',
-    asset: 'voronoi-web',
-
-    globalCompositeOperation: 'darken',
+    filters: ['mosaic-filter'],
 });
-
 
 
 // #### Scene animation
@@ -317,6 +298,8 @@ scrawl.makeRender({
 
     name: 'demo-animation',
     target: canvas,
+
+    // We need to update our RawAsset at the start of each Display cycle
     commence: () => myAsset.set({ trigger: true }),
     afterShow: report,
 });

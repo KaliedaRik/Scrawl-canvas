@@ -92,18 +92,21 @@ const circumcenter = (a, b, c) => {
 
 const forEachVoronoiEdge = (pts, del, cb) => {
 
-    let { triangles, halfedges } = del;
+    if (del) {
 
-    let len = triangles.length;
+        let { triangles, halfedges } = del;
 
-    for (let e = 0; e < len; e++) {
+        let len = triangles.length;
 
-        if (e < halfedges[e]) {
+        for (let e = 0; e < len; e++) {
 
-            const p = triangleCenter(pts, del, triangleOfEdge(e));
-            const q = triangleCenter(pts, del, triangleOfEdge(halfedges[e]));
+            if (e < halfedges[e]) {
 
-            cb(e, p, q);
+                const p = triangleCenter(pts, del, triangleOfEdge(e));
+                const q = triangleCenter(pts, del, triangleOfEdge(halfedges[e]));
+
+                cb(e, p, q);
+            }
         }
     }
 };

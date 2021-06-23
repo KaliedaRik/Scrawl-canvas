@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 052</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    #my-image-store {
+      display: none;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    .canvas-container {
+      overflow: hidden;
+      resize: both;
+      border: 1px solid black;
+      width: 400px;
+      height: 400px;
+      min-height: 200px;
+      min-width: 200px;
+      max-height: 600px;
+      max-width: 600px;
+    }
+
+    .controls {
+      grid-template-columns: 1fr 2fr 1fr 2fr;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 052</h1>
+  <h2>Drag-drop load image files into the canvas element</h2>
+  <h3>Drag image files over the canvas to load them</h3>
+  <h3>Resize the canvas by dragging its bottom right corner</h3>
+
+  <div class="canvas-container">
+    <canvas id="mycanvas"></canvas>
+  </div>
+
+  <p id="reportmessage"></p>
+
+  <div class="controls">
+
+    <div class="yellow label">Liner width</div>
+    <div class="yellow"><input class="controlItem" id="lineWidth" type="range" value="4" min="1" max="20" step="1" /></div>
+
+    <div class="yellow label">Liner length reducer</div>
+    <div class="yellow"><input class="controlItem" id="lineLengthReducer" type="range" value="6" min="1" max="30" step="1" /></div>
+
+    <div class="yellow label">Lines to add</div>
+    <div class="yellow"><input class="controlItem" id="linesToAdd" type="range" value="50" min="1" max="200" step="1" /></div>
+
+    <div class="yellow label">Line blend</div>
+    <div class="yellow">
+      <select class="controlItem" id="lineBlend">
+        <option value="source-over">normal</option>
+        <option value="color-burn">color-burn</option>
+        <option value="color-dodge">color-dodge</option>
+        <option value="darken">darken</option>
+        <option value="difference">difference</option>
+        <option value="exclusion">exclusion</option>
+        <option value="hard-light">hard-light</option>
+        <option value="lighten">lighten</option>
+        <option value="lighter">lighter</option>
+        <option value="multiply">multiply</option>
+        <option value="overlay">overlay</option>
+        <option value="screen">screen</option>
+        <option value="soft-light">soft-light</option>
+        <option value="color">color</option>
+        <option value="hue">hue</option>
+        <option value="luminosity">luminosity</option>
+        <option value="saturation">saturation</option>
+      </select>
+    </div>
+
+    <div class="yellow label">Line opacity</div>
+    <div class="yellow"><input class="controlItem" id="lineOpacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
+
+    <div class="pink label">Noise scale</div>
+    <div class="pink"><input class="controlItem" id="noiseScale" type="range" value="80" min="40" max="120" step="1" /></div>
+
+  </div>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>...</li>
+      <li>Allow user to drag-and-drop their own image file onto the canvas, to use as the base for the painting exercise</li>
+    </ul>
+    <p><a href="../docs/demo/canvas-052.html">Annotated code</a></p>
+  </div>
+
+  <div id="my-image-store">
+    <img id="iris" src="img/iris.png" class="flowers" />
+  </div>
+
+  <script src="canvas-052.js" type="module"></script>
+
+</body>
+
+</html>
