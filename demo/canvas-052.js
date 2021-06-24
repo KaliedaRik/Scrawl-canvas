@@ -55,12 +55,15 @@ let impressionistAsset = scrawl.makeRawAsset({
     name: 'pretend-van-gogh',
 
     userAttributes: [{
-        // __lineWidth__, __lineLengthReducer__, __linesToAdd__, __lineBlend__, __lineOpacity__ - some brush attributes that we'll allow the user to modify in real time.
+        // __lineWidth__, __lineLengthMultiplier__, __lineLengthStart__, __linesToAdd__, __lineBlend__, __lineOpacity__ - some brush attributes that we'll allow the user to modify in real time.
         key: 'lineWidth', 
         defaultValue: 4,
     },{
-        key: 'lineLengthReducer', 
-        defaultValue: 6,
+        key: 'lineLengthMultiplier', 
+        defaultValue: 20,
+    },{
+        key: 'lineLengthStart', 
+        defaultValue: 5,
     },{
         key: 'linesToAdd', 
         defaultValue: 50,
@@ -70,6 +73,19 @@ let impressionistAsset = scrawl.makeRawAsset({
     },{
         key: 'lineOpacity', 
         defaultValue: 1,
+    },{
+        // __offsetX__, __offsetY__, __rotationMultiplier__, __rotationStart__ - some additional brush rotation attributes.
+        key: 'offsetX', 
+        defaultValue: 0,
+    },{
+        key: 'offsetY', 
+        defaultValue: 0,
+    },{
+        key: 'rotationMultiplier', 
+        defaultValue: 90,
+    },{
+        key: 'rotationStart', 
+        defaultValue: 0,
     },{
         // __canvasWidth__, __canvasHeight__ - make the RawAsset's dimensions the same as our canvas base Cell's dimensions
         key: 'canvasWidth', 
@@ -133,34 +149,33 @@ let impressionistAsset = scrawl.makeRawAsset({
     // + We clear the RawAsset's canvas, then draw the updated Voronoi web onto it
     updateSource: function (assetWrapper) {
 
-        const { engine, noise, backgroundData, lineWidth, lineLengthReducer, linesToAdd, lineBlend, lineOpacity } = assetWrapper;
+        const { engine, noise, backgroundData, lineWidth, lineLengthMultiplier, lineLengthStart, linesToAdd, lineBlend, lineOpacity, offsetX, offsetY, rotationMultiplier, rotationStart } = assetWrapper;
 
         if (noise && backgroundData) {
 
             const { data, width, height } = backgroundData;
 
-            const { noiseValues, colorFactory } = noise;
+            const { noiseValues } = noise;
 
-            if (noiseValues && colorFactory) {
+            if (noiseValues) {
 
                 engine.lineWidth = lineWidth;
                 engine.lineCap = 'round';
                 engine.globalCompositeOperation = lineBlend;
                 engine.globalAlpha = lineOpacity;
 
-                let x, y, pos, dx, dy, r, g, b, a;
+                let x, y, pos, len, rx, ry, dx, dy, roll, r, g, b, a;
+
+                const coord = scrawl.requestCoordinate();
 
                 for (let i = 0; i < linesToAdd; i++) {
 
                     x = Math.floor(Math.random() * width);
                     y = Math.floor(Math.random() * height);
 
+                    len = (noiseValues[y][x] * lineLengthMultiplier) + lineLengthStart;
+
                     pos = ((y * width) + x) * 4;
-
-                    colorFactory.convert(colorFactory.getRangeColor(noiseValues[y][x]));
-
-                    dx = colorFactory.r / lineLengthReducer;
-                    dy = colorFactory.g / lineLengthReducer;
 
                     r = data[pos];
                     g = data[++pos];
@@ -169,11 +184,27 @@ let impressionistAsset = scrawl.makeRawAsset({
 
                     engine.strokeStyle = `rgba(${r},${g},${b},${a/255})`;
 
+                    rx = (x + offsetX);
+                    if (rx < 0 || rx >= width) {
+                        rx = (rx < 0) ? rx + width : rx - width;
+                    }
+
+                    ry = (y + offsetY);
+                    if (ry < 0 || ry >= height) {
+                        ry = (ry < 0) ? ry + height : ry - height;
+                    }
+
+                    roll = (noiseValues[ry][rx] * rotationMultiplier) + rotationStart;
+
+                    coord.set(len, 0).rotate(roll);
+                    [dx, dy] = coord;
+
                     engine.beginPath();
                     engine.moveTo(x, y);
                     engine.lineTo(x + dx, y + dy);
                     engine.stroke();
                 }
+                scrawl.releaseCoordinate(coord);
             }
         }
     },
@@ -339,10 +370,15 @@ scrawl.observeAndUpdate({
     updates: {
 
         lineBlend: ['lineBlend', 'raw'],
-        lineLengthReducer: ['lineLengthReducer', 'round'],
+        lineLengthMultiplier: ['lineLengthMultiplier', 'round'],
+        lineLengthStart: ['lineLengthStart', 'round'],
         lineWidth: ['lineWidth', 'round'],
         linesToAdd: ['linesToAdd', 'round'],
         lineOpacity: ['lineOpacity', 'float'],
+        offsetX: ['offsetX', 'round'],
+        offsetY: ['offsetY', 'round'],
+        rotationMultiplier: ['rotationMultiplier', 'round'],
+        rotationStart: ['rotationStart', 'round'],
     },
 });
 
@@ -365,10 +401,15 @@ scrawl.observeAndUpdate({
 // Setup form
 document.querySelector('#lineBlend').options.selectedIndex = 0;
 document.querySelector('#lineWidth').value = 4;
-document.querySelector('#lineLengthReducer').value = 6;
+document.querySelector('#lineLengthMultiplier').value = 20;
+document.querySelector('#lineLengthStart').value = 5;
 document.querySelector('#linesToAdd').value = 50;
 document.querySelector('#lineOpacity').value = 1;
 document.querySelector('#noiseScale').value = 80;
+document.querySelector('#offsetX').value = 0;
+document.querySelector('#offsetY').value = 0;
+document.querySelector('#rotationMultiplier').value = 90;
+document.querySelector('#rotationStart').value = 0;
 
 
 // #### Development and testing

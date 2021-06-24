@@ -51,17 +51,35 @@
 
   <div class="controls">
 
-    <div class="yellow label">Liner width</div>
+    <div class="yellow label">Line width</div>
     <div class="yellow"><input class="controlItem" id="lineWidth" type="range" value="4" min="1" max="20" step="1" /></div>
 
-    <div class="yellow label">Liner length reducer</div>
-    <div class="yellow"><input class="controlItem" id="lineLengthReducer" type="range" value="6" min="1" max="30" step="1" /></div>
+    <div class="yellow label">Line opacity</div>
+    <div class="yellow"><input class="controlItem" id="lineOpacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
 
-    <div class="yellow label">Lines to add</div>
-    <div class="yellow"><input class="controlItem" id="linesToAdd" type="range" value="50" min="1" max="200" step="1" /></div>
+    <div class="yellow label">Line length multiplier</div>
+    <div class="yellow"><input class="controlItem" id="lineLengthMultiplier" type="range" value="20" min="1" max="100" step="1" /></div>
 
-    <div class="yellow label">Line blend</div>
-    <div class="yellow">
+    <div class="yellow label">Line length start</div>
+    <div class="yellow"><input class="controlItem" id="lineLengthStart" type="range" value="5" min="0" max="100" step="1" /></div>
+
+    <div class="blue label">Offset X</div>
+    <div class="blue"><input class="controlItem" id="offsetX" type="range" value="0" min="-100" max="100" step="1" /></div>
+
+    <div class="blue label">Offset Y</div>
+    <div class="blue"><input class="controlItem" id="offsetY" type="range" value="0" min="-100" max="100" step="1" /></div>
+
+    <div class="blue label">Rotation multiplier</div>
+    <div class="blue"><input class="controlItem" id="rotationMultiplier" type="range" value="90" min="0" max="360" step="1" /></div>
+
+    <div class="blue label">Rotation start</div>
+    <div class="blue"><input class="controlItem" id="rotationStart" type="range" value="0" min="0" max="360" step="1" /></div>
+
+    <div class="lavender label">Lines to add</div>
+    <div class="lavender"><input class="controlItem" id="linesToAdd" type="range" value="50" min="0" max="200" step="1" /></div>
+
+    <div class="lavender label">Line blend</div>
+    <div class="lavender">
       <select class="controlItem" id="lineBlend">
         <option value="source-over">normal</option>
         <option value="color-burn">color-burn</option>
@@ -82,9 +100,6 @@
         <option value="saturation">saturation</option>
       </select>
     </div>
-
-    <div class="yellow label">Line opacity</div>
-    <div class="yellow"><input class="controlItem" id="lineOpacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
 
     <div class="pink label">Noise scale</div>
     <div class="pink"><input class="controlItem" id="noiseScale" type="range" value="80" min="40" max="120" step="1" /></div>
