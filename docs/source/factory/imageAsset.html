@@ -270,6 +270,11 @@
                 </a>
               
                 
+                <a class="source" href="rdAsset.html">
+                  ./source/factory/rdAsset.js
+                </a>
+              
+                
                 <a class="source" href="rectangle.html">
                   ./source/factory/rectangle.js
                 </a>
@@ -357,6 +362,11 @@
                 
                 <a class="source" href="../mixin/asset.html">
                   ./source/mixin/asset.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/assetAdvancedFunctionality.html">
+                  ./source/mixin/assetAdvancedFunctionality.js
                 </a>
               
                 
@@ -687,7 +697,16 @@ P.<span class="hljs-property">finalizePacketOut</span> = λ<span class="hljs-lit
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">source</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+            <div class="content"><div class='highlight'><pre>G.<span class="hljs-property">width</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalWidth</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>.<span class="hljs-property">naturalWidth</span> || <span class="hljs-number">0</span>;
+};
+G.<span class="hljs-property">height</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">sourceNaturalHeight</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>.<span class="hljs-property">naturalHeight</span> || <span class="hljs-number">0</span>;
+};
+
+S.<span class="hljs-property">source</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-keyword">if</span> (item) {</pre></div></div>
             

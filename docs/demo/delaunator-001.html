@@ -285,6 +285,16 @@
                 </a>
               
                 
+                <a class="source" href="canvas-052.html">
+                  ./demo/canvas-052.js
+                </a>
+              
+                
+                <a class="source" href="canvas-053.html">
+                  ./demo/canvas-053.js
+                </a>
+              
+                
                 <a class="source" href="core-001.html">
                   ./demo/core-001.js
                 </a>
@@ -820,18 +830,21 @@
 
 <span class="hljs-keyword">const</span> <span class="hljs-title function_">forEachVoronoiEdge</span> = (<span class="hljs-params">pts, del, cb</span>) =&gt; {
 
-    <span class="hljs-keyword">let</span> { triangles, halfedges } = del;
+    <span class="hljs-keyword">if</span> (del) {
 
-    <span class="hljs-keyword">let</span> len = triangles.<span class="hljs-property">length</span>;
+        <span class="hljs-keyword">let</span> { triangles, halfedges } = del;
 
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> e = <span class="hljs-number">0</span>; e &lt; len; e++) {
+        <span class="hljs-keyword">let</span> len = triangles.<span class="hljs-property">length</span>;
 
-        <span class="hljs-keyword">if</span> (e &lt; halfedges[e]) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> e = <span class="hljs-number">0</span>; e &lt; len; e++) {
 
-            <span class="hljs-keyword">const</span> p = <span class="hljs-title function_">triangleCenter</span>(pts, del, <span class="hljs-title function_">triangleOfEdge</span>(e));
-            <span class="hljs-keyword">const</span> q = <span class="hljs-title function_">triangleCenter</span>(pts, del, <span class="hljs-title function_">triangleOfEdge</span>(halfedges[e]));
+            <span class="hljs-keyword">if</span> (e &lt; halfedges[e]) {
 
-            <span class="hljs-title function_">cb</span>(e, p, q);
+                <span class="hljs-keyword">const</span> p = <span class="hljs-title function_">triangleCenter</span>(pts, del, <span class="hljs-title function_">triangleOfEdge</span>(e));
+                <span class="hljs-keyword">const</span> q = <span class="hljs-title function_">triangleCenter</span>(pts, del, <span class="hljs-title function_">triangleOfEdge</span>(halfedges[e]));
+
+                <span class="hljs-title function_">cb</span>(e, p, q);
+            }
         }
     }
 };

@@ -285,6 +285,16 @@
                 </a>
               
                 
+                <a class="source" href="canvas-052.html">
+                  ./demo/canvas-052.js
+                </a>
+              
+                
+                <a class="source" href="canvas-053.html">
+                  ./demo/canvas-053.js
+                </a>
+              
+                
                 <a class="source" href="core-001.html">
                   ./demo/core-001.js
                 </a>
@@ -747,58 +757,11 @@
 
 <span class="hljs-keyword">const</span> <span class="hljs-title function_">triangleOfEdge</span> = (<span class="hljs-params">e</span>) =&gt; <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(e / <span class="hljs-number">3</span>);
 
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">nextHalfedge</span> = (<span class="hljs-params">e</span>) =&gt; (e % <span class="hljs-number">3</span> === <span class="hljs-number">2</span>) ? e - <span class="hljs-number">2</span> : e + <span class="hljs-number">1</span>;
-
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">prevHalfedge</span> = (<span class="hljs-params">e</span>) =&gt; (e % <span class="hljs-number">3</span> === <span class="hljs-number">0</span>) ? e + <span class="hljs-number">2</span> : e - <span class="hljs-number">1</span>;
-
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">forEachTriangleEdge</span> = (<span class="hljs-params">pts, del, cb</span>) =&gt; {
-
-    <span class="hljs-keyword">let</span> { triangles, halfedges } = del;
-
-    <span class="hljs-keyword">let</span> len = triangles.<span class="hljs-property">length</span>;
-
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> e = <span class="hljs-number">0</span>; e &lt; len; e++) {
-
-        <span class="hljs-keyword">if</span> (e &gt; halfedges[e]) {
-
-            <span class="hljs-keyword">const</span> p = pts[triangles[e]];
-            <span class="hljs-keyword">const</span> q = pts[triangles[<span class="hljs-title function_">nextHalfedge</span>(e)]];
-
-            <span class="hljs-title function_">cb</span>(e, p, q);
-        }
-    }
-};
-
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">forEachTriangle</span> = (<span class="hljs-params">pts, del, cb</span>) =&gt; {
-
-    <span class="hljs-keyword">let</span> len = del.<span class="hljs-property">triangles</span>.<span class="hljs-property">length</span> / <span class="hljs-number">3</span>;
-
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> t = <span class="hljs-number">0</span>; t &lt; len; t++) {
-
-        <span class="hljs-title function_">cb</span>(t, <span class="hljs-title function_">pointsOfTriangle</span>(del, t).<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> pts[p]));
-    }
-};
-
 <span class="hljs-keyword">const</span> <span class="hljs-title function_">triangleCenter</span> = (<span class="hljs-params">pts, del, t</span>) =&gt; {
 
     <span class="hljs-keyword">const</span> vertices = <span class="hljs-title function_">pointsOfTriangle</span>(del, t).<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> pts[p]);
 
     <span class="hljs-keyword">return</span> <span class="hljs-title function_">circumcenter</span>(vertices[<span class="hljs-number">0</span>], vertices[<span class="hljs-number">1</span>], vertices[<span class="hljs-number">2</span>]);
-};
-
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">trianglesAdjacentToTriangle</span> = (<span class="hljs-params">del, t</span>) =&gt; {
-
-    <span class="hljs-keyword">let</span> { halfedges } = del;
-
-    <span class="hljs-keyword">const</span> adjacent = [];
-
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> e <span class="hljs-keyword">of</span> <span class="hljs-title function_">edgesOfTriangle</span>(t)) {
-
-        <span class="hljs-keyword">const</span> opposite = halfedges[e];
-
-        <span class="hljs-keyword">if</span> (opposite &gt;= <span class="hljs-number">0</span>) adjacent.<span class="hljs-title function_">push</span>(<span class="hljs-title function_">triangleOfEdge</span>(opposite));
-    }
-    <span class="hljs-keyword">return</span> adjacent;
 };
 
 <span class="hljs-keyword">const</span> <span class="hljs-title function_">circumcenter</span> = (<span class="hljs-params">a, b, c</span>) =&gt; {
@@ -837,55 +800,6 @@
             }
         }
     }
-};
-
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">edgesAroundPoint</span> = (<span class="hljs-params">del, start</span>) =&gt; {
-
-    <span class="hljs-keyword">let</span> { halfedges } = del;
-
-    <span class="hljs-keyword">const</span> result = [];
-
-    <span class="hljs-keyword">let</span> incoming = start;
-
-    <span class="hljs-keyword">do</span> {
-
-        result.<span class="hljs-title function_">push</span>(incoming);
-        <span class="hljs-keyword">const</span> outgoing = <span class="hljs-title function_">nextHalfedge</span>(incoming);
-        incoming = halfedges[outgoing];
-
-    } <span class="hljs-keyword">while</span> (incoming !== -<span class="hljs-number">1</span> &amp;&amp; incoming !== start);
-
-    <span class="hljs-keyword">return</span> result;
-};
-
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">forEachVoronoiCell</span> = (<span class="hljs-params">pts, del, cb</span>) =&gt; {
-
-    <span class="hljs-keyword">const</span> index = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Map</span>();
-
-    <span class="hljs-keyword">let</span> { triangles, halfedges } = del;
-
-    <span class="hljs-keyword">let</span> tLen = triangles.<span class="hljs-property">length</span>,
-        pLen = pts.<span class="hljs-property">length</span>;
-
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> e = <span class="hljs-number">0</span>; e &lt; tLen; e++) {
-
-        <span class="hljs-keyword">const</span> endpoint = triangles[<span class="hljs-title function_">nextHalfedge</span>(e)];
-
-        <span class="hljs-keyword">if</span> (!index.<span class="hljs-title function_">has</span>(endpoint) || halfedges[e] === -<span class="hljs-number">1</span>) index.<span class="hljs-title function_">set</span>(endpoint, e);
-    }
-
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> p = <span class="hljs-number">0</span>; p &lt; pLen; p++) {
-
-        <span class="hljs-keyword">const</span> incoming = index.<span class="hljs-title function_">get</span>(p);
-
-        <span class="hljs-keyword">const</span> E = <span class="hljs-title function_">edgesAroundPoint</span>(del, incoming);
-
-        <span class="hljs-keyword">const</span> T = E.<span class="hljs-title function_">map</span>(triangleOfEdge);
-
-        <span class="hljs-keyword">const</span> V = T.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> <span class="hljs-title function_">triangleCenter</span>(pts, del, t));
-
-        <span class="hljs-title function_">cb</span>(p, V);
-    }
 };</pre></div></div>
             
         </li>
@@ -916,9 +830,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);
-
-canvas.<span class="hljs-title function_">set</span>({</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -929,19 +841,13 @@ canvas.<span class="hljs-title function_">set</span>({</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <p>Make the canvas responsive</p>
+              <p>Magic number - base Cell dimensions</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">fit</span>: <span class="hljs-string">&#x27;cover&#x27;</span>,
-    <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> baseDimension = <span class="hljs-number">400</span>;
 
-}).<span class="hljs-title function_">setBase</span>({
-
-    <span class="hljs-attr">width</span>: <span class="hljs-number">600</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-number">600</span>,
-    <span class="hljs-attr">compileOrder</span>: <span class="hljs-number">2</span>,
-});</pre></div></div>
+canvas.<span class="hljs-title function_">set</span>({</pre></div></div>
             
         </li>
         
@@ -952,13 +858,49 @@ canvas.<span class="hljs-title function_">set</span>({</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <p>Create the coordinates to be used as the Voronoi web’s points</p>
+              <p>Make the canvas responsive</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">fit</span>: <span class="hljs-string">&#x27;cover&#x27;</span>,
+    <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,
+
+}).<span class="hljs-title function_">setBase</span>({</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
+              </div>
+              <p>Set the base Cell</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">width</span>: baseDimension,
+    <span class="hljs-attr">height</span>: baseDimension,
+    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;black&#x27;</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
+              </div>
+              <p>Create the coordinates to be used as the Voronoi web’s points - for this deo these coordinates will be static, except for the first point which will track the mouse cursor position over the canvas</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> coordArray = [],
     coord = scrawl.<span class="hljs-title function_">requestCoordinate</span>(),
-    center = [<span class="hljs-number">300</span>, <span class="hljs-number">300</span>];
+    center = [baseDimension/<span class="hljs-number">2</span>, baseDimension/<span class="hljs-number">2</span>];
 
 coordArray.<span class="hljs-title function_">push</span>(center);
 
@@ -977,11 +919,11 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);</pre>
         </li>
         
         
-        <li id="section-8">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>We build the Voronoi web in a RawAsset wrapper</p>
 
@@ -991,38 +933,96 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);</pre>
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;voronoi-web&#x27;</span>,
 
-    <span class="hljs-attr">userAttributes</span>: [{
+    <span class="hljs-attr">userAttributes</span>: [{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
+              <p><strong>points</strong> - an array holding the coordinate arrays we generate elsewhere</p>
+<ul>
+<li>For this demo, we will be updating the first coordinate point with the mouse cursor’s position when it is over the canvas element</li>
+</ul>
 
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;points&#x27;</span>, 
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;points&#x27;</span>, 
         <span class="hljs-attr">defaultValue</span>: [],
         <span class="hljs-attr">setter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">points</span> = [...item];
         },
-    },{
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;here&#x27;</span>, 
-        <span class="hljs-attr">defaultValue</span>: <span class="hljs-literal">null</span>,
-    },{
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;delaunay&#x27;</span>, 
-        <span class="hljs-attr">defaultValue</span>: <span class="hljs-literal">null</span>,
-    },{
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;canvasWidth&#x27;</span>, 
-        <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">600</span>,
-    },{
-        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;canvasHeight&#x27;</span>, 
-        <span class="hljs-attr">defaultValue</span>: <span class="hljs-number">600</span>,
     },{</pre></div></div>
             
         </li>
         
         
-        <li id="section-9">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
-              <p>We update the RawAsset at the start of each Display cycle by setting its <code>trigger</code> attribute</p>
+              <p><strong>here</strong> - a handle to our Canvas wrapper’s base Cell’s <code>here</code> object, which gives us the current mouse cursor coordinates</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;here&#x27;</span>, 
+        <span class="hljs-attr">defaultValue</span>: <span class="hljs-literal">null</span>,
+    },{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
+              <p><strong>delaunay</strong> - a handle to the current Delaunator object we recreate on each update</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;delaunay&#x27;</span>, 
+        <span class="hljs-attr">defaultValue</span>: <span class="hljs-literal">null</span>,
+    },{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
+              </div>
+              <p><strong>canvasWidth</strong>, <strong>canvasHeight</strong> - make the RawAsset’s dimensions the same as our canvas base Cell’s dimensions</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;canvasWidth&#x27;</span>, 
+        <span class="hljs-attr">defaultValue</span>: baseDimension,
+    },{
+        <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;canvasHeight&#x27;</span>, 
+        <span class="hljs-attr">defaultValue</span>: baseDimension,
+    },{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
+              </div>
+              <p><strong>trigger</strong> - we update the RawAsset at the start of each Display cycle by setting its <code>trigger</code> attribute. All the work with recreating the Delaunator object happens here</p>
 
             </div>
             
@@ -1044,13 +1044,16 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);</pre>
         </li>
         
         
-        <li id="section-10">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p><code>assetWrapper</code> is the same as <code>this</code> when function is declared with the function keyword</p>
+<ul>
+<li>We clear the RawAsset’s canvas, then draw the updated Voronoi web onto it</li>
+</ul>
 
             </div>
             
@@ -1061,8 +1064,8 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);</pre>
         element.<span class="hljs-property">width</span> = canvasWidth;
         <span class="hljs-keyword">if</span> (!element.<span class="hljs-property">height</span>) element.<span class="hljs-property">height</span> = canvasHeight;
 
-        engine.<span class="hljs-property">strokeStyle</span> = <span class="hljs-string">&#x27;red&#x27;</span>;
-        engine.<span class="hljs-property">lineWidth</span> = <span class="hljs-number">4</span>;
+        engine.<span class="hljs-property">strokeStyle</span> = <span class="hljs-string">&#x27;black&#x27;</span>;
+        engine.<span class="hljs-property">lineWidth</span> = <span class="hljs-number">2</span>;
 
         engine.<span class="hljs-title function_">beginPath</span>();
 
@@ -1077,15 +1080,203 @@ scrawl.<span class="hljs-title function_">releaseCoordinate</span>(coord);</pre>
 
         engine.<span class="hljs-title function_">stroke</span>();
     },
-});
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
+              </div>
+              <p>Initialize the RawAsset with relevant data</p>
 
-
-myAsset.<span class="hljs-title function_">set</span>({
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>myAsset.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">points</span>: coordArray,
     <span class="hljs-attr">here</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">here</span>,
-});
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
+              </div>
+              <p>The RawAsset needs a subscriber to make it active - currently filters do not subscribe to assets so we need to do it via an otherwise unused Picture entity</p>
 
-scrawl.<span class="hljs-title function_">makePicture</span>({
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makePicture</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;temp&#x27;</span>,
+    <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;voronoi-web&#x27;</span>,
+    <span class="hljs-attr">display</span>: <span class="hljs-string">&#x27;none&#x27;</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
+              </div>
+              <p>We apply the mosaic effect over our image using a Scrawl-canvas filter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeFilter</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;mosaic-filter&#x27;</span>,
+
+    <span class="hljs-attr">actions</span>: [{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
+              </div>
+              <p>Load our RawAsset’s output - the Voronoi web - into the filter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;process-image&#x27;</span>,
+        <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;web&#x27;</span>,
+        <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;voronoi-web&#x27;</span>,
+        <span class="hljs-attr">width</span>: baseDimension,
+        <span class="hljs-attr">height</span>: baseDimension,
+        <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+        <span class="hljs-attr">copyHeight</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+    },{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
+              </div>
+              <p>Create the tiles from the Voronoi web</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;flood&#x27;</span>,
+        <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;white-background&#x27;</span>,
+        <span class="hljs-attr">red</span>: <span class="hljs-number">255</span>,
+        <span class="hljs-attr">green</span>: <span class="hljs-number">255</span>,
+        <span class="hljs-attr">blue</span>: <span class="hljs-number">255</span>,
+        <span class="hljs-attr">alpha</span>: <span class="hljs-number">255</span>,
+    },{
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;compose&#x27;</span>,
+        <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;web&#x27;</span>,
+        <span class="hljs-attr">lineMix</span>: <span class="hljs-string">&#x27;white-background&#x27;</span>,
+        <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;webbed-background&#x27;</span>,
+    },{
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;channels-to-alpha&#x27;</span>,
+        <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;webbed-background&#x27;</span>,
+        <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;webbed-background&#x27;</span>,
+        <span class="hljs-attr">includeRed</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">includeGreen</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">includeBlue</span>: <span class="hljs-literal">false</span>,
+    },{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
+              </div>
+              <p>Apply our image over the tiles</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;compose&#x27;</span>,
+        <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;source&#x27;</span>,
+        <span class="hljs-attr">lineMix</span>: <span class="hljs-string">&#x27;webbed-background&#x27;</span>,
+        <span class="hljs-attr">compose</span>: <span class="hljs-string">&#x27;source-atop&#x27;</span>,
+    },{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-23">&#x00a7;</a>
+              </div>
+              <p>Tile shadows - blur the voronoi web then apply it, offset up and left, to the image </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;gaussian-blur&#x27;</span>,
+        <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;web&#x27;</span>,
+        <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;blurred-web&#x27;</span>,
+        <span class="hljs-attr">radius</span>: <span class="hljs-number">3</span>,
+    },{
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;compose&#x27;</span>,
+        <span class="hljs-attr">lineMix</span>: <span class="hljs-string">&#x27;blurred-web&#x27;</span>,
+        <span class="hljs-attr">offsetX</span>: -<span class="hljs-number">2</span>,
+        <span class="hljs-attr">offsetY</span>: -<span class="hljs-number">2</span>,
+        <span class="hljs-attr">compose</span>: <span class="hljs-string">&#x27;destination-atop&#x27;</span>,
+    },{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-24">&#x00a7;</a>
+              </div>
+              <p>Tile highlights - invert the blurred web then apply it, offset down and right, to the image </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;invert-channels&#x27;</span>,
+        <span class="hljs-attr">lineIn</span>: <span class="hljs-string">&#x27;blurred-web&#x27;</span>,
+        <span class="hljs-attr">lineOut</span>: <span class="hljs-string">&#x27;blurred-web&#x27;</span>,
+    },{
+        <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;compose&#x27;</span>,
+        <span class="hljs-attr">lineMix</span>: <span class="hljs-string">&#x27;blurred-web&#x27;</span>,
+        <span class="hljs-attr">offsetX</span>: <span class="hljs-number">2</span>,
+        <span class="hljs-attr">offsetY</span>: <span class="hljs-number">2</span>,
+        <span class="hljs-attr">compose</span>: <span class="hljs-string">&#x27;destination-atop&#x27;</span>,
+    }],
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-25">&#x00a7;</a>
+              </div>
+              <p>Display our image in a Picture entity - the filter is applied here </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makePicture</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myFlower&#x27;</span>,
     <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;iris&#x27;</span>,
@@ -1093,22 +1284,17 @@ scrawl.<span class="hljs-title function_">makePicture</span>({
     <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
     <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
 
-}).<span class="hljs-title function_">clone</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;temporary-for-development&#x27;</span>,
-    <span class="hljs-attr">asset</span>: <span class="hljs-string">&#x27;voronoi-web&#x27;</span>,
-
-    <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;darken&#x27;</span>,
+    <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;mosaic-filter&#x27;</span>],
 });</pre></div></div>
             
         </li>
         
         
-        <li id="section-11">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1134,11 +1320,11 @@ scrawl.<span class="hljs-title function_">makePicture</span>({
         </li>
         
         
-        <li id="section-12">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1147,19 +1333,33 @@ scrawl.<span class="hljs-title function_">makePicture</span>({
             <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
-    <span class="hljs-attr">target</span>: canvas,
-    <span class="hljs-attr">commence</span>: <span class="hljs-function">() =&gt;</span> myAsset.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">trigger</span>: <span class="hljs-literal">true</span> }),
+    <span class="hljs-attr">target</span>: canvas,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-28">&#x00a7;</a>
+              </div>
+              <p>We need to update our RawAsset at the start of each Display cycle</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">commence</span>: <span class="hljs-function">() =&gt;</span> myAsset.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">trigger</span>: <span class="hljs-literal">true</span> }),
     <span class="hljs-attr">afterShow</span>: report,
 });</pre></div></div>
             
         </li>
         
         
-        <li id="section-13">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

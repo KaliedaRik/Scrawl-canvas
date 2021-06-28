@@ -270,6 +270,11 @@
                 </a>
               
                 
+                <a class="source" href="rdAsset.html">
+                  ./source/factory/rdAsset.js
+                </a>
+              
+                
                 <a class="source" href="rectangle.html">
                   ./source/factory/rectangle.js
                 </a>
@@ -357,6 +362,11 @@
                 
                 <a class="source" href="../mixin/asset.html">
                   ./source/mixin/asset.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/assetAdvancedFunctionality.html">
+                  ./source/mixin/assetAdvancedFunctionality.js
                 </a>
               
                 
@@ -1603,80 +1613,90 @@ P.<span class="hljs-property">getHSL</span> = <span class="hljs-keyword">functio
 
 P.<span class="hljs-property">getRGBfromHSL</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">h, s, l, a</span>) {
 
-    <span class="hljs-keyword">if</span> (!s) {
+    s /= <span class="hljs-number">100</span>;
+    l /= <span class="hljs-number">100</span>;
 
-        <span class="hljs-keyword">let</span> gray = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(l * <span class="hljs-number">255</span>);
-        <span class="hljs-keyword">return</span> [gray, gray, gray];
+    <span class="hljs-keyword">let</span> c = (<span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(<span class="hljs-number">2</span> * l - <span class="hljs-number">1</span>)) * s,
+        x = c * (<span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>((h / <span class="hljs-number">60</span>) % <span class="hljs-number">2</span> - <span class="hljs-number">1</span>)),
+        m = l - c/<span class="hljs-number">2</span>,
+        r = <span class="hljs-number">0</span>,
+        g = <span class="hljs-number">0</span>,
+        b = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-number">0</span> &lt;= h &amp;&amp; h &lt; <span class="hljs-number">60</span>) {
+        r = c; 
+        g = x; 
+        b = <span class="hljs-number">0</span>;  
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-number">60</span> &lt;= h &amp;&amp; h &lt; <span class="hljs-number">120</span>) {
+        r = x; 
+        g = c; 
+        b = <span class="hljs-number">0</span>;
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-number">120</span> &lt;= h &amp;&amp; h &lt; <span class="hljs-number">180</span>) {
+        r = <span class="hljs-number">0</span>; 
+        g = c; 
+        b = x;
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-number">180</span> &lt;= h &amp;&amp; h &lt; <span class="hljs-number">240</span>) {
+        r = <span class="hljs-number">0</span>; 
+        g = x; 
+        b = c;
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-number">240</span> &lt;= h &amp;&amp; h &lt; <span class="hljs-number">300</span>) {
+        r = x; 
+        g = <span class="hljs-number">0</span>; 
+        b = c;
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-number">300</span> &lt;= h &amp;&amp; h &lt; <span class="hljs-number">360</span>) {
+        r = c; 
+        g = <span class="hljs-number">0</span>; 
+        b = x;
     }
 
-    <span class="hljs-keyword">let</span> tempLum1 = (l &lt; <span class="hljs-number">0.5</span>) ? l * (s + <span class="hljs-number">1</span>) : l + s - (l * s),
-        tempLum2 = (<span class="hljs-number">2</span> * l) - tempLum1;
+    r = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>((r + m) * <span class="hljs-number">255</span>);
+    g = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>((g + m) * <span class="hljs-number">255</span>);
+    b = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>((b + m) * <span class="hljs-number">255</span>);
 
-    <span class="hljs-keyword">const</span> calculator = <span class="hljs-keyword">function</span> (<span class="hljs-params">t, l1, l2</span>) {
-
-        <span class="hljs-keyword">if</span> (t * <span class="hljs-number">6</span> &lt; <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> l2 + ((l1 - l2) * <span class="hljs-number">6</span> * t);
-        <span class="hljs-keyword">if</span> (t * <span class="hljs-number">2</span> &lt; <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> l1;
-        <span class="hljs-keyword">if</span> (t * <span class="hljs-number">2</span> &lt; <span class="hljs-number">2</span>) <span class="hljs-keyword">return</span> l2 + ((l1 - l2) * <span class="hljs-number">6</span> * (t * <span class="hljs-number">0.666</span>));
-        <span class="hljs-keyword">return</span> l2;
-    };
-
-    h /= <span class="hljs-number">360</span>;
-
-    <span class="hljs-keyword">let</span> tr = h + <span class="hljs-number">0.333</span>,
-        tg = h,
-        tb = h - <span class="hljs-number">0.333</span>;
-
-    <span class="hljs-keyword">if</span> (tr &lt; <span class="hljs-number">0</span>) tr += <span class="hljs-number">1</span>;
-    <span class="hljs-keyword">if</span> (tr &gt; <span class="hljs-number">1</span>) tr -= <span class="hljs-number">1</span>;
-    <span class="hljs-keyword">if</span> (tg &lt; <span class="hljs-number">0</span>) tg += <span class="hljs-number">1</span>;
-    <span class="hljs-keyword">if</span> (tg &gt; <span class="hljs-number">1</span>) tg -= <span class="hljs-number">1</span>;
-    <span class="hljs-keyword">if</span> (tb &lt; <span class="hljs-number">0</span>) tb += <span class="hljs-number">1</span>;
-    <span class="hljs-keyword">if</span> (tb &gt; <span class="hljs-number">1</span>) tb -= <span class="hljs-number">1</span>;
-
-    <span class="hljs-keyword">let</span> r = <span class="hljs-title function_">calculator</span>(tr, tempLum1, tempLum2) * <span class="hljs-number">255</span>,
-        g = <span class="hljs-title function_">calculator</span>(tg, tempLum1, tempLum2) * <span class="hljs-number">255</span>,
-        b = <span class="hljs-title function_">calculator</span>(tb, tempLum1, tempLum2) * <span class="hljs-number">255</span>;
-
-    <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == a) <span class="hljs-keyword">return</span> [r, g, b];
-
-    <span class="hljs-keyword">return</span> [r, g, b, a * <span class="hljs-number">255</span>];
+    <span class="hljs-keyword">return</span> [r, g, b, a];
 };
 
 P.<span class="hljs-property">setFromHSL</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">h, s, l, a</span>) {
 
-    <span class="hljs-keyword">if</span> (!s) {
+    s /= <span class="hljs-number">100</span>;
+    l /= <span class="hljs-number">100</span>;
 
-        <span class="hljs-keyword">let</span> gray = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(l * <span class="hljs-number">255</span>);
-        <span class="hljs-keyword">return</span> [gray, gray, gray];
+    <span class="hljs-keyword">let</span> c = (<span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(<span class="hljs-number">2</span> * l - <span class="hljs-number">1</span>)) * s,
+        x = c * (<span class="hljs-number">1</span> - <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>((h / <span class="hljs-number">60</span>) % <span class="hljs-number">2</span> - <span class="hljs-number">1</span>)),
+        m = l - c/<span class="hljs-number">2</span>,
+        r = <span class="hljs-number">0</span>,
+        g = <span class="hljs-number">0</span>,
+        b = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-number">0</span> &lt;= h &amp;&amp; h &lt; <span class="hljs-number">60</span>) {
+        r = c; 
+        g = x; 
+        b = <span class="hljs-number">0</span>;  
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-number">60</span> &lt;= h &amp;&amp; h &lt; <span class="hljs-number">120</span>) {
+        r = x; 
+        g = c; 
+        b = <span class="hljs-number">0</span>;
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-number">120</span> &lt;= h &amp;&amp; h &lt; <span class="hljs-number">180</span>) {
+        r = <span class="hljs-number">0</span>; 
+        g = c; 
+        b = x;
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-number">180</span> &lt;= h &amp;&amp; h &lt; <span class="hljs-number">240</span>) {
+        r = <span class="hljs-number">0</span>; 
+        g = x; 
+        b = c;
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-number">240</span> &lt;= h &amp;&amp; h &lt; <span class="hljs-number">300</span>) {
+        r = x; 
+        g = <span class="hljs-number">0</span>; 
+        b = c;
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-number">300</span> &lt;= h &amp;&amp; h &lt; <span class="hljs-number">360</span>) {
+        r = c; 
+        g = <span class="hljs-number">0</span>; 
+        b = x;
     }
 
-    <span class="hljs-keyword">let</span> tempLum1 = (l &lt; <span class="hljs-number">0.5</span>) ? l * (s + <span class="hljs-number">1</span>) : l + s - (l * s),
-        tempLum2 = (<span class="hljs-number">2</span> * l) - tempLum1;
-
-    <span class="hljs-keyword">const</span> calculator = <span class="hljs-keyword">function</span> (<span class="hljs-params">t, l1, l2</span>) {
-
-        <span class="hljs-keyword">if</span> (t * <span class="hljs-number">6</span> &lt; <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> l2 + ((l1 - l2) * <span class="hljs-number">6</span> * t);
-        <span class="hljs-keyword">if</span> (t * <span class="hljs-number">2</span> &lt; <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> l1;
-        <span class="hljs-keyword">if</span> (t * <span class="hljs-number">2</span> &lt; <span class="hljs-number">2</span>) <span class="hljs-keyword">return</span> l2 + ((l1 - l2) * <span class="hljs-number">6</span> * (t * <span class="hljs-number">0.666</span>));
-        <span class="hljs-keyword">return</span> l2;
-    };
-
-    h /= <span class="hljs-number">360</span>;
-
-    <span class="hljs-keyword">let</span> tr = h + <span class="hljs-number">0.333</span>,
-        tg = h,
-        tb = h - <span class="hljs-number">0.333</span>;
-
-    <span class="hljs-keyword">if</span> (tr &lt; <span class="hljs-number">0</span>) tr += <span class="hljs-number">1</span>;
-    <span class="hljs-keyword">if</span> (tr &gt; <span class="hljs-number">1</span>) tr -= <span class="hljs-number">1</span>;
-    <span class="hljs-keyword">if</span> (tg &lt; <span class="hljs-number">0</span>) tg += <span class="hljs-number">1</span>;
-    <span class="hljs-keyword">if</span> (tg &gt; <span class="hljs-number">1</span>) tg -= <span class="hljs-number">1</span>;
-    <span class="hljs-keyword">if</span> (tb &lt; <span class="hljs-number">0</span>) tb += <span class="hljs-number">1</span>;
-    <span class="hljs-keyword">if</span> (tb &gt; <span class="hljs-number">1</span>) tb -= <span class="hljs-number">1</span>;
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">r</span> = <span class="hljs-title function_">calculator</span>(tr, tempLum1, tempLum2) * <span class="hljs-number">255</span>,
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">g</span> = <span class="hljs-title function_">calculator</span>(tg, tempLum1, tempLum2) * <span class="hljs-number">255</span>,
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">b</span> = <span class="hljs-title function_">calculator</span>(tb, tempLum1, tempLum2) * <span class="hljs-number">255</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">r</span> = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>((r + m) * <span class="hljs-number">255</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">g</span> = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>((g + m) * <span class="hljs-number">255</span>);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">b</span> = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>((b + m) * <span class="hljs-number">255</span>);
 
     <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> != a) {
 

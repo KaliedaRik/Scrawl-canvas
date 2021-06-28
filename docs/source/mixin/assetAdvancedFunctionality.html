@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Path mixin</title>
+  <title>AssetAdvancedFunctionality mixin</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../../docco.css" />
@@ -474,8 +474,8 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
-              <h1 id="path-mixin">Path mixin</h1>
-<p>This mixin defines the attributes and functionality required by an artefact so that it can position and rotate itself along the contours of a shape-based entity.</p>
+              <h1 id="assetadvancedfunctionality-mixin">AssetAdvancedFunctionality mixin</h1>
+<p>The following functionality is shared between NoiseAsset, ArtAsset and RdAsset objects</p>
 
             </div>
             
@@ -492,8 +492,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { artefact } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { mergeOver, pushUnique, removeItem, isa_boolean, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { mergeOver, pushUnique, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -534,11 +533,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <p><strong>path</strong> - reference Shape entity object. Can also be set using the Shape’s name-String.</p>
+              <p><strong>color</strong> - String value determining how the generated noise will be output on the canvas. Currently recognised values are: <code>monochrome</code> (default), <code>gradient</code> and <code>hue</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;&#x27;</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">color</span>: <span class="hljs-string">&#x27;monochrome&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -549,11 +548,17 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <p><strong>pathPosition</strong> - float Number between <code>0.0</code> - <code>1.0</code> representing the distance along the Shape path which is to be used as the reference coordinate.</p>
+              <p>When the <code>color</code> choice has been set to <code>monochrome</code> we can clamp the pixel values using the <strong>monochromeStart</strong> and <strong>monochromeRange</strong> attributes, both of which take integer Numbers. </p>
+<ul>
+<li>Accepted monochromeStart values are 0 to 255</li>
+<li>Accepted monochromeRange values are -255 to 255</li>
+<li>Be aware that the monochromeRange value will be recalculated to make sure calculated pixel values remain in the 0-255 color channel range</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">pathPosition</span>: <span class="hljs-number">0</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">monochromeStart</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-attr">monochromeRange</span>: <span class="hljs-number">255</span>,</pre></div></div>
             
         </li>
         
@@ -564,13 +569,12 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <p><strong>addPathHandle</strong>, <strong>addPathOffset</strong>, <strong>addPathRotation</strong> - Boolean flags. When set, the artifact will add its own values to the reference artefact’s values, rather than use them as replacement values.</p>
+              <p>When the <code>color</code> choice has been set to <code>gradient</code> we can control the start and end colors of the gradient using the <strong>gradientStart</strong> and <strong>gradientEnd</strong> attributes</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">addPathHandle</span>: <span class="hljs-literal">false</span>,
-        <span class="hljs-attr">addPathOffset</span>: <span class="hljs-literal">true</span>,
-        <span class="hljs-attr">addPathRotation</span>: <span class="hljs-literal">false</span>,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">gradientStart</span>: <span class="hljs-string">&#x27;#ff0000&#x27;</span>,
+        <span class="hljs-attr">gradientEnd</span>: <span class="hljs-string">&#x27;#00ff00&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -581,14 +585,22 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p>DEPRECATION WARNING: <code>constantSpeedAlongPath</code> replaces the old attribute <code>constantPathSpeed</code> which clashes with the attribute set by the ShapeBasic mixin.</p>
+              <p>When the <code>color</code> choice has been set to <code>hue</code> we can control the pixel colors (in terms of their HSL components) using the <strong>hueStart</strong>, <strong>hueRange</strong>, <strong>saturation</strong> and <strong>luminosity</strong> attributes:</p>
+<ul>
+<li><code>hueStart</code> - float Number value in degrees, will be clamped to between 0 and 360</li>
+<li><code>hueRange</code> - float Number value in degrees, can be negative as well as positive</li>
+<li><code>saturation</code> - float Number value, between 0 and 100</li>
+<li><code>luminosity</code> - float Number value, between 0 and 100</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">constantSpeedAlongPath</span>: <span class="hljs-literal">false</span>,
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">hueStart</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-attr">hueRange</span>: <span class="hljs-number">120</span>,
+        <span class="hljs-attr">saturation</span>: <span class="hljs-number">100</span>,
+        <span class="hljs-attr">luminosity</span>: <span class="hljs-number">50</span>,
     };
-    P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);
-    <span class="hljs-title function_">mergeOver</span>(P, defaultAttributes);</pre></div></div>
+    P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -600,10 +612,9 @@
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
+<p>No additional packet management functionality defined here</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">packetObjects</span> = <span class="hljs-title function_">pushUnique</span>(P.<span class="hljs-property">packetObjects</span>, [<span class="hljs-string">&#x27;path&#x27;</span>]);</pre></div></div>
             
         </li>
         
@@ -646,8 +657,92 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> S = P.<span class="hljs-property">setters</span>,
-        D = P.<span class="hljs-property">deltaSetters</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> G = P.<span class="hljs-property">getters</span>, 
+        S = P.<span class="hljs-property">setters</span>, 
+        D = P.<span class="hljs-property">deltaSetters</span>;
+
+
+    P.<span class="hljs-property">supportedColorSchemes</span> = [<span class="hljs-string">&#x27;monochrome&#x27;</span>, <span class="hljs-string">&#x27;gradient&#x27;</span>, <span class="hljs-string">&#x27;hue&#x27;</span>];
+    S.<span class="hljs-property">color</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">supportedColorSchemes</span>.<span class="hljs-title function_">indexOf</span>(item) &gt;= <span class="hljs-number">0</span>) {
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">color</span> = item;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">true</span>;
+        }
+    };
+
+    S.<span class="hljs-property">gradientStart</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+        <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) {
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">colorFactory</span>.<span class="hljs-title function_">setMinimumColor</span>(item);
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">true</span>;
+        }
+    };
+
+    S.<span class="hljs-property">gradientEnd</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+        <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) {
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">colorFactory</span>.<span class="hljs-title function_">setMaximumColor</span>(item);
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">true</span>;
+        }
+    };
+
+    S.<span class="hljs-property">monochromeStart</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+        <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span> &amp;&amp; item &gt;= <span class="hljs-number">0</span>) {
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">monochromeStart</span> = item % <span class="hljs-number">360</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">true</span>;
+        }
+    };
+
+    S.<span class="hljs-property">monochromeRange</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+        <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span> &amp;&amp; item &gt;= -<span class="hljs-number">255</span> &amp;&amp; item &lt; <span class="hljs-number">256</span>) {
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">monochromeRange</span> = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(item);
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">true</span>;
+        }
+    };
+
+    S.<span class="hljs-property">hueStart</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+        <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span>) {
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">hueStart</span> = item;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">true</span>;
+        }
+    };
+
+    S.<span class="hljs-property">hueRange</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+        <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span>) {
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">hueRange</span> = item;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">true</span>;
+        }
+    };
+
+    S.<span class="hljs-property">saturation</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+        <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span> &amp;&amp; item &gt;= <span class="hljs-number">0</span> &amp;&amp; item &lt;= <span class="hljs-number">100</span>) {
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">saturation</span> = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(item);
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">true</span>;
+        }
+    };
+
+    S.<span class="hljs-property">luminosity</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+        <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span> &amp;&amp; item &gt;= <span class="hljs-number">0</span> &amp;&amp; item &lt;= <span class="hljs-number">100</span>) {
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">luminosity</span> = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(item);
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">true</span>;
+        }
+    };</pre></div></div>
             
         </li>
         
@@ -671,39 +766,16 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
-              <p><strong>path</strong></p>
+              <p><code>installElement</code> - internal function, used by the constructor</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">path</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">installElement</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">element</span>) {
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_boolean</span>(item) &amp;&amp; !item) {
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">element</span> = element;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">element</span>.<span class="hljs-title function_">getContext</span>(<span class="hljs-string">&#x27;2d&#x27;</span>);
 
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">path</span> = <span class="hljs-literal">null</span>;
-
-            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>[<span class="hljs-number">0</span>] === <span class="hljs-string">&#x27;path&#x27;</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>[<span class="hljs-number">0</span>] = <span class="hljs-string">&#x27;start&#x27;</span>;
-            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>[<span class="hljs-number">1</span>] === <span class="hljs-string">&#x27;path&#x27;</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">lockTo</span>[<span class="hljs-number">1</span>] = <span class="hljs-string">&#x27;start&#x27;</span>;
-
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampPositions</span> = <span class="hljs-literal">true</span>;
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampHandlePositions</span> = <span class="hljs-literal">true</span>;
-        }
-        <span class="hljs-keyword">else</span> {
-
-            <span class="hljs-keyword">let</span> oldPath = <span class="hljs-variable language_">this</span>.<span class="hljs-property">path</span>,
-                newPath = (item.<span class="hljs-property">substring</span>) ? artefact[item] : item,
-                name = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;
-
-            <span class="hljs-keyword">if</span> (newPath &amp;&amp; newPath.<span class="hljs-property">name</span> &amp;&amp; newPath.<span class="hljs-property">useAsPath</span>) {
-
-                <span class="hljs-keyword">if</span> (oldPath &amp;&amp; oldPath.<span class="hljs-property">name</span> !== newPath.<span class="hljs-property">name</span>) <span class="hljs-title function_">removeItem</span>(oldPath.<span class="hljs-property">pathed</span>, name);
-
-                <span class="hljs-title function_">pushUnique</span>(newPath.<span class="hljs-property">pathed</span>, name);
-
-                <span class="hljs-variable language_">this</span>.<span class="hljs-property">path</span> = newPath;
-                <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampPositions</span> = <span class="hljs-literal">true</span>;
-                <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampHandlePositions</span> = <span class="hljs-literal">true</span>;
-            }
-        }
+        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
     };</pre></div></div>
             
         </li>
@@ -715,34 +787,17 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
-              <p> <strong>pathPosition</strong></p>
+              <p><code>checkSource</code></p>
 <ul>
-<li>TODO: current functionality is for pathPosition to loop - is there a case for adding a pathPosition loop flag? If yes, then when that flag is false values &lt; 0 would be corrected back to 0, and vals &gt; 1 would be corrected back to 1.</li>
+<li>Gets invoked by subscribers (who have a handle to the asset instance object) as part of the display cycle.</li>
+<li>ArtAsset assets will automatically pass this call onto <code>notifySubscribers</code>, where dirty flags get checked and rectified</li>
 </ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">pathPosition</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">checkSource</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">width, height</span>) {
 
-        <span class="hljs-keyword">if</span> (item &lt; <span class="hljs-number">0</span>) item = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(item);
-        <span class="hljs-keyword">if</span> (item &gt; <span class="hljs-number">1</span>) item = item % <span class="hljs-number">1</span>;
-
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathPosition</span> = <span class="hljs-built_in">parseFloat</span>(item.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">6</span>));
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampPositions</span> = <span class="hljs-literal">true</span>;
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampHandlePositions</span> = <span class="hljs-literal">true</span>;
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentPathData</span> = <span class="hljs-literal">false</span>;
-    };
-    D.<span class="hljs-property">pathPosition</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-        <span class="hljs-keyword">let</span> pos = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathPosition</span> + item
-
-        <span class="hljs-keyword">if</span> (pos &lt; <span class="hljs-number">0</span>) pos += <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (pos &gt; <span class="hljs-number">1</span>) pos = pos % <span class="hljs-number">1</span>;
-
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathPosition</span> = <span class="hljs-built_in">parseFloat</span>(pos.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">6</span>));
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampPositions</span> = <span class="hljs-literal">true</span>;
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStampHandlePositions</span> = <span class="hljs-literal">true</span>;
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentPathData</span> = <span class="hljs-literal">false</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">notifySubscribers</span>();
     };</pre></div></div>
             
         </li>
@@ -754,24 +809,18 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
-              <p><strong>addPathHandle</strong>, <strong>addPathOffset</strong>, <strong>addPathRotation</strong></p>
+              <p><code>getData</code> function called by Cell objects when calculating required updates to its CanvasRenderingContext2D engine, specifically for an entity’s <strong>fillStyle</strong>, <strong>strokeStyle</strong> and <strong>shadowColor</strong> attributes.</p>
+<ul>
+<li>This is the point when we clean Scrawl-canvas assets which have told their subscribers that asset data/attributes have updated</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">addPathHandle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">getData</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">entity, cell</span>) {
 
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">addPathHandle</span> = item;
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyHandle</span> = <span class="hljs-literal">true</span>;
-    };
-    S.<span class="hljs-property">addPathOffset</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">notifySubscribers</span>();
 
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">addPathOffset</span> = item;
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOffset</span> = <span class="hljs-literal">true</span>;
-    };
-    S.<span class="hljs-property">addPathRotation</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
-
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">addPathRotation</span> = item;
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyRotation</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildStyle</span>(cell);
     };</pre></div></div>
             
         </li>
@@ -783,9 +832,28 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
-              <h4 id="prototype-functions">Prototype functions</h4>
+              <p><code>notifySubscribers</code>, <code>notifySubscriber</code> - overwrites the functions defined in mixin/asset.js</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">notifySubscribers</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanOutput</span>();
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">subscribers</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">sub</span> =&gt;</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">notifySubscriber</span>(sub), <span class="hljs-variable language_">this</span>);
+    };
+
+    P.<span class="hljs-property">notifySubscriber</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">sub</span>) {
+
+        sub.<span class="hljs-property">sourceNaturalWidth</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">width</span>;
+        sub.<span class="hljs-property">sourceNaturalHeight</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">height</span>;
+        sub.<span class="hljs-property">sourceLoaded</span> = <span class="hljs-literal">true</span>;
+        sub.<span class="hljs-property">source</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">element</span>;
+        sub.<span class="hljs-property">dirtyImage</span> = <span class="hljs-literal">true</span>;
+        sub.<span class="hljs-property">dirtyCopyStart</span> = <span class="hljs-literal">true</span>;
+        sub.<span class="hljs-property">dirtyCopyDimensions</span> = <span class="hljs-literal">true</span>;
+        sub.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">true</span>;
+    };</pre></div></div>
             
         </li>
         
@@ -796,19 +864,19 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
-              <p><code>getPathData</code></p>
+              <p><code>paintCanvas</code> - internal function called by the <code>cleanOutput</code> function</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">getPathData</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">paintCanvas</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentPathData</span>) <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentPathData</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkOutputValuesExist</span>()) {
 
-        <span class="hljs-keyword">let</span> pathPos = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathPosition</span>,
-            path = <span class="hljs-variable language_">this</span>.<span class="hljs-property">path</span>,
-            currentPathData;
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span>) {
 
-        <span class="hljs-keyword">if</span> (path) {</pre></div></div>
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">false</span>;
+
+                <span class="hljs-keyword">let</span> {element, engine, width, height, color, colorFactory, monochromeStart, monochromeRange, hueStart, hueRange, saturation, luminosity} = <span class="hljs-variable language_">this</span>;</pre></div></div>
             
         </li>
         
@@ -819,22 +887,17 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
-              <p>Note: the old attribute <code>constantPathSpeed</code> has been deprecated because the ShapeBasic mixin adds that attributes to shapes where it has different functionality. This code is temporary until Scrawl-canvas v9 is released</p>
+              <p>Update the Canvas element’s dimensions - this will also clear the canvas display</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">let</span> speed = <span class="hljs-variable language_">this</span>.<span class="hljs-property">constantSpeedAlongPath</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">constantPathSpeed</span> || <span class="hljs-literal">false</span>;
+            <div class="content"><div class='highlight'><pre>                element.<span class="hljs-property">width</span> = width;
+                element.<span class="hljs-property">height</span> = height;
 
-            currentPathData = path.<span class="hljs-title function_">getPathPositionData</span>(pathPos, speed);
-
-            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">addPathRotation</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyRotation</span> = <span class="hljs-literal">true</span>;
-
-            <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentPathData</span> = currentPathData;
-
-            <span class="hljs-keyword">return</span> currentPathData;
-        }
-        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    };</pre></div></div>
+                <span class="hljs-keyword">let</span> img = engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, width, height),
+                    d = img.<span class="hljs-property">data</span>,
+                    len = width * height,
+                    i, v, c;</pre></div></div>
             
         </li>
         
@@ -844,6 +907,99 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-20">&#x00a7;</a>
+              </div>
+              <p>Rebuild the display, pixel-by-pixel</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">switch</span> (color) {
+
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;hue&#x27;</span> :
+
+                        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i++) {
+
+                            v = hueStart + (<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getOutputValue</span>(i, width) * hueRange);
+                            <span class="hljs-keyword">if</span> (v &lt; <span class="hljs-number">0</span>) v += <span class="hljs-number">360</span>;
+                            <span class="hljs-keyword">if</span> (v &gt; <span class="hljs-number">360</span>) v %= <span class="hljs-number">360</span>;
+
+                            <span class="hljs-keyword">let</span> [r, g, b] = colorFactory.<span class="hljs-title function_">getRGBfromHSL</span>(v, saturation, luminosity);
+
+                            c = i * <span class="hljs-number">4</span>;
+
+                            d[c] = r;
+                            d[++c] = g;
+                            d[++c] = b;
+                            d[++c] = <span class="hljs-number">255</span>;
+                        }
+                        <span class="hljs-keyword">break</span>;
+
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;gradient&#x27;</span> :
+
+                        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i++) {
+
+                            v = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getOutputValue</span>(i, width);
+                            colorFactory.<span class="hljs-title function_">convert</span>(colorFactory.<span class="hljs-title function_">getRangeColor</span>(v));
+
+                            <span class="hljs-keyword">let</span> {r, g, b, a} = colorFactory; 
+                            
+                            c = i * <span class="hljs-number">4</span>;
+
+                            d[c] = r;
+                            d[++c] = g;
+                            d[++c] = b;
+                            d[++c] = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(a * <span class="hljs-number">255</span>);
+                        }
+                        <span class="hljs-keyword">break</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
+              </div>
+              <p>The default color preference is monochrome</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">default</span> :
+
+                        <span class="hljs-keyword">if</span> (monochromeRange &gt; <span class="hljs-number">0</span>) {
+
+                            <span class="hljs-keyword">if</span> (monochromeStart + monochromeRange &gt; <span class="hljs-number">255</span>) monochromeRange = <span class="hljs-number">255</span> - monochromeStart;
+                        }
+                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (monochromeRange &lt; <span class="hljs-number">0</span>) {
+
+                            <span class="hljs-keyword">if</span> (monochromeStart - monochromeRange &lt; <span class="hljs-number">0</span>) monochromeRange = monochromeStart;
+                        }
+
+                        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i++) {
+
+                            v = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(monochromeStart + (<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getOutputValue</span>(i, width) * monochromeRange));
+
+                            c = i * <span class="hljs-number">4</span>;
+
+                            d[c] = v;
+                            d[++c] = v;
+                            d[++c] = v;
+                            d[++c] = <span class="hljs-number">255</span>;
+                        }
+                }
+                engine.<span class="hljs-title function_">putImageData</span>(img, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+            }
+        }
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p>Return the prototype</p>
 

@@ -3,7 +3,7 @@
 
 
 // #### Demos:
-// + [Canvas-053](../../demo/canvas-053.html) - Create and display output from a Reaction-Diffusion algorithm
+// + [Canvas-053](../../demo/canvas-053.html) - Display output from a Reaction-Diffusion asset
 
 
 // #### Imports
@@ -703,12 +703,9 @@ P.getOutputValue = function (index, width) {
 // #### Factory
 // ```
 // scrawl.makeReactionDiffusionAsset({
-//     name: 'my-noise-generator',
+//     name: 'my-rd-generator',
 //     width: 50,
 //     height: 50,
-//     octaves: 5,
-//     scale: 2,
-//     noiseEngine: 'simplex',
 // });
 // ```
 const makeReactionDiffusionAsset = function (items) {
