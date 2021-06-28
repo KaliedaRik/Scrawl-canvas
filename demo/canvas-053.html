@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 053</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    #my-image-store {
+      display: none;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    .canvas-container {
+      overflow: hidden;
+      resize: both;
+      border: 1px solid black;
+      width: 400px;
+      height: 400px;
+      min-height: 200px;
+      min-width: 200px;
+      max-height: 600px;
+      max-width: 600px;
+    }
+
+    .controls {
+      grid-template-columns: 1fr 2fr 1fr 2fr;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 053</h1>
+  <h2>Display output from a Reaction-Diffusion asset</h2>
+  <h3>(Note that these assets take time to develop!)</h3>
+  <h3>Resize the canvas by dragging its bottom right corner</h3>
+
+  <div class="canvas-container">
+    <canvas id="mycanvas"></canvas>
+  </div>
+
+  <p id="reportmessage"></p>
+
+   <div class="controls">
+
+    <div class="yellow label">Diffusion Rate for A</div>
+    <div class="yellow"><input class="controlItem" id="diffusionRateA" type="range" value="0.2097" min="0" max="1" step="0.0001" /></div>
+
+    <div class="yellow label">Diffusion Rate for B</div>
+    <div class="yellow"><input class="controlItem" id="diffusionRateB" type="range" value="0.105" min="0" max="1" step="0.0001" /></div>
+
+    <div class="yellow label">Feed Rate</div>
+    <div class="yellow"><input class="controlItem" id="feedRate" type="range" value="0.054" min="0" max="1" step="0.0001" /></div>
+
+    <div class="yellow label">Kill Rate</div>
+    <div class="yellow"><input class="controlItem" id="killRate" type="range" value="0.062" min="0" max="1" step="0.0001" /></div>
+
+    <div class="blue label">Draw every x generations</div>
+    <div class="blue"><input class="controlItem" id="drawEvery" type="range" value="10" min="1" max="40" step="1" /></div>
+
+    <div class="blue label">Max generations</div>
+    <div class="blue"><input class="controlItem" id="maxGenerations" type="range" value="4000" min="0" max="10000" step="100" /></div>
+
+    <div class="blue label">Asset width</div>
+    <div class="blue"><input class="controlItem asset-dimensions" id="canvasWidth" type="range" value="80" min="20" max="200" step="10" /></div>
+
+    <div class="blue label">Asset height</div>
+    <div class="blue"><input class="controlItem asset-dimensions" id="canvasHeight" type="range" value="80" min="20" max="200" step="10" /></div>
+
+    <div class="pink label">Presets</div>
+    <div class="pink">
+      <select class="controlItem" id="presets">
+        <option value="default">Default</option>
+        <option value="negativeBubbles">Negative bubbles</option>
+        <option value="positiveBubbles">Positive bubbles</option>
+        <option value="precriticalBubbles">Precritical bubbles</option>
+        <option value="wormsAndLoops">Worms and loops</option>
+        <option value="stableSolitons">Stable solitons</option>
+        <option value="uSkateWorld">The U-Skate world</option>
+        <option value="worms">Worms</option>
+        <option value="wormsJoinIntoMazes">Worms join into mazes</option>
+        <option value="negatons">Negatons</option>
+        <option value="turingPatterns">Turing patterns</option>
+        <option value="fingerprints">Fingerprints</option>
+        <option value="spotsAndWorms">Spots and worms</option>
+        <option value="selfReplicatingSpots">Self-replicating spots</option>
+        <option value="superResonantMazes">Super-resonant mazes</option>
+        <option value="mazes">Mazes</option>
+        <option value="chaosToTuringNegatons">Chaos to Turing negatons</option>
+        <option value="chaosWithNegatons">Chaos with negatons</option>
+        <option value="mazesWithSomeChaos">Mazes with some chaos</option>
+        <option value="chaos">Chaos</option>
+        <option value="warringMicrobes">Warring microbes</option>
+        <option value="spotsAndLoops">Spots and loops</option>
+        <option value="movingSpots">Moving spots</option>
+        <option value="waves">Waves</option>
+      </select>
+    </div>
+
+    <div class="pink label">Initial setting</div>
+    <div class="pink">
+      <select class="controlItem" id="initialSettingPreference">
+        <option value="random">Random</option>
+        <option value="square">Square</option>
+        <option value="circle">Circle</option>
+        <option value="spiral">Spiral</option>
+      </select>
+    </div>
+
+    <div class="pink label">Random engine seed</div>
+    <div class="pink"><input class="controlItem" id="randomEngineSeed" type="text" value="" /></div>
+
+    <div class="pink label">Initial random seed level</div>
+    <div class="pink"><input class="controlItem" id="initialRandomSeedLevel" type="range" value="0.1" min="0" max="0.15" step="0.0001" /></div>
+
+    <div class="green label">Color output</div>
+    <div class="green">
+      <select class="controlItem" id="color">
+        <option value="monochrome">Monochrome</option>
+        <option value="gradient">Gradient</option>
+        <option value="hue">Hue</option>
+      </select>
+    </div>
+
+    <div>&nbsp;</div>
+    <div>&nbsp;</div>
+
+    <div class="green label">Monochrome start</div>
+    <div class="green"><input class="controlItem" id="monochromeStart" type="range" value="0" min="0" max="255" step="1" /></div>
+
+    <div class="green label">Monochrome range</div>
+    <div class="green"><input class="controlItem" id="monochromeRange" type="range" value="255" min="0" max="255" step="1" /></div>
+
+    <div class="green label">Gradient start</div>
+    <div class="green"><input class="controlItem" id="gradientStart" type="color" value="#ff0000" /></div>
+
+    <div class="green label">Gradient end</div>
+    <div class="green"><input class="controlItem" id="gradientEnd" type="color" value="#00ff00" /></div>
+
+    <div class="green label">Hue start</div>
+    <div class="green"><input class="controlItem" id="hueStart" type="range" value="0" min="0" max="360" step="0.5" /></div>
+
+    <div class="green label">Hue range</div>
+    <div class="green"><input class="controlItem" id="hueRange" type="range" value="120" min="-350" max="400" step="5" /></div>
+
+    <div class="green label">Saturation</div>
+    <div class="green"><input class="controlItem" id="saturation" type="range" value="100" min="0" max="100" step="0.1" /></div>
+
+    <div class="green label">Luminosity</div>
+    <div class="green"><input class="controlItem" id="luminosity" type="range" value="50" min="0" max="100" step="0.1" /></div>
+
+  </div>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>...</li>
+    </ul>
+    <p><a href="../docs/demo/canvas-053.html">Annotated code</a></p>
+  </div>
+
+  <script src="canvas-053.js" type="module"></script>
+
+</body>
+
+</html>

@@ -36,6 +36,7 @@ import { makeColor } from './color.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
+import assetAdvancedMix from '../mixin/assetAdvancedFunctionality.js';
 import patternMix from '../mixin/pattern.js';
 
 
@@ -84,47 +85,24 @@ P.isAsset = true;
 // #### Mixins
 // + [base](../mixin/base.html)
 // + [asset](../mixin/asset.html)
+// + [assetAdvancedFunctionality](../mixin/assetAdvancedFunctionality.html)
 // + [pattern](../mixin/pattern.html)
 P = baseMix(P);
 P = assetMix(P);
+P = assetAdvancedMix(P);
 P = patternMix(P);
 
 
 // #### NoiseAsset attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 // + Attributes defined in the [asset mixin](../mixin/asset.html): __source, subscribers__.
+// + Attributes defined in the [assetAdvancedFunctionality mixin](../mixin/assetAdvancedFunctionality.html): __color, monochromeStart, monochromeRange, gradientStart, gradientEnd, hueStart, hueRange, saturation, luminosity__.
 // + Attributes defined in the [pattern mixin](../mixin/pattern.html): __repeat, patternMatrix, matrixA, matrixB, matrixC, matrixD, matrixE, matrixF__.
 let defaultAttributes = {
 
     // The offscreen canvas dimensions, within which the noise will be generated, is set using the __width__ and __height__ attributes. These take Number values.
     width: 300,
     height: 150,
-
-    // SHARED BETWEEN noiseAsset, reactionDiffusionAsset
-    // __color__ - String value determining how the generated noise will be output on the canvas. Currently recognised values are: `monochrome` (default), `gradient` and `hue`
-    color: 'monochrome',
-
-    // When the `color` choice has been set to `monochrome` we can clamp the pixel values using the __monochromeStart__ and __monochromeRange__ attributes, both of which take integer Numbers. 
-    // + Accepted monochromeStart values are 0 to 255
-    // + Accepted monochromeRange values are -255 to 255
-    // + Be aware that the monochromeRange value will be recalculated to make sure calculated pixel values remain in the 0-255 color channel range
-    monochromeStart: 0,
-    monochromeRange: 255,
-
-    // When the `color` choice has been set to `gradient` we can control the start and end colors of the gradient using the __gradientStart__ and __gradientEnd__ attributes
-    gradientStart: '#ff0000',
-    gradientEnd: '#00ff00',
-
-    // When the `color` choice has been set to `hue` we can control the pixel colors (in terms of their HSL components) using the __hueStart__, __hueRange__, __saturation__ and __luminosity__ attributes:
-    // + `hueStart` - float Number value in degrees, will be clamped to between 0 and 360
-    // + `hueRange` - float Number value in degrees, can be negative as well as positive
-    // + `saturation` - float Number value, between 0 and 100
-    // + `luminosity` - float Number value, between 0 and 100
-    hueStart: 0,
-    hueRange: 120,
-    saturation: 100,
-    luminosity: 50,
-    // END SHARED BETWEEN noiseAsset, reactionDiffusionAsset
 
     // __noiseEngine__ - String - the currently supported noise engines String values are: `perlin`, `improved-perlin`, `simplex`, `value`
     noiseEngine: 'simplex',
@@ -241,90 +219,6 @@ S.seed = function (item) {
     }
 };
 
-// SHARED BETWEEN noiseAsset, reactionDiffusionAsset
-P.supportedColorSchemes = ['monochrome', 'gradient', 'hue'];
-S.color = function (item) {
-
-    if (this.supportedColorSchemes.indexOf(item) >= 0) {
-
-        this.color = item;
-        this.dirtyOutput = true;
-    }
-};
-
-S.gradientStart = function (item) {
-
-    if (item.substring) {
-
-        this.colorFactory.setMinimumColor(item);
-        this.dirtyOutput = true;
-    }
-};
-
-S.gradientEnd = function (item) {
-
-    if (item.substring) {
-
-        this.colorFactory.setMaximumColor(item);
-        this.dirtyOutput = true;
-    }
-};
-
-S.monochromeStart = function (item) {
-
-    if (item.toFixed && item >= 0) {
-
-        this.monochromeStart = item % 360;
-        this.dirtyOutput = true;
-    }
-};
-
-S.monochromeRange = function (item) {
-
-    if (item.toFixed && item >= -255 && item < 256) {
-
-        this.monochromeRange = Math.floor(item);
-        this.dirtyOutput = true;
-    }
-};
-
-S.hueStart = function (item) {
-
-    if (item.toFixed) {
-
-        this.hueStart = item;
-        this.dirtyOutput = true;
-    }
-};
-
-S.hueRange = function (item) {
-
-    if (item.toFixed) {
-
-        this.hueRange = item;
-        this.dirtyOutput = true;
-    }
-};
-
-S.saturation = function (item) {
-
-    if (item.toFixed && item >= 0 && item <= 100) {
-
-        this.saturation = Math.floor(item);
-        this.dirtyOutput = true;
-    }
-};
-
-S.luminosity = function (item) {
-
-    if (item.toFixed && item >= 0 && item <= 100) {
-
-        this.luminosity = Math.floor(item);
-        this.dirtyOutput = true;
-    }
-};
-// END SHARED BETWEEN noiseAsset, reactionDiffusionAsset
-
 S.scale = function (item) {
 
     if (item.toFixed) {
@@ -420,54 +314,8 @@ S.height = function (item) {
 
 
 // #### Prototype functions
-// `installElement` - internal function, used by the constructor
-P.installElement = function (element) {
-
-    this.element = element;
-    this.engine = this.element.getContext('2d');
-
-    return this;
-};
-
-// `checkSource`
-// + Gets invoked by subscribers (who have a handle to the asset instance object) as part of the display cycle.
-// + NoiseAsset assets will automatically pass this call onto `notifySubscribers`, where dirty flags get checked and rectified
-P.checkSource = function (width, height) {
-
-    this.notifySubscribers();
-};
-
-// `getData` function called by Cell objects when calculating required updates to its CanvasRenderingContext2D engine, specifically for an entity's __fillStyle__, __strokeStyle__ and __shadowColor__ attributes.
-// + This is the point when we clean Scrawl-canvas assets which have told their subscribers that asset data/attributes have updated
-P.getData = function (entity, cell) {
-
-    // this.checkSource(this.width, this.height);
-    this.notifySubscribers();
-
-    return this.buildStyle(cell);
-};
-
-// `notifySubscribers`, `notifySubscriber` - overwrites the functions defined in mixin/asset.js
-P.notifySubscribers = function () {
-
-    if (this.dirtyOutput || this.dirtyNoise) this.cleanOutput();
-
-    this.subscribers.forEach(sub => this.notifySubscriber(sub), this);
-};
-
-P.notifySubscriber = function (sub) {
-
-    sub.sourceNaturalWidth = this.width;
-    sub.sourceNaturalHeight = this.height;
-    sub.sourceLoaded = true;
-    sub.source = this.element;
-    sub.dirtyImage = true;
-    sub.dirtyCopyStart = true;
-    sub.dirtyCopyDimensions = true;
-    sub.dirtyImageSubscribers = true;
-};
-
 // `cleanOutput` - internal function called by the `notifySubscribers` function
+// + The `paintCanvas` function is supplied by the _assetAdvancedFunctionality.js_ mixin
 P.cleanOutput = function () {
 
     if (this.dirtyNoise) this.cleanNoise();
@@ -578,74 +426,19 @@ P.cleanNoise = function () {
     }
 };
 
-// `paintCanvas` - internal function called by the `cleanOutput` function
-P.paintCanvas = function () {
+// `checkOutputValuesExist` and `getOutputValue` are internal variables that must be defined by any asset that makes use of the _assetAdvancedFunctionality.js_ mixin and its `paintCanvas` function
+P.checkOutputValuesExist = function () {
 
-    if (this.dirtyOutput) {
-
-        this.dirtyOutput = false;
-
-        let {noiseValues, element, engine, width, height, color, colorFactory, monochromeStart, monochromeRange, hueStart, hueRange, saturation, luminosity} = this;
-
-        // NoiseAsset values will be calculated in the cleanNoise function, but just in case this function gets invoked directly before the 2d array has been created ...
-        if (null != noiseValues) {
-
-            // Update the Canvas element's dimensions - this will also clear the canvas display
-            element.width = width;
-            element.height = height;
-
-            // Rebuild the display, pixel-by-pixel
-            switch (color) {
-
-                case 'hue' :
-
-                    for (let y = 0; y < height; y++) {
-                        for (let x = 0; x < width; x++) {
-
-                            engine.fillStyle = `hsl(${(hueStart + (noiseValues[y][x] * hueRange)) % 360}, ${saturation}%, ${luminosity}%)`;
-                            engine.fillRect(x, y, 1, 1);
-                        }
-                    }
-                    break;
-
-                case 'gradient' :
-
-                    for (let y = 0; y < height; y++) {
-                        for (let x = 0; x < width; x++) {
-
-                            engine.fillStyle = colorFactory.getRangeColor(noiseValues[y][x]);
-                            engine.fillRect(x, y, 1, 1);
-                        }
-                    }
-                    break;
-
-                // The default color preference is monochrome
-                default :
-
-                    if (monochromeRange > 0) {
-
-                        if (monochromeStart + monochromeRange > 255) monochromeRange = 255 - monochromeStart;
-                    }
-                    else if (monochromeRange < 0) {
-
-                        if (monochromeStart - monochromeRange < 0) monochromeRange = monochromeStart;
-                    }
-
-                    for (let y = 0; y < height; y++) {
-                        for (let x = 0; x < width; x++) {
-
-                            let gray = Math.floor(monochromeStart + (noiseValues[y][x] * monochromeRange));
-
-                            engine.fillStyle = `rgb(${gray}, ${gray}, ${gray})`;
-
-                            engine.fillRect(x, y, 1, 1);
-                        }
-                    }
-            }
-        }
-        else this.dirtyOutput = true;
-    }
+    return (null != this.noiseValues) ? true : false;
 };
+P.getOutputValue = function (index, width) {
+
+    let row = Math.floor(index / width),
+        col = index - (row * width);
+
+    return this.noiseValues[row][col];
+};
+
 
 // #### NoiseAsset generator functionality
 

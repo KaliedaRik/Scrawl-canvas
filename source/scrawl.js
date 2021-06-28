@@ -244,6 +244,11 @@ import {
 
 
 import { 
+    makeReactionDiffusionAsset,
+} from './factory/rdAsset.js';
+
+
+import { 
     makeRectangle,
 } from './factory/rectangle.js';
 
@@ -507,6 +512,10 @@ export default {
 
     // factory/rawAsset.js
     makeRawAsset,
+
+
+    // factory/rdAsset.js
+    makeReactionDiffusionAsset,
 
 
     // factory/rectangle.js
