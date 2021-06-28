@@ -1,6 +1,6 @@
 // # Scrawl-canvas
 //
-// #### Version 8.5.3 - 6 Jun 2021
+// #### Version 8.5.4 - 29 Jun 2021
 //
 // ---------------------------------------------------------------------------------
 // The MIT License (MIT)
@@ -324,12 +324,6 @@ import {
 import { 
     makeWorld,
 } from './factory/particleWorld.js';
-
-
-
-// // ## Initialize Scrawl-canvas
-// import { init } from './core/init.js';
-// init();
 
 
 
