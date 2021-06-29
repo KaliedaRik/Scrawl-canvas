@@ -475,7 +475,8 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="rdasset-factory">RdAsset factory</h1>
-<p>… TODO</p>
+<p><a href="https://en.wikipedia.org/wiki/Reaction%E2%80%93diffusion_system">Reaction-diffusion systems</a> are mathematical models which can be used to explore various physical phenomena. The Scrawl-canvas version is an interpretation of a <em>two-component activator-inhibitor system</em>.</p>
+<p>This factory was inspired by Jason Webb’s <a href="https://jasonwebb.github.io/reaction-diffusion-playground/">Reaction-Diffusion Playground</a></p>
 
             </div>
             
@@ -636,32 +637,12 @@ P = <span class="hljs-title function_">patternMix</span>(P);</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p>The offscreen canvas dimensions, within which the noise will be generated, is set using the <strong>width</strong> and <strong>height</strong> attributes. These take Number values.</p>
+              <p>The offscreen canvas dimensions, within which the reaction-diffusion scene will be generated, is set using the <strong>width</strong> and <strong>height</strong> attributes. These take Number values.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">width</span>: <span class="hljs-number">300</span>,
-    <span class="hljs-attr">height</span>: <span class="hljs-number">150</span>,
-
-    <span class="hljs-attr">initialRandomSeedLevel</span>: <span class="hljs-number">0.0045</span>,
-
-    <span class="hljs-attr">diffusionRateA</span>: <span class="hljs-number">0.2097</span>,
-    <span class="hljs-attr">diffusionRateB</span>: <span class="hljs-number">0.105</span>,
-
-    <span class="hljs-attr">feedRate</span>: <span class="hljs-number">0.054</span>,
-    <span class="hljs-attr">killRate</span>: <span class="hljs-number">0.062</span>,
-
-    <span class="hljs-attr">drawEvery</span>: <span class="hljs-number">10</span>,
-    <span class="hljs-attr">maxGenerations</span>: <span class="hljs-number">4000</span>,
-
-    <span class="hljs-attr">initialSettingPreference</span>: <span class="hljs-string">&#x27;random&#x27;</span>,
-    <span class="hljs-attr">randomEngineSeed</span>: <span class="hljs-string">&#x27;some-random-string-or-other&#x27;</span>,
-    <span class="hljs-attr">initialSettingEntity</span>: <span class="hljs-literal">null</span>,
-};
-P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);
-
-<span class="hljs-keyword">delete</span> P.<span class="hljs-property">defs</span>.<span class="hljs-property">source</span>;
-<span class="hljs-keyword">delete</span> P.<span class="hljs-property">defs</span>.<span class="hljs-property">sourceLoaded</span>;</pre></div></div>
+    <span class="hljs-attr">height</span>: <span class="hljs-number">150</span>,</pre></div></div>
             
         </li>
         
@@ -671,6 +652,131 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
+              </div>
+              <p>The reaction-diffusion scene results will differ based on the initial settings for the <strong>feedRate</strong>, <strong>killRate</strong>, <strong>diffusionRateA</strong> and <strong>diffusionRateB</strong> attributes. These attributes are all float numbers in restricted ranges between 0.0 and 1.0</p>
+<ul>
+<li>In general, the diffusion rate of the A reagent should be roughly double that of the B reagent</li>
+<li>Given the above, the relative settings of the feed and kill rates will determine the stability and eventual outcome of the scene. To find more interesting values, check out the online interactive<a href="https://jasonwebb.github.io/reaction-diffusion-playground/app.html">Reaction-Diffusion Playground</a></li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">diffusionRateA</span>: <span class="hljs-number">0.2097</span>,
+    <span class="hljs-attr">diffusionRateB</span>: <span class="hljs-number">0.105</span>,
+    <span class="hljs-attr">feedRate</span>: <span class="hljs-number">0.054</span>,
+    <span class="hljs-attr">killRate</span>: <span class="hljs-number">0.062</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
+              </div>
+              <p>The Scrawl-canvas implementation allows users to initialize the scene using pseudo-random values scattered across the canvas, or alternatively use a regular Scrawl-canvas entity to supply a more regular initial shape.</p>
+<ul>
+<li>Demo <a href="../../demo/canvas-053.html">Canvas-053</a> includes Block, Wheel and Spiral entitys which can be used for this purpose</li>
+</ul>
+<p><strong>initialSettingPreference</strong> - String - either ‘random’ (default) or ‘entity’</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">initialSettingPreference</span>: <span class="hljs-string">&#x27;random&#x27;</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
+              <p><strong>randomEngineSeed</strong> - String acting as the random engine’s seed value. different String values will create different scene outputs, all other attributes not changing.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">randomEngineSeed</span>: <span class="hljs-string">&#x27;some-random-string-or-other&#x27;</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
+              </div>
+              <p><strong>initialRandomSeedLevel</strong> - Number between 0.0 and 1.0 representing the density of reagent A across the scene’s dimensions</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">initialRandomSeedLevel</span>: <span class="hljs-number">0.0045</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
+              <p><strong>initialSettingEntity</strong> - String name of the entity to be used for setting up the scene</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">initialSettingEntity</span>: <span class="hljs-literal">null</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
+              </div>
+              <p><strong>drawEvery</strong> - positive integer Number - the speed of evolution is affected by how often we draw the current state of the scene onto the canvas.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">drawEvery</span>: <span class="hljs-number">10</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
+              </div>
+              <p><strong>maxGenerations</strong> - positive integer Number - some interesting outputs can be found as a given scene develops over time. We can halt development to allow these outputs to be used by Picture entitys and Pattern styles by setting this attribute to the appropriate value</p>
+<ul>
+<li>Halting the calculations when the scene reaches a desired output is also more efficient - allowing a scene to develop forever may cause the entire animation to slow down</li>
+<li>To allow the scene to develop forever (for instance, to show a more chaotic output) set te value of this attribute to <code>0</code></li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">maxGenerations</span>: <span class="hljs-number">4000</span>,
+};
+P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);
+
+<span class="hljs-keyword">delete</span> P.<span class="hljs-property">defs</span>.<span class="hljs-property">source</span>;
+<span class="hljs-keyword">delete</span> P.<span class="hljs-property">defs</span>.<span class="hljs-property">sourceLoaded</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 <p>This functionality is disabled for Cell objects</p>
@@ -688,11 +794,11 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-10">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 
@@ -703,11 +809,11 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-11">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 <p>No additional kill functionality required</p>
@@ -717,11 +823,11 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-12">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -734,19 +840,32 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-13">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p><strong>subscribers</strong> - we disable the ability to set the subscribers Array directly. Picture entitys and Pattern styles will manage their subscription to the asset using their subscribe() and unsubscribe() functions. Filters will check for updates every time they run</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">subscribers</span> = λ<span class="hljs-literal">null</span>;
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">subscribers</span> = λ<span class="hljs-literal">null</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
+              </div>
+              <p>Setting any of the following attributes will cause the scene to re-initialize itself</p>
 
-S.<span class="hljs-property">width</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">width</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span>) {
 
@@ -860,9 +979,27 @@ S.<span class="hljs-property">initialSettingEntity</span> = <span class="hljs-ke
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScene</span> = <span class="hljs-literal">true</span>;
         }
     }
-};
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
+              </div>
+              <p>This asset comes with a set of predefined effects built in, to make using it easier</p>
+<ul>
+<li>Reaction-diffusion simulations are very sensitive to their initial conditions and, in most cases, will quickly evolve into all-black or all-white (monochrome) displays</li>
+<li>These presets pick out some of the more stable initial conditions</li>
+<li><em><strong>WARNING! The chaos-related presets will generate strobe-lighting effects which may trigger epileptic fits in people who are sensitive to such displays</strong></em></li>
+</ul>
 
-S.<span class="hljs-property">preset</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">preset</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) {
 
@@ -1090,14 +1227,39 @@ S.<span class="hljs-property">preset</span> = <span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-14">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
-<p><code>cleanOutput</code> - internal function called by the <code>notifySubscribers</code> function</p>
+<p><code>update</code> - this function needs to be called once during each Display cycle.</p>
+<ul>
+<li>Reaction-diffusion systems are, like particle systems, dynamic and time based - the more stable scenes need around 4000 iterations to settle down into their final states.</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">update</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">true</span>;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-24">&#x00a7;</a>
+              </div>
+              <p><code>cleanOutput</code> - internal function called by the <code>notifySubscribers</code> function</p>
+<ul>
+<li>All reaction-diffusion calculations are coordinated from this function</li>
+<li>Function also checks to see if scene needs to be (re)initialized - initialization will take place after any of the initial parameters are set to new values</li>
+</ul>
 
             </div>
             
@@ -1145,208 +1307,21 @@ S.<span class="hljs-property">preset</span> = <span class="hljs-keyword">functio
         }
         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">paintCanvas</span>();
     }
-};
-
-P.<span class="hljs-property">checkRow</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
-
-    <span class="hljs-keyword">const</span> h = <span class="hljs-variable language_">this</span>.<span class="hljs-property">height</span>;
-
-    <span class="hljs-keyword">if</span> (val &lt; <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> h - <span class="hljs-number">1</span>;
-    <span class="hljs-keyword">if</span> (val &gt;= h) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
-    <span class="hljs-keyword">return</span> val;
-} 
-
-P.<span class="hljs-property">checkCol</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
-
-    <span class="hljs-keyword">const</span> w = <span class="hljs-variable language_">this</span>.<span class="hljs-property">width</span>;
-
-    <span class="hljs-keyword">if</span> (val &lt; <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> w - <span class="hljs-number">1</span>;
-    <span class="hljs-keyword">if</span> (val &gt;= w) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
-    <span class="hljs-keyword">return</span> val;
-} 
-
-P.<span class="hljs-property">constrain</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val, min, max</span>) {
-
-    <span class="hljs-keyword">if</span> (val &lt; min) <span class="hljs-keyword">return</span> min;
-    <span class="hljs-keyword">if</span> (val &gt; max) <span class="hljs-keyword">return</span> max;
-    <span class="hljs-keyword">return</span> val;
-};
-
-P.<span class="hljs-property">update</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">true</span>;
-};
-
-P.<span class="hljs-property">calculateLaplacian</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">index, src</span>) {
-
-    <span class="hljs-keyword">const</span> w = <span class="hljs-variable language_">this</span>.<span class="hljs-property">width</span>;
-
-    <span class="hljs-keyword">let</span> res = <span class="hljs-number">0</span>,
-        row = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(index / w), 
-        rowAbove = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkRow</span>(row - <span class="hljs-number">1</span>) * w,
-        rowBelow = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkRow</span>(row + <span class="hljs-number">1</span>) * w,
-        rowHere = row * w,
-        col = index - rowHere,
-        colLeft = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkCol</span>(col - <span class="hljs-number">1</span>),
-        colRight = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkCol</span>(col + <span class="hljs-number">1</span>),
-        cursor;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
-              </div>
-              <p>center</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    res += src[index] * -<span class="hljs-number">1</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
-              </div>
-              <p>topleft</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    cursor = rowAbove + colLeft;
-    res += src[cursor] * <span class="hljs-number">0.05</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
-              </div>
-              <p>topright</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    cursor = rowAbove + colRight;
-    res += src[cursor] * <span class="hljs-number">0.05</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
-              </div>
-              <p>bottomleft</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    cursor = rowBelow + colLeft;
-    res += src[cursor] * <span class="hljs-number">0.05</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
-              </div>
-              <p>bottomright</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    cursor = rowBelow + colRight;
-    res += src[cursor] * <span class="hljs-number">0.05</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
-              </div>
-              <p>top</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    cursor = rowAbove + col;
-    res += src[cursor] * <span class="hljs-number">0.2</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
-              </div>
-              <p>right</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    cursor = rowHere + colRight;
-    res += src[cursor] * <span class="hljs-number">0.2</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
-              </div>
-              <p>left</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    cursor = rowHere + colLeft;
-    res += src[cursor] * <span class="hljs-number">0.2</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
-              </div>
-              <p>bottom</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    cursor = rowBelow + col;
-    res += src[cursor] * <span class="hljs-number">0.2</span>;
-
-    <span class="hljs-keyword">return</span> res;
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p><code>cleanScene</code> - internal function called by the <code>cleanOutput</code> function</p>
+<ul>
+<li>Resets the scene to its initial conditions</li>
+</ul>
 
             </div>
             
@@ -1365,9 +1340,22 @@ P.<span class="hljs-property">calculateLaplacian</span> = <span class="hljs-keyw
 
             <span class="hljs-keyword">const</span> len = width * height;
 
-            dataArrays.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+            dataArrays.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-26">&#x00a7;</a>
+              </div>
+              <p>We use four arrays to contain the current and next state of the scene</p>
 
-            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">4</span>; i++) {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">4</span>; i++) {
 
                 dataArrays.<span class="hljs-title function_">push</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Float</span>64<span class="hljs-built_in">Array</span>(len))
             }
@@ -1378,10 +1366,22 @@ P.<span class="hljs-property">calculateLaplacian</span> = <span class="hljs-keyw
             sourceA.<span class="hljs-title function_">fill</span>(<span class="hljs-number">1</span>);
             destA.<span class="hljs-title function_">fill</span>(<span class="hljs-number">1</span>);
             sourceB.<span class="hljs-title function_">fill</span>(<span class="hljs-number">0</span>);
-            destB.<span class="hljs-title function_">fill</span>(<span class="hljs-number">0</span>);
+            destB.<span class="hljs-title function_">fill</span>(<span class="hljs-number">0</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-27">&#x00a7;</a>
+              </div>
+              <p>The scene can be set up to include either random values, or we can use Scrawl-canvas entitys to supply the initial state for the second reagent</p>
 
-
-            <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;entity&#x27;</span> === initialSettingPreference &amp;&amp; entity[initialSettingEntity]) {
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;entity&#x27;</span> === initialSettingPreference &amp;&amp; entity[initialSettingEntity]) {
 
                 <span class="hljs-keyword">const</span> ent = entity[initialSettingEntity],
                     cell = <span class="hljs-title function_">requestCell</span>();
@@ -1404,11 +1404,11 @@ P.<span class="hljs-property">calculateLaplacian</span> = <span class="hljs-keyw
         </li>
         
         
-        <li id="section-25">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p>get data from alpha channel</p>
 
@@ -1421,9 +1421,25 @@ P.<span class="hljs-property">calculateLaplacian</span> = <span class="hljs-keyw
                 }
                 <span class="hljs-title function_">releaseCell</span>(cell);
             }
-            <span class="hljs-keyword">else</span> {
+            <span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-29">&#x00a7;</a>
+              </div>
+              <p>We use a semi-random generator to supply random values to the scene</p>
+<ul>
+<li>This ensures that we can discover and recreate particular patterns from a of ‘randomized’ initial state, as the pattern will be tied to the canvas dimensions, the feed and kill rates, the diffusion rates for each reagent, and the String value supplied to the <code>randomEngineSeed</code> attribute.</li>
+</ul>
 
-                <span class="hljs-keyword">const</span> rndEngine = <span class="hljs-title function_">seededRandomNumberGenerator</span>(randomEngineSeed);
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">const</span> rndEngine = <span class="hljs-title function_">seededRandomNumberGenerator</span>(randomEngineSeed);
 
                 <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> index = <span class="hljs-number">0</span>; index &lt; len; index++) {
 
@@ -1439,11 +1455,222 @@ P.<span class="hljs-property">calculateLaplacian</span> = <span class="hljs-keyw
         </li>
         
         
-        <li id="section-26">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
+              </div>
+              <p><code>constrain</code>, <code>calculateLaplacian</code> - additional internal functions invoked by the <code>cleanOutput</code> function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">constrain</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val, min, max</span>) {
+
+    <span class="hljs-keyword">if</span> (val &lt; min) <span class="hljs-keyword">return</span> min;
+    <span class="hljs-keyword">if</span> (val &gt; max) <span class="hljs-keyword">return</span> max;
+    <span class="hljs-keyword">return</span> val;
+};
+
+P.<span class="hljs-property">calculateLaplacian</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">index, src</span>) {
+
+    <span class="hljs-keyword">const</span> w = <span class="hljs-variable language_">this</span>.<span class="hljs-property">width</span>;
+
+    <span class="hljs-keyword">let</span> res = <span class="hljs-number">0</span>,
+        row = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(index / w), 
+        rowAbove = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkRow</span>(row - <span class="hljs-number">1</span>) * w,
+        rowBelow = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkRow</span>(row + <span class="hljs-number">1</span>) * w,
+        rowHere = row * w,
+        col = index - rowHere,
+        colLeft = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkCol</span>(col - <span class="hljs-number">1</span>),
+        colRight = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkCol</span>(col + <span class="hljs-number">1</span>),
+        cursor;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-31">&#x00a7;</a>
+              </div>
+              <p>center</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    res += src[index] * -<span class="hljs-number">1</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-32">&#x00a7;</a>
+              </div>
+              <p>topleft</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    cursor = rowAbove + colLeft;
+    res += src[cursor] * <span class="hljs-number">0.05</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-33">&#x00a7;</a>
+              </div>
+              <p>topright</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    cursor = rowAbove + colRight;
+    res += src[cursor] * <span class="hljs-number">0.05</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-34">&#x00a7;</a>
+              </div>
+              <p>bottomleft</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    cursor = rowBelow + colLeft;
+    res += src[cursor] * <span class="hljs-number">0.05</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-35">&#x00a7;</a>
+              </div>
+              <p>bottomright</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    cursor = rowBelow + colRight;
+    res += src[cursor] * <span class="hljs-number">0.05</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-36">&#x00a7;</a>
+              </div>
+              <p>top</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    cursor = rowAbove + col;
+    res += src[cursor] * <span class="hljs-number">0.2</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-37">&#x00a7;</a>
+              </div>
+              <p>right</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    cursor = rowHere + colRight;
+    res += src[cursor] * <span class="hljs-number">0.2</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-38">&#x00a7;</a>
+              </div>
+              <p>left</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    cursor = rowHere + colLeft;
+    res += src[cursor] * <span class="hljs-number">0.2</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-39">&#x00a7;</a>
+              </div>
+              <p>bottom</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    cursor = rowBelow + col;
+    res += src[cursor] * <span class="hljs-number">0.2</span>;
+
+    <span class="hljs-keyword">return</span> res;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-40">&#x00a7;</a>
+              </div>
+              <p><code>checkRow</code>, <code>checkCol</code> - internal functions invoked by the <code>calculateLaplacian</code> function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">checkRow</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
+
+    <span class="hljs-keyword">const</span> h = <span class="hljs-variable language_">this</span>.<span class="hljs-property">height</span>;
+
+    <span class="hljs-keyword">if</span> (val &lt; <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> h - <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">if</span> (val &gt;= h) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">return</span> val;
+} 
+
+P.<span class="hljs-property">checkCol</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
+
+    <span class="hljs-keyword">const</span> w = <span class="hljs-variable language_">this</span>.<span class="hljs-property">width</span>;
+
+    <span class="hljs-keyword">if</span> (val &lt; <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> w - <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">if</span> (val &gt;= w) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">return</span> val;
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p><code>checkOutputValuesExist</code> and <code>getOutputValue</code> are internal variables that must be defined by any asset that makes use of the <em>assetAdvancedFunctionality.js</em> mixin and its <code>paintCanvas</code> function</p>
 
@@ -1474,11 +1701,11 @@ P.<span class="hljs-property">getOutputValue</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-27">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.<span class="hljs-title function_">makeReactionDiffusionAsset</span>({
@@ -1501,11 +1728,11 @@ constructors.<span class="hljs-property">RdAsset</span> = <span class="hljs-titl
         </li>
         
         
-        <li id="section-28">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

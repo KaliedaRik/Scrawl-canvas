@@ -475,6 +475,12 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="rawasset-factory">RawAsset factory</h1>
+<p>The Scrawl-canvas RawAsset object allows developers to extend the ability and functionality of the library. It can:</p>
+<ul>
+<li>Act as a link between third-party code and Scrawl-canvas, for instance allowing us to use the output of a Delauney triangulation library to render Voronoi cells into a Scrawl-canvas scene</li>
+<li>Interpret the output of complex machine learning models (for instance: TensorFlow and MediaPipe models) to build real-time scenes</li>
+<li>Build complex displays from simpler building blocks - for instance by interpreting the output from a NoiseAsset object to process an image asset, allowing us to simulate impressionistic styles of painting.</li>
+</ul>
 
             </div>
             
@@ -489,6 +495,11 @@
               </div>
               <h4 id="demos">Demos:</h4>
 <ul>
+<li><a href="../../demo/canvas-052.html">Canvas-052</a> - Create and use a RawAsset object to modify an image asset</li>
+<li><a href="../../demo/delaunator-002.html">Delaunator-002</a> - Responsive Voronoi cells in a RawAsset wrapper</li>
+<li><a href="../../demo/mediapipe-001.html">MediaPipe-001</a> - MediaPipe Selfie Segmentation - model image output</li>
+<li><a href="../../demo/mediapipe-002.html">MediaPipe-002</a> - MediaPipe Face Mesh - model image output</li>
+<li><a href="../../demo/mediapipe-003.html">MediaPipe-003</a> - MediaPipe Face Mesh - working with the mesh coordinates</li>
 <li><a href="../../demo/tensorflow-001.html">TensorFlow-001</a> - Tensorflow tfjs-models / body-pix experiment - follow my eyes</li>
 <li><a href="../../demo/tensorflow-002.html">TensorFlow-002</a> - Tensorflow tfjs-models / body-pix experiment - model image output</li>
 </ul>
@@ -666,7 +677,7 @@ P = <span class="hljs-title function_">assetMix</span>(P);</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <p><strong>updateSource</strong> - a user-defined function which will be run every time a subscriber invokes checkSource when the dirtyData flag is set to true</p>
+              <p><strong>updateSource</strong> - a user-defined function which will be run every time a subscriber invokes checkSource when the <code>dirtyData</code> flag is set to true</p>
 <ul>
 <li>At a minimum, the function will need to set the canvas element’s dimensions (<strong>width</strong> and <strong>height</strong>, both Numbers) and make an effort to draw something onto the canvas element </li>
 </ul>
@@ -815,22 +826,8 @@ S.<span class="hljs-property">updateSource</span> = <span class="hljs-keyword">f
 
     <span class="hljs-keyword">let</span> source = <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span>;
 
-    <span class="hljs-keyword">if</span> (source) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
-              </div>
-              <p>console.log(this.name, ‘checkSource’, width, height, this.dirtyData, source.width, source.height);</p>
+    <span class="hljs-keyword">if</span> (source) {
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>
         <span class="hljs-keyword">let</span> notify = <span class="hljs-literal">false</span>;
 
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyData</span>) {
@@ -857,11 +854,11 @@ S.<span class="hljs-property">updateSource</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-19">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p><code>subscribeAction</code> - Overrides mixin/asset.js function</p>
 
@@ -878,11 +875,11 @@ S.<span class="hljs-property">updateSource</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-20">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p><code>addAttribute</code>, <code>removeAttribute</code> - we can use these functions to add and remove other attributes to the RawAsset object.</p>
 
@@ -920,11 +917,11 @@ P.<span class="hljs-property">removeAttribute</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-21">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p><code>initializeAttributes</code> - internal function called by the constructor.</p>
 
@@ -954,11 +951,11 @@ P.<span class="hljs-property">removeAttribute</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-22">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>
@@ -977,11 +974,11 @@ constructors.<span class="hljs-property">RawAsset</span> = <span class="hljs-tit
         </li>
         
         
-        <li id="section-23">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 
