@@ -31,12 +31,15 @@ const reactionAsset = scrawl.makeReactionDiffusionAsset({
     height: assetDimension,
 });
 
+// Test that the RD asset output is always tileable by displaying it via a Pattern style
 scrawl.makePattern({
 
     name: 'rd-pattern',
     asset: reactionAsset,
 });
 
+// Display the RD asset output in a block
+// + We could also display it in a Picture entity, or use it in a Filter object
 scrawl.makeBlock({
 
     name: 'rd-block',
@@ -45,7 +48,14 @@ scrawl.makeBlock({
 });
 
 
-// Entitys used by the asset for its initialization
+// Entitys that can be used by the RD asset for its initialization
+// + Start positions and dimensions need to be in absolute coordinates/lengths because the RD asset will `simpleStamp` the entity onto a temporary canvas and populate the scene with the alpha channel values from the resulting ImageData object.
+// ```
+// ent.simpleStamp(cell, {
+//     fillStyle: 'white',
+//     strokeStyle: 'white',
+// });
+// ```
 scrawl.makeBlock({
     name: 'initial-square',
     dimensions: [30, 30],
@@ -109,6 +119,80 @@ scrawl.makeRender({
 
 // #### User interaction
 // Setup form observer functionality
+scrawl.addNativeListener('input', (e) => {
+
+    e.preventDefault();
+
+    if (e && e.target) {
+
+        let val = e.target.value;
+
+        switch (val) {
+
+            case 'square':
+                reactionAsset.set({
+                    initialSettingPreference: 'entity',
+                    initialSettingEntity: 'initial-square',
+                });
+                break;
+
+            case 'circle':
+                reactionAsset.set({
+                    initialSettingPreference: 'entity',
+                    initialSettingEntity: 'initial-circle',
+                });
+                break;
+
+            case 'spiral':
+                reactionAsset.set({
+                    initialSettingPreference: 'entity',
+                    initialSettingEntity: 'initial-spiral',
+                });
+                break;
+
+            default: 
+                reactionAsset.set({
+                    initialSettingPreference: 'random',
+                });
+        }
+    }
+}, '#initialSettingPreference');
+
+scrawl.observeAndUpdate({
+
+    event: ['input', 'change'],
+    origin: '.controlItem',
+
+    target: reactionAsset,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+
+        initialRandomSeedLevel: ['initialRandomSeedLevel', 'float'],
+        diffusionRateA: ['diffusionRateA', 'float'],
+        diffusionRateB: ['diffusionRateB', 'float'],
+        feedRate: ['feedRate', 'float'],
+        killRate: ['killRate', 'float'],
+        drawEvery: ['drawEvery', 'round'],
+        maxGenerations: ['maxGenerations', 'round'],
+        canvasWidth: ['width', 'round'],
+        canvasHeight: ['height', 'round'],
+        color: ['color', 'raw'],
+        gradientStart: ['gradientStart', 'raw'],
+        gradientEnd: ['gradientEnd', 'raw'],
+        monochromeStart: ['monochromeStart', 'round'],
+        monochromeRange: ['monochromeRange', 'round'],
+        hueStart: ['hueStart', 'float'],
+        hueRange: ['hueRange', 'float'],
+        saturation: ['saturation', 'float'],
+        luminosity: ['luminosity', 'float'],
+        randomEngineSeed: ['randomEngineSeed', 'raw'],
+    },
+});
+
+// This listener updates the RD asset with the selected preset value. Most of the following code is to update the the Demo's user interface
 scrawl.addNativeListener(['change', 'input'], (e) => {
 
     e.preventDefault();
@@ -340,79 +424,6 @@ scrawl.addNativeListener(['change', 'input'], (e) => {
         }
     }
 }, '#presets');
-
-scrawl.addNativeListener('input', (e) => {
-
-    e.preventDefault();
-
-    if (e && e.target) {
-
-        let val = e.target.value;
-
-        switch (val) {
-
-            case 'square':
-                reactionAsset.set({
-                    initialSettingPreference: 'entity',
-                    initialSettingEntity: 'initial-square',
-                });
-                break;
-
-            case 'circle':
-                reactionAsset.set({
-                    initialSettingPreference: 'entity',
-                    initialSettingEntity: 'initial-circle',
-                });
-                break;
-
-            case 'spiral':
-                reactionAsset.set({
-                    initialSettingPreference: 'entity',
-                    initialSettingEntity: 'initial-spiral',
-                });
-                break;
-
-            default: 
-                reactionAsset.set({
-                    initialSettingPreference: 'random',
-                });
-        }
-    }
-}, '#initialSettingPreference');
-
-scrawl.observeAndUpdate({
-
-    event: ['input', 'change'],
-    origin: '.controlItem',
-
-    target: reactionAsset,
-
-    useNativeListener: true,
-    preventDefault: true,
-
-    updates: {
-
-        initialRandomSeedLevel: ['initialRandomSeedLevel', 'float'],
-        diffusionRateA: ['diffusionRateA', 'float'],
-        diffusionRateB: ['diffusionRateB', 'float'],
-        feedRate: ['feedRate', 'float'],
-        killRate: ['killRate', 'float'],
-        drawEvery: ['drawEvery', 'round'],
-        maxGenerations: ['maxGenerations', 'round'],
-        canvasWidth: ['width', 'round'],
-        canvasHeight: ['height', 'round'],
-        color: ['color', 'raw'],
-        gradientStart: ['gradientStart', 'raw'],
-        gradientEnd: ['gradientEnd', 'raw'],
-        monochromeStart: ['monochromeStart', 'round'],
-        monochromeRange: ['monochromeRange', 'round'],
-        hueStart: ['hueStart', 'float'],
-        hueRange: ['hueRange', 'float'],
-        saturation: ['saturation', 'float'],
-        luminosity: ['luminosity', 'float'],
-        randomEngineSeed: ['randomEngineSeed', 'raw'],
-    },
-});
 
 // Setup form
 const qs_presets = document.querySelector('#presets'),

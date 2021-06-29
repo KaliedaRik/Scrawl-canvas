@@ -1,5 +1,5 @@
 // # Demo Canvas 052 
-// Drag-drop load image files into the canvas element
+// Create and use a RawAsset object to modify an image asset
 
 // [Run code](../../demo/canvas-052.html)
 import scrawl from '../source/scrawl.js'
@@ -254,12 +254,14 @@ scrawl.makeRender({
     name: 'demo-animation',
     target: canvas,
 
+    // We need to trigger the RawAsset object to update its output at the start of each Display cycle
     commence: () => impressionistAsset.set({ trigger: true }),
+    
     afterShow: report,
 });
 
 
-// #### Drag-and-Drop functionality
+// #### Drag-and-Drop image loading functionality
 const store = document.querySelector('#my-image-store');
 const timeoutDelay = 200;
 
