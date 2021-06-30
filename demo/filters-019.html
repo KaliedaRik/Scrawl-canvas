@@ -42,6 +42,8 @@
         <option value="improved-perlin">Perlin (improved)</option>
         <option value="simplex">Simplex</option>
         <option value="value">Value</option>
+        <option value="stripes">Stripes</option>
+        <option value="smoothed-stripes">Smoothed stripes</option>
       </select>
     </div>
 
@@ -70,7 +72,7 @@
     <div class="green"><input class="controlItem" id="hueStart" type="range" value="0" min="0" max="360" step="0.5" disabled /></div>
 
     <div class="green label">Hue range</div>
-    <div class="green"><input class="controlItem" id="hueRange" type="range" value="120" min="-400" max="400" step="5" disabled /></div>
+    <div class="green"><input class="controlItem" id="hueRange" type="range" value="120" min="-350" max="400" step="5" disabled /></div>
 
     <div class="green label">Saturation</div>
     <div class="green"><input class="controlItem" id="saturation" type="range" value="100" min="0" max="100" step="0.1" disabled /></div>
@@ -103,6 +105,7 @@
         <option value="sine-x">sine-x</option>
         <option value="sine-y">sine-y</option>
         <option value="modular">modular</option>
+        <option value="random">random</option>
       </select>
     </div>
 
@@ -150,8 +153,8 @@
       </select>
     </div>
 
-    <div class="blue label">Modular Amplitude</div>
-    <div class="blue"><input class="controlItem" id="modularAmplitude" type="range" value="5" min="0.1" max="10" step="0.1" disabled /></div>
+    <div class="blue label">Sum Amplitude</div>
+    <div class="blue"><input class="controlItem" id="sumAmplitude" type="range" value="5" min="0.1" max="10" step="0.1" disabled /></div>
 
     <div class="yellow label">Canvas width</div>
     <div class="yellow"><input class="controlItem" id="width" type="range" value="400" min="1" max="600" step="1" /></div>
@@ -160,7 +163,7 @@
     <div class="yellow"><input class="controlItem" id="height" type="range" value="400" min="1" max="600" step="1" /></div>
 
     <div class="yellow label">Scale</div>
-    <div class="yellow"><input class="controlItem" id="scale" type="range" value="50" min="0" max="100" step="1" /></div>
+    <div class="yellow"><input class="controlItem" id="scale" type="range" value="50" min="0" max="200" step="1" /></div>
 
     <div class="yellow label">Size</div>
     <div class="yellow"><input class="controlItem" id="size" type="range" value="256" min="4" max="2048" step="4" /></div>

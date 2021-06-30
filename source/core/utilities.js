@@ -699,7 +699,7 @@ const easeOutInBounce = function(t) {
     }
 };
 
-
+const getArrayType = someObject => someObject && someObject.constructor && someObject.constructor.name && someObject.constructor.name || null;
 
 // #### Exports
 export {
@@ -762,5 +762,7 @@ export {
     easeOutBounce,
     easeInBounce,
     easeOutInBounce,
+
+    getArrayType,
 };
 

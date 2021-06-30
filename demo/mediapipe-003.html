@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Mediapipe 003</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    .controls {
+      grid-template-columns: 1fr 2fr 1fr 2fr;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Mediapipe test 003</h1>
+  <h2>MediaPipe Face Mesh - working with the mesh coordinates</h2>
+
+  <div class="controls">
+    <div class="yellow label">Worm start</div>
+    <div class="yellow"><input class="controlItem" id="wormstart" type="number" value="220" min="0" max="468" step="1" /></div>
+    <div class="yellow label">Worm end</div>
+    <div class="yellow"><input class="controlItem" id="wormend" type="number" value="270" min="0" max="468" step="1" /></div>
+  </div>
+
+  <canvas id="mycanvas"></canvas>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Check that the media stream loads (if browser/device supports it)</li>
+      <li>Check that we can load and use both Mediapipe (from a CDN) and its face mesh model</li>
+      <li>Apply the model to a live camera feed</li>
+      <li>Interrogate and label the coordinates returned by the model</li>
+      <li>Use the labels as pins for a Polyline entity</li>
+      <li>Allow the user to update the start and end points of the Polyline entity's pins</li>
+    </ul>
+    <p><a href="../docs/demo/mediapipe-003.html">Annotated code</a></p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
+
+  <script src="mediapipe-003.js" type="module"></script>
+
+</body>
+
+</html>

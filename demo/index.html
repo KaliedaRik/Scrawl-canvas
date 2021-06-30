@@ -119,6 +119,8 @@
 
     <p><strong>These demos represent the library's testing suite.</strong> They have been designed to cover as much functionality as possible in sets of integration tests. Testing is (currently) conducted by hand: all demos must run as expected before changes can be pushed to the library's v8 or master branches on GitHub.</p>
 
+    <p>Additional (non-testing) demos can be found in this <a href="https://codepen.io/collection/RzzMjw">CodePen collection</a>.</p>
+
     <h2>Core functionality tests:</h2>
 
     <p>Scrawl-canvas helps developers build graphical representations and scenes that are <strong>real-time responsive</strong> to their DOM environment, and easier to <strong>make accessible</strong> to non-visibility-based technology. The coding paradigm encourages developers to <strong>split their code into ES6 modules</strong>: this makes code easier to maintain and easier to reuse.</p>
@@ -463,6 +465,18 @@
       <div>
         <a href="canvas-051.html">Canvas 051</a>
         Line Spirals
+      </div>
+
+      <div class="no-padding"><img src="thumbs/canvas-052.png" /></div>
+      <div>
+        <a href="canvas-052.html">Canvas 052</a>
+        Create and use a RawAsset object to modify an image asset
+      </div>
+
+      <div class="no-padding"><img src="thumbs/canvas-053.png" /></div>
+      <div>
+        <a href="canvas-053.html">Canvas 053</a>
+        Display output from a Reaction-Diffusion asset
       </div>
     </div>
 
@@ -933,11 +947,55 @@
       </div>
     </div>
 
-    <h2>TensorFlow experiments</h2>
+    <h2>Third party library experiments</h2>
 
-    <p>Scrawl-canvas support for various TensorFlow model outputs is highly experimental at this time.</p>
+    <p>Scrawl-canvas can work with third party Javascript libraries as well as vanilla Javascript code. The demos below use the following libraries and technologies:</p>
+
+    <ul>
+      <li><a href="https://github.com/mapbox/delaunator">Delaunator</a> - An incredibly fast and robust JavaScript library for Delaunay (and Voronoi) triangulation of 2D points</li>
+      <li><a href="https://google.github.io/mediapipe/">MediaPipe</a> - cross-platform, customizable machine learning solutions for live and streaming media</li>
+      <li><a href="https://www.tensorflow.org/">TensorFlow</a> - an end-to-end open source platform for machine learning</li>
+    </ul>
+
+    <p>In addition some of the other Demos, and <a href="https://codepen.io/collection/RzzMjw">CodePen examples</a>, make use of third party libraries:</p>
+
+    <ul>
+      <li>Demos <a href="canvas-009.html">Canvas 009</a> and <a href="dom-006.html">DOM 006</a> include examples of using <a href="https://marketingplatform.google.com/intl/en_uk/about/analytics/">Google Analytics</a> with a canvas/stack animation</li>
+
+      <li>The CodePen <a href="https://codepen.io/kaliedarik/pen/zYvbwBy">cloth demo</a> uses the <a href="https://brm.io/matter-js/">Matter.js physics engine</a></li>
+    </ul>
 
     <div class="container">
+
+      <div class="no-padding"><img src="thumbs/delaunator-001.png" /></div>
+      <div>
+        <a href="delaunator-001.html">Delaunator 001</a>
+        Delauney triangulation and Voronoi cell visualisation
+      </div>
+
+      <div class="no-padding"><img src="thumbs/delaunator-002.png" /></div>
+      <div>
+        <a href="delaunator-002.html">Delaunator 002</a>
+        Responsive Voronoi cells in a RawAsset wrapper
+      </div>
+
+      <div class="no-padding"><img src="thumbs/mediapipe-001.png" /></div>
+      <div>
+        <a href="mediapipe-001.html">MediaPipe 001</a>
+        MediaPipe Selfie Segmentation - model image output
+      </div>
+
+      <div class="no-padding"><img src="thumbs/mediapipe-002.png" /></div>
+      <div>
+        <a href="mediapipe-002.html">MediaPipe 002</a>
+        MediaPipe Face Mesh - model image output
+      </div>
+
+      <div class="no-padding"><img src="thumbs/mediapipe-003.png" /></div>
+      <div>
+        <a href="mediapipe-003.html">MediaPipe 003</a>
+        MediaPipe Face Mesh - working with the mesh coordinates
+      </div>
 
       <div class="no-padding"><img src="thumbs/tensorflow-001.png" /></div>
       <div>
@@ -951,6 +1009,7 @@
         Tensorflow tfjs-models / body-pix experiment - model image output
       </div>
     </div>
+
   </main>
 </body>
 </html>

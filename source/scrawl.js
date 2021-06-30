@@ -1,6 +1,6 @@
 // # Scrawl-canvas
 //
-// #### Version 8.5.3 - 6 Jun 2021
+// #### Version 8.5.4 - 29 Jun 2021
 //
 // ---------------------------------------------------------------------------------
 // The MIT License (MIT)
@@ -188,7 +188,8 @@ import {
 
 import { 
     makeNoise,
-} from './factory/noise.js';
+    makeNoiseAsset,
+} from './factory/noiseAsset.js';
 
 
 import { 
@@ -240,6 +241,11 @@ import {
 import { 
     makeRawAsset,
 } from './factory/rawAsset.js';
+
+
+import { 
+    makeReactionDiffusionAsset,
+} from './factory/rdAsset.js';
 
 
 import { 
@@ -318,12 +324,6 @@ import {
 import { 
     makeWorld,
 } from './factory/particleWorld.js';
-
-
-
-// // ## Initialize Scrawl-canvas
-// import { init } from './core/init.js';
-// init();
 
 
 
@@ -462,8 +462,9 @@ export default {
     makeNet,
 
 
-    // factory/noise.js
+    // factory/noiseAsset.js
     makeNoise,
+    makeNoiseAsset,
 
 
     // factory/oval.js
@@ -505,6 +506,10 @@ export default {
 
     // factory/rawAsset.js
     makeRawAsset,
+
+
+    // factory/rdAsset.js
+    makeReactionDiffusionAsset,
 
 
     // factory/rectangle.js

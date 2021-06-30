@@ -3,11 +3,12 @@
 // + the __start__ and __end__ positioning attributes are defined here rather than in the factories
 // + gradient-type styles manage their color stops in [Palette factory](../factory/palette.html) objects; that functionality is entirely defined here
 //
-// The Canvas API CanvasRenderingContext2D interface defines two types of gradient: [linear](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createLinearGradient) and [radial](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createRadialGradient).
+// The Canvas API CanvasRenderingContext2D interface defines three types of gradient: the widely supported [linear](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createLinearGradient) and [radial](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createRadialGradient) gradients, and the [conic](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createConicGradient) which, while widely supported as a CSS feature, is very much an experimental technology for CanvasRenderingContext2D engines.
 // + the `createLinearGradient` method creates a gradient along the line connecting two given coordinates (__start__ and __end__) which are absolute values (measured in pixels) from the &lt;canvas> elements top-left corner
 // + the `createRadialGradient` method creates a radial gradient using the size and coordinates of two circles.
+// + the `createConicGradient` method creates a conic gradient as a 360° sweep around the gradient's start coordinate. For browsers which donb't support this gradient out of the box, the method will apply no gradient to the entity.
 //
-// Common to both types of gradient is the idea of a start coordinate and an end coordinate, supplied in pixels. 
+// Common to linear and radial types of gradient is the idea of a start coordinate and an end coordinate, supplied in pixels. 
 // + Scrawl-canvas extends this idea so that the coordinates can be supplied as a percentage value (String%) of the host Cell's dimensions. 
 // + Furthermore Scrawl-canvas allows each entity that uses a Gradient-type style to indicate whether the reference box should be that of the host Cell, or of the entity itself, through their `lockFillStyleToEntity` and `lockStrokeStyleToEntity` attribute flags.
 
@@ -39,7 +40,7 @@ export default function (P = Ωempty) {
         end: null,
 
 
-// __palette__ - Every gradient requires a Palette object containing color stop instructions
+// __palette__ - Every gradient requires a Palette object containing color stop instructions. Generation of the object is automated and should ot be tampered with. Add and remove colors to the gradient using the `updateColor` and `removeColor` functions.
         palette: null,
 
 
@@ -52,6 +53,13 @@ export default function (P = Ωempty) {
 // + when false, we reverse the color stops
 // + when true, we keep the normal order of color stops and pass through the 1/0 border
         cyclePalette: false,
+
+// The __delta__ object is not stored in the defs object; it acts in a similar way to the artefact delta object - though it is restricted to adding delta values to Number and 'String%' attributes.
+// + Unlike artefacts, where delta animation will be applied to artefacts by default as part of each Display cycle, gradient delta animations need to be explicitly invoked: `my_gradient.updateByDelta();`
+//
+// The __colors__ _pseudo-attribute_ can be used to pass through an array of palette color objects to the Palette object. The data is not retained by the gradient object.
+// + A better approach to managing gradient colors is to use the `updateColor` and `removeColor` functions
+
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
 

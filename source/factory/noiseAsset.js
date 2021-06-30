@@ -1,13 +1,17 @@
-// # Noise factory
-// The purpose of the Noise asset is to give us a resource for generating noisy (semi-regular) maps. These can then be used directly as Picture or Pattern images, or uploaded to the filter engine as part of a filter that uses displacement map functionality.
+// # NoiseAsset factory
+// The purpose of the NoiseAsset asset is to give us a resource for generating noisy (semi-regular) maps. These can then be used directly as Picture or Pattern images, or uploaded to the filter engine as part of a filter that uses displacement map functionality.
 
 
 // #### Current functionality
-// At the moment the Noise asset can generate Perlin-type noise, with engines supplied for:
+// At the moment the NoiseAsset asset can generate Perlin-type noise, with engines supplied for:
 // + Perlin (classic)
 // + Perlin (improved)
 // + Simplex - the default engine
 // + Value
+//
+// Additional engines include:
+// + Stripes
+// + Smoothed stripes
 //
 // These engines are supported by a number of settable (and thus animatable) attributes, including special functions for smoothing the engine output. Demo [Filters-019](../../demo/filters-019.html) has been set up to allow for experimenting with these attributes
 //
@@ -17,15 +21,6 @@
 // + __Hue__ - where the engine output for each pixel is interpreted as the hue component of an HSL color
 //
 // (___NOTE:___ Perlin, Simplex and Value noise generator code based on code found in the [canvas-noise GitHub repository](https://github.com/lencinhaus/canvas-noise) written by [lencinhaus](https://github.com/lencinhaus).
-
-
-// #### Possible future functionality
-// There's no reason why the Noise asset cannot be extended to output other types of (semi-regular) noise data. For instance:
-// + [Nearest neighbour interpolation](https://en.wikipedia.org/wiki/Nearest-neighbor_interpolation) - for tesselations, particularly with [unstructured grids](https://en.wikipedia.org/wiki/Unstructured_grid)
-// + [Linear interpolation](https://en.wikipedia.org/wiki/Linear_interpolation) 
-// + [Bilinear interpolation](https://en.wikipedia.org/wiki/Bilinear_interpolation)
-// + [Bicubic interpolation](https://en.wikipedia.org/wiki/Bicubic_interpolation) - and see also (this blog post)[https://jobtalle.com/cubic_noise.html]
-// + Using non-rectangular [grids or meshes](https://en.wikipedia.org/wiki/Types_of_mesh) as a starting point for generating noise. For instance: [sunflower pattern](https://www.sciencemag.org/news/2016/05/sunflowers-show-complex-fibonacci-sequences)
 
 
 // #### Demos:
@@ -41,11 +36,12 @@ import { makeColor } from './color.js';
 
 import baseMix from '../mixin/base.js';
 import assetMix from '../mixin/asset.js';
+import assetAdvancedMix from '../mixin/assetAdvancedFunctionality.js';
 import patternMix from '../mixin/pattern.js';
 
 
-// #### Noise constructor
-const Noise = function (items = Ωempty) {
+// #### NoiseAsset constructor
+const NoiseAsset = function (items = Ωempty) {
 
     this.makeName(items.name);
     this.register();
@@ -78,9 +74,9 @@ const Noise = function (items = Ωempty) {
 };
 
 
-// #### Noise prototype
-let P = Noise.prototype = Object.create(Object.prototype);
-P.type = 'Noise';
+// #### NoiseAsset prototype
+let P = NoiseAsset.prototype = Object.create(Object.prototype);
+P.type = 'NoiseAsset';
 P.lib = 'asset';
 P.isArtefact = false;
 P.isAsset = true;
@@ -89,45 +85,24 @@ P.isAsset = true;
 // #### Mixins
 // + [base](../mixin/base.html)
 // + [asset](../mixin/asset.html)
+// + [assetAdvancedFunctionality](../mixin/assetAdvancedFunctionality.html)
 // + [pattern](../mixin/pattern.html)
 P = baseMix(P);
 P = assetMix(P);
+P = assetAdvancedMix(P);
 P = patternMix(P);
 
 
-// #### Noise attributes
+// #### NoiseAsset attributes
 // + Attributes defined in the [base mixin](../mixin/base.html): __name__.
 // + Attributes defined in the [asset mixin](../mixin/asset.html): __source, subscribers__.
+// + Attributes defined in the [assetAdvancedFunctionality mixin](../mixin/assetAdvancedFunctionality.html): __color, monochromeStart, monochromeRange, gradientStart, gradientEnd, hueStart, hueRange, saturation, luminosity__.
 // + Attributes defined in the [pattern mixin](../mixin/pattern.html): __repeat, patternMatrix, matrixA, matrixB, matrixC, matrixD, matrixE, matrixF__.
 let defaultAttributes = {
 
     // The offscreen canvas dimensions, within which the noise will be generated, is set using the __width__ and __height__ attributes. These take Number values.
     width: 300,
     height: 150,
-
-    // __color__ - String value determining how the generated noise will be output on the canvas. Currently recognised values are: `monochrome` (default), `gradient` and `hue`
-    color: 'monochrome',
-
-    // When the `color` choice has been set to `monochrome` we can clamp the pixel values using the __monochromeStart__ and __monochromeRange__ attributes, both of which take integer Numbers. 
-    // + Accepted monochromeStart values are 0 to 255
-    // + Accepted monochromeRange values are -255 to 255
-    // + Be aware that the monochromeRange value will be recalculated to make sure calculated pixel values remain in the 0-255 color channel range
-    monochromeStart: 0,
-    monochromeRange: 255,
-
-    // When the `color` choice has been set to `gradient` we can control the start and end colors of the gradient using the __gradientStart__ and __gradientEnd__ attributes
-    gradientStart: '#ff0000',
-    gradientEnd: '#00ff00',
-
-    // When the `color` choice has been set to `hue` we can control the pixel colors (in terms of their HSL components) using the __hueStart__, __hueRange__, __saturation__ and __luminosity__ attributes:
-    // + `hueStart` - float Number value in degrees, will be clamped to between 0 and 360
-    // + `hueRange` - float Number value in degrees, can be negative as well as positive
-    // + `saturation` - float Number value, between 0 and 100
-    // + `luminosity` - float Number value, between 0 and 100
-    hueStart: 0,
-    hueRange: 120,
-    saturation: 100,
-    luminosity: 50,
 
     // __noiseEngine__ - String - the currently supported noise engines String values are: `perlin`, `improved-perlin`, `simplex`, `value`
     noiseEngine: 'simplex',
@@ -157,7 +132,7 @@ let defaultAttributes = {
     // + __modularAmplitude__ - a Number - is used by the modular sum function
     sumFunction: 'none',
     sineFrequencyCoeff: 1,
-    modularAmplitude: 5,
+    sumAmplitude: 5,
 
 
 };
@@ -244,16 +219,6 @@ S.seed = function (item) {
     }
 };
 
-P.supportedColorSchemes = ['monochrome', 'gradient', 'hue'];
-S.color = function (item) {
-
-    if (this.supportedColorSchemes.indexOf(item) >= 0) {
-
-        this.color = item;
-        this.dirtyOutput = true;
-    }
-};
-
 S.scale = function (item) {
 
     if (item.toFixed) {
@@ -294,78 +259,6 @@ S.lacunarity = function (item) {
     }
 };
 
-S.gradientStart = function (item) {
-
-    if (item.substring) {
-
-        this.colorFactory.setMinimumColor(item);
-        this.dirtyOutput = true;
-    }
-};
-
-S.gradientEnd = function (item) {
-
-    if (item.substring) {
-
-        this.colorFactory.setMaximumColor(item);
-        this.dirtyOutput = true;
-    }
-};
-
-S.monochromeStart = function (item) {
-
-    if (item.toFixed && item >= 0) {
-
-        this.monochromeStart = item % 360;
-        this.dirtyOutput = true;
-    }
-};
-
-S.monochromeRange = function (item) {
-
-    if (item.toFixed && item >= -255 && item < 256) {
-
-        this.monochromeRange = Math.floor(item);
-        this.dirtyOutput = true;
-    }
-};
-
-S.hueStart = function (item) {
-
-    if (item.toFixed) {
-
-        this.hueStart = item;
-        this.dirtyOutput = true;
-    }
-};
-
-S.hueRange = function (item) {
-
-    if (item.toFixed) {
-
-        this.hueRange = item;
-        this.dirtyOutput = true;
-    }
-};
-
-S.saturation = function (item) {
-
-    if (item.toFixed && item >= 0 && item <= 100) {
-
-        this.saturation = Math.floor(item);
-        this.dirtyOutput = true;
-    }
-};
-
-S.luminosity = function (item) {
-
-    if (item.toFixed && item >= 0 && item <= 100) {
-
-        this.luminosity = Math.floor(item);
-        this.dirtyOutput = true;
-    }
-};
-
 S.sineFrequencyCoeff = function (item) {
 
     if (item.toFixed) {
@@ -376,11 +269,22 @@ S.sineFrequencyCoeff = function (item) {
     }
 };
 
+// `modularAmplitude` - name changed to `sumAmplitude`
 S.modularAmplitude = function (item) {
 
     if (item.toFixed) {
 
-        this.modularAmplitude = item;
+        this.sumAmplitude = item;
+        this.dirtyNoise = true;
+        this.dirtyOutput = true;
+    }
+};
+
+S.sumAmplitude = function (item) {
+
+    if (item.toFixed) {
+
+        this.sumAmplitude = item;
         this.dirtyNoise = true;
         this.dirtyOutput = true;
     }
@@ -410,54 +314,8 @@ S.height = function (item) {
 
 
 // #### Prototype functions
-// `installElement` - internal function, used by the constructor
-P.installElement = function (element) {
-
-    this.element = element;
-    this.engine = this.element.getContext('2d');
-
-    return this;
-};
-
-// `checkSource`
-// + Gets invoked by subscribers (who have a handle to the asset instance object) as part of the display cycle.
-// + Noise assets will automatically pass this call onto `notifySubscribers`, where dirty flags get checked and rectified
-P.checkSource = function (width, height) {
-
-    this.notifySubscribers();
-};
-
-// `getData` function called by Cell objects when calculating required updates to its CanvasRenderingContext2D engine, specifically for an entity's __fillStyle__, __strokeStyle__ and __shadowColor__ attributes.
-// + This is the point when we clean Scrawl-canvas assets which have told their subscribers that asset data/attributes have updated
-P.getData = function (entity, cell) {
-
-    // this.checkSource(this.width, this.height);
-    this.notifySubscribers();
-
-    return this.buildStyle(cell);
-};
-
-// `notifySubscribers`, `notifySubscriber` - overwrites the functions defined in mixin/asset.js
-P.notifySubscribers = function () {
-
-    if (this.dirtyOutput || this.dirtyNoise) this.cleanOutput();
-
-    this.subscribers.forEach(sub => this.notifySubscriber(sub), this);
-};
-
-P.notifySubscriber = function (sub) {
-
-    sub.sourceNaturalWidth = this.width;
-    sub.sourceNaturalHeight = this.height;
-    sub.sourceLoaded = true;
-    sub.source = this.element;
-    sub.dirtyImage = true;
-    sub.dirtyCopyStart = true;
-    sub.dirtyCopyDimensions = true;
-    sub.dirtyImageSubscribers = true;
-};
-
 // `cleanOutput` - internal function called by the `notifySubscribers` function
+// + The `paintCanvas` function is supplied by the _assetAdvancedFunctionality.js_ mixin
 P.cleanOutput = function () {
 
     if (this.dirtyNoise) this.cleanNoise();
@@ -568,76 +426,21 @@ P.cleanNoise = function () {
     }
 };
 
-// `paintCanvas` - internal function called by the `cleanOutput` function
-P.paintCanvas = function () {
+// `checkOutputValuesExist` and `getOutputValue` are internal variables that must be defined by any asset that makes use of the _assetAdvancedFunctionality.js_ mixin and its `paintCanvas` function
+P.checkOutputValuesExist = function () {
 
-    if (this.dirtyOutput) {
+    return (null != this.noiseValues) ? true : false;
+};
+P.getOutputValue = function (index, width) {
 
-        this.dirtyOutput = false;
+    let row = Math.floor(index / width),
+        col = index - (row * width);
 
-        let {noiseValues, element, engine, width, height, color, colorFactory, monochromeStart, monochromeRange, hueStart, hueRange, saturation, luminosity} = this;
-
-        // Noise values will be calculated in the cleanNoise function, but just in case this function gets invoked directly before the 2d array has been created ...
-        if (null != noiseValues) {
-
-            // Update the Canvas element's dimensions - this will also clear the canvas display
-            element.width = width;
-            element.height = height;
-
-            // Rebuild the display, pixel-by-pixel
-            switch (color) {
-
-                case 'hue' :
-
-                    for (let y = 0; y < height; y++) {
-                        for (let x = 0; x < width; x++) {
-
-                            engine.fillStyle = `hsl(${(hueStart + (noiseValues[y][x] * hueRange)) % 360}, ${saturation}%, ${luminosity}%)`;
-                            engine.fillRect(x, y, 1, 1);
-                        }
-                    }
-                    break;
-
-                case 'gradient' :
-
-                    for (let y = 0; y < height; y++) {
-                        for (let x = 0; x < width; x++) {
-
-                            engine.fillStyle = colorFactory.getRangeColor(noiseValues[y][x]);
-                            engine.fillRect(x, y, 1, 1);
-                        }
-                    }
-                    break;
-
-                // The default color preference is monochrome
-                default :
-
-                    if (monochromeRange > 0) {
-
-                        if (monochromeStart + monochromeRange > 255) monochromeRange = 255 - monochromeStart;
-                    }
-                    else if (monochromeRange < 0) {
-
-                        if (monochromeStart - monochromeRange < 0) monochromeRange = monochromeStart;
-                    }
-
-                    for (let y = 0; y < height; y++) {
-                        for (let x = 0; x < width; x++) {
-
-                            let gray = Math.floor(monochromeStart + (noiseValues[y][x] * monochromeRange));
-
-                            engine.fillStyle = `rgb(${gray}, ${gray}, ${gray})`;
-
-                            engine.fillRect(x, y, 1, 1);
-                        }
-                    }
-            }
-        }
-        else this.dirtyOutput = true;
-    }
+    return this.noiseValues[row][col];
 };
 
-// #### Noise generator functionality
+
+// #### NoiseAsset generator functionality
 
 // Convenience constants
 // P.F = 0.5 * (Math.sqrt(3) - 1);
@@ -652,6 +455,7 @@ P.perlinGrad = [[1, 1], [-1, 1], [1, -1], [-1, -1], [1, 0], [-1, 0], [0, 1], [0,
 // + __getNoiseValue__ - a function called on a per-pixel basis, which calculates the noise value for that pixel
 P.noiseEngines = {
 
+    // The classic Perlin noise generator
     'perlin': {
 
         init: function () {
@@ -712,6 +516,7 @@ P.noiseEngines = {
         },
     },
 
+    // An improved Perlin noise generator
     'improved-perlin': {
 
         init: λnull,
@@ -757,6 +562,7 @@ P.noiseEngines = {
         }
     },
 
+    // A successor to Perlin noise generation, by the person who invented it
     'simplex': {
 
         init: λnull,
@@ -806,6 +612,7 @@ P.noiseEngines = {
         },
     },
 
+    // A simplified form of Perlin noise
     'value': {
 
         init: function () {
@@ -843,6 +650,34 @@ P.noiseEngines = {
 
             return interpolate(sy, i1, i2);
         },
+    },
+
+    // For generating repeated stripe gradients, set the sum function to `modular` and vary the canvas width/height attributes to set the stripe direction; stripe spacing can be varied using the modular amplitude value. Other sum function values can also produce interesting effects
+    'stripes': {
+
+        init: λnull,
+
+        getNoiseValue: function (x, y) {
+
+            return (x / 5) + (y / 5);
+        }
+    },
+
+    // As for stripes, but can apply smoothing function to the output
+    // + interesting things start to happen when scale is set to on/around 100 and canvas dimensions are roughly equal, alongside a higher value for sumAmplitude. Best viewed with a modular sum function
+    'smoothed-stripes': {
+
+        init: λnull,
+
+        getNoiseValue: function (x, y) {
+
+            const {smoothing} = this;
+
+            let sx = smoothing(x),
+                sy = smoothing(y);
+
+            return (sx / 5) + (sy / 5);
+        }
     },
 };
 
@@ -892,18 +727,33 @@ P.sumFunctions = {
 
     none: λfirstArg,
 
+    // These functions modify the final output using a sine frequency calculation based on the pixel position within the canvas
     'sine-x': function (v, sx, sy) { return 0.5 + (Math.sin((sx * this.sineFrequencyCoeff) + v) / 2) },
     'sine-y': function (v, sx, sy) { return 0.5 + (Math.sin((sy * this.sineFrequencyCoeff) + v) / 2) },
     sine: function (v, sx, sy) { return 0.5 + (Math.sin((sx * this.sineFrequencyCoeff) + v) / 4) + (Math.sin((sy * this.sineFrequencyCoeff) + v) / 4) },
 
+    // This function creates repeating bands, the frequency of which depends on the sumAmplitude attribute
     modular: function(v) {
-        let g = v * this.modularAmplitude;
+        let g = v * this.sumAmplitude;
         return g - Math.floor(g);
+    },
+
+    // This function adds random interference to the final output, the strength of which depends on the sumAmplitude attribute (lower values create a stronger effect)
+    random: function(v) {
+        let a = this.sumAmplitude;
+        let r = (Math.random() / a) - (0.5 / a);
+        let g = v + r;
+
+        if (g > 1) g = 1;
+        else if (g < 0) g = 0;
+
+        return g;
     },
 };
 
 // `smoothingFunctions` - a {key:function} object containing various ___fade functions___ which can be used to smooth calculated coordinate values so that they will ease towards integral values.
 // + Used by the "perlin_classic", "perlin_improved" and "value" getNoiseValue functions; the "simplex" getNoiseValue function does away with the need for a smoothing operation.
+// + Also used by the "smoothed-stripes" getNoiseValue function.
 // + calling signature: `smoothing(value)`
 P.smoothingFunctions = {
 
@@ -954,25 +804,29 @@ P.smoothingFunctions = {
 
 // #### Factory
 // ```
-// scrawl.makeNoise({
+// scrawl.makeNoiseAsset({
 //     name: 'my-noise-generator',
 //     width: 50,
 //     height: 50,
 //     octaves: 5,
 //     scale: 2,
-//     noiseFunction: 'simplex',
+//     noiseEngine: 'simplex',
 // });
 // ```
-const makeNoise = function (items) {
+const makeNoiseAsset = function (items) {
 
     if (!items) return false;
-    return new Noise(items);
+    return new NoiseAsset(items);
 };
 
-constructors.Noise = Noise;
+// Deprecated - old name
+const makeNoise = makeNoiseAsset;
+
+constructors.NoiseAsset = NoiseAsset;
 
 
 // #### Exports
 export {
+    makeNoiseAsset,
     makeNoise,
 };

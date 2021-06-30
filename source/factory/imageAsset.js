@@ -87,6 +87,15 @@ let G = P.getters,
     D = P.deltaSetters;
 
 // __source__
+G.width = function () {
+
+    return this.sourceNaturalWidth || this.source.naturalWidth || 0;
+};
+G.height = function () {
+
+    return this.sourceNaturalHeight || this.source.naturalHeight || 0;
+};
+
 S.source = function (item) {
 
     if (item) {
