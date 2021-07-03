@@ -46,9 +46,7 @@ const NoiseAsset = function (items = Ωempty) {
     this.makeName(items.name);
     this.register();
 
-    let mycanvas = document.createElement('canvas');
-    mycanvas.id = this.name;
-    this.installElement(mycanvas);
+    this.installElement(this.name);
 
     this.perm = [];
     this.permMod8 = [];

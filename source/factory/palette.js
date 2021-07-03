@@ -128,23 +128,27 @@ let G = P.getters,
     S = P.setters;
 
 
-// __colors__ - No checking is done prior to assigning the colors object to the colors attribute beyond verifying that the argument value is an object.
+// __colors__ - an array of arrays, each sub-array being in the form `[Number, String]` where:
+// + Number is a positive integer in the range 0-999
+// + String is any legitimate CSS color string value
 S.colors = function (item) {
 
-    if (isa_obj(item)) {
+    if (Array.isArray(item)) {
 
-        let f = this.factory;
+        let f = this.factory,
+            newCols = {};
 
-        Object.entries(item).forEach(([pos, col]) => {
+        item.forEach(c => {
 
-            if (col.substring) {
+            let [pos, col] = c; 
+            if (pos.toFixed && col.substring) {
 
                 f.convert(col);
-                item[pos] = [f.r, f.g, f.b, f.a];
+                newCols[`${pos} `] = [f.r, f.g, f.b, f.a];
             }
         });
 
-        this.colors = item;
+        this.colors = newCols;
         this.dirtyPalette = true;
     }
 };
