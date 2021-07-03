@@ -26,16 +26,20 @@ const parasolGradient = scrawl.makeGradient({
     name: 'parasol-gradient',
     endY: '100%',
     paletteEnd: 299,
-})
-.updateColor(0, 'red')
-.updateColor(999, 'transparent');
+    colors: [
+        [0, 'red'],
+        [999, 'transparent']
+    ],
+});
 
 scrawl.makeGradient({
     name: 'plank-gradient',
     endX: '100%',
-})
-.updateColor(0, 'gold')
-.updateColor(999, 'green');
+    colors: [
+        [0, 'gold'],
+        [999, 'green']
+    ],
+});
 
 
 // A parasol compound-entity

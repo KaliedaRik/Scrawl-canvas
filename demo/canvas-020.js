@@ -19,33 +19,32 @@ canvas.set({
 
 
 // Create gradients
-scrawl.makeGradient({
+let myGrad = scrawl.makeGradient({
     name: 'linear1',
     endX: '100%',
-})
-.updateColor(0, 'pink')
-.updateColor(999, 'darkgreen');
-
-scrawl.makeGradient({
+    colors: [
+        [0, 'pink'],
+        [999, 'darkgreen']
+    ],
+}).clone({
     name: 'linear2',
-    endX: '100%',
-})
-.updateColor(0, 'darkblue')
-.updateColor(999, 'white');
-
-scrawl.makeGradient({
+    colors: [
+        [0, 'darkblue'],
+        [999, 'white']
+    ],
+}).clone({
     name: 'linear3',
-    endX: '100%',
-})
-.updateColor(0, 'yellow')
-.updateColor(999, 'purple');
-
-scrawl.makeGradient({
+    colors: [
+        [0, 'yellow'],
+        [999, 'purple']
+    ],
+}).clone({
     name: 'linear4',
-    endX: '100%',
-})
-.updateColor(0, 'black')
-.updateColor(999, 'coral');
+    colors: [
+        [0, 'black'],
+        [999, 'coral']
+    ],
+});
 
 
 // Create entitys

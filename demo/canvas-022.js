@@ -19,19 +19,23 @@ canvas.set({
 let cellGradient = scrawl.makeGradient({
     name: 'blue-green',
     endX: '100%',
-})
-.updateColor(0, 'blue')
-.updateColor(500, 'gold')
-.updateColor(999, 'green');
+    colors: [
+        [0, 'blue'],
+        [500, 'gold'],
+        [999, 'green']
+    ],
+});
 
 let gridGradient = scrawl.makeGradient({
     name: 'red-blue',
     endX: '100%',
     endY: '100%',
-})
-.updateColor(0, 'red')
-.updateColor(500, 'gold')
-.updateColor(999, 'lightblue');
+    colors: [
+        [0, 'red'],
+        [500, 'gold'],
+        [999, 'lightblue']
+    ],
+});
 
 
 // Define Grid `tileSource` Array objects

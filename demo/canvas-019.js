@@ -59,9 +59,9 @@ data.forEach(scene => {
     let entity = scrawl.makePicture({
 
         name: `${scene.image}-original`,
-        group: `${scene.canvas.base.name}`,
+        group: scene.canvas.base.name,
 
-        asset: `${scene.image}`,
+        asset: scene.image,
 
         dimensions: ['100%', '100%'],
         copyDimensions: ['100%', '100%'],
@@ -81,15 +81,21 @@ data.forEach(scene => {
         end: ['50%', '50%'],
         startRadius: '5%',
         endRadius: '20%',
-    })
-    .updateColor(0, `${scene.transparency}`)
-    .updateColor(999, 'black');
+
+        colors: [
+            [0, scene.transparency],
+            [999, 'black']
+        ],
+    });
+    // })
+    // .updateColor(0, `${scene.transparency}`)
+    // .updateColor(999, 'black');
 
     // Apply the gradient to the scene via a Block entity
     const filterBlock = scrawl.makeBlock({
 
         name: `${scene.image}-block`,
-        group: `${scene.canvas.base.name}`,
+        group: scene.canvas.base.name,
 
         start: ['center', 'center'],
         handle: ['center', 'center'],

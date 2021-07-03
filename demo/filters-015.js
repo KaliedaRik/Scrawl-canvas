@@ -133,12 +133,14 @@ let composeFilter = scrawl.makeFilter({
 scrawl.makeGradient({
     name: 'linear',
     endX: '100%',
-})
-.updateColor(0, 'blue')
-.updateColor(495, 'red')
-.updateColor(500, 'yellow')
-.updateColor(505, 'red')
-.updateColor(999, 'green');
+    colors: [
+        [0, 'blue'],
+        [495, 'red'],
+        [500, 'yellow'],
+        [505, 'red'],
+        [999, 'green']
+    ],
+});
 
 scrawl.makeBlock({
 

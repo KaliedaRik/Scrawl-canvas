@@ -30,20 +30,17 @@
 //     },
 // }
 // ``` 
-// To `set` the Palette object's `colors` object, either when creating the gradient-type style or at some point afterwards, we can use CSS color Strings instead of an array of values for each color. Note that:
-// + the color object attribute labels MUST include a space after the String number; and 
-// + the number itself must be a positive integer in the range 0-999:
+// To `set` the Palette object's `colors` object, either when creating the gradient-type style or at some point afterwards, we can use CSS color Strings instead of an array of values for each color:
 //
 // ``` 
 // myGradient.set({
 //
-//     colors: {
-//
-//         '0 ': 'black',
-//         '350 ': 'red',
-//         '650 ': 'blue',
-//         '999 ': 'white'
-//     },
+//     colors: [
+//         [0, 'black'],
+//         [0, 'red'],
+//         [0, 'blue'],
+//         [0, 'white'],
+//     ]
 // });
 // ``` 
 
@@ -272,8 +269,8 @@ P.makeColorString = function (item) {
         r, g, b, a;
 
     let constrainer = (n, min, max) => {
-        n = (n < min) ? min : n;
-        n = (n > max) ? max : n;
+        if (n < min) return min;
+        if (n > max) return max;
         return n;
     };
 

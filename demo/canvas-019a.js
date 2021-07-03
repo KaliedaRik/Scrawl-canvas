@@ -65,7 +65,7 @@ data.forEach(scene => {
         name: `${scene.image}-blurred-image`,
         group: `${scene.image}-blurred-cell`,
 
-        asset: `${scene.image}`,
+        asset: scene.image,
 
         dimensions: ['100%', '100%'],
         copyDimensions: ['100%', '100%'],
@@ -86,14 +86,17 @@ data.forEach(scene => {
         end: ['50%', '50%'],
         startRadius: '5%',
         endRadius: '20%',
-    })
-    .updateColor(0, `${scene.transparency}`)
-    .updateColor(999, 'lightgray');
+
+        colors: [
+            [0, scene.transparency],
+            [999, 'lightgray']
+        ],
+    });
 
     const gradientBlock = scrawl.makeBlock({
 
         name: `${scene.image}-gradient-block`,
-        group: `${scene.canvas.base.name}`,
+        group: scene.canvas.base.name,
 
         start: ['center', 'center'],
         handle: ['center', 'center'],
@@ -126,7 +129,7 @@ data.forEach(scene => {
         name: `${scene.image}-original-image`,
         group: scene.canvas.base.name,
 
-        asset: `${scene.image}`,
+        asset: scene.image,
 
         dimensions: ['100%', '100%'],
         copyDimensions: ['100%', '100%'],
