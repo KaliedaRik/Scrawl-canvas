@@ -115,6 +115,11 @@
                 </a>
               
                 
+                <a class="source" href="crescent.html">
+                  ./source/factory/crescent.js
+                </a>
+              
+                
                 <a class="source" href="element.html">
                   ./source/factory/element.js
                 </a>
@@ -516,20 +521,15 @@
     },
 }
 </code></pre>
-<p>To <code>set</code> the Palette object’s <code>colors</code> object, either when creating the gradient-type style or at some point afterwards, we can use CSS color Strings instead of an array of values for each color. Note that:</p>
-<ul>
-<li>the color object attribute labels MUST include a space after the String number; and </li>
-<li>the number itself must be a positive integer in the range 0-999:</li>
-</ul>
+<p>To <code>set</code> the Palette object’s <code>colors</code> object, either when creating the gradient-type style or at some point afterwards, we can use CSS color Strings instead of an array of values for each color:</p>
 <pre><code>myGradient.<span class="hljs-title function_">set</span>({
 
-    <span class="hljs-attr">colors</span>: {
-
-        <span class="hljs-string">&#x27;0 &#x27;</span>: <span class="hljs-string">&#x27;black&#x27;</span>,
-        <span class="hljs-string">&#x27;350 &#x27;</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
-        <span class="hljs-string">&#x27;650 &#x27;</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
-        <span class="hljs-string">&#x27;999 &#x27;</span>: <span class="hljs-string">&#x27;white&#x27;</span>
-    },
+    <span class="hljs-attr">colors</span>: [
+        [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;black&#x27;</span>],
+        [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;red&#x27;</span>],
+        [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;blue&#x27;</span>],
+        [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;white&#x27;</span>],
+    ]
 });
 </code></pre>
 
@@ -771,26 +771,32 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
-              <p><strong>colors</strong> - No checking is done prior to assigning the colors object to the colors attribute beyond verifying that the argument value is an object.</p>
+              <p><strong>colors</strong> - an array of arrays, each sub-array being in the form <code>[Number, String]</code> where:</p>
+<ul>
+<li>Number is a positive integer in the range 0-999</li>
+<li>String is any legitimate CSS color string value</li>
+</ul>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">colors</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(item)) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(item)) {
 
-        <span class="hljs-keyword">let</span> f = <span class="hljs-variable language_">this</span>.<span class="hljs-property">factory</span>;
+        <span class="hljs-keyword">let</span> f = <span class="hljs-variable language_">this</span>.<span class="hljs-property">factory</span>,
+            newCols = {};
 
-        <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(item).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">[pos, col]</span>) =&gt;</span> {
+        item.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> {
 
-            <span class="hljs-keyword">if</span> (col.<span class="hljs-property">substring</span>) {
+            <span class="hljs-keyword">let</span> [pos, col] = c; 
+            <span class="hljs-keyword">if</span> (pos.<span class="hljs-property">toFixed</span> &amp;&amp; col.<span class="hljs-property">substring</span>) {
 
                 f.<span class="hljs-title function_">convert</span>(col);
-                item[pos] = [f.<span class="hljs-property">r</span>, f.<span class="hljs-property">g</span>, f.<span class="hljs-property">b</span>, f.<span class="hljs-property">a</span>];
+                newCols[<span class="hljs-string">`<span class="hljs-subst">${pos}</span> `</span>] = [f.<span class="hljs-property">r</span>, f.<span class="hljs-property">g</span>, f.<span class="hljs-property">b</span>, f.<span class="hljs-property">a</span>];
             }
         });
 
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">colors</span> = item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">colors</span> = newCols;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPalette</span> = <span class="hljs-literal">true</span>;
     }
 };</pre></div></div>
@@ -971,8 +977,8 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
         r, g, b, a;
 
     <span class="hljs-keyword">let</span> <span class="hljs-title function_">constrainer</span> = (<span class="hljs-params">n, min, max</span>) =&gt; {
-        n = (n &lt; min) ? min : n;
-        n = (n &gt; max) ? max : n;
+        <span class="hljs-keyword">if</span> (n &lt; min) <span class="hljs-keyword">return</span> min;
+        <span class="hljs-keyword">if</span> (n &gt; max) <span class="hljs-keyword">return</span> max;
         <span class="hljs-keyword">return</span> n;
     };
 

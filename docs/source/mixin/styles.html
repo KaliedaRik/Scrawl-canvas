@@ -115,6 +115,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/crescent.html">
+                  ./source/factory/crescent.js
+                </a>
+              
+                
                 <a class="source" href="../factory/element.html">
                   ./source/factory/element.js
                 </a>
@@ -987,15 +992,17 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
-              <p><code>colors</code> - We can pass through an array of palette color objects to the Palette object by setting it on the gradient-type styles object</p>
+              <p><code>colors</code> - We can pass through an array of palette color arrays to the Palette object by setting it on the gradient-type styles object. Each palette array is in the form <code>[Number, String]</code> where:</p>
+<ul>
+<li>Number is a positive integer in the range 0-999</li>
+<li>String is any legitimate CSS color string value</li>
+</ul>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">colors</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-        <span class="hljs-keyword">let</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span>;
-
-        <span class="hljs-keyword">if</span> (p &amp;&amp; p.<span class="hljs-property">colors</span>) p.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">colors</span>: item });
+        <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(item) &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">palette</span>.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">colors</span>: item });
     };</pre></div></div>
             
         </li>
@@ -1374,26 +1381,6 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
-              <p>let e = cell.engine;
-e.save();
-e.lineWidth = 10;
-e.strokeStyle = ‘green’;
-e.globalAlpha = 0.4;
-e.strokeRect(…this.gradientArgs);
-e.restore();
-console.log(entity.name, …this.gradientArgs);</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-36">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
-              </div>
               <p>Step 4: create, populate and return gradient/pattern object</p>
 
             </div>
@@ -1404,11 +1391,11 @@ console.log(entity.name, …this.gradientArgs);</p>
         </li>
         
         
-        <li id="section-37">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p><code>cleanStyle</code> - internal function invoked as part of the gradient-type object’s <code>getData</code> function. The style has to be cleaned every time it is applied to a Cell’s engine because it can never know which Cell is invoking it, or for which entity it is to be used.</p>
 
@@ -1441,11 +1428,11 @@ console.log(entity.name, …this.gradientArgs);</p>
         </li>
         
         
-        <li id="section-38">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p><code>cleanPosition</code> - internal function invoked as part of the gradient-type object’s <code>cleanStyle</code> function.</p>
 
@@ -1471,11 +1458,11 @@ console.log(entity.name, …this.gradientArgs);</p>
         </li>
         
         
-        <li id="section-39">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p><code>finalizeCoordinates</code> - internal function invoked as part of the gradient-type object’s <code>getData</code> function.</p>
 
@@ -1506,11 +1493,11 @@ console.log(entity.name, …this.gradientArgs);</p>
         </li>
         
         
-        <li id="section-40">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p><code>cleanRadius</code> - overwritten by the RadialGradient factory</p>
 
@@ -1521,11 +1508,11 @@ console.log(entity.name, …this.gradientArgs);</p>
         </li>
         
         
-        <li id="section-41">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p><code>buildStyle</code> - Just in case something went wrong with loading other styles Factory modules, which must overwrite this function, we can return transparent color here</p>
 
@@ -1539,11 +1526,11 @@ console.log(entity.name, …this.gradientArgs);</p>
         </li>
         
         
-        <li id="section-42">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p><code>addStopsToGradient</code> - internal function, called by the <code>buildStyle</code> function (which is overwritten by the Gradient and RadialGradient factories)</p>
 
@@ -1559,11 +1546,11 @@ console.log(entity.name, …this.gradientArgs);</p>
         </li>
         
         
-        <li id="section-43">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <h4 id="gradients-and-color-stops">Gradients and color stops</h4>
 <p>The <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API">Canvas API</a> uses a rather convoluted way to add color data to a <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasGradient">CanvasGradient</a> interface object: </p>
@@ -1610,11 +1597,11 @@ console.log(entity.name, …this.gradientArgs);</p>
         </li>
         
         
-        <li id="section-44">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p><code>updateColor</code> - add or update a gradient-type style’s Palette object with a color.</p>
 <ul>
@@ -1634,11 +1621,11 @@ console.log(entity.name, …this.gradientArgs);</p>
         </li>
         
         
-        <li id="section-45">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p><code>removeColor</code> - remove a gradient-type style’s Palette object color from a specified index</p>
 <ul>
@@ -1657,11 +1644,11 @@ console.log(entity.name, …this.gradientArgs);</p>
         </li>
         
         
-        <li id="section-46">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p>Return the prototype</p>
 

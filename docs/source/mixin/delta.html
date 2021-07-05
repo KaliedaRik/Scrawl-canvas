@@ -115,6 +115,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/crescent.html">
+                  ./source/factory/crescent.js
+                </a>
+              
+                
                 <a class="source" href="../factory/element.html">
                   ./source/factory/element.js
                 </a>
@@ -561,10 +566,7 @@
             <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">delta</span>: <span class="hljs-literal">null</span>,
         <span class="hljs-attr">noDeltaUpdates</span>: <span class="hljs-literal">false</span>,
         <span class="hljs-attr">deltaConstraints</span>: <span class="hljs-literal">null</span>,
-        <span class="hljs-attr">checkDeltaConstraints</span>: <span class="hljs-literal">false</span>,
-    };
-    P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);
-    <span class="hljs-title function_">mergeOver</span>(P, defaultAttributes);</pre></div></div>
+        <span class="hljs-attr">checkDeltaConstraints</span>: <span class="hljs-literal">false</span>,</pre></div></div>
             
         </li>
         
@@ -575,10 +577,15 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <h4 id="packet-management">Packet management</h4>
-<p>No additional packet management functionality defined here</p>
+              <p>We do not want to perform any delta checks on any uninitalized attributes - in other words: no checks on the first iteration of the Display cycle</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">performDeltaChecks</span>: <span class="hljs-literal">false</span>,
+
+    };
+    P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);
+    <span class="hljs-title function_">mergeOver</span>(P, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -589,8 +596,8 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <h4 id="clone-management">Clone management</h4>
-<p>No additional clone functionality defined here</p>
+              <h4 id="packet-management">Packet management</h4>
+<p>No additional packet management functionality defined here</p>
 
             </div>
             
@@ -603,8 +610,8 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <h4 id="kill-management">Kill management</h4>
-<p>No additional kill functionality defined here</p>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality defined here</p>
 
             </div>
             
@@ -617,6 +624,20 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
+              <h4 id="kill-management">Kill management</h4>
+<p>No additional kill functionality defined here</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
+              </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
             </div>
@@ -627,11 +648,11 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p><strong>delta</strong></p>
 
@@ -651,11 +672,11 @@
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -664,11 +685,11 @@
         </li>
         
         
-        <li id="section-12">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p><code>updateByDelta</code> - this function gets called as part of every display cycle iteration, meaning that if an attribute is set to a non-zero value in the <strong>delta</strong> attribute object then those <strong>delta animations</strong> will start playing immediately.</p>
 
@@ -686,11 +707,11 @@
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p><code>reverseByDelta</code> - The opposite action to ‘updateByDelta’; values in the <strong>delta</strong> attribute object will be subtracted from the current value for that Scrawl-canvas object.</p>
 
@@ -725,146 +746,150 @@
 
         <span class="hljs-keyword">const</span> {delta, deltaConstraints} = <span class="hljs-variable language_">this</span>;
 
-        <span class="hljs-keyword">const</span> keys = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(deltaConstraints),
-            keysLen = keys.<span class="hljs-property">length</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">performDeltaChecks</span>) {
 
-        <span class="hljs-keyword">let</span> key, keyIndex, item, min, max, action, performAction, performActionBecause, valArray, valIndex, val, i, isString, fMin, fMax, fVal;
+            <span class="hljs-keyword">const</span> keys = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(deltaConstraints),
+                keysLen = keys.<span class="hljs-property">length</span>;
 
-        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; keysLen; i++) {
+            <span class="hljs-keyword">let</span> key, keyIndex, item, min, max, action, performAction, performActionBecause, valArray, valIndex, val, i, isString, fMin, fMax, fVal;
 
-            key = keys[i];
-            item = deltaConstraints[key];
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; keysLen; i++) {
 
-            <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(item) &amp;&amp; item.<span class="hljs-property">length</span> === <span class="hljs-number">3</span>) {
+                key = keys[i];
+                item = deltaConstraints[key];
 
-                [min, max, action] = deltaConstraints[key];
-                isString = (min.<span class="hljs-property">substring</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
+                <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(item) &amp;&amp; item.<span class="hljs-property">length</span> === <span class="hljs-number">3</span>) {
 
-                <span class="hljs-keyword">if</span> (isString) {
+                    [min, max, action] = deltaConstraints[key];
+                    isString = (min.<span class="hljs-property">substring</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
 
-                    keyIndex = [<span class="hljs-string">&#x27;startX&#x27;</span>, <span class="hljs-string">&#x27;startY&#x27;</span>, <span class="hljs-string">&#x27;handleX&#x27;</span>, <span class="hljs-string">&#x27;handleY&#x27;</span>, <span class="hljs-string">&#x27;offsetX&#x27;</span>, <span class="hljs-string">&#x27;offsetY&#x27;</span>].<span class="hljs-title function_">indexOf</span>(key);
-                    valArray = <span class="hljs-literal">false</span>;
-                    valIndex = <span class="hljs-number">0</span>;
+                    <span class="hljs-keyword">if</span> (isString) {
 
-                    <span class="hljs-keyword">if</span> (keyIndex &gt;= <span class="hljs-number">0</span>) {
+                        keyIndex = [<span class="hljs-string">&#x27;startX&#x27;</span>, <span class="hljs-string">&#x27;startY&#x27;</span>, <span class="hljs-string">&#x27;handleX&#x27;</span>, <span class="hljs-string">&#x27;handleY&#x27;</span>, <span class="hljs-string">&#x27;offsetX&#x27;</span>, <span class="hljs-string">&#x27;offsetY&#x27;</span>].<span class="hljs-title function_">indexOf</span>(key);
+                        valArray = <span class="hljs-literal">false</span>;
+                        valIndex = <span class="hljs-number">0</span>;
 
-                        <span class="hljs-keyword">if</span> (keyIndex &lt; <span class="hljs-number">2</span>) valArray = <span class="hljs-variable language_">this</span>.<span class="hljs-property">start</span>;
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (keyIndex &lt; <span class="hljs-number">4</span>) valArray = <span class="hljs-variable language_">this</span>.<span class="hljs-property">handle</span>;
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (keyIndex &lt; <span class="hljs-number">2</span>) valArray = <span class="hljs-variable language_">this</span>.<span class="hljs-property">offset</span>;
+                        <span class="hljs-keyword">if</span> (keyIndex &gt;= <span class="hljs-number">0</span>) {
 
-                        <span class="hljs-keyword">if</span> ([<span class="hljs-string">&#x27;startY&#x27;</span>, <span class="hljs-string">&#x27;handleY&#x27;</span>, <span class="hljs-string">&#x27;offsetY&#x27;</span>].<span class="hljs-title function_">indexOf</span>(key) &gt;= <span class="hljs-number">0</span>) valIndex = <span class="hljs-number">1</span>;
+                            <span class="hljs-keyword">if</span> (keyIndex &lt; <span class="hljs-number">2</span>) valArray = <span class="hljs-variable language_">this</span>.<span class="hljs-property">start</span>;
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (keyIndex &lt; <span class="hljs-number">4</span>) valArray = <span class="hljs-variable language_">this</span>.<span class="hljs-property">handle</span>;
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (keyIndex &lt; <span class="hljs-number">2</span>) valArray = <span class="hljs-variable language_">this</span>.<span class="hljs-property">offset</span>;
 
-                        val = valArray[valIndex];
-                    }
-                    <span class="hljs-keyword">else</span> val = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">get</span>(key);
+                            <span class="hljs-keyword">if</span> ([<span class="hljs-string">&#x27;startY&#x27;</span>, <span class="hljs-string">&#x27;handleY&#x27;</span>, <span class="hljs-string">&#x27;offsetY&#x27;</span>].<span class="hljs-title function_">indexOf</span>(key) &gt;= <span class="hljs-number">0</span>) valIndex = <span class="hljs-number">1</span>;
 
-                    fMin = <span class="hljs-built_in">parseFloat</span>(min);
-                    fMax = <span class="hljs-built_in">parseFloat</span>(max);
-                    fVal = <span class="hljs-built_in">parseFloat</span>(val);
-                    performAction = <span class="hljs-string">&#x27;&#x27;</span>;
+                            val = valArray[valIndex];
+                        }
+                        <span class="hljs-keyword">else</span> val = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">get</span>(key);
 
-                    <span class="hljs-keyword">if</span> (fVal &lt; fMin) {
+                        fMin = <span class="hljs-built_in">parseFloat</span>(min);
+                        fMax = <span class="hljs-built_in">parseFloat</span>(max);
+                        fVal = <span class="hljs-built_in">parseFloat</span>(val);
+                        performAction = <span class="hljs-string">&#x27;&#x27;</span>;
 
-                        performAction = action;
-                        performActionBecause = <span class="hljs-number">0</span>;
-                    }
-                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (fVal &gt; fMax) {
+                        <span class="hljs-keyword">if</span> (fVal &lt; fMin) {
 
-                        performAction = action;
-                        performActionBecause = <span class="hljs-number">1</span>;
-                    }
+                            performAction = action;
+                            performActionBecause = <span class="hljs-number">0</span>;
+                        }
+                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (fVal &gt; fMax) {
 
-                    <span class="hljs-keyword">if</span> (performAction) {
+                            performAction = action;
+                            performActionBecause = <span class="hljs-number">1</span>;
+                        }
 
-                        <span class="hljs-keyword">switch</span> (performAction) {
+                        <span class="hljs-keyword">if</span> (performAction) {
 
-                            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;reverse&#x27;</span> :
+                            <span class="hljs-keyword">switch</span> (performAction) {
 
-                                delta[key] = -<span class="hljs-built_in">parseFloat</span>(delta[key]) + <span class="hljs-string">&#x27;%&#x27;</span>;
+                                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;reverse&#x27;</span> :
 
-                                <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
-                                    [key]: fVal + <span class="hljs-built_in">parseFloat</span>(delta[key]) + <span class="hljs-string">&#x27;%&#x27;</span>,
-                                });
-                                <span class="hljs-keyword">break</span>; 
-
-                            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;loop&#x27;</span> :
-
-                                <span class="hljs-keyword">if</span> (performActionBecause) {
+                                    delta[key] = -<span class="hljs-built_in">parseFloat</span>(delta[key]) + <span class="hljs-string">&#x27;%&#x27;</span>;
 
                                     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
-                                        [key]: fVal - (fMax - fMin) + <span class="hljs-string">&#x27;%&#x27;</span>,
+                                        [key]: fVal + <span class="hljs-built_in">parseFloat</span>(delta[key]) + <span class="hljs-string">&#x27;%&#x27;</span>,
                                     });
-                                }
-                                <span class="hljs-keyword">else</span> {
+                                    <span class="hljs-keyword">break</span>; 
 
-                                    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
-                                        [key]: fVal + (fMax - fMin) + <span class="hljs-string">&#x27;%&#x27;</span>,
-                                    });
-                                }
-                                <span class="hljs-keyword">break</span>; 
+                                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;loop&#x27;</span> :
+
+                                    <span class="hljs-keyword">if</span> (performActionBecause) {
+
+                                        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
+                                            [key]: fVal - (fMax - fMin) + <span class="hljs-string">&#x27;%&#x27;</span>,
+                                        });
+                                    }
+                                    <span class="hljs-keyword">else</span> {
+
+                                        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
+                                            [key]: fVal + (fMax - fMin) + <span class="hljs-string">&#x27;%&#x27;</span>,
+                                        });
+                                    }
+                                    <span class="hljs-keyword">break</span>; 
+                            }
                         }
                     }
-                }
-                <span class="hljs-keyword">else</span> {
+                    <span class="hljs-keyword">else</span> {
 
-                    val = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">get</span>(key);
+                        val = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">get</span>(key);
 
-                    performAction = <span class="hljs-string">&#x27;&#x27;</span>;
+                        performAction = <span class="hljs-string">&#x27;&#x27;</span>;
 
-                    <span class="hljs-keyword">if</span> (val &lt; min) {
+                        <span class="hljs-keyword">if</span> (val &lt; min) {
 
-                        performAction = action;
-                        performActionBecause = <span class="hljs-number">0</span>;
-                    }
-                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (val &gt; max) {
+                            performAction = action;
+                            performActionBecause = <span class="hljs-number">0</span>;
+                        }
+                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (val &gt; max) {
 
-                        performAction = action;
-                        performActionBecause = <span class="hljs-number">1</span>;
-                    }
+                            performAction = action;
+                            performActionBecause = <span class="hljs-number">1</span>;
+                        }
 
-                    <span class="hljs-keyword">if</span> (performAction) {
+                        <span class="hljs-keyword">if</span> (performAction) {
 
-                        <span class="hljs-keyword">switch</span> (performAction) {
+                            <span class="hljs-keyword">switch</span> (performAction) {
 
-                            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;reverse&#x27;</span> :
+                                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;reverse&#x27;</span> :
 
-                                delta[key] = -delta[key];
-
-                                <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
-                                    [key]: val + delta[key],
-                                });
-                                <span class="hljs-keyword">break</span>; 
-
-                            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;loop&#x27;</span> :
-
-                                <span class="hljs-keyword">if</span> (performActionBecause) {
+                                    delta[key] = -delta[key];
 
                                     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
-                                        [key]: val - (max - min),
+                                        [key]: val + delta[key],
                                     });
-                                }
-                                <span class="hljs-keyword">else</span> {
+                                    <span class="hljs-keyword">break</span>; 
 
-                                    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
-                                        [key]: val + (max - min),
-                                    });
-                                }
-                                <span class="hljs-keyword">break</span>; 
+                                <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;loop&#x27;</span> :
+
+                                    <span class="hljs-keyword">if</span> (performActionBecause) {
+
+                                        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
+                                            [key]: val - (max - min),
+                                        });
+                                    }
+                                    <span class="hljs-keyword">else</span> {
+
+                                        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({
+                                            [key]: val + (max - min),
+                                        });
+                                    }
+                                    <span class="hljs-keyword">break</span>; 
+                            }
                         }
                     }
                 }
             }
         }
+        <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">performDeltaChecks</span> = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p><code>setDeltaValues</code>
 Update the artefact’s <code>delta</code> object in a more intelligent way. The function accepts an object argument containing a set of instructions which will be interpreted and applied to the delat object.</p>
@@ -956,11 +981,11 @@ artefact.<span class="hljs-property">delta</span>: {
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>Return the prototype</p>
 

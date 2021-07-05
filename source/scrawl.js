@@ -123,6 +123,11 @@ import {
 
 
 import { 
+    makeCrescent,
+} from './factory/crescent.js';
+
+
+import { 
     makeEmitter,
 } from './factory/emitter.js';
 
@@ -408,6 +413,10 @@ export default {
     // factory/coordinate.js
     requestCoordinate, 
     releaseCoordinate,
+
+
+    // factory/crescent.js
+    makeCrescent,
 
 
     // factory/emitter.js

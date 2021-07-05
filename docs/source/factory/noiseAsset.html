@@ -115,6 +115,11 @@
                 </a>
               
                 
+                <a class="source" href="crescent.html">
+                  ./source/factory/crescent.js
+                </a>
+              
+                
                 <a class="source" href="element.html">
                   ./source/factory/element.js
                 </a>
@@ -570,9 +575,7 @@
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(items.<span class="hljs-property">name</span>);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
 
-    <span class="hljs-keyword">let</span> mycanvas = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;canvas&#x27;</span>);
-    mycanvas.<span class="hljs-property">id</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">installElement</span>(mycanvas);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">installElement</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">perm</span> = [];
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">permMod8</span> = [];

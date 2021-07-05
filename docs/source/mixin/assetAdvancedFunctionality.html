@@ -115,6 +115,11 @@
                 </a>
               
                 
+                <a class="source" href="../factory/crescent.html">
+                  ./source/factory/crescent.js
+                </a>
+              
+                
                 <a class="source" href="../factory/element.html">
                   ./source/factory/element.js
                 </a>
@@ -475,7 +480,7 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="assetadvancedfunctionality-mixin">AssetAdvancedFunctionality mixin</h1>
-<p>The following functionality is shared between NoiseAsset, ArtAsset and RdAsset objects</p>
+<p>The following functionality is shared between NoiseAsset and RdAsset objects</p>
 
             </div>
             
@@ -492,7 +497,8 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { mergeOver, pushUnique, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { mergeOver, pushUnique, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { makeGradient } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../factory/gradient.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -598,9 +604,7 @@
             <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">hueStart</span>: <span class="hljs-number">0</span>,
         <span class="hljs-attr">hueRange</span>: <span class="hljs-number">120</span>,
         <span class="hljs-attr">saturation</span>: <span class="hljs-number">100</span>,
-        <span class="hljs-attr">luminosity</span>: <span class="hljs-number">50</span>,
-    };
-    P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
+        <span class="hljs-attr">luminosity</span>: <span class="hljs-number">50</span>,</pre></div></div>
             
         </li>
         
@@ -611,10 +615,13 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <h4 id="packet-management">Packet management</h4>
-<p>No additional packet management functionality defined here</p>
+              <p><strong>rainbowGradientChoke</strong> - positive integer Number greater than 0 - control the speed of any rainbowGradient animation</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">rainbowGradientChoke</span>: <span class="hljs-number">1</span>,
+    };
+    P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
             
         </li>
         
@@ -625,8 +632,8 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <h4 id="clone-management">Clone management</h4>
-<p>No additional clone functionality defined here</p>
+              <h4 id="packet-management">Packet management</h4>
+<p>No additional packet management functionality defined here</p>
 
             </div>
             
@@ -639,8 +646,8 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <h4 id="kill-management">Kill management</h4>
-<p>No additional kill functionality defined here</p>
+              <h4 id="clone-management">Clone management</h4>
+<p>No additional clone functionality defined here</p>
 
             </div>
             
@@ -653,6 +660,20 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
+              <h4 id="kill-management">Kill management</h4>
+<p>No additional kill functionality defined here</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
             </div>
@@ -662,12 +683,68 @@
         D = P.<span class="hljs-property">deltaSetters</span>;
 
 
-    P.<span class="hljs-property">supportedColorSchemes</span> = [<span class="hljs-string">&#x27;monochrome&#x27;</span>, <span class="hljs-string">&#x27;gradient&#x27;</span>, <span class="hljs-string">&#x27;hue&#x27;</span>];
+    P.<span class="hljs-property">supportedColorSchemes</span> = [<span class="hljs-string">&#x27;monochrome&#x27;</span>, <span class="hljs-string">&#x27;gradient&#x27;</span>, <span class="hljs-string">&#x27;rainbow&#x27;</span>, <span class="hljs-string">&#x27;hue&#x27;</span>];
     S.<span class="hljs-property">color</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">supportedColorSchemes</span>.<span class="hljs-title function_">indexOf</span>(item) &gt;= <span class="hljs-number">0</span>) {
 
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">color</span> = item;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">true</span>;
+        }
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
+              </div>
+              <p><code>rainbowColors</code> - an Array of Palette stop Arrays</p>
+<ul>
+<li>Use this function to change the color stops of the asset’s rainbow gradient. Generally better to set this value after the scene has completed its first Display cycle</li>
+<li>Each palette array is in the form <code>[Number, String]</code> where:</li>
+<li>Number is a positive integer in the range 0-999</li>
+<li>String is any legitimate CSS color string value</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">rainbowColors</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+        <span class="hljs-keyword">if</span> (item &amp;&amp; <span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(item) &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">rainbowGradient</span>) {
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">rainbowGradient</span>.<span class="hljs-title function_">set</span>({
+                <span class="hljs-attr">colors</span>: item,
+            });
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">true</span>;
+        }
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
+              </div>
+              <p><code>rainbowDelta</code> - an animation delta object</p>
+<ul>
+<li>Use this function to set up the rainbow gradient animation</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">rainbowDelta</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+        <span class="hljs-keyword">if</span> (item &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">rainbowGradient</span>) {
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">rainbowGradient</span>.<span class="hljs-property">delta</span> = item;
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">true</span>;
         }
     };
@@ -747,11 +824,11 @@
         </li>
         
         
-        <li id="section-13">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -760,20 +837,67 @@
         </li>
         
         
-        <li id="section-14">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p><code>installElement</code> - internal function, used by the constructor</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">installElement</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">element</span>) {
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">installElement</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">name</span>) {
 
+        <span class="hljs-keyword">let</span> element = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;canvas&#x27;</span>);
+        element.<span class="hljs-property">id</span> = name;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">element</span> = element;
-        <span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">element</span>.<span class="hljs-title function_">getContext</span>(<span class="hljs-string">&#x27;2d&#x27;</span>);
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">engine</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">element</span>.<span class="hljs-title function_">getContext</span>(<span class="hljs-string">&#x27;2d&#x27;</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
+              </div>
+              <p>The rainbow gradient allows us to map contour-like lines across a noise or rd asset’s output. This gradient (unlike other colorizing options) can be animated.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> rainbow = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;canvas&#x27;</span>);
+        rainbow.<span class="hljs-property">id</span> = <span class="hljs-string">`<span class="hljs-subst">${name}</span>-rainbow`</span>;
+        rainbow.<span class="hljs-property">width</span> = <span class="hljs-number">256</span>;
+        rainbow.<span class="hljs-property">height</span> = <span class="hljs-number">1</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">rainbowElement</span> = rainbow;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">rainbowEngine</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">rainbowElement</span>.<span class="hljs-title function_">getContext</span>(<span class="hljs-string">&#x27;2d&#x27;</span>);
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">rainbowGradient</span> = <span class="hljs-title function_">makeGradient</span>({
+            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-rainbowgradient`</span>,
+            <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+            <span class="hljs-attr">delta</span>: {
+                <span class="hljs-attr">paletteStart</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">paletteEnd</span>: <span class="hljs-number">0</span>,
+            },
+            <span class="hljs-attr">cyclePalette</span>: <span class="hljs-literal">true</span>,
+        })
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;#ff0000&#x27;</span>)
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">83</span>, <span class="hljs-string">&#x27;#000000&#x27;</span>)
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">166</span>, <span class="hljs-string">&#x27;#ffff00&#x27;</span>)
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">249</span>, <span class="hljs-string">&#x27;#000000&#x27;</span>)
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">332</span>, <span class="hljs-string">&#x27;#00ff00&#x27;</span>)
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">415</span>, <span class="hljs-string">&#x27;#000000&#x27;</span>)
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">499</span>, <span class="hljs-string">&#x27;#00ffff&#x27;</span>)
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">582</span>, <span class="hljs-string">&#x27;#000000&#x27;</span>)
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">665</span>, <span class="hljs-string">&#x27;#0000ff&#x27;</span>)
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">749</span>, <span class="hljs-string">&#x27;#000000&#x27;</span>)
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">832</span>, <span class="hljs-string">&#x27;#ff00ff&#x27;</span>)
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">915</span>, <span class="hljs-string">&#x27;#000000&#x27;</span>)
+        .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;#ff0000&#x27;</span>);
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">rainbowGradientCounter</span> = <span class="hljs-number">0</span>;
 
         <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
     };</pre></div></div>
@@ -781,16 +905,16 @@
         </li>
         
         
-        <li id="section-15">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p><code>checkSource</code></p>
 <ul>
 <li>Gets invoked by subscribers (who have a handle to the asset instance object) as part of the display cycle.</li>
-<li>ArtAsset assets will automatically pass this call onto <code>notifySubscribers</code>, where dirty flags get checked and rectified</li>
+<li>Assets will automatically pass this call onto <code>notifySubscribers</code>, where dirty flags get checked and rectified</li>
 </ul>
 
             </div>
@@ -803,11 +927,11 @@
         </li>
         
         
-        <li id="section-16">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p><code>getData</code> function called by Cell objects when calculating required updates to its CanvasRenderingContext2D engine, specifically for an entity’s <strong>fillStyle</strong>, <strong>strokeStyle</strong> and <strong>shadowColor</strong> attributes.</p>
 <ul>
@@ -826,11 +950,29 @@
         </li>
         
         
-        <li id="section-17">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
+              </div>
+              <p><code>notifySubscribers</code> - If the rainbow gradient is to be animated, then we need to update the asset at some point (generally the start) of each Display cycle by invoking this function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">update</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">true</span>;
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p><code>notifySubscribers</code>, <code>notifySubscriber</code> - overwrites the functions defined in mixin/asset.js</p>
 
@@ -858,11 +1000,11 @@
         </li>
         
         
-        <li id="section-18">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p><code>paintCanvas</code> - internal function called by the <code>cleanOutput</code> function</p>
 
@@ -876,16 +1018,16 @@
 
                 <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">false</span>;
 
-                <span class="hljs-keyword">let</span> {element, engine, width, height, color, colorFactory, monochromeStart, monochromeRange, hueStart, hueRange, saturation, luminosity} = <span class="hljs-variable language_">this</span>;</pre></div></div>
+                <span class="hljs-keyword">let</span> {element, engine, width, height, color, colorFactory, monochromeStart, monochromeRange, hueStart, hueRange, saturation, luminosity, rainbowGradient, rainbowGradientChoke, rainbowEngine } = <span class="hljs-variable language_">this</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-19">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p>Update the Canvas element’s dimensions - this will also clear the canvas display</p>
 
@@ -902,11 +1044,11 @@
         </li>
         
         
-        <li id="section-20">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p>Rebuild the display, pixel-by-pixel</p>
 
@@ -949,16 +1091,59 @@
                             d[++c] = b;
                             d[++c] = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(a * <span class="hljs-number">255</span>);
                         }
+                        <span class="hljs-keyword">break</span>;
+
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;rainbow&#x27;</span> :
+
+                        <span class="hljs-keyword">if</span> (rainbowGradient) {
+
+                            <span class="hljs-keyword">if</span> (rainbowGradientChoke &lt; <span class="hljs-number">1</span>) {
+
+                                <span class="hljs-variable language_">this</span>.<span class="hljs-property">rainbowGradientChoke</span> = <span class="hljs-number">1</span>;
+                                rainbowGradientChoke = <span class="hljs-number">1</span>;
+                            }
+
+                            <span class="hljs-variable language_">this</span>.<span class="hljs-property">rainbowGradientCounter</span>++;
+
+                            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">rainbowGradientCounter</span> &gt;= rainbowGradientChoke) {
+
+                                <span class="hljs-variable language_">this</span>.<span class="hljs-property">rainbowGradientCounter</span> = <span class="hljs-number">0</span>;
+                                rainbowGradient.<span class="hljs-title function_">updateByDelta</span>();
+                            }
+
+                            rainbowGradient.<span class="hljs-property">palette</span>.<span class="hljs-title function_">recalculate</span>();
+
+                            <span class="hljs-keyword">let</span> G = rainbowEngine.<span class="hljs-title function_">createLinearGradient</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">255</span>, <span class="hljs-number">0</span>);
+
+                            rainbowGradient.<span class="hljs-title function_">addStopsToGradient</span>(G, rainbowGradient.<span class="hljs-property">paletteStart</span>, rainbowGradient.<span class="hljs-property">paletteEnd</span>, rainbowGradient.<span class="hljs-property">cyclePalette</span>);
+
+                            rainbowEngine.<span class="hljs-property">fillStyle</span> = G;
+                            rainbowEngine.<span class="hljs-title function_">fillRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">256</span>, <span class="hljs-number">1</span>);
+
+                            <span class="hljs-keyword">let</span> rainbowData = rainbowEngine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">256</span>, <span class="hljs-number">1</span>).<span class="hljs-property">data</span>;
+
+                            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i++) {
+
+                                v = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getOutputValue</span>(i, width) * <span class="hljs-number">255</span>) * <span class="hljs-number">4</span>;
+                                
+                                c = i * <span class="hljs-number">4</span>;
+
+                                d[c] = rainbowData[v];
+                                d[++c] = rainbowData[++v];
+                                d[++c] = rainbowData[++v];
+                                d[++c] = rainbowData[++v];
+                            }
+                        }
                         <span class="hljs-keyword">break</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-21">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p>The default color preference is monochrome</p>
 
@@ -995,11 +1180,11 @@
         </li>
         
         
-        <li id="section-22">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p>Return the prototype</p>
 
