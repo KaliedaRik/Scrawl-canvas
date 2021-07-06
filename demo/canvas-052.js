@@ -414,5 +414,57 @@ document.querySelector('#rotationMultiplier').value = 90;
 document.querySelector('#rotationStart').value = 0;
 
 
+// #### Video recording and download functionality
+const videoButton = document.querySelector("#my-record-video-button");
+
+let recording = false;
+let myRecorder;
+let recordedChunks;
+
+videoButton.addEventListener("click", () => {
+    recording = !recording;
+
+    if (recording) {
+
+        videoButton.textContent = "Stop recording";
+
+        const stream = canvas.domElement.captureStream(25);
+
+        myRecorder = new MediaRecorder(stream, {
+            mimeType: "video/webm;codecs=vp8"
+        });
+
+        recordedChunks = [];
+
+        myRecorder.ondataavailable = (e) => {
+
+            if (e.data.size > 0) recordedChunks.push(e.data);
+        };
+
+        myRecorder.start();
+    } 
+    else {
+
+        videoButton.textContent = "Record a video";
+
+        myRecorder.stop();
+
+        setTimeout(() => {
+            
+            const blob = new Blob(recordedChunks, { type: "video/webm" });
+
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+
+            a.href = url;
+            a.download = `Scrawl-canvas-art-recording-${Date().slice(4, 24)}.webm`;
+            a.click();
+
+            URL.revokeObjectURL(url);
+        }, 0);
+    }
+});
+
+
 // #### Development and testing
 console.log(scrawl.library);

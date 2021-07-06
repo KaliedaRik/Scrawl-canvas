@@ -237,6 +237,18 @@ P.setAllTilesTo = function (val) {
     }
 };
 
+// `setTileFill` - update the tileFill array
+// + The array supplied as an argument must be the same length as current rows * columns
+P.setTileFill = function (item) {
+
+    const { columns, rows } = this;
+
+    if (Array.isArray(item) && item.length === columns * rows) {
+
+        this.tileFill = item;
+    }
+};
+
 // `setTilesTo` - change the fill for a (set of) tile(s) in a Grid - requires two arguments:
 // + First argument is an integer Number representing the position of a tile in the tileFill Array, or an Array of such Numbers
 // + Second argument is an integer Number representing the index of a tileSource object

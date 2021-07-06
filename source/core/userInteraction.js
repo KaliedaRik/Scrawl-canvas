@@ -323,13 +323,13 @@ const actionCoreListeners = function (action) {
         window[action]('mouseleave', moveAction, false);
         window[action]('mouseenter', moveAction, false);
 
-        window[action]('touchmove', touchAction, false);
-        window[action]('touchstart', touchAction, false);
-        window[action]('touchend', touchAction, false);
-        window[action]('touchcancel', touchAction, false);
+        window[action]('touchmove', touchAction, {passive: true});
+        window[action]('touchstart', touchAction, {passive: true});
+        window[action]('touchend', touchAction, {passive: true});
+        window[action]('touchcancel', touchAction, {passive: true});
     }
 
-    window[action]('scroll', scrollAction, false);
+    window[action]('scroll', scrollAction, {passive: true});
     window[action]('resize', resizeAction, false);
 };
 
