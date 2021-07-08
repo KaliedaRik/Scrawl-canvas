@@ -21,7 +21,7 @@
 
 
 // #### Imports
-import { constructors, artefact } from '../core/library.js';
+import { constructors, artefact, group } from '../core/library.js';
 import { currentGroup } from '../core/document.js';
 import { mergeOver, mergeDiscard, pushUnique, λnull, λthis, xta, Ωempty } from '../core/utilities.js';
 
