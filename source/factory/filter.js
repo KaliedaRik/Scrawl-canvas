@@ -115,8 +115,10 @@
 
 
 // #### Imports
-import { constructors, cell, group, entity, asset } from '../core/library.js';
+import { constructors, cell, group, entity, asset, styles } from '../core/library.js';
 import { mergeOver, removeItem, λnull, Ωempty } from '../core/utilities.js';
+
+import { makeGradient } from './gradient.js';
 
 import baseMix from '../mixin/base.js';
 
@@ -227,6 +229,7 @@ let defaultAttributes = {
     excludeGreen: false,
     excludeRed: false,
     excludeTransparentPixels: true,
+    gradient: null,
     green: 0,
     greenInBlue: 0,
     greenInGreen: 0,
@@ -871,6 +874,21 @@ const setActionsArray = {
             includeRed: true,
             includeBlue: true,
             excludeGreen: true,
+        }];
+    },
+
+// __mapToGradient__ - produces a more realistic black-and-white photograph effect
+    mapToGradient: function (f) {
+
+        if (f.gradient && f.gradient.substring) f.gradient = styles[f.gradient];
+
+        f.actions = [{
+            action: 'map-to-gradient',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            useNaturalGrayscale: (f.useNaturalGrayscale != null) ? f.useNaturalGrayscale : false,
+            gradient: f.gradient || makeGradient(),
         }];
     },
 

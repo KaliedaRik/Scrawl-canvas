@@ -2872,6 +2872,68 @@ P.theBigActionsObject = {
         else this.processResults(this.cache.work, output, opacity);
     },
 
+// __map-to-gradient__ - maps the colors in the supplied (complex) gradient to a grayscaled input.
+    'map-to-gradient': function (requirements) {
+
+        let [input, output] = this.getInputAndOutputLines(requirements);
+
+        let iData = input.data,
+            oData = output.data,
+            len = iData.length,
+            i, avg, r, g, b, a, v, G;
+
+        let {opacity, useNaturalGrayscale, gradient, lineOut} = requirements;
+
+        if (null == opacity) opacity = 1;
+        if (null == useNaturalGrayscale) useNaturalGrayscale = false;
+        if (null == gradient) gradient = false;
+
+        if (gradient) {
+
+            const mycell = requestCell();
+
+            const {engine, element} = mycell;
+
+            element.width = 256;
+            element.height = 1;
+
+            gradient.palette.recalculate();
+
+            G = engine.createLinearGradient(0, 0, 255, 0);
+
+            gradient.addStopsToGradient(G, gradient.paletteStart, gradient.paletteEnd, gradient.cyclePalette);
+
+            engine.fillStyle = G;
+            engine.fillRect(0, 0, 256, 1);
+
+            let rainbowData = engine.getImageData(0, 0, 256, 1).data;
+
+            releaseCell(mycell);
+
+            for (i = 0; i < len; i += 4) {
+
+                r = i;
+                g = r + 1;
+                b = g + 1;
+                a = b + 1;
+
+                if (useNaturalGrayscale) avg = Math.floor((0.2126 * iData[r]) + (0.7152 * iData[g]) + (0.0722 * iData[b]));
+                else avg = Math.floor((0.3333 * iData[r]) + (0.3333 * iData[g]) + (0.3333 * iData[b]));
+
+                v = avg * 4;
+
+                oData[r] = rainbowData[v];
+                oData[g] = rainbowData[++v];
+                oData[b] = rainbowData[++v];
+                oData[a] = rainbowData[++v];
+            }
+            
+            if (lineOut) this.processResults(output, input, 1 - opacity);
+            else this.processResults(this.cache.work, output, opacity);
+        }
+
+    },
+
 // __matrix__ - Performs a matrix operation on each pixel's channels, calculating the new value using neighbouring pixel weighted values. Also known as a convolution matrix, kernel or mask operation. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the "width" and "height" arguments, while setting the home pixel's position within the matrix can be set using the "offsetX" and "offsetY" arguments. The weights to be applied need to be supplied in the "weights" argument - an Array listing the weights row-by-row starting from the top-left corner of the matrix. By default all color channels are included in the calculations while the alpha channel is excluded. The 'edgeDetect', 'emboss' and 'sharpen' convenience filter methods all use the matrix action, pre-setting the required weights.
     'matrix': function (requirements) {
 
