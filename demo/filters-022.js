@@ -1,7 +1,7 @@
-// # Demo Filters 013 
-// Filter parameters: flood
+// # Demo Filters 022 
+// Filter parameters: mapToGradient
 
-// [Run code](../../demo/filters-013.html)
+// [Run code](../../demo/filters-022.html)
 import scrawl from '../source/scrawl.js';
 
 // #### Scene setup

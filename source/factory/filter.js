@@ -28,17 +28,23 @@
 // 
 // `compose` - Using two source images (from the "lineIn" and "lineMix" arguments), combine their color information using alpha compositing rules (as defined by Porter/Duff). The compositing method is determined by the String value supplied in the "compose" argument; permitted values are: 'destination-only', 'destination-over', 'destination-in', 'destination-out', 'destination-atop', 'source-only', 'source-over' (default), 'source-in', 'source-out', 'source-atop', 'clear', 'xor', or 'lighter'. Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the "offsetX" and "offsetY" arguments. Object attributes: `action, lineIn, lineOut, lineMix, opacity, compose, offsetX, offsetY`
 // 
+// `corrode` - Performs a special form of matrix operation on each pixel's color and alpha channels, calculating the new value using neighbouring pixel values. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the "width" and "height" arguments, while setting the home pixel's position within the matrix can be set using the "offsetX" and "offsetY" arguments. The operation will set the pixel's channel value to match either the lowest, highest, mean or median values as dictated by its neighbours - this value is set in the "level" attribute. Channels can be selected by setting the "includeRed", "includeGreen", "includeBlue" (all false by default) and "includeAlpha" (default: true) flags. Object attributes: `action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue, includeAlpha, width, height, offsetX, offsetY, operation`
+// 
 // `displace` - Shift pixels around the image, based on the values supplied in a displacement process-image. Object attributes: `action, lineIn, lineOut, lineMix, opacity, channelX, channelY, scaleX, scaleY, transparentEdges, offsetX, offsetY`
 // 
 // `emboss` - A 3x3 matrix transform; the matrix weights are calculated internally from the values of two arguments: "strength", and "angle" - which is a value measured in degrees, with 0 degrees pointing to the right of the origin (along the positive x axis). Post-processing options include removing unchanged pixels, or setting then to mid-gray. The convenience method includes additional arguments which will add a choice of grayscale, then channel clamping, then blurring actions before passing the results to this emboss action. Object attributes: `action, lineIn, lineOut, opacity, strength, angle, tolerance, keepOnlyChangedAreas, postProcessResults`; pseudo-arguments for the convenience method include `useNaturalGrayscale, clamp, smoothing`
 // 
 // `flood` - Set all pixels to the channel values supplied in the "red", "green", "blue" and "alpha" arguments. Object attributes: `action, lineIn, lineOut, opacity, red, green, blue, alpha`
 // 
+// `gaussianblur` - from this GitHub repository: https://github.com/nodeca/glur/blob/master/index.js (code accessed 1 June 2021). Object attributes: `action, lineIn, lineOut, opacity, radius`
+// 
 // `grayscale` - For each pixel, averages the weighted color channels and applies the result across all the color channels. This gives a more realistic monochrome effect. Object attributes: `action, lineIn, lineOut, opacity`
 // 
 // `invert-channels` - For each pixel, subtracts its current channel values - when included - from 255. Object attributes: `action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue, includeAlpha`
 // 
 // `lock-channels-to-levels` - Produces a posterize effect. Takes in four arguments - "red", "green", "blue" and "alpha" - each of which is an Array of zero or more integer Numbers (between 0 and 255). The filter works by looking at each pixel's channel value and determines which of the corresponding Array's Number values it is closest to; it then sets the channel value to that Number value. Object attributes: `action, lineIn, lineOut, opacity, red, green, blue, alpha`
+// 
+// `map-to-gradient` - maps the colors in the supplied (complex) gradient to a grayscaled input. Object attributes: `action, lineIn, lineOut, opacity, useNaturalGrayscale, gradient`
 // 
 // `matrix` - Performs a matrix operation on each pixel's channels, calculating the new value using neighbouring pixel weighted values. Also known as a convolution matrix, kernel or mask operation. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the "width" and "height" arguments, while setting the home pixel's position within the matrix can be set using the "offsetX" and "offsetY" arguments. The weights to be applied need to be supplied in the "weights" argument - an Array listing the weights row-by-row starting from the top-left corner of the matrix. By default all color channels are included in the calculations while the alpha channel is excluded. The 'edgeDetect', 'emboss' and 'sharpen' convenience filter methods all use the matrix action, pre-setting the required weights. Object attributes: `action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue, includeAlpha, width, height, offsetX, offsetY, weights`
 // 
@@ -207,6 +213,8 @@ let defaultAttributes = {
 // + [Filters-018](../../demo/filters-018.html) - Parameters for: emboss filter
 // + [Filters-020](../../demo/filters-020.html) - Parameters for: clampChannels filter
 // + [Filters-021](../../demo/filters-021.html) - Parameters for: corrode filter
+// + [Filters-022](../../demo/filters-022.html) - Parameters for: mapToGradient filter
+// + [Filters-023](../../demo/filters-023.html) - Parameters for: randomNoise filter
     alpha: 255,
     angle: 0,
     areaAlphaLevels: null,
@@ -273,6 +281,7 @@ let defaultAttributes = {
     redInRed: 0,
     scaleX: 1,
     scaleY: 1,
+    seed: 'some-random-string-or-other',
     smoothing: 0,
     step: 1,
     strength: 1,
@@ -1017,6 +1026,25 @@ const setActionsArray = {
             includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
             includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
             includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
+        }];
+    },
+
+// __randomNoise__ - creates a stippling effect across the image
+    randomNoise: function (f) {
+        f.actions = [{
+            action: 'random-noise',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            width: (f.width != null) ? f.width : 1,
+            height: (f.height != null) ? f.height : 1,
+            seed: (f.seed != null) ? f.seed : 'some-random-string-or-other',
+            level: (f.level != null) ? f.level : 0,
+            includeRed: (f.includeRed != null) ? f.includeRed : true,
+            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
+            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
+            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : true,
+            excludeTransparentPixels: (f.excludeTransparentPixels != null) ? f.excludeTransparentPixels : true,
         }];
     },
 
