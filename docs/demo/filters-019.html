@@ -520,6 +520,16 @@
                 </a>
               
                 
+                <a class="source" href="filters-022.html">
+                  ./demo/filters-022.js
+                </a>
+              
+                
+                <a class="source" href="filters-023.html">
+                  ./demo/filters-023.js
+                </a>
+              
+                
                 <a class="source" href="filters-501.html">
                   ./demo/filters-501.js
                 </a>
@@ -893,7 +903,8 @@ scrawl.<span class="hljs-title function_">makePicture</span>({
         hueRange = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#hueRange&#x27;</span>),
         saturation = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#saturation&#x27;</span>),
         luminosity = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#luminosity&#x27;</span>),
-        sumAmplitude = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#sumAmplitude&#x27;</span>);
+        sumAmplitude = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#sumAmplitude&#x27;</span>),
+        worleyDepth = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#worleyDepth&#x27;</span>);
 
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
@@ -902,7 +913,7 @@ Color (monochrome): start: <span class="hljs-subst">${monochromeStart.value}</sp
 Color (hue): start: <span class="hljs-subst">${hueStart.value}</span>; range: <span class="hljs-subst">${hueRange.value}</span>; saturation: <span class="hljs-subst">${saturation.value}</span>; luminosity: <span class="hljs-subst">${luminosity.value}</span>
 Scale: <span class="hljs-subst">${scale.value}</span>; Size: <span class="hljs-subst">${size.value}</span>
 Octaves: <span class="hljs-subst">${octaves.value}</span>; Sine frequency coefficient: <span class="hljs-subst">${sineFrequencyCoeff.value}</span>
-Persistence: <span class="hljs-subst">${persistence.value}</span>; Lacunarity: <span class="hljs-subst">${lacunarity.value}</span>; Sum amplitude: <span class="hljs-subst">${sumAmplitude.value}</span>`</span>;
+Persistence: <span class="hljs-subst">${persistence.value}</span>; Lacunarity: <span class="hljs-subst">${lacunarity.value}</span>; Sum amplitude: <span class="hljs-subst">${sumAmplitude.value}</span>; Worley depth: <span class="hljs-subst">${worleyDepth.value}</span>`</span>;
     };
 }();</pre></div></div>
             
@@ -975,6 +986,8 @@ Persistence: <span class="hljs-subst">${persistence.value}</span>; Lacunarity: <
         <span class="hljs-attr">hueRange</span>: [<span class="hljs-string">&#x27;hueRange&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
         <span class="hljs-attr">saturation</span>: [<span class="hljs-string">&#x27;saturation&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
         <span class="hljs-attr">luminosity</span>: [<span class="hljs-string">&#x27;luminosity&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
+        <span class="hljs-attr">worleyOutput</span>: [<span class="hljs-string">&#x27;worleyOutput&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
+        <span class="hljs-attr">worleyDepth</span>: [<span class="hljs-string">&#x27;worleyDepth&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
     },
 });
 
@@ -1107,7 +1120,9 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#hueStart&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
 <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#hueRange&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">120</span>;
 <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#saturation&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">100</span>;
-<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#luminosity&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;</pre></div></div>
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#luminosity&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#worleyOutput&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#worleyDepth&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
             
         </li>
         
