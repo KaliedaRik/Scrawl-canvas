@@ -295,6 +295,16 @@
                 </a>
               
                 
+                <a class="source" href="canvas-054.html">
+                  ./demo/canvas-054.js
+                </a>
+              
+                
+                <a class="source" href="canvas-055.html">
+                  ./demo/canvas-055.js
+                </a>
+              
+                
                 <a class="source" href="core-001.html">
                   ./demo/core-001.js
                 </a>
@@ -510,6 +520,16 @@
                 </a>
               
                 
+                <a class="source" href="filters-022.html">
+                  ./demo/filters-022.js
+                </a>
+              
+                
+                <a class="source" href="filters-023.html">
+                  ./demo/filters-023.js
+                </a>
+              
+                
                 <a class="source" href="filters-501.html">
                   ./demo/filters-501.js
                 </a>
@@ -685,6 +705,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-003.html">
+                  ./demo/temp-003.js
+                </a>
+              
+                
                 <a class="source" href="temp-inkscapeSvgFilters.html">
                   ./demo/temp-inkscapeSvgFilters.js
                 </a>
@@ -786,56 +811,65 @@ canvas.<span class="hljs-title function_">set</span>({
         <span class="hljs-attr">paletteEnd</span>: -<span class="hljs-number">1</span>
     },
 
-    <span class="hljs-attr">cyclePalette</span>: <span class="hljs-literal">true</span>
-})
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;black&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">99</span>, <span class="hljs-string">&#x27;red&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">199</span>, <span class="hljs-string">&#x27;black&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">299</span>, <span class="hljs-string">&#x27;blue&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">399</span>, <span class="hljs-string">&#x27;black&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">499</span>, <span class="hljs-string">&#x27;gold&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">599</span>, <span class="hljs-string">&#x27;black&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">699</span>, <span class="hljs-string">&#x27;green&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">799</span>, <span class="hljs-string">&#x27;black&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">899</span>, <span class="hljs-string">&#x27;lavender&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;black&#x27;</span>);
+    <span class="hljs-attr">cyclePalette</span>: <span class="hljs-literal">true</span>,
+
+    <span class="hljs-attr">colors</span>: [
+        [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;black&#x27;</span>],
+        [<span class="hljs-number">99</span>, <span class="hljs-string">&#x27;red&#x27;</span>],
+        [<span class="hljs-number">199</span>, <span class="hljs-string">&#x27;black&#x27;</span>],
+        [<span class="hljs-number">299</span>, <span class="hljs-string">&#x27;blue&#x27;</span>],
+        [<span class="hljs-number">399</span>, <span class="hljs-string">&#x27;black&#x27;</span>],
+        [<span class="hljs-number">499</span>, <span class="hljs-string">&#x27;gold&#x27;</span>],
+        [<span class="hljs-number">599</span>, <span class="hljs-string">&#x27;black&#x27;</span>],
+        [<span class="hljs-number">699</span>, <span class="hljs-string">&#x27;green&#x27;</span>],
+        [<span class="hljs-number">799</span>, <span class="hljs-string">&#x27;black&#x27;</span>],
+        [<span class="hljs-number">899</span>, <span class="hljs-string">&#x27;lavender&#x27;</span>],
+        [<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;black&#x27;</span>]
+    ],
+});
 
 scrawl.<span class="hljs-title function_">makeGradient</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;colored-pipes&#x27;</span>,
     <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-    <span class="hljs-attr">cyclePalette</span>: <span class="hljs-literal">true</span>
-})
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;black&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">49</span>, <span class="hljs-string">&#x27;yellow&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">99</span>, <span class="hljs-string">&#x27;black&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">149</span>, <span class="hljs-string">&#x27;lightyellow&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">199</span>, <span class="hljs-string">&#x27;black&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">249</span>, <span class="hljs-string">&#x27;goldenrod&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">299</span>, <span class="hljs-string">&#x27;black&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">349</span>, <span class="hljs-string">&#x27;lemonchiffon&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">399</span>, <span class="hljs-string">&#x27;black&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">449</span>, <span class="hljs-string">&#x27;gold&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">499</span>, <span class="hljs-string">&#x27;black&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">549</span>, <span class="hljs-string">&#x27;tan&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">599</span>, <span class="hljs-string">&#x27;black&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">649</span>, <span class="hljs-string">&#x27;wheat&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">699</span>, <span class="hljs-string">&#x27;black&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">749</span>, <span class="hljs-string">&#x27;yellowgreen&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">799</span>, <span class="hljs-string">&#x27;black&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">849</span>, <span class="hljs-string">&#x27;peachpuff&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">899</span>, <span class="hljs-string">&#x27;black&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">949</span>, <span class="hljs-string">&#x27;papayawhip&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;black&#x27;</span>);
+    <span class="hljs-attr">cyclePalette</span>: <span class="hljs-literal">true</span>,
+
+    <span class="hljs-attr">colors</span>: [
+        [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;black&#x27;</span>],
+        [<span class="hljs-number">49</span>, <span class="hljs-string">&#x27;yellow&#x27;</span>],
+        [<span class="hljs-number">99</span>, <span class="hljs-string">&#x27;black&#x27;</span>],
+        [<span class="hljs-number">149</span>, <span class="hljs-string">&#x27;lightyellow&#x27;</span>],
+        [<span class="hljs-number">199</span>, <span class="hljs-string">&#x27;black&#x27;</span>],
+        [<span class="hljs-number">249</span>, <span class="hljs-string">&#x27;goldenrod&#x27;</span>],
+        [<span class="hljs-number">299</span>, <span class="hljs-string">&#x27;black&#x27;</span>],
+        [<span class="hljs-number">349</span>, <span class="hljs-string">&#x27;lemonchiffon&#x27;</span>],
+        [<span class="hljs-number">399</span>, <span class="hljs-string">&#x27;black&#x27;</span>],
+        [<span class="hljs-number">449</span>, <span class="hljs-string">&#x27;gold&#x27;</span>],
+        [<span class="hljs-number">499</span>, <span class="hljs-string">&#x27;black&#x27;</span>],
+        [<span class="hljs-number">549</span>, <span class="hljs-string">&#x27;tan&#x27;</span>],
+        [<span class="hljs-number">599</span>, <span class="hljs-string">&#x27;black&#x27;</span>],
+        [<span class="hljs-number">649</span>, <span class="hljs-string">&#x27;wheat&#x27;</span>],
+        [<span class="hljs-number">699</span>, <span class="hljs-string">&#x27;black&#x27;</span>],
+        [<span class="hljs-number">749</span>, <span class="hljs-string">&#x27;yellowgreen&#x27;</span>],
+        [<span class="hljs-number">799</span>, <span class="hljs-string">&#x27;black&#x27;</span>],
+        [<span class="hljs-number">849</span>, <span class="hljs-string">&#x27;peachpuff&#x27;</span>],
+        [<span class="hljs-number">899</span>, <span class="hljs-string">&#x27;black&#x27;</span>],
+        [<span class="hljs-number">949</span>, <span class="hljs-string">&#x27;papayawhip&#x27;</span>],
+        [<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;black&#x27;</span>],
+    ],
+});
 
 scrawl.<span class="hljs-title function_">makeGradient</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;linear&#x27;</span>,
     <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-})
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;blue&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">495</span>, <span class="hljs-string">&#x27;red&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">500</span>, <span class="hljs-string">&#x27;yellow&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">505</span>, <span class="hljs-string">&#x27;red&#x27;</span>)
-.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;green&#x27;</span>);</pre></div></div>
+
+    <span class="hljs-attr">colors</span>: [
+        [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;blue&#x27;</span>],
+        [<span class="hljs-number">495</span>, <span class="hljs-string">&#x27;red&#x27;</span>],
+        [<span class="hljs-number">500</span>, <span class="hljs-string">&#x27;yellow&#x27;</span>],
+        [<span class="hljs-number">505</span>, <span class="hljs-string">&#x27;red&#x27;</span>],
+        [<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;green&#x27;</span>]
+    ],
+});</pre></div></div>
             
         </li>
         

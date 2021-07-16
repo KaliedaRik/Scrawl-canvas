@@ -295,6 +295,16 @@
                 </a>
               
                 
+                <a class="source" href="canvas-054.html">
+                  ./demo/canvas-054.js
+                </a>
+              
+                
+                <a class="source" href="canvas-055.html">
+                  ./demo/canvas-055.js
+                </a>
+              
+                
                 <a class="source" href="core-001.html">
                   ./demo/core-001.js
                 </a>
@@ -510,6 +520,16 @@
                 </a>
               
                 
+                <a class="source" href="filters-022.html">
+                  ./demo/filters-022.js
+                </a>
+              
+                
+                <a class="source" href="filters-023.html">
+                  ./demo/filters-023.js
+                </a>
+              
+                
                 <a class="source" href="filters-501.html">
                   ./demo/filters-501.js
                 </a>
@@ -682,6 +702,11 @@
                 
                 <a class="source" href="temp-002.html">
                   ./demo/temp-002.js
+                </a>
+              
+                
+                <a class="source" href="temp-003.html">
+                  ./demo/temp-003.js
                 </a>
               
                 
@@ -1466,6 +1491,69 @@ scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
               
               <div class="sswrap ">
                 <a class="ss" href="#section-29">&#x00a7;</a>
+              </div>
+              <h4 id="video-recording-and-download-functionality">Video recording and download functionality</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> videoButton = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&quot;#my-record-video-button&quot;</span>);
+
+<span class="hljs-keyword">let</span> recording = <span class="hljs-literal">false</span>;
+<span class="hljs-keyword">let</span> myRecorder;
+<span class="hljs-keyword">let</span> recordedChunks;
+
+videoButton.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&quot;click&quot;</span>, <span class="hljs-function">() =&gt;</span> {
+    recording = !recording;
+
+    <span class="hljs-keyword">if</span> (recording) {
+
+        videoButton.<span class="hljs-property">textContent</span> = <span class="hljs-string">&quot;Stop recording&quot;</span>;
+
+        <span class="hljs-keyword">const</span> stream = canvas.<span class="hljs-property">domElement</span>.<span class="hljs-title function_">captureStream</span>(<span class="hljs-number">25</span>);
+
+        myRecorder = <span class="hljs-keyword">new</span> <span class="hljs-title class_">MediaRecorder</span>(stream, {
+            <span class="hljs-attr">mimeType</span>: <span class="hljs-string">&quot;video/webm;codecs=vp8&quot;</span>
+        });
+
+        recordedChunks = [];
+
+        myRecorder.<span class="hljs-property">ondataavailable</span> = <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+
+            <span class="hljs-keyword">if</span> (e.<span class="hljs-property">data</span>.<span class="hljs-property">size</span> &gt; <span class="hljs-number">0</span>) recordedChunks.<span class="hljs-title function_">push</span>(e.<span class="hljs-property">data</span>);
+        };
+
+        myRecorder.<span class="hljs-title function_">start</span>();
+    } 
+    <span class="hljs-keyword">else</span> {
+
+        videoButton.<span class="hljs-property">textContent</span> = <span class="hljs-string">&quot;Record a video&quot;</span>;
+
+        myRecorder.<span class="hljs-title function_">stop</span>();
+
+        <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
+            
+            <span class="hljs-keyword">const</span> blob = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Blob</span>(recordedChunks, { <span class="hljs-attr">type</span>: <span class="hljs-string">&quot;video/webm&quot;</span> });
+
+            <span class="hljs-keyword">const</span> url = <span class="hljs-variable constant_">URL</span>.<span class="hljs-title function_">createObjectURL</span>(blob);
+            <span class="hljs-keyword">const</span> a = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&quot;a&quot;</span>);
+
+            a.<span class="hljs-property">href</span> = url;
+            a.<span class="hljs-property">download</span> = <span class="hljs-string">`Scrawl-canvas-art-recording-<span class="hljs-subst">${<span class="hljs-built_in">Date</span>().slice(<span class="hljs-number">4</span>, <span class="hljs-number">24</span>)}</span>.webm`</span>;
+            a.<span class="hljs-title function_">click</span>();
+
+            <span class="hljs-variable constant_">URL</span>.<span class="hljs-title function_">revokeObjectURL</span>(url);
+        }, <span class="hljs-number">0</span>);
+    }
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

@@ -21,18 +21,122 @@ let myWheel = scrawl.makeWheel({
     startAngle: 35,
     endAngle: -35,
 
-    fillStyle: 'purple',
+    fillStyle: '#f2aafe',
     strokeStyle: 'gold',
     lineWidth: 6,
     lineJoin: 'round',
 
     method: 'fillAndDraw',
+    globalAlpha: 0.8,
 
     delta: {
         startX: 4,
-        startY: '-0.3%',
+        startY: '0.25%',
         roll: -0.5,
+        globalAlpha: 0.006,
     },
+
+    // We will check for bounds violations using Scrawl-canvas delta checking functionality
+    // + We supply an array for each delta attribute we want to check in the deltaConstraints Object
+    // + The Array holds three items: `[minimum-value, maximum-value, action-to-take]`
+    // + When the attribute updated by the delta value falls outside our boundaries, Scrawl-canvas takes the appropriate action
+    // + The __reverse__ action will reverse the numerical sign of the affected delta object attribute value
+    // + The __loop__ action will loop the artefact's attribute value from the maximum to the minimum value, or vice-versa as appropriate
+    deltaConstraints: {
+        startX: [50, 550, 'reverse'],
+        startY: ['10%', '90%', 'reverse'],
+        scale: [0.5, 2, 'reverse'],
+        globalAlpha: [0.2, 1, 'reverse'],
+    },
+    checkDeltaConstraints: true,
+});
+
+
+scrawl.makeOval({
+    name: 'base-oval',
+    start: ['center', 'center'],
+    handle: ['center', 'center'],
+    radiusX: 150,
+    radiusY: 150,
+    method: 'draw',
+    lineWidth: 2,
+    strokeStyle: 'red',
+    lineDash: [4, 3],
+    useAsPath: true,
+    delta: {
+        roll: 0.1,
+    },
+    shadowColor: 'black',
+    shadowOffsetX: 4,
+    shadowOffsetY: 4,
+    shadowBlur: 4,
+});
+
+const pins = scrawl.makeGroup({
+    name: 'pins',
+    host: canvas.base.name,
+});
+
+let angle = 3 / 7;
+
+scrawl.makeBlock({
+    name: 'pin-1',
+    group: 'pins',
+    dimensions: [7, 7],
+    handle: ['center', 'center'],
+    path: 'base-oval',
+    pathPosition: (angle * 1) % 1,
+    lockTo: 'path',
+    fillStyle: 'blue',
+    shadowColor: 'black',
+    shadowOffsetX: 4,
+    shadowOffsetY: 4,
+    shadowBlur: 4,
+}).clone({
+    name: 'pin-2',
+    pathPosition: (angle * 2) % 1,
+}).clone({
+    name: 'pin-3',
+    pathPosition: (angle * 3) % 1,
+}).clone({
+    name: 'pin-4',
+    pathPosition: (angle * 4) % 1,
+}).clone({
+    name: 'pin-5',
+    pathPosition: (angle * 5) % 1,
+}).clone({
+    name: 'pin-6',
+    pathPosition: (angle * 6) % 1,
+}).clone({
+    name: 'pin-7',
+    pathPosition: (angle * 7) % 1,
+});
+
+scrawl.makePolyline({
+    name: 'polly',
+    pins: pins.get('artefacts'),
+    tension: 0,
+    closed: true,
+    mapToPins: true,
+
+    strokeStyle: 'orange',
+    lineWidth: 2,
+    lineCap: 'round',
+    lineJoin: 'round',
+
+    shadowColor: 'black',
+    shadowOffsetX: 4,
+    shadowOffsetY: 4,
+    shadowBlur: 4,
+    method: 'draw',
+
+    delta: {
+        tension: 0.005,
+    },
+    deltaConstraints: {
+        tension: [-3.5, 3, 'reverse'],
+    },
+    checkDeltaConstraints: true,
 });
 
 
@@ -61,20 +165,6 @@ scrawl.makeRender({
     name: 'demo-animation',
     target: canvas,
     afterShow: report,
-
-    // We need to wait until the first Display cycle completes before setting up the delta constraint checking
-    afterCreated: () => {
-
-        myWheel.set({
-
-            deltaConstraints: {
-                startX: [50, 550, 'reverse'],
-                startY: ['10%', '90%', 'reverse'],
-                scale: [0.5, 2, 'reverse'],
-            },
-            checkDeltaConstraints: true,
-        })
-    },
 });
 
 
@@ -92,6 +182,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
                     startX: [50, 550, 'reverse'],
                     startY: ['10%', '90%', 'reverse'],
                     scale: [0.5, 2, 'reverse'],
+                    globalAlpha: [0.2, 1, 'reverse'],
                 },
             });
             break;
@@ -102,6 +193,7 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
                     startX: [50, 550, 'loop'],
                     startY: ['10%', '90%', 'loop'],
                     scale: [0.5, 2, 'loop'],
+                    globalAlpha: [0.2, 1, 'loop'],
                 },
             });
             break;

@@ -22,12 +22,14 @@ scrawl.makeGradient({
     name: 'linear',
     endX: '100%',
     endY: '100%',
-})
-.updateColor(0, 'white')
-.updateColor(420, 'red')
-.updateColor(500, 'yellow')
-.updateColor(580, 'red')
-.updateColor(999, 'black');
+    colors: [
+        [0, 'white'],
+        [420, 'red'],
+        [500, 'yellow'],
+        [580, 'red'],
+        [999, 'black'],
+    ],
+});
 
 // Add a new Cell to our canvas
 const patternCell = canvas.buildCell({

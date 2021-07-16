@@ -34,56 +34,65 @@ let myRadial = scrawl.makeRadialGradient({
         paletteEnd: -1
     },
 
-    cyclePalette: true
-})
-.updateColor(0, 'black')
-.updateColor(99, 'red')
-.updateColor(199, 'black')
-.updateColor(299, 'blue')
-.updateColor(399, 'black')
-.updateColor(499, 'gold')
-.updateColor(599, 'black')
-.updateColor(699, 'green')
-.updateColor(799, 'black')
-.updateColor(899, 'lavender')
-.updateColor(999, 'black');
+    cyclePalette: true,
+
+    colors: [
+        [0, 'black'],
+        [99, 'red'],
+        [199, 'black'],
+        [299, 'blue'],
+        [399, 'black'],
+        [499, 'gold'],
+        [599, 'black'],
+        [699, 'green'],
+        [799, 'black'],
+        [899, 'lavender'],
+        [999, 'black']
+    ],
+});
 
 scrawl.makeGradient({
     name: 'colored-pipes',
     endX: '100%',
-    cyclePalette: true
-})
-.updateColor(0, 'black')
-.updateColor(49, 'yellow')
-.updateColor(99, 'black')
-.updateColor(149, 'lightyellow')
-.updateColor(199, 'black')
-.updateColor(249, 'goldenrod')
-.updateColor(299, 'black')
-.updateColor(349, 'lemonchiffon')
-.updateColor(399, 'black')
-.updateColor(449, 'gold')
-.updateColor(499, 'black')
-.updateColor(549, 'tan')
-.updateColor(599, 'black')
-.updateColor(649, 'wheat')
-.updateColor(699, 'black')
-.updateColor(749, 'yellowgreen')
-.updateColor(799, 'black')
-.updateColor(849, 'peachpuff')
-.updateColor(899, 'black')
-.updateColor(949, 'papayawhip')
-.updateColor(999, 'black');
+    cyclePalette: true,
+
+    colors: [
+        [0, 'black'],
+        [49, 'yellow'],
+        [99, 'black'],
+        [149, 'lightyellow'],
+        [199, 'black'],
+        [249, 'goldenrod'],
+        [299, 'black'],
+        [349, 'lemonchiffon'],
+        [399, 'black'],
+        [449, 'gold'],
+        [499, 'black'],
+        [549, 'tan'],
+        [599, 'black'],
+        [649, 'wheat'],
+        [699, 'black'],
+        [749, 'yellowgreen'],
+        [799, 'black'],
+        [849, 'peachpuff'],
+        [899, 'black'],
+        [949, 'papayawhip'],
+        [999, 'black'],
+    ],
+});
 
 scrawl.makeGradient({
     name: 'linear',
     endX: '100%',
-})
-.updateColor(0, 'blue')
-.updateColor(495, 'red')
-.updateColor(500, 'yellow')
-.updateColor(505, 'red')
-.updateColor(999, 'green');
+
+    colors: [
+        [0, 'blue'],
+        [495, 'red'],
+        [500, 'yellow'],
+        [505, 'red'],
+        [999, 'green']
+    ],
+});
 
 
 // Build the block and wheel entitys

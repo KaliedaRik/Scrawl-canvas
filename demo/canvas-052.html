@@ -19,6 +19,11 @@
       height: 100%;
     }
 
+    .instructions {
+      max-width: 48rem;
+      margin: 0 auto;
+    }
+
     .canvas-container {
       overflow: hidden;
       resize: both;
@@ -29,6 +34,20 @@
       min-width: 200px;
       max-height: 600px;
       max-width: 600px;
+      margin: 1rem auto;
+    }
+
+    .button-container {
+      width:  100%;
+      text-align: center;
+    }
+    button {
+      font-size: 1.4rem;
+      padding: 0.4rem;
+      width: 280px;
+      margin-top: 1rem;
+      background-color: darkred;
+      color: yellow;
     }
 
     .controls {
@@ -40,8 +59,12 @@
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 052</h1>
   <h2>Create and use a RawAsset object to modify an image asset</h2>
-  <h3>Drag image files over the canvas to load them</h3>
-  <h3>Resize the canvas by dragging its bottom right corner</h3>
+
+  <p class="instructions">Drag-drop an image onto the canvas to start doing Art with it. Click on the record button at any time to record your Art creation process. Video will download when you stop recording. Canvas (and video output) can be resized by dragging bottom-right corner. Note: video recording and download only works in Chrome and (possibly) Firefox.</p>
+
+  <div class="button-container">
+    <button id="my-record-video-button">Record a video</button>
+  </div>
 
   <div class="canvas-container">
     <canvas id="mycanvas"></canvas>
@@ -112,7 +135,8 @@
       <li>Create a RawAsset object which can amend an image to make it look like an Impressionist painting (think: Van Gogh).</li>
       <li>The RawAsset object will require both a NoiseAsset object, and an ImageAsset object - the NoiseAsset will affect how the RawAsset will modify the ImageAsset.</li>
       <li>Include additional controls to allow the user to modify the output in various ways.</li>
-      <li>In addition: allow user to drag-and-drop their own image file onto the canvas, to use as the base for the painting exercise<./li>
+      <li>In addition: allow user to drag-and-drop their own image file onto the canvas, to use as the base for the painting exercise.</li>
+      <li>Include functionality to allow the user to record their output as a video, and download that video.</li>
     </ul>
     <p><a href="../docs/demo/canvas-052.html">Annotated code</a></p>
   </div>

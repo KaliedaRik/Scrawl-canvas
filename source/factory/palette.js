@@ -30,20 +30,17 @@
 //     },
 // }
 // ``` 
-// To `set` the Palette object's `colors` object, either when creating the gradient-type style or at some point afterwards, we can use CSS color Strings instead of an array of values for each color. Note that:
-// + the color object attribute labels MUST include a space after the String number; and 
-// + the number itself must be a positive integer in the range 0-999:
+// To `set` the Palette object's `colors` object, either when creating the gradient-type style or at some point afterwards, we can use CSS color Strings instead of an array of values for each color:
 //
 // ``` 
 // myGradient.set({
 //
-//     colors: {
-//
-//         '0 ': 'black',
-//         '350 ': 'red',
-//         '650 ': 'blue',
-//         '999 ': 'white'
-//     },
+//     colors: [
+//         [0, 'black'],
+//         [0, 'red'],
+//         [0, 'blue'],
+//         [0, 'white'],
+//     ]
 // });
 // ``` 
 
@@ -128,23 +125,27 @@ let G = P.getters,
     S = P.setters;
 
 
-// __colors__ - No checking is done prior to assigning the colors object to the colors attribute beyond verifying that the argument value is an object.
+// __colors__ - an array of arrays, each sub-array being in the form `[Number, String]` where:
+// + Number is a positive integer in the range 0-999
+// + String is any legitimate CSS color string value
 S.colors = function (item) {
 
-    if (isa_obj(item)) {
+    if (Array.isArray(item)) {
 
-        let f = this.factory;
+        let f = this.factory,
+            newCols = {};
 
-        Object.entries(item).forEach(([pos, col]) => {
+        item.forEach(c => {
 
-            if (col.substring) {
+            let [pos, col] = c; 
+            if (pos.toFixed && col.substring) {
 
                 f.convert(col);
-                item[pos] = [f.r, f.g, f.b, f.a];
+                newCols[`${pos} `] = [f.r, f.g, f.b, f.a];
             }
         });
 
-        this.colors = item;
+        this.colors = newCols;
         this.dirtyPalette = true;
     }
 };
@@ -268,8 +269,8 @@ P.makeColorString = function (item) {
         r, g, b, a;
 
     let constrainer = (n, min, max) => {
-        n = (n < min) ? min : n;
-        n = (n > max) ? max : n;
+        if (n < min) return min;
+        if (n > max) return max;
         return n;
     };
 

@@ -115,6 +115,11 @@
                 </a>
               
                 
+                <a class="source" href="crescent.html">
+                  ./source/factory/crescent.js
+                </a>
+              
+                
                 <a class="source" href="element.html">
                   ./source/factory/element.js
                 </a>
@@ -953,6 +958,32 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
               <div class="sswrap ">
                 <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
+              <p><code>setTileFill</code> - update the tileFill array</p>
+<ul>
+<li>The array supplied as an argument must be the same length as current rows * columns</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">setTileFill</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-keyword">const</span> { columns, rows } = <span class="hljs-variable language_">this</span>;
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(item) &amp;&amp; item.<span class="hljs-property">length</span> === columns * rows) {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">tileFill</span> = item;
+    }
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
+              </div>
               <p><code>setTilesTo</code> - change the fill for a (set of) tile(s) in a Grid - requires two arguments:</p>
 <ul>
 <li>First argument is an integer Number representing the position of a tile in the tileFill Array, or an Array of such Numbers</li>
@@ -983,11 +1014,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p><code>setTileSourceTo</code> - update or replace a tileSource object - requires two arguments:</p>
 <ul>
@@ -1008,11 +1039,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p><code>removeTileSource</code> - remove a tileSource object</p>
 <ul>
@@ -1035,11 +1066,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p><code>getTileSource</code> - returns the tileSource index Number for the given tile. Function is overloaded:</p>
 <ul>
@@ -1061,11 +1092,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p><code>getTilesUsingSource</code> - returns an Array of tileFill index Numbers representing tiles that are currently using the tileSource Object at the given tileSource index.</p>
 
@@ -1083,11 +1114,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p><code>cleanPathObject</code> - internal - used for entity stamping (Display cycle), and collision detection</p>
 
@@ -1176,11 +1207,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-27">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <h5 id="stamp-methods">Stamp methods</h5>
 
@@ -1189,11 +1220,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p><code>performFill</code> - internal stamp method helper function</p>
 <ul>
@@ -1207,11 +1238,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p>Grab the current engine values for various things</p>
 
@@ -1240,11 +1271,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p>Iterate through the grid’s tileSources</p>
 
@@ -1255,11 +1286,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p>Set up the engine fillStyle value (where required)</p>
 
@@ -1291,11 +1322,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-32">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p>Get an map of tiles using this source</p>
 
@@ -1310,11 +1341,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-33">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p>Use pool canvas to compose the output</p>
 
@@ -1389,11 +1420,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p>Assign (or construct) the appropriate object to gObject</p>
 
@@ -1412,11 +1443,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-35">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p>Set the engine’s strokeStyle to the appropriate value (if needed)</p>
 
@@ -1447,11 +1478,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-36">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p>Use pool canvas to compose the output</p>
 <ul>
@@ -1511,11 +1542,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p>We have a color/gradient all set up - stroke the lines directly onto grid</p>
 
@@ -1545,11 +1576,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-38">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p><code>fill</code></p>
 
@@ -1563,11 +1594,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-39">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p><code>drawAndFill</code></p>
 
@@ -1585,11 +1616,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p><code>fillAndDraw</code></p>
 
@@ -1608,11 +1639,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-41">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p><code>drawThenFill</code></p>
 
@@ -1629,11 +1660,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-42">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p><code>fillThenDraw</code></p>
 
@@ -1650,11 +1681,11 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p><code>checkHit</code> - overrides position mixin function</p>
 <ul>
@@ -1767,11 +1798,11 @@ P.<span class="hljs-property">checkHit</span> = <span class="hljs-keyword">funct
         </li>
         
         
-        <li id="section-44">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code><span class="hljs-keyword">let</span> blueSource = {
@@ -1815,11 +1846,11 @@ constructors.<span class="hljs-property">Grid</span> = <span class="hljs-title c
         </li>
         
         
-        <li id="section-45">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

@@ -44,6 +44,8 @@
         <option value="value">Value</option>
         <option value="stripes">Stripes</option>
         <option value="smoothed-stripes">Smoothed stripes</option>
+        <option value="worley-euclidean">Worley (euclidean)</option>
+        <option value="worley-manhattan">Worley (manhattan)</option>
       </select>
     </div>
 
@@ -53,6 +55,7 @@
         <option value="monochrome">Monochrome</option>
         <option value="gradient">Gradient</option>
         <option value="hue">Hue</option>
+        <option value="rainbow">Rainbow</option>
       </select>
     </div>
 
@@ -154,7 +157,41 @@
     </div>
 
     <div class="blue label">Sum Amplitude</div>
-    <div class="blue"><input class="controlItem" id="sumAmplitude" type="range" value="5" min="0.1" max="10" step="0.1" disabled /></div>
+    <div class="blue"><input class="controlItem" id="sumAmplitude" type="range" value="5" min="0.1" max="25" step="0.1" disabled /></div>
+
+    <div class="blue label">Worley output</div>
+    <div class="blue">
+      <select class="controlItem" id="worleyOutput">
+        <option value="X">X</option>
+        <option value="Y">Y</option>
+        <option value="Z">Z</option>
+        <option value="XminusY">XminusY</option>
+        <option value="XminusZ">XminusZ</option>
+        <option value="YminusX">YminusX</option>
+        <option value="YminusZ">YminusZ</option>
+        <option value="ZminusX">ZminusX</option>
+        <option value="ZminusY">ZminusY</option>
+        <option value="XaddY">XaddY</option>
+        <option value="XaddZ">XaddZ</option>
+        <option value="YaddZ">YaddZ</option>
+        <option value="XaddYminusZ">XaddYminusZ</option>
+        <option value="XaddZminusY">XaddZminusY</option>
+        <option value="YaddZminusX">YaddZminusX</option>
+        <option value="XmultiplyY">XmultiplyY</option>
+        <option value="XmultiplyZ">XmultiplyZ</option>
+        <option value="YmultiplyZ">YmultiplyZ</option>
+        <option value="XmultiplyYaddZ">XmultiplyYaddZ</option>
+        <option value="XmultiplyZaddY">XmultiplyZaddY</option>
+        <option value="YmultiplyZaddX">YmultiplyZaddX</option>
+        <option value="XmultiplyYminusZ">XmultiplyYminusZ</option>
+        <option value="XmultiplyZminusY">XmultiplyZminusY</option>
+        <option value="YmultiplyZminusX">YmultiplyZminusX</option>
+        <option value="sum">sum</option>
+      </select>
+    </div>
+
+    <div class="blue label">Worley depth</div>
+    <div class="blue"><input class="controlItem" id="worleyDepth" type="range" value="0" min="0" max="500" step="1" /></div>
 
     <div class="yellow label">Canvas width</div>
     <div class="yellow"><input class="controlItem" id="width" type="range" value="400" min="1" max="600" step="1" /></div>

@@ -1,6 +1,6 @@
 // # Scrawl-canvas
 //
-// #### Version 8.5.4 - 29 Jun 2021
+// #### Version 8.5.5 - 16 Jul 2021
 //
 // ---------------------------------------------------------------------------------
 // The MIT License (MIT)
@@ -120,6 +120,11 @@ import {
     requestCoordinate, 
     releaseCoordinate,
 } from './factory/coordinate.js';
+
+
+import { 
+    makeCrescent,
+} from './factory/crescent.js';
 
 
 import { 
@@ -408,6 +413,10 @@ export default {
     // factory/coordinate.js
     requestCoordinate, 
     releaseCoordinate,
+
+
+    // factory/crescent.js
+    makeCrescent,
 
 
     // factory/emitter.js

@@ -295,6 +295,16 @@
                 </a>
               
                 
+                <a class="source" href="canvas-054.html">
+                  ./demo/canvas-054.js
+                </a>
+              
+                
+                <a class="source" href="canvas-055.html">
+                  ./demo/canvas-055.js
+                </a>
+              
+                
                 <a class="source" href="core-001.html">
                   ./demo/core-001.js
                 </a>
@@ -510,6 +520,16 @@
                 </a>
               
                 
+                <a class="source" href="filters-022.html">
+                  ./demo/filters-022.js
+                </a>
+              
+                
+                <a class="source" href="filters-023.html">
+                  ./demo/filters-023.js
+                </a>
+              
+                
                 <a class="source" href="filters-501.html">
                   ./demo/filters-501.js
                 </a>
@@ -685,6 +705,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-003.html">
+                  ./demo/temp-003.js
+                </a>
+              
+                
                 <a class="source" href="temp-inkscapeSvgFilters.html">
                   ./demo/temp-inkscapeSvgFilters.js
                 </a>
@@ -773,19 +798,20 @@
     <span class="hljs-attr">startAngle</span>: <span class="hljs-number">35</span>,
     <span class="hljs-attr">endAngle</span>: -<span class="hljs-number">35</span>,
 
-    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;purple&#x27;</span>,
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;#f2aafe&#x27;</span>,
     <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;gold&#x27;</span>,
     <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">6</span>,
     <span class="hljs-attr">lineJoin</span>: <span class="hljs-string">&#x27;round&#x27;</span>,
 
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillAndDraw&#x27;</span>,
+    <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0.8</span>,
 
     <span class="hljs-attr">delta</span>: {
         <span class="hljs-attr">startX</span>: <span class="hljs-number">4</span>,
-        <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;-0.3%&#x27;</span>,
+        <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;0.25%&#x27;</span>,
         <span class="hljs-attr">roll</span>: -<span class="hljs-number">0.5</span>,
-    },
-});</pre></div></div>
+        <span class="hljs-attr">globalAlpha</span>: <span class="hljs-number">0.006</span>,
+    },</pre></div></div>
             
         </li>
         
@@ -795,6 +821,123 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <p>We will check for bounds violations using Scrawl-canvas delta checking functionality</p>
+<ul>
+<li>We supply an array for each delta attribute we want to check in the deltaConstraints Object</li>
+<li>The Array holds three items: <code>[minimum-value, maximum-value, action-to-take]</code></li>
+<li>When the attribute updated by the delta value falls outside our boundaries, Scrawl-canvas takes the appropriate action</li>
+<li>The <strong>reverse</strong> action will reverse the numerical sign of the affected delta object attribute value</li>
+<li>The <strong>loop</strong> action will loop the artefact’s attribute value from the maximum to the minimum value, or vice-versa as appropriate</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">deltaConstraints</span>: {
+        <span class="hljs-attr">startX</span>: [<span class="hljs-number">50</span>, <span class="hljs-number">550</span>, <span class="hljs-string">&#x27;reverse&#x27;</span>],
+        <span class="hljs-attr">startY</span>: [<span class="hljs-string">&#x27;10%&#x27;</span>, <span class="hljs-string">&#x27;90%&#x27;</span>, <span class="hljs-string">&#x27;reverse&#x27;</span>],
+        <span class="hljs-attr">scale</span>: [<span class="hljs-number">0.5</span>, <span class="hljs-number">2</span>, <span class="hljs-string">&#x27;reverse&#x27;</span>],
+        <span class="hljs-attr">globalAlpha</span>: [<span class="hljs-number">0.2</span>, <span class="hljs-number">1</span>, <span class="hljs-string">&#x27;reverse&#x27;</span>],
+    },
+    <span class="hljs-attr">checkDeltaConstraints</span>: <span class="hljs-literal">true</span>,
+});
+
+
+scrawl.<span class="hljs-title function_">makeOval</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;base-oval&#x27;</span>,
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">radiusX</span>: <span class="hljs-number">150</span>,
+    <span class="hljs-attr">radiusY</span>: <span class="hljs-number">150</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;red&#x27;</span>,
+    <span class="hljs-attr">lineDash</span>: [<span class="hljs-number">4</span>, <span class="hljs-number">3</span>],
+    <span class="hljs-attr">useAsPath</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">delta</span>: {
+        <span class="hljs-attr">roll</span>: <span class="hljs-number">0.1</span>,
+    },
+    <span class="hljs-attr">shadowColor</span>: <span class="hljs-string">&#x27;black&#x27;</span>,
+    <span class="hljs-attr">shadowOffsetX</span>: <span class="hljs-number">4</span>,
+    <span class="hljs-attr">shadowOffsetY</span>: <span class="hljs-number">4</span>,
+    <span class="hljs-attr">shadowBlur</span>: <span class="hljs-number">4</span>,
+});
+
+<span class="hljs-keyword">const</span> pins = scrawl.<span class="hljs-title function_">makeGroup</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pins&#x27;</span>,
+    <span class="hljs-attr">host</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
+});
+
+<span class="hljs-keyword">let</span> angle = <span class="hljs-number">3</span> / <span class="hljs-number">7</span>;
+
+scrawl.<span class="hljs-title function_">makeBlock</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pin-1&#x27;</span>,
+    <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;pins&#x27;</span>,
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">7</span>, <span class="hljs-number">7</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;base-oval&#x27;</span>,
+    <span class="hljs-attr">pathPosition</span>: (angle * <span class="hljs-number">1</span>) % <span class="hljs-number">1</span>,
+    <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;path&#x27;</span>,
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;blue&#x27;</span>,
+    <span class="hljs-attr">shadowColor</span>: <span class="hljs-string">&#x27;black&#x27;</span>,
+    <span class="hljs-attr">shadowOffsetX</span>: <span class="hljs-number">4</span>,
+    <span class="hljs-attr">shadowOffsetY</span>: <span class="hljs-number">4</span>,
+    <span class="hljs-attr">shadowBlur</span>: <span class="hljs-number">4</span>,
+}).<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pin-2&#x27;</span>,
+    <span class="hljs-attr">pathPosition</span>: (angle * <span class="hljs-number">2</span>) % <span class="hljs-number">1</span>,
+}).<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pin-3&#x27;</span>,
+    <span class="hljs-attr">pathPosition</span>: (angle * <span class="hljs-number">3</span>) % <span class="hljs-number">1</span>,
+}).<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pin-4&#x27;</span>,
+    <span class="hljs-attr">pathPosition</span>: (angle * <span class="hljs-number">4</span>) % <span class="hljs-number">1</span>,
+}).<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pin-5&#x27;</span>,
+    <span class="hljs-attr">pathPosition</span>: (angle * <span class="hljs-number">5</span>) % <span class="hljs-number">1</span>,
+}).<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pin-6&#x27;</span>,
+    <span class="hljs-attr">pathPosition</span>: (angle * <span class="hljs-number">6</span>) % <span class="hljs-number">1</span>,
+}).<span class="hljs-title function_">clone</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;pin-7&#x27;</span>,
+    <span class="hljs-attr">pathPosition</span>: (angle * <span class="hljs-number">7</span>) % <span class="hljs-number">1</span>,
+});
+
+scrawl.<span class="hljs-title function_">makePolyline</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;polly&#x27;</span>,
+    <span class="hljs-attr">pins</span>: pins.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;artefacts&#x27;</span>),
+    <span class="hljs-attr">tension</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">closed</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">mapToPins</span>: <span class="hljs-literal">true</span>,
+
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;orange&#x27;</span>,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
+    <span class="hljs-attr">lineCap</span>: <span class="hljs-string">&#x27;round&#x27;</span>,
+    <span class="hljs-attr">lineJoin</span>: <span class="hljs-string">&#x27;round&#x27;</span>,
+
+    <span class="hljs-attr">shadowColor</span>: <span class="hljs-string">&#x27;black&#x27;</span>,
+    <span class="hljs-attr">shadowOffsetX</span>: <span class="hljs-number">4</span>,
+    <span class="hljs-attr">shadowOffsetY</span>: <span class="hljs-number">4</span>,
+    <span class="hljs-attr">shadowBlur</span>: <span class="hljs-number">4</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
+
+    <span class="hljs-attr">delta</span>: {
+        <span class="hljs-attr">tension</span>: <span class="hljs-number">0.005</span>,
+    },
+    <span class="hljs-attr">deltaConstraints</span>: {
+        <span class="hljs-attr">tension</span>: [-<span class="hljs-number">3.5</span>, <span class="hljs-number">3</span>, <span class="hljs-string">&#x27;reverse&#x27;</span>],
+    },
+    <span class="hljs-attr">checkDeltaConstraints</span>: <span class="hljs-literal">true</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -820,11 +963,11 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -834,33 +977,7 @@
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
     <span class="hljs-attr">target</span>: canvas,
-    <span class="hljs-attr">afterShow</span>: report,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
-              </div>
-              <p>We need to wait until the first Display cycle completes before setting up the delta constraint checking</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">afterCreated</span>: <span class="hljs-function">() =&gt;</span> {
-
-        myWheel.<span class="hljs-title function_">set</span>({
-
-            <span class="hljs-attr">deltaConstraints</span>: {
-                <span class="hljs-attr">startX</span>: [<span class="hljs-number">50</span>, <span class="hljs-number">550</span>, <span class="hljs-string">&#x27;reverse&#x27;</span>],
-                <span class="hljs-attr">startY</span>: [<span class="hljs-string">&#x27;10%&#x27;</span>, <span class="hljs-string">&#x27;90%&#x27;</span>, <span class="hljs-string">&#x27;reverse&#x27;</span>],
-                <span class="hljs-attr">scale</span>: [<span class="hljs-number">0.5</span>, <span class="hljs-number">2</span>, <span class="hljs-string">&#x27;reverse&#x27;</span>],
-            },
-            <span class="hljs-attr">checkDeltaConstraints</span>: <span class="hljs-literal">true</span>,
-        })
-    },
+    <span class="hljs-attr">afterShow</span>: report,
 });</pre></div></div>
             
         </li>
@@ -889,6 +1006,7 @@
                     <span class="hljs-attr">startX</span>: [<span class="hljs-number">50</span>, <span class="hljs-number">550</span>, <span class="hljs-string">&#x27;reverse&#x27;</span>],
                     <span class="hljs-attr">startY</span>: [<span class="hljs-string">&#x27;10%&#x27;</span>, <span class="hljs-string">&#x27;90%&#x27;</span>, <span class="hljs-string">&#x27;reverse&#x27;</span>],
                     <span class="hljs-attr">scale</span>: [<span class="hljs-number">0.5</span>, <span class="hljs-number">2</span>, <span class="hljs-string">&#x27;reverse&#x27;</span>],
+                    <span class="hljs-attr">globalAlpha</span>: [<span class="hljs-number">0.2</span>, <span class="hljs-number">1</span>, <span class="hljs-string">&#x27;reverse&#x27;</span>],
                 },
             });
             <span class="hljs-keyword">break</span>;
@@ -899,6 +1017,7 @@
                     <span class="hljs-attr">startX</span>: [<span class="hljs-number">50</span>, <span class="hljs-number">550</span>, <span class="hljs-string">&#x27;loop&#x27;</span>],
                     <span class="hljs-attr">startY</span>: [<span class="hljs-string">&#x27;10%&#x27;</span>, <span class="hljs-string">&#x27;90%&#x27;</span>, <span class="hljs-string">&#x27;loop&#x27;</span>],
                     <span class="hljs-attr">scale</span>: [<span class="hljs-number">0.5</span>, <span class="hljs-number">2</span>, <span class="hljs-string">&#x27;loop&#x27;</span>],
+                    <span class="hljs-attr">globalAlpha</span>: [<span class="hljs-number">0.2</span>, <span class="hljs-number">1</span>, <span class="hljs-string">&#x27;loop&#x27;</span>],
                 },
             });
             <span class="hljs-keyword">break</span>;

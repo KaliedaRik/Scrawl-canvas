@@ -115,6 +115,11 @@
                 </a>
               
                 
+                <a class="source" href="crescent.html">
+                  ./source/factory/crescent.js
+                </a>
+              
+                
                 <a class="source" href="element.html">
                   ./source/factory/element.js
                 </a>
@@ -500,6 +505,7 @@
 <ul>
 <li>Stripes</li>
 <li>Smoothed stripes</li>
+<li>Worley - both euclidean and manhattan versions</li>
 </ul>
 <p>These engines are supported by a number of settable (and thus animatable) attributes, including special functions for smoothing the engine output. Demo <a href="../../demo/filters-019.html">Filters-019</a> has been set up to allow for experimenting with these attributes</p>
 <p>The noise generated will be output to a dedicated offscreen &lt;canvas&gt; element, which is the asset used by Picture entitys, Pattern styles and filters. The output image can be set to three color schemas:</p>
@@ -507,6 +513,7 @@
 <li><strong>Monochrome</strong> (black - gray - white)</li>
 <li><strong>Gradient</strong> - mediated by a Scrawl-canvas Color object</li>
 <li><strong>Hue</strong> - where the engine output for each pixel is interpreted as the hue component of an HSL color</li>
+<li><strong>Rainbow</strong> - to map a more complex Scrawl-canvas gradient to the noise output (for instance, to create contour lines and shading)</li>
 </ul>
 <p>(<em><strong>NOTE:</strong></em> Perlin, Simplex and Value noise generator code based on code found in the <a href="https://github.com/lencinhaus/canvas-noise">canvas-noise GitHub repository</a> written by <a href="https://github.com/lencinhaus">lencinhaus</a>.</p>
 
@@ -570,9 +577,7 @@
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">makeName</span>(items.<span class="hljs-property">name</span>);
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">register</span>();
 
-    <span class="hljs-keyword">let</span> mycanvas = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;canvas&#x27;</span>);
-    mycanvas.<span class="hljs-property">id</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>;
-    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">installElement</span>(mycanvas);
+    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">installElement</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">perm</span> = [];
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">permMod8</span> = [];
@@ -686,7 +691,7 @@ P = <span class="hljs-title function_">patternMix</span>(P);</pre></div></div>
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <p><strong>noiseEngine</strong> - String - the currently supported noise engines String values are: <code>perlin</code>, <code>improved-perlin</code>, <code>simplex</code>, <code>value</code></p>
+              <p><strong>noiseEngine</strong> - String - the currently supported noise engines String values are: <code>perlin</code>, <code>improved-perlin</code>, <code>simplex</code>, <code>value</code>, <code>stripes</code>, <code>smoothed-stripes</code>, <code>worley-euclidean</code>, <code>worley-manhattan</code></p>
 
             </div>
             
@@ -781,14 +786,7 @@ P = <span class="hljs-title function_">patternMix</span>(P);</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">sumFunction</span>: <span class="hljs-string">&#x27;none&#x27;</span>,
     <span class="hljs-attr">sineFrequencyCoeff</span>: <span class="hljs-number">1</span>,
-    <span class="hljs-attr">sumAmplitude</span>: <span class="hljs-number">5</span>,
-
-
-};
-P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);
-
-<span class="hljs-keyword">delete</span> P.<span class="hljs-property">defs</span>.<span class="hljs-property">source</span>;
-<span class="hljs-keyword">delete</span> P.<span class="hljs-property">defs</span>.<span class="hljs-property">sourceLoaded</span>;</pre></div></div>
+    <span class="hljs-attr">sumAmplitude</span>: <span class="hljs-number">5</span>,</pre></div></div>
             
         </li>
         
@@ -798,6 +796,46 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
               
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <p>Worley functionality found in the <a href="https://github.com/jackunion/tooloud/blob/master/src/Worley.js">jackunion/tooloud GitHub repository</a>. </p>
+<ul>
+<li>The noise generated can be one of <strong>worley-euclidean</strong> or <strong>worley-manhattan</strong></li>
+<li>we can amend the noise via the <code>worleyOutput</code> and <code>worleyDepth</code> attributes</li>
+</ul>
+<p><strong>worleyOutput</strong> - String value, one from: ‘X’, ‘Y’, ‘Z’, ‘XminusY’, ‘XminusZ’, ‘YminusX’, ‘YminusZ’, ‘ZminusX’, ‘ZminusY’, ‘XaddY’, ‘XaddZ’, ‘YaddZ’, ‘XaddYminusZ’, ‘XaddZminusY’, ‘YaddZminusX’, ‘XmultiplyY’, ‘XmultiplyZ’, ‘YmultiplyZ’, ‘XmultiplyYaddZ’, ‘XmultiplyZaddY’, ‘YmultiplyZaddX’, ‘XmultiplyYminusZ’, ‘XmultiplyZminusY’, ‘YmultiplyZminusX’, ‘sum’, ‘average’</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">worleyOutput</span>: <span class="hljs-string">&#x27;X&#x27;</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
+              </div>
+              <p>worleyDepth - positive integer Number - Scrawl-canvas only uses the x and y dimensions to calculate noise; worley noise also comes with a z dimension which we can amend via this attribute</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">worleyDepth</span>: <span class="hljs-number">0</span>,
+};
+P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);
+
+<span class="hljs-keyword">delete</span> P.<span class="hljs-property">defs</span>.<span class="hljs-property">source</span>;
+<span class="hljs-keyword">delete</span> P.<span class="hljs-property">defs</span>.<span class="hljs-property">sourceLoaded</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 <p>This functionality is disabled for Cell objects</p>
@@ -815,11 +853,11 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-17">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 
@@ -830,11 +868,11 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-18">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 <p>No additional kill functionality required</p>
@@ -844,11 +882,11 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-19">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -861,11 +899,11 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-20">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p><strong>source</strong></p>
 
@@ -876,11 +914,11 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
         </li>
         
         
-        <li id="section-21">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p><strong>subscribers</strong> - we disable the ability to set the subscribers Array directly. Picture entitys and Pattern styles will manage their subscription to the asset using their subscribe() and unsubscribe() functions. Filters will check for updates every time they run</p>
 
@@ -989,11 +1027,11 @@ S.<span class="hljs-property">sineFrequencyCoeff</span> = <span class="hljs-keyw
         </li>
         
         
-        <li id="section-22">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p><code>modularAmplitude</code> - name changed to <code>sumAmplitude</code></p>
 
@@ -1039,16 +1077,37 @@ S.<span class="hljs-property">height</span> = <span class="hljs-keyword">functio
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyNoise</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">true</span>;
     }
+};
+
+S.<span class="hljs-property">worleyDepth</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-keyword">if</span> (item.<span class="hljs-property">toFixed</span>) {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">worleyDepth</span> = item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyNoise</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">true</span>;
+    }
+};
+
+P.<span class="hljs-property">worleyOutputStrings</span> = [<span class="hljs-string">&#x27;X&#x27;</span>, <span class="hljs-string">&#x27;Y&#x27;</span>, <span class="hljs-string">&#x27;Z&#x27;</span>, <span class="hljs-string">&#x27;XminusY&#x27;</span>, <span class="hljs-string">&#x27;XminusZ&#x27;</span>, <span class="hljs-string">&#x27;YminusX&#x27;</span>, <span class="hljs-string">&#x27;YminusZ&#x27;</span>, <span class="hljs-string">&#x27;ZminusX&#x27;</span>, <span class="hljs-string">&#x27;ZminusY&#x27;</span>, <span class="hljs-string">&#x27;XaddY&#x27;</span>, <span class="hljs-string">&#x27;XaddZ&#x27;</span>, <span class="hljs-string">&#x27;YaddZ&#x27;</span>, <span class="hljs-string">&#x27;XaddYminusZ&#x27;</span>, <span class="hljs-string">&#x27;XaddZminusY&#x27;</span>, <span class="hljs-string">&#x27;YaddZminusX&#x27;</span>, <span class="hljs-string">&#x27;XmultiplyY&#x27;</span>, <span class="hljs-string">&#x27;XmultiplyZ&#x27;</span>, <span class="hljs-string">&#x27;YmultiplyZ&#x27;</span>, <span class="hljs-string">&#x27;XmultiplyYaddZ&#x27;</span>, <span class="hljs-string">&#x27;XmultiplyZaddY&#x27;</span>, <span class="hljs-string">&#x27;YmultiplyZaddX&#x27;</span>, <span class="hljs-string">&#x27;XmultiplyYminusZ&#x27;</span>, <span class="hljs-string">&#x27;XmultiplyZminusY&#x27;</span>, <span class="hljs-string">&#x27;YmultiplyZminusX&#x27;</span>, <span class="hljs-string">&#x27;sum&#x27;</span>];
+S.<span class="hljs-property">worleyOutput</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">worleyOutputStrings</span>.<span class="hljs-title function_">indexOf</span>(item) &gt;= <span class="hljs-number">0</span>) {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">worleyOutput</span> = item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyNoise</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">true</span>;
+    }
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-23">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 <p><code>cleanOutput</code> - internal function called by the <code>notifySubscribers</code> function</p>
@@ -1067,11 +1126,11 @@ S.<span class="hljs-property">height</span> = <span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-24">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p><code>cleanNoise</code> - internal function called by the <code>cleanOutput</code> function</p>
 
@@ -1090,11 +1149,11 @@ S.<span class="hljs-property">height</span> = <span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-25">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p>Seed our pseudo-random number generator</p>
 
@@ -1105,11 +1164,11 @@ S.<span class="hljs-property">height</span> = <span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-26">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p>Generate the permutations table(s)</p>
 
@@ -1120,11 +1179,11 @@ S.<span class="hljs-property">height</span> = <span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-27">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p>Initialize the appropriate noise function</p>
 
@@ -1140,11 +1199,11 @@ S.<span class="hljs-property">height</span> = <span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-28">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p>Prepare the noiseValues 2d array</p>
 
@@ -1162,11 +1221,11 @@ S.<span class="hljs-property">height</span> = <span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-29">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p>Calculate a relative scale, and setup min/max variables</p>
 
@@ -1180,54 +1239,38 @@ S.<span class="hljs-property">height</span> = <span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-30">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
-              </div>
-              <p>This is the core of the calculation, performed for each cell in the noiseValues 2d array</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">for</span> (y = <span class="hljs-number">0</span>; y &lt; height; y++) {
-                <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt; width; x++) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-31">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
-              </div>
-              <p>We can modify the output by scaling it</p>
-<ul>
-<li>Note that modifying the canvas dimensions (width, height) can also have a scaling effect</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                    scaledX = x * relativeScale;
-                    scaledY = y * relativeScale;</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
-              <p>Amplitude and frequency will update once per octave calculation; totalNoise is the sum of all octave results</p>
+              <p>This is the core of the calculation, performed for each cell in the noiseValues 2d array</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                    totalNoise = <span class="hljs-number">0</span>;
-                    amplitude = <span class="hljs-number">1</span>; 
-                    frequency = <span class="hljs-number">1</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">let</span> name = noiseEngine.<span class="hljs-property">name</span>;
+            <span class="hljs-keyword">if</span> ([<span class="hljs-string">&#x27;stripes&#x27;</span>, <span class="hljs-string">&#x27;smoothed-stripes&#x27;</span>, <span class="hljs-string">&#x27;worley-euclidean&#x27;</span>, <span class="hljs-string">&#x27;worley-manhattan&#x27;</span>].<span class="hljs-title function_">indexOf</span>(name) &gt;= <span class="hljs-number">0</span>) {
+
+                <span class="hljs-keyword">for</span> (y = <span class="hljs-number">0</span>; y &lt; height; y++) {
+                    <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt; width; x++) {
+
+                        scaledX = x * relativeScale;
+                        scaledY = y * relativeScale;
+
+                        totalNoise = noiseEngine.<span class="hljs-property">getNoiseValue</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, scaledX, scaledY);
+
+                        noiseValues[y][x] = totalNoise;
+
+                        min = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">min</span>(min, totalNoise);
+                        max = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(max, totalNoise);
+                    }
+                }
+            }
+            <span class="hljs-keyword">else</span> {
+
+                <span class="hljs-keyword">for</span> (y = <span class="hljs-number">0</span>; y &lt; height; y++) {
+                    <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt; width; x++) {</pre></div></div>
             
         </li>
         
@@ -1238,14 +1281,15 @@ S.<span class="hljs-property">height</span> = <span class="hljs-keyword">functio
               <div class="sswrap ">
                 <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
-              <p>The calculation will be performed at least once</p>
+              <p>We can modify the output by scaling it</p>
 <ul>
-<li>For some reason the literature insists on calling these loops “octaves”</li>
+<li>Note that modifying the canvas dimensions (width, height) can also have a scaling effect</li>
 </ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">for</span> (o = <span class="hljs-number">0</span>; o &lt; octaves; o++) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                        scaledX = x * relativeScale;
+                        scaledY = y * relativeScale;</pre></div></div>
             
         </li>
         
@@ -1256,14 +1300,13 @@ S.<span class="hljs-property">height</span> = <span class="hljs-keyword">functio
               <div class="sswrap ">
                 <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
-              <p>Call the appropriate getNoiseValue function</p>
-<ul>
-<li>The result needs to be stored in a variable scoped locally to this loop iteration</li>
-</ul>
+              <p>Amplitude and frequency will update once per octave calculation; totalNoise is the sum of all octave results</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                        <span class="hljs-keyword">let</span> octaveNoise = noiseEngine.<span class="hljs-property">getNoiseValue</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, scaledX * frequency, scaledY * frequency);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                        totalNoise = <span class="hljs-number">0</span>;
+                        amplitude = <span class="hljs-number">1</span>; 
+                        frequency = <span class="hljs-number">1</span>;</pre></div></div>
             
         </li>
         
@@ -1274,11 +1317,14 @@ S.<span class="hljs-property">height</span> = <span class="hljs-keyword">functio
               <div class="sswrap ">
                 <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
-              <p>Update octave with a post-calculation octaveFunction, if required</p>
+              <p>The calculation will be performed at least once</p>
+<ul>
+<li>For some reason the literature insists on calling these loops “octaves”</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                        octaveNoise = <span class="hljs-title function_">octaveFunction</span>(octaveNoise, scaledX, scaledY, o + <span class="hljs-number">1</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                        <span class="hljs-keyword">for</span> (o = <span class="hljs-number">0</span>; o &lt; octaves; o++) {</pre></div></div>
             
         </li>
         
@@ -1289,12 +1335,14 @@ S.<span class="hljs-property">height</span> = <span class="hljs-keyword">functio
               <div class="sswrap ">
                 <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
-              <p>Modify result by the current amplitude, and add to the running total</p>
+              <p>Call the appropriate getNoiseValue function</p>
+<ul>
+<li>The result needs to be stored in a variable scoped locally to this loop iteration</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                        octaveNoise *= amplitude;
-                        totalNoise += octaveNoise;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                            <span class="hljs-keyword">let</span> octaveNoise = noiseEngine.<span class="hljs-property">getNoiseValue</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, scaledX * frequency, scaledY * frequency);</pre></div></div>
             
         </li>
         
@@ -1305,13 +1353,11 @@ S.<span class="hljs-property">height</span> = <span class="hljs-keyword">functio
               <div class="sswrap ">
                 <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
-              <p>Update the variables that change over multiple octave loops</p>
+              <p>Update octave with a post-calculation octaveFunction, if required</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                        frequency *= lacunarity;
-                        amplitude *= persistence;
-                    }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                            octaveNoise = <span class="hljs-title function_">octaveFunction</span>(octaveNoise, scaledX, scaledY, o + <span class="hljs-number">1</span>);</pre></div></div>
             
         </li>
         
@@ -1322,11 +1368,12 @@ S.<span class="hljs-property">height</span> = <span class="hljs-keyword">functio
               <div class="sswrap ">
                 <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
-              <p>Update the noise value in its array</p>
+              <p>Modify result by the current amplitude, and add to the running total</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                    noiseValues[y][x] = totalNoise;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                            octaveNoise *= amplitude;
+                            totalNoise += octaveNoise;</pre></div></div>
             
         </li>
         
@@ -1337,14 +1384,13 @@ S.<span class="hljs-property">height</span> = <span class="hljs-keyword">functio
               <div class="sswrap ">
                 <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
-              <p>… and check for max/min spread of the generated values</p>
+              <p>Update the variables that change over multiple octave loops</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                    min = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">min</span>(min, totalNoise);
-                    max = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(max, totalNoise);
-                }
-            }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>                            frequency *= lacunarity;
+                            amplitude *= persistence;
+                        }</pre></div></div>
             
         </li>
         
@@ -1354,6 +1400,40 @@ S.<span class="hljs-property">height</span> = <span class="hljs-keyword">functio
               
               <div class="sswrap ">
                 <a class="ss" href="#section-40">&#x00a7;</a>
+              </div>
+              <p>Update the noise value in its array</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                        noiseValues[y][x] = totalNoise;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-41">&#x00a7;</a>
+              </div>
+              <p>… and check for max/min spread of the generated values</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                        min = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">min</span>(min, totalNoise);
+                        max = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(max, totalNoise);
+                    }
+                }
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p>Calculate the span of numbers generated - we need to get all the results in the range 0 to 1</p>
 
@@ -1370,11 +1450,11 @@ S.<span class="hljs-property">height</span> = <span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-41">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p>Clamp the cell’s noise value to between 0 and 1, then update it with the post-calculation sumFunction, if required</p>
 
@@ -1388,11 +1468,11 @@ S.<span class="hljs-property">height</span> = <span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-42">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p>Update the cached noise values arrays</p>
 
@@ -1407,11 +1487,11 @@ S.<span class="hljs-property">height</span> = <span class="hljs-keyword">functio
         </li>
         
         
-        <li id="section-43">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p><code>checkOutputValuesExist</code> and <code>getOutputValue</code> are internal variables that must be defined by any asset that makes use of the <em>assetAdvancedFunctionality.js</em> mixin and its <code>paintCanvas</code> function</p>
 
@@ -1432,11 +1512,11 @@ P.<span class="hljs-property">getOutputValue</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-44">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <h4 id="noiseasset-generator-functionality">NoiseAsset generator functionality</h4>
 
@@ -1445,11 +1525,11 @@ P.<span class="hljs-property">getOutputValue</span> = <span class="hljs-keyword"
         </li>
         
         
-        <li id="section-45">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p>Convenience constants
 P.F = 0.5 * (Math.sqrt(3) - 1);
@@ -1465,11 +1545,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-46">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p><code>noiseEngines</code> - a {key:object} object. Each named object contains two functions:</p>
 <ul>
@@ -1484,17 +1564,19 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-47">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p>The classic Perlin noise generator</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;perlin&#x27;</span>: {
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;perlin&#x27;</span>,
 
         <span class="hljs-attr">init</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
@@ -1557,17 +1639,19 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-48">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p>An improved Perlin noise generator</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;improved-perlin&#x27;</span>: {
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;improved-perlin&#x27;</span>,
 
         <span class="hljs-attr">init</span>: λ<span class="hljs-literal">null</span>,
 
@@ -1615,17 +1699,19 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-49">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p>A successor to Perlin noise generation, by the person who invented it</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;simplex&#x27;</span>: {
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;simplex&#x27;</span>,
 
         <span class="hljs-attr">init</span>: λ<span class="hljs-literal">null</span>,
 
@@ -1677,17 +1763,19 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-50">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p>A simplified form of Perlin noise</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;value&#x27;</span>: {
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;value&#x27;</span>,
 
         <span class="hljs-attr">init</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
@@ -1729,17 +1817,19 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-51">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p>For generating repeated stripe gradients, set the sum function to <code>modular</code> and vary the canvas width/height attributes to set the stripe direction; stripe spacing can be varied using the modular amplitude value. Other sum function values can also produce interesting effects</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;stripes&#x27;</span>: {
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;stripes&#x27;</span>,
 
         <span class="hljs-attr">init</span>: λ<span class="hljs-literal">null</span>,
 
@@ -1752,11 +1842,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-52">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p>As for stripes, but can apply smoothing function to the output</p>
 <ul>
@@ -1766,6 +1856,8 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;smoothed-stripes&#x27;</span>: {
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;smoothed-stripes&#x27;</span>,
 
         <span class="hljs-attr">init</span>: λ<span class="hljs-literal">null</span>,
 
@@ -1778,17 +1870,83 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
 
             <span class="hljs-keyword">return</span> (sx / <span class="hljs-number">5</span>) + (sy / <span class="hljs-number">5</span>);
         }
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-55">&#x00a7;</a>
+              </div>
+              <p>Worley functionality found in the <a href="https://github.com/jackunion/tooloud/blob/master/src/Worley.js">jackunion/tooloud GitHub repository</a></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;worley-euclidean&#x27;</span>: {
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;worley-euclidean&#x27;</span>,
+
+        <span class="hljs-attr">init</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">worleySeed</span> = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">rndEngine</span>.<span class="hljs-title function_">random</span>() * <span class="hljs-number">1000000</span>);
+        },
+
+        <span class="hljs-attr">getNoiseValue</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) {
+
+            <span class="hljs-keyword">const</span> {width, height, worleyDepth, worleyDistanceFunctions, worleyOutputFunctions, worleyOutput} = <span class="hljs-variable language_">this</span>;
+
+            <span class="hljs-keyword">const</span> f = worleyDistanceFunctions[<span class="hljs-string">&#x27;euclidian-distance&#x27;</span>];
+            <span class="hljs-keyword">const</span> o = worleyOutputFunctions[worleyOutput];
+
+            <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">worleyNoise</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, {<span class="hljs-attr">x</span>:x, <span class="hljs-attr">y</span>:y, <span class="hljs-attr">z</span>:worleyDepth}, f, o);
+        }
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-56">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-56">&#x00a7;</a>
+              </div>
+              <p>For generating repeated stripe gradients, set the sum function to <code>modular</code> and vary the canvas width/height attributes to set the stripe direction; stripe spacing can be varied using the modular amplitude value. Other sum function values can also produce interesting effects</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;worley-manhattan&#x27;</span>: {
+
+        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;worley-manhattan&#x27;</span>,
+
+        <span class="hljs-attr">init</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">worleySeed</span> = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">rndEngine</span>.<span class="hljs-title function_">random</span>() * <span class="hljs-number">1000000</span>);
+        },
+
+        <span class="hljs-attr">getNoiseValue</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) {
+
+            <span class="hljs-keyword">const</span> {width, height, worleyDepth, worleyDistanceFunctions, worleyOutputFunctions, worleyOutput} = <span class="hljs-variable language_">this</span>;
+
+            <span class="hljs-keyword">const</span> f = worleyDistanceFunctions[<span class="hljs-string">&#x27;manhattan-distance&#x27;</span>];
+            <span class="hljs-keyword">const</span> o = worleyOutputFunctions[worleyOutput];
+
+            <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">worleyNoise</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, {<span class="hljs-attr">x</span>:x, <span class="hljs-attr">y</span>:y, <span class="hljs-attr">z</span>:worleyDepth}, f, o);
+        }
     },
 };</pre></div></div>
             
         </li>
         
         
-        <li id="section-53">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p><code>generatePermutationTable</code> - internal function called by the <code>cleanNoise</code> function</p>
 <ul>
@@ -1830,11 +1988,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-54">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p><code>octaveFunctions</code> - a {key:functions} object holding functions used to modify octave loop results</p>
 <ul>
@@ -1852,11 +2010,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-55">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p><code>sumFunctions</code> - a {key:functions} object holding functions used to modify noise values after their calculation has completed (post-processing)</p>
 <ul>
@@ -1872,11 +2030,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-56">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <p>These functions modify the final output using a sine frequency calculation based on the pixel position within the canvas</p>
 
@@ -1889,11 +2047,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-57">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p>This function creates repeating bands, the frequency of which depends on the sumAmplitude attribute</p>
 
@@ -1907,11 +2065,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-58">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p>This function adds random interference to the final output, the strength of which depends on the sumAmplitude attribute (lower values create a stronger effect)</p>
 
@@ -1932,11 +2090,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-59">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p><code>smoothingFunctions</code> - a {key:function} object containing various <em><strong>fade functions</strong></em> which can be used to smooth calculated coordinate values so that they will ease towards integral values.</p>
 <ul>
@@ -1952,11 +2110,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-60">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <p><strong>none</strong> - effectively linear - no smoothing gets performed</p>
 
@@ -1998,11 +2156,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-61">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <p><strong>cosine</strong> - a cosine-based interpolator</p>
 
@@ -2013,11 +2171,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-62">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <p><strong>hermite</strong> - a cubic Hermite interpolator</p>
 
@@ -2028,11 +2186,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-63">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <p><strong>quintic</strong> - the original ease function used by Perlin</p>
 
@@ -2044,11 +2202,253 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-64">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
+              </div>
+              <p>Worley functionality found in the <a href="https://github.com/jackunion/tooloud/blob/master/src/Worley.js">jackunion/tooloud GitHub repository</a></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">wXorshift</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">value</span>) {
+
+    <span class="hljs-keyword">let</span> x = value ^ (value &gt;&gt; <span class="hljs-number">12</span>);
+    x = x ^ (x &lt;&lt; <span class="hljs-number">25</span>);
+    x = x ^ (x &gt;&gt; <span class="hljs-number">27</span>);
+    <span class="hljs-keyword">return</span> x * <span class="hljs-number">2</span>;
+};
+
+P.<span class="hljs-property">wHash</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">i, j, k</span>) {
+
+    <span class="hljs-keyword">return</span> (((((<span class="hljs-number">2166136261</span> ^ i) * <span class="hljs-number">16777619</span>) ^ j) * <span class="hljs-number">16777619</span>) ^ k) * <span class="hljs-number">16777619</span> &amp; <span class="hljs-number">0xffffffff</span>;
+};
+
+P.<span class="hljs-property">worleyDistanceFunctions</span> = {
+
+    <span class="hljs-string">&#x27;euclidian-distance&#x27;</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">p1, p2</span>) {
+
+        <span class="hljs-keyword">const</span> d = <span class="hljs-keyword">function</span> (<span class="hljs-params">p1, p2</span>) {
+            <span class="hljs-keyword">return</span> [p1.<span class="hljs-property">x</span> - p2.<span class="hljs-property">x</span>, p1.<span class="hljs-property">y</span> - p2.<span class="hljs-property">y</span>, p1.<span class="hljs-property">z</span> - p2.<span class="hljs-property">z</span>];
+        };
+
+        <span class="hljs-keyword">return</span> <span class="hljs-title function_">d</span>(p1, p2).<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">sum, x</span>) =&gt;</span> sum + (x * x), <span class="hljs-number">0</span>);
+    },
+
+    <span class="hljs-string">&#x27;manhattan-distance&#x27;</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">p1, p2</span>) {
+
+        <span class="hljs-keyword">const</span> d = <span class="hljs-keyword">function</span> (<span class="hljs-params">p1, p2</span>) {
+            <span class="hljs-keyword">return</span> [p1.<span class="hljs-property">x</span> - p2.<span class="hljs-property">x</span>, p1.<span class="hljs-property">y</span> - p2.<span class="hljs-property">y</span>, p1.<span class="hljs-property">z</span> - p2.<span class="hljs-property">z</span>];
+        };
+
+        <span class="hljs-keyword">return</span> <span class="hljs-title function_">d</span>(p1, p2).<span class="hljs-title function_">reduce</span>(<span class="hljs-function">(<span class="hljs-params">sum, x</span>) =&gt;</span> sum + <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(x), <span class="hljs-number">0</span>);
+    },
+};
+
+P.<span class="hljs-property">wProbLookup</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">value</span>) {
+
+    value = value &amp; <span class="hljs-number">0xffffffff</span>;
+    <span class="hljs-keyword">if</span> (value &lt; <span class="hljs-number">393325350</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">if</span> (value &lt; <span class="hljs-number">1022645910</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">2</span>;
+    <span class="hljs-keyword">if</span> (value &lt; <span class="hljs-number">1861739990</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">3</span>;
+    <span class="hljs-keyword">if</span> (value &lt; <span class="hljs-number">2700834071</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">4</span>;
+    <span class="hljs-keyword">if</span> (value &lt; <span class="hljs-number">3372109335</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">5</span>;
+    <span class="hljs-keyword">if</span> (value &lt; <span class="hljs-number">3819626178</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">6</span>;
+    <span class="hljs-keyword">if</span> (value &lt; <span class="hljs-number">4075350088</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">7</span>;
+    <span class="hljs-keyword">if</span> (value &lt; <span class="hljs-number">4203212043</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">8</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">9</span>;
+};
+
+P.<span class="hljs-property">wInsert</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">arr, value</span>) {
+
+    <span class="hljs-keyword">let</span> temp;
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = arr.<span class="hljs-property">length</span> - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) {
+
+        <span class="hljs-keyword">if</span> (value &gt; arr[i]) <span class="hljs-keyword">break</span>;
+
+        temp = arr[i];
+        arr[i] = value;
+        <span class="hljs-keyword">if</span> (i + <span class="hljs-number">1</span> &lt; arr.<span class="hljs-property">length</span>) arr[i + <span class="hljs-number">1</span>] = temp;
+    }
+};
+
+P.<span class="hljs-property">worleyOutputFunctions</span> = {
+
+    <span class="hljs-attr">X</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">arr</span>) {
+        <span class="hljs-keyword">return</span> arr[<span class="hljs-number">0</span>];
+    },
+
+    <span class="hljs-attr">Y</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">arr</span>) {
+        <span class="hljs-keyword">return</span> arr[<span class="hljs-number">1</span>];
+    },
+
+    <span class="hljs-attr">Z</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">arr</span>) {
+        <span class="hljs-keyword">return</span> arr[<span class="hljs-number">2</span>];
+    },
+
+    <span class="hljs-title class_">Xminus</span><span class="hljs-attr">Y</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">arr</span>) {
+        <span class="hljs-keyword">return</span> arr[<span class="hljs-number">0</span>] - arr[<span class="hljs-number">1</span>];
+    },
+
+    <span class="hljs-title class_">Xminus</span><span class="hljs-attr">Z</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">arr</span>) {
+        <span class="hljs-keyword">return</span> arr[<span class="hljs-number">0</span>] - arr[<span class="hljs-number">2</span>];
+    },
+
+    <span class="hljs-title class_">Yminus</span><span class="hljs-attr">X</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">arr</span>) {
+        <span class="hljs-keyword">return</span> arr[<span class="hljs-number">1</span>] - arr[<span class="hljs-number">0</span>];
+    },
+
+    <span class="hljs-title class_">Yminus</span><span class="hljs-attr">Z</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">arr</span>) {
+        <span class="hljs-keyword">return</span> arr[<span class="hljs-number">1</span>] - arr[<span class="hljs-number">2</span>];
+    },
+
+    <span class="hljs-title class_">Zminus</span><span class="hljs-attr">X</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">arr</span>) {
+        <span class="hljs-keyword">return</span> arr[<span class="hljs-number">2</span>] - arr[<span class="hljs-number">0</span>];
+    },
+
+    <span class="hljs-title class_">Zminus</span><span class="hljs-attr">Y</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">arr</span>) {
+        <span class="hljs-keyword">return</span> arr[<span class="hljs-number">2</span>] - arr[<span class="hljs-number">1</span>];
+    },
+
+    <span class="hljs-title class_">Xadd</span><span class="hljs-attr">Y</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">arr</span>) {
+        <span class="hljs-keyword">return</span> arr[<span class="hljs-number">0</span>] + arr[<span class="hljs-number">1</span>];
+    },
+
+    <span class="hljs-title class_">Xadd</span><span class="hljs-attr">Z</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">arr</span>) {
+        <span class="hljs-keyword">return</span> arr[<span class="hljs-number">0</span>] + arr[<span class="hljs-number">2</span>];
+    },
+
+    <span class="hljs-title class_">Yadd</span><span class="hljs-attr">Z</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">arr</span>) {
+        <span class="hljs-keyword">return</span> arr[<span class="hljs-number">1</span>] + arr[<span class="hljs-number">2</span>];
+    },
+
+    <span class="hljs-title class_">XaddYminus</span><span class="hljs-attr">Z</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">arr</span>) {
+        <span class="hljs-keyword">return</span> arr[<span class="hljs-number">0</span>] + arr[<span class="hljs-number">1</span>] - arr[<span class="hljs-number">2</span>];
+    },
+
+    <span class="hljs-title class_">XaddZminus</span><span class="hljs-attr">Y</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">arr</span>) {
+        <span class="hljs-keyword">return</span> arr[<span class="hljs-number">0</span>] + arr[<span class="hljs-number">2</span>] - arr[<span class="hljs-number">1</span>];
+    },
+
+    <span class="hljs-title class_">YaddZminus</span><span class="hljs-attr">X</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">arr</span>) {
+        <span class="hljs-keyword">return</span> arr[<span class="hljs-number">1</span>] + arr[<span class="hljs-number">2</span>] - arr[<span class="hljs-number">0</span>];
+    },
+
+    <span class="hljs-title class_">Xmultiply</span><span class="hljs-attr">Y</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">arr</span>) {
+        <span class="hljs-keyword">return</span> arr[<span class="hljs-number">0</span>] * arr[<span class="hljs-number">1</span>];
+    },
+
+    <span class="hljs-title class_">Xmultiply</span><span class="hljs-attr">Z</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">arr</span>) {
+        <span class="hljs-keyword">return</span> arr[<span class="hljs-number">0</span>] * arr[<span class="hljs-number">2</span>];
+    },
+
+    <span class="hljs-title class_">Ymultiply</span><span class="hljs-attr">Z</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">arr</span>) {
+        <span class="hljs-keyword">return</span> arr[<span class="hljs-number">1</span>] * arr[<span class="hljs-number">2</span>];
+    },
+
+    <span class="hljs-title class_">XmultiplyYadd</span><span class="hljs-attr">Z</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">arr</span>) {
+        <span class="hljs-keyword">return</span> (arr[<span class="hljs-number">0</span>] * arr[<span class="hljs-number">1</span>]) + arr[<span class="hljs-number">2</span>];
+    },
+
+    <span class="hljs-title class_">XmultiplyZadd</span><span class="hljs-attr">Y</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">arr</span>) {
+        <span class="hljs-keyword">return</span> (arr[<span class="hljs-number">0</span>] * arr[<span class="hljs-number">2</span>]) + arr[<span class="hljs-number">1</span>];
+    },
+
+    <span class="hljs-title class_">YmultiplyZadd</span><span class="hljs-attr">X</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">arr</span>) {
+        <span class="hljs-keyword">return</span> (arr[<span class="hljs-number">1</span>] * arr[<span class="hljs-number">2</span>]) + arr[<span class="hljs-number">0</span>];
+    },
+
+    <span class="hljs-title class_">XmultiplyYminus</span><span class="hljs-attr">Z</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">arr</span>) {
+        <span class="hljs-keyword">return</span> (arr[<span class="hljs-number">0</span>] * arr[<span class="hljs-number">1</span>]) - arr[<span class="hljs-number">2</span>];
+    },
+
+    <span class="hljs-title class_">XmultiplyZminus</span><span class="hljs-attr">Y</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">arr</span>) {
+        <span class="hljs-keyword">return</span> (arr[<span class="hljs-number">0</span>] * arr[<span class="hljs-number">2</span>]) - arr[<span class="hljs-number">1</span>];
+    },
+
+    <span class="hljs-title class_">YmultiplyZminus</span><span class="hljs-attr">X</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">arr</span>) {
+        <span class="hljs-keyword">return</span> (arr[<span class="hljs-number">1</span>] * arr[<span class="hljs-number">2</span>]) - arr[<span class="hljs-number">0</span>];
+    },
+
+    <span class="hljs-attr">sum</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">arr</span>) {
+        <span class="hljs-keyword">return</span> arr[<span class="hljs-number">0</span>] + arr[<span class="hljs-number">1</span>] + arr[<span class="hljs-number">2</span>];
+    },
+}
+
+P.<span class="hljs-property">worleyNoise</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">input, distanceFunc, outputFunc</span>) {
+
+    <span class="hljs-keyword">let</span> lastRandom,
+        numberFeaturePoints,
+        randomDiff = { <span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">z</span>: <span class="hljs-number">0</span> },
+        featurePoint = { <span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">z</span>: <span class="hljs-number">0</span> };
+
+    <span class="hljs-keyword">let</span> cubeX, cubeY, cubeZ;
+
+    <span class="hljs-keyword">let</span> distanceArray = [<span class="hljs-number">9999999</span>, <span class="hljs-number">9999999</span>, <span class="hljs-number">9999999</span>];
+
+    <span class="hljs-keyword">let</span> {<span class="hljs-attr">x</span>:inputX, <span class="hljs-attr">y</span>:inputY, <span class="hljs-attr">z</span>:inputZ} = input;
+    inputX = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(inputX);
+    inputY = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(inputY);
+    inputZ = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(inputZ);
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = -<span class="hljs-number">1</span>; i &lt; <span class="hljs-number">2</span>; ++i) {
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j = -<span class="hljs-number">1</span>; j &lt; <span class="hljs-number">2</span>; ++j) {
+
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> k = -<span class="hljs-number">1</span>; k &lt; <span class="hljs-number">2</span>; ++k) {
+
+                cubeX = inputX + i;
+                cubeY = inputY + j;
+                cubeZ = inputZ + k;
+
+                lastRandom = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">wXorshift</span>(
+                    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">wHash</span>(
+                        (cubeX + <span class="hljs-variable language_">this</span>.<span class="hljs-property">worleySeed</span>) &amp; <span class="hljs-number">0xffffffff</span>,
+                        (cubeY) &amp; <span class="hljs-number">0xffffffff</span>,
+                        (cubeZ) &amp; <span class="hljs-number">0xffffffff</span>
+                    )
+                );
+
+                numberFeaturePoints = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">wProbLookup</span>(lastRandom);
+
+                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> l = <span class="hljs-number">0</span>; l &lt; numberFeaturePoints; ++l) {
+
+                    lastRandom = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">wXorshift</span>(lastRandom);
+                    randomDiff.<span class="hljs-property">X</span> = lastRandom / <span class="hljs-number">0x100000000</span>;
+
+                    lastRandom = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">wXorshift</span>(lastRandom);
+                    randomDiff.<span class="hljs-property">Y</span> = lastRandom / <span class="hljs-number">0x100000000</span>;
+
+                    lastRandom = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">wXorshift</span>(lastRandom);
+                    randomDiff.<span class="hljs-property">Z</span> = lastRandom / <span class="hljs-number">0x100000000</span>;
+
+                    featurePoint = {
+                        <span class="hljs-attr">x</span>: randomDiff.<span class="hljs-property">X</span> + cubeX,
+                        <span class="hljs-attr">y</span>: randomDiff.<span class="hljs-property">Y</span> + cubeY,
+                        <span class="hljs-attr">z</span>: randomDiff.<span class="hljs-property">Z</span> + cubeZ
+                    };
+
+                    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">wInsert</span>(distanceArray, <span class="hljs-title function_">distanceFunc</span>(input, featurePoint));
+                }
+            }
+        }
+    }
+    <span class="hljs-keyword">const</span> preFinal = distanceArray.<span class="hljs-title function_">map</span>(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> x &lt; <span class="hljs-number">0</span> ? <span class="hljs-number">0</span> : x &gt; <span class="hljs-number">1</span> ? <span class="hljs-number">1</span> : x );
+    <span class="hljs-keyword">const</span> final = <span class="hljs-title function_">outputFunc</span>(preFinal);
+
+    <span class="hljs-keyword">return</span> final;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-69">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.<span class="hljs-title function_">makeNoiseAsset</span>({
@@ -2072,11 +2472,11 @@ P.<span class="hljs-property">perlinGrad</span> = [[<span class="hljs-number">1<
         </li>
         
         
-        <li id="section-65">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <p>Deprecated - old name</p>
 
@@ -2089,11 +2489,11 @@ constructors.<span class="hljs-property">NoiseAsset</span> = <span class="hljs-t
         </li>
         
         
-        <li id="section-66">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

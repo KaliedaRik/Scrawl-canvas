@@ -115,6 +115,11 @@
                 </a>
               
                 
+                <a class="source" href="crescent.html">
+                  ./source/factory/crescent.js
+                </a>
+              
+                
                 <a class="source" href="element.html">
                   ./source/factory/element.js
                 </a>
@@ -486,7 +491,9 @@
             <div class="content"><div class='highlight'><pre>
 
 <span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
-<span class="hljs-keyword">import</span> {requestCell, releaseCell} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./cell.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> {requestCell, releaseCell} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./cell.js&#x27;</span>;
+
+<span class="hljs-keyword">import</span> { seededRandomNumberGenerator } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -2452,275 +2459,6 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
               <div class="sswrap ">
                 <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
-              <p><strong>gaussian-blur</strong> - from this GitHub repository: <a href="https://github.com/nodeca/glur/blob/master/index.js">https://github.com/nodeca/glur/blob/master/index.js</a> (code accessed 1 June 2021)</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;gaussian-blur&#x27;</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">requirements</span>) {
-
-        <span class="hljs-keyword">let</span> a0, a1, a2, a3, b1, b2, left_corner, right_corner;
-
-        <span class="hljs-keyword">const</span> gaussCoef = <span class="hljs-keyword">function</span> (<span class="hljs-params">sigma</span>) {
-
-            <span class="hljs-keyword">if</span> (sigma &lt; <span class="hljs-number">0.5</span>) sigma = <span class="hljs-number">0.5</span>;
-
-            <span class="hljs-keyword">let</span> a = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">exp</span>(<span class="hljs-number">0.726</span> * <span class="hljs-number">0.726</span>) / sigma,
-                g1 = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">exp</span>(-a),
-                g2 = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">exp</span>(-<span class="hljs-number">2</span> * a),
-                k = (<span class="hljs-number">1</span> - g1) * (<span class="hljs-number">1</span> - g1) / (<span class="hljs-number">1</span> + <span class="hljs-number">2</span> * a * g1 - g2);
-
-            a0 = k;
-            a1 = k * (a - <span class="hljs-number">1</span>) * g1;
-            a2 = k * (a + <span class="hljs-number">1</span>) * g1;
-            a3 = -k * g2;
-            b1 = <span class="hljs-number">2</span> * g1;
-            b2 = -g2;
-            left_corner = (a0 + a1) / (<span class="hljs-number">1</span> - b1 - b2);
-            right_corner = (a2 + a3) / (<span class="hljs-number">1</span> - b1 - b2);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-31">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
-              </div>
-              <p>Attempt to force type to FP32.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Float</span>32<span class="hljs-built_in">Array</span>([ a0, a1, a2, a3, b1, b2, left_corner, right_corner ]);
-        }
-
-        <span class="hljs-keyword">const</span> convolveRGBA = <span class="hljs-keyword">function</span> (<span class="hljs-params">src, out, line, coeff, width, height</span>) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-32">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
-              </div>
-              <p>takes src image and writes the blurred and transposed result into out</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>
-            <span class="hljs-keyword">let</span> rgba;
-            <span class="hljs-keyword">let</span> prev_src_r, prev_src_g, prev_src_b, prev_src_a;
-            <span class="hljs-keyword">let</span> curr_src_r, curr_src_g, curr_src_b, curr_src_a;
-            <span class="hljs-keyword">let</span> curr_out_r, curr_out_g, curr_out_b, curr_out_a;
-            <span class="hljs-keyword">let</span> prev_out_r, prev_out_g, prev_out_b, prev_out_a;
-            <span class="hljs-keyword">let</span> prev_prev_out_r, prev_prev_out_g, prev_prev_out_b, prev_prev_out_a;
-
-            <span class="hljs-keyword">let</span> src_index, out_index, line_index;
-            <span class="hljs-keyword">let</span> i, j;
-            <span class="hljs-keyword">let</span> coeff_a0, coeff_a1, coeff_b1, coeff_b2;
-
-            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; height; i++) {
-
-                src_index = i * width;
-                out_index = i;
-                line_index = <span class="hljs-number">0</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-33">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
-              </div>
-              <p>left to right</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                rgba = src[src_index];
-
-                prev_src_r = rgba &amp; <span class="hljs-number">0xff</span>;
-                prev_src_g = (rgba &gt;&gt; <span class="hljs-number">8</span>) &amp; <span class="hljs-number">0xff</span>;
-                prev_src_b = (rgba &gt;&gt; <span class="hljs-number">16</span>) &amp; <span class="hljs-number">0xff</span>;
-                prev_src_a = (rgba &gt;&gt; <span class="hljs-number">24</span>) &amp; <span class="hljs-number">0xff</span>;
-
-                prev_prev_out_r = prev_src_r * coeff[<span class="hljs-number">6</span>];
-                prev_prev_out_g = prev_src_g * coeff[<span class="hljs-number">6</span>];
-                prev_prev_out_b = prev_src_b * coeff[<span class="hljs-number">6</span>];
-                prev_prev_out_a = prev_src_a * coeff[<span class="hljs-number">6</span>];
-
-                prev_out_r = prev_prev_out_r;
-                prev_out_g = prev_prev_out_g;
-                prev_out_b = prev_prev_out_b;
-                prev_out_a = prev_prev_out_a;
-
-                coeff_a0 = coeff[<span class="hljs-number">0</span>];
-                coeff_a1 = coeff[<span class="hljs-number">1</span>];
-                coeff_b1 = coeff[<span class="hljs-number">4</span>];
-                coeff_b2 = coeff[<span class="hljs-number">5</span>];
-
-                <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; width; j++) {
-
-                    rgba = src[src_index];
-                    curr_src_r = rgba &amp; <span class="hljs-number">0xff</span>;
-                    curr_src_g = (rgba &gt;&gt; <span class="hljs-number">8</span>) &amp; <span class="hljs-number">0xff</span>;
-                    curr_src_b = (rgba &gt;&gt; <span class="hljs-number">16</span>) &amp; <span class="hljs-number">0xff</span>;
-                    curr_src_a = (rgba &gt;&gt; <span class="hljs-number">24</span>) &amp; <span class="hljs-number">0xff</span>;
-
-                    curr_out_r = curr_src_r * coeff_a0 + prev_src_r * coeff_a1 + prev_out_r * coeff_b1 + prev_prev_out_r * coeff_b2;
-                    curr_out_g = curr_src_g * coeff_a0 + prev_src_g * coeff_a1 + prev_out_g * coeff_b1 + prev_prev_out_g * coeff_b2;
-                    curr_out_b = curr_src_b * coeff_a0 + prev_src_b * coeff_a1 + prev_out_b * coeff_b1 + prev_prev_out_b * coeff_b2;
-                    curr_out_a = curr_src_a * coeff_a0 + prev_src_a * coeff_a1 + prev_out_a * coeff_b1 + prev_prev_out_a * coeff_b2;
-
-                    prev_prev_out_r = prev_out_r;
-                    prev_prev_out_g = prev_out_g;
-                    prev_prev_out_b = prev_out_b;
-                    prev_prev_out_a = prev_out_a;
-
-                    prev_out_r = curr_out_r;
-                    prev_out_g = curr_out_g;
-                    prev_out_b = curr_out_b;
-                    prev_out_a = curr_out_a;
-
-                    prev_src_r = curr_src_r;
-                    prev_src_g = curr_src_g;
-                    prev_src_b = curr_src_b;
-                    prev_src_a = curr_src_a;
-
-                    line[line_index] = prev_out_r;
-                    line[line_index + <span class="hljs-number">1</span>] = prev_out_g;
-                    line[line_index + <span class="hljs-number">2</span>] = prev_out_b;
-                    line[line_index + <span class="hljs-number">3</span>] = prev_out_a;
-                    line_index += <span class="hljs-number">4</span>;
-                    src_index++;
-                }
-
-                src_index--;
-                line_index -= <span class="hljs-number">4</span>;
-                out_index += height * (width - <span class="hljs-number">1</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-34">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
-              </div>
-              <p>right to left</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                rgba = src[src_index];
-
-                prev_src_r = rgba &amp; <span class="hljs-number">0xff</span>;
-                prev_src_g = (rgba &gt;&gt; <span class="hljs-number">8</span>) &amp; <span class="hljs-number">0xff</span>;
-                prev_src_b = (rgba &gt;&gt; <span class="hljs-number">16</span>) &amp; <span class="hljs-number">0xff</span>;
-                prev_src_a = (rgba &gt;&gt; <span class="hljs-number">24</span>) &amp; <span class="hljs-number">0xff</span>;
-
-                prev_prev_out_r = prev_src_r * coeff[<span class="hljs-number">7</span>];
-                prev_prev_out_g = prev_src_g * coeff[<span class="hljs-number">7</span>];
-                prev_prev_out_b = prev_src_b * coeff[<span class="hljs-number">7</span>];
-                prev_prev_out_a = prev_src_a * coeff[<span class="hljs-number">7</span>];
-
-                prev_out_r = prev_prev_out_r;
-                prev_out_g = prev_prev_out_g;
-                prev_out_b = prev_prev_out_b;
-                prev_out_a = prev_prev_out_a;
-
-                curr_src_r = prev_src_r;
-                curr_src_g = prev_src_g;
-                curr_src_b = prev_src_b;
-                curr_src_a = prev_src_a;
-
-                coeff_a0 = coeff[<span class="hljs-number">2</span>];
-                coeff_a1 = coeff[<span class="hljs-number">3</span>];
-
-                <span class="hljs-keyword">for</span> (j = width - <span class="hljs-number">1</span>; j &gt;= <span class="hljs-number">0</span>; j--) {
-
-                    curr_out_r = curr_src_r * coeff_a0 + prev_src_r * coeff_a1 + prev_out_r * coeff_b1 + prev_prev_out_r * coeff_b2;
-                    curr_out_g = curr_src_g * coeff_a0 + prev_src_g * coeff_a1 + prev_out_g * coeff_b1 + prev_prev_out_g * coeff_b2;
-                    curr_out_b = curr_src_b * coeff_a0 + prev_src_b * coeff_a1 + prev_out_b * coeff_b1 + prev_prev_out_b * coeff_b2;
-                    curr_out_a = curr_src_a * coeff_a0 + prev_src_a * coeff_a1 + prev_out_a * coeff_b1 + prev_prev_out_a * coeff_b2;
-
-                    prev_prev_out_r = prev_out_r;
-                    prev_prev_out_g = prev_out_g;
-                    prev_prev_out_b = prev_out_b;
-                    prev_prev_out_a = prev_out_a;
-
-                    prev_out_r = curr_out_r;
-                    prev_out_g = curr_out_g;
-                    prev_out_b = curr_out_b;
-                    prev_out_a = curr_out_a;
-
-                    prev_src_r = curr_src_r;
-                    prev_src_g = curr_src_g;
-                    prev_src_b = curr_src_b;
-                    prev_src_a = curr_src_a;
-
-                    rgba = src[src_index];
-                    curr_src_r = rgba &amp; <span class="hljs-number">0xff</span>;
-                    curr_src_g = (rgba &gt;&gt; <span class="hljs-number">8</span>) &amp; <span class="hljs-number">0xff</span>;
-                    curr_src_b = (rgba &gt;&gt; <span class="hljs-number">16</span>) &amp; <span class="hljs-number">0xff</span>;
-                    curr_src_a = (rgba &gt;&gt; <span class="hljs-number">24</span>) &amp; <span class="hljs-number">0xff</span>;
-
-                    rgba = ((line[line_index] + prev_out_r) &lt;&lt; <span class="hljs-number">0</span>) +
-                    ((line[line_index + <span class="hljs-number">1</span>] + prev_out_g) &lt;&lt; <span class="hljs-number">8</span>) +
-                    ((line[line_index + <span class="hljs-number">2</span>] + prev_out_b) &lt;&lt; <span class="hljs-number">16</span>) +
-                    ((line[line_index + <span class="hljs-number">3</span>] + prev_out_a) &lt;&lt; <span class="hljs-number">24</span>);
-
-                    out[out_index] = rgba;
-
-                    src_index--;
-                    line_index -= <span class="hljs-number">4</span>;
-                    out_index -= height;
-                }
-            }
-        }
-
-        <span class="hljs-keyword">let</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
-
-        <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
-            oData = output.<span class="hljs-property">data</span>;
-
-        <span class="hljs-keyword">let</span> {width, height} = input;
-
-        <span class="hljs-keyword">let</span> {opacity, radius, lineOut} = requirements;
-
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == radius) radius = <span class="hljs-number">1</span>;
-
-        <span class="hljs-keyword">const</span> hold = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint</span>8ClampedArray(iData);
-
-        <span class="hljs-keyword">const</span> src32 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint</span>32<span class="hljs-built_in">Array</span>(hold.<span class="hljs-property">buffer</span>);
-
-        <span class="hljs-keyword">const</span> out = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint</span>32<span class="hljs-built_in">Array</span>(src32.<span class="hljs-property">length</span>),
-            tmp_line = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Float</span>32<span class="hljs-built_in">Array</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(width, height) * <span class="hljs-number">4</span>);
-
-        <span class="hljs-keyword">const</span> coeff = <span class="hljs-title function_">gaussCoef</span>(radius);
-
-        <span class="hljs-title function_">convolveRGBA</span>(src32, out, tmp_line, coeff, width, height, radius);
-        <span class="hljs-title function_">convolveRGBA</span>(out, src32, tmp_line, coeff, height, width, radius);
-
-        oData.<span class="hljs-title function_">set</span>(hold);
-
-        <span class="hljs-keyword">if</span> (lineOut) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(output, input, <span class="hljs-number">1</span> - opacity);
-        <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">cache</span>.<span class="hljs-property">work</span>, output, opacity);
-    },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-35">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
-              </div>
               <p><strong>channels-to-alpha</strong> - Calculates an average value from each pixel’s included channels and applies that value to the alpha channel.</p>
 
             </div>
@@ -2781,11 +2519,11 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
         </li>
         
         
-        <li id="section-36">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p><strong>chroma</strong> - Using an array of ‘range’ arrays, determine whether a pixel’s values lie entirely within a range’s values and, if true, sets that pixel’s alpha channel value to zero. Each ‘range’ array comprises six Numbers representing [minimum-red, minimum-green, minimum-blue, maximum-red, maximum-green, maximum-blue] values.</p>
 
@@ -2841,11 +2579,11 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
         </li>
         
         
-        <li id="section-37">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p><strong>clamp-channels</strong> - Clamp each color channel to a range set by lowColor and highColor values</p>
 
@@ -2912,11 +2650,11 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
         </li>
         
         
-        <li id="section-38">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p><strong>colors-to-alpha</strong> - Determine the alpha channel value for each pixel depending on the closeness to that pixel’s color channel values to a reference color supplied in the “red”, “green” and “blue” arguments. The sensitivity of the effect can be manipulated using the “transparentAt” and “opaqueAt” values, both of which lie in the range 0-1.</p>
 
@@ -2978,11 +2716,11 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
         </li>
         
         
-        <li id="section-39">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p><strong>compose</strong> - Using two source images (from the “lineIn” and “lineMix” arguments), combine their color information using alpha compositing rules (as defined by Porter/Duff). The compositing method is determined by the String value supplied in the “compose” argument; permitted values are: ‘destination-only’, ‘destination-over’, ‘destination-in’, ‘destination-out’, ‘destination-atop’, ‘source-only’, ‘source-over’ (default), ‘source-in’, ‘source-out’, ‘source-atop’, ‘clear’, ‘xor’, or ‘lighter’. Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the “offsetX” and “offsetY” arguments.</p>
 
@@ -3325,11 +3063,11 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
         </li>
         
         
-        <li id="section-40">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p><strong>corrode</strong> - Performs a special form of matrix operation on each pixel’s color and alpha channels, calculating the new value using neighbouring pixel values. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the “width” and “height” arguments, while setting the home pixel’s position within the matrix can be set using the “offsetX” and “offsetY” arguments. The operation will set the pixel’s channel value to match either the lowest, highest, mean or median values as dictated by its neighbours - this value is set in the “level” attribute. Channels can be selected by setting the “includeRed”, “includeGreen”, “includeBlue” (all false by default) and “includeAlpha” (default: true) flags.</p>
 
@@ -3348,11 +3086,11 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
         </li>
         
         
-        <li id="section-41">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p>need to remove the pixel’s own value?</p>
 
@@ -3430,11 +3168,11 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
         </li>
         
         
-        <li id="section-42">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p><strong>displace</strong> - Shift pixels around the image, based on the values supplied in a displacement image</p>
 
@@ -3545,11 +3283,11 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
         </li>
         
         
-        <li id="section-43">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p><strong>emboss</strong> - A 3x3 matrix transform; the matrix weights are calculated internally from the values of two arguments: “strength”, and “angle” - which is a value measured in degrees, with 0 degrees pointing to the right of the origin (along the positive x axis). Post-processing options include removing unchanged pixels, or setting then to mid-gray. The convenience method includes additional arguments which will add a choice of grayscale, then channel clamping, then blurring actions before passing the results to this emboss action</p>
 
@@ -3701,11 +3439,11 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
         </li>
         
         
-        <li id="section-44">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p><strong>flood</strong> - Set all pixels to the channel values supplied in the “red”, “green”, “blue” and “alpha” arguments</p>
 
@@ -3742,6 +3480,275 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
             c++;
             oData[c] = alpha;
         }
+
+        <span class="hljs-keyword">if</span> (lineOut) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(output, input, <span class="hljs-number">1</span> - opacity);
+        <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">cache</span>.<span class="hljs-property">work</span>, output, opacity);
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-40">&#x00a7;</a>
+              </div>
+              <p><strong>gaussian-blur</strong> - from this GitHub repository: <a href="https://github.com/nodeca/glur/blob/master/index.js">https://github.com/nodeca/glur/blob/master/index.js</a> (code accessed 1 June 2021)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;gaussian-blur&#x27;</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">requirements</span>) {
+
+        <span class="hljs-keyword">let</span> a0, a1, a2, a3, b1, b2, left_corner, right_corner;
+
+        <span class="hljs-keyword">const</span> gaussCoef = <span class="hljs-keyword">function</span> (<span class="hljs-params">sigma</span>) {
+
+            <span class="hljs-keyword">if</span> (sigma &lt; <span class="hljs-number">0.5</span>) sigma = <span class="hljs-number">0.5</span>;
+
+            <span class="hljs-keyword">let</span> a = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">exp</span>(<span class="hljs-number">0.726</span> * <span class="hljs-number">0.726</span>) / sigma,
+                g1 = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">exp</span>(-a),
+                g2 = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">exp</span>(-<span class="hljs-number">2</span> * a),
+                k = (<span class="hljs-number">1</span> - g1) * (<span class="hljs-number">1</span> - g1) / (<span class="hljs-number">1</span> + <span class="hljs-number">2</span> * a * g1 - g2);
+
+            a0 = k;
+            a1 = k * (a - <span class="hljs-number">1</span>) * g1;
+            a2 = k * (a + <span class="hljs-number">1</span>) * g1;
+            a3 = -k * g2;
+            b1 = <span class="hljs-number">2</span> * g1;
+            b2 = -g2;
+            left_corner = (a0 + a1) / (<span class="hljs-number">1</span> - b1 - b2);
+            right_corner = (a2 + a3) / (<span class="hljs-number">1</span> - b1 - b2);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-41">&#x00a7;</a>
+              </div>
+              <p>Attempt to force type to FP32.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Float</span>32<span class="hljs-built_in">Array</span>([ a0, a1, a2, a3, b1, b2, left_corner, right_corner ]);
+        }
+
+        <span class="hljs-keyword">const</span> convolveRGBA = <span class="hljs-keyword">function</span> (<span class="hljs-params">src, out, line, coeff, width, height</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-42">&#x00a7;</a>
+              </div>
+              <p>takes src image and writes the blurred and transposed result into out</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+            <span class="hljs-keyword">let</span> rgba;
+            <span class="hljs-keyword">let</span> prev_src_r, prev_src_g, prev_src_b, prev_src_a;
+            <span class="hljs-keyword">let</span> curr_src_r, curr_src_g, curr_src_b, curr_src_a;
+            <span class="hljs-keyword">let</span> curr_out_r, curr_out_g, curr_out_b, curr_out_a;
+            <span class="hljs-keyword">let</span> prev_out_r, prev_out_g, prev_out_b, prev_out_a;
+            <span class="hljs-keyword">let</span> prev_prev_out_r, prev_prev_out_g, prev_prev_out_b, prev_prev_out_a;
+
+            <span class="hljs-keyword">let</span> src_index, out_index, line_index;
+            <span class="hljs-keyword">let</span> i, j;
+            <span class="hljs-keyword">let</span> coeff_a0, coeff_a1, coeff_b1, coeff_b2;
+
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; height; i++) {
+
+                src_index = i * width;
+                out_index = i;
+                line_index = <span class="hljs-number">0</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-43">&#x00a7;</a>
+              </div>
+              <p>left to right</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                rgba = src[src_index];
+
+                prev_src_r = rgba &amp; <span class="hljs-number">0xff</span>;
+                prev_src_g = (rgba &gt;&gt; <span class="hljs-number">8</span>) &amp; <span class="hljs-number">0xff</span>;
+                prev_src_b = (rgba &gt;&gt; <span class="hljs-number">16</span>) &amp; <span class="hljs-number">0xff</span>;
+                prev_src_a = (rgba &gt;&gt; <span class="hljs-number">24</span>) &amp; <span class="hljs-number">0xff</span>;
+
+                prev_prev_out_r = prev_src_r * coeff[<span class="hljs-number">6</span>];
+                prev_prev_out_g = prev_src_g * coeff[<span class="hljs-number">6</span>];
+                prev_prev_out_b = prev_src_b * coeff[<span class="hljs-number">6</span>];
+                prev_prev_out_a = prev_src_a * coeff[<span class="hljs-number">6</span>];
+
+                prev_out_r = prev_prev_out_r;
+                prev_out_g = prev_prev_out_g;
+                prev_out_b = prev_prev_out_b;
+                prev_out_a = prev_prev_out_a;
+
+                coeff_a0 = coeff[<span class="hljs-number">0</span>];
+                coeff_a1 = coeff[<span class="hljs-number">1</span>];
+                coeff_b1 = coeff[<span class="hljs-number">4</span>];
+                coeff_b2 = coeff[<span class="hljs-number">5</span>];
+
+                <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; width; j++) {
+
+                    rgba = src[src_index];
+                    curr_src_r = rgba &amp; <span class="hljs-number">0xff</span>;
+                    curr_src_g = (rgba &gt;&gt; <span class="hljs-number">8</span>) &amp; <span class="hljs-number">0xff</span>;
+                    curr_src_b = (rgba &gt;&gt; <span class="hljs-number">16</span>) &amp; <span class="hljs-number">0xff</span>;
+                    curr_src_a = (rgba &gt;&gt; <span class="hljs-number">24</span>) &amp; <span class="hljs-number">0xff</span>;
+
+                    curr_out_r = curr_src_r * coeff_a0 + prev_src_r * coeff_a1 + prev_out_r * coeff_b1 + prev_prev_out_r * coeff_b2;
+                    curr_out_g = curr_src_g * coeff_a0 + prev_src_g * coeff_a1 + prev_out_g * coeff_b1 + prev_prev_out_g * coeff_b2;
+                    curr_out_b = curr_src_b * coeff_a0 + prev_src_b * coeff_a1 + prev_out_b * coeff_b1 + prev_prev_out_b * coeff_b2;
+                    curr_out_a = curr_src_a * coeff_a0 + prev_src_a * coeff_a1 + prev_out_a * coeff_b1 + prev_prev_out_a * coeff_b2;
+
+                    prev_prev_out_r = prev_out_r;
+                    prev_prev_out_g = prev_out_g;
+                    prev_prev_out_b = prev_out_b;
+                    prev_prev_out_a = prev_out_a;
+
+                    prev_out_r = curr_out_r;
+                    prev_out_g = curr_out_g;
+                    prev_out_b = curr_out_b;
+                    prev_out_a = curr_out_a;
+
+                    prev_src_r = curr_src_r;
+                    prev_src_g = curr_src_g;
+                    prev_src_b = curr_src_b;
+                    prev_src_a = curr_src_a;
+
+                    line[line_index] = prev_out_r;
+                    line[line_index + <span class="hljs-number">1</span>] = prev_out_g;
+                    line[line_index + <span class="hljs-number">2</span>] = prev_out_b;
+                    line[line_index + <span class="hljs-number">3</span>] = prev_out_a;
+                    line_index += <span class="hljs-number">4</span>;
+                    src_index++;
+                }
+
+                src_index--;
+                line_index -= <span class="hljs-number">4</span>;
+                out_index += height * (width - <span class="hljs-number">1</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-44">&#x00a7;</a>
+              </div>
+              <p>right to left</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                rgba = src[src_index];
+
+                prev_src_r = rgba &amp; <span class="hljs-number">0xff</span>;
+                prev_src_g = (rgba &gt;&gt; <span class="hljs-number">8</span>) &amp; <span class="hljs-number">0xff</span>;
+                prev_src_b = (rgba &gt;&gt; <span class="hljs-number">16</span>) &amp; <span class="hljs-number">0xff</span>;
+                prev_src_a = (rgba &gt;&gt; <span class="hljs-number">24</span>) &amp; <span class="hljs-number">0xff</span>;
+
+                prev_prev_out_r = prev_src_r * coeff[<span class="hljs-number">7</span>];
+                prev_prev_out_g = prev_src_g * coeff[<span class="hljs-number">7</span>];
+                prev_prev_out_b = prev_src_b * coeff[<span class="hljs-number">7</span>];
+                prev_prev_out_a = prev_src_a * coeff[<span class="hljs-number">7</span>];
+
+                prev_out_r = prev_prev_out_r;
+                prev_out_g = prev_prev_out_g;
+                prev_out_b = prev_prev_out_b;
+                prev_out_a = prev_prev_out_a;
+
+                curr_src_r = prev_src_r;
+                curr_src_g = prev_src_g;
+                curr_src_b = prev_src_b;
+                curr_src_a = prev_src_a;
+
+                coeff_a0 = coeff[<span class="hljs-number">2</span>];
+                coeff_a1 = coeff[<span class="hljs-number">3</span>];
+
+                <span class="hljs-keyword">for</span> (j = width - <span class="hljs-number">1</span>; j &gt;= <span class="hljs-number">0</span>; j--) {
+
+                    curr_out_r = curr_src_r * coeff_a0 + prev_src_r * coeff_a1 + prev_out_r * coeff_b1 + prev_prev_out_r * coeff_b2;
+                    curr_out_g = curr_src_g * coeff_a0 + prev_src_g * coeff_a1 + prev_out_g * coeff_b1 + prev_prev_out_g * coeff_b2;
+                    curr_out_b = curr_src_b * coeff_a0 + prev_src_b * coeff_a1 + prev_out_b * coeff_b1 + prev_prev_out_b * coeff_b2;
+                    curr_out_a = curr_src_a * coeff_a0 + prev_src_a * coeff_a1 + prev_out_a * coeff_b1 + prev_prev_out_a * coeff_b2;
+
+                    prev_prev_out_r = prev_out_r;
+                    prev_prev_out_g = prev_out_g;
+                    prev_prev_out_b = prev_out_b;
+                    prev_prev_out_a = prev_out_a;
+
+                    prev_out_r = curr_out_r;
+                    prev_out_g = curr_out_g;
+                    prev_out_b = curr_out_b;
+                    prev_out_a = curr_out_a;
+
+                    prev_src_r = curr_src_r;
+                    prev_src_g = curr_src_g;
+                    prev_src_b = curr_src_b;
+                    prev_src_a = curr_src_a;
+
+                    rgba = src[src_index];
+                    curr_src_r = rgba &amp; <span class="hljs-number">0xff</span>;
+                    curr_src_g = (rgba &gt;&gt; <span class="hljs-number">8</span>) &amp; <span class="hljs-number">0xff</span>;
+                    curr_src_b = (rgba &gt;&gt; <span class="hljs-number">16</span>) &amp; <span class="hljs-number">0xff</span>;
+                    curr_src_a = (rgba &gt;&gt; <span class="hljs-number">24</span>) &amp; <span class="hljs-number">0xff</span>;
+
+                    rgba = ((line[line_index] + prev_out_r) &lt;&lt; <span class="hljs-number">0</span>) +
+                    ((line[line_index + <span class="hljs-number">1</span>] + prev_out_g) &lt;&lt; <span class="hljs-number">8</span>) +
+                    ((line[line_index + <span class="hljs-number">2</span>] + prev_out_b) &lt;&lt; <span class="hljs-number">16</span>) +
+                    ((line[line_index + <span class="hljs-number">3</span>] + prev_out_a) &lt;&lt; <span class="hljs-number">24</span>);
+
+                    out[out_index] = rgba;
+
+                    src_index--;
+                    line_index -= <span class="hljs-number">4</span>;
+                    out_index -= height;
+                }
+            }
+        }
+
+        <span class="hljs-keyword">let</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
+
+        <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
+            oData = output.<span class="hljs-property">data</span>;
+
+        <span class="hljs-keyword">let</span> {width, height} = input;
+
+        <span class="hljs-keyword">let</span> {opacity, radius, lineOut} = requirements;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == radius) radius = <span class="hljs-number">1</span>;
+
+        <span class="hljs-keyword">const</span> hold = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint</span>8ClampedArray(iData);
+
+        <span class="hljs-keyword">const</span> src32 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint</span>32<span class="hljs-built_in">Array</span>(hold.<span class="hljs-property">buffer</span>);
+
+        <span class="hljs-keyword">const</span> out = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint</span>32<span class="hljs-built_in">Array</span>(src32.<span class="hljs-property">length</span>),
+            tmp_line = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Float</span>32<span class="hljs-built_in">Array</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(width, height) * <span class="hljs-number">4</span>);
+
+        <span class="hljs-keyword">const</span> coeff = <span class="hljs-title function_">gaussCoef</span>(radius);
+
+        <span class="hljs-title function_">convolveRGBA</span>(src32, out, tmp_line, coeff, width, height, radius);
+        <span class="hljs-title function_">convolveRGBA</span>(out, src32, tmp_line, coeff, height, width, radius);
+
+        oData.<span class="hljs-title function_">set</span>(hold);
 
         <span class="hljs-keyword">if</span> (lineOut) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(output, input, <span class="hljs-number">1</span> - opacity);
         <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">cache</span>.<span class="hljs-property">work</span>, output, opacity);
@@ -3908,6 +3915,93 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
               <div class="sswrap ">
                 <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
+              <p><strong>map-to-gradient</strong> - maps the colors in the supplied (complex) gradient to a grayscaled input.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;map-to-gradient&#x27;</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">requirements</span>) {
+
+        <span class="hljs-keyword">let</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
+
+        <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
+            oData = output.<span class="hljs-property">data</span>,
+            len = iData.<span class="hljs-property">length</span>,
+            i, avg, r, g, b, a, v, G;
+
+        <span class="hljs-keyword">let</span> {opacity, useNaturalGrayscale, gradient, lineOut} = requirements;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == useNaturalGrayscale) useNaturalGrayscale = <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == gradient) gradient = <span class="hljs-literal">false</span>;
+
+        <span class="hljs-keyword">if</span> (gradient) {
+
+            <span class="hljs-keyword">const</span> mycell = <span class="hljs-title function_">requestCell</span>();
+
+            <span class="hljs-keyword">const</span> {engine, element} = mycell;
+
+            element.<span class="hljs-property">width</span> = <span class="hljs-number">256</span>;
+            element.<span class="hljs-property">height</span> = <span class="hljs-number">1</span>;
+
+            gradient.<span class="hljs-property">palette</span>.<span class="hljs-title function_">recalculate</span>();
+
+            G = engine.<span class="hljs-title function_">createLinearGradient</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">255</span>, <span class="hljs-number">0</span>);
+
+            gradient.<span class="hljs-title function_">addStopsToGradient</span>(G, gradient.<span class="hljs-property">paletteStart</span>, gradient.<span class="hljs-property">paletteEnd</span>, gradient.<span class="hljs-property">cyclePalette</span>);
+
+            engine.<span class="hljs-property">fillStyle</span> = G;
+            engine.<span class="hljs-title function_">fillRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">256</span>, <span class="hljs-number">1</span>);
+
+            <span class="hljs-keyword">let</span> rainbowData = engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">256</span>, <span class="hljs-number">1</span>).<span class="hljs-property">data</span>;
+
+            <span class="hljs-title function_">releaseCell</span>(mycell);
+
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i += <span class="hljs-number">4</span>) {
+
+                r = i;
+                g = r + <span class="hljs-number">1</span>;
+                b = g + <span class="hljs-number">1</span>;
+                a = b + <span class="hljs-number">1</span>;
+
+                <span class="hljs-keyword">if</span> (useNaturalGrayscale) avg = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>((<span class="hljs-number">0.2126</span> * iData[r]) + (<span class="hljs-number">0.7152</span> * iData[g]) + (<span class="hljs-number">0.0722</span> * iData[b]));
+                <span class="hljs-keyword">else</span> avg = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>((<span class="hljs-number">0.3333</span> * iData[r]) + (<span class="hljs-number">0.3333</span> * iData[g]) + (<span class="hljs-number">0.3333</span> * iData[b]));
+
+                v = avg * <span class="hljs-number">4</span>;
+
+                oData[r] = rainbowData[v];
+                oData[g] = rainbowData[++v];
+                oData[b] = rainbowData[++v];
+                oData[a] = rainbowData[++v];
+            }
+        }
+        <span class="hljs-keyword">else</span> {
+
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i += <span class="hljs-number">4</span>) {
+
+                r = i;
+                g = r + <span class="hljs-number">1</span>;
+                b = g + <span class="hljs-number">1</span>;
+                a = b + <span class="hljs-number">1</span>;
+
+                oData[r] = iData[r];
+                oData[g] = iData[g];
+                oData[b] = iData[b];
+                oData[a] = iData[a];
+            }
+        }
+        <span class="hljs-keyword">if</span> (lineOut) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(output, input, <span class="hljs-number">1</span> - opacity);
+        <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">cache</span>.<span class="hljs-property">work</span>, output, opacity);
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-49">&#x00a7;</a>
+              </div>
               <p><strong>matrix</strong> - Performs a matrix operation on each pixel’s channels, calculating the new value using neighbouring pixel weighted values. Also known as a convolution matrix, kernel or mask operation. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the “width” and “height” arguments, while setting the home pixel’s position within the matrix can be set using the “offsetX” and “offsetY” arguments. The weights to be applied need to be supplied in the “weights” argument - an Array listing the weights row-by-row starting from the top-left corner of the matrix. By default all color channels are included in the calculations while the alpha channel is excluded. The ‘edgeDetect’, ‘emboss’ and ‘sharpen’ convenience filter methods all use the matrix action, pre-setting the required weights.</p>
 
             </div>
@@ -3981,11 +4075,11 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p><strong>modulate-channels</strong> - Multiplies each channel’s value by the supplied argument value. A channel-argument’s value of ‘0’ will set that channel’s value to zero; a value of ‘1’ will leave the channel value unchanged. If the “saturation” flag is set to ‘true’ the calculation changes to start at the color range mid point. The ‘brightness’ and ‘saturation’ filters are special forms of the ‘channels’ filter which use a single “levels” argument to set all three color channel arguments to the same value.</p>
 
@@ -4047,11 +4141,11 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p><strong>offset</strong> - Offset the input image in the output image.</p>
 
@@ -4153,11 +4247,11 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
         </li>
         
         
-        <li id="section-51">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p><strong>pixelate</strong> - Pixelizes the input image by creating a grid of tiles across it and then averaging the color values of each pixel in a tile and setting its value to the average. Tile width and height, and their offset from the top left corner of the image, are set via the “tileWidth”, “tileHeight”, “offsetX” and “offsetY” arguments.</p>
 
@@ -4229,11 +4323,11 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
         </li>
         
         
-        <li id="section-52">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p><strong>process-image</strong> - Add an asset image to the filter process chain. The asset - the String name of the asset object - must be pre-loaded before it can be included in the filter. The “width” and “height” arguments are measured in integer Number pixels; the “copy” arguments can be either percentage Strings (relative to the asset’s natural dimensions) or absolute Number values (in pixels). The “lineOut” argument is required - be aware that the filter action does not check for any pre-existing assets cached under this name and, if they exist, will overwrite them with this asset’s data.</p>
 
@@ -4257,11 +4351,98 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
         </li>
         
         
-        <li id="section-53">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
+              </div>
+              <p><strong>random-noise</strong> - Swap pixels at random within a given box (width/height) distance of each other, dependent on the level setting - lower levels mean less noise. Uses a pseudo-random numbers generator to ensure consistent results across runs. Takes into account choices to include red, green, blue and alpha channels, and whether to ignore transparent pixels</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;random-noise&#x27;</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">requirements</span>) {
+
+        <span class="hljs-keyword">let</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
+
+        <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
+            oData = output.<span class="hljs-property">data</span>,
+            len = iData.<span class="hljs-property">length</span>,
+            iWidth = input.<span class="hljs-property">width</span>,
+            r, g, b, a, i, dw, dh, source;
+
+        <span class="hljs-keyword">let</span> {opacity, width, height, level, seed, includeRed, includeGreen, includeBlue, includeAlpha, excludeTransparentPixels, lineOut} = requirements;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == width) width = <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == height) height = <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == level) level = <span class="hljs-number">0.5</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == seed) level = <span class="hljs-string">&#x27;some-random-string-or-other&#x27;</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeRed) includeRed = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeGreen) includeGreen = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeBlue) includeBlue = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeAlpha) includeAlpha = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == excludeTransparentPixels) excludeTransparentPixels = <span class="hljs-literal">true</span>;
+
+        <span class="hljs-keyword">const</span> rndEngine = <span class="hljs-title function_">seededRandomNumberGenerator</span>(seed),
+            halfWidth = width / <span class="hljs-number">2</span>,
+            halfHeight = height / <span class="hljs-number">2</span>;
+
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i += <span class="hljs-number">4</span>) {
+
+            r = i;
+            g = r + <span class="hljs-number">1</span>;
+            b = g + <span class="hljs-number">1</span>;
+            a = b + <span class="hljs-number">1</span>;
+
+            <span class="hljs-keyword">if</span> (rndEngine.<span class="hljs-title function_">random</span>() &lt; level) {
+
+                dw = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>((rndEngine.<span class="hljs-title function_">random</span>() * width) - halfWidth);
+                dh = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>((rndEngine.<span class="hljs-title function_">random</span>() * height) - halfHeight);
+
+                source = i + ((dh * iWidth) + dw) * <span class="hljs-number">4</span>;
+
+                <span class="hljs-keyword">if</span> (source &lt; <span class="hljs-number">0</span>) source += len;
+                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (source &gt;= len) source -= len;
+
+                <span class="hljs-keyword">if</span> (excludeTransparentPixels &amp;&amp; (!iData[a] || !iData[source + <span class="hljs-number">3</span>])) {
+
+                    oData[r] = iData[r];
+                    oData[g] = iData[g];
+                    oData[b] = iData[b];
+                    oData[a] = iData[a];
+                }
+                <span class="hljs-keyword">else</span> {
+
+                    oData[r] = (includeRed) ? iData[source] : iData[r];
+                    source++;
+                    oData[g] = (includeGreen) ? iData[source] : iData[g];
+                    source++;
+                    oData[b] = (includeBlue) ? iData[source] : iData[b];
+                    source++;
+                    oData[a] = (includeAlpha) ? iData[source] : iData[a];
+                }
+            }
+            <span class="hljs-keyword">else</span> {
+
+                oData[r] = iData[r];
+                oData[g] = iData[g];
+                oData[b] = iData[b];
+                oData[a] = iData[a];
+            }
+        }
+        <span class="hljs-keyword">if</span> (lineOut) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(output, input, <span class="hljs-number">1</span> - opacity);
+        <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">cache</span>.<span class="hljs-property">work</span>, output, opacity);
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p><strong>set-channel-to-level</strong> - Sets the value of each pixel’s included channel to the value supplied in the “level” argument.</p>
 
@@ -4305,11 +4486,11 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
         </li>
         
         
-        <li id="section-54">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p><strong>step-channels</strong> - Takes three divisor values - “red”, “green”, “blue”. For each pixel, its color channel values are divided by the corresponding color divisor, floored to the integer value and then multiplied by the divisor. For example a divisor value of ‘50’ applied to a channel value of ‘120’ will give a result of ‘100’. The output is a form of posterization.</p>
 
@@ -4352,11 +4533,11 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
         </li>
         
         
-        <li id="section-55">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p><strong>threshold</strong> - Grayscales the input then, for each pixel, checks the color channel values against a “level” argument: pixels with channel values above the level value are assigned to the ‘high’ color; otherwise they are updated to the ‘low’ color. The “high” and “low” arguments are [red, green, blue] integer Number Arrays. The convenience function will accept the pseudo-attributes “highRed”, “lowRed” etc in place of the “high” and “low” Arrays.</p>
 
@@ -4415,11 +4596,11 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
         </li>
         
         
-        <li id="section-56">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p><strong>tint-channels</strong> - Has similarities to the SVG &lt;feColorMatrix&gt; filter element, but excludes the alpha channel from calculations. Rather than set a matrix, we set nine arguments to determine how the value of each color channel in a pixel will affect both itself and its fellow color channels. The ‘sepia’ convenience filter presets these values to create a sepia effect.</p>
 
@@ -4471,11 +4652,11 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
         </li>
         
         
-        <li id="section-57">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p><strong>user-defined-legacy</strong> - Previous to version 8.4, filters could be defined with an argument which passed a function string to the filter engine, which the engine would then run against the source input image as-and-when required. This functionality has been removed from the new filter functionality. All such filters will now return the input image unchanged.</p>
 
@@ -4500,11 +4681,11 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
         </li>
         
         
-        <li id="section-58">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
@@ -4520,11 +4701,11 @@ constructors.<span class="hljs-property">FilterEngine</span> = <span class="hljs
         </li>
         
         
-        <li id="section-59">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p>Create a singleton filter engine, for export and use within this code base</p>
 
@@ -4535,11 +4716,11 @@ constructors.<span class="hljs-property">FilterEngine</span> = <span class="hljs
         </li>
         
         
-        <li id="section-60">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

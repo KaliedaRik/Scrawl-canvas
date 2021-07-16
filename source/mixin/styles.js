@@ -274,12 +274,12 @@ export default function (P = Ωempty) {
         }
     };
 
-// `colors` - We can pass through an array of palette color objects to the Palette object by setting it on the gradient-type styles object
+// `colors` - We can pass through an array of palette color arrays to the Palette object by setting it on the gradient-type styles object. Each palette array is in the form `[Number, String]` where:
+// + Number is a positive integer in the range 0-999
+// + String is any legitimate CSS color string value
     S.colors = function (item) {
 
-        let p = this.palette;
-
-        if (p && p.colors) p.set({ colors: item });
+        if (Array.isArray(item) && this.palette) this.palette.set({ colors: item });
     };
 
 // `delta` - Gradient-type styles objects support the delta attribute, and can be delta-animated using its attributes
@@ -497,15 +497,6 @@ export default function (P = Ωempty) {
 
         // Step 3: finalize the coordinates to use for creating the gradient in relation to the current entity's position and requirements on the canvas
         this.finalizeCoordinates(entity);
-
-        // let e = cell.engine;
-        // e.save();
-        // e.lineWidth = 10;
-        // e.strokeStyle = 'green';
-        // e.globalAlpha = 0.4;
-        // e.strokeRect(...this.gradientArgs);
-        // e.restore();
-        // console.log(entity.name, ...this.gradientArgs);
 
         // Step 4: create, populate and return gradient/pattern object
         return this.buildStyle(cell);

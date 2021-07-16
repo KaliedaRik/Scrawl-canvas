@@ -888,7 +888,7 @@ export default function (P = Ωempty) {
     };
 
 
-// `setCoordinateHelper` - internal helper function used by positional and dimensional delta-setter (D.) functions. Arguments are:
+// `setDeltaCoordinateHelper` - internal helper function used by positional and dimensional delta-setter (D.) functions. Arguments are:
 // + __label__ - either `dimensions`, `start`, `handle` or `offset`
 // + __x__ - this can be either an `[x, y]` Array, or an `{x: val, y: val}` object, or a Number, or %String value
 // + (for dimensions, `[w, h]`, or `{w: val, h: val}`, or `{width: val, height: val}`, etc)

@@ -68,9 +68,11 @@ scrawl.makeShape({
 scrawl.makeGradient({
     name: 'linear1',
     endX: '100%',
-})
-.updateColor(0, 'pink')
-.updateColor(999, 'darkgreen');
+    colors: [
+        [0, 'pink'],
+        [999, 'darkgreen']
+    ],
+});
 
 
 // Create entitys that we can use with the particle emitter

@@ -101,7 +101,8 @@ let report = function () {
         hueRange = document.querySelector('#hueRange'),
         saturation = document.querySelector('#saturation'),
         luminosity = document.querySelector('#luminosity'),
-        sumAmplitude = document.querySelector('#sumAmplitude');
+        sumAmplitude = document.querySelector('#sumAmplitude'),
+        worleyDepth = document.querySelector('#worleyDepth');
 
     return function () {
 
@@ -110,7 +111,7 @@ Color (monochrome): start: ${monochromeStart.value}; range: ${monochromeRange.va
 Color (hue): start: ${hueStart.value}; range: ${hueRange.value}; saturation: ${saturation.value}; luminosity: ${luminosity.value}
 Scale: ${scale.value}; Size: ${size.value}
 Octaves: ${octaves.value}; Sine frequency coefficient: ${sineFrequencyCoeff.value}
-Persistence: ${persistence.value}; Lacunarity: ${lacunarity.value}; Sum amplitude: ${sumAmplitude.value}`;
+Persistence: ${persistence.value}; Lacunarity: ${lacunarity.value}; Sum amplitude: ${sumAmplitude.value}; Worley depth: ${worleyDepth.value}`;
     };
 }();
 
@@ -161,6 +162,8 @@ scrawl.observeAndUpdate({
         hueRange: ['hueRange', 'float'],
         saturation: ['saturation', 'float'],
         luminosity: ['luminosity', 'float'],
+        worleyOutput: ['worleyOutput', 'raw'],
+        worleyDepth: ['worleyDepth', 'round'],
     },
 });
 
@@ -282,6 +285,8 @@ document.querySelector('#hueStart').value = 0;
 document.querySelector('#hueRange').value = 120;
 document.querySelector('#saturation').value = 100;
 document.querySelector('#luminosity').value = 50;
+document.querySelector('#worleyOutput').options.selectedIndex = 0;
+document.querySelector('#worleyDepth').value = 0;
 
 
 // #### Development and testing

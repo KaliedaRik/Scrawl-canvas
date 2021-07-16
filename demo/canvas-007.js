@@ -19,31 +19,32 @@ canvas.set({
 });
 
 
-// Create gradients - clone test
 let myGrad = scrawl.makeGradient({
     name: 'linear1',
     endX: '100%',
-})
-.updateColor(0, 'pink')
-.updateColor(999, 'darkgreen');
-
-myGrad.clone({
+    colors: [
+        [0, 'pink'],
+        [999, 'darkgreen']
+    ],
+}).clone({
     name: 'linear2',
-})
-.updateColor(0, 'darkblue')
-.updateColor(999, 'white');
-
-myGrad.clone({
+    colors: [
+        [0, 'darkblue'],
+        [999, 'white']
+    ],
+}).clone({
     name: 'linear3',
-})
-.updateColor(0, 'yellow')
-.updateColor(999, 'purple');
-
-myGrad.clone({
+    colors: [
+        [0, 'yellow'],
+        [999, 'purple']
+    ],
+}).clone({
     name: 'linear4',
-})
-.updateColor(0, 'black')
-.updateColor(999, 'coral');
+    colors: [
+        [0, 'black'],
+        [999, 'coral']
+    ],
+});
 
 
 // Create entitys
@@ -551,26 +552,29 @@ console.log(myGrad.palette.saveAsPacket());
 // RESULT:
 // ```
 // [
-//     "linear1",
+//     "linear4",
 //     "Gradient",
 //     "styles",
 //     {
-//         "name":"linear1",
+//         "name":"linear4",
 //         "start":[0,0],
 //         "end":["100%",0],
-//         "palette":"linear1_palette"
+//         "palette":"linear4_palette",
+//         "colors":{
+//             "0 ":[0,0,0,1],
+//             "999 ":[255,127,80,1]
+//         }
 //     }
 // ]
-//    
 // [
-//     "linear1_palette",
+//     "linear4_palette",
 //     "Palette",
 //     "palette",
 //     {
-//         "name":"linear1_palette",
+//         "name":"linear4_palette",
 //         "colors":{
-//             "0 ":[255,192,203,1],
-//             "999 ":[0,100,0,1]
+//             "0 ":[0,0,0,1],
+//             "999 ":[255,127,80,1]
 //         }
 //     }
 // ]

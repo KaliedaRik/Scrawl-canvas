@@ -295,6 +295,16 @@
                 </a>
               
                 
+                <a class="source" href="canvas-054.html">
+                  ./demo/canvas-054.js
+                </a>
+              
+                
+                <a class="source" href="canvas-055.html">
+                  ./demo/canvas-055.js
+                </a>
+              
+                
                 <a class="source" href="core-001.html">
                   ./demo/core-001.js
                 </a>
@@ -510,6 +520,16 @@
                 </a>
               
                 
+                <a class="source" href="filters-022.html">
+                  ./demo/filters-022.js
+                </a>
+              
+                
+                <a class="source" href="filters-023.html">
+                  ./demo/filters-023.js
+                </a>
+              
+                
                 <a class="source" href="filters-501.html">
                   ./demo/filters-501.js
                 </a>
@@ -682,6 +702,11 @@
                 
                 <a class="source" href="temp-002.html">
                   ./demo/temp-002.js
+                </a>
+              
+                
+                <a class="source" href="temp-003.html">
+                  ./demo/temp-003.js
                 </a>
               
                 
@@ -882,7 +907,7 @@
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>-blurred-image`</span>,
         <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>-blurred-cell`</span>,
 
-        <span class="hljs-attr">asset</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>`</span>,
+        <span class="hljs-attr">asset</span>: scene.<span class="hljs-property">image</span>,
 
         <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
         <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
@@ -926,14 +951,17 @@
         <span class="hljs-attr">end</span>: [<span class="hljs-string">&#x27;50%&#x27;</span>, <span class="hljs-string">&#x27;50%&#x27;</span>],
         <span class="hljs-attr">startRadius</span>: <span class="hljs-string">&#x27;5%&#x27;</span>,
         <span class="hljs-attr">endRadius</span>: <span class="hljs-string">&#x27;20%&#x27;</span>,
-    })
-    .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">0</span>, <span class="hljs-string">`<span class="hljs-subst">${scene.transparency}</span>`</span>)
-    .<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;lightgray&#x27;</span>);
+
+        <span class="hljs-attr">colors</span>: [
+            [<span class="hljs-number">0</span>, scene.<span class="hljs-property">transparency</span>],
+            [<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;lightgray&#x27;</span>]
+        ],
+    });
 
     <span class="hljs-keyword">const</span> gradientBlock = scrawl.<span class="hljs-title function_">makeBlock</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>-gradient-block`</span>,
-        <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.canvas.base.name}</span>`</span>,
+        <span class="hljs-attr">group</span>: scene.<span class="hljs-property">canvas</span>.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
 
         <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
         <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
@@ -994,7 +1022,7 @@
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>-original-image`</span>,
         <span class="hljs-attr">group</span>: scene.<span class="hljs-property">canvas</span>.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
 
-        <span class="hljs-attr">asset</span>: <span class="hljs-string">`<span class="hljs-subst">${scene.image}</span>`</span>,
+        <span class="hljs-attr">asset</span>: scene.<span class="hljs-property">image</span>,
 
         <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
         <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],

@@ -29,14 +29,17 @@ let mygradient = scrawl.makeGradient({
     },
 
     cyclePalette: true,
-})
-.updateColor(0, 'black')
-.updateColor(19, 'red')
-.updateColor(499, 'black')
-.updateColor(549, 'yellow')
-.updateColor(599, 'black')
-.updateColor(979, 'aqua')
-.updateColor(999, 'black');
+
+    colors: [
+        [0, 'black'],
+        [19, 'red'],
+        [499, 'black'],
+        [549, 'yellow'],
+        [599, 'black'],
+        [979, 'aqua'],
+        [999, 'black'],
+    ],
+});
 
 scrawl.makeQuadratic({
 
