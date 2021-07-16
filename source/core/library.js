@@ -9,7 +9,7 @@
 
 
 // Current version
-const version = '8.5.4';
+const version = '8.5.5';
 
 
 // Objects created using the __makeAnchor__ factory
