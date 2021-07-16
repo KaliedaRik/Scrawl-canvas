@@ -14,7 +14,7 @@ export default function (P = Ωempty) {
 // #### Shared attributes
     let defaultAttributes = {
 
-        // __color__ - String value determining how the generated noise will be output on the canvas. Currently recognised values are: `monochrome` (default), `gradient` and `hue`
+        // __color__ - String value determining how the generated noise will be output on the canvas. Currently recognised values are: `monochrome` (default), `gradient`, `hue` and `rainbow`.
         color: 'monochrome',
 
         // When the `color` choice has been set to `monochrome` we can clamp the pixel values using the __monochromeStart__ and __monochromeRange__ attributes, both of which take integer Numbers. 
