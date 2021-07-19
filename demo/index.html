@@ -130,21 +130,31 @@
     <p>Entitys include:</p>
 
     <ul>
-      <li>Basic shapes such as rectangles (<strong>Block</strong>), circles (<strong>Wheel</strong>) and text (<strong>Phrase</strong>).</li>
+      <li>Basic shapes such as rectangles (<strong>Block</strong>), circles (<strong>Wheel</strong>, <strong>Crescent</strong>) and text (<strong>Phrase</strong>).</li>
       <ul>
         <li>Wheel entitys also include part-circle shapes such as pie slices and truncated circles.</li>
         <li>Phrase text can be automatically broken over multiple lines, and different styling applied to words and individual letters; text can be animated along (curved) paths.</li>
         <li>CSS font strings are supported as far as possible, including font-sizes declared using suffixes such as 'em', 'rem', 'vw', 'pt', etc.</li>
       </ul>
-      <li>SVG path-defined entitys (<strong>Shape</strong>), and a range of pre-defined, path-based entitys (<strong>Oval, Rectangle, Tetragon, Polygon, Star, Spiral, Cog, Line, Quadratic, Bezier, Polyline</strong>).</li>
+      <li>Path-defined entitys (<strong>Shape</strong>), and a range of pre-defined, path-based entitys (<strong>Bezier, Cog, Line, LineSpiral, Oval, Polygon, Polyline, Quadratic, Rectangle, Spiral, Star, Tetragon</strong>).</li>
       <ul>
         <li>Line, Quadratic, and Bezier entitys can have their start, end and control coordinates positioned absolutely, relatively, or by reference to other entitys (including along paths).</li>
       </ul>
       <li>Images, video and related pixel-based image streams (<strong>Picture</strong>), both in whole and in part; the proportion of the image displayed can be controlled and animated.</li>
-      <ul>
-        <li>Spritesheet animation is also supported.</li>
-      </ul>
       <li>Compound entitys built on top of other entitys which can be used to combine the output of images in various ways (<strong>Grid</strong>) or distort image output (<strong>Loom, Mesh</strong>).</li>
+    </ul>
+
+    <p>Entitys can be stamped onto the canvas in a variety of ways:</p>
+
+    <ul>
+      <li>They can take <strong>Color</strong>, <strong>Gradient</strong>, <strong>RadialGradient</strong>, and <strong>ConicGradient</strong> (where the browser supports it) styles for both their fill and stroke styling.</li>
+      <li>They can also take <strong>Pattern</strong> styles which may contain a variety of image-based assets; patterns can be scaled, skewed and positioned as requested.</li>
+      <li>All styles can be bound to their containing cell, or to particular entitys.</li>
+      <li>Entitys can also act as clipping zones for subesequent drawing activities.</li>
+      <li>The visual assets used by Picture entitys and Pattern styles can include fully responsive <strong>&lt;img></strong> elements, or image files.</li>
+      <li><strong>&lt;video></strong> and <strong>&lt;canvas></strong> elements are also supported, as are spritesheet animations.</li>
+      <li>Scrawl-canvas includes a <strong>NoiseAsset</strong> asset (for Perlin, Simplex, Worley, etc, noise generation), alongside an <strong>RdAsset</strong> reaction-diffusion asset (for more organic patterns).</li>
+      <li>Third-party asset generators (for example TensorFlow) can be accommodated using the <strong>RawAsset</strong> asset</li>
     </ul>
 
     <div class="container">
