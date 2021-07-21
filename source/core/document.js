@@ -10,6 +10,8 @@
 import { isa_canvas, generateUniqueString, isa_dom, pushUnique, removeItem, xt, Ωempty } from "./utilities.js";
 import { artefact, canvas, group, stack, css, xcss } from "./library.js";
 
+import { getPixelRatio, getIgnorePixelRatio } from "./events.js";
+
 import { makeStack } from "../factory/stack.js";
 import { makeElement } from "../factory/element.js";
 import { makeCanvas } from "../factory/canvas.js";
@@ -540,6 +542,9 @@ const domShow = function (singleArtefact = '') {
             p, dims, w, h,
             j, jz, items, keys, key, keyName, value;
 
+        let ignoreDpr = getIgnorePixelRatio();
+        let dpr = getPixelRatio();
+
         for (i = 0, iz = myartefacts.length; i < iz; i++) {
 
             name = myartefacts[i];
@@ -581,10 +586,22 @@ const domShow = function (singleArtefact = '') {
 
                 if (art.type === 'Canvas') {
 
-                    el.width = w;
-                    el.height = h;
+                    if (ignoreDpr) {
 
-                    // if (art.renderOnResize) art.render().catch(err => console.log(err));
+                        el.width = w;
+                        el.height = h;
+                    }
+                    else {
+
+                        if (!art.ignoreCanvasCssDimensions) {
+
+                            style.width = `${w}px`;
+                            style.height = `${h}px`;
+                        }
+
+                        el.width = w * dpr;
+                        el.height = h * dpr;
+                    }
                     if (art.renderOnResize) art.render();
                 }
                 else {

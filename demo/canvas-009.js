@@ -4,6 +4,9 @@
 // [Run code](../../demo/canvas-009.html)
 import scrawl from '../source/scrawl.js'
 
+// Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
+scrawl.setIgnorePixelRatio(false);
+
 
 // #### Google Analytics
 // We load GA code in the normal way through markup in the dom-006.html file (lines 11-21), and get a handle on the __ga__ object here

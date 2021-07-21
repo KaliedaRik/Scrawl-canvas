@@ -219,6 +219,17 @@ let defaultAttributes = {
 // __renderOnResize__ - perform an additional render of the scene following a change in the canvas's dimensions
     renderOnResize: true,
 
+// For ___Device Pixel Ratio___, we need to tell the canvas whether it should ignore resetting the canvas dimensions - if, for instance, we set them to '100%' in CSS - and whether we have set the base to static dimensions (via `setBase`)
+// + We only need to worry about this after we invoke `scrawl.setIgnorePixelRatio(false)` in the demo code
+//
+// __ignoreCanvasCssDimensions__ - skip setting the &lt;canvas> element's CSS width and height when dimensions change. When the flag is set to `false` (default), we need to set the CSS values to a valuepx String which will then allow us to set the canvas drawing dimensions to take into account the display's device pixel ratio value. Set the flag to `true` if the canvas has been initialized as responsive by setting its CSS dimensions values to a value% String. 
+// + Note that Scrawl-canvas ignores any attempt to set CSS dimension (width, height) values in the `css` attribute of the `set({})` function.
+    ignoreCanvasCssDimensions: false,
+
+// __baseDimensionsAreStatic__ - we assume that the &lt;canvas element lives in an environment where we want it to match its base dimensions to its display dimensions. If this is not the case - for instance we set the base canvas to be much bigger than the display when initializing the scene - then we need to set this flag to `true`
+// + the attribute actually lives on the base Cell itself; this is a convenience attribute which is not saved in the Canvas wrapper
+    // baseDimensionsAreStatic: false,
+
 // ##### Accessibility attributes
 // &lt;canvas> elements are __raster images__ - they contain no information within their content (beyond pixel data) which can be analyzed or passed on to the browser or other device. The element _can_ include `title` and various `item` attributes (alongside custom `data-` attributes) but inclusion of these depends entirely on the developer remembering to include them when coding up a web page.
 // 
@@ -323,7 +334,6 @@ S.description = function (item) {
     this.dirtyAria = true;
 };
 
-
 // ##### Get and set base cell attributes
 // For convenience, Scrawl-canvas allows us to get/set a limited number of base Cell attributes via their Canvas wrapper's `get`, `set` and `deltaSet` functions. We can set and deltaSet other base Cell attributes by invoking the `mycanvas.setBase` and `mycanvas.deltaSetBase` functions.
 
@@ -376,6 +386,20 @@ S.composite = function (item) {
     if (this.base) {
         this.base.set({
             composite: item
+        });
+    }
+};
+
+// `baseDimensionsAreStatic` - Boolean
+G.baseDimensionsAreStatic = function () {
+
+    return this.base.baseDimensionsAreStatic;
+};
+S.baseDimensionsAreStatic = function (item) {
+
+    if (this.base) {
+        this.base.set({
+            baseDimensionsAreStatic: item
         });
     }
 };

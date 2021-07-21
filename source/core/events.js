@@ -351,8 +351,6 @@ const updatePixelRatio = () => {
 
     dpr = window.devicePixelRatio;
 
-    console.log(`current dpr - ${dpr}`);
-
     if (!ignorePixelRatio) dpr_changeAction();
 
     matchMedia(`(resolution: ${dpr}dppx)`).addEventListener("change", updatePixelRatio, { once: true });

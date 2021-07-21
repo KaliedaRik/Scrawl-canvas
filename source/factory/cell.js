@@ -47,6 +47,8 @@ import { generateUniqueString, isa_canvas, mergeOver, λthis, λnull, Ωempty } 
 
 import { scrawlCanvasHold } from '../core/document.js';
 
+import { getPixelRatio, getIgnorePixelRatio } from "../core/events.js";
+
 import { makeGroup } from './group.js';
 import { makeState } from './state.js';
 import { makeCoordinate, requestCoordinate, releaseCoordinate } from './coordinate.js';
@@ -209,8 +211,13 @@ let defaultAttributes = {
 // __isBase__ - Every displayed &lt;canvas> element - wrapped in a Scrawl-canvas Canvas object (factory/canvas.js) - must possess at least one Cell object, known as its 'base' Cell. 
     isBase: false,
 
+// __baseDimensionsAreStatic__ - we assume that the &lt;canvas element lives in an environment where we want it to match its base dimensions to its display dimensions. If this is not the case - for instance we set the base canvas to be much bigger than the display when initializing the scene - then we need to set this flag to `true`
+// + Note that we only need to worry about this flag after we invoke `scrawl.setIgnorePixelRatio(false)` in the demo code
+    baseDimensionsAreStatic: false,
+
 // __controller__ - A reference link to the displayed &lt;canvas> element's Scrawl-canvas wrapper (factory/canvas.js) - only 'base' cells require this handle.
     controller: null,
+
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -528,20 +535,60 @@ P.cleanDimensionsAdditionalActions = function() {
             current = this.currentDimensions,
             base = this.isBase;
 
+        let ignoreDpr = getIgnorePixelRatio();
+        let dpr = getPixelRatio();
+
         // DEPRECATED (because it is a really bad name) __isComponent__ replaced by __baseMatchesCanvasDimensions__
-        if (base && control && (control.baseMatchesCanvasDimensions || control.isComponent)) {
+        if (ignoreDpr) {
 
-            let controlDims = this.controller.currentDimensions,
-                dims = this.dimensions;
+// console.log(this.name, 'cell.js cleanDimensionsAdditionalActions IGNORE');
 
-            dims[0] = current[0] = controlDims[0];
-            dims[1] = current[1] = controlDims[1];
+            if (base && control && (control.baseMatchesCanvasDimensions || control.isComponent)) {
+
+                let controlDims = this.controller.currentDimensions,
+                    dims = this.dimensions;
+
+                dims[0] = current[0] = controlDims[0];
+                dims[1] = current[1] = controlDims[1];
+// console.log(this.name, 'IGNORE RESET DIMENSIONS');
+            }
+
+            let [w, h] = current;
+
+            element.width = w;
+            element.height = h;
+// console.log(this.name, 'IGNORE', w, h, element.width, element.height);
+
         }
+        else {
 
-        let [w, h] = current;
+// console.log(this.name, 'cell.js cleanDimensionsAdditionalActions ACTION');
 
-        element.width = w;
-        element.height = h;
+            if (base && control && (control.baseMatchesCanvasDimensions || control.isComponent)) {
+
+                let controlDims = this.controller.currentDimensions,
+                    dims = this.dimensions;
+
+                dims[0] = current[0] = controlDims[0];
+                dims[1] = current[1] = controlDims[1];
+
+// console.log(this.name, 'ACTION RESET DIMENSIONS');
+            }
+
+            let [w, h] = current;
+
+            if (ignoreDpr) {
+
+                element.width = w;
+                element.height = h;
+            }
+            else {
+
+                element.width = w * dpr;
+                element.height = h * dpr;
+            }
+// console.log(this.name, 'ACTION', w, h, dpr, element.width, element.height);
+        }
 
         this.setEngineFromState(this.engine);
 
@@ -589,7 +636,7 @@ P.installElement = function (element) {
     this.engine = this.element.getContext('2d', {willReadFrequently: true});
 
     this.state = makeState({
-        engine: this.engine
+        engine: this.engine,
     });
 
     return this;
@@ -867,6 +914,21 @@ P.getComputedFontSizes = function () {
 // #### Display cycle functionality
 // This functionality is triggered by the Cell's Canvas wrapper controller
 
+// `checkEngineScale`
+P.checkEngineScale = function (engine) {
+
+    if (!engine) engine = this.engine;
+
+    engine.setTransform(1,0,0,1,0,0);
+
+    if (getIgnorePixelRatio()) engine.scale(1, 1);
+    else {
+
+        let dpr = getPixelRatio();
+        engine.scale(dpr, dpr);
+    }
+};
+
 // `clear`
 P.clear = function () {
 
@@ -875,7 +937,7 @@ P.clear = function () {
 
     this.prepareStamp();
 
-    engine.setTransform(1,0,0,1,0,0);
+    this.checkEngineScale();
 
     if (backgroundColor) {
 
@@ -909,6 +971,8 @@ P.clear = function () {
         engine.globalAlpha = clearAlpha;
         engine.drawImage(tempEl, 0, 0);
         engine.globalAlpha = oldAlpha;
+
+        releaseCell(tempEngine);
     }
     else engine.clearRect(0, 0, width, height);
 };
@@ -922,6 +986,8 @@ P.compile = function(){
     this.prepareStamp();
 
     if(this.dirtyFilters || !this.currentFilters) this.cleanFilters();
+
+    this.checkEngineScale();
 
     const gb = this.groupBuckets,
         gbLen = gb.length;
@@ -960,7 +1026,8 @@ P.show = function () {
             paste;
 
         engine.save();
-        engine.setTransform(1, 0, 0, 1, 0, 0);
+
+        this.checkEngineScale(engine);
             
         engine.filter = this.filter;
 

@@ -2,7 +2,11 @@
 // Block and Wheel entitys (make, clone, method); drag and drop block and wheel entitys
 
 // [Run code](../../demo/canvas-001.html)
-import scrawl from '../min/scrawl.js'
+import scrawl from '../source/scrawl.js';
+// import scrawl from '../min/scrawl.js'
+
+// Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
+scrawl.setIgnorePixelRatio(false);
 
 
 // #### Scene setup

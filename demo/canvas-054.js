@@ -8,6 +8,11 @@ import scrawl from '../source/scrawl.js'
 // #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
+canvas.set({
+    fit: 'cover',
+    checkForResize: true,
+});
+
 
 // Add the NoiseAsset, and a Picture entity in which to display it
 const myNoise = scrawl.makeNoiseAsset({
