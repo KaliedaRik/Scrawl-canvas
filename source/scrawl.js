@@ -61,6 +61,8 @@ import {
     colorSchemeActions,
     setColorSchemeDarkAction,
     setColorSchemeLightAction,
+    getPixelRatio,
+    setPixelRatioChangeAction,
 } from './core/events.js';
 
 
@@ -376,6 +378,8 @@ export default {
     colorSchemeActions,
     setColorSchemeDarkAction,
     setColorSchemeLightAction,
+    getPixelRatio,
+    setPixelRatioChangeAction,
 
 
     // core/snippets.js
