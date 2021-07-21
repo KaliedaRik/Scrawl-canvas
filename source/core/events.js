@@ -337,9 +337,15 @@ const setColorSchemeDarkAction = (func) => colorScheme_darkAction = func;
 
 
 // Monitoring the device pixel ratio
-let dpr = 0;
-
 let dpr_changeAction = λnull;
+const setPixelRatioChangeAction = (func) => dpr_changeAction = func;
+
+let dpr = 0;
+const getPixelRatio = () => dpr;
+
+let ignorePixelRatio = true;
+const getIgnorePixelRatio = () => ignorePixelRatio;
+const setIgnorePixelRatio = (val) => ignorePixelRatio = val;
 
 const updatePixelRatio = () => {
 
@@ -347,15 +353,10 @@ const updatePixelRatio = () => {
 
     console.log(`current dpr - ${dpr}`);
 
-    dpr_changeAction();
+    if (!ignorePixelRatio) dpr_changeAction();
 
     matchMedia(`(resolution: ${dpr}dppx)`).addEventListener("change", updatePixelRatio, { once: true });
 };
-
-const getPixelRatio = () => dpr;
-
-const setPixelRatioChangeAction = (func) => dpr_changeAction = func;
-
 
 updatePixelRatio();
 
@@ -380,4 +381,6 @@ export {
 
     getPixelRatio,
     setPixelRatioChangeAction,
+    getIgnorePixelRatio,
+    setIgnorePixelRatio,
 };
