@@ -4,6 +4,9 @@
 // [Run code](../../demo/canvas-035.html)
 import scrawl from '../source/scrawl.js'
 
+// Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
+scrawl.setIgnorePixelRatio(false);
+
 
 // #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas,
@@ -69,6 +72,7 @@ canvas.buildCell({
     backgroundColor: 'lightblue',
 
     shown: false,
+    useAsPattern: true,
 });
 
 scrawl.makeBlock({
@@ -106,6 +110,7 @@ canvas.buildCell({
     height: 75,
 
     shown: false,
+    useAsPattern: true,
 });
 
 scrawl.makePicture({

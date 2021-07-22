@@ -4,9 +4,12 @@
 // [Run code](../../demo/canvas-039.html)
 import scrawl from '../source/scrawl.js';
 
+// Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
+scrawl.setIgnorePixelRatio(false);
+
+
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
-
 
 // Create a second cell for the canvas
 // + This cell will act as a moveable layer (start, handle, offset, roll, flipUpend, flipReverse)

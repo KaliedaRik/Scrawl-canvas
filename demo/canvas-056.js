@@ -29,7 +29,6 @@ c2.set({
 c3.set({
     backgroundColor: 'lightslategray',
     fit: 'contain',
-    baseDimensionsAreStatic: true,
 }).setBase({
     width: 1000,
     height: 1000,
@@ -52,7 +51,6 @@ c5.set({
 }).setBase({
     width: 1000,
     height: 1000,
-    baseDimensionsAreStatic: true,
 });
 
 // Responsive canvas via CSS + JS; baseMatchesCanvasDimensions is true

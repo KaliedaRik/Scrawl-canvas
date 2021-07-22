@@ -39,6 +39,7 @@ canvas.set({
     backgroundColor: 'honeydew',
     checkForResize: true,
     fit: 'contain',
+    ignoreCanvasCssDimensions: true,
 }).setBase({
     width: 4000,
     height: 3000,

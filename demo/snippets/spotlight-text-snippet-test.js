@@ -1,5 +1,9 @@
 import scrawl from '../../source/scrawl.js';
 
+// Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
+scrawl.setIgnorePixelRatio(false);
+
+
 export default function (el) {
 
     let snippet = scrawl.makeSnippet({

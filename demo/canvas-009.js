@@ -75,6 +75,7 @@ canvas.buildCell({
     backgroundColor: 'lightblue',
 
     shown: false,
+    useAsPattern: true,
 });
 
 canvas.base.set({

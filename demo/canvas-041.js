@@ -4,6 +4,12 @@
 // [Run code](../../demo/canvas-041.html)
 import scrawl from '../source/scrawl.js';
 
+// This example doesn't play nicely with device pixel ratio values greater than 1 (because: instructions are absolute positioning onto the base Cell). Thus, no need to test it for compliance
+// + Would be much better if we replacved this demo with a makeAnimation object which is less contrived and more useful.
+
+// scrawl.setIgnorePixelRatio(false);
+
+
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
 

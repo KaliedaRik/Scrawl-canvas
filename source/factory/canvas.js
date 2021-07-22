@@ -226,10 +226,6 @@ let defaultAttributes = {
 // + Note that Scrawl-canvas ignores any attempt to set CSS dimension (width, height) values in the `css` attribute of the `set({})` function.
     ignoreCanvasCssDimensions: false,
 
-// __baseDimensionsAreStatic__ - we assume that the &lt;canvas element lives in an environment where we want it to match its base dimensions to its display dimensions. If this is not the case - for instance we set the base canvas to be much bigger than the display when initializing the scene - then we need to set this flag to `true`
-// + the attribute actually lives on the base Cell itself; this is a convenience attribute which is not saved in the Canvas wrapper
-    // baseDimensionsAreStatic: false,
-
 // ##### Accessibility attributes
 // &lt;canvas> elements are __raster images__ - they contain no information within their content (beyond pixel data) which can be analyzed or passed on to the browser or other device. The element _can_ include `title` and various `item` attributes (alongside custom `data-` attributes) but inclusion of these depends entirely on the developer remembering to include them when coding up a web page.
 // 
@@ -386,20 +382,6 @@ S.composite = function (item) {
     if (this.base) {
         this.base.set({
             composite: item
-        });
-    }
-};
-
-// `baseDimensionsAreStatic` - Boolean
-G.baseDimensionsAreStatic = function () {
-
-    return this.base.baseDimensionsAreStatic;
-};
-S.baseDimensionsAreStatic = function (item) {
-
-    if (this.base) {
-        this.base.set({
-            baseDimensionsAreStatic: item
         });
     }
 };

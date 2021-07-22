@@ -4,10 +4,12 @@
 // [Run code](../../demo/canvas-050.html)
 import scrawl from '../source/scrawl.js'
 
+// Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
+scrawl.setIgnorePixelRatio(false);
+
 
 // #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
-
 
 // Create a wheel entity which we can then bounce around the canvas
 let myWheel = scrawl.makeWheel({

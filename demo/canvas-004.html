@@ -10,6 +10,29 @@
   <link href="css/tests.css" rel="stylesheet" />
 
   <style>
+    canvas {
+      background-color: lemonchiffon;
+      border: 1px dashed red;
+      width: 100%;
+      height: 100%;
+    }
+
+    .canvas-host {
+      overflow: hidden;
+      resize: both;
+
+      border: 1px solid black;
+
+      width: 600px;
+      height: 600px;
+
+      min-width: 300px;
+      min-height: 300px;
+
+      max-width: 800px;
+      max-height: 800px;
+    }
+
     .controls {
       grid-template-columns: 1fr 2fr 1fr 2fr;
     }
@@ -42,10 +65,10 @@
     <div class="blue"><input class="controlItem" id="endY" type="range" value="0" min="0" max="100" step="1" /></div>
 
     <div class="green label">startRadius</div>
-    <div class="green"><input class="controlItem" id="startRadius" type="range" value="0" min="0" max="300" step="1" /></div>
+    <div class="green"><input class="controlItem" id="startRadius" type="range" value="0" min="0" max="700" step="1" /></div>
 
     <div class="blue label">endRadius</div>
-    <div class="blue"><input class="controlItem" id="endRadius" type="range" value="0" min="0" max="300" step="1" /></div>
+    <div class="blue"><input class="controlItem" id="endRadius" type="range" value="500" min="0" max="700" step="1" /></div>
 
     <div class="yellow label">Include red</div>
     <div class="yellow">
@@ -65,18 +88,8 @@
 
   </div>
 
-  <canvas id="mycanvas" width="600" height="400"></canvas>
-
-  <div class="controls">
-
-    <div class="lavender label">Width</div>
-    <div class="lavender"><input class="controlItem" id="width" type="range" value="600" min="200" max="1000" step="10" />
-    </div>
-
-    <div class="lavender label">Height</div>
-    <div class="lavender"><input class="controlItem" id="height" type="range" value="400" min="200" max="1000" step="10" />
-    </div>
-
+  <div class="canvas-host">
+    <canvas id="mycanvas"></canvas>
   </div>
 
   <p id="reportmessage"></p>
