@@ -979,6 +979,40 @@ colorSchemeMediaQuery.<span class="hljs-title function_">addEventListener</span>
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
+              <p>Monitoring the device pixel ratio</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> dpr_changeAction = λ<span class="hljs-literal">null</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">setPixelRatioChangeAction</span> = (<span class="hljs-params">func</span>) =&gt; dpr_changeAction = func;
+
+<span class="hljs-keyword">let</span> dpr = <span class="hljs-number">0</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">getPixelRatio</span> = (<span class="hljs-params"></span>) =&gt; dpr;
+
+<span class="hljs-keyword">let</span> ignorePixelRatio = <span class="hljs-literal">true</span>;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">getIgnorePixelRatio</span> = (<span class="hljs-params"></span>) =&gt; ignorePixelRatio;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">setIgnorePixelRatio</span> = (<span class="hljs-params">val</span>) =&gt; ignorePixelRatio = val;
+
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">updatePixelRatio</span> = (<span class="hljs-params"></span>) =&gt; {
+
+    dpr = <span class="hljs-variable language_">window</span>.<span class="hljs-property">devicePixelRatio</span>;
+
+    <span class="hljs-keyword">if</span> (!ignorePixelRatio) <span class="hljs-title function_">dpr_changeAction</span>();
+
+    <span class="hljs-title function_">matchMedia</span>(<span class="hljs-string">`(resolution: <span class="hljs-subst">${dpr}</span>dppx)`</span>).<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&quot;change&quot;</span>, updatePixelRatio, { <span class="hljs-attr">once</span>: <span class="hljs-literal">true</span> });
+};
+
+<span class="hljs-title function_">updatePixelRatio</span>();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
               <h4 id="exports">Exports</h4>
 
             </div>
@@ -998,6 +1032,11 @@ colorSchemeMediaQuery.<span class="hljs-title function_">addEventListener</span>
     colorSchemeActions,
     setColorSchemeDarkAction,
     setColorSchemeLightAction,
+
+    getPixelRatio,
+    setPixelRatioChangeAction,
+    getIgnorePixelRatio,
+    setIgnorePixelRatio,
 };</pre></div></div>
             
         </li>

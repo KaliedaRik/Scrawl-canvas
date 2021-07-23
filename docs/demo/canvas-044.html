@@ -305,6 +305,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-056.html">
+                  ./demo/canvas-056.js
+                </a>
+              
+                
                 <a class="source" href="core-001.html">
                   ./demo/core-001.js
                 </a>
@@ -768,6 +773,21 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
+              <p>Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">setIgnorePixelRatio</span>(<span class="hljs-literal">false</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
               <h4 id="scene-setup">Scene setup</h4>
 
             </div>
@@ -781,11 +801,11 @@ canvas.<span class="hljs-title function_">setBase</span>({
         </li>
         
         
-        <li id="section-4">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p>The order in which we compile Cells becomes important when building more complex patterns with additional Cells</p>
 
@@ -797,11 +817,11 @@ canvas.<span class="hljs-title function_">setBase</span>({
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>STEP 1. We define a gradient, then apply it to some Blocks we create in a new canvas Cell. This gives us a more interesting gradient pattern than the default ‘linear’ and ‘radial’ gradients supplied by the Canvas API</p>
 
@@ -823,11 +843,11 @@ canvas.<span class="hljs-title function_">setBase</span>({
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>Add a new Cell to our canvas</p>
 
@@ -838,17 +858,18 @@ canvas.<span class="hljs-title function_">setBase</span>({
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;gradient-pattern-cell&#x27;</span>,
     <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">50</span>, <span class="hljs-number">50</span>],
     <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">useAsPattern</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">compileOrder</span>: <span class="hljs-number">0</span>,
 });</pre></div></div>
             
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>Populate our new Cell with Block entitys that use our linear gradient</p>
 
@@ -882,11 +903,11 @@ canvas.<span class="hljs-title function_">setBase</span>({
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>STEP 2. Apply a Noise-based displacement filter to our pattern Cell. We can then animate this filter to make it more interesting</p>
 
@@ -895,11 +916,11 @@ canvas.<span class="hljs-title function_">setBase</span>({
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>Create the Noise asset</p>
 
@@ -918,11 +939,11 @@ canvas.<span class="hljs-title function_">setBase</span>({
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>TEST: see if we can load the Noise asset directly into a Picture entity, and into a Pattern style - we’ll use these for background textures.</p>
 
@@ -960,11 +981,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>Build filters that use the Noise asset</p>
 
@@ -994,11 +1015,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-12">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Update our Cell with the filters</p>
 
@@ -1011,11 +1032,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Animate the displacer filter using a Tween</p>
 
@@ -1047,11 +1068,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>STEP 3. We are now in a position where we can use our Cells as pattern fills for some SC entitys.</p>
 
@@ -1072,11 +1093,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>To use a Cell as a pattern we just assign its name to the entity’s fillStyle attribute
 fillStyle: ‘warped-pattern’,</p>
@@ -1089,11 +1110,11 @@ fillStyle: ‘warped-pattern’,</p>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>STEP 4. If we want, we can add some color-based filters to our entitys, to give our pattern a different look.</p>
 
@@ -1151,11 +1172,11 @@ scrawl.<span class="hljs-title function_">makeTetragon</span>({
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>STEP 5. There’s one additional thing we can do with our Cell-based pattern - pass it into a Pattern object where we can warp and resize it. Then we can apply it to entitys via the Pattern object.</p>
 
@@ -1192,11 +1213,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1222,11 +1243,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1242,11 +1263,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <h4 id="user-interaction">User interaction</h4>
 
@@ -1265,11 +1286,11 @@ scrawl.<span class="hljs-title function_">makeDragZone</span>({
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

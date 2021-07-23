@@ -305,6 +305,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-056.html">
+                  ./demo/canvas-056.js
+                </a>
+              
+                
                 <a class="source" href="core-001.html">
                   ./demo/core-001.js
                 </a>
@@ -768,6 +773,21 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
+              <p>Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">setIgnorePixelRatio</span>(<span class="hljs-literal">false</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
               <h4 id="google-analytics">Google Analytics</h4>
 <p>We load GA code in the normal way through markup in the dom-006.html file (lines 11-21), and get a handle on the <strong>ga</strong> object here</p>
 
@@ -779,11 +799,11 @@
         </li>
         
         
-        <li id="section-4">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p>Create a new tracker to handle tween and ticker action/progress, and set some attributes on it. </p>
 
@@ -794,11 +814,11 @@
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>We can then incorporate the tracker’s functionality in our various hook functions defined further down in this script</p>
 
@@ -815,11 +835,11 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>Comment out the next line to send tracker packets (so they show up in the console)</p>
 
@@ -831,11 +851,11 @@
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h4 id="scene-setup">Scene setup</h4>
 
@@ -846,11 +866,11 @@
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>Get images from DOM</p>
 
@@ -861,11 +881,11 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>Create Pattern styles using imported images</p>
 
@@ -886,11 +906,11 @@
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>Create Pattern styles dynamically</p>
 
@@ -911,11 +931,11 @@
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>Create a canvas-based Cell pattern</p>
 
@@ -931,6 +951,7 @@
     <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;lightblue&#x27;</span>,
 
     <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">useAsPattern</span>: <span class="hljs-literal">true</span>,
 });
 
 canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_">set</span>({
@@ -941,11 +962,11 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
-        <li id="section-12">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Create a Block entity to display in the new Cell pattern</p>
 
@@ -977,11 +998,11 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Main canvas display - create Block entitys which will use the patterns defined above</p>
 
@@ -1017,11 +1038,11 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>Include an anchor (href) link which can be tied to user interaction (in this case, mouse clicks on the canvas element) through events defined further down in this script.</p>
 
@@ -1030,11 +1051,11 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>ALWAYS include a description! We will be using the anchor’s description string later as part of our asistive technology solution for this demo.</p>
 
@@ -1048,11 +1069,11 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>The clickAction attribute captures both Scrawl-canvas trigger clicks and also non-mouse ‘clicks’ on the anchor element hidden at the top of the web page, for example using the keyboard (tab, return) or other assistive technology.</p>
 
@@ -1061,11 +1082,11 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>The function returns a string which Scrawl-canvas will add to the anchor’s ‘onclick’ attribute when it creates the anchor element dynamically and adds it to the DOM.</p>
 
@@ -1079,11 +1100,11 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>Include focus and blur actions, which will trigger the onEnter and onLeave functions (below) for visitors using non-mouse/touch navigation (for example: keyboard tabbing)</p>
 
@@ -1096,11 +1117,11 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p>Accessibility functionality to be used by event functions defined below in response to user activity - this time moving the mouse cursor across the &lt;canvas&gt; element. Note that ‘this’ refers to the entity object, meaning the functions can be safely cloned into other entitys.</p>
 
@@ -1111,11 +1132,11 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p>Update the block entity’s visual display</p>
 
@@ -1128,11 +1149,11 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p>This is where we update the accessibility information tied to the canvas element. We’re using the anchor attribute object’s description value to supply details of what actions will happen when the user clicks on the canvas while the mouse is over the block entity.</p>
 
@@ -1146,11 +1167,11 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p>Track the action in Google Analytics</p>
 
@@ -1164,11 +1185,11 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p>Reset the block entity’s visual display</p>
 
@@ -1181,11 +1202,11 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p>Reset the accessibility information tied to the canvas element.</p>
 
@@ -1199,11 +1220,11 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p>Track the action in Google Analytics</p>
 
@@ -1215,11 +1236,11 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p>Used by the Scrawl-canvas click event, below. This hit report will only be generated from user interaction on the canvas element, thus will supply different numbers to the anchor’s clickAction function above - a useful way to help calculate the volume of users bypassing the canvas and opening the Wikipedia page using the keyboard or assistive technology</p>
 
@@ -1230,11 +1251,11 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
-        <li id="section-27">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p>Track the action in Google Analytics</p>
 
@@ -1245,11 +1266,11 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p>Trigger the click event on the anchor element we added to the DOM</p>
 
@@ -1307,11 +1328,11 @@ canvas.<span class="hljs-property">base</span>.<span class="hljs-title function_
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p>Demonstrate zoned actions on a canvas element as a result of user interaction</p>
 <ul>
@@ -1335,11 +1356,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p>To capture other user interaction with the &lt;a&gt; DOM elements which, while being visually hidden, are still accessible - for instance when a user keyboard-tabs through the web page</p>
 <p>In this case, clicking on one of the tiles will open a related Wikipedia page in a new browser tab - as defined in the  <strong>onUp</strong> function in the block factories above</p>
@@ -1355,11 +1376,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1386,11 +1407,11 @@ Hits: <span class="hljs-subst">${interactionResults}</span>`</span>;
         </li>
         
         
-        <li id="section-32">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1406,11 +1427,11 @@ Hits: <span class="hljs-subst">${interactionResults}</span>`</span>;
         </li>
         
         
-        <li id="section-33">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 
@@ -1421,11 +1442,11 @@ Hits: <span class="hljs-subst">${interactionResults}</span>`</span>;
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p>To test artefact kill functionality</p>
 
@@ -1491,11 +1512,11 @@ Hits: <span class="hljs-subst">${interactionResults}</span>`</span>;
         </li>
         
         
-        <li id="section-35">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p>We use the <strong>canvas</strong> and <strong>myTracker</strong> variables in our blocks’ onEnter, onLeave and onUp functions. While this works fine for the blocks created in the scope of this module file’s code, it will fail when we kill and resurrect a block - in the resurrected block the canvas and myTracker variables will be ‘undefined’. So we need to reset the block’s ‘on…’ functions (in this module file’s code) after the block has resurrected</p>
 
@@ -1531,11 +1552,11 @@ Hits: <span class="hljs-subst">${interactionResults}</span>`</span>;
         </li>
         
         
-        <li id="section-36">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p>To test styles (Pattern) kill functionality</p>
 
@@ -1583,11 +1604,11 @@ Hits: <span class="hljs-subst">${interactionResults}</span>`</span>;
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p>Reset entitys, whose fill/strokeStyles will have been set to default values when the Pattern died</p>
 

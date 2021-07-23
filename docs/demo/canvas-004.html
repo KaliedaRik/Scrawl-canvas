@@ -305,6 +305,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-056.html">
+                  ./demo/canvas-056.js
+                </a>
+              
+                
                 <a class="source" href="core-001.html">
                   ./demo/core-001.js
                 </a>
@@ -768,22 +773,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <h4 id="scene-setup">Scene setup</h4>
+              <p>Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;
-
-canvas.<span class="hljs-title function_">set</span>({
-    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;blanchedalmond&#x27;</span>,
-    <span class="hljs-attr">css</span>: {
-        <span class="hljs-attr">border</span>: <span class="hljs-string">&#x27;1px solid black&#x27;</span>,
-        <span class="hljs-attr">overflow</span>: <span class="hljs-string">&#x27;hidden&#x27;</span>,
-        <span class="hljs-attr">resize</span>: <span class="hljs-string">&#x27;both&#x27;</span>,
-    },
-    <span class="hljs-attr">fit</span>: <span class="hljs-string">&#x27;cover&#x27;</span>,
-    <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,
-});</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">setIgnorePixelRatio</span>(<span class="hljs-literal">false</span>);</pre></div></div>
             
         </li>
         
@@ -793,6 +787,31 @@ canvas.<span class="hljs-title function_">set</span>({
               
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <h4 id="scene-setup">Scene setup</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>.<span class="hljs-property">mycanvas</span>;
+
+canvas.<span class="hljs-title function_">set</span>({
+    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;blanchedalmond&#x27;</span>,
+    <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">fit</span>: <span class="hljs-string">&#x27;cover&#x27;</span>,
+    <span class="hljs-attr">ignoreCanvasCssDimensions</span>: <span class="hljs-literal">true</span>,
+}).<span class="hljs-title function_">setBase</span>({
+    <span class="hljs-attr">width</span>: <span class="hljs-number">1000</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-number">1000</span>,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p>Create the radial gradient</p>
 
@@ -804,17 +823,17 @@ canvas.<span class="hljs-title function_">set</span>({
     <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
     <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
     <span class="hljs-attr">endY</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
-    <span class="hljs-attr">endRadius</span>: <span class="hljs-number">300</span>,
+    <span class="hljs-attr">endRadius</span>: <span class="hljs-number">500</span>,
 });</pre></div></div>
             
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>Create a block entity which will use the gradient</p>
 
@@ -836,11 +855,11 @@ canvas.<span class="hljs-title function_">set</span>({
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -869,11 +888,11 @@ End - x: <span class="hljs-subst">${graddy.get(<span class="hljs-string">&#x27;e
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -889,11 +908,11 @@ End - x: <span class="hljs-subst">${graddy.get(<span class="hljs-string">&#x27;e
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <h4 id="user-interaction">User interaction</h4>
 <p>Setup form observer functionality</p>
@@ -950,32 +969,6 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
         </li>
         
         
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
-              </div>
-              <p>Test to make sure Canvas is listening for external changes in its dimensions</p>
-<ul>
-<li>Canvas artefact’s <code>checkForResize</code> flag set to true, enabling the checks</li>
-<li>While we’ve setup the canvas element so it can be resized by dragging the lower right corner, most browsers will not respect this request.</li>
-<li>Can also resize the canvas by using the width and height form controls - these controls then update the element’s width and height attributes via the event listeners below.</li>
-<li>In both cases, the Canvas artefact needs to check whether resizing has occurred and take action.</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#width&#x27;</span>).<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
-    canvas.<span class="hljs-property">domElement</span>.<span class="hljs-property">width</span> = <span class="hljs-string">`<span class="hljs-subst">${e.target.value}</span>`</span>;
-}, <span class="hljs-literal">false</span>);
-<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#height&#x27;</span>).<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
-    canvas.<span class="hljs-property">domElement</span>.<span class="hljs-property">height</span> = <span class="hljs-string">`<span class="hljs-subst">${e.target.value}</span>`</span>;
-}, <span class="hljs-literal">false</span>);</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-10">
             <div class="annotation">
               
@@ -993,11 +986,9 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#startRadius&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
 <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#endX&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;
 <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#endY&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;
-<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#endRadius&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">300</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#endRadius&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">500</span>;
 <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#red&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#blue&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
-<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#width&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">600</span>;
-<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#height&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">400</span>;</pre></div></div>
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#blue&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;</pre></div></div>
             
         </li>
         

@@ -121,6 +121,8 @@ const myEmitter = scrawl.makeEmitter({
         // Start by saving the engine's current state.
         engine.save();
 
+        engine.setTransform(1, 0, 0, 1, 0, 0);
+
         // // We are using the same color for all of the Emitter's particles, which we've stored in a user-defined attribute in the World obvject.
         // engine.fillStyle = myWorld.get('particleColor');
 
