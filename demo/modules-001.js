@@ -14,6 +14,10 @@
 
 import scrawl from '../source/scrawl.js';
 
+// Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
+scrawl.setIgnorePixelRatio(false);
+
+
 let canvas = scrawl.library.canvas.mycanvas,
     namespace = 'London-crimes';
 
@@ -31,6 +35,7 @@ canvas.set({
 
     fit: 'contain',
     checkForResize: true,
+    ignoreCanvasCssDimensions: true,
 
 }).setBase({
 

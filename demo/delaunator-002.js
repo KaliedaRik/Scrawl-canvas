@@ -5,6 +5,9 @@
 import scrawl from '../source/scrawl.js';
 import Delaunator from 'https://cdn.skypack.dev/delaunator@5.0.0';
 
+// Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
+scrawl.setIgnorePixelRatio(false);
+
 
 // The following functions are used to handle the Delaunay object
 // + Code adapted from the [Delaunator Guide website](https://mapbox.github.io/delaunator/)
@@ -78,6 +81,7 @@ canvas.set({
     // Make the canvas responsive
     fit: 'cover',
     checkForResize: true,
+    ignoreCanvasCssDimensions: true,
 
 }).setBase({
 
