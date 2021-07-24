@@ -1710,6 +1710,43 @@ using any of these functions.</p>
               <div class="sswrap ">
                 <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
+              <p>Code to detect browser from Code Box: <a href="https://code-boxx.com/detect-browser-with-javascript/">https://code-boxx.com/detect-browser-with-javascript/</a></p>
+<ul>
+<li>Because there’s times when it’s easier to just shut down features in webkit-based browsers than deal with their nonsense (looking at you: Safari!)</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> detectBrowser = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">let</span> result = [];
+
+    <span class="hljs-keyword">if</span> ((!!<span class="hljs-variable language_">window</span>.<span class="hljs-property">opr</span> &amp;&amp; !!opr.<span class="hljs-property">addons</span>) || !!<span class="hljs-variable language_">window</span>.<span class="hljs-property">opera</span> || navigator.<span class="hljs-property">userAgent</span>.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27; OPR/&#x27;</span>) &gt;= <span class="hljs-number">0</span>) result.<span class="hljs-title function_">push</span>(<span class="hljs-string">&#x27;old-opera&#x27;</span>);
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-title class_">InstallTrigger</span> !== <span class="hljs-string">&#x27;undefined&#x27;</span>) result.<span class="hljs-title function_">push</span>(<span class="hljs-string">&#x27;firefox&#x27;</span>);
+
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/constructor/i</span>.<span class="hljs-title function_">test</span>(<span class="hljs-variable language_">window</span>.<span class="hljs-property">HTMLElement</span>) || (<span class="hljs-keyword">function</span> (<span class="hljs-params">p</span>) { <span class="hljs-keyword">return</span> p.<span class="hljs-title function_">toString</span>() === <span class="hljs-string">&quot;[object SafariRemoteNotification]&quot;</span>; })(!<span class="hljs-variable language_">window</span>[<span class="hljs-string">&#x27;safari&#x27;</span>] || (<span class="hljs-keyword">typeof</span> safari !== <span class="hljs-string">&#x27;undefined&#x27;</span> &amp;&amp; safari.<span class="hljs-property">pushNotification</span>))) result.<span class="hljs-title function_">push</span>(<span class="hljs-string">&#x27;safari&#x27;</span>);
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-comment">/*@cc_on!@*/</span><span class="hljs-literal">false</span> || !!<span class="hljs-variable language_">document</span>.<span class="hljs-property">documentMode</span>) result.<span class="hljs-title function_">push</span>(<span class="hljs-string">&#x27;internet-explorer&#x27;</span>);
+
+    <span class="hljs-keyword">if</span> (result.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;internet-explorer&#x27;</span>) &lt; <span class="hljs-number">0</span> &amp;&amp; !!<span class="hljs-variable language_">window</span>.<span class="hljs-property">StyleMedia</span>) result.<span class="hljs-title function_">push</span>(<span class="hljs-string">&#x27;edge&#x27;</span>);
+
+    <span class="hljs-keyword">if</span>(!!<span class="hljs-variable language_">window</span>.<span class="hljs-property">chrome</span>) result.<span class="hljs-title function_">push</span>(<span class="hljs-string">&#x27;chrome&#x27;</span>);
+
+    <span class="hljs-keyword">if</span>((result.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;chrome&#x27;</span>) &gt;= <span class="hljs-number">0</span> || result.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;old-opera&#x27;</span>) &gt;= <span class="hljs-number">0</span>) &amp;&amp; !!<span class="hljs-variable language_">window</span>.<span class="hljs-property">CSS</span>) result.<span class="hljs-title function_">push</span>(<span class="hljs-string">&#x27;blink&#x27;</span>);
+
+    <span class="hljs-keyword">return</span> result;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-49">&#x00a7;</a>
+              </div>
               <h4 id="exports">Exports</h4>
 
             </div>
@@ -1776,6 +1813,8 @@ using any of these functions.</p>
     easeOutInBounce,
 
     getArrayType,
+
+    detectBrowser,
 };</pre></div></div>
             
         </li>

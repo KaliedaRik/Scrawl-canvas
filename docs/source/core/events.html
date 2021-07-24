@@ -510,7 +510,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { isa_fn, isa_dom, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./utilities.js&quot;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { isa_fn, isa_dom, λ<span class="hljs-literal">null</span>, Ωempty, detectBrowser } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./utilities.js&quot;</span>;</pre></div></div>
             
         </li>
         
@@ -986,6 +986,8 @@ colorSchemeMediaQuery.<span class="hljs-title function_">addEventListener</span>
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> dpr_changeAction = λ<span class="hljs-literal">null</span>;
 <span class="hljs-keyword">const</span> <span class="hljs-title function_">setPixelRatioChangeAction</span> = (<span class="hljs-params">func</span>) =&gt; dpr_changeAction = func;
 
+<span class="hljs-keyword">const</span> browserIs = <span class="hljs-title function_">detectBrowser</span>();
+
 <span class="hljs-keyword">let</span> dpr = <span class="hljs-number">0</span>;
 <span class="hljs-keyword">const</span> <span class="hljs-title function_">getPixelRatio</span> = (<span class="hljs-params"></span>) =&gt; dpr;
 
@@ -995,9 +997,19 @@ colorSchemeMediaQuery.<span class="hljs-title function_">addEventListener</span>
 
 <span class="hljs-keyword">const</span> <span class="hljs-title function_">updatePixelRatio</span> = (<span class="hljs-params"></span>) =&gt; {
 
-    dpr = <span class="hljs-variable language_">window</span>.<span class="hljs-property">devicePixelRatio</span>;
+    <span class="hljs-keyword">if</span> (browserIs.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;safari&#x27;</span>) &gt;= <span class="hljs-number">0</span>) {
 
-    <span class="hljs-keyword">if</span> (!ignorePixelRatio) <span class="hljs-title function_">dpr_changeAction</span>();
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;safari browser detected, switching off DPR&#x27;</span>);
+
+        ignorePixelRatio = <span class="hljs-literal">true</span>;
+        dpr = <span class="hljs-number">1</span>;
+    }
+    <span class="hljs-keyword">else</span> {
+
+        dpr = <span class="hljs-variable language_">window</span>.<span class="hljs-property">devicePixelRatio</span>;
+
+        <span class="hljs-keyword">if</span> (!ignorePixelRatio) <span class="hljs-title function_">dpr_changeAction</span>();
+    }
 
     <span class="hljs-title function_">matchMedia</span>(<span class="hljs-string">`(resolution: <span class="hljs-subst">${dpr}</span>dppx)`</span>).<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&quot;change&quot;</span>, updatePixelRatio, { <span class="hljs-attr">once</span>: <span class="hljs-literal">true</span> });
 };
