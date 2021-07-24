@@ -1,5 +1,5 @@
 // # Demo Canvas 025 
-// Responsive images
+// Various responsive and non-responsive canvases; responsive images
 
 // [Run code](../../demo/canvas-025.html)
 import scrawl from '../source/scrawl.js'
