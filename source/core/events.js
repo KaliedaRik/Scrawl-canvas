@@ -14,7 +14,7 @@
 
 
 // #### Imports
-import { isa_fn, isa_dom, λnull, Ωempty } from "./utilities.js";
+import { isa_fn, isa_dom, λnull, Ωempty, detectBrowser } from "./utilities.js";
 
 // `Exported function` (to modules and scrawl object) - __scrawl.makeAnimationObserver__ - function to create and start a [DOM IntersectionObserver](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) object.
 //
@@ -340,6 +340,8 @@ const setColorSchemeDarkAction = (func) => colorScheme_darkAction = func;
 let dpr_changeAction = λnull;
 const setPixelRatioChangeAction = (func) => dpr_changeAction = func;
 
+const browserIs = detectBrowser();
+
 let dpr = 0;
 const getPixelRatio = () => dpr;
 
@@ -349,9 +351,19 @@ const setIgnorePixelRatio = (val) => ignorePixelRatio = val;
 
 const updatePixelRatio = () => {
 
-    dpr = window.devicePixelRatio;
+    if (browserIs.indexOf('safari') >= 0) {
 
-    if (!ignorePixelRatio) dpr_changeAction();
+        console.log('safari browser detected, switching off DPR');
+
+        ignorePixelRatio = true;
+        dpr = 1;
+    }
+    else {
+
+        dpr = window.devicePixelRatio;
+
+        if (!ignorePixelRatio) dpr_changeAction();
+    }
 
     matchMedia(`(resolution: ${dpr}dppx)`).addEventListener("change", updatePixelRatio, { once: true });
 };

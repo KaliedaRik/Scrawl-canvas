@@ -701,6 +701,31 @@ const easeOutInBounce = function(t) {
 
 const getArrayType = someObject => someObject && someObject.constructor && someObject.constructor.name && someObject.constructor.name || null;
 
+
+// Code to detect browser from Code Box: https://code-boxx.com/detect-browser-with-javascript/
+// + Because there's times when it's easier to just shut down features in webkit-based browsers than deal with their nonsense (looking at you: Safari!)
+const detectBrowser = function () {
+
+    let result = [];
+
+    if ((!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0) result.push('old-opera');
+
+    if (typeof InstallTrigger !== 'undefined') result.push('firefox');
+
+    else if (/constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification))) result.push('safari');
+
+    if (/*@cc_on!@*/false || !!document.documentMode) result.push('internet-explorer');
+
+    if (result.indexOf('internet-explorer') < 0 && !!window.StyleMedia) result.push('edge');
+
+    if(!!window.chrome) result.push('chrome');
+
+    if((result.indexOf('chrome') >= 0 || result.indexOf('old-opera') >= 0) && !!window.CSS) result.push('blink');
+
+    return result;
+};
+
+
 // #### Exports
 export {
     addStrings,
@@ -764,5 +789,7 @@ export {
     easeOutInBounce,
 
     getArrayType,
+
+    detectBrowser,
 };
 

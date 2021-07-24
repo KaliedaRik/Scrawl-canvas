@@ -9,7 +9,13 @@ scrawl.setIgnorePixelRatio(false);
 
 
 // #### Scene setup
-let canvas = scrawl.library.canvas.mycanvas;
+const c1 = scrawl.library.artefact['canvas-1'],
+    c2 = scrawl.library.artefact['canvas-2'],
+    c3 = scrawl.library.artefact['canvas-3'],
+    c4 = scrawl.library.artefact['canvas-4'],
+    c5 = scrawl.library.artefact['canvas-5'],
+    c6 = scrawl.library.artefact['canvas-6'],
+    c7 = scrawl.library.artefact['canvas-7'];
 
 
 // Import image from DOM, and add data to it
@@ -34,22 +40,69 @@ myRiver.set({
 });
 
 
-// Make canvas responsive
-canvas.set({
-    backgroundColor: 'honeydew',
+// Set canvas dimensions in HTML; initial base set to canvas dimensions
+c1.set({
+    backgroundColor: 'red',
+    fit: 'cover',
+});
+
+// Set canvas dimensions in HTML; added border; initial base set to canvas dimensions
+c2.set({
+    backgroundColor: 'red',
+    fit: 'cover',
+});
+
+// Set canvas dimensions in HTML; base size is static (via JS)
+c3.set({
+    backgroundColor: 'red',
+    fit: 'cover',
+}).setBase({
+    width: 1000,
+    height: 1000,
+});
+
+// Responsive canvas via CSS + JS; initial base set to canvas dimensions
+c4.set({
+    backgroundColor: 'red',
+    fit: 'cover',
     checkForResize: true,
-    fit: 'contain',
+    ignoreCanvasCssDimensions: true,
+});
+
+// Responsive canvas via CSS + JS; base size is static (via JS)
+c5.set({
+    backgroundColor: 'red',
+    fit: 'cover',
+    checkForResize: true,
     ignoreCanvasCssDimensions: true,
 }).setBase({
-    width: 4000,
-    height: 3000,
+    width: 1000,
+    height: 1000,
+});
+
+// Responsive canvas via CSS + JS; baseMatchesCanvasDimensions is true
+c6.set({
+    backgroundColor: 'red',
+    fit: 'cover',
+    checkForResize: true,
+    ignoreCanvasCssDimensions: true,
+    baseMatchesCanvasDimensions: true,
+});
+
+// Full bleed canvas
+c7.set({
+    backgroundColor: 'red',
+    fit: 'cover',
+    checkForResize: true,
+    ignoreCanvasCssDimensions: true,
 });
 
 
 // Build the Picture entity
 let piccy = scrawl.makePicture({
 
-    name: `${canvas.name}-image`,
+    name: 'c1-image',
+    group: c1.base.name,
     asset: 'river',
 
     width: '100%',
@@ -57,6 +110,36 @@ let piccy = scrawl.makePicture({
 
     copyWidth: '100%',
     copyHeight: '100%',
+
+}).clone({
+
+    name: 'c2-image',
+    group: c2.base.name,
+
+}).clone({
+
+    name: 'c3-image',
+    group: c3.base.name,
+
+}).clone({
+
+    name: 'c4-image',
+    group: c4.base.name,
+
+}).clone({
+
+    name: 'c5-image',
+    group: c5.base.name,
+
+}).clone({
+
+    name: 'c6-image',
+    group: c6.base.name,
+
+}).clone({
+
+    name: 'c7-image',
+    group: c7.base.name,
 });
 
 
@@ -65,19 +148,21 @@ let piccy = scrawl.makePicture({
 let report = function () {
 
     let testTicker = Date.now(),
-        testTime, testNow,
+        testTime, testNow, dragging,
         testMessage = document.querySelector('#reportmessage');
 
     return function () {
 
         testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
 
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    asset natural dims: ${myRiver.source.naturalWidth}, ${myRiver.source.naturalHeight}
-    asset current dims: ${myRiver.sourceNaturalWidth}, ${myRiver.sourceNaturalHeight}
-    entity copy dims: ${piccy.currentCopyDimensions[0]}, ${piccy.currentCopyDimensions[1]}`;
+        // Because we are using the same render object to animate all four canvases, this report function gets run four times for each Display cycle (once each time each canvas is rendered). The fix is to choke the functionality so it actions only after a given number of milliseconds since it was last run - typically 2 milliseconds is enough to ensure the action only runs once per cycle.
+        if (testNow - testTicker > 2) {
+
+            testTime = testNow - testTicker;
+            testTicker = testNow;
+
+            testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+        }
     };
 }();
 
@@ -85,8 +170,8 @@ let report = function () {
 // Create the Display cycle animation
 scrawl.makeRender({
 
-    name: `${canvas.name}-render`,
-    target: canvas,
+    name: 'demo-animation',
+    target: [c1, c2, c3, c4, c5, c6, c7],
     afterShow: report,
 });
 
