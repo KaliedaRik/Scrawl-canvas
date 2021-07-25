@@ -95,6 +95,7 @@ c7.set({
     fit: 'cover',
     checkForResize: true,
     ignoreCanvasCssDimensions: true,
+    baseMatchesCanvasDimensions: true,
 });
 
 

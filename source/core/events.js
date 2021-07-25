@@ -15,6 +15,7 @@
 
 // #### Imports
 import { isa_fn, isa_dom, λnull, Ωempty, detectBrowser } from "./utilities.js";
+import { canvas, cell } from "./library.js";
 
 // `Exported function` (to modules and scrawl object) - __scrawl.makeAnimationObserver__ - function to create and start a [DOM IntersectionObserver](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) object.
 //
@@ -361,6 +362,16 @@ const updatePixelRatio = () => {
     else {
 
         dpr = window.devicePixelRatio;
+
+        for (const [name, wrapper] of Object.entries(canvas)) {
+
+            wrapper.dirtyDimensions = true;
+        }
+
+        for (const [name, wrapper] of Object.entries(cell)) {
+
+            wrapper.dirtyDimensions = true;
+        }
 
         if (!ignorePixelRatio) dpr_changeAction();
     }
