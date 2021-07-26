@@ -104,9 +104,10 @@
   <div class="testinfo">
     <h4>Test purpose</h4>
     <ul>
-      <li>Setup the canvas element so it picks up its parent element's dimension updates</li>
+      <li>Setup a number of canvas elements with differing dimensional attributes (fixed width, CSS% values, etc)</li>
+      <li>Import all the canvases into Scrawl-canvas and update them in various ways using various flags; set the dimensions of the base Cells of some of the Canvas wrappers to be different to the display &lt;canvas> dimensions</li>
       <li>Import a responsive image (with a srcset attribute) from the DOM</li>
-      <li>Create a Picture entity and set it to cover the canvas</li>
+      <li>Create Picture entitys and set them to cover each &lt;canvas> element</li>
       <li>Change the browser's viewport size</li>
       <li>Check that when the browser selects a different srcset image, the canvas displays that image</li>
       <li>Check that the canvas always displays the entire image, not a part of it</li>

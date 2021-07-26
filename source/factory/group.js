@@ -251,12 +251,17 @@ P.stamp = function () {
             // Setup the pool Cell, if required
             if (filterCell && filterCell.element) {
 
-                let dims = currentHost.currentDimensions;
+                let dims = currentHost.currentDimensions,
+                    fCellDims = filterCell.currentDimensions,
+                    fEl = filterCell.element;
 
-                if (dims) {
+                if (dims && fCellDims && fEl) {
 
-                    filterCell.element.width = dims[0];
-                    filterCell.element.height = dims[1];
+                    fCellDims[0] = dims[0];
+                    fCellDims[1] = dims[1];
+
+                    fEl.width = dims[0];
+                    fEl.height = dims[1];
                 }
             }
 

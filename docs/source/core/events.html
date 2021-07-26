@@ -511,7 +511,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { isa_fn, isa_dom, λ<span class="hljs-literal">null</span>, Ωempty, detectBrowser } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./utilities.js&quot;</span>;
-<span class="hljs-keyword">import</span> { canvas, cell } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./library.js&quot;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { canvas, cell, entity } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./library.js&quot;</span>;</pre></div></div>
             
         </li>
         
@@ -1017,8 +1017,41 @@ colorSchemeMediaQuery.<span class="hljs-title function_">addEventListener</span>
         <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> [name, wrapper] <span class="hljs-keyword">of</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(cell)) {
 
             wrapper.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
-        }
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <p>window.setTimeout(() =&gt; {</p>
 
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> [name, ent] <span class="hljs-keyword">of</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(entity)) {
+
+                ent.<span class="hljs-property">dirtyHost</span> = <span class="hljs-literal">true</span>;
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
+              </div>
+              <p>}, 20);</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
         <span class="hljs-keyword">if</span> (!ignorePixelRatio) <span class="hljs-title function_">dpr_changeAction</span>();
     }
 
@@ -1030,11 +1063,11 @@ colorSchemeMediaQuery.<span class="hljs-title function_">addEventListener</span>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 
