@@ -768,6 +768,21 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
+              <p>Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">setIgnorePixelRatio</span>(<span class="hljs-literal">false</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
               <h4 id="scene-setup">Scene setup</h4>
 
             </div>
@@ -780,11 +795,11 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
         </li>
         
         
-        <li id="section-4">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <h4 id="canvas-1">Canvas 1</h4>
 <p>Applying more than one clipped region to a scene, using Groups to separate them</p>
@@ -798,11 +813,11 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>The scene will be made up of two clipped images, both draggable around the canvas</p>
 
@@ -822,11 +837,11 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>Clipping region entitys</p>
 
@@ -855,11 +870,11 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>The clipping region entity MUST be stamped on the canvas before the entitys that will be clipped by it</p>
 
@@ -870,11 +885,11 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>Add outlines to our clipped regions</p>
 
@@ -926,11 +941,11 @@ scrawl.<span class="hljs-title function_">makeStar</span>({
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>Picture entitys - we pivot these to our clipping region entitys to make the clipped display the same, wherever it is moved to on the canvas</p>
 
@@ -963,11 +978,11 @@ scrawl.<span class="hljs-title function_">makeStar</span>({
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>We’re not interested with associating the canvas 1 drag group with the canvas’s base cell - the entitys in this group will already be assigned to the clip groups, thus will already be included in the canvas’s Display cycle</p>
 
@@ -989,11 +1004,11 @@ scrawl.<span class="hljs-title function_">makeDragZone</span>({
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h4 id="canvas-2">Canvas 2:</h4>
 <p>Generate and use Picture entitys from clipped scenes</p>
@@ -1007,11 +1022,11 @@ scrawl.<span class="hljs-title function_">makeDragZone</span>({
         </li>
         
         
-        <li id="section-12">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>We will generate Image assets from cells created specifically for this one task</p>
 
@@ -1034,11 +1049,11 @@ canvas2.<span class="hljs-title function_">buildCell</span>({
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Clipped entitys - this code is much the same as for canvas1, without dragging and delta animation</p>
 
@@ -1119,11 +1134,11 @@ scrawl.<span class="hljs-title function_">makePicture</span>({
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>We will get Scrawl-canvas to capture the image output of each Cell as part of the first Display cycle. Then we can create regular Picture entitys from those images, and get rid of the original cells and entitys.</p>
 
@@ -1135,11 +1150,11 @@ scrawl.<span class="hljs-title function_">createImageFromCell</span>(<span class
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>We create our Picture entitys from Cell output in a post-initialization step. Note that this function may run more than once as page loading is asynchronous and unpredictable</p>
 
@@ -1152,11 +1167,11 @@ scrawl.<span class="hljs-title function_">createImageFromCell</span>(<span class
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>check to see if groups have been created - they don’t create until late in the page load process</p>
 
@@ -1170,11 +1185,11 @@ scrawl.<span class="hljs-title function_">createImageFromCell</span>(<span class
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>create our drag group and dragzone, if they don’t already exist</p>
 
@@ -1220,11 +1235,11 @@ scrawl.<span class="hljs-title function_">createImageFromCell</span>(<span class
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>The cog cell, and its entitys, have served their purpose; time to get rid of them</p>
 
@@ -1261,11 +1276,11 @@ scrawl.<span class="hljs-title function_">createImageFromCell</span>(<span class
         </li>
         
         
-        <li id="section-19">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p>The star cell, and its entitys, have served their purpose; time to get rid of them</p>
 
@@ -1279,11 +1294,11 @@ scrawl.<span class="hljs-title function_">createImageFromCell</span>(<span class
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <h4 id="canvas-3">Canvas 3:</h4>
 <p>Emulate clipping to a Phrase entity using a composite scene rendered in its own cell</p>
@@ -1297,11 +1312,11 @@ scrawl.<span class="hljs-title function_">createImageFromCell</span>(<span class
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p>We will generate Image assets from cells created specifically for this one task</p>
 
@@ -1329,11 +1344,11 @@ scrawl.<span class="hljs-title function_">makePhrase</span>({
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p>check to see if groups have been created - they don’t create until late in the page load process</p>
 
@@ -1344,11 +1359,11 @@ scrawl.<span class="hljs-title function_">makePhrase</span>({
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p>create our drag group and dragzone, if they don’t already exist</p>
 
@@ -1374,11 +1389,11 @@ scrawl.<span class="hljs-title function_">makePhrase</span>({
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p>We need to retrieve the Phrase entity’s dimensions - which are hard to guess before it’s created - and update its surrounding environment to fit.</p>
 
@@ -1389,11 +1404,11 @@ scrawl.<span class="hljs-title function_">makePhrase</span>({
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p>We can use the phrase entity as a stencil by applying a Picture entity over it with a GCO = ‘source-atop’</p>
 
@@ -1419,11 +1434,11 @@ scrawl.<span class="hljs-title function_">makePhrase</span>({
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p>We can also add an outline, if we want</p>
 
@@ -1443,11 +1458,11 @@ scrawl.<span class="hljs-title function_">makePhrase</span>({
         </li>
         
         
-        <li id="section-27">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p>We cannot directly drag-and-drop a Cell, but we can create a Block entity and pivot the Cell to it, then drag-and-drop the Block</p>
 
@@ -1482,11 +1497,11 @@ scrawl.<span class="hljs-title function_">makePhrase</span>({
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function will be called 3 times - once per canvas - so we need to make sure the appropriate function gets invoked for that canvas</p>
@@ -1514,11 +1529,11 @@ scrawl.<span class="hljs-title function_">makeRender</span>({
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p>Note that this function will be run three times - once for each of the canvases targeted. Thus we need to code the function defensively so that code related to a particular canvas runs only once </p>
 
@@ -1530,11 +1545,11 @@ scrawl.<span class="hljs-title function_">makeRender</span>({
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

@@ -47,6 +47,8 @@ import { generateUniqueString, isa_canvas, mergeOver, λthis, λnull, Ωempty } 
 
 import { scrawlCanvasHold } from '../core/document.js';
 
+import { getPixelRatio, getIgnorePixelRatio } from "../core/events.js";
+
 import { makeGroup } from './group.js';
 import { makeState } from './state.js';
 import { makeCoordinate, requestCoordinate, releaseCoordinate } from './coordinate.js';
@@ -209,8 +211,12 @@ let defaultAttributes = {
 // __isBase__ - Every displayed &lt;canvas> element - wrapped in a Scrawl-canvas Canvas object (factory/canvas.js) - must possess at least one Cell object, known as its 'base' Cell. 
     isBase: false,
 
+// __useAsPattern__ - Used to ignore the requirement to resize canvases to take into account device pixel ratios greater than 1 
+    useAsPattern: false,
+
 // __controller__ - A reference link to the displayed &lt;canvas> element's Scrawl-canvas wrapper (factory/canvas.js) - only 'base' cells require this handle.
     controller: null,
+
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -528,20 +534,50 @@ P.cleanDimensionsAdditionalActions = function() {
             current = this.currentDimensions,
             base = this.isBase;
 
+        let ignoreDpr = getIgnorePixelRatio();
+        let dpr = getPixelRatio();
+
         // DEPRECATED (because it is a really bad name) __isComponent__ replaced by __baseMatchesCanvasDimensions__
-        if (base && control && (control.baseMatchesCanvasDimensions || control.isComponent)) {
+        if (ignoreDpr) {
 
-            let controlDims = this.controller.currentDimensions,
-                dims = this.dimensions;
+            if (base && control && (control.baseMatchesCanvasDimensions || control.isComponent)) {
 
-            dims[0] = current[0] = controlDims[0];
-            dims[1] = current[1] = controlDims[1];
+                let controlDims = this.controller.currentDimensions,
+                    dims = this.dimensions;
+
+                dims[0] = current[0] = controlDims[0];
+                dims[1] = current[1] = controlDims[1];
+            }
+
+            let [w, h] = current;
+
+            element.width = w;
+            element.height = h;
         }
+        else {
 
-        let [w, h] = current;
+            if (base && control && (control.baseMatchesCanvasDimensions || control.isComponent)) {
 
-        element.width = w;
-        element.height = h;
+                let controlDims = this.controller.currentDimensions,
+                    dims = this.dimensions;
+
+                dims[0] = current[0] = controlDims[0];
+                dims[1] = current[1] = controlDims[1];
+            }
+
+            let [w, h] = current;
+
+            if (ignoreDpr) {
+
+                element.width = w;
+                element.height = h;
+            }
+            else {
+
+                element.width = w * dpr;
+                element.height = h * dpr;
+            }
+        }
 
         this.setEngineFromState(this.engine);
 
@@ -589,7 +625,7 @@ P.installElement = function (element) {
     this.engine = this.element.getContext('2d', {willReadFrequently: true});
 
     this.state = makeState({
-        engine: this.engine
+        engine: this.engine,
     });
 
     return this;
@@ -867,6 +903,24 @@ P.getComputedFontSizes = function () {
 // #### Display cycle functionality
 // This functionality is triggered by the Cell's Canvas wrapper controller
 
+// `checkEngineScale`
+const checkEngineScale = function (engine) {
+
+    if (engine) {
+
+        engine.setTransform(1,0,0,1,0,0);
+
+        if (getIgnorePixelRatio()) engine.scale(1, 1);
+        else {
+
+            let dpr = getPixelRatio();
+            engine.scale(dpr, dpr);
+            return dpr;
+        }
+    }
+    return 1;
+};
+
 // `clear`
 P.clear = function () {
 
@@ -875,7 +929,20 @@ P.clear = function () {
 
     this.prepareStamp();
 
-    engine.setTransform(1,0,0,1,0,0);
+    let dpr = checkEngineScale(engine);
+
+    let w = width * dpr,
+        h = height * dpr;
+
+    // if (this.fixedDimensions && !this.isBase) {
+    //     element.style.width = `${width}px`;
+    //     element.style.height = `${height}px`;
+    // }
+    if (this.useAsPattern) {
+
+        element.width = width;
+        element.height = height;
+    }
 
     if (backgroundColor) {
 
@@ -897,18 +964,23 @@ P.clear = function () {
         
         let {engine:tempEngine, element:tempEl} = tempCell;
 
-        tempEl.width = width;
-        tempEl.height = height;
+        tempEl.width = w;
+        tempEl.height = h;
 
         let data = engine.getImageData(0, 0, width, height);
-        tempEngine.putImageData(data, 0, 0);
+        tempEngine.putImageData(data, 0, 0, 0, 0, width, height);
 
         let oldAlpha = engine.globalAlpha;
 
         engine.clearRect(0, 0, width, height);
         engine.globalAlpha = clearAlpha;
-        engine.drawImage(tempEl, 0, 0);
+
+        if (this.useAsPattern) engine.drawImage(tempEl, 0, 0, width, height, 0, 0, width, height);
+        else engine.drawImage(tempEl, 0, 0, w, h, 0, 0, width, height);
+
         engine.globalAlpha = oldAlpha;
+
+        releaseCell(tempCell);
     }
     else engine.clearRect(0, 0, width, height);
 };
@@ -922,6 +994,8 @@ P.compile = function(){
     this.prepareStamp();
 
     if(this.dirtyFilters || !this.currentFilters) this.cleanFilters();
+
+    checkEngineScale(this.engine);
 
     const gb = this.groupBuckets,
         gbLen = gb.length;
@@ -960,7 +1034,8 @@ P.show = function () {
             paste;
 
         engine.save();
-        engine.setTransform(1, 0, 0, 1, 0, 0);
+
+        checkEngineScale(engine);
             
         engine.filter = this.filter;
 
@@ -1529,6 +1604,7 @@ const requestCell = function () {
 
     let c = cellPool.shift();
     c.engine.save();
+
     return c;
 };
 

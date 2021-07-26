@@ -4,6 +4,9 @@
 // [Run code](../../demo/particles-001.html)
 import scrawl from '../source/scrawl.js'
 
+// Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
+scrawl.setIgnorePixelRatio(false);
+
 
 // #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
@@ -117,6 +120,8 @@ const myEmitter = scrawl.makeEmitter({
 
         // Start by saving the engine's current state.
         engine.save();
+
+        engine.setTransform(1, 0, 0, 1, 0, 0);
 
         // // We are using the same color for all of the Emitter's particles, which we've stored in a user-defined attribute in the World obvject.
         // engine.fillStyle = myWorld.get('particleColor');

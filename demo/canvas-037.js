@@ -8,6 +8,9 @@
 // [Run code](../../demo/canvas-037.html)
 import scrawl from '../source/scrawl.js';
 
+// Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
+scrawl.setIgnorePixelRatio(false);
+
 
 // #### Scene state
 // Because we need to manually calculate the copy position and dimensions for the Picture entity, we need to create state to hold known values and record changes between user interactions

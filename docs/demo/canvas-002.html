@@ -768,6 +768,21 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
+              <p>Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">setIgnorePixelRatio</span>(<span class="hljs-literal">false</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
               <h4 id="scene-setup">Scene setup</h4>
 
             </div>
@@ -781,11 +796,11 @@ canvas.<span class="hljs-title function_">setBase</span>({
         </li>
         
         
-        <li id="section-4">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p>Create and clone block and wheel entitys. For the sake of safety and sanity, create the (reference) entitys on which other artefacts will pivot and mimic first. Then create those other artefacts.</p>
 <p>Note: setting this entity’s <code>method</code> value to <strong>none</strong> means that while it will perform all necessary calculations as part of the Display cycle, it will not complete its stamp action, thus will not appear on the display. This differs from setting its <code>visibility</code> attribute to false, which will make the entity skip both calculation and stamp operations</p>
@@ -815,11 +830,11 @@ canvas.<span class="hljs-title function_">setBase</span>({
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>To pivot this entity to the reference entity, we need to set both its <code>pivot</code> attribute (to the reference entity’s name, or the entity itself) <strong>and also</strong> set the <code>lockTo</code> attribute to the value <strong>‘pivot’</strong></p>
 
@@ -908,11 +923,11 @@ myblock.<span class="hljs-title function_">clone</span>({
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p><code>mimic</code> is an extended form of <code>pivot</code></p>
 
@@ -924,11 +939,11 @@ myblock.<span class="hljs-title function_">clone</span>({
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>When an entity mimics another entity’s dimensions, its own dimensions (width, height) can be added to the mimic dimensions</p>
 
@@ -940,11 +955,11 @@ myblock.<span class="hljs-title function_">clone</span>({
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>Handles can be directly affected by mimic dimensions. If the entity adds its own dimensions to the mimics dimensions, then it may also need to add appropriate handle values to the mimic’s handle</p>
 
@@ -958,11 +973,11 @@ myblock.<span class="hljs-title function_">clone</span>({
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>The default values for the <strong>useMimic</strong> and <strong>addOwn</strong> variables is ‘false’ - including false attributes here only for convenience during development work</p>
 
@@ -1007,11 +1022,11 @@ mywheel.<span class="hljs-title function_">clone</span>({
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <h4 id="user-interaction">User interaction</h4>
 <p>Function to check whether mouse cursor is over canvas, and lock the reference entity accordingly</p>
@@ -1038,11 +1053,11 @@ mywheel.<span class="hljs-title function_">clone</span>({
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -1071,11 +1086,11 @@ mywheel.<span class="hljs-title function_">clone</span>({
         </li>
         
         
-        <li id="section-12">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1092,11 +1107,11 @@ mywheel.<span class="hljs-title function_">clone</span>({
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <h4 id="user-interaction">User interaction</h4>
 <p>Setup form observer functionality. We’re doing it this way (wrapped in a function) so we can test that it can be killed, and then recreated, later</p>
@@ -1125,11 +1140,11 @@ mywheel.<span class="hljs-title function_">clone</span>({
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 
@@ -1140,11 +1155,11 @@ mywheel.<span class="hljs-title function_">clone</span>({
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>To test kill functionality</p>
 

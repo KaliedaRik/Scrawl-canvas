@@ -4,6 +4,9 @@
 // [Run code](../../demo/canvas-044.html)
 import scrawl from '../source/scrawl.js';
 
+// Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
+scrawl.setIgnorePixelRatio(false);
+
 
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
@@ -37,6 +40,7 @@ const patternCell = canvas.buildCell({
     name: 'gradient-pattern-cell',
     dimensions: [50, 50],
     shown: false,
+    useAsPattern: true,
     compileOrder: 0,
 });
 

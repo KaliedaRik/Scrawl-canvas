@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Demo Modules 003</title>
+  <title>Demo Canvas 056</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="../docco.css" />
@@ -302,6 +302,11 @@
                 
                 <a class="source" href="canvas-055.html">
                   ./demo/canvas-055.js
+                </a>
+              
+                
+                <a class="source" href="canvas-056.html">
+                  ./demo/canvas-056.js
                 </a>
               
                 
@@ -739,17 +744,10 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
-              <h1 id="demo-modules-003">Demo Modules 003</h1>
-<p>Factory functions to create more complex, compound entitys</p>
-<p>Related files:</p>
-<ul>
-<li><a href="./modules/entity-ring-builder.html">Wikipedia views spiral chart module</a></li>
-</ul>
-<p><a href="../../demo/modules-003.html">Run code</a></p>
+              <h1 id="demo-canvas-056">Demo Canvas 056</h1>
+<p>Canvas creation; device pixel ratio considerations</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -760,11 +758,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-2">&#x00a7;</a>
               </div>
-              <p>Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1</p>
+              <p><a href="../../demo/canvas-056.html">Run code</a></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">setIgnorePixelRatio</span>(<span class="hljs-literal">false</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -775,16 +773,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <h4 id="scene-setup">Scene setup</h4>
+              <p>Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;
-
-canvas.<span class="hljs-title function_">setBase</span>({
-    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;azure&#x27;</span>,
-    <span class="hljs-attr">compileOrder</span>: <span class="hljs-number">1</span>,
-});</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">setIgnorePixelRatio</span>(<span class="hljs-literal">false</span>);</pre></div></div>
             
         </li>
         
@@ -795,11 +788,16 @@ canvas.<span class="hljs-title function_">setBase</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              <p>Import the entity ring factory</p>
+              <h4 id="scene-setup">Scene setup</h4>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> buildEntityRing <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./modules/entity-ring-builder.js&#x27;</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> c1 = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>[<span class="hljs-string">&#x27;canvas-1&#x27;</span>],
+    c2 = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>[<span class="hljs-string">&#x27;canvas-2&#x27;</span>],
+    c3 = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>[<span class="hljs-string">&#x27;canvas-3&#x27;</span>],
+    c4 = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>[<span class="hljs-string">&#x27;canvas-4&#x27;</span>],
+    c5 = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>[<span class="hljs-string">&#x27;canvas-5&#x27;</span>],
+    c6 = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>[<span class="hljs-string">&#x27;canvas-6&#x27;</span>];</pre></div></div>
             
         </li>
         
@@ -810,27 +808,12 @@ canvas.<span class="hljs-title function_">setBase</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <p>Some gradients for our scene</p>
+              <p>Set canvas dimensions in HTML; initial base set to canvas dimensions</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> parasolGradient = scrawl.<span class="hljs-title function_">makeGradient</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;parasol-gradient&#x27;</span>,
-    <span class="hljs-attr">endY</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-    <span class="hljs-attr">paletteEnd</span>: <span class="hljs-number">299</span>,
-    <span class="hljs-attr">colors</span>: [
-        [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;red&#x27;</span>],
-        [<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;transparent&#x27;</span>]
-    ],
-});
-
-scrawl.<span class="hljs-title function_">makeGradient</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;plank-gradient&#x27;</span>,
-    <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-    <span class="hljs-attr">colors</span>: [
-        [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;gold&#x27;</span>],
-        [<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;green&#x27;</span>]
-    ],
+            <div class="content"><div class='highlight'><pre>c1.<span class="hljs-title function_">set</span>({
+    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;beige&#x27;</span>,
 });</pre></div></div>
             
         </li>
@@ -842,32 +825,12 @@ scrawl.<span class="hljs-title function_">makeGradient</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
-              <p>A parasol compound-entity</p>
-<ul>
-<li>See the <a href="./modules/entity-ring-builder.html">entity ring builder module</a> for an explanation of the argument attributes used to construct the compound entity</li>
-</ul>
+              <p>Set canvas dimensions in HTML; added border; initial base set to canvas dimensions</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> parasol = <span class="hljs-title function_">buildEntityRing</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;parasol&#x27;</span>,
-    canvas,
-
-    <span class="hljs-attr">dimensions</span>: <span class="hljs-number">400</span>,
-    <span class="hljs-attr">buildStartAngle</span>: -<span class="hljs-number">20</span>,
-    <span class="hljs-attr">buildEndAngle</span>: <span class="hljs-number">200</span>,
-    <span class="hljs-attr">buildStepAngle</span>: <span class="hljs-number">5</span>,
-    <span class="hljs-attr">reflectOnly</span>: <span class="hljs-literal">false</span>,
-
-    <span class="hljs-attr">entity</span>: scrawl.<span class="hljs-title function_">makeBlock</span>({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;parasol-template&#x27;</span>,
-        <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-        <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">200</span>, <span class="hljs-number">18</span>],
-        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
-        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;parasol-gradient&#x27;</span>,
-        <span class="hljs-attr">lockFillStyleToEntity</span>: <span class="hljs-literal">true</span>,
-    }),
+            <div class="content"><div class='highlight'><pre>c2.<span class="hljs-title function_">set</span>({
+    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;azure&#x27;</span>,
 });</pre></div></div>
             
         </li>
@@ -879,35 +842,16 @@ scrawl.<span class="hljs-title function_">makeGradient</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
-              <p>A ring-of-planks compound-entity</p>
+              <p>Set canvas dimensions in HTML; base size is static (via JS)</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> plank = <span class="hljs-title function_">buildEntityRing</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;plank&#x27;</span>,
-    canvas,
-
-    <span class="hljs-attr">dimensions</span>: <span class="hljs-number">600</span>,
-    <span class="hljs-attr">buildStartAngle</span>: -<span class="hljs-number">90</span>,
-    <span class="hljs-attr">buildEndAngle</span>: <span class="hljs-number">210</span>,
-    <span class="hljs-attr">buildStepAngle</span>: <span class="hljs-number">30</span>,
-    <span class="hljs-attr">buildOffset</span>: <span class="hljs-number">190</span>,
-    <span class="hljs-attr">reflectOnly</span>: <span class="hljs-literal">false</span>,
-
-    <span class="hljs-attr">entity</span>: scrawl.<span class="hljs-title function_">makeBlock</span>({
-        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;plank-template&#x27;</span>,
-        <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-        <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;top&#x27;</span>],
-        <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">150</span>, <span class="hljs-number">30</span>],
-        <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">2</span>,
-        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;plank-gradient&#x27;</span>,
-        <span class="hljs-attr">lockFillStyleToEntity</span>: <span class="hljs-literal">true</span>,
-        <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
-        <span class="hljs-attr">delta</span>: {
-            <span class="hljs-attr">roll</span>: <span class="hljs-number">0.3</span>,
-        },
-    }),
+            <div class="content"><div class='highlight'><pre>c3.<span class="hljs-title function_">set</span>({
+    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;lightslategray&#x27;</span>,
+    <span class="hljs-attr">fit</span>: <span class="hljs-string">&#x27;contain&#x27;</span>,
+}).<span class="hljs-title function_">setBase</span>({
+    <span class="hljs-attr">width</span>: <span class="hljs-number">1000</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-number">1000</span>,
 });</pre></div></div>
             
         </li>
@@ -919,35 +863,15 @@ scrawl.<span class="hljs-title function_">makeGradient</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
-              <p>We can now use our compound entitys to create a scene</p>
+              <p>Responsive canvas via CSS + JS; initial base set to canvas dimensions</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makePicture</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;plank-picture&#x27;</span>,
-    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-    <span class="hljs-attr">asset</span>: plank.<span class="hljs-property">cell</span>.<span class="hljs-property">name</span>,
-    <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">600</span>, <span class="hljs-number">600</span>],
-    <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
-    <span class="hljs-attr">delta</span>: {
-        <span class="hljs-attr">roll</span>: -<span class="hljs-number">0.25</span>,
-    }
-});
-
-scrawl.<span class="hljs-title function_">makePicture</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;parasol-picture&#x27;</span>,
-    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-    <span class="hljs-attr">asset</span>: parasol.<span class="hljs-property">cell</span>,
-    <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">400</span>, <span class="hljs-number">400</span>],
-    <span class="hljs-attr">copyDimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
-    <span class="hljs-attr">scale</span>: <span class="hljs-number">0.8</span>,
-    <span class="hljs-attr">delta</span>: {
-        <span class="hljs-attr">roll</span>: <span class="hljs-number">0.1</span>,
-    }
+            <div class="content"><div class='highlight'><pre>c4.<span class="hljs-title function_">set</span>({
+    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;lemonchiffon&#x27;</span>,
+    <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">fit</span>: <span class="hljs-string">&#x27;contain&#x27;</span>,
+    <span class="hljs-attr">ignoreCanvasCssDimensions</span>: <span class="hljs-literal">true</span>,
 });</pre></div></div>
             
         </li>
@@ -959,26 +883,19 @@ scrawl.<span class="hljs-title function_">makePicture</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
-              <h4 id="scene-animation">Scene animation</h4>
-<p>Function to display frames-per-second data, and other information relevant to the demo</p>
+              <p>Responsive canvas via CSS + JS; base size is static (via JS)</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
-        testTime, testNow,
-        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
-
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
-    };
-}();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>c5.<span class="hljs-title function_">set</span>({
+    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;honeydew&#x27;</span>,
+    <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">fit</span>: <span class="hljs-string">&#x27;contain&#x27;</span>,
+    <span class="hljs-attr">ignoreCanvasCssDimensions</span>: <span class="hljs-literal">true</span>,
+}).<span class="hljs-title function_">setBase</span>({
+    <span class="hljs-attr">width</span>: <span class="hljs-number">1000</span>,
+    <span class="hljs-attr">height</span>: <span class="hljs-number">1000</span>,
+});</pre></div></div>
             
         </li>
         
@@ -989,15 +906,15 @@ scrawl.<span class="hljs-title function_">makePicture</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
-              <p>Create the Display cycle animation</p>
+              <p>Responsive canvas via CSS + JS; baseMatchesCanvasDimensions is true</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
-
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
-    <span class="hljs-attr">target</span>: canvas,
-    <span class="hljs-attr">afterShow</span>: report,
+            <div class="content"><div class='highlight'><pre>c6.<span class="hljs-title function_">set</span>({
+    <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;pink&#x27;</span>,
+    <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">baseMatchesCanvasDimensions</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">ignoreCanvasCssDimensions</span>: <span class="hljs-literal">true</span>,
 });</pre></div></div>
             
         </li>
@@ -1009,48 +926,20 @@ scrawl.<span class="hljs-title function_">makePicture</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <p>And some additional animation for the parasol gradient</p>
+              <h4 id="scene-animation">Scene animation</h4>
+<p>Function to display frames-per-second data, and other information relevant to the demo</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> ticker = scrawl.<span class="hljs-title function_">makeTicker</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;parasol-gradient-ticker&#x27;</span>,
-    <span class="hljs-attr">cycles</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">duration</span>: <span class="hljs-string">&#x27;12s&#x27;</span>,
-});
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-scrawl.<span class="hljs-title function_">makeTween</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;parasol-start-palette-tween&#x27;</span>,
-    <span class="hljs-attr">targets</span>: parasolGradient,
-    <span class="hljs-attr">ticker</span>: <span class="hljs-string">&#x27;parasol-gradient-ticker&#x27;</span>,
-    <span class="hljs-attr">duration</span>: <span class="hljs-string">&#x27;60%&#x27;</span>,
-    <span class="hljs-attr">time</span>: <span class="hljs-string">&#x27;10%&#x27;</span>,
-    <span class="hljs-attr">reverseOnCycleEnd</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">definitions</span>: [
-        {
-            <span class="hljs-attr">attribute</span>: <span class="hljs-string">&#x27;paletteStart&#x27;</span>,
-            <span class="hljs-attr">start</span>: <span class="hljs-number">0</span>,
-            <span class="hljs-attr">end</span>: <span class="hljs-number">700</span>,
-            <span class="hljs-attr">integer</span>: <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">engine</span>: <span class="hljs-string">&#x27;easeOutIn&#x27;</span>,
-        }
-    ]
-}).<span class="hljs-title function_">clone</span>({
+    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
+        testTime, testNow, dragging,
+        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;parasol-end-palette-tween&#x27;</span>,
-    <span class="hljs-attr">time</span>: <span class="hljs-string">&#x27;30%&#x27;</span>,
-    <span class="hljs-attr">definitions</span>: [
-        {
-            <span class="hljs-attr">attribute</span>: <span class="hljs-string">&#x27;paletteEnd&#x27;</span>,
-            <span class="hljs-attr">start</span>: <span class="hljs-number">299</span>,
-            <span class="hljs-attr">end</span>: <span class="hljs-number">999</span>,
-            <span class="hljs-attr">integer</span>: <span class="hljs-literal">true</span>,
-            <span class="hljs-attr">engine</span>: <span class="hljs-string">&#x27;easeOutIn&#x27;</span>,
-        }
-    ]
-});
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-ticker.<span class="hljs-title function_">run</span>();</pre></div></div>
+        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();</pre></div></div>
             
         </li>
         
@@ -1060,6 +949,268 @@ ticker.<span class="hljs-title function_">run</span>();</pre></div></div>
               
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
+              </div>
+              <p>Because we are using the same render object to animate all four canvases, this report function gets run four times for each Display cycle (once each time each canvas is rendered). The fix is to choke the functionality so it actions only after a given number of milliseconds since it was last run - typically 2 milliseconds is enough to ensure the action only runs once per cycle.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (testNow - testTicker &gt; <span class="hljs-number">2</span>) {
+
+            testTime = testNow - testTicker;
+            testTicker = testNow;
+
+            testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
+        }
+    };
+}();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
+              <p>Create the Display cycle animation</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">makeRender</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;demo-animation&#x27;</span>,
+    <span class="hljs-attr">target</span>: [c1, c2, c3, c4, c5, c6],
+    <span class="hljs-attr">afterShow</span>: report,
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
+              </div>
+              <p>// #### User interaction
+// Setup form observer functionality
+scrawl.observeAndUpdate({</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
+              </div>
+              <pre><code><span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
+<span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,
+</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <pre><code><span class="hljs-attr">target</span>: myMoon,
+</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
+              </div>
+              <pre><code><span class="hljs-attr">useNativeListener</span>: <span class="hljs-literal">true</span>,
+<span class="hljs-attr">preventDefault</span>: <span class="hljs-literal">true</span>,
+</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
+              </div>
+              <pre><code><span class="hljs-attr">updates</span>: {
+</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
+              </div>
+              <pre><code>    <span class="hljs-attr">start_xPercent</span>: [<span class="hljs-string">&#x27;startX&#x27;</span>, <span class="hljs-string">&#x27;%&#x27;</span>],
+    <span class="hljs-attr">start_xAbsolute</span>: [<span class="hljs-string">&#x27;startX&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+    <span class="hljs-attr">start_xString</span>: [<span class="hljs-string">&#x27;startX&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
+</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
+              </div>
+              <pre><code>    <span class="hljs-attr">start_yPercent</span>: [<span class="hljs-string">&#x27;startY&#x27;</span>, <span class="hljs-string">&#x27;%&#x27;</span>],
+    <span class="hljs-attr">start_yAbsolute</span>: [<span class="hljs-string">&#x27;startY&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+    <span class="hljs-attr">start_yString</span>: [<span class="hljs-string">&#x27;startY&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
+</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
+              </div>
+              <pre><code>    <span class="hljs-attr">handle_xPercent</span>: [<span class="hljs-string">&#x27;handleX&#x27;</span>, <span class="hljs-string">&#x27;%&#x27;</span>],
+    <span class="hljs-attr">handle_xAbsolute</span>: [<span class="hljs-string">&#x27;handleX&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+    <span class="hljs-attr">handle_xString</span>: [<span class="hljs-string">&#x27;handleX&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
+</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-22">&#x00a7;</a>
+              </div>
+              <pre><code>    <span class="hljs-attr">handle_yPercent</span>: [<span class="hljs-string">&#x27;handleY&#x27;</span>, <span class="hljs-string">&#x27;%&#x27;</span>],
+    <span class="hljs-attr">handle_yAbsolute</span>: [<span class="hljs-string">&#x27;handleY&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+    <span class="hljs-attr">handle_yString</span>: [<span class="hljs-string">&#x27;handleY&#x27;</span>, <span class="hljs-string">&#x27;raw&#x27;</span>],
+</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-23">&#x00a7;</a>
+              </div>
+              <pre><code>    <span class="hljs-attr">roll</span>: [<span class="hljs-string">&#x27;roll&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
+    <span class="hljs-attr">scale</span>: [<span class="hljs-string">&#x27;scale&#x27;</span>, <span class="hljs-string">&#x27;float&#x27;</span>],
+</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-24">&#x00a7;</a>
+              </div>
+              <pre><code>    <span class="hljs-attr">upend</span>: [<span class="hljs-string">&#x27;flipUpend&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
+    <span class="hljs-attr">reverse</span>: [<span class="hljs-string">&#x27;flipReverse&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
+</code></pre>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-25">&#x00a7;</a>
+              </div>
+              <pre><code>    <span class="hljs-attr">outerRadius</span>: [<span class="hljs-string">&#x27;outerRadius&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+    <span class="hljs-attr">innerRadius</span>: [<span class="hljs-string">&#x27;innerRadius&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+    <span class="hljs-attr">displacement</span>: [<span class="hljs-string">&#x27;displacement&#x27;</span>, <span class="hljs-string">&#x27;round&#x27;</span>],
+    <span class="hljs-attr">displayIntersect</span>: [<span class="hljs-string">&#x27;displayIntersect&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
+},
+</code></pre>
+<p>});</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-26">&#x00a7;</a>
+              </div>
+              <p>// Setup form
+document.querySelector(‘#start_xPercent’).value = 50;
+document.querySelector(‘#start_yPercent’).value = 50;
+document.querySelector(‘#handle_xPercent’).value = 50;
+document.querySelector(‘#handle_yPercent’).value = 50;
+document.querySelector(‘#start_xAbsolute’).value = 300;
+document.querySelector(‘#start_yAbsolute’).value = 200;
+document.querySelector(‘#handle_xAbsolute’).value = 100;
+document.querySelector(‘#handle_yAbsolute’).value = 100;
+document.querySelector(‘#start_xString’).options.selectedIndex = 1;
+document.querySelector(‘#start_yString’).options.selectedIndex = 1;
+document.querySelector(‘#handle_xString’).options.selectedIndex = 1;
+document.querySelector(‘#handle_yString’).options.selectedIndex = 1;
+document.querySelector(‘#roll’).value = 0;
+document.querySelector(‘#scale’).value = 1;
+document.querySelector(‘#upend’).options.selectedIndex = 0;
+document.querySelector(‘#reverse’).options.selectedIndex = 0;
+document.querySelector(‘#outerRadius’).value = 150;
+document.querySelector(‘#innerRadius’).value = 100;
+document.querySelector(‘#displacement’).value = 40;
+document.querySelector(‘#displayIntersect’).options.selectedIndex = 0;</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

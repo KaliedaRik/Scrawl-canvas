@@ -34,6 +34,9 @@
 // #### Imports
 import scrawl from '../../source/scrawl.js'
 
+// Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
+scrawl.setIgnorePixelRatio(false);
+
 
 // __Effects on the element:__ 
 // + Adds a green box to the background display

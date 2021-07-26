@@ -768,11 +768,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-              <h4 id="scene-setup">Scene setup</h4>
+              <p>Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">setIgnorePixelRatio</span>(<span class="hljs-literal">false</span>);</pre></div></div>
             
         </li>
         
@@ -782,6 +782,21 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <h4 id="scene-setup">Scene setup</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p>Event listeners</p>
 
@@ -793,11 +808,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>Testing Block entity</p>
 
@@ -841,11 +856,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <pre><code><span class="hljs-title class_">Test</span> <span class="hljs-number">1</span> - no argument supplied
 </code></pre>
@@ -857,11 +872,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <pre><code><span class="hljs-title class_">Test</span> <span class="hljs-number">2</span> - argument === <span class="hljs-literal">true</span>
 </code></pre>
@@ -873,11 +888,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <pre><code><span class="hljs-title class_">Test</span> <span class="hljs-number">3</span> - argument.<span class="hljs-property">includeDefaults</span> === <span class="hljs-literal">true</span>
 </code></pre>
@@ -891,11 +906,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <pre><code><span class="hljs-title class_">Test</span> <span class="hljs-number">4</span> - argument.<span class="hljs-property">includeDefaults</span> === <span class="hljs-title class_">Array</span>
 </code></pre>
@@ -914,11 +929,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>Save tests - expected results</p>
 <pre><code><span class="hljs-variable constant_">TEST</span> <span class="hljs-number">1</span>
@@ -1072,11 +1087,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>Import tests - note that <strong>importPacket() is an asynchronous function that returns a promise</strong></p>
 
@@ -1088,11 +1103,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-12">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p><strong>Import test 1</strong> - expect the import to fail due to a bad packet (malformed JSON string)</p>
 
@@ -1105,11 +1120,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p><strong>Import test 2</strong> - expect the import to succeed</p>
 
@@ -1124,11 +1139,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p><strong>Import test 3</strong> - expect the import to fail due to incorrect url (missing .txt)</p>
 
@@ -1141,11 +1156,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p><strong>Import test 4</strong> - expect the import to succeed</p>
 
@@ -1160,11 +1175,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p><strong>Import test 5</strong> - expect the import to succeed</p>
 
@@ -1179,11 +1194,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-17">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>Import tests - expected results (result order may vary due to asynchronous fetch/promise resolve)</p>
 <pre><code><span class="hljs-variable constant_">SETUP</span>
@@ -1227,11 +1242,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-18">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Create the Display cycle animation</p>

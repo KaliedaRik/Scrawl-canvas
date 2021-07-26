@@ -1,6 +1,6 @@
 // # Scrawl-canvas
 //
-// #### Version 8.5.5 - 16 Jul 2021
+// #### Version 8.6.0 - 24 Jul 2021
 //
 // ---------------------------------------------------------------------------------
 // The MIT License (MIT)
@@ -61,6 +61,10 @@ import {
     colorSchemeActions,
     setColorSchemeDarkAction,
     setColorSchemeLightAction,
+    getPixelRatio,
+    setPixelRatioChangeAction,
+    getIgnorePixelRatio,
+    setIgnorePixelRatio,
 } from './core/events.js';
 
 
@@ -376,6 +380,10 @@ export default {
     colorSchemeActions,
     setColorSchemeDarkAction,
     setColorSchemeLightAction,
+    getPixelRatio,
+    setPixelRatioChangeAction,
+    getIgnorePixelRatio,
+    setIgnorePixelRatio,
 
 
     // core/snippets.js

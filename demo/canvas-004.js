@@ -4,19 +4,21 @@
 // [Run code](../../demo/canvas-004.html)
 import scrawl from '../source/scrawl.js'
 
+// Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
+scrawl.setIgnorePixelRatio(false);
+
 
 // #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
 
 canvas.set({
     backgroundColor: 'blanchedalmond',
-    css: {
-        border: '1px solid black',
-        overflow: 'hidden',
-        resize: 'both',
-    },
-    fit: 'cover',
     checkForResize: true,
+    fit: 'cover',
+    ignoreCanvasCssDimensions: true,
+}).setBase({
+    width: 1000,
+    height: 1000,
 });
 
 
@@ -27,7 +29,7 @@ let graddy = scrawl.makeRadialGradient({
     startY: '50%',
     endX: '50%',
     endY: '50%',
-    endRadius: 300,
+    endRadius: 500,
 });
 
 
@@ -127,19 +129,6 @@ let events = (e) => {
 scrawl.addNativeListener(['input', 'change'], events, '.controlItem');
 
 
-// Test to make sure Canvas is listening for external changes in its dimensions
-// + Canvas artefact's `checkForResize` flag set to true, enabling the checks
-// + While we've setup the canvas element so it can be resized by dragging the lower right corner, most browsers will not respect this request.
-// + Can also resize the canvas by using the width and height form controls - these controls then update the element's width and height attributes via the event listeners below.
-// + In both cases, the Canvas artefact needs to check whether resizing has occurred and take action.
-document.querySelector('#width').addEventListener('input', (e) => {
-    canvas.domElement.width = `${e.target.value}`;
-}, false);
-document.querySelector('#height').addEventListener('input', (e) => {
-    canvas.domElement.height = `${e.target.value}`;
-}, false);
-
-
 // Set the DOM input values
 document.querySelector('#paletteStart').value = 0;
 document.querySelector('#paletteEnd').value = 999;
@@ -148,11 +137,9 @@ document.querySelector('#startY').value = 50;
 document.querySelector('#startRadius').value = 0;
 document.querySelector('#endX').value = 50;
 document.querySelector('#endY').value = 50;
-document.querySelector('#endRadius').value = 300;
+document.querySelector('#endRadius').value = 500;
 document.querySelector('#red').value = 0;
 document.querySelector('#blue').value = 0;
-document.querySelector('#width').value = 600;
-document.querySelector('#height').value = 400;
 
 
 // #### Development and testing

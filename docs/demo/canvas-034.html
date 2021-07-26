@@ -768,6 +768,21 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
+              <p>Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">setIgnorePixelRatio</span>(<span class="hljs-literal">false</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
               <h4 id="scene-setup">Scene setup</h4>
 
             </div>
@@ -778,17 +793,18 @@ canvas.<span class="hljs-title function_">set</span>({
 
     <span class="hljs-attr">baseMatchesCanvasDimensions</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">ignoreCanvasCssDimensions</span>: <span class="hljs-literal">true</span>,
 
 }).<span class="hljs-title function_">setAsCurrentCanvas</span>();</pre></div></div>
             
         </li>
         
         
-        <li id="section-4">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p>Create the demo Phrase entity</p>
 
@@ -811,11 +827,11 @@ canvas.<span class="hljs-title function_">set</span>({
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>Scrawl-canvas recognises five shapes, separated by four breakpoints: </p>
 <ul>
@@ -847,11 +863,11 @@ canvas.<span class="hljs-title function_">set</span>({
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>Each display shape has an associated hook function (by default a function that does nothing) which Scrawl-canvas will run each time it detects that the Canvas display shape has changed to that shape. We can replace these null-functions with our own; this allows us to configure the scene/animation to accommodate different display shapes, thus making the code reusable in a range of different web page environments.</p>
 <p>We can set/update these functions at any time using the normal <code>set()</code> function:</p>
@@ -903,11 +919,11 @@ canvas.<span class="hljs-title function_">set</span>({
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>We can also set/update the functions using dedicated <code>setAction???Shape()</code> functions:</p>
 
@@ -942,11 +958,11 @@ canvas.<span class="hljs-title function_">setActionSmallerArea</span>(<span clas
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -972,11 +988,11 @@ canvas.<span class="hljs-title function_">setActionSmallerArea</span>(<span clas
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -991,11 +1007,11 @@ canvas.<span class="hljs-title function_">setActionSmallerArea</span>(<span clas
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>We manually trigger the display shape functionality after the first render cycle completes. This allows all artefacts to settle into a state where we can then update the Phrase entity with text and roll values appropriate to the Canvas element’s initial shape</p>
 
@@ -1007,11 +1023,11 @@ canvas.<span class="hljs-title function_">setActionSmallerArea</span>(<span clas
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

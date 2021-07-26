@@ -768,6 +768,21 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
+              <p>Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">setIgnorePixelRatio</span>(<span class="hljs-literal">false</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
               <h4 id="scene-setup">Scene setup</h4>
 
             </div>
@@ -779,11 +794,11 @@ canvas.<span class="hljs-title function_">set</span>({</pre></div></div>
         </li>
         
         
-        <li id="section-4">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p>Make the canvas responsive</p>
 
@@ -791,17 +806,18 @@ canvas.<span class="hljs-title function_">set</span>({</pre></div></div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">fit</span>: <span class="hljs-string">&#x27;cover&#x27;</span>,
     <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">ignoreCanvasCssDimensions</span>: <span class="hljs-literal">true</span>,
 
 }).<span class="hljs-title function_">setBase</span>({</pre></div></div>
             
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>We’ll set the base canvas’s dimensions to match our video’s dimensions</p>
 <ul>
@@ -817,11 +833,11 @@ canvas.<span class="hljs-title function_">set</span>({</pre></div></div>
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="create-filters">Create filters</h4>
 
@@ -845,11 +861,11 @@ canvas.<span class="hljs-title function_">set</span>({</pre></div></div>
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>Known issue: if we set lineOut to the same String as lineIn at this point in the filter then it produces incorrect output. Changing (and continuing with) a new lineOut String fixes the bug.</p>
 
@@ -904,11 +920,11 @@ canvas.<span class="hljs-title function_">set</span>({</pre></div></div>
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <h4 id="importing-video-sources">Importing video sources</h4>
 <p><strong>Display a device-based media stream</strong> in a Picture entity</p>
@@ -945,11 +961,11 @@ canvas.<span class="hljs-title function_">set</span>({</pre></div></div>
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -975,11 +991,11 @@ canvas.<span class="hljs-title function_">set</span>({</pre></div></div>
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 

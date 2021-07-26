@@ -7,6 +7,9 @@ import scrawl from '../source/scrawl.js';
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
 
+// Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
+scrawl.setIgnorePixelRatio(false);
+
 
 canvas.set({
     backgroundColor: 'honeydew',

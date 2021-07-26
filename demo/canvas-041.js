@@ -4,6 +4,11 @@
 // [Run code](../../demo/canvas-041.html)
 import scrawl from '../source/scrawl.js';
 
+// Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
+// + TODO: work out how to make this work with high DPR screens
+scrawl.setIgnorePixelRatio(true);
+
+
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
 
@@ -12,56 +17,106 @@ canvas.setBase({
 });
 
 
-// Create a function to draw stuff on a canvas
-// + Code taken from this blog site post: [Bartosz Ciechanowski - Cameras and lenses, 7 December 2020](https://ciechanow.ski/cameras-and-lenses/) ... specifically [this JS file](https://ciechanow.ski/js/lenses.js)
-const drawBlade = function (engine, rotation = 0) {
+const boxes = [];
 
-    engine.save();
+const engine = {
 
-    engine.translate(200, 200);
-    engine.rotate(rotation * Math.PI / 180);
-    engine.translate(-200, -200);
-
-    engine.translate(71, 25);
-
-    engine.fillStyle = "#111";
-    engine.strokeStyle = "#777";
-
-    engine.beginPath();
-    engine.moveTo(89.4010224, 104.878569);
-    engine.bezierCurveTo(89.2014641, 59.0393448, 52.2406566, 21.8785692, 6.40102238, 21.8785692);
-    engine.bezierCurveTo(-0.598977616, 21.8785692, -3.54240333, 14.8213764, 6.40102238, 10.3785692);
-    engine.bezierCurveTo(29.9010224, -0.121430803, 60.1944849, -2.5577938, 85.1944849, 4.4422062);
-    engine.bezierCurveTo(106.455278, 10.3952284, 130.17673, 17.6283113, 144.389943, 43.5465243);
-    engine.bezierCurveTo(161.389943, 74.5465243, 150.901934, 94.6590605, 155.901022, 116.878569);
-    engine.bezierCurveTo(162.227448, 144.997707, 171.289513, 153.053505, 176.736821, 156.416713);
-    engine.bezierCurveTo(183.731851, 160.735498, 184.243043, 167.938877, 181.743043, 172.438877);
-    engine.bezierCurveTo(179.243043, 176.938877, 173.80372, 180.55601, 166.350116, 177.644439);
-    engine.bezierCurveTo(157.688987, 174.261179, 122.055011, 166.31114, 109.41407, 154.260969);
-    engine.bezierCurveTo(103.684297, 148.798975, 89.5544242, 140.115494, 89.4010224, 104.878569);
-    engine.closePath();
-    engine.fill("evenodd");
-    engine.stroke();
-
-    engine.fillStyle = "#333";
-    engine.strokeStyle = "#777";
-    engine.beginPath();
-    engine.arc(171, 166, 4, 0, 6.283185307179586, false);
-    engine.closePath();
-    engine.fill("evenodd");
-    engine.stroke();
-    engine.restore();
+    width: canvas.get("width"),
+    height: canvas.get("height"),
+    count: 1000,
 };
 
+// Setup the display canvas
+canvas.set({
 
-// #### Scene animation
+    width: engine.width,
+    height: engine.height,
+    isComponent: true,
 
-// Function to display frames-per-second data, and other information relevant to the demo
-const report = function () {
+}).render();
+
+// Build and populate our cache Cell with pre-drawn boxes
+canvas.buildCell({
+
+    name: 'cache',
+    width: 50 * 40,
+    height: 50,
+    cleared: false,
+    compiled: false,
+    shown: false,
+});
+
+const source = scrawl.library.cell.cache.element;
+const sourceEngine = scrawl.library.cell.cache.engine;
+
+sourceEngine.fillStyle = 'white';
+sourceEngine.strokeStyle = 'black';
+sourceEngine.lineWidth = 1;
+
+for (let i = 0; i < 40; i++) {
+
+    let size = 10 + i,
+        delta = size / 2;
+
+    sourceEngine.setTransform(1, 0, 0, 1, (50 * i) + 25, 25);
+    sourceEngine.fillRect(-delta, -delta, size, size);
+    sourceEngine.strokeRect(-delta, -delta, size, size);
+}
+
+// On start, and UI, create the required number of box objects
+// - these are plain JS objects holding data for our box drawing routine
+const buildBoxes = function (boxesRequired) {
+
+    let { width, height } = engine,
+        size, x, y, dx;
+
+    boxes.length = 0;
+
+    for (let i = 0; i < boxesRequired; i++) {
+
+        size = 10 + Math.random() * 40;
+        x = Math.random() * width;
+        y = Math.random() * height;
+        dx = -1 - Math.random();
+
+        boxes.push([x, y, dx, Math.floor(size - 10)]);
+    }
+};
+
+// Use the box data to draw the appropriate box images onto the screen at the required positions
+const drawBoxes = function () {
+
+    const engineWidth = engine.width,
+        ctx = canvas.base.engine;
+
+    let box, x, y, deltaX, boxpos, width;
+
+    return function () {
+
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+        for (let i = 0, iz = boxes.length; i < iz; i++) {
+
+            box = boxes[i];
+            [x, y, deltaX, boxpos] = box;
+            width = boxpos + 10
+
+            ctx.drawImage(source, boxpos * 50, 0, 50, 50, x - 25, y - 25, 50, 50);
+
+            x += deltaX;
+            if (x < -width) x += engineWidth + (width * 2);
+            box[0] = x;
+        }
+    }
+}();
+
+// Speed reporter
+let report = (function () {
 
     let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
+        testTime,
+        testNow,
+        testMessage = document.querySelector("#reportmessage");
 
     return function () {
 
@@ -69,39 +124,28 @@ const report = function () {
         testTime = testNow - testTicker;
         testTicker = testNow;
 
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+        testMessage.textContent = `Screen refresh: ${Math.floor(1000 / testTime)}fps. Box count: ${boxes.length}`;
     };
-}();
+})();
 
 
-// Create the Display cycle animation
-// + We can use `makeAnimation` instead of `makeRender`
-// + Inside the function, we construct our Display cycle
-let rotation = 0;
-
+// The animation loop object
 scrawl.makeAnimation({
 
-    // Give our animation a name, in case we want to retrieve it from te Scrawl-canvas library later
-    name: "demo-animation",
+    name: 'demo-animation',
 
-    // Every Animation object __must__ have a `fn` attribute!
     fn: () => {
 
-        // The Display cycle includes 3 key steps:
-        // + `clear()` - to wipe the canvas's drawing areas clean
-        // + `compile()` - which takes place on the Canvas wrapper object's `base` canvas. 
-        // + `show()` - which copies over everything drawn on the base canvas and pastes it into the display canvas
+        if (boxes.length !== engine.count) buildBoxes(engine.count);
+
         canvas.clear();
-
-        // In this instance, we're using our `drawBlade()` function instead of the built-in `compile` function
-        drawBlade(canvas.base.engine, ++rotation);
-
+        drawBoxes();
         canvas.show();
-
-        // We can invoke additional functions at any time, wrapping them in `Promise.resolve()` functions
         report();
     },
 });
+
+scrawl.addListener("up", () => engine.count += 1000, canvas.domElement);
 
 
 // #### Development and testing

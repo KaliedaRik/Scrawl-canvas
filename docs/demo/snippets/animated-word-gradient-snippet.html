@@ -218,6 +218,21 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
+              <p>Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">setIgnorePixelRatio</span>(<span class="hljs-literal">false</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
               <p><strong>Effects on the element:</strong> </p>
 <ul>
 <li>Imports the element’s background color, and sets the element background to <code>transparent</code></li>
@@ -232,11 +247,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>Apply the snippet to the DOM element</p>
 
@@ -251,11 +266,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>Set some convenience variables</p>
 
@@ -271,11 +286,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>The snippet will take details of its font family and size from the DOM element’s computed styles</p>
 <ul>
@@ -330,11 +345,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>This is a bad fix for mis-aligned text - a better solution would be to expose startX and startY so coder could set them individually for each instance where this snippet is used, so the replacement canvas text can line up exactly with its surrounding text</p>
 
@@ -346,11 +361,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>We do not want to expose this canvas text in the DOM as it already exists in the DOM (this snippet just makes it invisible by setting its color to ‘transparent’). The last thing non-visual users need is repeated text.</p>
 
@@ -367,11 +382,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>Return the snippet, so coders can access the snippet’s parts - in case they need to tweak the output to meet the web page’s specific requirements</p>
 

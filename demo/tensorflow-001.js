@@ -4,6 +4,9 @@
 // [Run code](../../demo/tensorflow-001.html)
 import scrawl from '../source/scrawl.js'
 
+// Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
+scrawl.setIgnorePixelRatio(false);
+
 
 // #### Scene setup
 const canvas = scrawl.library.artefact.mycanvas;

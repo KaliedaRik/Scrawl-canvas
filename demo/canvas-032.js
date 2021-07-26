@@ -5,6 +5,9 @@
 // [Run code](../../demo/canvas-032.html)
 import scrawl from '../source/scrawl.js'
 
+// Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
+scrawl.setIgnorePixelRatio(false);
+
 
 // #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas,
@@ -15,6 +18,7 @@ canvas.set({
     backgroundColor: 'honeydew',
     fit: 'contain',
     checkForResize: true,
+    ignoreCanvasCssDimensions: true,
 
 }).setBase({
 

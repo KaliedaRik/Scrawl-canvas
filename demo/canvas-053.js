@@ -4,20 +4,22 @@
 // [Run code](../../demo/canvas-053.html)
 import scrawl from '../source/scrawl.js'
 
+// Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
+scrawl.setIgnorePixelRatio(false);
+
 
 // #### Scene setup
 let canvas = scrawl.library.artefact.mycanvas;
-
 
 // Magic numbers
 const canvasDimension = 400,
     assetDimension = 80;
 
-
 // Make the canvas responsive
 canvas.set({
     fit: 'cover',
     checkForResize: true,
+    ignoreCanvasCssDimensions: true,
 }).setBase({
     dimensions: [canvasDimension, canvasDimension],
 });
@@ -29,10 +31,19 @@ const reactionAsset = scrawl.makeReactionDiffusionAsset({
     name: 'reaction-diffusion-asset',
     width: assetDimension,
     height: assetDimension,
+
+    rainbowColors: [
+        [0, '#804E04'],
+        [50, '#804E04'],
+        [199, '#FC9704'],
+        [800, '#FC9704'],
+        [950, '#FEEFD9'],
+        [999, '#FEEFD9'],
+    ],
 });
 
 // Test that the RD asset output is always tileable by displaying it via a Pattern style
-scrawl.makePattern({
+const myPattern = scrawl.makePattern({
 
     name: 'rd-pattern',
     asset: reactionAsset,
@@ -96,12 +107,19 @@ let report = function () {
         testTime = testNow - testTicker;
         testTicker = testNow;
 
+        let mx = myPattern.patternMatrix;
+
+        let matrixVals = (mx) ? 
+            `[${mx.a}, ${mx.b}, ${mx.c}, ${mx.d}, ${mx.e}, ${mx.f}]` :
+            '[]';
+
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
     Generation: ${reactionAsset.currentGeneration} of ${reactionAsset.maxGenerations}
     Initial random seed level: ${reactionAsset.initialRandomSeedLevel}
     Diffusion rates - A: ${reactionAsset.diffusionRateA}, B: ${reactionAsset.diffusionRateB}
     Feed rate: ${reactionAsset.feedRate}; Kill rate: ${reactionAsset.killRate}
-    Asset dimensions - width: ${reactionAsset.width}, height: ${reactionAsset.height}`;
+    Asset dimensions - width: ${reactionAsset.width}, height: ${reactionAsset.height}
+    Pattern matrix: ${matrixVals}`;
     };
 }();
 
@@ -157,6 +175,26 @@ scrawl.addNativeListener('input', (e) => {
         }
     }
 }, '#initialSettingPreference');
+
+scrawl.observeAndUpdate({
+
+    event: ['input', 'change'],
+    origin: '.controlItem',
+
+    target: myPattern,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+        matrixA: ['matrixA', 'float'],
+        matrixB: ['matrixB', 'float'],
+        matrixC: ['matrixC', 'float'],
+        matrixD: ['matrixD', 'float'],
+        matrixE: ['matrixE', 'round'],
+        matrixF: ['matrixF', 'round'],
+    },
+});
 
 scrawl.observeAndUpdate({
 
@@ -445,6 +483,12 @@ const qs_presets = document.querySelector('#presets'),
     qs_hueRange = document.querySelector('#hueRange'),
     qs_saturation = document.querySelector('#saturation'),
     qs_luminosity = document.querySelector('#luminosity'),
+    qs_matrixA = document.querySelector('#matrixA'),
+    qs_matrixB = document.querySelector('#matrixB'),
+    qs_matrixC = document.querySelector('#matrixC'),
+    qs_matrixD = document.querySelector('#matrixD'),
+    qs_matrixE = document.querySelector('#matrixE'),
+    qs_matrixF = document.querySelector('#matrixF'),
     qs_initialSettingPreference = document.querySelector('#initialSettingPreference'),
     qs_randomEngineSeed = document.querySelector('#randomEngineSeed');
 
@@ -467,6 +511,12 @@ qs_hueStart.value = 0;
 qs_hueRange.value = 120;
 qs_saturation.value = 100;
 qs_luminosity.value = 50;
+qs_matrixA.value = 1;
+qs_matrixB.value = 0;
+qs_matrixC.value = 0;
+qs_matrixD.value = 1;
+qs_matrixE.value = 0;
+qs_matrixF.value = 0;
 qs_initialSettingPreference.selectedIndex = 0;
 qs_randomEngineSeed.value = reactionAsset.get('randomEngineSeed');
 

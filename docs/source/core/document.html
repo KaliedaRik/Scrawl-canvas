@@ -502,6 +502,8 @@
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { isa_canvas, generateUniqueString, isa_dom, pushUnique, removeItem, xt, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./utilities.js&quot;</span>;
 <span class="hljs-keyword">import</span> { artefact, canvas, group, stack, css, xcss } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./library.js&quot;</span>;
 
+<span class="hljs-keyword">import</span> { getPixelRatio, getIgnorePixelRatio } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./events.js&quot;</span>;
+
 <span class="hljs-keyword">import</span> { makeStack } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../factory/stack.js&quot;</span>;
 <span class="hljs-keyword">import</span> { makeElement } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../factory/element.js&quot;</span>;
 <span class="hljs-keyword">import</span> { makeCanvas } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../factory/canvas.js&quot;</span>;</pre></div></div>
@@ -1570,6 +1572,9 @@
             p, dims, w, h,
             j, jz, items, keys, key, keyName, value;
 
+        <span class="hljs-keyword">let</span> ignoreDpr = <span class="hljs-title function_">getIgnorePixelRatio</span>();
+        <span class="hljs-keyword">let</span> dpr = <span class="hljs-title function_">getPixelRatio</span>();
+
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>, iz = myartefacts.<span class="hljs-property">length</span>; i &lt; iz; i++) {
 
             name = myartefacts[i];
@@ -1647,23 +1652,23 @@
 
                 <span class="hljs-keyword">if</span> (art.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Canvas&#x27;</span>) {
 
-                    el.<span class="hljs-property">width</span> = w;
-                    el.<span class="hljs-property">height</span> = h;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-52">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
-              </div>
-              <p>if (art.renderOnResize) art.render().catch(err =&gt; console.log(err));</p>
+                    <span class="hljs-keyword">if</span> (ignoreDpr) {
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">if</span> (art.<span class="hljs-property">renderOnResize</span>) art.<span class="hljs-title function_">render</span>();
+                        el.<span class="hljs-property">width</span> = w;
+                        el.<span class="hljs-property">height</span> = h;
+                    }
+                    <span class="hljs-keyword">else</span> {
+
+                        <span class="hljs-keyword">if</span> (!art.<span class="hljs-property">ignoreCanvasCssDimensions</span>) {
+
+                            style.<span class="hljs-property">width</span> = <span class="hljs-string">`<span class="hljs-subst">${w}</span>px`</span>;
+                            style.<span class="hljs-property">height</span> = <span class="hljs-string">`<span class="hljs-subst">${h}</span>px`</span>;
+                        }
+
+                        el.<span class="hljs-property">width</span> = w * dpr;
+                        el.<span class="hljs-property">height</span> = h * dpr;
+                    }
+                    <span class="hljs-keyword">if</span> (art.<span class="hljs-property">renderOnResize</span>) art.<span class="hljs-title function_">render</span>();
                 }
                 <span class="hljs-keyword">else</span> {
 
@@ -1675,11 +1680,11 @@
         </li>
         
         
-        <li id="section-53">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p>update handle/transformOrigin</p>
 
@@ -1694,11 +1699,11 @@
         </li>
         
         
-        <li id="section-54">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p>update transform</p>
 
@@ -1713,11 +1718,11 @@
         </li>
         
         
-        <li id="section-55">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p>update visibility</p>
 
@@ -1732,11 +1737,11 @@
         </li>
         
         
-        <li id="section-56">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p>update other CSS changes</p>
 
@@ -1771,11 +1776,11 @@
         </li>
         
         
-        <li id="section-57">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p>update element classes</p>
 
@@ -1793,11 +1798,11 @@
         </li>
         
         
-        <li id="section-58">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <h4 id="dom-holding-areas">DOM Holding areas</h4>
 <p><code>Exported handles</code> (to modules). During its initialization phase, Scrawl-canvas will add two hidden ‘hold’ elements at the top and bottom of the document body where it can add additional elements as-and-when required. </p>
@@ -1807,11 +1812,11 @@
         </li>
         
         
-        <li id="section-59">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p>Mainly for ARIA content. ARIA labels and descriptions are used by Scrawl-canvas &lt;canvas&gt; elements to inform non-visual website visitors about content in the canvas.</p>
 
@@ -1832,11 +1837,11 @@ scrawlCanvasHold.<span class="hljs-property">id</span> = <span class="hljs-strin
         </li>
         
         
-        <li id="section-60">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p>Navigation area - canvas anchor links. Canvases create their own (hidden) &lt;nav&gt; elements that directly follow them in the DOM. These are used to store &lt;a&gt; links for clickable entitys in the canvas display, making them accessible to non-visual users (for example: screen readers)</p>
 
@@ -1852,11 +1857,11 @@ scrawlNavigationHold.<span class="hljs-property">id</span> = <span class="hljs-s
         </li>
         
         
-        <li id="section-61">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

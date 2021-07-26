@@ -4,6 +4,9 @@
 // [Run code](../../demo/particles-008.html)
 import scrawl from '../source/scrawl.js'
 
+// Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
+scrawl.setIgnorePixelRatio(false);
+
 
 // Import image from DOM
 scrawl.importDomImage('.flowers');

@@ -4,9 +4,12 @@
 // [Run code](../../demo/canvas-036.html)
 import scrawl from '../source/scrawl.js';
 
+// Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
+scrawl.setIgnorePixelRatio(false);
+
+
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
-
 
 canvas.set({
 
@@ -17,6 +20,8 @@ canvas.set({
 
     // Cascade changes in the Canvas dimensions down to its base Cell
     baseMatchesCanvasDimensions: true,
+
+    ignoreCanvasCssDimensions: true,
 });
 
 

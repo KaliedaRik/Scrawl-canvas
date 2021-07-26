@@ -14,7 +14,8 @@
 
 
 // #### Imports
-import { isa_fn, isa_dom, λnull, Ωempty } from "./utilities.js";
+import { isa_fn, isa_dom, λnull, Ωempty, detectBrowser } from "./utilities.js";
+import { canvas, cell, entity } from "./library.js";
 
 // `Exported function` (to modules and scrawl object) - __scrawl.makeAnimationObserver__ - function to create and start a [DOM IntersectionObserver](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) object.
 //
@@ -336,6 +337,60 @@ const setColorSchemeLightAction = (func) => colorScheme_lightAction = func;
 const setColorSchemeDarkAction = (func) => colorScheme_darkAction = func;
 
 
+// Monitoring the device pixel ratio
+let dpr_changeAction = λnull;
+const setPixelRatioChangeAction = (func) => dpr_changeAction = func;
+
+const browserIs = detectBrowser();
+
+let dpr = 0;
+const getPixelRatio = () => dpr;
+
+let ignorePixelRatio = true;
+const getIgnorePixelRatio = () => ignorePixelRatio;
+const setIgnorePixelRatio = (val) => ignorePixelRatio = val;
+
+const updatePixelRatio = () => {
+
+    if (browserIs.indexOf('safari') >= 0) {
+
+        console.log('safari browser detected, switching off DPR');
+
+        ignorePixelRatio = true;
+        dpr = 1;
+    }
+    else {
+
+        dpr = window.devicePixelRatio;
+
+        for (const [name, wrapper] of Object.entries(canvas)) {
+
+            wrapper.dirtyDimensions = true;
+        }
+
+        for (const [name, wrapper] of Object.entries(cell)) {
+
+            wrapper.dirtyDimensions = true;
+        }
+
+        // window.setTimeout(() => {
+
+            for (const [name, ent] of Object.entries(entity)) {
+
+                ent.dirtyHost = true;
+            }
+        // }, 20);
+
+        if (!ignorePixelRatio) dpr_changeAction();
+    }
+
+    matchMedia(`(resolution: ${dpr}dppx)`).addEventListener("change", updatePixelRatio, { once: true });
+};
+
+updatePixelRatio();
+
+
+
 // #### Exports
 export {
     addListener,
@@ -352,4 +407,9 @@ export {
     colorSchemeActions,
     setColorSchemeDarkAction,
     setColorSchemeLightAction,
+
+    getPixelRatio,
+    setPixelRatioChangeAction,
+    getIgnorePixelRatio,
+    setIgnorePixelRatio,
 };

@@ -4,6 +4,10 @@
 // [Run code](../../demo/filters-019.html)
 import scrawl from '../source/scrawl.js';
 
+// Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
+scrawl.setIgnorePixelRatio(false);
+
+
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas,
     noiseCanvas = scrawl.library.canvas['noise-canvas'];
@@ -18,6 +22,18 @@ let noiseAsset = scrawl.makeNoiseAsset({
     height: 400,
 
     noiseEngine: 'improved-perlin',
+
+    rainbowColors: [
+        [0, '#fae8c0'],
+        [249, '#f8f6f3'],
+        [289, '#fbf6eb'],
+        [410, '#fee1b5'],
+        [450, '#c98b05'],
+        [482, '#f8f6f3'],
+        [749, '#fae8c0'],
+        [812, '#fed9a1'],
+        [999, '#fae8c0'],
+    ],
 });
 
 // Create the filter

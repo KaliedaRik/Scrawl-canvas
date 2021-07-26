@@ -768,6 +768,21 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
+              <p>Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">setIgnorePixelRatio</span>(<span class="hljs-literal">false</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
               <h4 id="scene-setup">Scene setup</h4>
 
             </div>
@@ -783,6 +798,7 @@ canvas.<span class="hljs-title function_">set</span>({
 
     <span class="hljs-attr">fit</span>: <span class="hljs-string">&quot;cover&quot;</span>,
     <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">ignoreCanvasCssDimensions</span>: <span class="hljs-literal">true</span>,
 
 }).<span class="hljs-title function_">setBase</span>({
 
@@ -794,11 +810,11 @@ canvas.<span class="hljs-title function_">set</span>({
         </li>
         
         
-        <li id="section-4">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p>Create the demo Oval entity</p>
 
@@ -829,11 +845,11 @@ canvas.<span class="hljs-title function_">set</span>({
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>Create the three Phrase entitys that will animate around the oval</p>
 <ul>
@@ -880,11 +896,11 @@ scrawl.<span class="hljs-title function_">makePhrase</span>({
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="prefers-color-scheme-actions">prefers-color-scheme actions</h4>
 <p>Setup the actions to take, to match the animation scene to the user’s preference for <code>dark</code> or <code>light</code> (default) color scheme</p>
@@ -906,11 +922,11 @@ scrawl.<span class="hljs-title function_">setColorSchemeLightAction</span>(<span
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>Invoke prefers-color-scheme actions test</p>
 <ul>
@@ -924,11 +940,11 @@ scrawl.<span class="hljs-title function_">setColorSchemeLightAction</span>(<span
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <h4 id="scene-animation">Scene animation</h4>
 <p>Function to display frames-per-second data, and other information relevant to the demo</p>
@@ -954,11 +970,11 @@ scrawl.<span class="hljs-title function_">setColorSchemeLightAction</span>(<span
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -974,11 +990,11 @@ scrawl.<span class="hljs-title function_">setColorSchemeLightAction</span>(<span
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <h4 id="prefers-reduced-motion-actions">prefers-reduced-motion actions</h4>
 <p>Setup the actions to take, to match the animation scene to the user’s preference for <code>reduced</code> or unspecified (default) animation</p>
@@ -998,11 +1014,11 @@ scrawl.<span class="hljs-title function_">setNoPreferenceMotionAction</span>(<sp
         </li>
         
         
-        <li id="section-11">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>Invoke prefers-reduced-motion actions test</p>
 <ul>
@@ -1017,11 +1033,11 @@ scrawl.<span class="hljs-title function_">setNoPreferenceMotionAction</span>(<sp
         </li>
         
         
-        <li id="section-12">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 <p>In chrome browsers, open the inspector and enable the <strong>Rendering</strong> view - this includes selectors to emulate both <code>prefers-reduced-motion</code> and <code>prefers-color-scheme</code> user choices.</p>

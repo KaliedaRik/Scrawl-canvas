@@ -4,15 +4,19 @@
 // [Run code](../../demo/canvas-038.html)
 import scrawl from '../source/scrawl.js';
 
+// Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
+scrawl.setIgnorePixelRatio(false);
+
+
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
-
 
 canvas.set({
 
     backgroundColor: 'honeydew',
-    checkForResize: true,
     baseMatchesCanvasDimensions: true,
+    checkForResize: true,
+    ignoreCanvasCssDimensions: true,
 });
 
 // Create a shape track along which we can animate a Cell

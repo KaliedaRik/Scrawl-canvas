@@ -1069,12 +1069,17 @@ P.<span class="hljs-property">killArtefacts</span> = <span class="hljs-keyword">
             
             <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (filterCell &amp;&amp; filterCell.<span class="hljs-property">element</span>) {
 
-                <span class="hljs-keyword">let</span> dims = currentHost.<span class="hljs-property">currentDimensions</span>;
+                <span class="hljs-keyword">let</span> dims = currentHost.<span class="hljs-property">currentDimensions</span>,
+                    fCellDims = filterCell.<span class="hljs-property">currentDimensions</span>,
+                    fEl = filterCell.<span class="hljs-property">element</span>;
 
-                <span class="hljs-keyword">if</span> (dims) {
+                <span class="hljs-keyword">if</span> (dims &amp;&amp; fCellDims &amp;&amp; fEl) {
 
-                    filterCell.<span class="hljs-property">element</span>.<span class="hljs-property">width</span> = dims[<span class="hljs-number">0</span>];
-                    filterCell.<span class="hljs-property">element</span>.<span class="hljs-property">height</span> = dims[<span class="hljs-number">1</span>];
+                    fCellDims[<span class="hljs-number">0</span>] = dims[<span class="hljs-number">0</span>];
+                    fCellDims[<span class="hljs-number">1</span>] = dims[<span class="hljs-number">1</span>];
+
+                    fEl.<span class="hljs-property">width</span> = dims[<span class="hljs-number">0</span>];
+                    fEl.<span class="hljs-property">height</span> = dims[<span class="hljs-number">1</span>];
                 }
             }</pre></div></div>
             
