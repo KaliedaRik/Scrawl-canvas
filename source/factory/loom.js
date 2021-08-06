@@ -726,6 +726,16 @@ P.getSensors = function () {
     return [];
 };
 
+
+// Force the Loom entity to update
+// + Because it doesn't automatically keep check of changes in its picture source
+P.update = function () {
+
+    this.dirtyInput = true;
+    this.dirtyOutput = true;
+};
+
+
 // #### Display cycle functionality
 
 // `prepareStamp` - function called as part of the Display cycle `compile` step.

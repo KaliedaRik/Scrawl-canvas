@@ -337,6 +337,76 @@ const setColorSchemeLightAction = (func) => colorScheme_lightAction = func;
 const setColorSchemeDarkAction = (func) => colorScheme_darkAction = func;
 
 
+// #### prefers-reduced-transparency media query
+// See the [W3 Media Queries Level 5 documentation](https://www.w3.org/TR/mediaqueries-5/#descdef-media-prefers-reduced-transparency) for more information
+//
+// Exported function `reducedTransparencyActions` - depending on the user selection, the appropriate hook function is run; where no selection has been made, this will be the noPreferenceAction function.
+// + `reduceTransparency_noPreferenceAction`
+// + `reduceTransparency_reduceAction`
+//
+// ```
+// __Example code__
+//
+// TODO
+// ```
+
+const reducedTransparencyMediaQuery = window.matchMedia("(prefers-reduced-transparency: reduce)");
+
+let reduceTransparency = reducedTransparencyMediaQuery.matches,
+    reduceTransparency_reduceAction = λnull,
+    reduceTransparency_noPreferenceAction = λnull;
+
+const reducedTransparencyActions = () => {
+
+    if (reduceTransparency) reduceTransparency_reduceAction();
+    else reduceTransparency_noPreferenceAction();
+};
+
+reducedTransparencyMediaQuery.addEventListener('change', () => {
+
+    reduceTransparency = reducedTransparencyMediaQuery.matches;
+    reducedTransparencyActions();
+});
+
+const setReduceTransparencyAction = (func) => reduceTransparency_reduceAction = func;
+const setNoPreferenceTransparencyAction = (func) => reduceTransparency_noPreferenceAction = func;
+
+
+// #### prefers-reduced-data media query
+// See the [W3 Media Queries Level 5 documentation](https://www.w3.org/TR/mediaqueries-5/#descdef-media-prefers-reduced-data) for more information
+//
+// Exported function `reducedDataActions` - depending on the user selection, the appropriate hook function is run; where no selection has been made, this will be the noPreferenceAction function.
+// + `reduceData_noPreferenceAction`
+// + `reduceData_reduceAction`
+//
+// ```
+// __Example code__
+//
+// TODO
+// ```
+
+const reducedDataMediaQuery = window.matchMedia("(prefers-reduced-data: reduce)");
+
+let reducedData = reducedDataMediaQuery.matches,
+    reduceData_reduceAction = λnull,
+    reduceData_noPreferenceAction = λnull;
+
+const reducedDataActions = () => {
+
+    if (reducedData) reduceData_reduceAction();
+    else reduceData_noPreferenceAction();
+};
+
+reducedDataMediaQuery.addEventListener('change', () => {
+
+    reducedData = reducedDataMediaQuery.matches;
+    reducedDataActions();
+});
+
+const setReduceDataAction = (func) => reduceData_reduceAction = func;
+const setNoPreferenceDataAction = (func) => reduceData_noPreferenceAction = func;
+
+
 // Monitoring the device pixel ratio
 let dpr_changeAction = λnull;
 const setPixelRatioChangeAction = (func) => dpr_changeAction = func;
@@ -407,6 +477,14 @@ export {
     colorSchemeActions,
     setColorSchemeDarkAction,
     setColorSchemeLightAction,
+
+    reducedTransparencyActions,
+    setReduceTransparencyAction,
+    setNoPreferenceTransparencyAction,
+
+    reducedDataActions,
+    setReduceDataAction,
+    setNoPreferenceDataAction,
 
     getPixelRatio,
     setPixelRatioChangeAction,
