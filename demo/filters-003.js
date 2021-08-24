@@ -25,7 +25,29 @@ scrawl.makeFilter({
     method: 'saturation',
 });
 
-const levelFilters = [filter.brightness, filter.saturation];
+scrawl.makeFilter({
+    name: 'advancedbrightness',
+    actions: [{
+        action: 'modulate-channels',
+        red: 1,
+        green: 1,
+        blue: 1,
+        alpha: 1,
+    }],
+}).clone({
+    name: 'advancedsaturation',
+    actions: [{
+        action: 'modulate-channels',
+        red: 1,
+        green: 1,
+        blue: 1,
+        alpha: 1,
+        saturation: true,
+    }],
+});
+
+const simpleFilters = [filter.brightness, filter.saturation];
+const advancedFilters = [filter.advancedbrightness, filter.advancedsaturation];
 
 
 // Create the target entitys
@@ -49,6 +71,18 @@ scrawl.makePicture({
     name: 'saturation-picture',
     startX: 200,
     filters: ['saturation'],
+
+}).clone({
+
+    name: 'advanced-saturation-picture',
+    startY: 200,
+    filters: ['advancedsaturation'],
+
+}).clone({
+
+    name: 'advanced-brightness-picture',
+    startX: 0,
+    filters: ['advancedbrightness'],
 });
 
 scrawl.makePhrase({
@@ -57,6 +91,7 @@ scrawl.makePhrase({
     text: 'Brightness',
 
     font: '30px sans-serif',
+    width: '45%',
 
     fillStyle: 'white',
     lineWidth: 4,
@@ -72,6 +107,18 @@ scrawl.makePhrase({
     name: 'saturation-label',
     text: 'Saturation',
     pivot: 'saturation-picture',
+
+}).clone({
+
+    name: 'advanced-saturation-label',
+    text: 'Modulate channels + saturation',
+    pivot: 'advanced-saturation-picture',
+
+}).clone({
+
+    name: 'advanced-brightness-label',
+    text: 'Modulate channels',
+    pivot: 'advanced-brightness-picture',
 })
 
 
@@ -83,9 +130,6 @@ let report = function () {
         testTime, testNow,
         testMessage = document.querySelector('#reportmessage');
 
-    let level = document.querySelector('#level'),
-        opacity = document.querySelector('#opacity');
-
     return function () {
 
         testNow = Date.now();
@@ -94,7 +138,8 @@ let report = function () {
 
         testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
     Level: ${level.value}
-    Opacity: ${opacity.value}`;
+    Opacity: ${opacity.value}
+    R: ${red.value}; G: ${green.value}; B: ${blue.value}; A: ${alpha.value}; `;
     };
 }();
 
@@ -109,41 +154,72 @@ const demoAnimation = scrawl.makeRender({
 
 
 // #### User interaction
-scrawl.observeAndUpdate({
+scrawl.addNativeListener(['input', 'change'], () => {
 
-    event: ['input', 'change'],
-    origin: '.controlItem',
+    simpleFilters.forEach(f => {
+        f.set({
+            opacity: opacity.value,
+        });
+    });
 
-    target: filter.brightness,
+    advancedFilters.forEach(f => {
+        f.set({
+            actions: [{
+                action: "modulate-channels",
+                opacity: opacity.value,
+                red: red.value,
+                green: green.value,
+                blue: blue.value,
+                alpha: alpha.value,
+                saturation: ('advancedsaturation' === f.name) ? true : false,
+            }],
+        });
+    });
 
-    useNativeListener: true,
-    preventDefault: true,
+}, '#opacity');
 
-    updates: {
-        opacity: ['opacity', 'float'],
-        level: ['level', 'float'],
-    },
-});
+scrawl.addNativeListener(['input', 'change'], () => {
 
-scrawl.observeAndUpdate({
+    simpleFilters.forEach(f => {
+        f.set({
+            level: level.value,
+        });
+    });
 
-    event: ['input', 'change'],
-    origin: '.controlItem',
+}, '#level');
 
-    target: filter.saturation,
+scrawl.addNativeListener(['input', 'change'], () => {
 
-    useNativeListener: true,
-    preventDefault: true,
+    advancedFilters.forEach(f => {
+        f.set({
+            actions: [{
+                action: "modulate-channels",
+                opacity: opacity.value,
+                red: red.value,
+                green: green.value,
+                blue: blue.value,
+                alpha: alpha.value,
+                saturation: ('advancedsaturation' === f.name) ? true : false,
+            }],
+        });
+    });
 
-    updates: {
-        opacity: ['opacity', 'float'],
-        level: ['level', 'float'],
-    },
-});
+}, '.modulatecontrol');
 
 // Setup form
-document.querySelector('#opacity').value = 1;
-document.querySelector('#level').value = 1;
+const opacity = document.querySelector('#opacity');
+const level = document.querySelector('#level');
+const red = document.querySelector('#red');
+const green = document.querySelector('#green');
+const blue = document.querySelector('#blue');
+const alpha = document.querySelector('#alpha');
+
+opacity.value = 1;
+level.value = 1;
+red.value = 1;
+green.value = 1;
+blue.value = 1;
+alpha.value = 1;
 
 
 // #### Development and testing
