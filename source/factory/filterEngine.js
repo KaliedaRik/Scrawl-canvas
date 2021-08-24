@@ -3015,7 +3015,7 @@ P.theBigActionsObject = {
         else this.processResults(this.cache.work, output, opacity);
     },
 
-// __modulate-channels__ - Multiplies each channel's value by the supplied argument value. A channel-argument's value of '0' will set that channel's value to zero; a value of '1' will leave the channel value unchanged. If the "saturation" flag is set to 'true' the calculation changes to start at the color range mid point. The 'brightness' and 'saturation' filters are special forms of the 'channels' filter which use a single "levels" argument to set all three color channel arguments to the same value.
+// __modulate-channels__ - Multiplies each channel's value by the supplied argument value. A channel-argument's value of '0' will set that channel's value to zero; a value of '1' will leave the channel value unchanged. If the "saturation" flag is set to 'true' the calculation changes to start at that pixel's grayscale values. The 'brightness' and 'saturation' filters are special forms of the 'channels' filter which use a single "levels" argument to set all three color channel arguments to the same value.
     'modulate-channels': function (requirements) {
 
         let [input, output] = this.getInputAndOutputLines(requirements);
@@ -3023,7 +3023,7 @@ P.theBigActionsObject = {
         let iData = input.data,
             oData = output.data,
             len = iData.length,
-            r, g, b, a, i;
+            r, g, b, a, gray, vr, vg, vb, i;
 
         let {opacity, red, green, blue, alpha, saturation, lineOut} = requirements;
 
@@ -3043,10 +3043,16 @@ P.theBigActionsObject = {
                 b = g + 1;
                 a = b + 1;
 
-                oData[r] = 127 + ((iData[r] - 127) * red);
-                oData[g] = 127 + ((iData[g] - 127) * green);
-                oData[b] = 127 + ((iData[b] - 127) * blue);
-                oData[a] = 127 + ((iData[a] - 127) * alpha);
+                vr = iData[r];
+                vg = iData[g];
+                vb = iData[b];
+
+                gray = Math.floor((0.2126 * vr) + (0.7152 * vg) + (0.0722 * vb));
+
+                oData[r] = gray + ((vr - gray) * red);
+                oData[g] = gray + ((vg - gray) * green);
+                oData[b] = gray + ((vb - gray) * blue);
+                oData[a] = iData[a] * alpha;
             }
         }
         else {

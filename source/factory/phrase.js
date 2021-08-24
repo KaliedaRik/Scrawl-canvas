@@ -38,6 +38,13 @@
 // + [Packets-002](../../demo/packets-002.html) - Scrawl-canvas packets - save and load a range of different entitys
 // + [Modules-001](../../demo/modules-001.html) - Scrawl-canvas modularized code - London crime charts
 
+// #### TODO:
+// The [CSS Font Loading API](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Font_Loading_API) is beginning to stabilize across browsers, which means we can watch for font loads and then perform text measurements using the [TextMetrics interface](https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics)
+// + Currently we need to calculate font/text height using temporary DOM elements - this is both ugly and less than accurate
+// + Text metrics will give us much better height measurements, and also glyph width measurements (and thus advance values for eg text along a path)
+// + However progress with the enhanced TextMetrics is slower across browsers, meaning that any code we develop is likely to bloat the code base as we cannot (yet) afford to discard existing code.
+// + More details in Demo [Canvas-029](../../demo/canvas-029.html) - Phrase entitys and gradients
+
 
 // #### Imports
 import { constructors, cell, cellnames, styles, stylesnames, artefact, sectionClasses } from '../core/library.js';

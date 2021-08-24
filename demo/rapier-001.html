@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Rapier 001</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    .controls {
+      grid-template-columns: 1fr 1fr;
+      width:  600px;
+      margin-bottom: 0.5em;
+    }
+    .controls div {
+      box-sizing: border-box;
+      justify-self: stretch;
+      align-self: center;
+      text-align: center;
+      padding: 6px 0;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Rapier test 001</h1>
+  <h2>Rapier physics - stacking boxes</h2>
+  <p>The boxes can be dragged and dropped</p>
+
+  <div class="controls">
+    <button id="run">Run</button>
+    <button id="halt" disabled>Halt</button>
+  </div>
+
+  <canvas id="mycanvas" width="600" height="600"></canvas>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>.../li>
+    </ul>
+    <p><a href="../docs/demo/rapier-001.html">Annotated code</a></p>
+  </div>
+
+  <script src="rapier-001.js" type="module"></script>
+
+</body>
+
+</html>

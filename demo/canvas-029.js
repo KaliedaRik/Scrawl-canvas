@@ -299,3 +299,66 @@ document.querySelector('#justify').value = 'left';
 
 // #### Development and testing
 console.log(scrawl.library);
+
+
+// Text measurements
+// 
+// To see forthcoming measurements, we need to go to chrome://flags and enable 'Experimental Web Platform Features'
+// + The eventual aim is to replace a whole stack of code in factory/phrase.js where we calculate font height etc
+// + At the moment Phrase entitys ignore font baselines; positioning is entirely from the top left corner of the text rectangle
+if ('fonts' in document) {
+
+    Promise.all([
+        document.fonts.load('18px Garamond'),
+        document.fonts.load('46px "Mountains of Christmas"')
+    ])
+    .then(res => {
+
+        let { engine } = canvas;
+
+        engine.save();
+
+        engine.font = '18px Garamond';
+        let garamond = engine.measureText('The quick brown fox jumps over the lazy dog');
+        console.log('garamond', garamond);
+
+        engine.font = '46px "Mountains of Christmas"';
+        let moc = engine.measureText('The quick brown fox jumps over the lazy dog');
+        console.log('moc', moc);
+
+        engine.restore();
+    })
+    .catch(e => console.log(e));
+}
+
+
+/*
+RESULTS - Chrome, with flag enabled
+
+garamond TextMetrics
+    actualBoundingBoxAscent: 12.33984375
+    actualBoundingBoxDescent: 3.9375
+    actualBoundingBoxLeft: -0.24609375
+    actualBoundingBoxRight: 328.376953125
+    advances: [
+        0, 10.9951171875, 19.9951171875, 27.984375, 32.484375, 41.484375, 50.484375, 55.4853515625, 63.474609375, 72.474609375, 76.974609375, 85.974609375, 91.96875, 100.96875, 113.9677734375, 122.9677734375, 127.4677734375, 133.4619140625, 142.4619140625, 151.4619140625, 155.9619140625, 160.962890625, 169.962890625, 183.9638671875, 192.9638671875, 199.96875, 204.46875, 213.46875, 222.46875, 230.4580078125, 236.4521484375, 240.9521484375, 245.953125, 254.953125, 262.9423828125, 267.4423828125, 272.443359375, 280.4326171875, 288.421875, 297.421875, 301.921875, 310.921875, 319.921875
+    ]
+    emHeightAscent: 13.5
+    emHeightDescent: 4.5
+    fontBoundingBoxAscent: 17
+    fontBoundingBoxDescent: 5
+    width: 328.921875
+
+
+RESULTS - Chrome, with flag disabled
+
+garamond TextMetrics
+    actualBoundingBoxAscent: 12.33984375
+    actualBoundingBoxDescent: 3.9375
+    actualBoundingBoxLeft: -0.24609375
+    actualBoundingBoxRight: 328.376953125
+    fontBoundingBoxAscent: 17
+    fontBoundingBoxDescent: 5
+    width: 328.921875
+
+*/
