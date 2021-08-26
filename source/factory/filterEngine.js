@@ -7,7 +7,7 @@
 import { constructors } from '../core/library.js';
 import {requestCell, releaseCell} from './cell.js';
 
-import { seededRandomNumberGenerator } from '../core/utilities.js';
+import { seededRandomNumberGenerator } from '../core/random-seed.js';
 
 // #### FilterEngine constructor
 const FilterEngine = function () {

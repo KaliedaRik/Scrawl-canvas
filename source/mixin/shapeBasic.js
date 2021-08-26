@@ -106,6 +106,7 @@ export default function (P = Ωempty) {
     S.pathDefinition = function (item) {
 
         if (item.substring) this.pathDefinition = item;
+        this.pathCalculatedOnce = false;
         this.dirtyPathObject = true;
     };
 
@@ -320,7 +321,7 @@ export default function (P = Ωempty) {
         return false;
     }
 
-    // `getPathPositionData`
+    // `getPathPositionData` - internal function called by `getPathPositionData`
     P.getPathPositionData = function (pos, constantSpeed = false) {
 
         if (this.useAsPath && xt(pos) && pos.toFixed) {
@@ -358,7 +359,17 @@ export default function (P = Ωempty) {
             return this.buildPathPositionObject(unit, myLen);
         }
         return false;
-    }
+    };
+
+    // `getPointOnPathCoordinates` - function to return an Array of `[x, y]` coordinates (not a Scrawl-canvas Coordinate Array) for the given position argument - a positive float Number between 0 and 1. 
+    P.getPointOnPathCoordinates = function (pos, constantSpeed = false) {
+
+        let data = this.getPathPositionData(pos, constantSpeed);
+
+        if (!data) return [0,0];
+
+        return [data.x, data.y];
+    };
 
 
 // #### Display cycle functionality

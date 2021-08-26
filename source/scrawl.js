@@ -78,6 +78,11 @@ import * as library from './core/library.js';
 
 
 import { 
+    seededRandomNumberGenerator,
+} from './core/random-seed.js';
+
+
+import { 
     makeSnippet,
 } from './core/snippets.js';
 
@@ -396,6 +401,10 @@ export default {
     setPixelRatioChangeAction,
     getIgnorePixelRatio,
     setIgnorePixelRatio,
+
+
+    // core/random-seed.js
+    seededRandomNumberGenerator,
 
 
     // core/snippets.js
