@@ -321,7 +321,9 @@ export default function (P = Ωempty) {
         return false;
     }
 
-    // `getPathPositionData` - internal function called by `getPathPositionData`
+    // `getPathPositionData` - function called by `getPathPositionData`
+    // + Also useful in user code to retrieve the Cell-relative coordinates of any point (measured as a float Number between `0` and `1` along the path)
+    // + The second argument - a Boolean - rectifies for constant speed
     P.getPathPositionData = function (pos, constantSpeed = false) {
 
         if (this.useAsPath && xt(pos) && pos.toFixed) {
@@ -359,16 +361,6 @@ export default function (P = Ωempty) {
             return this.buildPathPositionObject(unit, myLen);
         }
         return false;
-    };
-
-    // `getPointOnPathCoordinates` - function to return an Array of `[x, y]` coordinates (not a Scrawl-canvas Coordinate Array) for the given position argument - a positive float Number between 0 and 1. 
-    P.getPointOnPathCoordinates = function (pos, constantSpeed = false) {
-
-        let data = this.getPathPositionData(pos, constantSpeed);
-
-        if (!data) return [0,0];
-
-        return [data.x, data.y];
     };
 
 

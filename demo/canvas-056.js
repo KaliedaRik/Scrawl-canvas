@@ -26,9 +26,6 @@ let densityValue = 600,
     rotationValue = 360,
     pathrollValue = false;
 
-// Get the number generator
-const numberGenerator = scrawl.seededRandomNumberGenerator('hello-world');
-
 // We use a Polyline entity as the guide along which we shall calculate the hairs for our Shape entity. The Polyline's pins are a set of Wheel entitys which the user can drag around the canvas to reshape the Polyline
 const firstPins = scrawl.makeGroup({
     name: 'first-pins',
@@ -93,37 +90,34 @@ const checkOutlines = function () {
         // Rotations are calculated with the help of a pool Coordinate object
         const coord = scrawl.requestCoordinate();
 
+        // Get the number generator
+        const numberGenerator = scrawl.seededRandomNumberGenerator('hello-world');
+
         let pos, x, y, a, dx, dy;
         let line = '';
 
         for (let i = 0; i < densityValue; i++) {
 
+            // __getPathPositionData__ returns an Object with attributes `x`, `y`, `angle`.
+            // + The first argument is a float Number value between `0` and `1`, representing the relative position of the required point along the path.
+            // + The second argument is a boolean which, when set to true, will return the `constant speed` coordinate rather than the `natural speed` coordinate.
+            pos = firstOutline.getPathPositionData(i / densityValue, true);
+            x = pos.x;
+            y = pos.y;
+
             if (pathrollValue) {
 
-                // __getPathPositionData__ returns an Object with attributes `x`, `y`, `angle`
-                pos = firstOutline.getPathPositionData(i / densityValue, true);
-                x = pos.x;
-                y = pos.y;
                 a = pos.angle + 90;
 
                 coord.set(0, numberGenerator.random() * lengthValue).rotate(a + (numberGenerator.random() * rotationValue)).add([x, y]);
-
-                [dx, dy] = coord;
-
-                line += `M${x},${y}L${dx},${dy}`;
             }
             else {
 
-                // __getPointOnPathCoordinates__ returns an `[x, y]` Array
-                pos = firstOutline.getPointOnPathCoordinates(i / densityValue, true);
-                [x, y] = pos;
-
-                coord.set(0, numberGenerator.random() * lengthValue).rotate(numberGenerator.random() * rotationValue).add(pos);
-
-                [dx, dy] = coord;
-
-                line += `M${x},${y}L${dx},${dy}`;
+                coord.set(0, numberGenerator.random() * lengthValue).rotate(numberGenerator.random() * rotationValue).add([x, y]);
             }
+            [dx, dy] = coord;
+
+            line += `M${x},${y}L${dx},${dy}`;
         }
 
         // Return the Coordinate object back to the pool - failure to do this leads to memory leaks!
