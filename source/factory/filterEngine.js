@@ -638,6 +638,31 @@ P.getRGBfromHSL = function (h, s, l) {
     return [r, g, b];
 };
 
+P.getGradientData = function (gradient) {
+
+    const mycell = requestCell();
+
+    const {engine, element} = mycell;
+
+    element.width = 256;
+    element.height = 1;
+
+    gradient.palette.recalculate();
+
+    const G = engine.createLinearGradient(0, 0, 255, 0);
+
+    gradient.addStopsToGradient(G, gradient.paletteStart, gradient.paletteEnd, gradient.cyclePalette);
+
+    engine.fillStyle = G;
+    engine.fillRect(0, 0, 256, 1);
+
+    let data = engine.getImageData(0, 0, 256, 1).data;
+
+    releaseCell(mycell);
+
+    return data;
+};
+
 
 // ## Filter action functions
 // Each function is held in the `theBigActionsObject` object, for convenience
@@ -1823,7 +1848,7 @@ P.theBigActionsObject = {
         if (null == opaqueAt) opaqueAt = 1;
         if (null == transparentAt) transparentAt = 0;
 
-        const maxDiff = Math.max(((red + green + blue) / 3), (((255 - red) + (255 - green) + (255 - blue)) / 3)),
+        let maxDiff = Math.max(((red + green + blue) / 3), (((255 - red) + (255 - green) + (255 - blue)) / 3)),
             transparent = transparentAt * maxDiff,
             opaque = opaqueAt * maxDiff,
             range = opaque - transparent;
@@ -2891,25 +2916,7 @@ P.theBigActionsObject = {
 
         if (gradient) {
 
-            const mycell = requestCell();
-
-            const {engine, element} = mycell;
-
-            element.width = 256;
-            element.height = 1;
-
-            gradient.palette.recalculate();
-
-            G = engine.createLinearGradient(0, 0, 255, 0);
-
-            gradient.addStopsToGradient(G, gradient.paletteStart, gradient.paletteEnd, gradient.cyclePalette);
-
-            engine.fillStyle = G;
-            engine.fillRect(0, 0, 256, 1);
-
-            let rainbowData = engine.getImageData(0, 0, 256, 1).data;
-
-            releaseCell(mycell);
+            let rainbowData = this.getGradientData(gradient);
 
             for (i = 0; i < len; i += 4) {
 
@@ -2943,6 +2950,52 @@ P.theBigActionsObject = {
                 oData[b] = iData[b];
                 oData[a] = iData[a];
             }
+        }
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
+    },
+
+// __vary-channels-by-weights__ - manipulate colors using a set of channel curve arrays.
+// + We give each possible color channel value a weighting (default: 1); when that color channel value is encountered, it gets multiplied by its weighting to return the output value
+// + Using this method, we can perform a __curve__ (image tonality) filter
+// + The weightings __must__ be supplied as an Array of length 1024 (256 values for each of the 4 channels)
+    'vary-channels-by-weights': function (requirements) {
+
+        let [input, output] = this.getInputAndOutputLines(requirements);
+
+        let iData = input.data,
+            oData = output.data,
+            len = iData.length,
+            i, r, g, b, a, red, green, blue, alpha;
+
+        let {opacity, includeAlpha, weights, lineOut} = requirements;
+
+        if (null == opacity) opacity = 1;
+        if (null == includeAlpha) includeAlpha = false;
+        if (null == weights) weights = false;
+
+        if (!weights || weights.length !== 1024) {
+
+            weights = new Array(1024);
+            weights.fill(1);
+        }
+
+        for (i = 0; i < len; i += 4) {
+
+            r = i;
+            g = r + 1;
+            b = g + 1;
+            a = b + 1;
+
+            red = iData[r];
+            green = iData[g];
+            blue = iData[b];
+            alpha = iData[a];
+
+            oData[r] = red * weights[red];
+            oData[g] = green * weights[green];
+            oData[b] = blue * weights[blue];
+            oData[a] = (includeAlpha) ? alpha * weights[alpha] : alpha;
         }
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);
@@ -3266,7 +3319,7 @@ P.theBigActionsObject = {
         if (null == width) width = 1;
         if (null == height) height = 1;
         if (null == level) level = 0.5;
-        if (null == seed) level = 'some-random-string-or-other';
+        if (null == seed) seed = 'some-random-string-or-other';
         if (null == includeRed) includeRed = true;
         if (null == includeGreen) includeGreen = true;
         if (null == includeBlue) includeBlue = true;

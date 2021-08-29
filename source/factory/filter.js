@@ -30,6 +30,8 @@
 // 
 // `corrode` - Performs a special form of matrix operation on each pixel's color and alpha channels, calculating the new value using neighbouring pixel values. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the "width" and "height" arguments, while setting the home pixel's position within the matrix can be set using the "offsetX" and "offsetY" arguments. The operation will set the pixel's channel value to match either the lowest, highest, mean or median values as dictated by its neighbours - this value is set in the "level" attribute. Channels can be selected by setting the "includeRed", "includeGreen", "includeBlue" (all false by default) and "includeAlpha" (default: true) flags. Object attributes: `action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue, includeAlpha, width, height, offsetX, offsetY, operation`
 // 
+// `curveWeights` - curves filter (for image processing tonality). The weights array must by 1024 elements long, with each element defaulting to a value of `1.0`. Object attributes: `action, lineIn, lineOut, opacity, includeAlpha, weights`
+//
 // `displace` - Shift pixels around the image, based on the values supplied in a displacement process-image. Object attributes: `action, lineIn, lineOut, lineMix, opacity, channelX, channelY, scaleX, scaleY, transparentEdges, offsetX, offsetY`
 // 
 // `emboss` - A 3x3 matrix transform; the matrix weights are calculated internally from the values of two arguments: "strength", and "angle" - which is a value measured in degrees, with 0 degrees pointing to the right of the origin (along the positive x axis). Post-processing options include removing unchanged pixels, or setting then to mid-gray. The convenience method includes additional arguments which will add a choice of grayscale, then channel clamping, then blurring actions before passing the results to this emboss action. Object attributes: `action, lineIn, lineOut, opacity, strength, angle, tolerance, keepOnlyChangedAreas, postProcessResults`; pseudo-arguments for the convenience method include `useNaturalGrayscale, clamp, smoothing`
@@ -215,6 +217,7 @@ let defaultAttributes = {
 // + [Filters-021](../../demo/filters-021.html) - Parameters for: corrode filter
 // + [Filters-022](../../demo/filters-022.html) - Parameters for: mapToGradient filter
 // + [Filters-023](../../demo/filters-023.html) - Parameters for: randomNoise filter
+// + [Filters-024](../../demo/filters-024.html) - Parameters for: curveNoise filter
     alpha: 255,
     angle: 0,
     areaAlphaLevels: null,
@@ -690,6 +693,18 @@ const setActionsArray = {
         }];
     },
 
+// __curveWeights__ (new in v8.6.1) - curves filter (for image processing tonality). The weights array must by 1024 elements long, with each element defaulting to a value of 1.0
+    curveWeights: function (f) {
+        f.actions = [{
+            action: 'vary-channels-by-weights',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            weights: (f.weights != null) ? f.weights : false,
+            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
+        }];
+    },
+
 // __cyan__ - removes red channel color from the image, and averages the remaining channel colors
     cyan: function (f) {
         f.actions = [{
@@ -1029,7 +1044,7 @@ const setActionsArray = {
         }];
     },
 
-// __randomNoise__ - creates a stippling effect across the image
+// __randomNoise__ (new in v8.6.0) - creates a stippling effect across the image
     randomNoise: function (f) {
         f.actions = [{
             action: 'random-noise',
