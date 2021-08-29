@@ -2955,52 +2955,6 @@ P.theBigActionsObject = {
         else this.processResults(this.cache.work, output, opacity);
     },
 
-// __vary-channels-by-weights__ - manipulate colors using a set of channel curve arrays.
-// + We give each possible color channel value a weighting (default: 1); when that color channel value is encountered, it gets multiplied by its weighting to return the output value
-// + Using this method, we can perform a __curve__ (image tonality) filter
-// + The weightings __must__ be supplied as an Array of length 1024 (256 values for each of the 4 channels)
-    'vary-channels-by-weights': function (requirements) {
-
-        let [input, output] = this.getInputAndOutputLines(requirements);
-
-        let iData = input.data,
-            oData = output.data,
-            len = iData.length,
-            i, r, g, b, a, red, green, blue, alpha;
-
-        let {opacity, includeAlpha, weights, lineOut} = requirements;
-
-        if (null == opacity) opacity = 1;
-        if (null == includeAlpha) includeAlpha = false;
-        if (null == weights) weights = false;
-
-        if (!weights || weights.length !== 1024) {
-
-            weights = new Array(1024);
-            weights.fill(1);
-        }
-
-        for (i = 0; i < len; i += 4) {
-
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
-
-            red = iData[r];
-            green = iData[g];
-            blue = iData[b];
-            alpha = iData[a];
-
-            oData[r] = red * weights[red];
-            oData[g] = green * weights[green];
-            oData[b] = blue * weights[blue];
-            oData[a] = (includeAlpha) ? alpha * weights[alpha] : alpha;
-        }
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
-    },
-
 // __matrix__ - Performs a matrix operation on each pixel's channels, calculating the new value using neighbouring pixel weighted values. Also known as a convolution matrix, kernel or mask operation. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the "width" and "height" arguments, while setting the home pixel's position within the matrix can be set using the "offsetX" and "offsetY" arguments. The weights to be applied need to be supplied in the "weights" argument - an Array listing the weights row-by-row starting from the top-left corner of the matrix. By default all color channels are included in the calculations while the alpha channel is excluded. The 'edgeDetect', 'emboss' and 'sharpen' convenience filter methods all use the matrix action, pre-setting the required weights.
     'matrix': function (requirements) {
 
@@ -3558,6 +3512,53 @@ P.theBigActionsObject = {
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);
     },
+
+// __vary-channels-by-weights__ - manipulate colors using a set of channel curve arrays.
+// + We give each possible color channel value a weighting (default: 1); when that color channel value is encountered, it gets multiplied by its weighting to return the output value
+// + Using this method, we can perform a __curve__ (image tonality) filter
+// + The weightings __must__ be supplied as an Array of length 1024 (256 values for each of the 4 channels)
+    'vary-channels-by-weights': function (requirements) {
+
+        let [input, output] = this.getInputAndOutputLines(requirements);
+
+        let iData = input.data,
+            oData = output.data,
+            len = iData.length,
+            i, r, g, b, a, red, green, blue, alpha;
+
+        let {opacity, includeAlpha, weights, lineOut} = requirements;
+
+        if (null == opacity) opacity = 1;
+        if (null == includeAlpha) includeAlpha = false;
+        if (null == weights) weights = false;
+
+        if (!weights || weights.length !== 1024) {
+
+            weights = new Array(1024);
+            weights.fill(1);
+        }
+
+        for (i = 0; i < len; i += 4) {
+
+            r = i;
+            g = r + 1;
+            b = g + 1;
+            a = b + 1;
+
+            red = iData[r];
+            green = iData[g];
+            blue = iData[b];
+            alpha = iData[a];
+
+            oData[r] = red * weights[red];
+            oData[g] = green * weights[green];
+            oData[b] = blue * weights[blue];
+            oData[a] = (includeAlpha) ? alpha * weights[alpha] : alpha;
+        }
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
+    },
+
 };
 
 
