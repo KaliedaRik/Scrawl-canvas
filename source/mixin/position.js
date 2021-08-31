@@ -239,7 +239,7 @@ export default function (P = Ωempty) {
         mimicked: null,
 
 // __particle__ - attribute to store any particle the artefact mey be using for its position reference
-		particle: null,
+	    particle: null,
 
 // __lockTo__ - `[x-lock, y-lock]` Array; locks can be set to: `start` (the default), `pivot`, `path`, `mimic`, `particle`, or `mouse`.
 // + The lock values can be set individually using the pseudo-attributes __lockXTo__ and __lockYTo__.

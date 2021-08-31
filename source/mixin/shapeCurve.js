@@ -150,6 +150,19 @@ P.factoryKill = function () {
 
     // __end__
     // + pseudo-attributes __endX__, __endY__
+    G.endPositionX = function () {
+
+        return this.currentEnd[0];
+    };
+    G.endPositionY = function () {
+
+        return this.currentEnd[1];
+    };
+    G.endPosition = function () {
+
+        return [].concat(this.currentEnd);
+    };
+
     S.endX = function (coord) {
 
         if (coord != null) {

@@ -30,8 +30,6 @@
 // 
 // `corrode` - Performs a special form of matrix operation on each pixel's color and alpha channels, calculating the new value using neighbouring pixel values. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the "width" and "height" arguments, while setting the home pixel's position within the matrix can be set using the "offsetX" and "offsetY" arguments. The operation will set the pixel's channel value to match either the lowest, highest, mean or median values as dictated by its neighbours - this value is set in the "level" attribute. Channels can be selected by setting the "includeRed", "includeGreen", "includeBlue" (all false by default) and "includeAlpha" (default: true) flags. Object attributes: `action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue, includeAlpha, width, height, offsetX, offsetY, operation`
 // 
-// `curveWeights` - curves filter (for image processing tonality). The weights array must by 1024 elements long, with each element defaulting to a value of `1.0`. Object attributes: `action, lineIn, lineOut, opacity, includeAlpha, weights`
-//
 // `displace` - Shift pixels around the image, based on the values supplied in a displacement process-image. Object attributes: `action, lineIn, lineOut, lineMix, opacity, channelX, channelY, scaleX, scaleY, transparentEdges, offsetX, offsetY`
 // 
 // `emboss` - A 3x3 matrix transform; the matrix weights are calculated internally from the values of two arguments: "strength", and "angle" - which is a value measured in degrees, with 0 degrees pointing to the right of the origin (along the positive x axis). Post-processing options include removing unchanged pixels, or setting then to mid-gray. The convenience method includes additional arguments which will add a choice of grayscale, then channel clamping, then blurring actions before passing the results to this emboss action. Object attributes: `action, lineIn, lineOut, opacity, strength, angle, tolerance, keepOnlyChangedAreas, postProcessResults`; pseudo-arguments for the convenience method include `useNaturalGrayscale, clamp, smoothing`
@@ -66,7 +64,9 @@
 // 
 // `tint-channels` - Has similarities to the SVG <feColorMatrix> filter element, but excludes the alpha channel from calculations. Rather than set a matrix, we set nine arguments to determine how the value of each color channel in a pixel will affect both itself and its fellow color channels. The 'sepia' convenience filter presets these values to create a sepia effect. Object attributes: `action, lineIn, lineOut, opacity, redInRed, redInGreen, redInBlue, greenInRed, greenInGreen, greenInBlue, blueInRed, blueInGreen, blueInBlue`
 // 
-// `user-defined-legacy` - Previous to Scrawl-canvas version 8.4.0, filters could be defined with an argument which passed a function string to a filter web worker, which the worker would then run against the source input image as-and-when required. This functionality has been removed from the new filter system. All such filters will now return the input image unchanged. Object attributes: action, lineIn, lineOut, opacity
+// `user-defined-legacy` - Previous to Scrawl-canvas version 8.4.0, filters could be defined with an argument which passed a function string to a filter web worker, which the worker would then run against the source input image as-and-when required. This functionality has been removed from the new filter system. All such filters will now return the input image unchanged. Object attributes: `action, lineIn, lineOut, opacity`
+//
+// `vary-channels-by-weights` - curves filter (for image processing tonality). The weights array must by 1024 elements long, with each element defaulting to a value of `1.0`. Object attributes: `action, lineIn, lineOut, opacity, weights, useMixedChannel`
 //
 // ```
 // // Example: the following code creates a filter that applies a thick red border around the entitys 
@@ -293,6 +293,7 @@ let defaultAttributes = {
     tolerance: 0,
     transparentAt: 0,
     transparentEdges: false,
+    useMixedChannel: true,
     useNaturalGrayscale: false,
     weights: null,
     width: 1,
@@ -701,7 +702,7 @@ const setActionsArray = {
             lineOut: (f.lineOut != null) ? f.lineOut : '',
             opacity: (f.opacity != null) ? f.opacity : 1,
             weights: (f.weights != null) ? f.weights : false,
-            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
+            useMixedChannel: (f.useMixedChannel != null) ? f.useMixedChannel : true,
         }];
     },
 

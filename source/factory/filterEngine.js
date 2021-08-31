@@ -3514,9 +3514,9 @@ P.theBigActionsObject = {
     },
 
 // __vary-channels-by-weights__ - manipulate colors using a set of channel curve arrays.
-// + We give each possible color channel value a weighting (default: 1); when that color channel value is encountered, it gets multiplied by its weighting to return the output value
+// + The weights Array is (256 * 4) elements long. For each color level, we supply four weights: `redweight, greenweight, blueweight, allweight`
+// + The default weighting for all elements is `1`. For each pixel's color channel, we multiply that channels value first by the `allweight` value, then by that channel's specific weight value
 // + Using this method, we can perform a __curve__ (image tonality) filter
-// + The weightings __must__ be supplied as an Array of length 1024 (256 values for each of the 4 channels)
     'vary-channels-by-weights': function (requirements) {
 
         let [input, output] = this.getInputAndOutputLines(requirements);
@@ -3524,18 +3524,21 @@ P.theBigActionsObject = {
         let iData = input.data,
             oData = output.data,
             len = iData.length,
-            i, r, g, b, a, red, green, blue, alpha;
+            i, r, g, b, a, red, green, blue, gray, all, allR, allG, allB;
 
-        let {opacity, includeAlpha, weights, lineOut} = requirements;
+        let {opacity, weights, useMixedChannel, lineOut} = requirements;
 
         if (null == opacity) opacity = 1;
-        if (null == includeAlpha) includeAlpha = false;
+        if (null == useMixedChannel) useMixedChannel = true;
         if (null == weights) weights = false;
+
+        if (useMixedChannel) console.log('using mixed channel');
+
 
         if (!weights || weights.length !== 1024) {
 
             weights = new Array(1024);
-            weights.fill(1);
+            weights.fill(0);
         }
 
         for (i = 0; i < len; i += 4) {
@@ -3548,12 +3551,29 @@ P.theBigActionsObject = {
             red = iData[r];
             green = iData[g];
             blue = iData[b];
-            alpha = iData[a];
 
-            oData[r] = red * weights[red];
-            oData[g] = green * weights[green];
-            oData[b] = blue * weights[blue];
-            oData[a] = (includeAlpha) ? alpha * weights[alpha] : alpha;
+            if (useMixedChannel) {
+
+                gray = Math.floor((0.2126 * red) + (0.7152 * green) + (0.0722 * blue));
+
+                all = weights[(gray * 4) + 3];
+
+                allR = all * 0.2126;
+                allG = all * 0.7152;
+                allB = all * 0.0722;
+
+                oData[r] = red + allR;
+                oData[g] = green + allG;
+                oData[b] = blue + allB;
+                oData[a] = iData[a];
+            }
+            else {
+
+                oData[r] = red + weights[red * 4];
+                oData[g] = green + weights[(green * 4) + 1];
+                oData[b] = blue + weights[(blue * 4) + 2];
+                oData[a] = iData[a];
+            }
         }
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);

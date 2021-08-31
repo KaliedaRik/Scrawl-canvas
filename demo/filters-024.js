@@ -1,23 +1,23 @@
 // # Demo Filters 024 
-// Filter parameters: randomNoise
+// Filter parameters: curveWeights
 
 // [Run code](../../demo/filters-024.html)
 import scrawl from '../source/scrawl.js';
 
-// Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
-scrawl.setIgnorePixelRatio(false);
-
 
 // #### Scene setup
-const canvas = scrawl.library.canvas.mycanvas;
+scrawl.setIgnorePixelRatio(false);
 
 scrawl.importDomImage('.flowers');
 
+const oCanvas = scrawl.library.canvas['output-canvas'];
+const wCanvas = scrawl.library.canvas['channel-weights-canvas'];
 
+
+// #### Curves filter
 const weights = new Array(1024);
-weights.fill(1);
+weights.fill(0);
 
-// Create the filter
 const myFilter = scrawl.makeFilter({
 
     name: 'my-filter',
@@ -27,10 +27,11 @@ const myFilter = scrawl.makeFilter({
 });
 
 
-// Create the target entity
+// #### Output canvas
 scrawl.makePicture({
 
     name: 'base-piccy',
+    group: oCanvas.base.name,
 
     asset: 'iris',
 
@@ -46,39 +47,312 @@ scrawl.makePicture({
 });
 
 
-// #### Scene animation
-// Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+// #### Weights canvas
+let curvesCell = wCanvas.buildCell({
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
+    name: 'curves-cell',
+    dimensions: [360, 360],
+});
 
-    let opacity = document.querySelector('#opacity');
+const curveArray = ['red', 'green', 'blue', 'black'];
 
-    return function () {
+curveArray.forEach((name, index) => {
 
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
+    scrawl.makeGroup({
 
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Opacity: ${opacity.value}
-    Weights: ${weights.join(', ')}`;
-    };
-}();
+        name: `${name}-pins-group`,
+        host: wCanvas.base.name,
+        order: index,
+    });
 
+    scrawl.makeWheel({
 
-// Create the Display cycle animation
-const demoAnimation = scrawl.makeRender({
+        name: `${name}-pin-start`,
+        group: `${name}-pins-group`,
+        radius: 12,
+        start: [0, 360],
+        fillStyle: name,
+        strokeStyle: 'gold',
+        method: 'fillThenDraw',
+        handle: ['center', 'center'],
 
-    name: "demo-animation",
-    target: canvas,
-    afterShow: report,
+    }).clone({
+
+        name: `${name}-pin-cs`,
+        radius: 8,
+        start: [120, 240],
+        method: 'fill',
+
+    }).clone({
+
+        name: `${name}-pin-ce`,
+        start: [240, 120],
+
+    }).clone({
+
+        name: `${name}-pin-end`,
+        radius: 12,
+        start: [360, 0],
+        method: 'fillThenDraw',
+    });
+
+    scrawl.makeBezier({
+
+        name: `${name}-bezier`,
+        group: 'curves-cell',
+
+        strokeStyle: name,
+        lineWidth: 1,
+        method: 'draw',
+
+        pivot: `${name}-pin-start`,
+        lockTo: 'pivot',
+        startControlPivot: `${name}-pin-cs`,
+        startControlLockTo: 'pivot',
+        endControlPivot: `${name}-pin-ce`,
+        endControlLockTo: 'pivot',
+        endPivot: `${name}-pin-end`,
+        endLockTo: 'pivot',
+
+        useStartAsControlPoint: true,
+        useAsPath: true,
+    });
 });
 
 
 // #### User interaction
+// Create the drag-and-drop zone
+let draggedPin = false;
+
+let dragGroup = scrawl.makeGroup({
+    name: 'drag-group',
+});
+
+dragGroup.addArtefacts('black-pin-start', 'black-pin-cs', 'black-pin-ce', 'black-pin-end');
+
+const currentPin = scrawl.makeDragZone({
+
+    zone: wCanvas,
+    collisionGroup: 'drag-group',
+    endOn: ['up', 'leave'],
+    exposeCurrentArtefact: true,
+
+    updateOnStart: () => {
+
+        draggedPin = currentPin();
+
+        if (draggedPin) {
+
+            let pin = draggedPin.artefact,
+                name = pin.name;
+
+            if (name.indexOf('start') > 0 || name.indexOf('end') > 0) {
+
+                pin.isBeingDragged = false;
+                pin.set({
+                    lockXTo: 'mouse',
+                });
+            }
+        }
+    },
+
+    updateOnEnd: () => {
+
+        if (draggedPin) {
+
+            let pin = draggedPin.artefact,
+                name = pin.name;
+
+            if (name.indexOf('start') > 0 || name.indexOf('end') > 0) {
+
+                pin.set({
+                    start: pin.get('position'),
+                    lockXTo: 'start',
+                });
+            }
+        }
+        draggedPin = false;
+
+        recalculateWeights();
+    },
+});
+
+
+// Filter weights recalculation
+const recalculateWeights = function () {
+
+    const allCurve = scrawl.library.entity['black-bezier'],
+        redCurve = scrawl.library.entity['red-bezier'],
+        greenCurve = scrawl.library.entity['green-bezier'],
+        blueCurve = scrawl.library.entity['blue-bezier'];
+
+    const step = 360 / 256,
+        inverseStep = 256 / 360;
+
+    const { engine, element } = curvesCell;
+
+    return function () {
+
+        const [startAllX, temp0] = allCurve.get('position');
+        const [endAllX, temp1] = allCurve.get('endPosition');
+
+        const [startRedX, temp2] = redCurve.get('position');
+        const [endRedX, temp3] = redCurve.get('endPosition');
+
+        const [startGreenX, temp4] = greenCurve.get('position');
+        const [endGreenX, temp5] = greenCurve.get('endPosition');
+
+        const [startBlueX, temp6] = blueCurve.get('position');
+        const [endBlueX, temp7] = blueCurve.get('endPosition');
+
+        const redArray = [],
+            greenArray = [],
+            blueArray = [],
+            allArray = [];
+
+        for (let i = 0; i < 1; i += 0.001) {
+
+            let r = redCurve.getPathPositionData(i),
+                g = greenCurve.getPathPositionData(i),
+                b = blueCurve.getPathPositionData(i),
+                a = allCurve.getPathPositionData(i);
+
+            let {x:xr, y:yr} = r;
+            let {x:xg, y:yg} = g;
+            let {x:xb, y:yb} = b;
+            let {x:xa, y:ya} = a;
+
+            xr = Math.floor(xr * inverseStep);
+            xg = Math.floor(xg * inverseStep);
+            xb = Math.floor(xb * inverseStep);
+            xa = Math.floor(xa * inverseStep);
+
+            yr = 256 - (yr * inverseStep);
+            yg = 256 - (yg * inverseStep);
+            yb = 256 - (yb * inverseStep);
+            ya = 256 - (ya * inverseStep);
+
+            if (!redArray[xr]) redArray[xr] = [];
+            redArray[xr].push(yr);
+
+            if (!greenArray[xg]) greenArray[xg] = [];
+            greenArray[xg].push(yg);
+
+            if (!blueArray[xb]) blueArray[xb] = [];
+            blueArray[xb].push(yb);
+
+            if (!allArray[xa]) allArray[xa] = [];
+            allArray[xa].push(ya);
+        }
+
+        let temp, tempLen, res;
+
+        for (let i = 0, cursor = 0; i < 256; i++) {
+
+            if (!redArray[i]) redArray[i] = [];
+            tempLen = redArray[i].length;
+            if (!tempLen) {
+                if (startRedX < endRedX) {
+                    if (i < startRedX) weights[cursor] = -i;
+                    else weights[cursor] = 255 - i;
+                }
+                else {
+                    if (i > startRedX) weights[cursor] = -i;
+                    else weights[cursor] = 255 - i;
+                }
+            }
+            else {
+                temp = [...redArray[i]];
+                res = Math.round(temp.reduce((acc, val) => acc + val, 0) / tempLen);
+                weights[cursor] = res - i;
+            }
+            cursor++;
+
+            if (!greenArray[i]) greenArray[i] = [];
+            tempLen = greenArray[i].length;
+            if (!tempLen) {
+                if (startGreenX < endGreenX) {
+                    if (i < startGreenX) weights[cursor] = -i;
+                    else weights[cursor] = 255 - i;
+                }
+                else {
+                    if (i > startGreenX) weights[cursor] = -i;
+                    else weights[cursor] = 255 - i;
+                }
+            }
+            else {
+                temp = [...greenArray[i]];
+                res = Math.round(temp.reduce((acc, val) => acc + val, 0) / tempLen);
+                weights[cursor] = res - i;
+            }
+            cursor++;
+
+            if (!blueArray[i]) blueArray[i] = [];
+            tempLen = blueArray[i].length;
+            if (!tempLen) {
+                if (startBlueX < endBlueX) {
+                    if (i < startBlueX) weights[cursor] = -i;
+                    else weights[cursor] = 255 - i;
+                }
+                else {
+                    if (i > startBlueX) weights[cursor] = -i;
+                    else weights[cursor] = 255 - i;
+                }
+            }
+            else {
+                temp = [...blueArray[i]];
+                res = Math.round(temp.reduce((acc, val) => acc + val, 0) / tempLen);
+                weights[cursor] = res - i;
+            }
+            cursor++;
+
+            if (!allArray[i]) allArray[i] = [];
+            tempLen = allArray[i].length;
+            if (!tempLen) {
+                if (startAllX < endAllX) {
+                    if (i < startAllX) weights[cursor] = -i;
+                    else weights[cursor] = 255 - i;
+                }
+                else {
+                    if (i > startAllX) weights[cursor] = -i;
+                    else weights[cursor] = 255 - i;
+                }
+            }
+            else {
+                temp = [...allArray[i]];
+                res = Math.round(temp.reduce((acc, val) => acc + val, 0) / tempLen);
+                weights[cursor] = res - i;
+            }
+            cursor++;
+        }
+
+        myFilter.set({
+            weights: [...weights],
+        });
+
+        updateOutput();
+    }
+}();
+
+
+// #### Scene animation
+const demoAnimation = scrawl.makeRender({
+
+    name: "demo-animation",
+    target: wCanvas,
+});
+
+const updateOutput = () => {
+
+    oCanvas.render();
+    document.querySelector('#reportmessage').textContent = weights.join(', ');
+}
+
+updateOutput();
+
+
+// #### User interaction
+// Top form
 scrawl.observeAndUpdate({
 
     event: ['input', 'change'],
@@ -92,30 +366,52 @@ scrawl.observeAndUpdate({
     updates: {
 
         opacity: ['opacity', 'float'],
-        includeAlpha: ['includeAlpha', 'boolean'],
+        useMixedChannel: ['useMixedChannel', 'boolean'],
     },
 });
 
-scrawl.addNativeListener('click', () => {
 
-    let len = weights.length;
+// Channel buttons
+let selected = false,
+    selectedGroup = false;
 
-    for (let i = 0; i < len; i++) {
+scrawl.addNativeListener('click', (e) => {
 
-        let w = 0.8 + (Math.random() * 0.4);
-        w = w.toFixed(2);
+    if (e && e.target && e.target.id) {
 
-        weights[i] = parseFloat(w);
+        if (selectedGroup) {
+
+            let order = selectedGroup.get('order') - 10;
+
+            selectedGroup.setArtefacts({ order });
+            selectedGroup.set({ order });
+        }
+
+        selected = e.target.id;
+        selectedGroup = scrawl.library.group[`${selected}-pins-group`];
+
+        if (selectedGroup) {
+
+            document.querySelectorAll('.channel-selector').forEach(el => el.classList.remove('selected'));
+
+            let order = selectedGroup.get('order') + 10;
+
+            selectedGroup.setArtefacts({ order });
+            selectedGroup.set({ order });
+
+            dragGroup.clearArtefacts();
+            dragGroup.addArtefacts(`${selected}-pin-start`, `${selected}-pin-cs`, `${selected}-pin-ce`, `${selected}-pin-end`);
+
+            e.target.classList.add('selected');
+        }
     }
+}, '.channel-selector');
 
-    myFilter.set({
-        weights: [...weights],
-    });
+scrawl.addNativeListener(['input', 'change'], () => updateOutput(), '.controlItem');
 
-}, canvas.domElement);
 
 // Setup form
-document.querySelector('#includeAlpha').options.selectedIndex = 1;
+document.querySelector('#useMixedChannel').options.selectedIndex = 1;
 document.querySelector('#opacity').value = 1;
 
 

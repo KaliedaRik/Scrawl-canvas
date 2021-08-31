@@ -188,6 +188,19 @@ D.controlPathPosition = function (item) {
 
 // __control__
 // + pseudo-attributes __controlX__, __controlY__
+G.controlPositionX = function () {
+
+    return this.currentControl[0];
+};
+G.controlPositionY = function () {
+
+    return this.currentControl[1];
+};
+G.controlPosition = function () {
+
+    return [].concat(this.currentControl);
+};
+
 S.controlX = function (coord) {
 
     if (coord != null) {
