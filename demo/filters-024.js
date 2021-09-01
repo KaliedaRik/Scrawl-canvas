@@ -336,6 +336,7 @@ const recalculateWeights = function () {
 
 
 // #### Scene animation
+// In this demo we continuously animate the (right hand side) curves canvas, but only update the (left hand side) output canvas when the filter changes
 const demoAnimation = scrawl.makeRender({
 
     name: "demo-animation",
@@ -352,7 +353,7 @@ updateOutput();
 
 
 // #### User interaction
-// Top form
+// Top form (for opacity, use mixed channel controls)
 scrawl.observeAndUpdate({
 
     event: ['input', 'change'],
@@ -371,7 +372,7 @@ scrawl.observeAndUpdate({
 });
 
 
-// Channel buttons
+// Channel buttons (under the curves canvas)
 let selected = false,
     selectedGroup = false;
 

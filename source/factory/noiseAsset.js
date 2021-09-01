@@ -130,7 +130,7 @@ let defaultAttributes = {
     // Post-processing the noise map: The __sumFunction__ attribute - a String value - identifies the smoothing function that will be applied to the noise map once the noise calculations complete. 
     // + Permitted values include: `none`, `sine-x`, `sine-y`, `sine`, `modular`
     // + __sineFrequencyCoeff__ - a Number - is used by sine-based sum functions
-    // + __modularAmplitude__ - a Number - is used by the modular sum function
+    // + __sumAmplitude__ - a Number - is used by the modular sum function
     sumFunction: 'none',
     sineFrequencyCoeff: 1,
     sumAmplitude: 5,

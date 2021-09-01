@@ -696,10 +696,13 @@ P.theBigActionsObject = {
             a = b + 1;
             aVal = iData[a];
 
-            oData[r] = (includeRed) ? aVal : ((excludeRed) ? 0 : iData[r]);
-            oData[g] = (includeGreen) ? aVal : ((excludeGreen) ? 0 : iData[g]);
-            oData[b] = (includeBlue) ? aVal : ((excludeBlue) ? 0 : iData[b]);
-            oData[a] = 255;
+            if (aVal) {
+
+                oData[r] = (includeRed) ? aVal : ((excludeRed) ? 0 : iData[r]);
+                oData[g] = (includeGreen) ? aVal : ((excludeGreen) ? 0 : iData[g]);
+                oData[b] = (includeBlue) ? aVal : ((excludeBlue) ? 0 : iData[b]);
+                oData[a] = 255;
+            }
         }
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
@@ -957,20 +960,23 @@ P.theBigActionsObject = {
                         ia = ir + 3;
                         ma = mr + 3;
 
-                        if (mr < 0) copyPixel(ir, ir, iData);
-                        else if (!iData[ia]) copyPixel(mr, ir, mData);
-                        else if (!mData[ma]) copyPixel(ir, ir, iData);
-                        else {
+                        if (iData[ia]) {
 
-                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
+                            if (mr < 0) copyPixel(ir, ir, iData);
+                            else if (!iData[ia]) copyPixel(mr, ir, mData);
+                            else if (!mData[ma]) copyPixel(ir, ir, iData);
+                            else {
 
-                            ig = ir + 1;
-                            ib = ig + 1;
+                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
 
-                            oData[ir] = colorburnCalc(dinR, dmixR);
-                            oData[ig] = colorburnCalc(dinG, dmixG);
-                            oData[ib] = colorburnCalc(dinB, dmixB);
-                            oData[ia] = alphaCalc(dinA, dmixA);
+                                ig = ir + 1;
+                                ib = ig + 1;
+
+                                oData[ir] = colorburnCalc(dinR, dmixR);
+                                oData[ig] = colorburnCalc(dinG, dmixG);
+                                oData[ib] = colorburnCalc(dinB, dmixB);
+                                oData[ia] = alphaCalc(dinA, dmixA);
+                            }
                         }
                     }
                 }
@@ -992,20 +998,23 @@ P.theBigActionsObject = {
                         ia = ir + 3;
                         ma = mr + 3;
 
-                        if (mr < 0) copyPixel(ir, ir, iData);
-                        else if (!iData[ia]) copyPixel(mr, ir, mData);
-                        else if (!mData[ma]) copyPixel(ir, ir, iData);
-                        else {
+                        if (iData[ia]) {
 
-                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
+                            if (mr < 0) copyPixel(ir, ir, iData);
+                            else if (!iData[ia]) copyPixel(mr, ir, mData);
+                            else if (!mData[ma]) copyPixel(ir, ir, iData);
+                            else {
 
-                            ig = ir + 1;
-                            ib = ig + 1;
+                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
 
-                            oData[ir] = colordodgeCalc(dinR, dmixR);
-                            oData[ig] = colordodgeCalc(dinG, dmixG);
-                            oData[ib] = colordodgeCalc(dinB, dmixB);
-                            oData[ia] = alphaCalc(dinA, dmixA);
+                                ig = ir + 1;
+                                ib = ig + 1;
+
+                                oData[ir] = colordodgeCalc(dinR, dmixR);
+                                oData[ig] = colordodgeCalc(dinG, dmixG);
+                                oData[ib] = colordodgeCalc(dinB, dmixB);
+                                oData[ia] = alphaCalc(dinA, dmixA);
+                            }
                         }
                     }
                 }
@@ -1023,20 +1032,23 @@ P.theBigActionsObject = {
                         ia = ir + 3;
                         ma = mr + 3;
 
-                        if (mr < 0) copyPixel(ir, ir, iData);
-                        else if (!iData[ia]) copyPixel(mr, ir, mData);
-                        else if (!mData[ma]) copyPixel(ir, ir, iData);
-                        else {
+                        if (iData[ia]) {
 
-                            ig = ir + 1;
-                            ib = ig + 1;
-                            mg = mr + 1;
-                            mb = mg + 1;
+                            if (mr < 0) copyPixel(ir, ir, iData);
+                            else if (!iData[ia]) copyPixel(mr, ir, mData);
+                            else if (!mData[ma]) copyPixel(ir, ir, iData);
+                            else {
 
-                            oData[ir] = darkenCalc(iData[ir], mData[mr]);
-                            oData[ig] = darkenCalc(iData[ig], mData[mg]);
-                            oData[ib] = darkenCalc(iData[ib], mData[mb]);
-                            oData[ia] = alphaCalc(iData[ia] / 255, mData[ma] / 255);
+                                ig = ir + 1;
+                                ib = ig + 1;
+                                mg = mr + 1;
+                                mb = mg + 1;
+
+                                oData[ir] = darkenCalc(iData[ir], mData[mr]);
+                                oData[ig] = darkenCalc(iData[ig], mData[mg]);
+                                oData[ib] = darkenCalc(iData[ib], mData[mb]);
+                                oData[ia] = alphaCalc(iData[ia] / 255, mData[ma] / 255);
+                            }
                         }
                     }
                 }
@@ -1053,19 +1065,22 @@ P.theBigActionsObject = {
 
                         ia = ir + 3;
 
-                        if (mr < 0) copyPixel(ir, ir, iData);
-                        else if (!iData[ia]) copyPixel(mr, ir, mData);
-                        else {
+                        if (iData[ia]) {
 
-                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
+                            if (mr < 0) copyPixel(ir, ir, iData);
+                            else if (!iData[ia]) copyPixel(mr, ir, mData);
+                            else {
 
-                            ig = ir + 1;
-                            ib = ig + 1;
+                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
 
-                            oData[ir] = differenceCalc(dinR, dmixR);
-                            oData[ig] = differenceCalc(dinG, dmixG);
-                            oData[ib] = differenceCalc(dinB, dmixB);
-                            oData[ia] = alphaCalc(dinA, dmixA);
+                                ig = ir + 1;
+                                ib = ig + 1;
+
+                                oData[ir] = differenceCalc(dinR, dmixR);
+                                oData[ig] = differenceCalc(dinG, dmixG);
+                                oData[ib] = differenceCalc(dinB, dmixB);
+                                oData[ia] = alphaCalc(dinA, dmixA);
+                            }
                         }
                     }
                 }
@@ -1082,19 +1097,22 @@ P.theBigActionsObject = {
 
                         ia = ir + 3;
 
-                        if (mr < 0) copyPixel(ir, ir, iData);
-                        else if (!iData[ia]) copyPixel(mr, ir, mData);
-                        else {
+                        if (iData[ia]) {
 
-                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
+                            if (mr < 0) copyPixel(ir, ir, iData);
+                            else if (!iData[ia]) copyPixel(mr, ir, mData);
+                            else {
 
-                            ig = ir + 1;
-                            ib = ig + 1;
+                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
 
-                            oData[ir] = exclusionCalc(dinR, dmixR);
-                            oData[ig] = exclusionCalc(dinG, dmixG);
-                            oData[ib] = exclusionCalc(dinB, dmixB);
-                            oData[ia] = alphaCalc(dinA, dmixA);
+                                ig = ir + 1;
+                                ib = ig + 1;
+
+                                oData[ir] = exclusionCalc(dinR, dmixR);
+                                oData[ig] = exclusionCalc(dinG, dmixG);
+                                oData[ib] = exclusionCalc(dinB, dmixB);
+                                oData[ia] = alphaCalc(dinA, dmixA);
+                            }
                         }
                     }
                 }
@@ -1111,19 +1129,22 @@ P.theBigActionsObject = {
 
                         ia = ir + 3;
 
-                        if (mr < 0) copyPixel(ir, ir, iData);
-                        else if (!iData[ia]) copyPixel(mr, ir, mData);
-                        else {
+                        if (iData[ia]) {
 
-                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
+                            if (mr < 0) copyPixel(ir, ir, iData);
+                            else if (!iData[ia]) copyPixel(mr, ir, mData);
+                            else {
 
-                            ig = ir + 1;
-                            ib = ig + 1;
+                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
 
-                            oData[ir] = hardlightCalc(dinR, dmixR);
-                            oData[ig] = hardlightCalc(dinG, dmixG);
-                            oData[ib] = hardlightCalc(dinB, dmixB);
-                            oData[ia] = alphaCalc(dinA, dmixA);
+                                ig = ir + 1;
+                                ib = ig + 1;
+
+                                oData[ir] = hardlightCalc(dinR, dmixR);
+                                oData[ig] = hardlightCalc(dinG, dmixG);
+                                oData[ib] = hardlightCalc(dinB, dmixB);
+                                oData[ia] = alphaCalc(dinA, dmixA);
+                            }
                         }
                     }
                 }
@@ -1140,20 +1161,23 @@ P.theBigActionsObject = {
 
                         ia = ir + 3;
 
-                        if (mr < 0) copyPixel(ir, ir, iData);
-                        else if (!iData[ir]) copyPixel(mr, ir, mData);
-                        else {
+                        if (iData[ia]) {
 
-                            ig = ir + 1;
-                            ib = ig + 1;
-                            mg = mr + 1;
-                            mb = mg + 1;
-                            ma = mb + 1;
+                            if (mr < 0) copyPixel(ir, ir, iData);
+                            else if (!iData[ir]) copyPixel(mr, ir, mData);
+                            else {
 
-                            oData[ir] = lightenCalc(iData[ir], mData[mr]);
-                            oData[ig] = lightenCalc(iData[ig], mData[mg]);
-                            oData[ib] = lightenCalc(iData[ib], mData[mb]);
-                            oData[ia] = alphaCalc(iData[ia] / 255, mData[ma] / 255);
+                                ig = ir + 1;
+                                ib = ig + 1;
+                                mg = mr + 1;
+                                mb = mg + 1;
+                                ma = mb + 1;
+
+                                oData[ir] = lightenCalc(iData[ir], mData[mr]);
+                                oData[ig] = lightenCalc(iData[ig], mData[mg]);
+                                oData[ib] = lightenCalc(iData[ib], mData[mb]);
+                                oData[ia] = alphaCalc(iData[ia] / 255, mData[ma] / 255);
+                            }
                         }
                     }
                 }
@@ -1170,19 +1194,22 @@ P.theBigActionsObject = {
 
                         ia = ir + 3;
 
-                        if (mr < 0) copyPixel(ir, ir, iData);
-                        else if (!iData[ia]) copyPixel(mr, ir, mData);
-                        else {
+                        if (iData[ia]) {
 
-                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
+                            if (mr < 0) copyPixel(ir, ir, iData);
+                            else if (!iData[ia]) copyPixel(mr, ir, mData);
+                            else {
 
-                            ig = ir + 1;
-                            ib = ig + 1;
+                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
 
-                            oData[ir] = lighterCalc(dinR, dmixR);
-                            oData[ig] = lighterCalc(dinG, dmixG);
-                            oData[ib] = lighterCalc(dinB, dmixB);
-                            oData[ia] = alphaCalc(dinA, dmixA);
+                                ig = ir + 1;
+                                ib = ig + 1;
+
+                                oData[ir] = lighterCalc(dinR, dmixR);
+                                oData[ig] = lighterCalc(dinG, dmixG);
+                                oData[ib] = lighterCalc(dinB, dmixB);
+                                oData[ia] = alphaCalc(dinA, dmixA);
+                            }
                         }
                     }
                 }
@@ -1200,20 +1227,23 @@ P.theBigActionsObject = {
                         ia = ir + 3;
                         ma = mr + 3;
 
-                        if (mr < 0) copyPixel(ir, ir, iData);
-                        else if (!iData[ia]) copyPixel(mr, ir, mData);
-                        else if (!mData[ma]) copyPixel(ir, ir, iData);
-                        else {
+                        if (iData[ia]) {
 
-                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
+                            if (mr < 0) copyPixel(ir, ir, iData);
+                            else if (!iData[ia]) copyPixel(mr, ir, mData);
+                            else if (!mData[ma]) copyPixel(ir, ir, iData);
+                            else {
 
-                            ig = ir + 1;
-                            ib = ig + 1;
+                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
 
-                            oData[ir] = multiplyCalc(dinR, dmixR);
-                            oData[ig] = multiplyCalc(dinG, dmixG);
-                            oData[ib] = multiplyCalc(dinB, dmixB);
-                            oData[ia] = alphaCalc(dinA, dmixA);
+                                ig = ir + 1;
+                                ib = ig + 1;
+
+                                oData[ir] = multiplyCalc(dinR, dmixR);
+                                oData[ig] = multiplyCalc(dinG, dmixG);
+                                oData[ib] = multiplyCalc(dinB, dmixB);
+                                oData[ia] = alphaCalc(dinA, dmixA);
+                            }
                         }
                     }
                 }
@@ -1230,19 +1260,22 @@ P.theBigActionsObject = {
 
                         ia = ir + 3;
 
-                        if (mr < 0) copyPixel(ir, ir, iData);
-                        else if (!iData[ia]) copyPixel(mr, ir, mData);
-                        else {
+                        if (iData[ia]) {
 
-                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
+                            if (mr < 0) copyPixel(ir, ir, iData);
+                            else if (!iData[ia]) copyPixel(mr, ir, mData);
+                            else {
 
-                            ig = ir + 1;
-                            ib = ig + 1;
+                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
 
-                            oData[ir] = overlayCalc(dinR, dmixR);
-                            oData[ig] = overlayCalc(dinG, dmixG);
-                            oData[ib] = overlayCalc(dinB, dmixB);
-                            oData[ia] = alphaCalc(dinA, dmixA);
+                                ig = ir + 1;
+                                ib = ig + 1;
+
+                                oData[ir] = overlayCalc(dinR, dmixR);
+                                oData[ig] = overlayCalc(dinG, dmixG);
+                                oData[ib] = overlayCalc(dinB, dmixB);
+                                oData[ia] = alphaCalc(dinA, dmixA);
+                            }
                         }
                     }
                 }
@@ -1259,19 +1292,22 @@ P.theBigActionsObject = {
 
                         ia = ir + 3;
 
-                        if (mr < 0) copyPixel(ir, ir, iData);
-                        else if (!iData[ia]) copyPixel(mr, ir, mData);
-                        else {
+                        if (iData[ia]) {
 
-                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
+                            if (mr < 0) copyPixel(ir, ir, iData);
+                            else if (!iData[ia]) copyPixel(mr, ir, mData);
+                            else {
 
-                            ig = ir + 1;
-                            ib = ig + 1;
+                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
 
-                            oData[ir] = screenCalc(dinR, dmixR);
-                            oData[ig] = screenCalc(dinG, dmixG);
-                            oData[ib] = screenCalc(dinB, dmixB);
-                            oData[ia] = alphaCalc(dinA, dmixA);
+                                ig = ir + 1;
+                                ib = ig + 1;
+
+                                oData[ir] = screenCalc(dinR, dmixR);
+                                oData[ig] = screenCalc(dinG, dmixG);
+                                oData[ib] = screenCalc(dinB, dmixB);
+                                oData[ia] = alphaCalc(dinA, dmixA);
+                            }
                         }
                     }
                 }
@@ -1297,20 +1333,23 @@ P.theBigActionsObject = {
                         ia = ir + 3;
                         ma = mr + 3;
 
-                        if (mr < 0) copyPixel(ir, ir, iData);
-                        else if (!iData[ia]) copyPixel(mr, ir, mData);
-                        else if (!mData[ma]) copyPixel(ir, ir, iData);
-                        else {
+                        if (iData[ia]) {
 
-                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
+                            if (mr < 0) copyPixel(ir, ir, iData);
+                            else if (!iData[ia]) copyPixel(mr, ir, mData);
+                            else if (!mData[ma]) copyPixel(ir, ir, iData);
+                            else {
 
-                            ig = ir + 1;
-                            ib = ig + 1;
+                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
 
-                            oData[ir] = softlightCalc(dinR, dmixR);
-                            oData[ig] = softlightCalc(dinG, dmixG);
-                            oData[ib] = softlightCalc(dinB, dmixB);
-                            oData[ia] = alphaCalc(dinA, dmixA);
+                                ig = ir + 1;
+                                ib = ig + 1;
+
+                                oData[ir] = softlightCalc(dinR, dmixR);
+                                oData[ig] = softlightCalc(dinG, dmixG);
+                                oData[ib] = softlightCalc(dinB, dmixB);
+                                oData[ia] = alphaCalc(dinA, dmixA);
+                            }
                         }
                     }
                 }
@@ -1334,22 +1373,25 @@ P.theBigActionsObject = {
                         ia = ir + 3;
                         ma = mr + 3;
 
-                        if (mr < 0) copyPixel(ir, ir, iData);
-                        else if (!iData[ia]) copyPixel(mr, ir, mData);
-                        else if (!mData[ma]) copyPixel(ir, ir, iData);
-                        else {
+                        if (iData[ia]) {
 
-                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
+                            if (mr < 0) copyPixel(ir, ir, iData);
+                            else if (!iData[ia]) copyPixel(mr, ir, mData);
+                            else if (!mData[ma]) copyPixel(ir, ir, iData);
+                            else {
 
-                            [cr, cg, cb] = colorCalc(dinR, dinG, dinB, dmixR, dmixG, dmixB);
+                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
 
-                            ig = ir + 1;
-                            ib = ig + 1;
+                                [cr, cg, cb] = colorCalc(dinR, dinG, dinB, dmixR, dmixG, dmixB);
 
-                            oData[ir] = cr;
-                            oData[ig] = cg;
-                            oData[ib] = cb;
-                            oData[ia] = alphaCalc(dinA, dmixA);
+                                ig = ir + 1;
+                                ib = ig + 1;
+
+                                oData[ir] = cr;
+                                oData[ig] = cg;
+                                oData[ib] = cb;
+                                oData[ia] = alphaCalc(dinA, dmixA);
+                            }
                         }
                     }
                 }
@@ -1373,22 +1415,25 @@ P.theBigActionsObject = {
                         ia = ir + 3;
                         ma = mr + 3;
 
-                        if (mr < 0) copyPixel(ir, ir, iData);
-                        else if (!iData[ia]) copyPixel(mr, ir, mData);
-                        else if (!mData[ma]) copyPixel(ir, ir, iData);
-                        else {
+                        if (iData[ia]) {
 
-                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
+                            if (mr < 0) copyPixel(ir, ir, iData);
+                            else if (!iData[ia]) copyPixel(mr, ir, mData);
+                            else if (!mData[ma]) copyPixel(ir, ir, iData);
+                            else {
 
-                            [cr, cg, cb] = hueCalc(dinR, dinG, dinB, dmixR, dmixG, dmixB);
+                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
 
-                            ig = ir + 1;
-                            ib = ig + 1;
+                                [cr, cg, cb] = hueCalc(dinR, dinG, dinB, dmixR, dmixG, dmixB);
 
-                            oData[ir] = cr;
-                            oData[ig] = cg;
-                            oData[ib] = cb;
-                            oData[ia] = alphaCalc(dinA, dmixA);
+                                ig = ir + 1;
+                                ib = ig + 1;
+
+                                oData[ir] = cr;
+                                oData[ig] = cg;
+                                oData[ib] = cb;
+                                oData[ia] = alphaCalc(dinA, dmixA);
+                            }
                         }
                     }
                 }
@@ -1412,22 +1457,25 @@ P.theBigActionsObject = {
                         ia = ir + 3;
                         ma = mr + 3;
 
-                        if (mr < 0) copyPixel(ir, ir, iData);
-                        else if (!iData[ia]) copyPixel(mr, ir, mData);
-                        else if (!mData[ma]) copyPixel(ir, ir, iData);
-                        else {
+                        if (iData[ia]) {
 
-                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
+                            if (mr < 0) copyPixel(ir, ir, iData);
+                            else if (!iData[ia]) copyPixel(mr, ir, mData);
+                            else if (!mData[ma]) copyPixel(ir, ir, iData);
+                            else {
 
-                            [cr, cg, cb] = luminosityCalc(dinR, dinG, dinB, dmixR, dmixG, dmixB);
+                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
 
-                            ig = ir + 1;
-                            ib = ig + 1;
+                                [cr, cg, cb] = luminosityCalc(dinR, dinG, dinB, dmixR, dmixG, dmixB);
 
-                            oData[ir] = cr;
-                            oData[ig] = cg;
-                            oData[ib] = cb;
-                            oData[ia] = alphaCalc(dinA, dmixA);
+                                ig = ir + 1;
+                                ib = ig + 1;
+
+                                oData[ir] = cr;
+                                oData[ig] = cg;
+                                oData[ib] = cb;
+                                oData[ia] = alphaCalc(dinA, dmixA);
+                            }
                         }
                     }
                 }
@@ -1451,22 +1499,25 @@ P.theBigActionsObject = {
                         ia = ir + 3;
                         ma = mr + 3;
 
-                        if (mr < 0) copyPixel(ir, ir, iData);
-                        else if (!iData[ia]) copyPixel(mr, ir, mData);
-                        else if (!mData[ma]) copyPixel(ir, ir, iData);
-                        else {
+                        if (iData[ia]) {
 
-                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
+                            if (mr < 0) copyPixel(ir, ir, iData);
+                            else if (!iData[ia]) copyPixel(mr, ir, mData);
+                            else if (!mData[ma]) copyPixel(ir, ir, iData);
+                            else {
 
-                            [cr, cg, cb] = saturationCalc(dinR, dinG, dinB, dmixR, dmixG, dmixB);
+                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = getChannelNormals(ir, mr);
 
-                            ig = ir + 1;
-                            ib = ig + 1;
+                                [cr, cg, cb] = saturationCalc(dinR, dinG, dinB, dmixR, dmixG, dmixB);
 
-                            oData[ir] = cr;
-                            oData[ig] = cg;
-                            oData[ib] = cb;
-                            oData[ia] = alphaCalc(dinA, dmixA);
+                                ig = ir + 1;
+                                ib = ig + 1;
+
+                                oData[ir] = cr;
+                                oData[ig] = cg;
+                                oData[ib] = cb;
+                                oData[ia] = alphaCalc(dinA, dmixA);
+                            }
                         }
                     }
                 }
@@ -1482,23 +1533,26 @@ P.theBigActionsObject = {
 
                         ia = ir + 3;
 
-                        if (mr < 0) copyPixel(ir, ir, iData);
-                        else if (!iData[ia]) copyPixel(mr, ir, mData);
-                        else {
+                        if (iData[ia]) {
 
-                            ig = ir + 1;
-                            ib = ig + 1;
-                            mg = mr + 1;
-                            mb = mg + 1;
-                            ma = mb + 1;
+                            if (mr < 0) copyPixel(ir, ir, iData);
+                            else if (!iData[ia]) copyPixel(mr, ir, mData);
+                            else {
 
-                            dinA = iData[ia] / 255;
-                            dmixA = mData[ma] / 255;
+                                ig = ir + 1;
+                                ib = ig + 1;
+                                mg = mr + 1;
+                                mb = mg + 1;
+                                ma = mb + 1;
 
-                            oData[ir] = normalCalc(iData[ir], dinA, mData[mr], dmixA);
-                            oData[ig] = normalCalc(iData[ig], dinA, mData[mg], dmixA);
-                            oData[ib] = normalCalc(iData[ib], dinA, mData[mb], dmixA);
-                            oData[ia] = alphaCalc(dinA, dmixA)
+                                dinA = iData[ia] / 255;
+                                dmixA = mData[ma] / 255;
+
+                                oData[ir] = normalCalc(iData[ir], dinA, mData[mr], dmixA);
+                                oData[ig] = normalCalc(iData[ig], dinA, mData[mg], dmixA);
+                                oData[ib] = normalCalc(iData[ib], dinA, mData[mb], dmixA);
+                                oData[ia] = alphaCalc(dinA, dmixA)
+                            }
                         }
                     }
                 }
@@ -1512,7 +1566,7 @@ P.theBigActionsObject = {
 // + Use the gaussian blur filter instead. This is being retained only for backwards compatibility and will be removed in a future major release
     'blur': function (requirements) {
 
-        const getValue = function (flag, gridStore, pos, data, offset) {
+        const getUncheckedValue = function (flag, gridStore, pos, data, offset) {
 
             if (flag) {
 
@@ -1609,7 +1663,7 @@ P.theBigActionsObject = {
 
         const hold = new Uint8ClampedArray(iData);
 
-        const selectedMethod = (excludeTransparentPixels) ? getCheckedValue : getValue;
+        const selectedMethod = (excludeTransparentPixels) ? getCheckedValue : getUncheckedValue;
 
         for (pass = 0; pass < passes; pass++) {
 
@@ -1627,7 +1681,7 @@ P.theBigActionsObject = {
                         oData[r] = selectedMethod(includeRed, horizontalBlurGrid, counter, hold, 0);
                         oData[g] = selectedMethod(includeGreen, horizontalBlurGrid, counter, hold, 1);
                         oData[b] = selectedMethod(includeBlue, horizontalBlurGrid, counter, hold, 2);
-                        oData[a] = getValue(includeAlpha, horizontalBlurGrid, counter, hold, 3);
+                        oData[a] = getUncheckedValue(includeAlpha, horizontalBlurGrid, counter, hold, 3);
                     }
                 }
 
@@ -1648,7 +1702,7 @@ P.theBigActionsObject = {
                         oData[r] = selectedMethod(includeRed, verticalBlurGrid, counter, hold, 0);
                         oData[g] = selectedMethod(includeGreen, verticalBlurGrid, counter, hold, 1);
                         oData[b] = selectedMethod(includeBlue, verticalBlurGrid, counter, hold, 2);
-                        oData[a] = getValue(includeAlpha, verticalBlurGrid, counter, hold, 3);
+                        oData[a] = getUncheckedValue(includeAlpha, verticalBlurGrid, counter, hold, 3);
                     }
                 }
                 if (pass < passes - 1) hold.set(oData);
@@ -1823,7 +1877,7 @@ P.theBigActionsObject = {
 // __colors-to-alpha__ - Determine the alpha channel value for each pixel depending on the closeness to that pixel's color channel values to a reference color supplied in the "red", "green" and "blue" arguments. The sensitivity of the effect can be manipulated using the "transparentAt" and "opaqueAt" values, both of which lie in the range 0-1.
     'colors-to-alpha': function (requirements) {
 
-        const getValue = function (dr, dg, db) {
+        const getCTAValue = function (dr, dg, db) {
 
             let diff = (Math.abs(red - dr) + Math.abs(green - dg) + Math.abs(blue - db)) / 3;
 
@@ -1837,7 +1891,7 @@ P.theBigActionsObject = {
         let iData = input.data,
             oData = output.data,
             len = iData.length,
-            r, g, b, a, vr, vg, vb, i;
+            r, g, b, a, vr, vg, vb, va, i;
 
         let {opacity, red, green, blue, opaqueAt, transparentAt, lineOut} = requirements;
 
@@ -1860,14 +1914,17 @@ P.theBigActionsObject = {
             b = g + 1;
             a = b + 1;
 
-            vr = iData[r];
-            vg = iData[g];
-            vb = iData[b];
+            if (iData[a]) {
 
-            oData[r] = vr;
-            oData[g] = vg;
-            oData[b] = vb;
-            oData[a] = getValue(vr, vg, vb);
+                vr = iData[r];
+                vg = iData[g];
+                vb = iData[b];
+
+                oData[r] = vr;
+                oData[g] = vg;
+                oData[b] = vb;
+                oData[a] = getCTAValue(vr, vg, vb);
+            }
         }
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
@@ -2388,7 +2445,6 @@ P.theBigActionsObject = {
                 else copyPixel(iPos, iPos, iData);
             }
         }
-
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);
     },
@@ -2557,17 +2613,20 @@ P.theBigActionsObject = {
 
         for (i = 0; i < len; i += 4) {
 
-            c = i;
-            oData[c] = red;
+            if (iData[i + 3]) {
 
-            c++;
-            oData[c] = green;
+                c = i;
+                oData[c] = red;
 
-            c++;
-            oData[c] = blue;
+                c++;
+                oData[c] = green;
 
-            c++;
-            oData[c] = alpha;
+                c++;
+                oData[c] = blue;
+
+                c++;
+                oData[c] = alpha;
+            }
         }
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
@@ -2853,7 +2912,7 @@ P.theBigActionsObject = {
 // __lock-channels-to-levels__ - Produces a posterize effect. Takes in four arguments - "red", "green", "blue" and "alpha" - each of which is an Array of zero or more integer Numbers (between 0 and 255). The filter works by looking at each pixel's channel value and determines which of the corresponding Array's Number values it is closest to; it then sets the channel value to that Number value.
     'lock-channels-to-levels': function (requirements) {
 
-        const getValue = function (val, levels) {
+        const getLCTLValue = function (val, levels) {
 
             if (!levels.length) return val;
 
@@ -2888,10 +2947,10 @@ P.theBigActionsObject = {
             b = g + 1;
             a = b + 1;
 
-            oData[r] = getValue(iData[r], red);
-            oData[g] = getValue(iData[g], green);
-            oData[b] = getValue(iData[b], blue);
-            oData[a] = getValue(iData[a], alpha);
+            oData[r] = getLCTLValue(iData[r], red);
+            oData[g] = getLCTLValue(iData[g], green);
+            oData[b] = getLCTLValue(iData[b], blue);
+            oData[a] = getLCTLValue(iData[a], alpha);
         }
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
@@ -2925,15 +2984,18 @@ P.theBigActionsObject = {
                 b = g + 1;
                 a = b + 1;
 
-                if (useNaturalGrayscale) avg = Math.floor((0.2126 * iData[r]) + (0.7152 * iData[g]) + (0.0722 * iData[b]));
-                else avg = Math.floor((0.3333 * iData[r]) + (0.3333 * iData[g]) + (0.3333 * iData[b]));
+                if (iData[a]) {
 
-                v = avg * 4;
+                    if (useNaturalGrayscale) avg = Math.floor((0.2126 * iData[r]) + (0.7152 * iData[g]) + (0.0722 * iData[b]));
+                    else avg = Math.floor((0.3333 * iData[r]) + (0.3333 * iData[g]) + (0.3333 * iData[b]));
 
-                oData[r] = rainbowData[v];
-                oData[g] = rainbowData[++v];
-                oData[b] = rainbowData[++v];
-                oData[a] = rainbowData[++v];
+                    v = avg * 4;
+
+                    oData[r] = rainbowData[v];
+                    oData[g] = rainbowData[++v];
+                    oData[b] = rainbowData[++v];
+                    oData[a] = rainbowData[++v];
+                }
             }
         }
         else {
@@ -3515,7 +3577,8 @@ P.theBigActionsObject = {
 
 // __vary-channels-by-weights__ - manipulate colors using a set of channel curve arrays.
 // + The weights Array is (256 * 4) elements long. For each color level, we supply four weights: `redweight, greenweight, blueweight, allweight`
-// + The default weighting for all elements is `1`. For each pixel's color channel, we multiply that channels value first by the `allweight` value, then by that channel's specific weight value
+// + The default weighting for all elements is `0`. Weights are added to a pixel channel's value, thus weighting values need to be integer Numbers, either positive or negative
+// + The `useMixedChannel` flag uses a different calculation, where a pixel's channel values are combined to give their grayscale value, then that weighting (stored as the `allweight` weighting value) is added to each channel value, pro-rata in line with the grayscale channel weightings. (Note: this produces a different result compared to tools supplied in various other graphic manipulation software)
 // + Using this method, we can perform a __curve__ (image tonality) filter
     'vary-channels-by-weights': function (requirements) {
 
@@ -3531,9 +3594,6 @@ P.theBigActionsObject = {
         if (null == opacity) opacity = 1;
         if (null == useMixedChannel) useMixedChannel = true;
         if (null == weights) weights = false;
-
-        if (useMixedChannel) console.log('using mixed channel');
-
 
         if (!weights || weights.length !== 1024) {
 

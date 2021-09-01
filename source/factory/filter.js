@@ -168,7 +168,7 @@ let defaultAttributes = {
     // The __method__ attribute is a String which, in legacy filters, determines the actions which that filter will take on the image. An entity, Group or Cell can include more than one filter object in its `filters` Array. 
     // + Filter factory invocations which include the method attribute in their argument object do not need to include an actions attribute; the factory will build the action objects for us.
     // + When using the method attribute, other attributes can be included alongside it. The filter factory will automatically transpose these attributes to the action object.
-    // + The following Strings are valid methods: `'areaAlpha', 'binary', 'blend', 'blue', 'blur', 'brightness', 'channelLevels', 'channels', 'channelstep', 'channelsToAlpha', 'chroma', 'chromakey', 'clampChannels', 'compose', 'cyan', 'displace', 'edgeDetect',  'emboss', 'flood', 'gray', 'grayscale', 'green', 'image', 'invert', 'magenta', 'matrix', 'matrix5', 'notblue', 'notgreen', 'notred', 'offset', 'offsetChannels', 'pixelate', 'red', 'saturation', 'sepia', 'sharpen', 'threshold', 'tint', 'userDefined', 'yellow'`
+    // + The following Strings are valid methods: `'alphaToChannels', 'areaAlpha', 'binary', 'blend', 'blue', 'blur', 'brightness', 'channelLevels', 'channels', 'channelstep', 'channelsToAlpha', 'chroma', 'chromakey', 'clampChannels', 'compose', 'corrode', 'curveWeights', 'cyan', 'displace', 'edgeDetect',  'emboss', 'flood', 'gaussianBlur', 'gray', 'grayscale', 'green', 'image', 'invert', 'magenta', 'mapToGradient', 'matrix', 'matrix5', 'notblue', 'notgreen', 'notred', 'offset', 'offsetChannels', 'pixelate', 'randomNoise', 'red', 'saturation', 'sepia', 'sharpen', 'threshold', 'tint', 'userDefined', 'yellow'`
     method: '',
 
     // ##### How filters process data
@@ -460,7 +460,6 @@ const setActionsArray = {
             excludeBlue: (f.excludeBlue != null) ? f.excludeBlue : true,
         }];
     },
-
 // __areaAlpha__ (new in v8.4.0) - places a tile schema across the input, quarters each tile and then sets the alpha channels of the pixels in selected quarters of each tile to zero. Can be used to create horizontal or vertical bars, or chequerboard effects.
     areaAlpha: function (f) {
         f.actions = [{
@@ -536,17 +535,6 @@ const setActionsArray = {
             radius: (f.radius != null) ? f.radius : 1,
             passes: (f.passes != null) ? f.passes : 1,
             step: (f.step != null) ? f.step : 1,
-        }];
-    },
-
-// __gaussianBlur__ - from this GitHub repository: https://github.com/nodeca/glur/blob/master/index.js (code accessed 1 June 2021)
-    gaussianBlur: function (f) {
-        f.actions = [{
-            action: 'gaussian-blur',
-            lineIn: (f.lineIn != null) ? f.lineIn : '',
-            lineOut: (f.lineOut != null) ? f.lineOut : '',
-            opacity: (f.opacity != null) ? f.opacity : 1,
-            radius: (f.radius != null) ? f.radius : 1,
         }];
     },
 
@@ -822,6 +810,17 @@ const setActionsArray = {
             green: (f.green != null) ? f.green : 0,
             blue: (f.blue != null) ? f.blue : 0,
             alpha: (f.alpha != null) ? f.alpha : 255,
+        }];
+    },
+
+// __gaussianBlur__ - from this GitHub repository: https://github.com/nodeca/glur/blob/master/index.js (code accessed 1 June 2021)
+    gaussianBlur: function (f) {
+        f.actions = [{
+            action: 'gaussian-blur',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            radius: (f.radius != null) ? f.radius : 1,
         }];
     },
 
