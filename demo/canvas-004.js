@@ -4,6 +4,8 @@
 // [Run code](../../demo/canvas-004.html)
 import scrawl from '../source/scrawl.js'
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -50,25 +52,11 @@ scrawl.makeBlock({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
-
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-Palette - start: ${graddy.get('paletteStart')}; end: ${graddy.get('paletteEnd')}
-Start - x: ${graddy.get('startX').toFixed(0)}; y: ${graddy.get('startY').toFixed(0)}; radius: ${graddy.get('startRadius').toFixed(0)}
-End - x: ${graddy.get('endX').toFixed(0)}; y: ${graddy.get('endY').toFixed(0)}; radius: ${graddy.get('endRadius').toFixed(0)}`;
-    };
-}();
-
+const report = reportSpeed('#reportmessage', function () {
+    return `    Palette - start: ${graddy.get('paletteStart')}; end: ${graddy.get('paletteEnd')}
+    Start - x: ${graddy.get('startX').toFixed(0)}; y: ${graddy.get('startY').toFixed(0)}; radius: ${graddy.get('startRadius').toFixed(0)}
+    End - x: ${graddy.get('endX').toFixed(0)}; y: ${graddy.get('endY').toFixed(0)}; radius: ${graddy.get('endRadius').toFixed(0)}`;
+});
 
 // Create the Display cycle animation
 scrawl.makeRender({

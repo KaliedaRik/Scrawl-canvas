@@ -4,6 +4,8 @@
 // [Run code](../../demo/canvas-010.html)
 import scrawl from '../source/scrawl.js'
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -134,25 +136,21 @@ scrawl.importMediaStream({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
+    let [copyX, copyY] = viddyOne.copyStart;
+    let [copyW, copyH] = viddyOne.copyDimensions;
+    let [pasteX, pasteY] = viddyOne.start;
+    let [pasteW, pasteH] = viddyOne.dimensions;
+    let [handleX, handleY] = viddyOne.handle;
 
-    return function () {
+    let {roll, scale} = viddyOne;
 
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Copy - x: ${viddyOne.copyStart[0]}, y: ${viddyOne.copyStart[1]}, w: ${viddyOne.copyDimensions[0]}, h:${viddyOne.copyDimensions[1]}
-    Paste - x: ${viddyOne.start[0]}, y: ${viddyOne.start[1]}, w: ${viddyOne.dimensions[0]}, h:${viddyOne.dimensions[1]}
-    Handle - x: ${viddyOne.handle[0]}, y: ${viddyOne.handle[1]}
-    Roll: ${viddyOne.roll}; Scale: ${viddyOne.scale}`;
-    };
-}();
+    return `    Copy - x: ${copyX}, y: ${copyY}, w: ${copyW}, h: ${copyH}
+    Paste - x: ${pasteX}, y: ${pasteY}, w: ${pasteW}, h:${pasteH}
+    Handle - x: ${handleX}, y: ${handleY}
+    Roll: ${roll}; Scale: ${scale}`;
+});
 
 
 // Create the Display cycle animation

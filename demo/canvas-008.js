@@ -4,6 +4,8 @@
 // [Run code](../../demo/canvas-008.html)
 import scrawl from '../source/scrawl.js'
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -67,25 +69,21 @@ piccy.clone({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
+    let [copyX, copyY] = piccy.copyStart;
+    let [copyW, copyH] = piccy.copyDimensions;
+    let [pasteX, pasteY] = piccy.start;
+    let [pasteW, pasteH] = piccy.dimensions;
+    let [handleX, handleY] = piccy.handle;
 
-    return function () {
+    let {roll, scale} = piccy;
 
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Copy - x: ${piccy.copyStart[0]}, y: ${piccy.copyStart[1]}, w: ${piccy.copyDimensions[0]}, h:${piccy.copyDimensions[1]}
-    Paste - x: ${piccy.start[0]}, y: ${piccy.start[1]}, w: ${piccy.dimensions[0]}, h:${piccy.dimensions[1]}
-    Handle - x: ${piccy.handle[0]}, y: ${piccy.handle[1]}
-    Roll: ${piccy.roll}; Scale: ${piccy.scale}`;
-    };
-}();
+    return `    Copy - x: ${copyX}, y: ${copyY}, w: ${copyW}, h: ${copyH}
+    Paste - x: ${pasteX}, y: ${pasteY}, w: ${pasteW}, h:${pasteH}
+    Handle - x: ${handleX}, y: ${handleY}
+    Roll: ${roll}; Scale: ${scale}`;
+});
 
 
 // Create the Display cycle animation

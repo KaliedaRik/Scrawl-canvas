@@ -4,6 +4,8 @@
 // [Run code](../../demo/canvas-011.html)
 import scrawl from '../source/scrawl.js'
 
+import { reportSpeed, killArtefact } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -412,24 +414,10 @@ let current = scrawl.makeDragZone({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
-
-    let testTicker = Date.now(),
-        testTime, testNow, dragging,
-        testMessage = document.querySelector('#reportmessage');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        dragging = current();
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-Currently dragging: ${(dragging) ? dragging.artefact.name : 'nothing'}`;
-    };
-}();
+const report = reportSpeed('#reportmessage', function () {
+    const dragging = current();
+    return `Currently dragging: ${(dragging) ? dragging.artefact.name : 'nothing'}`;
+});
 
 
 // Create the Display cycle animation
@@ -444,57 +432,6 @@ scrawl.makeRender({
 // #### Development and testing
 console.log(scrawl.library);
 
-// To test kill functionality
-let killArtefact = (name, time) => {
-
-    let groupname = 'mycanvas_base',
-        packet;
-
-    let checkGroupBucket = (name, groupname) => {
-
-        let res = scrawl.library.group[groupname].artefactBuckets.filter(e => e.name === name );
-        return (res.length) ? 'no' : 'yes';
-    };
-
-    setTimeout(() => {
-
-        console.log(`${name} alive
-    removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
-    removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
-    removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
-
-        packet = scrawl.library.artefact[name].saveAsPacket();
-
-        scrawl.library.artefact[name].kill();
-
-        setTimeout(() => {
-
-            console.log(`${name} killed
-    removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
-    removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
-    removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
-
-            canvas.actionPacket(packet);
-
-            setTimeout(() => {
-
-                console.log(`${name} resurrected
-    removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
-    removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
-    removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
-            }, 100);
-        }, 100);
-    }, time);
-};
-
-killArtefact('japan_fill', 4000);
-killArtefact('japan_fillAndDraw', 6000);
+console.log('Performing tests ...');
+killArtefact(canvas, 'japan_fill', 4000);
+killArtefact(canvas, 'japan_fillAndDraw', 6000);
