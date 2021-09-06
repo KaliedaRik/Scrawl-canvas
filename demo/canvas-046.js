@@ -4,6 +4,8 @@
 // [Run code](../../demo/canvas-046.html)
 import scrawl from '../source/scrawl.js';
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -145,27 +147,18 @@ canvas.setBase({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
+    const lib = scrawl.library;
 
-    return function () {
+    return `Cells: ${lib.cellnames.join(', ')}
+Groups: ${lib.groupnames.join(', ')}
+Assets: ${lib.assetnames.join(', ')}
+Entitys: ${lib.entitynames.join(', ')}
+Tickers: ${lib.animationtickersnames.join(', ')}
+Tweens: ${lib.tweennames.join(', ')}`;
+});
 
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-Cells: ${scrawl.library.cellnames.join(', ')}
-Groups: ${scrawl.library.groupnames.join(', ')}
-Assets: ${scrawl.library.assetnames.join(', ')}
-Entitys: ${scrawl.library.entitynames.join(', ')}
-Tickers: ${scrawl.library.animationtickersnames.join(', ')}
-Tweens: ${scrawl.library.tweennames.join(', ')}`;
-    };
-}();
 
 // Create the Display cycle animation
 const render = scrawl.makeRender({

@@ -4,6 +4,8 @@
 // [Run code](../../demo/canvas-022.html)
 import scrawl from '../source/scrawl.js'
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -104,29 +106,27 @@ let checkHitTiles = () => {
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
+    let [startX, startY] = myGrid.start;
+    let [handleX, handleY] = myGrid.handle;
+    let [offsetX, offsetY] = myGrid.offset;
+    let [width, height] = myGrid.dimensions;
 
-    return function () {
+    let here = canvas.here;
 
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
+    let {roll, scale, columns, rows, columnGutterWidth, rowGutterWidth} = myGrid;
 
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Grid - columns: ${myGrid.columns.toFixed(0)}; rows: ${myGrid.rows.toFixed(0)}
-    Grid dimensions - width: ${myGrid.dimensions[0]}; height: ${myGrid.dimensions[1]}
-    Grid gutter widths - column: ${myGrid.columnGutterWidth.toFixed(0)}; row: ${myGrid.rowGutterWidth.toFixed(0)}
-    Start - x: ${myGrid.start[0]}, y: ${myGrid.start[1]}
-    Handle - x: ${myGrid.handle[0]}, y: ${myGrid.handle[1]}
-    Offset - x: ${myGrid.offset[0]}, y: ${myGrid.offset[1]}
-    Roll: ${myGrid.roll}; Scale: ${myGrid.scale}
-    canvas.here - x: ${canvas.here.x.toFixed(0)}, y: ${canvas.here.y.toFixed(0)}; ${hitReport}`;
-    };
-}();
+    return `    Grid - columns: ${columns.toFixed(0)}; rows: ${rows.toFixed(0)}
+    Grid dimensions - width: ${width}; height: ${height}
+    Grid gutter widths - column: ${columnGutterWidth.toFixed(0)}; row: ${rowGutterWidth.toFixed(0)}
+    Start - x: ${startX}, y: ${startY}
+    Handle - x: ${handleX}, y: ${handleY}
+    Offset - x: ${offsetX}, y: ${offsetY}
+    Roll: ${roll}; Scale: ${scale}
+    canvas.here - x: ${here.x.toFixed(0)}, y: ${here.y.toFixed(0)}; ${hitReport}`;
+});
+
 
 // Create the Display cycle animation
 scrawl.makeRender({
@@ -340,4 +340,5 @@ document.querySelector('#reverse').options.selectedIndex = 0;
 
 
 // #### Development and testing
+// TODO: need to develop a test for killing and resurrecting the Grid entity
 console.log(scrawl.library);

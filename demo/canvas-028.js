@@ -4,6 +4,8 @@
 // [Run code](../../demo/canvas-028.html)
 import scrawl from '../source/scrawl.js'
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -139,27 +141,16 @@ let checkMagnifier = function () {
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
+    let displayed = canvas.here,
+        hidden = canvas.base.here;
 
-        displayed = canvas.here,
-        hidden = canvas.base.here,
-
-        testMessage = document.querySelector('#reportmessage');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-Display canvas mouse - x: ${displayed.x}, y: ${displayed.y}
+    return `Display canvas mouse - x: ${displayed.x}, y: ${displayed.y}
 Base canvas mouse - x: ${hidden.x}, y: ${hidden.y}`;
-    };
-}();
+
+});
+
 
 // Create the Display cycle animation
 scrawl.makeRender({

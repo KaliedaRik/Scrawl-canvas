@@ -4,6 +4,8 @@
 // [Run code](../../demo/canvas-017.html)
 import scrawl from '../source/scrawl.js';
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -60,25 +62,19 @@ scrawl.makeWheel({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow, dragging,
-        testMessage = document.querySelector('#reportmessage');
+    let [startX, startY] = lorem.start;
+    let [handleX, handleY] = lorem.handle;
+    let [width, height] = lorem.dimensions;
 
-    return function () {
+    let {roll, scale, lineHeight, letterSpacing, overlinePosition} = lorem;
 
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Start - x: ${lorem.start[0]}, y: ${lorem.start[1]}
-    Handle - x: ${lorem.handle[0]}, y: ${lorem.handle[1]}
-    Width: ${lorem.dimensions[0]}; Roll: ${lorem.roll}; Scale: ${lorem.scale}
-    Line height: ${lorem.lineHeight}; Letter spacing: ${lorem.letterSpacing}; Overline: ${lorem.overlinePosition}`;
-    };
-}();
+    return `    Start - x: ${startX}, y: ${startY}
+    Handle - x: ${handleX}, y: ${handleY}
+    Width: ${width}; Roll: ${roll}; Scale: ${scale}
+    Line height: ${lineHeight}; Letter spacing: ${letterSpacing}; Overline: ${overlinePosition}`;
+});
 
 
 // Create the Display cycle animation

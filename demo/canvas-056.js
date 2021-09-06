@@ -4,6 +4,8 @@
 // [Run code](../../demo/canvas-056.html)
 import scrawl from '../source/scrawl.js'
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -52,6 +54,7 @@ for (let i = 0; i < noOfPins; i++) {
 scrawl.releaseCoordinate(coord);
 
 const firstOutline = scrawl.makePolyline({
+
     name: 'first-outline',
     pins: firstPins.get('artefacts'),
     mapToPins: true,
@@ -65,6 +68,7 @@ const firstOutline = scrawl.makePolyline({
 
 // The Shape entity starts with a minimal pathDefinition value. Note that the Shape's start and handle attributes are centered; this entity does not pivot or mimic to the Polyline entity which is why their borders are often misaligned.
 const secondOutline = scrawl.makeShape({
+
     name: 'second-outline',
     pathDefinition: 'm0,0',
     start: ['center', 'center'],
@@ -132,29 +136,18 @@ const checkOutlines = function () {
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = (function () {
+const report = reportSpeed('#reportmessage', function () {
 
-  let testTicker = Date.now(),
-    testTime,
-    testNow,
-    testMessage = document.querySelector("#reportmessage");
-
-  return function () {
-    testNow = Date.now();
-    testTime = testNow - testTicker;
-    testTicker = testNow;
-
-    testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Rotation: ${rotation.value}; Length: ${length.value}; Density: ${density.value}`;
-  };
-})();
+    return `    Rotation: ${rotation.value}; Length: ${length.value}; Density: ${density.value}`;
+});
 
 // Create the Display cycle animation
 const animation = scrawl.makeRender({
-  name: "demo-animation",
-  target: canvas,
-  commence: checkOutlines,
-  afterShow: report,
+
+    name: "demo-animation",
+    target: canvas,
+    commence: checkOutlines,
+    afterShow: report,
 });
 
 scrawl.makeDragZone({

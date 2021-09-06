@@ -4,6 +4,8 @@
 // [Run code](../../demo/canvas-049.html)
 import scrawl from '../source/scrawl.js'
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -45,24 +47,16 @@ scrawl.makeBlock({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
+    let [startX, startY] = graddy.start;
 
-    return function () {
+    let {paletteStart, paletteEnd, startAngle} = graddy;
 
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-Palette - start: ${graddy.get('paletteStart')}; end: ${graddy.get('paletteEnd')}
-Start - x: ${graddy.get('startX')}; y: ${graddy.get('startY')}
-Angle - ${graddy.get('startAngle')}°`;
-    };
-}();
+    return `    Palette - start: ${paletteStart}; end: ${paletteEnd}
+    Start - x: ${startX}; y: ${startY}
+    Angle - ${startAngle}°`;
+});
 
 
 // Create the Display cycle animation

@@ -13,18 +13,22 @@ const reportSpeed = function (output = '', xtra = false) {
     return function () {
 
         testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
 
-        let text = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+        if (testNow - testTicker > 2) {
 
-        if (xtra) {
+            testTime = testNow - testTicker;
+            testTicker = testNow;
 
-            text += `
+            let text = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
+
+            if (xtra) {
+
+                text += `
 ${xtra()}`;
-        }
+            }
 
-        testMessage.textContent = text;
+            testMessage.textContent = text;
+        }
     };
 };
 
@@ -187,6 +191,73 @@ const killArtefactAndAnchor = (canvas, name, anchorname, time, finishResurrectio
     }, time);
 };
 
+// To test Polyline artefact kill functionality
+const killPolylineArtefact = (canvas, name, time, myline, restore) => {
+
+    let groupname = 'mycanvas_base',
+        packet;
+
+    let checkGroupBucket = (name, groupname) => {
+
+        let res = scrawl.library.group[groupname].artefactBuckets.filter(e => e.name === name );
+        return (res.length) ? 'no' : 'yes';
+    };
+
+    let checkPinsArray = (name) => {
+
+        if (myline.pins.indexOf(name) >= 0) return 'no';
+
+        let res = myline.pins.filter(e => e && e.name === name );
+        return (res.length) ? 'no' : 'yes';
+    };
+
+    setTimeout(() => {
+
+        console.log(`${name} alive
+    removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
+    removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
+    removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from polyline pins array: ${checkPinsArray(name)}
+    removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
+
+        packet = scrawl.library.artefact[name].saveAsPacket();
+
+        scrawl.library.artefact[name].kill();
+
+        setTimeout(() => {
+
+            console.log(`${name} killed
+    removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
+    removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
+    removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from polyline pins array: ${checkPinsArray(name)}
+    removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
+
+            canvas.actionPacket(packet);
+
+            setTimeout(() => {
+
+                if (restore) restore();
+
+                console.log(`${name} resurrected
+    removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
+    removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
+    removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from polyline pins array: ${checkPinsArray(name)}
+    removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
+    removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
+
+                console.log(myline.saveAsPacket());
+
+            }, 500);
+        }, 500);
+    }, time);
+};
 
 
 export {
@@ -194,5 +265,6 @@ export {
 
     killArtefact,
     killArtefactAndAnchor,
+    killPolylineArtefact,
     killStyle,
 }

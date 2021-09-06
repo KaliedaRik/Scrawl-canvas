@@ -4,6 +4,8 @@
 // [Run code](../../demo/canvas-053.html)
 import scrawl from '../source/scrawl.js'
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -95,33 +97,23 @@ scrawl.makeSpiral({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
+    const {currentGeneration, maxGenerations, initialRandomSeedLevel, diffusionRateA, diffusionRateB, feedRate, killRate, width, height} = reactionAsset;
 
-    return function () {
+    const mx = myPattern.patternMatrix;
 
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
+    const matrixVals = (mx) ? 
+        `[${mx.a}, ${mx.b}, ${mx.c}, ${mx.d}, ${mx.e}, ${mx.f}]` :
+        '[]';
 
-        let mx = myPattern.patternMatrix;
-
-        let matrixVals = (mx) ? 
-            `[${mx.a}, ${mx.b}, ${mx.c}, ${mx.d}, ${mx.e}, ${mx.f}]` :
-            '[]';
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Generation: ${reactionAsset.currentGeneration} of ${reactionAsset.maxGenerations}
+    return `    Generation: ${reactionAsset.currentGeneration} of ${reactionAsset.maxGenerations}
     Initial random seed level: ${reactionAsset.initialRandomSeedLevel}
     Diffusion rates - A: ${reactionAsset.diffusionRateA}, B: ${reactionAsset.diffusionRateB}
     Feed rate: ${reactionAsset.feedRate}; Kill rate: ${reactionAsset.killRate}
     Asset dimensions - width: ${reactionAsset.width}, height: ${reactionAsset.height}
     Pattern matrix: ${matrixVals}`;
-    };
-}();
+});
 
 
 // Create the Display cycle animation

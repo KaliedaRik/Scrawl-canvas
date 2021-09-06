@@ -559,7 +559,7 @@ D.textPathPosition = function (item) {
 // + The font String is not retained. Rather we break it down into its constituent parts, and rebuild the font String when needed.
 G.font = function () {
 
-    return this.fontAttributes.get('font');
+    return this.fontAttributes.getFontString();
 };
 S.font = function (item) {
 

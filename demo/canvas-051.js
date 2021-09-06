@@ -4,6 +4,8 @@
 // [Run code](../../demo/canvas-051.html)
 import scrawl from '../source/scrawl.js'
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -27,24 +29,14 @@ let mySpiral = scrawl.makeLineSpiral({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
+    let {startRadius, radiusIncrement, radiusIncrementAdjust, startAngle, angleIncrement, angleIncrementAdjust, stepLimit} = mySpiral;
 
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Radius - start: ${mySpiral.startRadius}, increment: ${mySpiral.radiusIncrement}, adjust: ${mySpiral.radiusIncrementAdjust}
-    Angle - start: ${mySpiral.startAngle}, increment: ${mySpiral.angleIncrement}, adjust: ${mySpiral.angleIncrementAdjust}
-    Limit: ${mySpiral.stepLimit}`;
-    };
-}();
+    return `    Radius - start: ${startRadius}, increment: ${radiusIncrement}, adjust: ${radiusIncrementAdjust}
+    Angle - start: ${startAngle}, increment: ${angleIncrement}, adjust: ${angleIncrementAdjust}
+    Limit: ${stepLimit}`;
+});
 
 
 // Create the Display cycle animation

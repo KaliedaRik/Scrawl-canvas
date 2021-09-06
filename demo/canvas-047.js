@@ -4,6 +4,8 @@
 // [Run code](../../demo/canvas-047.html)
 import scrawl from '../source/scrawl.js';
 
+import { reportSpeed } from './utilities.js';
+
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas;
 
@@ -89,21 +91,7 @@ easings.forEach((easing, index) => easingDisplayComponent(easing, 50 + (index * 
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
-
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
-    };
-}();
+const report = reportSpeed('#reportmessage');
 
 
 // Create the Display cycle animation
@@ -113,6 +101,7 @@ const demoAnimation = scrawl.makeRender({
     target: canvas,
     afterShow: report,
 });
+
 
 // #### Development and testing
 console.log(scrawl.library);

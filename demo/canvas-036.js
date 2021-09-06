@@ -4,6 +4,8 @@
 // [Run code](../../demo/canvas-036.html)
 import scrawl from '../source/scrawl.js';
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -361,28 +363,17 @@ scrawl.makeBlock({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-Canvas dimensions: ${canvas.currentDimensions}
-Base dimensions: ${canvas.base.currentDimensions}
-Cell 1 dimensions: ${cell1.currentDimensions}
-Cell 2 dimensions: ${cell2.currentDimensions}
-Cell 3 dimensions: ${cell3.currentDimensions}
-Cell 4 dimensions: ${cell4.currentDimensions}
-Cell 5 dimensions: ${cell5.currentDimensions}`;
-    };
-}();
+    // __Warning: directly accessing current- attributes is dangerous. Directly setting current- attributes is fatal!__
+    return `Canvas dimensions: ${canvas.currentDimensions.join(', ')}
+Base dimensions: ${canvas.base.currentDimensions.join(', ')}
+Cell 1 dimensions: ${cell1.currentDimensions.join(', ')}
+Cell 2 dimensions: ${cell2.currentDimensions.join(', ')}
+Cell 3 dimensions: ${cell3.currentDimensions.join(', ')}
+Cell 4 dimensions: ${cell4.currentDimensions.join(', ')}
+Cell 5 dimensions: ${cell5.currentDimensions.join(', ')}`;
+});
 
 
 // Create the Display cycle animation

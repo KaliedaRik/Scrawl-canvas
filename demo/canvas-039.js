@@ -4,6 +4,8 @@
 // [Run code](../../demo/canvas-039.html)
 import scrawl from '../source/scrawl.js';
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -105,28 +107,21 @@ scrawl.makeWheel({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
+    let [startX, startY] = mycell.start;
+    let [handleX, handleY] = mycell.handle;
+    let [offsetX, offsetY] = mycell.offset;
+    let [width, height] = mycell.dimensions;
 
-    return function () {
+    let {roll, scale} = mycell;
 
-        mycell.updateHere();
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Start - x: ${mycell.start[0]}, y: ${mycell.start[1]}
-    Handle - x: ${mycell.handle[0]}, y: ${mycell.handle[1]}
-    Offset - x: ${mycell.offset[0]}, y: ${mycell.offset[1]}
-    Dimensions - w: ${mycell.dimensions[0]}, h: ${mycell.dimensions[1]},
-    Roll: ${mycell.roll}; Scale: ${mycell.scale}`;
-    };
-}();
+    return `    Start - x: ${startX}, y: ${startY}
+    Handle - x: ${handleX}, y: ${handleY}
+    Offset - x: ${offsetX}, y: ${offsetY}
+    Dimensions - width: ${width}, height: ${height}
+    Roll: ${roll}; Scale: ${scale}`;
+});
 
 
 // Create the Display cycle animation
@@ -134,6 +129,7 @@ const demoAnimation = scrawl.makeRender({
 
     name: "demo-animation",
     target: canvas,
+    commence: () => mycell.updateHere(),
     afterShow: report,
 });
 
