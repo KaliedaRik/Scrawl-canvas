@@ -166,73 +166,96 @@
 <p><strong>Purpose:</strong> Turn a pair of images, alongside associated data, into a fully responsive, interactive and accessible before-after slider infographic</p>
 <p>Note that this is a highly complex snippet, which relies on recieving an element to process in a very specific format containing a number of required child elements. All elements are expected to have various specified data- attributes which are used to build the infographic.</p>
 <p><strong>Function input:</strong> </p>
-<pre><code>&amp;lt;div 
+<pre><code>&lt;div 
   id=<span class="hljs-string">&quot;infographic-unique name&quot;</span>
   <span class="hljs-keyword">class</span>=<span class="hljs-string">&quot;some-class-name&quot;</span>
   data-label=<span class="hljs-string">&quot;Infographic title - required for accessibility&quot;</span>
   data-description=<span class="hljs-string">&quot;Infographic description - required for accessibility&quot;</span>&gt;
   
-  &amp;lt;div 
-    id=<span class="hljs-string">&quot;left-panel-unique-name&quot;</span>
-    data-frame=<span class="hljs-string">&quot;left&quot;</span>&gt;
+  <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> 
+    <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;left-panel-unique-name&quot;</span>
+    <span class="hljs-attr">data-frame</span>=<span class="hljs-string">&quot;left&quot;</span>&gt;</span>
 
-    &amp;lt;img 
-      id=<span class="hljs-string">&quot;left-panel-image-unique-name&quot;</span>
-      alt=<span class="hljs-string">&quot;Alternative text for image - required for accessibility&quot;</span> 
-      src=<span class="hljs-string">&quot;path/to/image/url&quot;</span> /&gt;
+    <span class="hljs-tag">&lt;<span class="hljs-name">img</span> 
+      <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;left-panel-image-unique-name&quot;</span>
+      <span class="hljs-attr">alt</span>=<span class="hljs-string">&quot;Alternative text for image - required for accessibility&quot;</span> 
+      <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;path/to/image/url&quot;</span> /&gt;</span>
 
-    &amp;lt;!--
-      <span class="hljs-title class_">Each</span> &amp;lt;p&gt; element needs an id value together <span class="hljs-keyword">with</span> some data- attributes
+    <span class="hljs-comment">&lt;!--
+      Each &amp;lt;p&gt; element needs an id value together with some data- attributes
 
-        - data-type=<span class="hljs-string">&quot;pin&quot;</span> - required (no <span class="hljs-keyword">default</span> value)
-          - <span class="hljs-keyword">for</span> proof <span class="hljs-keyword">of</span> concept we<span class="hljs-string">&#x27;re only handling spot pins, not area pins
+        - data-type=&quot;pin&quot; - required (no default value)
+          - for proof of concept we&#x27;re only handling spot pins, not area pins
 
         - data-position - required (no default value)
           - a string of two percentage values, separated by a comma 
-          - these are the &#x27;</span>x%, y%<span class="hljs-string">&#x27; coords where the pin will appear on image
+          - these are the &#x27;x%, y%&#x27; coords where the pin will appear on image
 
         - data-fill - pin fill color - default is &quot;red&quot;
         - data-stroke - pin stroke color - default is &quot;yellow&quot;
         - data-labelwidth - percentage label width value - default is &quot;20%&quot;
 
         - data-labelposition - default is &quot;below&quot;
-          - where we want the text to appear relative to the pin&#x27;</span>s location 
-          - acceptable <span class="hljs-attr">values</span>: <span class="hljs-string">&quot;left&quot;</span>, <span class="hljs-string">&quot;right&quot;</span>, <span class="hljs-string">&quot;above&quot;</span>, <span class="hljs-string">&quot;below&quot;</span>
+          - where we want the text to appear relative to the pin&#x27;s location 
+          - acceptable values: &quot;left&quot;, &quot;right&quot;, &quot;above&quot;, &quot;below&quot;
 
-        - data-shared - <span class="hljs-keyword">default</span> is not included
-          - <span class="hljs-keyword">if</span> included, we create the pin on both panels
+        - data-shared - default is not included
+          - if included, we create the pin on both panels
 
-      <span class="hljs-title class_">The</span> text <span class="hljs-keyword">in</span> the &lt;p&gt; element is the text that will be used <span class="hljs-keyword">for</span> the pin<span class="hljs-string">&#x27;s 
+      The text in the &lt;p&gt; element is the text that will be used for the pin&#x27;s 
       label. Note that the snippet has been set up to interpret and display 
       the following inline markup: 
-        - &amp;lt;b&gt;&amp;lt;/b&gt;, &amp;lt;strong&gt;&amp;lt;/strong&gt;, &amp;lt;i&gt;&amp;lt;/i&gt;, &amp;lt;em&gt;&amp;lt;/em&gt;
-        - &amp;lt;span class=&quot;sc-red&quot;&gt;&amp;lt;/span&gt;, etc
-    --&gt;
+        - &lt;b&gt;&lt;/b&gt;, &lt;strong&gt;&lt;/strong&gt;, &lt;i&gt;&lt;/i&gt;, &lt;em&gt;&lt;/em&gt;
+        - &lt;span class=&quot;sc-red&quot;&gt;&lt;/span&gt;, etc
+    --&gt;</span>
 
-    &amp;lt;p 
-      id=&quot;pin-unique-id&quot; 
-      data-type=&quot;pin&quot; 
-      data-position=&quot;59%, 21%&quot; 
-      data-fill=&quot;blue&quot;,
-      data-stroke=&quot;yellow&quot;,
-      data-labelwidth=&quot;30%&quot;
-      data-labelposition=&quot;left&quot;
-      data-shared&gt;Text &lt;red&gt;appears&lt;/red&gt; when user &lt;strong&gt;hovers&lt;/strong&gt; over pin&amp;lt;/p&gt;
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span> 
+      <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;pin-unique-id&quot;</span> 
+      <span class="hljs-attr">data-type</span>=<span class="hljs-string">&quot;pin&quot;</span> 
+      <span class="hljs-attr">data-position</span>=<span class="hljs-string">&quot;59%, 21%&quot;</span> 
+      <span class="hljs-attr">data-fill</span>=<span class="hljs-string">&quot;blue&quot;</span>,
+      <span class="hljs-attr">data-stroke</span>=<span class="hljs-string">&quot;yellow&quot;</span>,
+      <span class="hljs-attr">data-labelwidth</span>=<span class="hljs-string">&quot;30%&quot;</span>
+      <span class="hljs-attr">data-labelposition</span>=<span class="hljs-string">&quot;left&quot;</span>
+      <span class="hljs-attr">data-shared</span>&gt;</span>Text <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;sc-red&quot;</span>&gt;</span>appears<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span> when user <span class="hljs-tag">&lt;<span class="hljs-name">strong</span>&gt;</span>hovers<span class="hljs-tag">&lt;/<span class="hljs-name">strong</span>&gt;</span> over pin<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
 
-  &amp;lt;/div&gt;
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
 
-  &amp;lt;div 
-    id=&quot;right-panel-unique-name&quot;
-    data-frame=&quot;right&quot;&gt;
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> 
+    <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;right-panel-unique-name&quot;</span>
+    <span class="hljs-attr">data-frame</span>=<span class="hljs-string">&quot;right&quot;</span>&gt;</span>
 
-    &amp;lt;img 
-      id=&quot;right-panel-image-unique-name&quot;
-      alt=&quot;Alternative text for image - required for accessibility&quot; 
-      src=&quot;path/to/image/url&quot; /&gt;
+    <span class="hljs-tag">&lt;<span class="hljs-name">img</span> 
+      <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;right-panel-image-unique-name&quot;</span>
+      <span class="hljs-attr">alt</span>=<span class="hljs-string">&quot;Alternative text for image - required for accessibility&quot;</span> 
+      <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;path/to/image/url&quot;</span> /&gt;</span>
 
-    &amp;lt;p&gt;...Pin definitions&amp;lt;/p&gt;
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>...Pin definitions<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
 
-  &amp;lt;/div&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+
+  <span class="hljs-comment">&lt;!--
+    If we also want to include any clickable links in the infographic, 
+    we can include them in a &amp;lt;nav&gt; element
+  --&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-name">nav</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> 
+      <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;link-unique-id&quot;</span> 
+      <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;link/url&quot;</span> 
+      <span class="hljs-attr">data-position</span>=<span class="hljs-string">&quot;1%, 95%&quot;</span> 
+      <span class="hljs-attr">data-width</span>=<span class="hljs-string">&quot;45%&quot;</span>
+      <span class="hljs-attr">data-justify</span>=<span class="hljs-string">&quot;left&quot;</span>&gt;</span>Text to include in the link<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> 
+      <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;another-link-unique-id&quot;</span> 
+      <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;another/link/url&quot;</span> 
+      <span class="hljs-attr">data-position</span>=<span class="hljs-string">&quot;99%, 95%&quot;</span> 
+      <span class="hljs-attr">data-width</span>=<span class="hljs-string">&quot;45%&quot;</span>
+      <span class="hljs-attr">data-justify</span>=<span class="hljs-string">&quot;right&quot;</span>&gt;</span>Different text for different link<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">nav</span>&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
 </code></pre>
 
             </div>
@@ -245,52 +268,6 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
-              </div>
-              <p>  &lt;!–
-    If we also want to include any clickable links in the infographic, 
-    we can include them in a &lt;nav&gt; element
-  –&gt;</p>
-<p>  &lt;nav&gt;
-    &lt;a 
-      id=”link-unique-id” 
-      href=”link/url” 
-      data-position=”1%, 95%” 
-      data-width=”45%”
-      data-justify=”left”&gt;Text to include in the link&lt;/a&gt;</p>
-<pre><code>&amp;lt;a 
-  id=<span class="hljs-string">&quot;another-link-unique-id&quot;</span> 
-  href=<span class="hljs-string">&quot;another/link/url&quot;</span> 
-  data-position=<span class="hljs-string">&quot;99%, 95%&quot;</span> 
-  data-width=<span class="hljs-string">&quot;45%&quot;</span>
-  data-justify=<span class="hljs-string">&quot;right&quot;</span>&gt;<span class="hljs-title class_">Different</span> text <span class="hljs-keyword">for</span> different link&amp;lt;/a&gt;
-</code></pre>
-<p>  &lt;/nav&gt;</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-4">&#x00a7;</a>
-              </div>
-              <p>&lt;/div&gt;</p>
-<pre><code>
-</code></pre>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <h5 id="usage-example">Usage example:</h5>
 <pre><code><span class="hljs-keyword">import</span> slider <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./relative/or/absolute/path/to/this/file.js&#x27;</span>;
@@ -321,11 +298,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-6">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <p>Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1</p>
 
@@ -336,11 +313,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-7">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
               <p>Internal function to scrape data from the supplied element </p>
 
@@ -382,11 +359,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-8">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <p>Internal function to scrape data from the supplied element </p>
 
@@ -418,11 +395,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-9">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <p>The pin factory takes all the data about pins that we scraped from the element and builds a set of interactive Scrawl-canvas entitys for each pin</p>
 
@@ -437,11 +414,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-10">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <p>TODO: We don’t want to display a label if its associated pin is not currently visible to the user</p>
 
@@ -455,11 +432,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-11">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>Generate the visible pin</p>
 
@@ -484,11 +461,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-12">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>The hit zone for the pin is assigned to the canvas element’s base cell, to make the user interaction (eg collision detection with the mouse cursor) code as simple as posssible</p>
 
@@ -508,11 +485,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-13">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <p>Increase the visible pin’s size</p>
 
@@ -526,11 +503,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-14">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <p>Display the pin’s associated label</p>
 
@@ -547,11 +524,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-15">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Decrease the visible pin’s size</p>
 
@@ -565,11 +542,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-16">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Hide the pin’s associated label</p>
 
@@ -583,11 +560,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-17">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <p>Generate the label associated with each pin (assuming it’s been defined in the data)</p>
 
@@ -600,11 +577,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-18">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-16">&#x00a7;</a>
               </div>
               <p>Labels can be positioned above, below, or to the right or left of the pin.</p>
 
@@ -644,11 +621,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-19">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-17">&#x00a7;</a>
               </div>
               <p>Changing the section class markers to include angle-bracketed markup</p>
 
@@ -680,11 +657,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-20">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>The link factory takes all the data about links that we scraped from the element and builds a set of interactive Scrawl-canvas entitys for each link</p>
 
@@ -751,11 +728,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-21">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>Suppress accessible text here because we’re also including an anchor, which will also add its description text to the canvas shadow DOM (as part of the navigation)</p>
 
@@ -780,11 +757,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-22">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <h5 id="the-exported-function">The exported function</h5>
 
@@ -795,11 +772,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-23">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p>Apply the snippet to the DOM element</p>
 
@@ -814,11 +791,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-24">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <p><strong>0. Convenience handle variables</strong>; basic followup housekeeping</p>
 
@@ -841,11 +818,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-25">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p><strong>1. Get all information required from the wrapper’s panel &lt;div&gt; child elements</strong></p>
 
@@ -858,11 +835,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-26">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p>Snippet will fail if we don’t have both panels to build</p>
 
@@ -873,11 +850,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-27">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p><strong>2. Get all information about links from the wrapper’s &lt;nav&gt; child element</strong></p>
 
@@ -888,11 +865,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-28">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p><strong>3. Get all information required from the wrapper element</strong></p>
 
@@ -904,11 +881,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-29">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p><strong>4. Clean up DOM - we don’t need to keep elements, text or links that we’ll be recreating in the &lt;canvas&gt; element</strong></p>
 
@@ -925,11 +902,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-30">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p><strong>5. Import image assets</strong></p>
 
@@ -940,11 +917,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-31">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p><strong>6. Create some Groups for handling User Interaction functionality</strong></p>
 
@@ -961,11 +938,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-32">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p><strong>7. Setup the canvas element</strong></p>
 
@@ -976,11 +953,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-33">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p>Accessibility first!</p>
 
@@ -992,11 +969,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-34">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p>Responsive text - we need to make sure text updates to an appropriate, readable size when the user changes the dimensions of their browser’s window, or alters the orientation of their device.</p>
 
@@ -1035,11 +1012,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-35">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p><strong>8. Build the left-hand panel</strong></p>
 
@@ -1053,11 +1030,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-36">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p>Does height need to be hardcoded? We should really pro-rata it in line with container/canvas dimensions?</p>
 
@@ -1086,11 +1063,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-37">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p><strong>9. Build the right-hand panel</strong></p>
 
@@ -1104,11 +1081,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-38">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p>Again, does height need to be hardcoded?</p>
 
@@ -1129,11 +1106,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-39">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p>We only need to manipulate the attributes of the right hand panel to execute the slider functionality</p>
 
@@ -1153,11 +1130,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-40">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p><strong>10. Generate pins and their associated labels</strong></p>
 
@@ -1202,11 +1179,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-41">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p><strong>11. Build the drag bar entitys</strong></p>
 
@@ -1277,11 +1254,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-42">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p><strong>12. Build the drag bar functionality</strong></p>
 
@@ -1347,11 +1324,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-43">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p><strong>13. Build the interactive links</strong></p>
 
@@ -1362,11 +1339,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-44">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p><strong>14. Hook into event listeners</strong></p>
 
@@ -1378,11 +1355,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-45">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p><strong>15. Update the animation object to listen for drag bar activity</strong></p>
 
@@ -1397,11 +1374,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-46">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p>We delay making the element’s contents visible - this is to prevent ugly flashes of original DOM content</p>
 
@@ -1412,11 +1389,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         </li>
         
         
-        <li id="section-47">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <h4 id="return-the-snippet-output">Return the snippet output</h4>
 

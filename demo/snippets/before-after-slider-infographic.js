@@ -11,22 +11,22 @@
 //
 // __Function input:__ 
 // ```
-// &lt;div 
+// <div 
 //   id="infographic-unique name"
 //   class="some-class-name"
 //   data-label="Infographic title - required for accessibility"
 //   data-description="Infographic description - required for accessibility">
 //   
-//   &lt;div 
+//   <div 
 //     id="left-panel-unique-name"
 //     data-frame="left">
 //
-//     &lt;img 
+//     <img 
 //       id="left-panel-image-unique-name"
 //       alt="Alternative text for image - required for accessibility" 
 //       src="path/to/image/url" />
 // 
-//     &lt;!--
+//     <!--
 //       Each &lt;p> element needs an id value together with some data- attributes
 //
 //         - data-type="pin" - required (no default value)
@@ -50,11 +50,11 @@
 //       The text in the <p> element is the text that will be used for the pin's 
 //       label. Note that the snippet has been set up to interpret and display 
 //       the following inline markup: 
-//         - &lt;b>&lt;/b>, &lt;strong>&lt;/strong>, &lt;i>&lt;/i>, &lt;em>&lt;/em>
-//         - &lt;span class="sc-red">&lt;/span>, etc
+//         - <b></b>, <strong></strong>, <i></i>, <em></em>
+//         - <span class="sc-red"></span>, etc
 //     -->
 //
-//     &lt;p 
+//     <p 
 //       id="pin-unique-id" 
 //       data-type="pin" 
 //       data-position="59%, 21%" 
@@ -62,45 +62,45 @@
 //       data-stroke="yellow",
 //       data-labelwidth="30%"
 //       data-labelposition="left"
-//       data-shared>Text <red>appears</red> when user <strong>hovers</strong> over pin&lt;/p>
+//       data-shared>Text <span class="sc-red">appears</span> when user <strong>hovers</strong> over pin</p>
 //
-//   &lt;/div>
+//   </div>
 //
-//   &lt;div 
+//   <div 
 //     id="right-panel-unique-name"
 //     data-frame="right">
 //
-//     &lt;img 
+//     <img 
 //       id="right-panel-image-unique-name"
 //       alt="Alternative text for image - required for accessibility" 
 //       src="path/to/image/url" />
 //
-//     &lt;p>...Pin definitions&lt;/p>
+//     <p>...Pin definitions</p>
 //
-//   &lt;/div>
-
-//   &lt;!--
+//   </div>
+//
+//   <!--
 //     If we also want to include any clickable links in the infographic, 
 //     we can include them in a &lt;nav> element
 //   -->
 //
-//   &lt;nav>
-//     &lt;a 
+//   <nav>
+//     <a 
 //       id="link-unique-id" 
 //       href="link/url" 
 //       data-position="1%, 95%" 
 //       data-width="45%"
-//       data-justify="left">Text to include in the link&lt;/a>
+//       data-justify="left">Text to include in the link</a>
 //
-//     &lt;a 
+//     <a 
 //       id="another-link-unique-id" 
 //       href="another/link/url" 
 //       data-position="99%, 95%" 
 //       data-width="45%"
-//       data-justify="right">Different text for different link&lt;/a>
-//   &lt;/nav>
-
-// &lt;/div>
+//       data-justify="right">Different text for different link</a>
+//   </nav>
+//
+// </div>
 // ```
 
 // ##### Usage example:
