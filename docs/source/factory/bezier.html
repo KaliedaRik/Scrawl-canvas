@@ -45,6 +45,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/random-seed.html">
+                  ./source/core/random-seed.js
+                </a>
+              
+                
                 <a class="source" href="../core/snippets.html">
                   ./source/core/snippets.js
                 </a>
@@ -1095,7 +1100,20 @@ D.<span class="hljs-property">startControlPathPosition</span> = <span class="hlj
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">startControlX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
+            <div class="content"><div class='highlight'><pre>G.<span class="hljs-property">startControlPositionX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStartControl</span>[<span class="hljs-number">0</span>];
+};
+G.<span class="hljs-property">startControlPositionY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStartControl</span>[<span class="hljs-number">1</span>];
+};
+G.<span class="hljs-property">startControlPosition</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">return</span> [].<span class="hljs-title function_">concat</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStartControl</span>);
+};
+
+S.<span class="hljs-property">startControlX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
 
     <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
 
@@ -1162,7 +1180,20 @@ D.<span class="hljs-property">startControl</span> = <span class="hljs-keyword">f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">endControlX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
+            <div class="content"><div class='highlight'><pre>G.<span class="hljs-property">endControlPositionX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEndControl</span>[<span class="hljs-number">0</span>];
+};
+G.<span class="hljs-property">endControlPositionY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEndControl</span>[<span class="hljs-number">1</span>];
+};
+G.<span class="hljs-property">endControlPosition</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-keyword">return</span> [].<span class="hljs-title function_">concat</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEndControl</span>);
+};
+
+S.<span class="hljs-property">endControlX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
 
     <span class="hljs-keyword">if</span> (coord != <span class="hljs-literal">null</span>) {
 

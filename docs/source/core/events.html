@@ -45,6 +45,11 @@
                 </a>
               
                 
+                <a class="source" href="random-seed.html">
+                  ./source/core/random-seed.js
+                </a>
+              
+                
                 <a class="source" href="snippets.html">
                   ./source/core/snippets.js
                 </a>
@@ -980,6 +985,96 @@ colorSchemeMediaQuery.<span class="hljs-title function_">addEventListener</span>
               <div class="sswrap ">
                 <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
+              <h4 id="prefers-reduced-transparency-media-query">prefers-reduced-transparency media query</h4>
+<p>See the <a href="https://www.w3.org/TR/mediaqueries-5/#descdef-media-prefers-reduced-transparency">W3 Media Queries Level 5 documentation</a> for more information</p>
+<p>Exported function <code>reducedTransparencyActions</code> - depending on the user selection, the appropriate hook function is run; where no selection has been made, this will be the noPreferenceAction function.</p>
+<ul>
+<li><code>reduceTransparency_noPreferenceAction</code></li>
+<li><code>reduceTransparency_reduceAction</code></li>
+</ul>
+<pre><code>__Example code__
+
+<span class="hljs-variable constant_">TODO</span>
+</code></pre>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-keyword">const</span> reducedTransparencyMediaQuery = <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">matchMedia</span>(<span class="hljs-string">&quot;(prefers-reduced-transparency: reduce)&quot;</span>);
+
+<span class="hljs-keyword">let</span> reduceTransparency = reducedTransparencyMediaQuery.<span class="hljs-property">matches</span>,
+    reduceTransparency_reduceAction = λ<span class="hljs-literal">null</span>,
+    reduceTransparency_noPreferenceAction = λ<span class="hljs-literal">null</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">reducedTransparencyActions</span> = (<span class="hljs-params"></span>) =&gt; {
+
+    <span class="hljs-keyword">if</span> (reduceTransparency) <span class="hljs-title function_">reduceTransparency_reduceAction</span>();
+    <span class="hljs-keyword">else</span> <span class="hljs-title function_">reduceTransparency_noPreferenceAction</span>();
+};
+
+reducedTransparencyMediaQuery.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;change&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
+
+    reduceTransparency = reducedTransparencyMediaQuery.<span class="hljs-property">matches</span>;
+    <span class="hljs-title function_">reducedTransparencyActions</span>();
+});
+
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">setReduceTransparencyAction</span> = (<span class="hljs-params">func</span>) =&gt; reduceTransparency_reduceAction = func;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">setNoPreferenceTransparencyAction</span> = (<span class="hljs-params">func</span>) =&gt; reduceTransparency_noPreferenceAction = func;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <h4 id="prefers-reduced-data-media-query">prefers-reduced-data media query</h4>
+<p>See the <a href="https://www.w3.org/TR/mediaqueries-5/#descdef-media-prefers-reduced-data">W3 Media Queries Level 5 documentation</a> for more information</p>
+<p>Exported function <code>reducedDataActions</code> - depending on the user selection, the appropriate hook function is run; where no selection has been made, this will be the noPreferenceAction function.</p>
+<ul>
+<li><code>reduceData_noPreferenceAction</code></li>
+<li><code>reduceData_reduceAction</code></li>
+</ul>
+<pre><code>__Example code__
+
+<span class="hljs-variable constant_">TODO</span>
+</code></pre>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-keyword">const</span> reducedDataMediaQuery = <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">matchMedia</span>(<span class="hljs-string">&quot;(prefers-reduced-data: reduce)&quot;</span>);
+
+<span class="hljs-keyword">let</span> reducedData = reducedDataMediaQuery.<span class="hljs-property">matches</span>,
+    reduceData_reduceAction = λ<span class="hljs-literal">null</span>,
+    reduceData_noPreferenceAction = λ<span class="hljs-literal">null</span>;
+
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">reducedDataActions</span> = (<span class="hljs-params"></span>) =&gt; {
+
+    <span class="hljs-keyword">if</span> (reducedData) <span class="hljs-title function_">reduceData_reduceAction</span>();
+    <span class="hljs-keyword">else</span> <span class="hljs-title function_">reduceData_noPreferenceAction</span>();
+};
+
+reducedDataMediaQuery.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;change&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
+
+    reducedData = reducedDataMediaQuery.<span class="hljs-property">matches</span>;
+    <span class="hljs-title function_">reducedDataActions</span>();
+});
+
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">setReduceDataAction</span> = (<span class="hljs-params">func</span>) =&gt; reduceData_reduceAction = func;
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">setNoPreferenceDataAction</span> = (<span class="hljs-params">func</span>) =&gt; reduceData_noPreferenceAction = func;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
+              </div>
               <p>Monitoring the device pixel ratio</p>
 
             </div>
@@ -1022,11 +1117,11 @@ colorSchemeMediaQuery.<span class="hljs-title function_">addEventListener</span>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <p>window.setTimeout(() =&gt; {</p>
 
@@ -1041,11 +1136,11 @@ colorSchemeMediaQuery.<span class="hljs-title function_">addEventListener</span>
         </li>
         
         
-        <li id="section-17">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p>}, 20);</p>
 
@@ -1063,11 +1158,11 @@ colorSchemeMediaQuery.<span class="hljs-title function_">addEventListener</span>
         </li>
         
         
-        <li id="section-18">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 
@@ -1088,6 +1183,14 @@ colorSchemeMediaQuery.<span class="hljs-title function_">addEventListener</span>
     colorSchemeActions,
     setColorSchemeDarkAction,
     setColorSchemeLightAction,
+
+    reducedTransparencyActions,
+    setReduceTransparencyAction,
+    setNoPreferenceTransparencyAction,
+
+    reducedDataActions,
+    setReduceDataAction,
+    setNoPreferenceDataAction,
 
     getPixelRatio,
     setPixelRatioChangeAction,

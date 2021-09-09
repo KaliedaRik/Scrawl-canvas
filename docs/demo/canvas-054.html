@@ -305,6 +305,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-056.html">
+                  ./demo/canvas-056.js
+                </a>
+              
+                
                 <a class="source" href="core-001.html">
                   ./demo/core-001.js
                 </a>
@@ -385,21 +390,6 @@
                 </a>
               
                 
-                <a class="source" href="dom-014a.html">
-                  ./demo/dom-014a.js
-                </a>
-              
-                
-                <a class="source" href="dom-014b.html">
-                  ./demo/dom-014b.js
-                </a>
-              
-                
-                <a class="source" href="dom-014c.html">
-                  ./demo/dom-014c.js
-                </a>
-              
-                
                 <a class="source" href="dom-015.html">
                   ./demo/dom-015.js
                 </a>
@@ -470,6 +460,11 @@
                 </a>
               
                 
+                <a class="source" href="filters-011a.html">
+                  ./demo/filters-011a.js
+                </a>
+              
+                
                 <a class="source" href="filters-012.html">
                   ./demo/filters-012.js
                 </a>
@@ -527,6 +522,11 @@
                 
                 <a class="source" href="filters-023.html">
                   ./demo/filters-023.js
+                </a>
+              
+                
+                <a class="source" href="filters-024.html">
+                  ./demo/filters-024.js
                 </a>
               
                 
@@ -675,6 +675,11 @@
                 </a>
               
                 
+                <a class="source" href="rapier-001.html">
+                  ./demo/rapier-001.js
+                </a>
+              
+                
                 <a class="source" href="snippets-001.html">
                   ./demo/snippets-001.js
                 </a>
@@ -695,6 +700,16 @@
                 </a>
               
                 
+                <a class="source" href="snippets-005.html">
+                  ./demo/snippets-005.js
+                </a>
+              
+                
+                <a class="source" href="temp-000.html">
+                  ./demo/temp-000.js
+                </a>
+              
+                
                 <a class="source" href="temp-001.html">
                   ./demo/temp-001.js
                 </a>
@@ -710,6 +725,66 @@
                 </a>
               
                 
+                <a class="source" href="temp-004.html">
+                  ./demo/temp-004.js
+                </a>
+              
+                
+                <a class="source" href="temp-005.html">
+                  ./demo/temp-005.js
+                </a>
+              
+                
+                <a class="source" href="temp-006.html">
+                  ./demo/temp-006.js
+                </a>
+              
+                
+                <a class="source" href="temp-007.html">
+                  ./demo/temp-007.js
+                </a>
+              
+                
+                <a class="source" href="temp-008.html">
+                  ./demo/temp-008.js
+                </a>
+              
+                
+                <a class="source" href="temp-009.html">
+                  ./demo/temp-009.js
+                </a>
+              
+                
+                <a class="source" href="temp-010.html">
+                  ./demo/temp-010.js
+                </a>
+              
+                
+                <a class="source" href="temp-100.html">
+                  ./demo/temp-100.js
+                </a>
+              
+                
+                <a class="source" href="temp-101.html">
+                  ./demo/temp-101.js
+                </a>
+              
+                
+                <a class="source" href="temp-102.html">
+                  ./demo/temp-102.js
+                </a>
+              
+                
+                <a class="source" href="temp-103.html">
+                  ./demo/temp-103.js
+                </a>
+              
+                
+                <a class="source" href="temp-104.html">
+                  ./demo/temp-104.js
+                </a>
+              
+                
                 <a class="source" href="temp-inkscapeSvgFilters.html">
                   ./demo/temp-inkscapeSvgFilters.js
                 </a>
@@ -722,6 +797,11 @@
                 
                 <a class="source" href="tensorflow-002.html">
                   ./demo/tensorflow-002.js
+                </a>
+              
+                
+                <a class="source" href="utilities.html">
+                  ./demo/utilities.js
                 </a>
               
             </div>
@@ -757,7 +837,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>
+
+<span class="hljs-keyword">import</span> { reportSpeed } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -821,15 +903,57 @@ canvas.<span class="hljs-title function_">set</span>({
         <span class="hljs-attr">paletteEnd</span>: -<span class="hljs-number">1</span>,
     },
     <span class="hljs-attr">rainbowColors</span>: [
-        [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;red&#x27;</span>],
-        [<span class="hljs-number">339</span>, <span class="hljs-string">&#x27;red&#x27;</span>],
-        [<span class="hljs-number">360</span>, <span class="hljs-string">&#x27;black&#x27;</span>],
-        [<span class="hljs-number">479</span>, <span class="hljs-string">&#x27;black&#x27;</span>],
-        [<span class="hljs-number">500</span>, <span class="hljs-string">&#x27;yellow&#x27;</span>],
-        [<span class="hljs-number">839</span>, <span class="hljs-string">&#x27;yellow&#x27;</span>],
-        [<span class="hljs-number">860</span>, <span class="hljs-string">&#x27;black&#x27;</span>],
-        [<span class="hljs-number">979</span>, <span class="hljs-string">&#x27;black&#x27;</span>],
-        [<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;red&#x27;</span>]
+        [<span class="hljs-number">0</span>, <span class="hljs-string">&#x27;#000000&#x27;</span>],
+        [<span class="hljs-number">19</span>, <span class="hljs-string">&#x27;#806e58&#x27;</span>],
+        [<span class="hljs-number">39</span>, <span class="hljs-string">&#x27;#ab7533&#x27;</span>],
+        [<span class="hljs-number">59</span>, <span class="hljs-string">&#x27;#f78b07&#x27;</span>],
+        [<span class="hljs-number">79</span>, <span class="hljs-string">&#x27;#fae69d&#x27;</span>],
+        [<span class="hljs-number">99</span>, <span class="hljs-string">&#x27;#e8e7e3&#x27;</span>],
+        [<span class="hljs-number">119</span>, <span class="hljs-string">&#x27;#babab6&#x27;</span>],
+        [<span class="hljs-number">139</span>, <span class="hljs-string">&#x27;#f7f7f2&#x27;</span>],
+        [<span class="hljs-number">159</span>, <span class="hljs-string">&#x27;#b0b094&#x27;</span>],
+        [<span class="hljs-number">179</span>, <span class="hljs-string">&#x27;#f2f2dc&#x27;</span>],
+        [<span class="hljs-number">199</span>, <span class="hljs-string">&#x27;#757544&#x27;</span>],
+        [<span class="hljs-number">219</span>, <span class="hljs-string">&#x27;#e6e670&#x27;</span>],
+        [<span class="hljs-number">239</span>, <span class="hljs-string">&#x27;#dbdb2a&#x27;</span>],
+        [<span class="hljs-number">259</span>, <span class="hljs-string">&#x27;#919129&#x27;</span>],
+        [<span class="hljs-number">279</span>, <span class="hljs-string">&#x27;#969608&#x27;</span>],
+        [<span class="hljs-number">299</span>, <span class="hljs-string">&#x27;#f5f50c&#x27;</span>],
+        [<span class="hljs-number">319</span>, <span class="hljs-string">&#x27;#f5da0c&#x27;</span>],
+        [<span class="hljs-number">339</span>, <span class="hljs-string">&#x27;#968606&#x27;</span>],
+        [<span class="hljs-number">359</span>, <span class="hljs-string">&#x27;#d6c53a&#x27;</span>],
+        [<span class="hljs-number">379</span>, <span class="hljs-string">&#x27;#918839&#x27;</span>],
+        [<span class="hljs-number">399</span>, <span class="hljs-string">&#x27;#f5eb90&#x27;</span>],
+        [<span class="hljs-number">419</span>, <span class="hljs-string">&#x27;#c7c293&#x27;</span>],
+        [<span class="hljs-number">439</span>, <span class="hljs-string">&#x27;#c7b093&#x27;</span>],
+        [<span class="hljs-number">459</span>, <span class="hljs-string">&#x27;#c9c0b3&#x27;</span>],
+        [<span class="hljs-number">479</span>, <span class="hljs-string">&#x27;#f7f0e6&#x27;</span>],
+        [<span class="hljs-number">499</span>, <span class="hljs-string">&#x27;#bf9a65&#x27;</span>],
+        [<span class="hljs-number">519</span>, <span class="hljs-string">&#x27;#b56e07&#x27;</span>],
+        [<span class="hljs-number">539</span>, <span class="hljs-string">&#x27;#f79502&#x27;</span>],
+        [<span class="hljs-number">559</span>, <span class="hljs-string">&#x27;#d69533&#x27;</span>],
+        [<span class="hljs-number">579</span>, <span class="hljs-string">&#x27;#704402&#x27;</span>],
+        [<span class="hljs-number">599</span>, <span class="hljs-string">&#x27;#805d2a&#x27;</span>],
+        [<span class="hljs-number">619</span>, <span class="hljs-string">&#x27;#ebd9d5&#x27;</span>],
+        [<span class="hljs-number">639</span>, <span class="hljs-string">&#x27;#dfede1&#x27;</span>],
+        [<span class="hljs-number">659</span>, <span class="hljs-string">&#x27;#dfe9ed&#x27;</span>],
+        [<span class="hljs-number">679</span>, <span class="hljs-string">&#x27;#a0cadb&#x27;</span>],
+        [<span class="hljs-number">699</span>, <span class="hljs-string">&#x27;#d2f0fc&#x27;</span>],
+        [<span class="hljs-number">719</span>, <span class="hljs-string">&#x27;#7d888c&#x27;</span>],
+        [<span class="hljs-number">739</span>, <span class="hljs-string">&#x27;#a8b2b5&#x27;</span>],
+        [<span class="hljs-number">759</span>, <span class="hljs-string">&#x27;#edf3f5&#x27;</span>],
+        [<span class="hljs-number">779</span>, <span class="hljs-string">&#x27;#a2c0de&#x27;</span>],
+        [<span class="hljs-number">799</span>, <span class="hljs-string">&#x27;#8a98a6&#x27;</span>],
+        [<span class="hljs-number">819</span>, <span class="hljs-string">&#x27;#b4b6b8&#x27;</span>],
+        [<span class="hljs-number">839</span>, <span class="hljs-string">&#x27;#f2f5f7&#x27;</span>],
+        [<span class="hljs-number">859</span>, <span class="hljs-string">&#x27;#eaebda&#x27;</span>],
+        [<span class="hljs-number">879</span>, <span class="hljs-string">&#x27;#d2d687&#x27;</span>],
+        [<span class="hljs-number">899</span>, <span class="hljs-string">&#x27;#686b2e&#x27;</span>],
+        [<span class="hljs-number">919</span>, <span class="hljs-string">&#x27;#aab038&#x27;</span>],
+        [<span class="hljs-number">939</span>, <span class="hljs-string">&#x27;#474a14&#x27;</span>],
+        [<span class="hljs-number">959</span>, <span class="hljs-string">&#x27;#b4bd28&#x27;</span>],
+        [<span class="hljs-number">979</span>, <span class="hljs-string">&#x27;#656b03&#x27;</span>],
+        [<span class="hljs-number">999</span>, <span class="hljs-string">&#x27;#000000&#x27;</span>],
     ],
 });
 
@@ -854,21 +978,7 @@ scrawl.<span class="hljs-title function_">makePicture</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
-        testTime, testNow,
-        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
-
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>`</span>;
-    };
-}();</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);</pre></div></div>
             
         </li>
         

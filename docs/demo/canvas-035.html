@@ -305,6 +305,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-056.html">
+                  ./demo/canvas-056.js
+                </a>
+              
+                
                 <a class="source" href="core-001.html">
                   ./demo/core-001.js
                 </a>
@@ -385,21 +390,6 @@
                 </a>
               
                 
-                <a class="source" href="dom-014a.html">
-                  ./demo/dom-014a.js
-                </a>
-              
-                
-                <a class="source" href="dom-014b.html">
-                  ./demo/dom-014b.js
-                </a>
-              
-                
-                <a class="source" href="dom-014c.html">
-                  ./demo/dom-014c.js
-                </a>
-              
-                
                 <a class="source" href="dom-015.html">
                   ./demo/dom-015.js
                 </a>
@@ -470,6 +460,11 @@
                 </a>
               
                 
+                <a class="source" href="filters-011a.html">
+                  ./demo/filters-011a.js
+                </a>
+              
+                
                 <a class="source" href="filters-012.html">
                   ./demo/filters-012.js
                 </a>
@@ -527,6 +522,11 @@
                 
                 <a class="source" href="filters-023.html">
                   ./demo/filters-023.js
+                </a>
+              
+                
+                <a class="source" href="filters-024.html">
+                  ./demo/filters-024.js
                 </a>
               
                 
@@ -675,6 +675,11 @@
                 </a>
               
                 
+                <a class="source" href="rapier-001.html">
+                  ./demo/rapier-001.js
+                </a>
+              
+                
                 <a class="source" href="snippets-001.html">
                   ./demo/snippets-001.js
                 </a>
@@ -695,6 +700,16 @@
                 </a>
               
                 
+                <a class="source" href="snippets-005.html">
+                  ./demo/snippets-005.js
+                </a>
+              
+                
+                <a class="source" href="temp-000.html">
+                  ./demo/temp-000.js
+                </a>
+              
+                
                 <a class="source" href="temp-001.html">
                   ./demo/temp-001.js
                 </a>
@@ -710,6 +725,66 @@
                 </a>
               
                 
+                <a class="source" href="temp-004.html">
+                  ./demo/temp-004.js
+                </a>
+              
+                
+                <a class="source" href="temp-005.html">
+                  ./demo/temp-005.js
+                </a>
+              
+                
+                <a class="source" href="temp-006.html">
+                  ./demo/temp-006.js
+                </a>
+              
+                
+                <a class="source" href="temp-007.html">
+                  ./demo/temp-007.js
+                </a>
+              
+                
+                <a class="source" href="temp-008.html">
+                  ./demo/temp-008.js
+                </a>
+              
+                
+                <a class="source" href="temp-009.html">
+                  ./demo/temp-009.js
+                </a>
+              
+                
+                <a class="source" href="temp-010.html">
+                  ./demo/temp-010.js
+                </a>
+              
+                
+                <a class="source" href="temp-100.html">
+                  ./demo/temp-100.js
+                </a>
+              
+                
+                <a class="source" href="temp-101.html">
+                  ./demo/temp-101.js
+                </a>
+              
+                
+                <a class="source" href="temp-102.html">
+                  ./demo/temp-102.js
+                </a>
+              
+                
+                <a class="source" href="temp-103.html">
+                  ./demo/temp-103.js
+                </a>
+              
+                
+                <a class="source" href="temp-104.html">
+                  ./demo/temp-104.js
+                </a>
+              
+                
                 <a class="source" href="temp-inkscapeSvgFilters.html">
                   ./demo/temp-inkscapeSvgFilters.js
                 </a>
@@ -722,6 +797,11 @@
                 
                 <a class="source" href="tensorflow-002.html">
                   ./demo/tensorflow-002.js
+                </a>
+              
+                
+                <a class="source" href="utilities.html">
+                  ./demo/utilities.js
                 </a>
               
             </div>
@@ -757,7 +837,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>
+
+<span class="hljs-keyword">import</span> { reportSpeed } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -1006,28 +1088,12 @@ scrawl.<span class="hljs-title function_">makePicture</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
-        testTime, testNow,
-        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
-
-    <span class="hljs-keyword">let</span> matrix, matrixVals = <span class="hljs-string">&#x27;&#x27;</span>;
-
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-        <span class="hljs-keyword">if</span> (!matrix) matrix = videoPattern.<span class="hljs-property">patternMatrix</span>;matrixVals
-
-        <span class="hljs-keyword">if</span> (matrix) matrixVals = <span class="hljs-string">`A: <span class="hljs-subst">${matrix.a}</span>, B: <span class="hljs-subst">${matrix.b}</span>, C: <span class="hljs-subst">${matrix.c}</span>, D: <span class="hljs-subst">${matrix.d}</span>, E: <span class="hljs-subst">${matrix.e}</span>, F: <span class="hljs-subst">${matrix.f}</span>`</span>;
-
-        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
-    Matrix - <span class="hljs-subst">${matrixVals}</span>`</span>;
-    };
-}();</pre></div></div>
+    <span class="hljs-keyword">let</span> matrix = styles[<span class="hljs-string">&#x27;bunny-pattern&#x27;</span>].<span class="hljs-property">patternMatrix</span>;
+    <span class="hljs-keyword">if</span> (matrix) <span class="hljs-keyword">return</span> <span class="hljs-string">`Matrix - A: <span class="hljs-subst">${matrix.a}</span>, B: <span class="hljs-subst">${matrix.b}</span>, C: <span class="hljs-subst">${matrix.c}</span>, D: <span class="hljs-subst">${matrix.d}</span>, E: <span class="hljs-subst">${matrix.e}</span>, F: <span class="hljs-subst">${matrix.f}</span>`</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;Matrix not available&#x27;</span>
+});</pre></div></div>
             
         </li>
         

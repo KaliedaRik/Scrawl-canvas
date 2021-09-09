@@ -850,14 +850,28 @@ P.buildText = function () {
 
             if (!this.exposedTextHoldAttached) {
 
-                if(this.currentHost && this.currentHost.controller && this.currentHost.controller.textHold) {
+                if (this.currentHost) {
 
-                    this.currentHost.controller.textHold.appendChild(this.exposedTextHold);
-                    this.exposedTextHoldAttached = true;
+                    let hold = this.getCanvasTextHold(this.currentHost);
+
+                    if (hold && hold.textHold) {
+
+                        hold.textHold.appendChild(this.exposedTextHold);
+                        this.exposedTextHoldAttached = true;
+                    }
                 }
             }
         }
     }
+};
+
+P.getCanvasTextHold = function (item) {
+
+    if (item && item.type === 'Cell' && item.controller && item.controller.type === 'Canvas' && item.controller.textHold) return item.controller;
+
+    if (item && item.type === 'Cell' && item.currentHost) return this.getCanvasTextHold(item.currentHost);
+
+    return false;
 };
 
 
@@ -1027,14 +1041,16 @@ P.calculateTextPositions = function (mytext) {
                 item = gStyle.stroke;
                 if (item && item !== currentStrokeStyle) {
 
-                    currentStrokeStyle = makeStyle(gStyle.stroke);
+                    if ('default' === item) currentStrokeStyle = defaultStrokeStyle;
+                    else currentStrokeStyle = makeStyle(gStyle.stroke);
                     gPos[1] = currentStrokeStyle;
                 };
 
                 item = gStyle.fill;
                 if (item && item !== currentFillStyle) {
 
-                    currentFillStyle = makeStyle(gStyle.fill);
+                    if ('default' === item) currentFillStyle = defaultFillStyle;
+                    else currentFillStyle = makeStyle(gStyle.fill);
                     gPos[2] = currentFillStyle;
                 };
 

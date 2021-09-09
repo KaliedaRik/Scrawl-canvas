@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>random-seed.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="../../docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
+              
+                
+                <a class="source" href="animationloop.html">
+                  ./source/core/animationloop.js
+                </a>
+              
+                
+                <a class="source" href="document.html">
+                  ./source/core/document.js
+                </a>
+              
+                
+                <a class="source" href="events.html">
+                  ./source/core/events.js
+                </a>
+              
+                
+                <a class="source" href="init.html">
+                  ./source/core/init.js
+                </a>
+              
+                
+                <a class="source" href="library.html">
+                  ./source/core/library.js
+                </a>
+              
+                
+                <a class="source" href="random-seed.html">
+                  ./source/core/random-seed.js
+                </a>
+              
+                
+                <a class="source" href="snippets.html">
+                  ./source/core/snippets.js
+                </a>
+              
+                
+                <a class="source" href="userInteraction.html">
+                  ./source/core/userInteraction.js
+                </a>
+              
+                
+                <a class="source" href="utilities.html">
+                  ./source/core/utilities.js
+                </a>
+              
+                
+                <a class="source" href="../factory/action.html">
+                  ./source/factory/action.js
+                </a>
+              
+                
+                <a class="source" href="../factory/anchor.html">
+                  ./source/factory/anchor.js
+                </a>
+              
+                
+                <a class="source" href="../factory/animation.html">
+                  ./source/factory/animation.js
+                </a>
+              
+                
+                <a class="source" href="../factory/bezier.html">
+                  ./source/factory/bezier.js
+                </a>
+              
+                
+                <a class="source" href="../factory/block.html">
+                  ./source/factory/block.js
+                </a>
+              
+                
+                <a class="source" href="../factory/canvas.html">
+                  ./source/factory/canvas.js
+                </a>
+              
+                
+                <a class="source" href="../factory/cell.html">
+                  ./source/factory/cell.js
+                </a>
+              
+                
+                <a class="source" href="../factory/cog.html">
+                  ./source/factory/cog.js
+                </a>
+              
+                
+                <a class="source" href="../factory/color.html">
+                  ./source/factory/color.js
+                </a>
+              
+                
+                <a class="source" href="../factory/conicGradient.html">
+                  ./source/factory/conicGradient.js
+                </a>
+              
+                
+                <a class="source" href="../factory/coordinate.html">
+                  ./source/factory/coordinate.js
+                </a>
+              
+                
+                <a class="source" href="../factory/crescent.html">
+                  ./source/factory/crescent.js
+                </a>
+              
+                
+                <a class="source" href="../factory/element.html">
+                  ./source/factory/element.js
+                </a>
+              
+                
+                <a class="source" href="../factory/emitter.html">
+                  ./source/factory/emitter.js
+                </a>
+              
+                
+                <a class="source" href="../factory/filter.html">
+                  ./source/factory/filter.js
+                </a>
+              
+                
+                <a class="source" href="../factory/filterEngine.html">
+                  ./source/factory/filterEngine.js
+                </a>
+              
+                
+                <a class="source" href="../factory/fontAttributes.html">
+                  ./source/factory/fontAttributes.js
+                </a>
+              
+                
+                <a class="source" href="../factory/gradient.html">
+                  ./source/factory/gradient.js
+                </a>
+              
+                
+                <a class="source" href="../factory/grid.html">
+                  ./source/factory/grid.js
+                </a>
+              
+                
+                <a class="source" href="../factory/group.html">
+                  ./source/factory/group.js
+                </a>
+              
+                
+                <a class="source" href="../factory/imageAsset.html">
+                  ./source/factory/imageAsset.js
+                </a>
+              
+                
+                <a class="source" href="../factory/line.html">
+                  ./source/factory/line.js
+                </a>
+              
+                
+                <a class="source" href="../factory/lineSpiral.html">
+                  ./source/factory/lineSpiral.js
+                </a>
+              
+                
+                <a class="source" href="../factory/loom.html">
+                  ./source/factory/loom.js
+                </a>
+              
+                
+                <a class="source" href="../factory/mesh.html">
+                  ./source/factory/mesh.js
+                </a>
+              
+                
+                <a class="source" href="../factory/net.html">
+                  ./source/factory/net.js
+                </a>
+              
+                
+                <a class="source" href="../factory/noiseAsset.html">
+                  ./source/factory/noiseAsset.js
+                </a>
+              
+                
+                <a class="source" href="../factory/oval.html">
+                  ./source/factory/oval.js
+                </a>
+              
+                
+                <a class="source" href="../factory/palette.html">
+                  ./source/factory/palette.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particle.html">
+                  ./source/factory/particle.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleForce.html">
+                  ./source/factory/particleForce.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleHistory.html">
+                  ./source/factory/particleHistory.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleSpring.html">
+                  ./source/factory/particleSpring.js
+                </a>
+              
+                
+                <a class="source" href="../factory/particleWorld.html">
+                  ./source/factory/particleWorld.js
+                </a>
+              
+                
+                <a class="source" href="../factory/pattern.html">
+                  ./source/factory/pattern.js
+                </a>
+              
+                
+                <a class="source" href="../factory/phrase.html">
+                  ./source/factory/phrase.js
+                </a>
+              
+                
+                <a class="source" href="../factory/picture.html">
+                  ./source/factory/picture.js
+                </a>
+              
+                
+                <a class="source" href="../factory/polygon.html">
+                  ./source/factory/polygon.js
+                </a>
+              
+                
+                <a class="source" href="../factory/polyline.html">
+                  ./source/factory/polyline.js
+                </a>
+              
+                
+                <a class="source" href="../factory/quadratic.html">
+                  ./source/factory/quadratic.js
+                </a>
+              
+                
+                <a class="source" href="../factory/quaternion.html">
+                  ./source/factory/quaternion.js
+                </a>
+              
+                
+                <a class="source" href="../factory/radialGradient.html">
+                  ./source/factory/radialGradient.js
+                </a>
+              
+                
+                <a class="source" href="../factory/rawAsset.html">
+                  ./source/factory/rawAsset.js
+                </a>
+              
+                
+                <a class="source" href="../factory/rdAsset.html">
+                  ./source/factory/rdAsset.js
+                </a>
+              
+                
+                <a class="source" href="../factory/rectangle.html">
+                  ./source/factory/rectangle.js
+                </a>
+              
+                
+                <a class="source" href="../factory/renderAnimation.html">
+                  ./source/factory/renderAnimation.js
+                </a>
+              
+                
+                <a class="source" href="../factory/shape.html">
+                  ./source/factory/shape.js
+                </a>
+              
+                
+                <a class="source" href="../factory/spiral.html">
+                  ./source/factory/spiral.js
+                </a>
+              
+                
+                <a class="source" href="../factory/spriteAsset.html">
+                  ./source/factory/spriteAsset.js
+                </a>
+              
+                
+                <a class="source" href="../factory/stack.html">
+                  ./source/factory/stack.js
+                </a>
+              
+                
+                <a class="source" href="../factory/star.html">
+                  ./source/factory/star.js
+                </a>
+              
+                
+                <a class="source" href="../factory/state.html">
+                  ./source/factory/state.js
+                </a>
+              
+                
+                <a class="source" href="../factory/tetragon.html">
+                  ./source/factory/tetragon.js
+                </a>
+              
+                
+                <a class="source" href="../factory/ticker.html">
+                  ./source/factory/ticker.js
+                </a>
+              
+                
+                <a class="source" href="../factory/tracer.html">
+                  ./source/factory/tracer.js
+                </a>
+              
+                
+                <a class="source" href="../factory/tween.html">
+                  ./source/factory/tween.js
+                </a>
+              
+                
+                <a class="source" href="../factory/unstackedElement.html">
+                  ./source/factory/unstackedElement.js
+                </a>
+              
+                
+                <a class="source" href="../factory/vector.html">
+                  ./source/factory/vector.js
+                </a>
+              
+                
+                <a class="source" href="../factory/videoAsset.html">
+                  ./source/factory/videoAsset.js
+                </a>
+              
+                
+                <a class="source" href="../factory/wheel.html">
+                  ./source/factory/wheel.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/anchor.html">
+                  ./source/mixin/anchor.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/asset.html">
+                  ./source/mixin/asset.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/assetAdvancedFunctionality.html">
+                  ./source/mixin/assetAdvancedFunctionality.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/assetConsumer.html">
+                  ./source/mixin/assetConsumer.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/base.html">
+                  ./source/mixin/base.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/cascade.html">
+                  ./source/mixin/cascade.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/delta.html">
+                  ./source/mixin/delta.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/displayShape.html">
+                  ./source/mixin/displayShape.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/dom.html">
+                  ./source/mixin/dom.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/entity.html">
+                  ./source/mixin/entity.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/filter.html">
+                  ./source/mixin/filter.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/mimic.html">
+                  ./source/mixin/mimic.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/path.html">
+                  ./source/mixin/path.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/pattern.html">
+                  ./source/mixin/pattern.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/pivot.html">
+                  ./source/mixin/pivot.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/position.html">
+                  ./source/mixin/position.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/shapeBasic.html">
+                  ./source/mixin/shapeBasic.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/shapeCurve.html">
+                  ./source/mixin/shapeCurve.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/shapePathCalculation.html">
+                  ./source/mixin/shapePathCalculation.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/styles.html">
+                  ./source/mixin/styles.js
+                </a>
+              
+                
+                <a class="source" href="../mixin/tween.html">
+                  ./source/mixin/tween.js
+                </a>
+              
+            </div>
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>random-seed.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-1">&#x00a7;</a>
+              </div>
+              <p>Seedable random numbers
+The following code has been lifted in its entirety from <a href="https://github.com/skratchdot/random-seed">https://github.com/skratchdot/random-seed</a></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-comment">/*
+ * random-seed
+ * https://github.com/skratchdot/random-seed
+ *
+ * This code was originally written by Steve Gibson and can be found here:
+ *
+ * https://www.grc.com/otg/uheprng.htm
+ *
+ * It was slightly modified for use in node, to pass jshint, and a few additional
+ * helper functions were added.
+ *
+ * Copyright (c) 2013 skratchdot
+ * Dual Licensed under the MIT license and the original GRC copyright/license
+ * included below.
+ */</span>
+<span class="hljs-comment">/*  ============================================================================
+                                    Gibson Research Corporation
+                UHEPRNG - Ultra High Entropy Pseudo-Random Number Generator
+    ============================================================================
+    LICENSE AND COPYRIGHT:  THIS CODE IS HEREBY RELEASED INTO THE PUBLIC DOMAIN
+    Gibson Research Corporation releases and disclaims ALL RIGHTS AND TITLE IN
+    THIS CODE OR ANY DERIVATIVES. Anyone may be freely use it for any purpose.
+    ============================================================================
+    This is GRC&#x27;s cryptographically strong PRNG (pseudo-random number generator)
+    for JavaScript. It is driven by 1536 bits of entropy, stored in an array of
+    48, 32-bit JavaScript variables.  Since many applications of this generator,
+    including ours with the &quot;Off The Grid&quot; Latin Square generator, may require
+    the deteriministic re-generation of a sequence of PRNs, this PRNG&#x27;s initial
+    entropic state can be read and written as a static whole, and incrementally
+    evolved by pouring new source entropy into the generator&#x27;s internal state.
+    ----------------------------------------------------------------------------
+    ENDLESS THANKS are due Johannes Baagoe for his careful development of highly
+    robust JavaScript implementations of JS PRNGs.  This work was based upon his
+    JavaScript &quot;Alea&quot; PRNG which is based upon the extremely robust Multiply-
+    With-Carry (MWC) PRNG invented by George Marsaglia. MWC Algorithm References:
+    http://www.GRC.com/otg/Marsaglia_PRNGs.pdf
+    http://www.GRC.com/otg/Marsaglia_MWC_Generators.pdf
+    ----------------------------------------------------------------------------
+    The quality of this algorithm&#x27;s pseudo-random numbers have been verified by
+    multiple independent researchers. It handily passes the fermilab.ch tests as
+    well as the &quot;diehard&quot; and &quot;dieharder&quot; test suites.  For individuals wishing
+    to further verify the quality of this algorithm&#x27;s pseudo-random numbers, a
+    256-megabyte file of this algorithm&#x27;s output may be downloaded from GRC.com,
+    and a Microsoft Windows scripting host (WSH) version of this algorithm may be
+    downloaded and run from the Windows command prompt to generate unique files
+    of any size:
+    The Fermilab &quot;ENT&quot; tests: http://fourmilab.ch/random/
+    The 256-megabyte sample PRN file at GRC: https://www.GRC.com/otg/uheprng.bin
+    The Windows scripting host version: https://www.GRC.com/otg/wsh-uheprng.js
+    ----------------------------------------------------------------------------
+    Qualifying MWC multipliers are: 187884, 686118, 898134, 1104375, 1250205,
+    1460910 and 1768863. (We use the largest one that&#x27;s &lt; 2^21)
+    ============================================================================ */</span>
+
+
+<span class="hljs-comment">/*  ============================================================================
+This is based upon Johannes Baagoe&#x27;s carefully designed and efficient hash
+function for use with JavaScript.  It has a proven &quot;avalanche&quot; effect such
+that every bit of the input affects every bit of the output 50% of the time,
+which is good.  See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
+============================================================================
+*/</span>
+<span class="hljs-keyword">var</span> <span class="hljs-title class_">Mash</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+    <span class="hljs-keyword">var</span> n = <span class="hljs-number">0xefc8249d</span>;
+    <span class="hljs-keyword">var</span> mash = <span class="hljs-keyword">function</span> (<span class="hljs-params">data</span>) {
+        <span class="hljs-keyword">if</span> (data) {
+            data = data.<span class="hljs-title function_">toString</span>();
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; data.<span class="hljs-property">length</span>; i++) {
+                n += data.<span class="hljs-title function_">charCodeAt</span>(i);
+                <span class="hljs-keyword">var</span> h = <span class="hljs-number">0.02519603282416938</span> * n;
+                n = h &gt;&gt;&gt; <span class="hljs-number">0</span>;
+                h -= n;
+                h *= n;
+                n = h &gt;&gt;&gt; <span class="hljs-number">0</span>;
+                h -= n;
+                n += h * <span class="hljs-number">0x100000000</span>; <span class="hljs-comment">// 2^32</span>
+            }
+            <span class="hljs-keyword">return</span> (n &gt;&gt;&gt; <span class="hljs-number">0</span>) * <span class="hljs-number">2.3283064365386963e-10</span>; <span class="hljs-comment">// 2^-32</span>
+        } <span class="hljs-keyword">else</span> {
+            n = <span class="hljs-number">0xefc8249d</span>;
+        }
+    };
+    <span class="hljs-keyword">return</span> mash;
+};
+
+<span class="hljs-keyword">var</span> uheprng = <span class="hljs-keyword">function</span> (<span class="hljs-params">seed</span>) {
+    <span class="hljs-keyword">return</span> (<span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+        <span class="hljs-keyword">var</span> o = <span class="hljs-number">48</span>; <span class="hljs-comment">// set the &#x27;order&#x27; number of ENTROPY-holding 32-bit values</span>
+        <span class="hljs-keyword">var</span> c = <span class="hljs-number">1</span>; <span class="hljs-comment">// init the &#x27;carry&#x27; used by the multiply-with-carry (MWC) algorithm</span>
+        <span class="hljs-keyword">var</span> p = o; <span class="hljs-comment">// init the &#x27;phase&#x27; (max-1) of the intermediate variable pointer</span>
+        <span class="hljs-keyword">var</span> s = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Array</span>(o); <span class="hljs-comment">// declare our intermediate variables array</span>
+        <span class="hljs-keyword">var</span> i; <span class="hljs-comment">// general purpose local</span>
+        <span class="hljs-keyword">var</span> j; <span class="hljs-comment">// general purpose local</span>
+        <span class="hljs-keyword">var</span> k = <span class="hljs-number">0</span>; <span class="hljs-comment">// general purpose local</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-2">&#x00a7;</a>
+              </div>
+              <p>when our “uheprng” is initially invoked our PRNG state is initialized from the
+browser’s own local PRNG. This is okay since although its generator might not
+be wonderful, it’s useful for establishing large startup entropy for our usage.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> mash = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Mash</span>(); <span class="hljs-comment">// get a pointer to our high-performance &quot;Mash&quot; hash</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-3">&#x00a7;</a>
+              </div>
+              <p>fill the array with initial mash hash values</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; o; i++) {
+            s[i] = <span class="hljs-title function_">mash</span>(<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>());
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-4">&#x00a7;</a>
+              </div>
+              <p>this PRIVATE (internal access only) function is the heart of the multiply-with-carry
+(MWC) PRNG algorithm. When called it returns a pseudo-random number in the form of a
+32-bit JavaScript fraction (0.0 to &lt;1.0) it is a PRIVATE function used by the default
+[0-1] return function, and by the random ‘string(n)’ function which returns ‘n’
+characters from 33 to 126.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> rawprng = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <span class="hljs-keyword">if</span> (++p &gt;= o) {
+                p = <span class="hljs-number">0</span>;
+            }
+            <span class="hljs-keyword">var</span> t = <span class="hljs-number">1768863</span> * s[p] + c * <span class="hljs-number">2.3283064365386963e-10</span>; <span class="hljs-comment">// 2^-32</span>
+            <span class="hljs-keyword">return</span> s[p] = t - (c = t | <span class="hljs-number">0</span>);
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-5">&#x00a7;</a>
+              </div>
+              <p>this EXPORTED function is the default function returned by this library.
+The values returned are integers in the range from 0 to range-1. We first
+obtain two 32-bit fractions (from rawprng) to synthesize a single high
+resolution 53-bit prng (0 to &lt;1), then we multiply this by the caller’s
+“range” param and take the “floor” to return a equally probable integer.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> random = <span class="hljs-keyword">function</span> (<span class="hljs-params">range</span>) {
+            <span class="hljs-keyword">return</span> <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(range * (<span class="hljs-title function_">rawprng</span>() + (<span class="hljs-title function_">rawprng</span>() * <span class="hljs-number">0x200000</span> | <span class="hljs-number">0</span>) * <span class="hljs-number">1.1102230246251565e-16</span>)); <span class="hljs-comment">// 2^-53</span>
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-6">&#x00a7;</a>
+              </div>
+              <p>this EXPORTED function ‘string(n)’ returns a pseudo-random string of
+‘n’ printable characters ranging from chr(33) to chr(126) inclusive.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        random.<span class="hljs-property">string</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">count</span>) {
+            <span class="hljs-keyword">var</span> i;
+            <span class="hljs-keyword">var</span> s = <span class="hljs-string">&#x27;&#x27;</span>;
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; count; i++) {
+                s += <span class="hljs-title class_">String</span>.<span class="hljs-title function_">fromCharCode</span>(<span class="hljs-number">33</span> + <span class="hljs-title function_">random</span>(<span class="hljs-number">94</span>));
+            }
+            <span class="hljs-keyword">return</span> s;
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-7">&#x00a7;</a>
+              </div>
+              <p>this PRIVATE “hash” function is used to evolve the generator’s internal
+entropy state. It is also called by the EXPORTED addEntropy() function
+which is used to pour entropy into the PRNG.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> hash = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <span class="hljs-keyword">var</span> args = <span class="hljs-title class_">Array</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">slice</span>.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">arguments</span>);
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; args.<span class="hljs-property">length</span>; i++) {
+                <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; o; j++) {
+                    s[j] -= <span class="hljs-title function_">mash</span>(args[i]);
+                    <span class="hljs-keyword">if</span> (s[j] &lt; <span class="hljs-number">0</span>) {
+                        s[j] += <span class="hljs-number">1</span>;
+                    }
+                }
+            }
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-8">&#x00a7;</a>
+              </div>
+              <p>this EXPORTED “clean string” function removes leading and trailing spaces and non-printing
+control characters, including any embedded carriage-return (CR) and line-feed (LF) characters,
+from any string it is handed. this is also used by the ‘hashstring’ function (below) to help
+users always obtain the same EFFECTIVE uheprng seeding key.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        random.<span class="hljs-property">cleanString</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">inStr</span>) {
+            inStr = inStr.<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/(^\s*)|(\s*$)/gi</span>, <span class="hljs-string">&#x27;&#x27;</span>); <span class="hljs-comment">// remove any/all leading spaces</span>
+            inStr = inStr.<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/[\x00-\x1F]/gi</span>, <span class="hljs-string">&#x27;&#x27;</span>); <span class="hljs-comment">// remove any/all control characters</span>
+            inStr = inStr.<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/\n /</span>, <span class="hljs-string">&#x27;\n&#x27;</span>); <span class="hljs-comment">// remove any/all trailing spaces</span>
+            <span class="hljs-keyword">return</span> inStr; <span class="hljs-comment">// return the cleaned up result</span>
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
+              </div>
+              <p>this EXPORTED “hash string” function hashes the provided character string after first removing
+any leading or trailing spaces and ignoring any embedded carriage returns (CR) or Line Feeds (LF)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        random.<span class="hljs-property">hashString</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">inStr</span>) {
+            inStr = random.<span class="hljs-title function_">cleanString</span>(inStr);
+            <span class="hljs-title function_">mash</span>(inStr); <span class="hljs-comment">// use the string to evolve the &#x27;mash&#x27; state</span>
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; inStr.<span class="hljs-property">length</span>; i++) { <span class="hljs-comment">// scan through the characters in our string</span>
+                k = inStr.<span class="hljs-title function_">charCodeAt</span>(i); <span class="hljs-comment">// get the character code at the location</span>
+                <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; o; j++) { <span class="hljs-comment">//    &quot;mash&quot; it into the UHEPRNG state</span>
+                    s[j] -= <span class="hljs-title function_">mash</span>(k);
+                    <span class="hljs-keyword">if</span> (s[j] &lt; <span class="hljs-number">0</span>) {
+                        s[j] += <span class="hljs-number">1</span>;
+                    }
+                }
+            }
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-10">&#x00a7;</a>
+              </div>
+              <p>this EXPORTED function allows you to seed the random generator.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        random.<span class="hljs-property">seed</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">seed</span>) {
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> seed === <span class="hljs-string">&#x27;undefined&#x27;</span> || seed === <span class="hljs-literal">null</span>) {
+                seed = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>();
+            }
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> seed !== <span class="hljs-string">&#x27;string&#x27;</span>) {
+                seed = <span class="hljs-title function_">stringify</span>(seed, <span class="hljs-keyword">function</span> (<span class="hljs-params">key, value</span>) {
+                    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> value === <span class="hljs-string">&#x27;function&#x27;</span>) {
+                        <span class="hljs-keyword">return</span> (value).<span class="hljs-title function_">toString</span>();
+                    }
+                    <span class="hljs-keyword">return</span> value;
+                });
+            }
+            random.<span class="hljs-title function_">initState</span>();
+            random.<span class="hljs-title function_">hashString</span>(seed);
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-11">&#x00a7;</a>
+              </div>
+              <p>this handy exported function is used to add entropy to our uheprng at any time</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        random.<span class="hljs-property">addEntropy</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"> <span class="hljs-comment">/* accept zero or more arguments */</span> </span>) {
+            <span class="hljs-keyword">var</span> args = [];
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-variable language_">arguments</span>.<span class="hljs-property">length</span>; i++) {
+                args.<span class="hljs-title function_">push</span>(<span class="hljs-variable language_">arguments</span>[i]);
+            }
+            <span class="hljs-title function_">hash</span>((k++) + (<span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>().<span class="hljs-title function_">getTime</span>()) + args.<span class="hljs-title function_">join</span>(<span class="hljs-string">&#x27;&#x27;</span>) + <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">random</span>());
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-12">&#x00a7;</a>
+              </div>
+              <p>if we want to provide a deterministic startup context for our PRNG,
+but without directly setting the internal state variables, this allows
+us to initialize the mash hash and PRNG’s internal state before providing
+some hashing input</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        random.<span class="hljs-property">initState</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <span class="hljs-title function_">mash</span>(); <span class="hljs-comment">// pass a null arg to force mash hash to init</span>
+            <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; o; i++) {
+                s[i] = <span class="hljs-title function_">mash</span>(<span class="hljs-string">&#x27; &#x27;</span>); <span class="hljs-comment">// fill the array with initial mash hash values</span>
+            }
+            c = <span class="hljs-number">1</span>; <span class="hljs-comment">// init our multiply-with-carry carry</span>
+            p = o; <span class="hljs-comment">// init our phase</span>
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
+              </div>
+              <p>we use this (optional) exported function to signal the JavaScript interpreter
+that we’re finished using the “Mash” hash function so that it can free up the
+local “instance variables” is will have been maintaining.  It’s not strictly
+necessary, of course, but it’s good JavaScript citizenship.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        random.<span class="hljs-property">done</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            mash = <span class="hljs-literal">null</span>;
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-14">&#x00a7;</a>
+              </div>
+              <p>if we called “uheprng” with a seed value, then execute random.seed() before returning</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> seed !== <span class="hljs-string">&#x27;undefined&#x27;</span>) {
+            random.<span class="hljs-title function_">seed</span>(seed);
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-15">&#x00a7;</a>
+              </div>
+              <p>Returns a random integer between 0 (inclusive) and range (exclusive)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        random.<span class="hljs-property">range</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">range</span>) {
+            <span class="hljs-keyword">return</span> <span class="hljs-title function_">random</span>(range);
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <p>Returns a random float between 0 (inclusive) and 1 (exclusive)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        random.<span class="hljs-property">random</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <span class="hljs-keyword">return</span> <span class="hljs-title function_">random</span>(<span class="hljs-title class_">Number</span>.<span class="hljs-property">MAX_VALUE</span> - <span class="hljs-number">1</span>) / <span class="hljs-title class_">Number</span>.<span class="hljs-property">MAX_VALUE</span>;
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
+              </div>
+              <p>Returns a random float between min (inclusive) and max (exclusive)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        random.<span class="hljs-property">floatBetween</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">min, max</span>) {
+            <span class="hljs-keyword">return</span> random.<span class="hljs-title function_">random</span>() * (max - min) + min;
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
+              </div>
+              <p>Returns a random integer between min (inclusive) and max (inclusive)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        random.<span class="hljs-property">intBetween</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">min, max</span>) {
+            <span class="hljs-keyword">return</span> <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(random.<span class="hljs-title function_">random</span>() * (max - min + <span class="hljs-number">1</span>)) + min;
+        };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-19">&#x00a7;</a>
+              </div>
+              <p>when our main outer “uheprng” function is called, after setting up our
+initial variables and entropic state, we return an “instance pointer”
+to the internal anonymous function which can then be used to access
+the uheprng’s various exported functions.  As with the “.done” function
+above, we should set the returned value to ‘null’ once we’re finished
+using any of these functions.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">return</span> random;
+    }());
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
+              </div>
+              <p>… And this code comes from <a href="https://github.com/moll/json-stringify-safe">https://github.com/moll/json-stringify-safe</a></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">function</span> <span class="hljs-title function_">stringify</span>(<span class="hljs-params">obj, replacer, spaces, cycleReplacer</span>) {
+    <span class="hljs-keyword">return</span> <span class="hljs-variable constant_">JSON</span>.<span class="hljs-title function_">stringify</span>(obj, <span class="hljs-title function_">serializer</span>(replacer, cycleReplacer), spaces)
+}
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">serializer</span>(<span class="hljs-params">replacer, cycleReplacer</span>) {
+    <span class="hljs-keyword">var</span> stack = [], keys = []
+
+    <span class="hljs-keyword">if</span> (cycleReplacer == <span class="hljs-literal">null</span>) cycleReplacer = <span class="hljs-keyword">function</span>(<span class="hljs-params">key, value</span>) {
+        <span class="hljs-keyword">if</span> (stack[<span class="hljs-number">0</span>] === value) <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;[Circular ~]&quot;</span>
+        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;[Circular ~.&quot;</span> + keys.<span class="hljs-title function_">slice</span>(<span class="hljs-number">0</span>, stack.<span class="hljs-title function_">indexOf</span>(value)).<span class="hljs-title function_">join</span>(<span class="hljs-string">&quot;.&quot;</span>) + <span class="hljs-string">&quot;]&quot;</span>
+    }
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span>(<span class="hljs-params">key, value</span>) {
+        <span class="hljs-keyword">if</span> (stack.<span class="hljs-property">length</span> &gt; <span class="hljs-number">0</span>) {
+            <span class="hljs-keyword">var</span> thisPos = stack.<span class="hljs-title function_">indexOf</span>(<span class="hljs-variable language_">this</span>)
+            ~thisPos ? stack.<span class="hljs-title function_">splice</span>(thisPos + <span class="hljs-number">1</span>) : stack.<span class="hljs-title function_">push</span>(<span class="hljs-variable language_">this</span>)
+            ~thisPos ? keys.<span class="hljs-title function_">splice</span>(thisPos, <span class="hljs-title class_">Infinity</span>, key) : keys.<span class="hljs-title function_">push</span>(key)
+            <span class="hljs-keyword">if</span> (~stack.<span class="hljs-title function_">indexOf</span>(value)) value = cycleReplacer.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, key, value)
+        }
+        <span class="hljs-keyword">else</span> stack.<span class="hljs-title function_">push</span>(value)
+
+        <span class="hljs-keyword">return</span> replacer == <span class="hljs-literal">null</span> ? value : replacer.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, key, value)
+    }
+}
+
+<span class="hljs-keyword">const</span> seededRandomNumberGenerator = <span class="hljs-keyword">function</span> (<span class="hljs-params">seed</span>) {
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title function_">uheprng</span>(seed);
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-21">&#x00a7;</a>
+              </div>
+              <h4 id="exports">Exports</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">export</span> {
+    seededRandomNumberGenerator,
+};</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

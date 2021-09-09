@@ -45,6 +45,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/random-seed.html">
+                  ./source/core/random-seed.js
+                </a>
+              
+                
                 <a class="source" href="../core/snippets.html">
                   ./source/core/snippets.js
                 </a>
@@ -702,6 +707,7 @@
             <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">pathDefinition</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
         <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathDefinition</span> = item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathCalculatedOnce</span> = <span class="hljs-literal">false</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
@@ -1125,7 +1131,11 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
-              <p><code>getPathPositionData</code></p>
+              <p><code>getPathPositionData</code> - function called by <code>getPathPositionData</code></p>
+<ul>
+<li>Also useful in user code to retrieve the Cell-relative coordinates of any point (measured as a float Number between <code>0</code> and <code>1</code> along the path)</li>
+<li>The second argument - a Boolean - rectifies for constant speed</li>
+</ul>
 
             </div>
             
@@ -1206,7 +1216,7 @@
             <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildPathPositionObject</span>(unit, myLen);
         }
         <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    }</pre></div></div>
+    };</pre></div></div>
             
         </li>
         

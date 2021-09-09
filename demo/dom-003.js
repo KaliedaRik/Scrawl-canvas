@@ -19,6 +19,10 @@ let hitGroup = scrawl.makeGroup({
     host: stack.name,
 });
 
+// TODO: we need perspectiveZ to be picked up from CSS setting in html file
+stack.set({
+    perspectiveZ: 1200
+});
 
 // Generate new (DOM) element artefacts and add them to the stack via our new group
 stack.addNewElement({

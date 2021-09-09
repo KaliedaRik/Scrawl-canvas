@@ -45,6 +45,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/random-seed.html">
+                  ./source/core/random-seed.js
+                </a>
+              
+                
                 <a class="source" href="../core/snippets.html">
                   ./source/core/snippets.js
                 </a>
@@ -1847,9 +1852,18 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
               <div class="sswrap ">
                 <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
-              <h4 id="display-cycle-functionality">Display cycle functionality</h4>
+              <p>Force the Loom entity to update</p>
+<ul>
+<li>Because it doesn’t automatically keep check of changes in its picture source</li>
+</ul>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">update</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyInput</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyOutput</span> = <span class="hljs-literal">true</span>;
+};</pre></div></div>
             
         </li>
         
@@ -1859,6 +1873,19 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
               
               <div class="sswrap ">
                 <a class="ss" href="#section-55">&#x00a7;</a>
+              </div>
+              <h4 id="display-cycle-functionality">Display cycle functionality</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-56">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p><code>prepareStamp</code> - function called as part of the Display cycle <code>compile</code> step.</p>
 <ul>
@@ -1877,11 +1904,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-56">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p>Sanity check 1</p>
 <ul>
@@ -1896,11 +1923,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-57">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p>Sanity check 2</p>
 <ul>
@@ -1997,11 +2024,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-58">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p><code>setSourceDimension</code> - internal function called by <code>prepareStamp</code>.</p>
 <ul>
@@ -2016,11 +2043,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-59">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <ul>
 <li><code>prepareStamp</code> does the dimension calculation itself, then supplies the new value</li>
@@ -2041,11 +2068,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-60">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p>if other functions call setSourceDimension, they will do it without supplying a new value</p>
 <ul>
@@ -2078,11 +2105,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-61">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p><code>simpleStamp</code> - Simple stamping is entirely synchronous</p>
 <ul>
@@ -2109,11 +2136,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-62">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p><code>stamp</code> - All entity stamping, except for simple stamps, goes through this function.</p>
 <ul>
@@ -2157,11 +2184,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-63">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <h4 id="clean-functions">Clean functions</h4>
 
@@ -2170,11 +2197,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-64">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <p><code>cleanInput</code> - internal function called by <code>stamp</code></p>
 
@@ -2223,11 +2250,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-65">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <p><code>cleanOutput</code> - internal function called by <code>stamp</code></p>
 <ul>
@@ -2425,11 +2452,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-66">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <p>else return new Error(<code>${this.name} - cleanOutput Error: source has a zero dimension, or no data</code>);</p>
 
@@ -2440,11 +2467,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-67">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <p><code>regularStamp</code> - internal function called by <code>stamp</code></p>
 
@@ -2467,11 +2494,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-68">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <p><code>getBoundingBox</code> - internal function called by <code>prepareStamp</code> and <code>cleanOutput</code> functions, as well as the various <em><strong>method</strong></em> functions.</p>
 <ul>
@@ -2527,11 +2554,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-69">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <h5 id="stamp-methods">Stamp methods</h5>
 <p>These ‘method’ functions stamp the Loom entity onto the canvas context supplied to them in the <code>engine</code> argument.</p>
@@ -2541,11 +2568,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-70">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <p><code>fill</code></p>
 
@@ -2563,11 +2590,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-71">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <p><code>draw</code></p>
 
@@ -2583,11 +2610,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-72">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-72">&#x00a7;</a>
+                <a class="ss" href="#section-73">&#x00a7;</a>
               </div>
               <p><code>drawAndFill</code></p>
 
@@ -2605,11 +2632,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-73">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-73">&#x00a7;</a>
+                <a class="ss" href="#section-74">&#x00a7;</a>
               </div>
               <p><code>fillAndDraw</code></p>
 
@@ -2627,11 +2654,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-74">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-74">&#x00a7;</a>
+                <a class="ss" href="#section-75">&#x00a7;</a>
               </div>
               <p><code>drawThenFill</code></p>
 
@@ -2648,11 +2675,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-75">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-75">&#x00a7;</a>
+                <a class="ss" href="#section-76">&#x00a7;</a>
               </div>
               <p><code>fillThenDraw</code></p>
 
@@ -2669,11 +2696,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-76">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-76">&#x00a7;</a>
+                <a class="ss" href="#section-77">&#x00a7;</a>
               </div>
               <p><code>clear</code></p>
 
@@ -2710,11 +2737,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-77">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-77">&#x00a7;</a>
+                <a class="ss" href="#section-78">&#x00a7;</a>
               </div>
               <p><code>none</code></p>
 
@@ -2725,11 +2752,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-78">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-78">&#x00a7;</a>
+                <a class="ss" href="#section-79">&#x00a7;</a>
               </div>
               <p>These <strong>stroke</strong> and <strong>fill</strong> functions handle most of the stuff that the method functions require to stamp the Loom entity onto a canvas cell.</p>
 
@@ -2738,11 +2765,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-79">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-79">&#x00a7;</a>
+                <a class="ss" href="#section-80">&#x00a7;</a>
               </div>
               <p><code>doStroke</code></p>
 
@@ -2785,11 +2812,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-80">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-80">&#x00a7;</a>
+                <a class="ss" href="#section-81">&#x00a7;</a>
               </div>
               <p><code>doFill</code></p>
 <ul>
@@ -2826,11 +2853,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-81">
+        <li id="section-82">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-81">&#x00a7;</a>
+                <a class="ss" href="#section-82">&#x00a7;</a>
               </div>
               <p><code>drawBoundingBox</code></p>
 <ul>
@@ -2865,11 +2892,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-82">
+        <li id="section-83">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-82">&#x00a7;</a>
+                <a class="ss" href="#section-83">&#x00a7;</a>
               </div>
               <h4 id="collision-functionality">Collision functionality</h4>
 
@@ -2878,11 +2905,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-83">
+        <li id="section-84">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-83">&#x00a7;</a>
+                <a class="ss" href="#section-84">&#x00a7;</a>
               </div>
               <p>The <code>checkHit</code> functionality can be used in the same way it is for other entitys (and groups)</p>
 <ul>
@@ -2945,11 +2972,11 @@ P.<span class="hljs-property">getSensors</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-84">
+        <li id="section-85">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-84">&#x00a7;</a>
+                <a class="ss" href="#section-85">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <pre><code>scrawl.<span class="hljs-title function_">makeQuadratic</span>({
@@ -3014,11 +3041,11 @@ constructors.<span class="hljs-property">Loom</span> = <span class="hljs-title c
         </li>
         
         
-        <li id="section-85">
+        <li id="section-86">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-85">&#x00a7;</a>
+                <a class="ss" href="#section-86">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 
