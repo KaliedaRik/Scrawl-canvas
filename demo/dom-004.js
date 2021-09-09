@@ -4,6 +4,8 @@
 // [Run code](../../demo/dom-004.html)
 import scrawl from '../source/scrawl.js'
 
+import { reportSpeed, killTicker } from './utilities.js';
+
 
 // #### Scene setup
 let library = scrawl.library,
@@ -66,32 +68,27 @@ let tween = scrawl.makeTween({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
+    const lib = scrawl.library;
 
-    return function () {
+    let t = Object.keys(lib.tween),
+        a = Object.keys(lib.artefact),
+        n = Object.keys(lib.animation),
+        k = Object.keys(lib.animationtickers),
+        e = Object.keys(lib.element),
+        tn = lib.tweennames.length,
+        an = lib.artefactnames.length,
+        nn = lib.animationnames.length,
+        kn = lib.animationtickersnames.length,
+        en = lib.elementnames.length;
 
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        let t = Object.keys(library.tween),
-            a = Object.keys(artefact),
-            n = Object.keys(library.animation),
-            k = Object.keys(library.animationtickers),
-            e = Object.keys(library.element);
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-tween - ${t.length}, ${library.tweennames.length}: ${t.join(', ')}
-artefact - ${a.length}, ${library.artefactnames.length}: ${a.join(', ')}
-element - ${e.length}, ${library.elementnames.length}: ${e.join(', ')}
-tickers - ${k.length}, ${library.animationtickersnames.length}: ${k.join(', ')}
-animation - ${n.length}, ${library.animationnames.length}: ${n.join(', ')}`;
-    };
-}();
+    return `Tween - ${t.length}, ${tn}: ${t.join(', ')}
+Artefact - ${a.length}, ${an}: ${a.join(', ')}
+Element - ${e.length}, ${en}: ${e.join(', ')}
+Tickers - ${k.length}, ${kn}: ${k.join(', ')}
+Animation - ${n.length}, ${nn}: ${n.join(', ')}`;
+});
 
 
 // Create the Display cycle animation
@@ -123,34 +120,5 @@ scrawl.addNativeListener('click', flyRocket, stack.domElement);
 // #### Development and testing
 console.log(scrawl.library);
 
-// To test kill functionality
-let killTicker = (name, time) => {
-
-    let packet;
-
-    setTimeout(() => {
-
-        console.log(`${name} alive
-    removed from tickers: ${(scrawl.library.animationtickers[name]) ? 'no' : 'yes'}`);
-
-        packet = scrawl.library.animationtickers[name].saveAsPacket();
-
-        scrawl.library.animationtickers[name].kill();
-
-        setTimeout(() => {
-
-            console.log(`${name} killed
-    removed from tickers: ${(scrawl.library.animationtickers[name]) ? 'no' : 'yes'}`);
-
-            stack.actionPacket(packet);
-
-            setTimeout(() => {
-
-                console.log(`${name} resurrected
-    removed from tickers: ${(scrawl.library.animationtickers[name]) ? 'no' : 'yes'}`);
-            }, 100);
-        }, 100);
-    }, time);
-};
-
-killTicker('template_ticker', 4000);
+console.log('Performing tests ...');
+killTicker(stack, 'template_ticker', 4000);

@@ -166,55 +166,50 @@
 <p><strong>Purpose:</strong> Turn a pair of images, alongside associated data, into a fully responsive, interactive and accessible before-after slider infographic</p>
 <p>Note that this is a highly complex snippet, which relies on recieving an element to process in a very specific format containing a number of required child elements. All elements are expected to have various specified data- attributes which are used to build the infographic.</p>
 <p><strong>Function input:</strong> </p>
-<pre><code>&lt;div 
+<pre><code>&amp;lt;div 
   id=<span class="hljs-string">&quot;infographic-unique name&quot;</span>
   <span class="hljs-keyword">class</span>=<span class="hljs-string">&quot;some-class-name&quot;</span>
   data-label=<span class="hljs-string">&quot;Infographic title - required for accessibility&quot;</span>
   data-description=<span class="hljs-string">&quot;Infographic description - required for accessibility&quot;</span>&gt;
   
-  &lt;div 
-    id=&quot;left-panel-unique-name&quot;
-    data-frame=&quot;left&quot;&gt;
+  &amp;lt;div 
+    id=<span class="hljs-string">&quot;left-panel-unique-name&quot;</span>
+    data-frame=<span class="hljs-string">&quot;left&quot;</span>&gt;
 
-    &lt;img 
-      id=&quot;left-panel-image-unique-name&quot;
-      alt=&quot;Alternative text for image - required for accessibility&quot; 
-      src=&quot;path/to/image/url&quot; /&gt;
+    &amp;lt;img 
+      id=<span class="hljs-string">&quot;left-panel-image-unique-name&quot;</span>
+      alt=<span class="hljs-string">&quot;Alternative text for image - required for accessibility&quot;</span> 
+      src=<span class="hljs-string">&quot;path/to/image/url&quot;</span> /&gt;
 
-    &lt;!--
-      Each &lt;p&gt; element needs an id value together with some data- attributes
+    &amp;lt;!--
+      <span class="hljs-title class_">Each</span> &amp;lt;p&gt; element needs an id value together <span class="hljs-keyword">with</span> some data- attributes
 
-        - data-type=&quot;pin&quot; - required (no default value)
-          - for proof of concept we&#x27;re only handling spot pins, not area pins
+        - data-type=<span class="hljs-string">&quot;pin&quot;</span> - required (no <span class="hljs-keyword">default</span> value)
+          - <span class="hljs-keyword">for</span> proof <span class="hljs-keyword">of</span> concept we<span class="hljs-string">&#x27;re only handling spot pins, not area pins
 
         - data-position - required (no default value)
           - a string of two percentage values, separated by a comma 
-          - these are the &#x27;x%, y%&#x27; coords where the pin will appear on image
+          - these are the &#x27;</span>x%, y%<span class="hljs-string">&#x27; coords where the pin will appear on image
 
         - data-fill - pin fill color - default is &quot;red&quot;
         - data-stroke - pin stroke color - default is &quot;yellow&quot;
         - data-labelwidth - percentage label width value - default is &quot;20%&quot;
 
         - data-labelposition - default is &quot;below&quot;
-          - where we want the text to appear relative to the pin&#x27;s location 
-          - acceptable values: &quot;left&quot;, &quot;right&quot;, &quot;above&quot;, &quot;below&quot;
+          - where we want the text to appear relative to the pin&#x27;</span>s location 
+          - acceptable <span class="hljs-attr">values</span>: <span class="hljs-string">&quot;left&quot;</span>, <span class="hljs-string">&quot;right&quot;</span>, <span class="hljs-string">&quot;above&quot;</span>, <span class="hljs-string">&quot;below&quot;</span>
 
-        - data-shared - default is not included
-          - if included, we create the pin on both panels
+        - data-shared - <span class="hljs-keyword">default</span> is not included
+          - <span class="hljs-keyword">if</span> included, we create the pin on both panels
 
-      The text in the &lt;p&gt; element is the text that will be used for the pin&#x27;s 
+      <span class="hljs-title class_">The</span> text <span class="hljs-keyword">in</span> the &lt;p&gt; element is the text that will be used <span class="hljs-keyword">for</span> the pin<span class="hljs-string">&#x27;s 
       label. Note that the snippet has been set up to interpret and display 
       the following inline markup: 
-        - &lt;b&gt;&lt;/b&gt;, &lt;strong&gt;&lt;/strong&gt;, &lt;i&gt;&lt;/i&gt;, &lt;em&gt;&lt;/em&gt;
-
-      Additional, non-standard markup is also supported: 
-        - &lt;red&gt;&lt;/red&gt;, &lt;blue&gt;&lt;/blue&gt;, &lt;green&gt;&lt;/green&gt;, &lt;black&gt;&lt;/black&gt;, 
-          &lt;white&gt;&lt;/white&gt;, &lt;gray&gt;&lt;/gray&gt;.
-        - If initial word markup doesn&#x27;t show correctly in the label, 
-          place a non-breaking space at the start of the text
+        - &amp;lt;b&gt;&amp;lt;/b&gt;, &amp;lt;strong&gt;&amp;lt;/strong&gt;, &amp;lt;i&gt;&amp;lt;/i&gt;, &amp;lt;em&gt;&amp;lt;/em&gt;
+        - &amp;lt;span class=&quot;sc-red&quot;&gt;&amp;lt;/span&gt;, etc
     --&gt;
 
-    &lt;p 
+    &amp;lt;p 
       id=&quot;pin-unique-id&quot; 
       data-type=&quot;pin&quot; 
       data-position=&quot;59%, 21%&quot; 
@@ -222,22 +217,22 @@
       data-stroke=&quot;yellow&quot;,
       data-labelwidth=&quot;30%&quot;
       data-labelposition=&quot;left&quot;
-      data-shared&gt;Text &lt;red&gt;appears&lt;/red&gt; when user &lt;strong&gt;hovers&lt;/strong&gt; over pin&lt;/p&gt;
+      data-shared&gt;Text &lt;red&gt;appears&lt;/red&gt; when user &lt;strong&gt;hovers&lt;/strong&gt; over pin&amp;lt;/p&gt;
 
-  &lt;/div&gt;
+  &amp;lt;/div&gt;
 
-  &lt;div 
+  &amp;lt;div 
     id=&quot;right-panel-unique-name&quot;
     data-frame=&quot;right&quot;&gt;
 
-    &lt;img 
+    &amp;lt;img 
       id=&quot;right-panel-image-unique-name&quot;
       alt=&quot;Alternative text for image - required for accessibility&quot; 
       src=&quot;path/to/image/url&quot; /&gt;
 
-    &lt;p&gt;...Pin definitions&lt;/p&gt;
+    &amp;lt;p&gt;...Pin definitions&amp;lt;/p&gt;
 
-  &lt;/div&gt;
+  &amp;lt;/div&gt;</span>
 </code></pre>
 
             </div>
@@ -251,27 +246,25 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-3">&#x00a7;</a>
               </div>
-                <!--
+              <p>  &lt;!–
     If we also want to include any clickable links in the infographic, 
-    we can include them in a <nav> element
-  -->
-
-  <nav>
-    <a 
-      id="link-unique-id" 
-      href="link/url" 
-      data-position="1%, 95%" 
-      data-width="45%"
-      data-justify="left">Text to include in the link</a>
-
-<pre><code>&lt;a 
+    we can include them in a &lt;nav&gt; element
+  –&gt;</p>
+<p>  &lt;nav&gt;
+    &lt;a 
+      id=”link-unique-id” 
+      href=”link/url” 
+      data-position=”1%, 95%” 
+      data-width=”45%”
+      data-justify=”left”&gt;Text to include in the link&lt;/a&gt;</p>
+<pre><code>&amp;lt;a 
   id=<span class="hljs-string">&quot;another-link-unique-id&quot;</span> 
   href=<span class="hljs-string">&quot;another/link/url&quot;</span> 
   data-position=<span class="hljs-string">&quot;99%, 95%&quot;</span> 
   data-width=<span class="hljs-string">&quot;45%&quot;</span>
-  data-justify=<span class="hljs-string">&quot;right&quot;</span>&gt;<span class="hljs-title class_">Different</span> text <span class="hljs-keyword">for</span> different link&lt;/a&gt;
+  data-justify=<span class="hljs-string">&quot;right&quot;</span>&gt;<span class="hljs-title class_">Different</span> text <span class="hljs-keyword">for</span> different link&amp;lt;/a&gt;
 </code></pre>
-  </nav>
+<p>  &lt;/nav&gt;</p>
 
             </div>
             
@@ -284,8 +277,9 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
-              </div>
-```
+              <p>&lt;/div&gt;</p>
+<pre><code>
+</code></pre>
 
             </div>
             

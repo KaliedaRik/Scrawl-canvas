@@ -4,6 +4,8 @@
 // [Run code](../../demo/dom-011.html)
 import scrawl from '../source/scrawl.js'
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -91,21 +93,8 @@ let check = function () {
 }();
 
 
-let report = function () {
-
-    let testTicker = Date.now(),
-        testTime, testNow, text,
-        testMessage = document.querySelector('#reportmessage');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
-    };
-}();
+// Function to display frames-per-second data, and other information relevant to the demo
+const report = reportSpeed('#reportmessage');
 
 
 // Create the Animation loop which will run the Display cycle. Note that we don't have to define a target - useful for when we want to cascade through multiple stacks (which don't themselves trigger canvas redraws, just canvas positioning) and multiple canvases

@@ -364,7 +364,8 @@ S.trackHere = function(val) {
                 // TODO - currently assumes all lengths supplied are in px - need a way to calculate non-px values
                 if (!xt(items.perspective) && !xt(items.perspectiveZ)) {
 
-                    // TODO - this isn't working! 
+                    // TODO - this isn't working! see Demo DOM 003 where attempting to set the perspective in CSS causes the demo to fail
+                    // + Workaround is to explicitly set the stack's perspectiveZ value in Javascript
                     items.perspectiveZ = (xt(elStyle.perspective) && elStyle.perspective) ? parseFloat(elStyle.perspective) : 0;
                 }
 

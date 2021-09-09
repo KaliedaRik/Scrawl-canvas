@@ -4,6 +4,9 @@
 // [Run code](../../demo/dom-006.html)
 import scrawl from '../source/scrawl.js'
 
+import { reportSpeed } from './utilities.js';
+
+
 // #### Google Analytics
 // We load GA code in the normal way through markup in the dom-006.html file (lines 11-21), and get a handle on the __ga__ object here
 let ga = window[window['GoogleAnalyticsObject'] || 'ga'];
@@ -241,27 +244,16 @@ smallboat.set({
     },
 });
 
+
 // #### Scene animation
 // Start the tween animation
 ticker.run();
 smallboat.run();
 
+
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage');
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
-    };
-}();
 
 // Create the Display cycle animation
 scrawl.makeRender({
@@ -270,6 +262,7 @@ scrawl.makeRender({
     target: stack,
     afterShow: report,
 });
+
 
 // #### User interaction
 // Event listener will reverse direction on the larger boats, while halting/restarting the smallest boat

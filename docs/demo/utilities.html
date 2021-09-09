@@ -1146,6 +1146,35 @@
     }, time);
 };
 
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">killTicker</span> = (<span class="hljs-params">stack, name, time</span>) =&gt; {
+
+    <span class="hljs-keyword">let</span> packet;
+
+    <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
+
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`<span class="hljs-subst">${name}</span> alive
+    removed from tickers: <span class="hljs-subst">${(scrawl.library.animationtickers[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>`</span>);
+
+        packet = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">animationtickers</span>[name].<span class="hljs-title function_">saveAsPacket</span>();
+
+        scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">animationtickers</span>[name].<span class="hljs-title function_">kill</span>();
+
+        <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
+
+            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`<span class="hljs-subst">${name}</span> killed
+    removed from tickers: <span class="hljs-subst">${(scrawl.library.animationtickers[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>`</span>);
+
+            stack.<span class="hljs-title function_">actionPacket</span>(packet);
+
+            <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
+
+                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`<span class="hljs-subst">${name}</span> resurrected
+    removed from tickers: <span class="hljs-subst">${(scrawl.library.animationtickers[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>`</span>);
+            }, <span class="hljs-number">100</span>);
+        }, <span class="hljs-number">100</span>);
+    }, time);
+};
+
 
 <span class="hljs-keyword">export</span> {
     reportSpeed,
@@ -1154,6 +1183,7 @@
     killArtefactAndAnchor,
     killPolylineArtefact,
     killStyle,
+    killTicker,
 }</pre></div></div>
             
         </li>

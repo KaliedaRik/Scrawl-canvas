@@ -4,6 +4,8 @@
 // [Run code](../../demo/dom-003.html)
 import scrawl from '../source/scrawl.js'
 
+import { reportSpeed } from './utilities.js';
+
 
 // #### Scene setup
 // Create some variables for use elsewhere in the script
@@ -19,7 +21,7 @@ let hitGroup = scrawl.makeGroup({
     host: stack.name,
 });
 
-// TODO: we need perspectiveZ to be picked up from CSS setting in html file
+// TODO: we need perspectiveZ (CSS perspective) to be picked up from CSS setting in html file. The code where this is handled is in mixin/dom.js lines 355 onwards. Currently is a known issue (low priority)
 stack.set({
     perspectiveZ: 1200
 });
@@ -201,21 +203,7 @@ scrawl.makeDragZone({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
-
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
-    };
-}();
+const report = reportSpeed('#reportmessage');
 
 
 // Create the Display cycle animation

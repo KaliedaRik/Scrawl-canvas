@@ -259,6 +259,35 @@ const killPolylineArtefact = (canvas, name, time, myline, restore) => {
     }, time);
 };
 
+const killTicker = (stack, name, time) => {
+
+    let packet;
+
+    setTimeout(() => {
+
+        console.log(`${name} alive
+    removed from tickers: ${(scrawl.library.animationtickers[name]) ? 'no' : 'yes'}`);
+
+        packet = scrawl.library.animationtickers[name].saveAsPacket();
+
+        scrawl.library.animationtickers[name].kill();
+
+        setTimeout(() => {
+
+            console.log(`${name} killed
+    removed from tickers: ${(scrawl.library.animationtickers[name]) ? 'no' : 'yes'}`);
+
+            stack.actionPacket(packet);
+
+            setTimeout(() => {
+
+                console.log(`${name} resurrected
+    removed from tickers: ${(scrawl.library.animationtickers[name]) ? 'no' : 'yes'}`);
+            }, 100);
+        }, 100);
+    }, time);
+};
+
 
 export {
     reportSpeed,
@@ -267,4 +296,5 @@ export {
     killArtefactAndAnchor,
     killPolylineArtefact,
     killStyle,
+    killTicker,
 }

@@ -11,23 +11,23 @@
 //
 // __Function input:__ 
 // ```
-// <div 
+// &lt;div 
 //   id="infographic-unique name"
 //   class="some-class-name"
 //   data-label="Infographic title - required for accessibility"
 //   data-description="Infographic description - required for accessibility">
 //   
-//   <div 
+//   &lt;div 
 //     id="left-panel-unique-name"
 //     data-frame="left">
 //
-//     <img 
+//     &lt;img 
 //       id="left-panel-image-unique-name"
 //       alt="Alternative text for image - required for accessibility" 
 //       src="path/to/image/url" />
 // 
-//     <!--
-//       Each <p> element needs an id value together with some data- attributes
+//     &lt;!--
+//       Each &lt;p> element needs an id value together with some data- attributes
 //
 //         - data-type="pin" - required (no default value)
 //           - for proof of concept we're only handling spot pins, not area pins
@@ -50,16 +50,11 @@
 //       The text in the <p> element is the text that will be used for the pin's 
 //       label. Note that the snippet has been set up to interpret and display 
 //       the following inline markup: 
-//         - <b></b>, <strong></strong>, <i></i>, <em></em>
-//
-//       Additional, non-standard markup is also supported: 
-//         - <red></red>, <blue></blue>, <green></green>, <black></black>, 
-//           <white></white>, <gray></gray>.
-//         - If initial word markup doesn't show correctly in the label, 
-//           place a non-breaking space at the start of the text
+//         - &lt;b>&lt;/b>, &lt;strong>&lt;/strong>, &lt;i>&lt;/i>, &lt;em>&lt;/em>
+//         - &lt;span class="sc-red">&lt;/span>, etc
 //     -->
 //
-//     <p 
+//     &lt;p 
 //       id="pin-unique-id" 
 //       data-type="pin" 
 //       data-position="59%, 21%" 
@@ -67,45 +62,45 @@
 //       data-stroke="yellow",
 //       data-labelwidth="30%"
 //       data-labelposition="left"
-//       data-shared>Text <red>appears</red> when user <strong>hovers</strong> over pin</p>
+//       data-shared>Text <red>appears</red> when user <strong>hovers</strong> over pin&lt;/p>
 //
-//   </div>
+//   &lt;/div>
 //
-//   <div 
+//   &lt;div 
 //     id="right-panel-unique-name"
 //     data-frame="right">
 //
-//     <img 
+//     &lt;img 
 //       id="right-panel-image-unique-name"
 //       alt="Alternative text for image - required for accessibility" 
 //       src="path/to/image/url" />
 //
-//     <p>...Pin definitions</p>
+//     &lt;p>...Pin definitions&lt;/p>
 //
-//   </div>
+//   &lt;/div>
 
-//   <!--
+//   &lt;!--
 //     If we also want to include any clickable links in the infographic, 
-//     we can include them in a <nav> element
+//     we can include them in a &lt;nav> element
 //   -->
 //
-//   <nav>
-//     <a 
+//   &lt;nav>
+//     &lt;a 
 //       id="link-unique-id" 
 //       href="link/url" 
 //       data-position="1%, 95%" 
 //       data-width="45%"
-//       data-justify="left">Text to include in the link</a>
+//       data-justify="left">Text to include in the link&lt;/a>
 //
-//     <a 
+//     &lt;a 
 //       id="another-link-unique-id" 
 //       href="another/link/url" 
 //       data-position="99%, 95%" 
 //       data-width="45%"
-//       data-justify="right">Different text for different link</a>
-//   </nav>
+//       data-justify="right">Different text for different link&lt;/a>
+//   &lt;/nav>
 
-// </div>
+// &lt;/div>
 // ```
 
 // ##### Usage example:
