@@ -191,7 +191,7 @@ const getNavigationData = function (el, store, canvas) {
 };
 
 // The pin factory takes all the data about pins that we scraped from the element and builds a set of interactive Scrawl-canvas entitys for each pin
-const pinFactory = function (items, canvas, pinTextGroup) {
+const pinFactory = function (items, canvas, pinTextGroup, colors) {
 
     const { name, groupname, position, fill, stroke, labeltext, labelposition, labelwidth, shared, suppressAccessibleText } = items;
 
@@ -288,8 +288,8 @@ const pinFactory = function (items, canvas, pinTextGroup) {
             lockTo: 'pivot',
 
             font: '28px Arial, sans-serif',
-            fillStyle: 'white',
-            shadowColor: 'black',
+            fillStyle: colors.default,
+            shadowColor: colors.shadow,
             shadowBlur: 4,
 
             exposeText: (suppressAccessibleText) ? false : true,
@@ -300,12 +300,12 @@ const pinFactory = function (items, canvas, pinTextGroup) {
             sectionClassMarker: '[§<>]',
         });
 
-        pinText.addSectionClass('span class="sc-red"', { fill: '#ff8888' })
-        .addSectionClass('span class="sc-blue"', { fill: '#8888ff' })
-        .addSectionClass('span class="sc-green"', { fill: '#88ff88' })
-        .addSectionClass('span class="sc-white"', { fill: 'white' })
-        .addSectionClass('span class="sc-black"', { fill: '#404040' })
-        .addSectionClass('span class="sc-gray"', { fill: '#b0b0b0' })
+        pinText.addSectionClass('span class="sc-red"', { fill: colors.red })
+        .addSectionClass('span class="sc-blue"', { fill: colors.blue })
+        .addSectionClass('span class="sc-green"', { fill: colors.green })
+        .addSectionClass('span class="sc-white"', { fill: colors.white })
+        .addSectionClass('span class="sc-black"', { fill: colors.black })
+        .addSectionClass('span class="sc-gray"', { fill: colors.gray })
         .addSectionClass('/span', { fill: 'default' })
         .addSectionClass('b', { weight: 'bold' })
         .addSectionClass('/b', { weight: 'normal' })
@@ -321,9 +321,7 @@ const pinFactory = function (items, canvas, pinTextGroup) {
 };
 
 // The link factory takes all the data about links that we scraped from the element and builds a set of interactive Scrawl-canvas entitys for each link
-const linkFactory = function (items, canvas, linkTextGroup) {
-
-    console.log(items);
+const linkFactory = function (items, canvas, linkTextGroup, colors) {
 
     const {name, position, href, justify, text, width} = items;
 
@@ -343,10 +341,12 @@ const linkFactory = function (items, canvas, linkTextGroup) {
 
         font: '16px Arial, sans-serif',
         lineHeight: 1,
-        fillStyle: 'white',
+        fillStyle: colors.link,
+        shadowColor: colors.linkshadow,
+        shadowBlur: 4,
 
         underlinePosition: 0.8,
-        underlineStyle: 'white',
+        underlineStyle: colors.linkunderline,
 
         onEnter: function () {
 
@@ -553,6 +553,21 @@ export default function (el) {
             });
 
             // __10. Generate pins and their associated labels__
+            const colors = {},
+                cssColors = getComputedStyle(document.documentElement);
+
+            colors.default = cssColors.getPropertyValue('--sc-default');
+            colors.shadow = cssColors.getPropertyValue('--sc-shadow');
+            colors.link = cssColors.getPropertyValue('--sc-link');
+            colors.linkshadow = cssColors.getPropertyValue('--sc-linkshadow');
+            colors.linkunderline = cssColors.getPropertyValue('--sc-linkunderline');
+            colors.red = cssColors.getPropertyValue('--sc-red');
+            colors.green = cssColors.getPropertyValue('--sc-green');
+            colors.blue = cssColors.getPropertyValue('--sc-blue');
+            colors.black = cssColors.getPropertyValue('--sc-black');
+            colors.white = cssColors.getPropertyValue('--sc-white');
+            colors.gray = cssColors.getPropertyValue('--sc-gray');
+
             leftPanel.pins.forEach(p => {
 
                 if (p.shared) {
@@ -562,13 +577,13 @@ export default function (el) {
                     p.name = `${n}-left`
                     p.groupname = leftPanelName;
                     
-                    pinFactory(p, canvas, pinTextGroup);
+                    pinFactory(p, canvas, pinTextGroup, colors);
 
                     p.name = `${n}-right`
                     p.groupname = rightPanelName;
                     p.suppressAccessibleText = true;
                 }
-                pinFactory(p, canvas, pinTextGroup);
+                pinFactory(p, canvas, pinTextGroup, colors);
             });
 
             rightPanel.pins.forEach(p => {
@@ -580,13 +595,13 @@ export default function (el) {
                     p.name = `${n}-left`
                     p.groupname = leftPanelName;
                     
-                    pinFactory(p, canvas, pinTextGroup);
+                    pinFactory(p, canvas, pinTextGroup, colors);
 
                     p.name = `${n}-right`
                     p.groupname = rightPanelName;
                     p.suppressAccessibleText = true;
                 }
-                pinFactory(p, canvas, pinTextGroup);
+                pinFactory(p, canvas, pinTextGroup, colors);
             });
 
 
@@ -712,7 +727,7 @@ export default function (el) {
             });
 
             // __13. Build the interactive links__
-            if (navItems && navItems.links) navItems.links.forEach(n => linkFactory(n, canvas, linkTextGroup));
+            if (navItems && navItems.links) navItems.links.forEach(n => linkFactory(n, canvas, linkTextGroup, colors));
 
             // __14. Hook into event listeners__
             scrawl.addListener('move', () => canvas.cascadeEventAction('move'), el);

@@ -20,10 +20,7 @@ let mySpiral = scrawl.makeLineSpiral({
     start: ['center', 'center'],
     handle: ['center', 'center'],
 
-    method: 'fillThenDraw',
-    fillStyle: 'green',
-    strokeStyle: 'yellow',
-    winding: 'evenodd',
+    method: 'draw',
 });
 
 

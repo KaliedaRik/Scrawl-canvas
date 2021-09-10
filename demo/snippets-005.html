@@ -34,6 +34,22 @@
     We start creating the infographic using HTML and CSS. This code will display for users who prefer to visit websites using a browser with Javascript disabled.
   -->
   <style>
+  
+    /* Define the values of the various colors our pin labels and link texts can use */
+    :root {
+      --sc-default: white;
+      --sc-shadow: black;
+      --sc-link: yellow;
+      --sc-linkshadow: black;
+      --sc-linkunderline: yellow;
+      --sc-red: #ff8888;
+      --sc-blue: #8888ff;
+      --sc-green: #88ff88;
+      --sc-black: #404040;
+      --sc-white: #f0f0f0;
+      --sc-gray: #b0b0b0;
+    }
+
     .slider-infographic {
       margin: 0;
       border: 0;
@@ -189,22 +205,22 @@
       }
 
       .sc-red {
-        color: red;
+        color: var(--sc-red, red);
       }
       .sc-green {
-        color: green;
+        color: var(--sc-green, green);
       }
       .sc-blue {
-        color: blue;
+        color: var(--sc-blue, blue);
       }
       .sc-black {
-        color: black;
+        color: var(--sc-black, black);
       }
       .sc-white {
-        color: white;
+        color: var(--sc-white, white);
       }
       .sc-gray {
-        color: gray;
+        color: var(--sc-gray, gray);
       }
     </style>
   </noscript>
