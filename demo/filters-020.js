@@ -4,6 +4,8 @@
 // [Run code](../../demo/filters-020.html)
 import scrawl from '../source/scrawl.js';
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -49,33 +51,13 @@ scrawl.makePicture({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
-
-    let lowRed = document.querySelector('#low-red'),
-        lowGreen = document.querySelector('#low-green'),
-        lowBlue = document.querySelector('#low-blue'),
-        highRed = document.querySelector('#high-red'),
-        highGreen = document.querySelector('#high-green'),
-        highBlue = document.querySelector('#high-blue'),
-        opacity = document.querySelector('#opacity');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Red: ${lowRed.value} - ${highRed.value} 
-    Green: ${lowGreen.value} - ${highGreen.value} 
-    Blue: ${lowBlue.value} - ${highBlue.value} 
+    return `    Red: ${lowRed.value} - ${highRed.value}
+    Green: ${lowGreen.value} - ${highGreen.value}
+    Blue: ${lowBlue.value} - ${highBlue.value}
     Opacity - ${opacity.value}`;
-    };
-}();
+});
 
 
 // Create the Display cycle animation
@@ -112,13 +94,21 @@ scrawl.observeAndUpdate({
 });
 
 // Setup form
-document.querySelector('#low-red').value = 0;
-document.querySelector('#low-green').value = 0;
-document.querySelector('#low-blue').value = 0;
-document.querySelector('#high-red').value = 255;
-document.querySelector('#high-green').value = 255;
-document.querySelector('#high-blue').value = 255;
-document.querySelector('#opacity').value = 1;
+const lowRed = document.querySelector('#low-red'),
+    lowGreen = document.querySelector('#low-green'),
+    lowBlue = document.querySelector('#low-blue'),
+    highRed = document.querySelector('#high-red'),
+    highGreen = document.querySelector('#high-green'),
+    highBlue = document.querySelector('#high-blue'),
+    opacity = document.querySelector('#opacity');
+
+lowRed.value = 0;
+lowGreen.value = 0;
+lowBlue.value = 0;
+highRed.value = 255;
+highGreen.value = 255;
+highBlue.value = 255;
+opacity.value = 1;
 
 
 // #### Development and testing

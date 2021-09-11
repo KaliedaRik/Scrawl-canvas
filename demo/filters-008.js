@@ -4,6 +4,8 @@
 // [Run code](../../demo/filters-008.html)
 import scrawl from '../source/scrawl.js';
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -53,36 +55,13 @@ scrawl.makePicture({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
-
-    let redInRed = document.querySelector('#redInRed'),
-        greenInRed = document.querySelector('#greenInRed'),
-        blueInRed = document.querySelector('#blueInRed'),
-        redInGreen = document.querySelector('#redInGreen'),
-        greenInGreen = document.querySelector('#greenInGreen'),
-        blueInGreen = document.querySelector('#blueInGreen'),
-        redInBlue = document.querySelector('#redInBlue'),
-        greenInBlue = document.querySelector('#greenInBlue'),
-        blueInBlue = document.querySelector('#blueInBlue'),
-        opacity = document.querySelector('#opacity');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    In Red -   red: ${redInRed.value} green: ${greenInRed.value} blue: ${blueInRed.value}
+    return `    In Red - red: ${redInRed.value} green: ${greenInRed.value} blue: ${blueInRed.value}
     In Green - red: ${redInGreen.value} green: ${greenInGreen.value} blue: ${blueInGreen.value}
     In Blue -  red: ${redInBlue.value} green: ${greenInBlue.value} blue: ${blueInBlue.value}
     Opacity: ${opacity.value}`;
-    };
-}();
+});
 
 
 // Create the Display cycle animation
@@ -122,16 +101,27 @@ scrawl.observeAndUpdate({
 });
 
 // Setup form
-document.querySelector('#redInRed').value = 1;
-document.querySelector('#redInGreen').value = 0;
-document.querySelector('#redInBlue').value = 0;
-document.querySelector('#greenInRed').value = 0;
-document.querySelector('#greenInGreen').value = 1;
-document.querySelector('#greenInBlue').value = 0;
-document.querySelector('#blueInRed').value = 0;
-document.querySelector('#blueInGreen').value = 0;
-document.querySelector('#blueInBlue').value = 1;
-document.querySelector('#opacity').value = 1;
+const redInRed = document.querySelector('#redInRed'),
+    greenInRed = document.querySelector('#greenInRed'),
+    blueInRed = document.querySelector('#blueInRed'),
+    redInGreen = document.querySelector('#redInGreen'),
+    greenInGreen = document.querySelector('#greenInGreen'),
+    blueInGreen = document.querySelector('#blueInGreen'),
+    redInBlue = document.querySelector('#redInBlue'),
+    greenInBlue = document.querySelector('#greenInBlue'),
+    blueInBlue = document.querySelector('#blueInBlue'),
+    opacity = document.querySelector('#opacity');
+
+redInRed.value = 1;
+redInGreen.value = 0;
+redInBlue.value = 0;
+greenInRed.value = 0;
+greenInGreen.value = 1;
+greenInBlue.value = 0;
+blueInRed.value = 0;
+blueInGreen.value = 0;
+blueInBlue.value = 1;
+opacity.value = 1;
 
 
 // #### Development and testing

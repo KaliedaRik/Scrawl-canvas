@@ -4,6 +4,8 @@
 // [Run code](../../demo/filters-013.html)
 import scrawl from '../source/scrawl.js';
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -48,26 +50,11 @@ scrawl.makePicture({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
-
-    let flood = document.querySelector('#flood'),
-        opacity = document.querySelector('#opacity');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Flood color: ${flood.value}
+    return `    Red: ${red.value}, Green: ${green.value}, Blue: ${blue.value}, Alpha: ${alpha.value}
     Opacity: ${opacity.value}`;
-    };
-}();
+});
 
 
 // Create the Display cycle animation
@@ -85,28 +72,39 @@ const converter = scrawl.makeColor({
     name: 'converter',
 });
 
-scrawl.addNativeListener(
-    ['input', 'change'], 
-    (e) => myFilter.set({ opacity: parseFloat(e.target.value) }), 
-    '#opacity');
+scrawl.observeAndUpdate({
 
-scrawl.addNativeListener(
-    ['input', 'change'], 
-    (e) => {
+    event: ['input', 'change'],
+    origin: '.controlItem',
 
-        converter.convert(e.target.value);
+    target: myFilter,
 
-        myFilter.set({ 
-            red: converter.r,
-            green: converter.g,
-            blue: converter.b,
-        });
-    }, 
-    '#flood');
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+
+        red: ['red', 'int'],
+        green: ['green', 'int'],
+        blue: ['blue', 'int'],
+        alpha: ['alpha', 'int'],
+        opacity: ['opacity', 'float'],
+    },
+});
+
 
 // Setup form
-document.querySelector('#flood').value = '#000000';
-document.querySelector('#opacity').value = 1;
+const opacity = document.querySelector('#opacity'),
+    red = document.querySelector('#red'),
+    green = document.querySelector('#green'),
+    blue = document.querySelector('#blue'),
+    alpha = document.querySelector('#alpha');
+
+opacity.value = 1;
+red.value = 0;
+green.value = 0;
+blue.value = 0;
+alpha.value = 255;
 
 
 // #### Development and testing

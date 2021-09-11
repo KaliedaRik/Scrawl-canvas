@@ -4,6 +4,8 @@
 // [Run code](../../demo/filters-009.html)
 import scrawl from '../source/scrawl.js';
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -48,30 +50,12 @@ scrawl.makePicture({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
-
-    let tile_width = document.querySelector('#tile_width'),
-        tile_height = document.querySelector('#tile_height'),
-        offset_x = document.querySelector('#offset_x'),
-        offset_y = document.querySelector('#offset_y'),
-        opacity = document.querySelector('#opacity');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Tile dimensions - width: ${tile_width.value} height: ${tile_height.value}
+    return `    Tile dimensions - width: ${tile_width.value} height: ${tile_height.value}
     Offset - x: ${offset_x.value} y: ${offset_y.value}
     Opacity: ${opacity.value}`;
-    };
-}();
+});
 
 
 // Create the Display cycle animation
@@ -112,15 +96,22 @@ scrawl.observeAndUpdate({
 });
 
 // Setup form
-document.querySelector('#tile_width').value = 10;
-document.querySelector('#tile_height').value = 10;
-document.querySelector('#offset_x').value = 0;
-document.querySelector('#offset_y').value = 0;
+const tile_width = document.querySelector('#tile_width'),
+    tile_height = document.querySelector('#tile_height'),
+    offset_x = document.querySelector('#offset_x'),
+    offset_y = document.querySelector('#offset_y'),
+    opacity = document.querySelector('#opacity');
+
+tile_width.value = 10;
+tile_height.value = 10;
+offset_x.value = 0;
+offset_y.value = 0;
+opacity.value = 1;
+
 document.querySelector('#includeRed').options.selectedIndex = 1;
 document.querySelector('#includeGreen').options.selectedIndex = 1;
 document.querySelector('#includeBlue').options.selectedIndex = 1;
 document.querySelector('#includeAlpha').options.selectedIndex = 0;
-document.querySelector('#opacity').value = 1;
 
 
 // #### Development and testing

@@ -4,6 +4,8 @@
 // [Run code](../../demo/filters-006.html)
 import scrawl from '../source/scrawl.js';
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -48,32 +50,14 @@ scrawl.makePicture({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
-
-    let red = document.querySelector('#red'),
-        green = document.querySelector('#green'),
-        alpha = document.querySelector('#alpha'),
-        blue = document.querySelector('#blue'),
-        opacity = document.querySelector('#opacity');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Red: [${red.value}]
+    return `    Red: [${red.value}]
     Green: [${green.value}]
     Blue: [${blue.value}]
     Alpha: [${alpha.value}]
     Opacity: ${opacity.value}`;
-    };
-}();
+});
 
 
 // Create the Display cycle animation
@@ -111,12 +95,17 @@ scrawl.addNativeListener(
     '.controlItem');
 
 // Setup form
-document.querySelector('#red').value = '50, 200';
-document.querySelector('#green').value = '60, 220, 150';
-document.querySelector('#blue').value = '40, 180';
-document.querySelector('#alpha').value = '';
-document.querySelector('#opacity').value = 1;
+const red = document.querySelector('#red'),
+    green = document.querySelector('#green'),
+    blue = document.querySelector('#blue'),
+    alpha = document.querySelector('#alpha'),
+    opacity = document.querySelector('#opacity');
 
+red.value = '50, 200';
+green.value = '60, 220, 150';
+blue.value = '40, 180';
+alpha.value = '';
+opacity.value = 1;
 
 // #### Development and testing
 console.log(scrawl.library);

@@ -4,6 +4,8 @@
 // [Run code](../../demo/filters-007.html)
 import scrawl from '../source/scrawl.js';
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -47,29 +49,14 @@ scrawl.makePicture({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
-
-    let red = document.querySelector('#red'),
-        green = document.querySelector('#green'),
-        blue = document.querySelector('#blue'),
-        alpha = document.querySelector('#alpha'),
-        opacity = document.querySelector('#opacity');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Red: ${red.value}, Green: ${green.value}, Blue: ${blue.value}, Alpha: ${alpha.value}
+    return `    Red: ${red.value}
+    Green: ${green.value}
+    Blue: ${blue.value}
+    Alpha: ${alpha.value}
     Opacity: ${opacity.value}`;
-    };
-}();
+});
 
 
 // Create the Display cycle animation
@@ -104,11 +91,17 @@ scrawl.observeAndUpdate({
 });
 
 // Setup form
-document.querySelector('#red').value = 1;
-document.querySelector('#green').value = 1;
-document.querySelector('#blue').value = 1;
-document.querySelector('#alpha').value = 1;
-document.querySelector('#opacity').value = 1;
+const red = document.querySelector('#red'),
+    green = document.querySelector('#green'),
+    blue = document.querySelector('#blue'),
+    alpha = document.querySelector('#alpha'),
+    opacity = document.querySelector('#opacity');
+
+red.value = 1;
+green.value = 1;
+blue.value = 1;
+alpha.value = 1;
+opacity.value = 1;
 
 
 // #### Development and testing

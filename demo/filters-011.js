@@ -4,6 +4,8 @@
 // [Run code](../../demo/filters-011.html)
 import scrawl from '../source/scrawl.js';
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -55,29 +57,12 @@ scrawl.makePicture({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
-
-    let col = document.querySelector('#color'),
-        trans = document.querySelector('#transparentAt'),
-        opaq = document.querySelector('#opaqueAt'),
-        opacity = document.querySelector('#opacity');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Key color: ${col.value}
-    Transparent at: ${trans.value}, Opaque at: ${opaq.value}
+    return `    Key color: ${color.value}
+    Transparent at: ${transparentAt.value}, Opaque at: ${opaqueAt.value}
     Opacity: ${opacity.value}`;
-    };
-}();
+});
 
 
 // Create the Display cycle animation
@@ -131,7 +116,15 @@ scrawl.observeAndUpdate({
 
 
 // Setup form
-document.querySelector('#color').value = '#007700';
+const color = document.querySelector('#color'),
+    opaqueAt = document.querySelector('#opaqueAt'),
+    transparentAt = document.querySelector('#transparentAt'),
+    opacity = document.querySelector('#opacity');
+
+color.value = '#007700';
+opaqueAt.value = 1;
+transparentAt.value = 0;
+opacity.value = 1;
 
 
 // #### Development and testing

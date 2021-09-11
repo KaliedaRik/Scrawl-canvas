@@ -4,6 +4,8 @@
 // [Run code](../../demo/filters-015.html)
 import scrawl from '../source/scrawl.js';
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -168,27 +170,11 @@ scrawl.makeBlock({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
-
-    let ox = document.querySelector('#offset-x'),
-        oy = document.querySelector('#offset-y'),
-        opacity = document.querySelector('#opacity');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Offset - x: ${ox.value}, y: ${oy.value}
+    return `    Offset - x: ${ox.value}, y: ${oy.value}
     Opacity: ${opacity.value}`;
-    };
-}();
+});
 
 
 // Create the Display cycle animation
@@ -224,12 +210,17 @@ scrawl.observeAndUpdate({
 });
 
 // Setup form
+const ox = document.querySelector('#offset-x'),
+    oy = document.querySelector('#offset-y'),
+    opacity = document.querySelector('#opacity');
+
+opacity.value = 1;
+ox.value = 30;
+oy.value = 30;
+
 document.querySelector('#source').options.selectedIndex = 2;
 document.querySelector('#destination').options.selectedIndex = 0;
 document.querySelector('#composite').options.selectedIndex = 0;
-document.querySelector('#opacity').value = 1;
-document.querySelector('#offset-x').value = 30;
-document.querySelector('#offset-y').value = 30;
 
 
 // #### Development and testing

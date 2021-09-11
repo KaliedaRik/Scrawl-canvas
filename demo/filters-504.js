@@ -4,6 +4,8 @@
 // [Run code](../../demo/filters-504.html)
 import scrawl from '../source/scrawl.js';
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -59,31 +61,23 @@ let feFuncR = document.querySelector('feFuncR'),
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
+    const tableValuesR = feFuncR.getAttribute('tableValues'),
+        tableValuesG = feFuncG.getAttribute('tableValues'),
+        tableValuesB = feFuncB.getAttribute('tableValues');
 
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-
+    return `
 <filter id="svg-duotone">
   <feColorMatrix type="matrix" values=".33 .33 .33 0 0 .33 .33 .33 0 0 .33 .33 .33 0 0 0 0 0 1 0"></feColorMatrix>
 
   <feComponentTransfer color-interpolation-filters="sRGB">
-    <feFuncR type="discrete" tableValues="${feFuncR.getAttribute('tableValues')}" />
-    <feFuncG type="discrete" tableValues="${feFuncG.getAttribute('tableValues')}" />
-    <feFuncB type="discrete" tableValues="${feFuncB.getAttribute('tableValues')}" />
+    <feFuncR type="discrete" tableValues="${tableValuesR}" />
+    <feFuncG type="discrete" tableValues="${tableValuesG}" />
+    <feFuncB type="discrete" tableValues="${tableValuesB}" />
   </feComponentTransfer>
 </filter>`;
-    };
-}();
+});
 
 
 // Create the Display cycle animation

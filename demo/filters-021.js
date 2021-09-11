@@ -4,6 +4,8 @@
 // [Run code](../../demo/filters-021.html)
 import scrawl from '../source/scrawl.js';
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -100,30 +102,12 @@ scrawl.makePhrase({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
-
-    let matrix_width = document.querySelector('#matrix_width'),
-        matrix_height = document.querySelector('#matrix_height'),
-        matrix_offset_x = document.querySelector('#matrix_offset_x'),
-        matrix_offset_y = document.querySelector('#matrix_offset_y'),
-        opacity = document.querySelector('#opacity');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Matrix dimensions - width: ${matrix_width.value} height: ${matrix_height.value}
+    return `    Matrix dimensions - width: ${matrix_width.value} height: ${matrix_height.value}
     Matrix offset - x: ${matrix_offset_x.value} y: ${matrix_offset_y.value}
-    Opacity: ${opacity.value}`;
-    };
-}();
+    Opacity - ${opacity.value}`;
+});
 
 
 // Create the Display cycle animation
@@ -166,16 +150,23 @@ scrawl.observeAndUpdate({
 });
 
 // Setup form
+const matrix_width = document.querySelector('#matrix_width'),
+    matrix_height = document.querySelector('#matrix_height'),
+    matrix_offset_x = document.querySelector('#matrix_offset_x'),
+    matrix_offset_y = document.querySelector('#matrix_offset_y'),
+    opacity = document.querySelector('#opacity');
+
+matrix_width.value = 3;
+matrix_height.value = 3;
+matrix_offset_x.value = 1;
+matrix_offset_y.value = 1;
+opacity.value = 1;
+
 document.querySelector('#operation').options.selectedIndex = 0;
-document.querySelector('#matrix_width').value = 3;
-document.querySelector('#matrix_height').value = 3;
-document.querySelector('#matrix_offset_x').value = 1;
-document.querySelector('#matrix_offset_y').value = 1;
 document.querySelector('#includeRed').options.selectedIndex = 0;
 document.querySelector('#includeGreen').options.selectedIndex = 0;
 document.querySelector('#includeBlue').options.selectedIndex = 0;
 document.querySelector('#includeAlpha').options.selectedIndex = 1;
-document.querySelector('#opacity').value = 1;
 
 
 // #### Development and testing
