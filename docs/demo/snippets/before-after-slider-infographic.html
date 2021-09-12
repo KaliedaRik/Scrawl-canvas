@@ -405,7 +405,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> pinFactory = <span class="hljs-keyword">function</span> (<span class="hljs-params">items, canvas, pinTextGroup</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> pinFactory = <span class="hljs-keyword">function</span> (<span class="hljs-params">items, canvas, pinTextGroup, colors</span>) {
 
     <span class="hljs-keyword">const</span> { name, groupname, position, fill, stroke, labeltext, labelposition, labelwidth, shared, suppressAccessibleText } = items;
 
@@ -610,8 +610,8 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
             <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
 
             <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;28px Arial, sans-serif&#x27;</span>,
-            <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;white&#x27;</span>,
-            <span class="hljs-attr">shadowColor</span>: <span class="hljs-string">&#x27;black&#x27;</span>,
+            <span class="hljs-attr">fillStyle</span>: colors.<span class="hljs-property">default</span>,
+            <span class="hljs-attr">shadowColor</span>: colors.<span class="hljs-property">shadow</span>,
             <span class="hljs-attr">shadowBlur</span>: <span class="hljs-number">4</span>,
 
             <span class="hljs-attr">exposeText</span>: (suppressAccessibleText) ? <span class="hljs-literal">false</span> : <span class="hljs-literal">true</span>,
@@ -634,12 +634,12 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
             <div class="content"><div class='highlight'><pre>            <span class="hljs-attr">sectionClassMarker</span>: <span class="hljs-string">&#x27;[§&lt;&gt;]&#x27;</span>,
         });
 
-        pinText.<span class="hljs-title function_">addSectionClass</span>(<span class="hljs-string">&#x27;span class=&quot;sc-red&quot;&#x27;</span>, { <span class="hljs-attr">fill</span>: <span class="hljs-string">&#x27;#ff8888&#x27;</span> })
-        .<span class="hljs-title function_">addSectionClass</span>(<span class="hljs-string">&#x27;span class=&quot;sc-blue&quot;&#x27;</span>, { <span class="hljs-attr">fill</span>: <span class="hljs-string">&#x27;#8888ff&#x27;</span> })
-        .<span class="hljs-title function_">addSectionClass</span>(<span class="hljs-string">&#x27;span class=&quot;sc-green&quot;&#x27;</span>, { <span class="hljs-attr">fill</span>: <span class="hljs-string">&#x27;#88ff88&#x27;</span> })
-        .<span class="hljs-title function_">addSectionClass</span>(<span class="hljs-string">&#x27;span class=&quot;sc-white&quot;&#x27;</span>, { <span class="hljs-attr">fill</span>: <span class="hljs-string">&#x27;white&#x27;</span> })
-        .<span class="hljs-title function_">addSectionClass</span>(<span class="hljs-string">&#x27;span class=&quot;sc-black&quot;&#x27;</span>, { <span class="hljs-attr">fill</span>: <span class="hljs-string">&#x27;#404040&#x27;</span> })
-        .<span class="hljs-title function_">addSectionClass</span>(<span class="hljs-string">&#x27;span class=&quot;sc-gray&quot;&#x27;</span>, { <span class="hljs-attr">fill</span>: <span class="hljs-string">&#x27;#b0b0b0&#x27;</span> })
+        pinText.<span class="hljs-title function_">addSectionClass</span>(<span class="hljs-string">&#x27;span class=&quot;sc-red&quot;&#x27;</span>, { <span class="hljs-attr">fill</span>: colors.<span class="hljs-property">red</span> })
+        .<span class="hljs-title function_">addSectionClass</span>(<span class="hljs-string">&#x27;span class=&quot;sc-blue&quot;&#x27;</span>, { <span class="hljs-attr">fill</span>: colors.<span class="hljs-property">blue</span> })
+        .<span class="hljs-title function_">addSectionClass</span>(<span class="hljs-string">&#x27;span class=&quot;sc-green&quot;&#x27;</span>, { <span class="hljs-attr">fill</span>: colors.<span class="hljs-property">green</span> })
+        .<span class="hljs-title function_">addSectionClass</span>(<span class="hljs-string">&#x27;span class=&quot;sc-white&quot;&#x27;</span>, { <span class="hljs-attr">fill</span>: colors.<span class="hljs-property">white</span> })
+        .<span class="hljs-title function_">addSectionClass</span>(<span class="hljs-string">&#x27;span class=&quot;sc-black&quot;&#x27;</span>, { <span class="hljs-attr">fill</span>: colors.<span class="hljs-property">black</span> })
+        .<span class="hljs-title function_">addSectionClass</span>(<span class="hljs-string">&#x27;span class=&quot;sc-gray&quot;&#x27;</span>, { <span class="hljs-attr">fill</span>: colors.<span class="hljs-property">gray</span> })
         .<span class="hljs-title function_">addSectionClass</span>(<span class="hljs-string">&#x27;/span&#x27;</span>, { <span class="hljs-attr">fill</span>: <span class="hljs-string">&#x27;default&#x27;</span> })
         .<span class="hljs-title function_">addSectionClass</span>(<span class="hljs-string">&#x27;b&#x27;</span>, { <span class="hljs-attr">weight</span>: <span class="hljs-string">&#x27;bold&#x27;</span> })
         .<span class="hljs-title function_">addSectionClass</span>(<span class="hljs-string">&#x27;/b&#x27;</span>, { <span class="hljs-attr">weight</span>: <span class="hljs-string">&#x27;normal&#x27;</span> })
@@ -667,9 +667,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> linkFactory = <span class="hljs-keyword">function</span> (<span class="hljs-params">items, canvas, linkTextGroup</span>) {
-
-    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(items);
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> linkFactory = <span class="hljs-keyword">function</span> (<span class="hljs-params">items, canvas, linkTextGroup, colors</span>) {
 
     <span class="hljs-keyword">const</span> {name, position, href, justify, text, width} = items;
 
@@ -689,10 +687,12 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
         <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;16px Arial, sans-serif&#x27;</span>,
         <span class="hljs-attr">lineHeight</span>: <span class="hljs-number">1</span>,
-        <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;white&#x27;</span>,
+        <span class="hljs-attr">fillStyle</span>: colors.<span class="hljs-property">link</span>,
+        <span class="hljs-attr">shadowColor</span>: colors.<span class="hljs-property">linkshadow</span>,
+        <span class="hljs-attr">shadowBlur</span>: <span class="hljs-number">4</span>,
 
         <span class="hljs-attr">underlinePosition</span>: <span class="hljs-number">0.8</span>,
-        <span class="hljs-attr">underlineStyle</span>: <span class="hljs-string">&#x27;white&#x27;</span>,
+        <span class="hljs-attr">underlineStyle</span>: colors.<span class="hljs-property">linkunderline</span>,
 
         <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
@@ -1140,7 +1140,22 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            leftPanel.<span class="hljs-property">pins</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> {
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">const</span> colors = {},
+                cssColors = <span class="hljs-title function_">getComputedStyle</span>(<span class="hljs-variable language_">document</span>.<span class="hljs-property">documentElement</span>);
+
+            colors.<span class="hljs-property">default</span> = cssColors.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--sc-default&#x27;</span>);
+            colors.<span class="hljs-property">shadow</span> = cssColors.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--sc-shadow&#x27;</span>);
+            colors.<span class="hljs-property">link</span> = cssColors.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--sc-link&#x27;</span>);
+            colors.<span class="hljs-property">linkshadow</span> = cssColors.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--sc-linkshadow&#x27;</span>);
+            colors.<span class="hljs-property">linkunderline</span> = cssColors.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--sc-linkunderline&#x27;</span>);
+            colors.<span class="hljs-property">red</span> = cssColors.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--sc-red&#x27;</span>);
+            colors.<span class="hljs-property">green</span> = cssColors.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--sc-green&#x27;</span>);
+            colors.<span class="hljs-property">blue</span> = cssColors.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--sc-blue&#x27;</span>);
+            colors.<span class="hljs-property">black</span> = cssColors.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--sc-black&#x27;</span>);
+            colors.<span class="hljs-property">white</span> = cssColors.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--sc-white&#x27;</span>);
+            colors.<span class="hljs-property">gray</span> = cssColors.<span class="hljs-title function_">getPropertyValue</span>(<span class="hljs-string">&#x27;--sc-gray&#x27;</span>);
+
+            leftPanel.<span class="hljs-property">pins</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> {
 
                 <span class="hljs-keyword">if</span> (p.<span class="hljs-property">shared</span>) {
 
@@ -1149,13 +1164,13 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
                     p.<span class="hljs-property">name</span> = <span class="hljs-string">`<span class="hljs-subst">${n}</span>-left`</span>
                     p.<span class="hljs-property">groupname</span> = leftPanelName;
                     
-                    <span class="hljs-title function_">pinFactory</span>(p, canvas, pinTextGroup);
+                    <span class="hljs-title function_">pinFactory</span>(p, canvas, pinTextGroup, colors);
 
                     p.<span class="hljs-property">name</span> = <span class="hljs-string">`<span class="hljs-subst">${n}</span>-right`</span>
                     p.<span class="hljs-property">groupname</span> = rightPanelName;
                     p.<span class="hljs-property">suppressAccessibleText</span> = <span class="hljs-literal">true</span>;
                 }
-                <span class="hljs-title function_">pinFactory</span>(p, canvas, pinTextGroup);
+                <span class="hljs-title function_">pinFactory</span>(p, canvas, pinTextGroup, colors);
             });
 
             rightPanel.<span class="hljs-property">pins</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> {
@@ -1167,13 +1182,13 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
                     p.<span class="hljs-property">name</span> = <span class="hljs-string">`<span class="hljs-subst">${n}</span>-left`</span>
                     p.<span class="hljs-property">groupname</span> = leftPanelName;
                     
-                    <span class="hljs-title function_">pinFactory</span>(p, canvas, pinTextGroup);
+                    <span class="hljs-title function_">pinFactory</span>(p, canvas, pinTextGroup, colors);
 
                     p.<span class="hljs-property">name</span> = <span class="hljs-string">`<span class="hljs-subst">${n}</span>-right`</span>
                     p.<span class="hljs-property">groupname</span> = rightPanelName;
                     p.<span class="hljs-property">suppressAccessibleText</span> = <span class="hljs-literal">true</span>;
                 }
-                <span class="hljs-title function_">pinFactory</span>(p, canvas, pinTextGroup);
+                <span class="hljs-title function_">pinFactory</span>(p, canvas, pinTextGroup, colors);
             });</pre></div></div>
             
         </li>
@@ -1334,7 +1349,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (navItems &amp;&amp; navItems.<span class="hljs-property">links</span>) navItems.<span class="hljs-property">links</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> <span class="hljs-title function_">linkFactory</span>(n, canvas, linkTextGroup));</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (navItems &amp;&amp; navItems.<span class="hljs-property">links</span>) navItems.<span class="hljs-property">links</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> <span class="hljs-title function_">linkFactory</span>(n, canvas, linkTextGroup, colors));</pre></div></div>
             
         </li>
         
