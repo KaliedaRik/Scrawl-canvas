@@ -25,6 +25,10 @@ const Action = function (items = Ωempty) {
     this.makeName(items.name);
     this.register();
     this.set(this.defs);
+
+    this.action = λnull;
+    this.revert = λnull;
+
     this.set(items);
 
     this.calculateEffectiveTime();

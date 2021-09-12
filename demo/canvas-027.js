@@ -17,7 +17,9 @@ let canvas = scrawl.library.canvas.mycanvas;
 canvas.set({
 
     checkForResize: true,
-    fit: 'fill',
+    fit: 'contain',
+    checkForResize: true,
+    ignoreCanvasCssDimensions: true,
 
 }).setBase({
 
@@ -86,6 +88,7 @@ scrawl.makePhrase({
         });
 
         // '§UNDERLINE§' is a section class marker which makes subsequent letters underlined
+        // ___Note:___ - dynamic underlining is currently not triggering in Firefox browser
         this.set({
             text: `§UNDERLINE§${this.text}`,
         });
