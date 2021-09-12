@@ -294,6 +294,9 @@ let updateFilter = (e) => {
     piccy.clearFilters();
 
     if (val) piccy.addFilters(val);
+
+    // Loom will not pickup changes to picture attributes, need to trigger its output for the changes to be instantaneous
+    myLoom.update();
 };
 scrawl.addNativeListener(['input', 'change'], updateFilter, '#filter');
 
@@ -322,6 +325,8 @@ scrawl.observeAndUpdate({
         copy_dims_heightPercent: ['copyHeight', '%'],
         copy_dims_heightAbsolute: ['copyHeight', 'round'],
     },
+
+    callback: () => myLoom.update(),
 });
 
 // Setup form
