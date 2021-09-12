@@ -4,6 +4,8 @@
 // [Run code](../../demo/particles-002.html)
 import scrawl from '../source/scrawl.js'
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -166,53 +168,30 @@ const myemitter = scrawl.makeEmitter({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const particlenames = scrawl.library.particlenames,
+    particle = scrawl.library.particle;
 
-    let testTicker = Date.now(),
-        testTime, testNow, dragging,
-        testMessage = document.querySelector('#reportmessage');
+const report = reportSpeed('#reportmessage', function () {
 
-    let particlenames = scrawl.library.particlenames,
-        particle = scrawl.library.particle,
-        historyCount, kr, krv;
+    // ParticleHistory arrays are not saved in the Scrawl-canvas library; instead we need to count them in each particle
+    let historyCount = 0;
+    particlenames.forEach(n => {
 
-    let worldSpeed = document.querySelector('#world-speed'),
-        minFill = document.querySelector('#min-fill'),
-        maxFill = document.querySelector('#max-fill'),
-        background = document.querySelector('#background'),
-        outlineColor = document.querySelector('#outline-color'),
-        opacity = document.querySelector('#opacity'),
-        killRadius = document.querySelector('#kill-radius'),
-        killRadiusVariation = document.querySelector('#kill-radius-variation'),
-        historyLength = document.querySelector('#historyLength'),
-        generationRate = document.querySelector('#generationRate');
+        let p = particle[n];
+        if (p) historyCount += p.history.length;
+    });
 
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        historyCount = 0;
-        particlenames.forEach(n => {
-
-            let p = particle[n];
-            if (p) historyCount += p.history.length;
-        });
-
-        kr = parseFloat(killRadius.value);
+    let kr = parseFloat(killRadius.value),
         krv = parseFloat(killRadiusVariation.value) / 2;
 
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Particles: ${particlenames.length}, generationRate: ${generationRate.value}, historyLength: ${historyLength.value}
+    return `    Particles: ${particlenames.length}, generationRate: ${generationRate.value}, historyLength: ${historyLength.value}
     Stamps per display: ${historyCount}
 
     Background color: ${background.value}, World speed (tickMultiplier): ${worldSpeed.value}
     Outline color (strokeStyle): ${outlineColor.value}, Opacity (globalAlpha): ${opacity.value}
     Kill radius: from ${(kr - krv) > 0 ? kr - krv : 0}px to ${kr + krv}px
-    Minimum fill color: ${minFill.value}, Maximum fill color: ${maxFill.value} - (fillStyle)`;
-    };
-}();
+    Minimum fill color: ${minFill.value}, Maximum fill color: ${maxFill.value}`;
+});
 
 let mouseCheck = function () {
 
@@ -366,16 +345,29 @@ scrawl.observeAndUpdate({
     },
 });
 
-document.querySelector('#min-fill').value = '#000000';
-document.querySelector('#max-fill').value = '#ffffff';
-document.querySelector('#outline-color').value = '#F0F8FF';
-document.querySelector('#background').value = '#000040';
-document.querySelector('#world-speed').value = 2;
-document.querySelector('#opacity').value = 0.2;
-document.querySelector('#generationRate').value = 10;
-document.querySelector('#historyLength').value = 20;
-document.querySelector('#kill-radius').value = 50;
-document.querySelector('#kill-radius-variation').value = 0;
+
+const worldSpeed = document.querySelector('#world-speed'),
+    minFill = document.querySelector('#min-fill'),
+    maxFill = document.querySelector('#max-fill'),
+    background = document.querySelector('#background'),
+    outlineColor = document.querySelector('#outline-color'),
+    opacity = document.querySelector('#opacity'),
+    killRadius = document.querySelector('#kill-radius'),
+    killRadiusVariation = document.querySelector('#kill-radius-variation'),
+    historyLength = document.querySelector('#historyLength'),
+    generationRate = document.querySelector('#generationRate');
+
+minFill.value = '#000000';
+maxFill.value = '#ffffff';
+outlineColor.value = '#F0F8FF';
+background.value = '#000040';
+worldSpeed.value = 2;
+opacity.value = 0.2;
+generationRate.value = 10;
+historyLength.value = 20;
+killRadius.value = 50;
+killRadiusVariation.value = 0;
+
 document.querySelector('#artefact').value = 'star';
 
 

@@ -4,6 +4,8 @@
 // [Run code](../../demo/particles-007.html)
 import scrawl from '../source/scrawl.js'
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -170,34 +172,22 @@ const myEmitter = scrawl.makeEmitter({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const particlenames = scrawl.library.particlenames,
+    particle = scrawl.library.particle;
 
-    let testTicker = Date.now(),
-        testTime, testNow, dragging,
-        testMessage = document.querySelector('#reportmessage');
+const report = reportSpeed('#reportmessage', function () {
 
-    let particlenames = scrawl.library.particlenames,
-        particle = scrawl.library.particle,
-        historyCount;
+    // ParticleHistory arrays are not saved in the Scrawl-canvas library; instead we need to count them in each particle
+    let historyCount = 0;
+    particlenames.forEach(n => {
 
-    return function () {
+        let p = particle[n];
+        if (p) historyCount += p.history.length;
+    });
 
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        historyCount = 0;
-        particlenames.forEach(n => {
-
-            let p = particle[n];
-            if (p) historyCount += p.history.length;
-        });
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Particles: ${particlenames.length}
+    return `    Particles: ${particlenames.length}
     Stamps per display: ${historyCount}`;
-    };
-}();
+});
 
 // Create the Display cycle animation
 scrawl.makeRender({

@@ -14,11 +14,13 @@
 
 import scrawl from '../source/scrawl.js';
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
 
-let canvas = scrawl.library.canvas.mycanvas,
+const canvas = scrawl.library.canvas.mycanvas,
     namespace = 'London-crimes';
 
 import * as frame from './modules/simple-chart-frame.js';
@@ -43,17 +45,14 @@ canvas.set({
     height: 600,
 });
 
-let report = function () {
+const assets = scrawl.library.assetnames,
+    groups = scrawl.library.groupnames,
+    entitys = scrawl.library.entitynames;
 
-    let assets = scrawl.library.assetnames,
-        groups = scrawl.library.groupnames,
-        entitys = scrawl.library.entitynames,
+const report = reportSpeed('#library-reporter', function () {
 
-        reporter = document.querySelector('#library-reporter');
-
-    return function () {
-
-        reporter.textContent = `Assets:
+    return `
+Assets:
 ${assets.join(', ')}
 
 Groups:
@@ -61,8 +60,8 @@ ${groups.join(', ')}
 
 Entitys:
 ${entitys.join(', ')}`;
-    }
-}();
+});
+
 
 scrawl.makeRender({
     name: `${namespace}-animation`,

@@ -5,6 +5,8 @@
 import scrawl from '../source/scrawl.js';
 import rapier from "https://cdn.skypack.dev/@dimforge/rapier2d-compat";
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -168,24 +170,11 @@ rapier.init()
 })
 .catch(e => console.log(e));
 
+
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = (function () {
+const report = reportSpeed('#reportmessage');
 
-    let testTicker = Date.now(),
-        testTime,
-        testNow,
-        testMessage = document.querySelector("#reportmessage");
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
-    };
-})();
 
 // Create the Display cycle animation
 const animation = scrawl.makeRender({
