@@ -40,7 +40,6 @@
       --sc-default: white;
       --sc-shadow: black;
       --sc-link: yellow;
-      --sc-linkshadow: black;
       --sc-linkunderline: yellow;
       --sc-red: #ff8888;
       --sc-blue: #8888ff;
@@ -107,13 +106,30 @@
 
           - data-position - a string of two percentage values, separated by a comma - these are the x and y coordinates of where the pin will appear over the image
 
-          - data-justify - where we want the text to appear relative to the pin's location - acceptable values are "left", "right", "above", "below"
+          - data-type="pin" - required (no default value)
+            - for proof of concept we're only handling spot pins, not area pins
 
-          - data-shared - if included, we create pins on both panels (so it never disappears when the slider moves across it)
+          - data-position - required (no default value)
+            - a string of two percentage values, separated by a comma 
+            - these are the 'x%, y%' coords where the pin will appear on image
 
-        The text in the <p> element is the text that will be used for the pin's label. Note that the snippet has been set up to interpret and display the following inline markup: <b></b>, <strong></strong>, <i></i>, <em></em>
+          - data-fill - pin fill color - default is "red"
+          - data-stroke - pin stroke color - default is "yellow"
+          - data-labelwidth - percentage label width value - default is "20%"
+          - data-labelbackground - defaults to "darkslategray" - can be made translucent using rgba() value
 
-          - Additional, span-mediated markup is also supported: <span class="sc-red"></span>, etc.
+          - data-labelposition - default is "below"
+            - where we want the text to appear relative to the pin's location 
+            - acceptable values: "left", "right", "above", "below"
+
+          - data-shared - default is not included
+            - if included, we create the pin on both panels
+
+        The text in the <p> element is the text that will be used for the pin's 
+        label. Note that the snippet has been set up to interpret and display 
+        the following inline markup: 
+          - <b></b>, <strong></strong>, <i></i>, <em></em>
+          - <span class="sc-red"></span>, etc
 
           - If initial word markup doesn't show correctly in the label, place a non-breaking space at the start of the text
       -->
@@ -125,6 +141,7 @@
         data-stroke="yellow",
         data-labelwidth="30%"
         data-labelposition="left"
+        data-labelbackground="rgba(0, 127, 0, 0.2)"
         data-shared>This roundabout <em>remained</em> navigable.</p>
 
       <p 
@@ -172,23 +189,32 @@
     </div>
 
     <!--
-      If we also want to include any clickable links in the infographic, we can include them in a <nav> element
+      If we also want to include any clickable links in the infographic, we can include them in a <nav> element. The following data- attributes apply
+
+        - data-position - required (no default value)
+          - a string of two percentage values, separated by a comma 
+          - these are the 'x%, y%' coords where the link will appear over image
+
+        - data-justify - one of: "left", "right", "center" (default)
+        - data-width - defaults to "20%"
+        - data-background - defaults to "rgba(0,0,0,0.2)" 
     -->
     <nav>
 
       <a 
         id="beirut-infographic-guardian-article" 
         href="https://www.theguardian.com/world/2020/aug/06/beirut-explosion-before-and-after-satellite-images" 
-        data-position="1%, 92%" 
-        data-width="49%"
-        data-justify="left">Guardian article</a>
+        data-position="25%, 96%" 
+        data-width="25%"
+        data-background="darkblue"
+        data-justify="center">Guardian article</a>
 
       <a 
         id="beirut-infographic-wikipedia-port-blast-article" 
         href="https://en.wikipedia.org/wiki/2020_Beirut_explosion" 
-        data-position="99%, 92%" 
-        data-width="49%"
-        data-justify="right">Wikipedia entry</a>
+        data-position="75%, 96%" 
+        data-width="25%"
+        data-justify="center">Wikipedia entry</a>
     </nav>
 
   </div>
@@ -247,7 +273,7 @@
         <li>Adjustsd text sizes of labels and links when user resizes browser window</li>
       </ul>
     </ul>
-    <p><b>Known issue:</b> this demo is extremely slow in Firefox, to the point of unusability. Seerms there may be a connection to loading modules, or or over-manipulating the DOM? While other snippet demos don't run particularly slow on Firefox, demo Module-001 (Hackney crimes graphics) is also very slow to respond to mouse interactions.</p>
+
     <ul>
       <li><a href="../docs/demo/snippets-005.html">Annotated code</a></li>
       <li><a href="../docs/demo/snippets/before-after-slider-infographic.html">Before/after slider infographic snippet</a></li>

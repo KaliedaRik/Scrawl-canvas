@@ -194,6 +194,7 @@
         - data-fill - pin fill color - default is &quot;red&quot;
         - data-stroke - pin stroke color - default is &quot;yellow&quot;
         - data-labelwidth - percentage label width value - default is &quot;20%&quot;
+        - data-labelbackground - default is &quot;rgba(0,0,0,0.2)&quot;
 
         - data-labelposition - default is &quot;below&quot;
           - where we want the text to appear relative to the pin&#x27;s location 
@@ -217,6 +218,7 @@
       <span class="hljs-attr">data-stroke</span>=<span class="hljs-string">&quot;yellow&quot;</span>,
       <span class="hljs-attr">data-labelwidth</span>=<span class="hljs-string">&quot;30%&quot;</span>
       <span class="hljs-attr">data-labelposition</span>=<span class="hljs-string">&quot;left&quot;</span>
+      <span class="hljs-attr">data-labelbackground</span>=<span class="hljs-string">&quot;azure&quot;</span>
       <span class="hljs-attr">data-shared</span>&gt;</span>Text <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;sc-red&quot;</span>&gt;</span>appears<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span> when user <span class="hljs-tag">&lt;<span class="hljs-name">strong</span>&gt;</span>hovers<span class="hljs-tag">&lt;/<span class="hljs-name">strong</span>&gt;</span> over pin<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
 
   <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
@@ -237,21 +239,29 @@
   <span class="hljs-comment">&lt;!--
     If we also want to include any clickable links in the infographic, 
     we can include them in a &amp;lt;nav&gt; element
+      - data-position - required (no default value)
+        - a string of two percentage values, separated by a comma 
+        - these are the &#x27;x%, y%&#x27; coords where the link will appear over image
+
+      - data-justify - one of: &quot;left&quot;, &quot;right&quot;, &quot;center&quot; (default)
+      - data-width - defaults to &quot;20%&quot;
+      - data-background - defaults to &quot;rgba(0,0,0,0.2)&quot; 
   --&gt;</span>
 
   <span class="hljs-tag">&lt;<span class="hljs-name">nav</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">a</span> 
       <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;link-unique-id&quot;</span> 
-      <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;link/url&quot;</span> 
+      <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;https://absolute/link/url&quot;</span> 
       <span class="hljs-attr">data-position</span>=<span class="hljs-string">&quot;1%, 95%&quot;</span> 
       <span class="hljs-attr">data-width</span>=<span class="hljs-string">&quot;45%&quot;</span>
       <span class="hljs-attr">data-justify</span>=<span class="hljs-string">&quot;left&quot;</span>&gt;</span>Text to include in the link<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
 
     <span class="hljs-tag">&lt;<span class="hljs-name">a</span> 
       <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;another-link-unique-id&quot;</span> 
-      <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;another/link/url&quot;</span> 
+      <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;relative/link/url&quot;</span> 
       <span class="hljs-attr">data-position</span>=<span class="hljs-string">&quot;99%, 95%&quot;</span> 
       <span class="hljs-attr">data-width</span>=<span class="hljs-string">&quot;45%&quot;</span>
+      <span class="hljs-attr">data-background</span>=<span class="hljs-string">&quot;darkblue&quot;</span>
       <span class="hljs-attr">data-justify</span>=<span class="hljs-string">&quot;right&quot;</span>&gt;</span>Different text for different link<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
   <span class="hljs-tag">&lt;/<span class="hljs-name">nav</span>&gt;</span>
 
@@ -345,7 +355,8 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
             <span class="hljs-attr">fill</span>: p.<span class="hljs-property">dataset</span>.<span class="hljs-property">fill</span> || <span class="hljs-string">&#x27;red&#x27;</span>,
             <span class="hljs-attr">stroke</span>: p.<span class="hljs-property">dataset</span>.<span class="hljs-property">stroke</span> || <span class="hljs-string">&#x27;yellow&#x27;</span>,
             <span class="hljs-attr">labelposition</span>: p.<span class="hljs-property">dataset</span>.<span class="hljs-property">labelposition</span>,
-            <span class="hljs-attr">labelwidth</span>: p.<span class="hljs-property">dataset</span>.<span class="hljs-property">labelwidth</span>,
+            <span class="hljs-attr">labelwidth</span>: p.<span class="hljs-property">dataset</span>.<span class="hljs-property">labelwidth</span> || <span class="hljs-string">&#x27;25%&#x27;</span>,
+            <span class="hljs-attr">labelbackground</span>: p.<span class="hljs-property">dataset</span>.<span class="hljs-property">labelbackground</span> || <span class="hljs-string">&#x27;rgba(0,0,0,0.2)&#x27;</span>,
             <span class="hljs-attr">labeltext</span>: p.<span class="hljs-property">innerHTML</span>,
             <span class="hljs-attr">shared</span>: (p.<span class="hljs-property">dataset</span>.<span class="hljs-property">shared</span> != <span class="hljs-literal">null</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>,
         });
@@ -382,9 +393,10 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         store.<span class="hljs-property">links</span>.<span class="hljs-title function_">push</span>({
             <span class="hljs-attr">name</span>: a.<span class="hljs-property">id</span>,
             <span class="hljs-attr">href</span>: a.<span class="hljs-property">href</span>,
-            <span class="hljs-attr">width</span>: a.<span class="hljs-property">dataset</span>.<span class="hljs-property">width</span>,
+            <span class="hljs-attr">width</span>: a.<span class="hljs-property">dataset</span>.<span class="hljs-property">width</span> || <span class="hljs-string">&#x27;20%&#x27;</span>,
             <span class="hljs-attr">position</span>: a.<span class="hljs-property">dataset</span>.<span class="hljs-property">position</span>,
-            <span class="hljs-attr">justify</span>: a.<span class="hljs-property">dataset</span>.<span class="hljs-property">justify</span>,
+            <span class="hljs-attr">background</span>: a.<span class="hljs-property">dataset</span>.<span class="hljs-property">background</span> || <span class="hljs-string">&#x27;rgba(0,0,0,0.2)&#x27;</span>,
+            <span class="hljs-attr">justify</span>: a.<span class="hljs-property">dataset</span>.<span class="hljs-property">justify</span> || <span class="hljs-string">&#x27;center&#x27;</span>,
             <span class="hljs-attr">text</span>: a.<span class="hljs-property">innerHTML</span>,
         });
     });
@@ -407,7 +419,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> pinFactory = <span class="hljs-keyword">function</span> (<span class="hljs-params">items, canvas, pinTextGroup, colors</span>) {
 
-    <span class="hljs-keyword">const</span> { name, groupname, position, fill, stroke, labeltext, labelposition, labelwidth, shared, suppressAccessibleText } = items;
+    <span class="hljs-keyword">const</span> { name, groupname, position, fill, stroke, labeltext, labelposition, labelwidth, labelbackground, shared, suppressAccessibleText } = items;
 
     <span class="hljs-keyword">const</span> coords = position.<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27;,&#x27;</span>);</pre></div></div>
             
@@ -513,7 +525,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (pinText) pinText.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span> });
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (pinText) {
+
+                    pinText.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span> });
+                    pinBackground.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span> });
+                }
             }
         },
 
@@ -552,7 +568,11 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (pinText) pinText.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span> });
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (pinText) {
+
+                    pinText.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span> });
+                    pinBackground.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span> });
+                }
             }
         },
     });</pre></div></div>
@@ -570,7 +590,8 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> pinText = <span class="hljs-literal">false</span>;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> pinText = <span class="hljs-literal">false</span>,
+        pinBackground = <span class="hljs-literal">false</span>;
 
     <span class="hljs-keyword">if</span> (labeltext) {</pre></div></div>
             
@@ -599,11 +620,13 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
             <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-label`</span>,
             <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${groupname}</span>-cell`</span>,
+            <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
 
             <span class="hljs-attr">text</span>: labeltext,
             <span class="hljs-attr">justify</span>: <span class="hljs-string">&#x27;center&#x27;</span>,
+            <span class="hljs-attr">lineHeight</span>: <span class="hljs-number">1.15</span>,
 
-            <span class="hljs-attr">width</span>: labelwidth || <span class="hljs-string">&#x27;25%&#x27;</span>,
+            <span class="hljs-attr">width</span>: labelwidth,
             handle,
 
             <span class="hljs-attr">pivot</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-pin`</span>,
@@ -611,8 +634,6 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
             <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;28px Arial, sans-serif&#x27;</span>,
             <span class="hljs-attr">fillStyle</span>: colors.<span class="hljs-property">default</span>,
-            <span class="hljs-attr">shadowColor</span>: colors.<span class="hljs-property">shadow</span>,
-            <span class="hljs-attr">shadowBlur</span>: <span class="hljs-number">4</span>,
 
             <span class="hljs-attr">exposeText</span>: (suppressAccessibleText) ? <span class="hljs-literal">false</span> : <span class="hljs-literal">true</span>,
 
@@ -651,6 +672,26 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
         .<span class="hljs-title function_">addSectionClass</span>(<span class="hljs-string">&#x27;/em&#x27;</span>, { <span class="hljs-attr">style</span>: <span class="hljs-string">&#x27;normal&#x27;</span> });
 
         pinTextGroup.<span class="hljs-title function_">addArtefacts</span>(<span class="hljs-string">`<span class="hljs-subst">${name}</span>-label`</span>);
+
+        pinBackground = scrawl.<span class="hljs-title function_">makeBlock</span>({
+            <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-background`</span>,
+            <span class="hljs-attr">group</span>: <span class="hljs-string">`<span class="hljs-subst">${groupname}</span>-cell`</span>,
+            <span class="hljs-attr">order</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">fillStyle</span>: labelbackground,
+            <span class="hljs-attr">width</span>: <span class="hljs-number">20</span>,
+            <span class="hljs-attr">height</span>: <span class="hljs-number">20</span>,
+            <span class="hljs-attr">handleY</span>: <span class="hljs-number">10</span>,
+
+            <span class="hljs-attr">mimic</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-label`</span>,
+            <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;mimic&#x27;</span>,
+            <span class="hljs-attr">useMimicDimensions</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">useMimicStart</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">useMimicHandle</span>: <span class="hljs-literal">true</span>,
+
+            <span class="hljs-attr">addOwnDimensionsToMimic</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">addOwnHandleToMimic</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
+        });
     }
 };</pre></div></div>
             
@@ -669,7 +710,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> linkFactory = <span class="hljs-keyword">function</span> (<span class="hljs-params">items, canvas, linkTextGroup, colors</span>) {
 
-    <span class="hljs-keyword">const</span> {name, position, href, justify, text, width} = items;
+    <span class="hljs-keyword">const</span> {name, position, href, justify, text, width, background} = items;
 
     <span class="hljs-keyword">const</span> start = position.<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27;,&#x27;</span>);
 
@@ -677,19 +718,19 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-link`</span>,
         <span class="hljs-attr">group</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
+        <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
         text,
         start,
 
         width,
 
         <span class="hljs-attr">handleX</span>: justify,
+        <span class="hljs-attr">handleY</span>: justify,
         justify,
 
         <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;16px Arial, sans-serif&#x27;</span>,
         <span class="hljs-attr">lineHeight</span>: <span class="hljs-number">1</span>,
         <span class="hljs-attr">fillStyle</span>: colors.<span class="hljs-property">link</span>,
-        <span class="hljs-attr">shadowColor</span>: colors.<span class="hljs-property">linkshadow</span>,
-        <span class="hljs-attr">shadowBlur</span>: <span class="hljs-number">4</span>,
 
         <span class="hljs-attr">underlinePosition</span>: <span class="hljs-number">0.8</span>,
         <span class="hljs-attr">underlineStyle</span>: colors.<span class="hljs-property">linkunderline</span>,
@@ -752,6 +793,25 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
     });
 
     linkTextGroup.<span class="hljs-title function_">addArtefacts</span>(<span class="hljs-string">`<span class="hljs-subst">${name}</span>-link`</span>);
+
+    scrawl.<span class="hljs-title function_">makeBlock</span>({
+        <span class="hljs-attr">name</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-background`</span>,
+        <span class="hljs-attr">group</span>: canvas.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
+        <span class="hljs-attr">order</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-attr">fillStyle</span>: background,
+        <span class="hljs-attr">width</span>: <span class="hljs-number">20</span>,
+        <span class="hljs-attr">height</span>: <span class="hljs-number">10</span>,
+        <span class="hljs-attr">handleY</span>: <span class="hljs-number">10</span>,
+
+        <span class="hljs-attr">mimic</span>: <span class="hljs-string">`<span class="hljs-subst">${name}</span>-link`</span>,
+        <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;mimic&#x27;</span>,
+        <span class="hljs-attr">useMimicDimensions</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">useMimicStart</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">useMimicHandle</span>: <span class="hljs-literal">true</span>,
+
+        <span class="hljs-attr">addOwnDimensionsToMimic</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">addOwnHandleToMimic</span>: <span class="hljs-literal">true</span>,
+    })
 };</pre></div></div>
             
         </li>
@@ -1382,6 +1442,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
             
             <div class="content"><div class='highlight'><pre>            animation.<span class="hljs-title function_">set</span>({
                 <span class="hljs-attr">commence</span>: dragAction,
+                <span class="hljs-attr">afterCreated</span>: <span class="hljs-function">() =&gt;</span> canvas.<span class="hljs-title function_">updateDisplay</span>(),
             });
         }
     }</pre></div></div>

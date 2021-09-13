@@ -39,6 +39,7 @@
 //         - data-fill - pin fill color - default is "red"
 //         - data-stroke - pin stroke color - default is "yellow"
 //         - data-labelwidth - percentage label width value - default is "20%"
+//         - data-labelbackground - default is "rgba(0,0,0,0.2)"
 //
 //         - data-labelposition - default is "below"
 //           - where we want the text to appear relative to the pin's location 
@@ -62,6 +63,7 @@
 //       data-stroke="yellow",
 //       data-labelwidth="30%"
 //       data-labelposition="left"
+//       data-labelbackground="azure"
 //       data-shared>Text <span class="sc-red">appears</span> when user <strong>hovers</strong> over pin</p>
 //
 //   </div>
@@ -82,21 +84,29 @@
 //   <!--
 //     If we also want to include any clickable links in the infographic, 
 //     we can include them in a &lt;nav> element
+//       - data-position - required (no default value)
+//         - a string of two percentage values, separated by a comma 
+//         - these are the 'x%, y%' coords where the link will appear over image
+//
+//       - data-justify - one of: "left", "right", "center" (default)
+//       - data-width - defaults to "20%"
+//       - data-background - defaults to "rgba(0,0,0,0.2)" 
 //   -->
 //
 //   <nav>
 //     <a 
 //       id="link-unique-id" 
-//       href="link/url" 
+//       href="https://absolute/link/url" 
 //       data-position="1%, 95%" 
 //       data-width="45%"
 //       data-justify="left">Text to include in the link</a>
 //
 //     <a 
 //       id="another-link-unique-id" 
-//       href="another/link/url" 
+//       href="relative/link/url" 
 //       data-position="99%, 95%" 
 //       data-width="45%"
+//       data-background="darkblue"
 //       data-justify="right">Different text for different link</a>
 //   </nav>
 //
@@ -155,7 +165,8 @@ const getPanelData = function (el, store, canvas) {
             fill: p.dataset.fill || 'red',
             stroke: p.dataset.stroke || 'yellow',
             labelposition: p.dataset.labelposition,
-            labelwidth: p.dataset.labelwidth,
+            labelwidth: p.dataset.labelwidth || '25%',
+            labelbackground: p.dataset.labelbackground || 'rgba(0,0,0,0.2)',
             labeltext: p.innerHTML,
             shared: (p.dataset.shared != null) ? true : false,
         });
@@ -180,9 +191,10 @@ const getNavigationData = function (el, store, canvas) {
         store.links.push({
             name: a.id,
             href: a.href,
-            width: a.dataset.width,
+            width: a.dataset.width || '20%',
             position: a.dataset.position,
-            justify: a.dataset.justify,
+            background: a.dataset.background || 'rgba(0,0,0,0.2)',
+            justify: a.dataset.justify || 'center',
             text: a.innerHTML,
         });
     });
@@ -193,7 +205,7 @@ const getNavigationData = function (el, store, canvas) {
 // The pin factory takes all the data about pins that we scraped from the element and builds a set of interactive Scrawl-canvas entitys for each pin
 const pinFactory = function (items, canvas, pinTextGroup, colors) {
 
-    const { name, groupname, position, fill, stroke, labeltext, labelposition, labelwidth, shared, suppressAccessibleText } = items;
+    const { name, groupname, position, fill, stroke, labeltext, labelposition, labelwidth, labelbackground, shared, suppressAccessibleText } = items;
 
     const coords = position.split(',');
 
@@ -239,7 +251,11 @@ const pinFactory = function (items, canvas, pinTextGroup, colors) {
                 });
 
                 // Display the pin's associated label
-                if (pinText) pinText.set({ visibility: true });
+                if (pinText) {
+
+                    pinText.set({ visibility: true });
+                    pinBackground.set({ visibility: true });
+                }
             }
         },
 
@@ -254,13 +270,18 @@ const pinFactory = function (items, canvas, pinTextGroup, colors) {
                 });
 
                 // Hide the pin's associated label
-                if (pinText) pinText.set({ visibility: false });
+                if (pinText) {
+
+                    pinText.set({ visibility: false });
+                    pinBackground.set({ visibility: false });
+                }
             }
         },
     });
 
     // Generate the label associated with each pin (assuming it's been defined in the data)
-    let pinText = false;
+    let pinText = false,
+        pinBackground = false;
 
     if (labeltext) {
 
@@ -277,11 +298,13 @@ const pinFactory = function (items, canvas, pinTextGroup, colors) {
 
             name: `${name}-label`,
             group: `${groupname}-cell`,
+            order: 1,
 
             text: labeltext,
             justify: 'center',
+            lineHeight: 1.15,
 
-            width: labelwidth || '25%',
+            width: labelwidth,
             handle,
 
             pivot: `${name}-pin`,
@@ -289,8 +312,6 @@ const pinFactory = function (items, canvas, pinTextGroup, colors) {
 
             font: '28px Arial, sans-serif',
             fillStyle: colors.default,
-            shadowColor: colors.shadow,
-            shadowBlur: 4,
 
             exposeText: (suppressAccessibleText) ? false : true,
 
@@ -317,13 +338,33 @@ const pinFactory = function (items, canvas, pinTextGroup, colors) {
         .addSectionClass('/em', { style: 'normal' });
 
         pinTextGroup.addArtefacts(`${name}-label`);
+
+        pinBackground = scrawl.makeBlock({
+            name: `${name}-background`,
+            group: `${groupname}-cell`,
+            order: 0,
+            fillStyle: labelbackground,
+            width: 20,
+            height: 20,
+            handleY: 10,
+
+            mimic: `${name}-label`,
+            lockTo: 'mimic',
+            useMimicDimensions: true,
+            useMimicStart: true,
+            useMimicHandle: true,
+
+            addOwnDimensionsToMimic: true,
+            addOwnHandleToMimic: true,
+            visibility: false,
+        });
     }
 };
 
 // The link factory takes all the data about links that we scraped from the element and builds a set of interactive Scrawl-canvas entitys for each link
 const linkFactory = function (items, canvas, linkTextGroup, colors) {
 
-    const {name, position, href, justify, text, width} = items;
+    const {name, position, href, justify, text, width, background} = items;
 
     const start = position.split(',');
 
@@ -331,19 +372,19 @@ const linkFactory = function (items, canvas, linkTextGroup, colors) {
 
         name: `${name}-link`,
         group: canvas.base.name,
+        order: 1,
         text,
         start,
 
         width,
 
         handleX: justify,
+        handleY: justify,
         justify,
 
         font: '16px Arial, sans-serif',
         lineHeight: 1,
         fillStyle: colors.link,
-        shadowColor: colors.linkshadow,
-        shadowBlur: 4,
 
         underlinePosition: 0.8,
         underlineStyle: colors.linkunderline,
@@ -394,6 +435,25 @@ const linkFactory = function (items, canvas, linkTextGroup, colors) {
     });
 
     linkTextGroup.addArtefacts(`${name}-link`);
+
+    scrawl.makeBlock({
+        name: `${name}-background`,
+        group: canvas.base.name,
+        order: 0,
+        fillStyle: background,
+        width: 20,
+        height: 10,
+        handleY: 10,
+
+        mimic: `${name}-link`,
+        lockTo: 'mimic',
+        useMimicDimensions: true,
+        useMimicStart: true,
+        useMimicHandle: true,
+
+        addOwnDimensionsToMimic: true,
+        addOwnHandleToMimic: true,
+    })
 };
 
 
@@ -736,6 +796,7 @@ export default function (el) {
             // __15. Update the animation object to listen for drag bar activity__
             animation.set({
                 commence: dragAction,
+                afterCreated: () => canvas.updateDisplay(),
             });
         }
     }
