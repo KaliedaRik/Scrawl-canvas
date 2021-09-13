@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Canvas 056</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+
+  <style>
+    .controls {
+      grid-template-columns: 1fr 2fr 1fr 2fr;
+    }
+    canvas {
+      margin: 0 auto;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Canvas test 056</h1>
+  <h2>Seeded random number generator; point on path</h3>
+
+  <div class="controls">
+
+    <div class="yellow label">Max random length</div>
+    <div class="yellow"><input class="controlItem" id="length" type="range" value="25" min="0" max="50" step="1" /></div>
+
+    <div class="yellow label">Density</div>
+    <div class="yellow"><input class="controlItem" id="density" type="range" value="600" min="100" max="1000" step="10" /></div>
+
+    <div class="yellow label">Max random rotation</div>
+    <div class="yellow"><input class="controlItem" id="rotation" type="range" value="360" min="0" max="360" step="1" /></div>
+
+    <div class="yellow label">Add path rotation</div>
+    <div class="yellow">
+      <select class="controlItem" id="pathroll">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+  </div>
+
+  <canvas id="mycanvas" width="600" height="600"></canvas>
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Create a Polyline entity and a Shape entity</li>
+      <li>Use positions along the Polyline entity's path to generate a series of short lines, captured in the Shape entity's pathDefinition attribute</li>
+      <li>The short lines should be calculated using the Seeded random number generator - c heck that the initial display is the same each time the page loads (this would not happen if we were using the Javascript Math.random() function)</li>
+    </ul>
+    <p>Note that the Shape entity doesn't overlap the Polyline entity because it is positioned centrally and will often have different dimension values.</p>
+    <p><a href="../docs/demo/canvas-056.html">Annotated code</a></p>
+  </div>
+
+  <script src="canvas-056.js" type="module"></script>
+
+</body>
+
+</html>

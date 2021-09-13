@@ -4,6 +4,8 @@
 // [Run code](../../demo/canvas-024.html)
 import scrawl from '../source/scrawl.js'
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -202,54 +204,9 @@ scrawl.makeDragZone({
 });
 
 
-// #### Development and testing
-// Test packet functionality
-console.log(myLoom.saveAsPacket());
-// ```
-// RESULT:
-// [
-//     "display-loom",
-//     "Loom",
-//     "entity",
-//     {
-//         "name":"display-loom",
-//         "showBoundingBox":true,
-//         "boundingBoxColor":"red",
-//         "method":"fillThenDraw",
-//         "onEnter":"~~~ this.set({ lineWidth: 6 }) ",
-//         "onLeave":"~~~ this.set({ lineWidth: 2 }) ",
-//         "onDown":"~~~",
-//         "onUp":"~~~",
-//         "delta":{},
-//         "fromPath":"my-quad",
-//         "toPath":"my-bezier",
-//         "source":"myFlower",
-//         "group":"mycanvas_base",
-//         "strokeStyle":"orange",
-//         "lineWidth":2,
-//         "lineCap":"round"
-//     }
-// ]
-// ```
-
-
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
-
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
-    };
-}();
+const report = reportSpeed('#reportmessage');
 
 
 // Create the Display cycle animation
@@ -337,6 +294,9 @@ let updateFilter = (e) => {
     piccy.clearFilters();
 
     if (val) piccy.addFilters(val);
+
+    // Loom will not pickup changes to picture attributes, need to trigger its output for the changes to be instantaneous
+    myLoom.update();
 };
 scrawl.addNativeListener(['input', 'change'], updateFilter, '#filter');
 
@@ -365,6 +325,8 @@ scrawl.observeAndUpdate({
         copy_dims_heightPercent: ['copyHeight', '%'],
         copy_dims_heightAbsolute: ['copyHeight', 'round'],
     },
+
+    callback: () => myLoom.update(),
 });
 
 // Setup form
@@ -388,5 +350,34 @@ document.querySelector('#copy_dims_heightPercent').value = 100;
 document.querySelector('#copy_dims_heightAbsolute').value = 400;
 
 
-// #### More development and testing
+// #### Development and testing
+// Test packet functionality
+console.log(myLoom.saveAsPacket());
+// ```
+// RESULT:
+// [
+//     "display-loom",
+//     "Loom",
+//     "entity",
+//     {
+//         "name":"display-loom",
+//         "showBoundingBox":true,
+//         "boundingBoxColor":"red",
+//         "method":"fillThenDraw",
+//         "onEnter":"~~~ this.set({ lineWidth: 6 }) ",
+//         "onLeave":"~~~ this.set({ lineWidth: 2 }) ",
+//         "onDown":"~~~",
+//         "onUp":"~~~",
+//         "delta":{},
+//         "fromPath":"my-quad",
+//         "toPath":"my-bezier",
+//         "source":"myFlower",
+//         "group":"mycanvas_base",
+//         "strokeStyle":"orange",
+//         "lineWidth":2,
+//         "lineCap":"round"
+//     }
+// ]
+// ```
+
 console.log(scrawl.library);

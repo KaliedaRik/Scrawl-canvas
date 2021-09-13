@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Filters 024</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  <style>
+    .controls {
+      grid-template-columns: 1fr 2fr 1fr 2fr;
+    }
+    .grid {
+      display: grid;
+
+      grid-template-columns: 1fr 1fr;
+      grid-column-gap: 2px;
+
+      grid-template-rows: auto;
+      grid-row-gap: 2px;
+
+      font-size:  12px;
+    }
+    img {
+      display: none;
+    }
+    canvas {
+      border: 1px solid black;
+      margin: 1em auto;
+    }
+    .channel-buttons {
+      text-align: center;
+    }
+    button {
+      background-color: lightblue;
+    }
+    button.selected {
+      background-color: yellow;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 024</h1>
+  <h2>Parameters for: curveWeights filter</h2>
+
+  <div class="controls">
+
+    <div class="yellow label">Opacity</div>
+    <div class="yellow"><input class="controlItem" id="opacity" type="range" value="1" min="0" max="1" step="0.01" /></div>
+
+    <div class="lavender label">Use mixed channel</div>
+    <div class="lavender">
+      <select class="controlItem" id="useMixedChannel">
+        <option value="0">false</option>
+        <option value="1">true</option>
+      </select>
+    </div>
+
+  </div>
+
+  <div class="grid">
+    
+    <canvas id="output-canvas" width="400" height="400"></canvas>
+
+    <div>    
+      <canvas id="channel-weights-canvas" width="360" height="360"></canvas>
+
+      <div class="channel-buttons">
+        <button id="black" class="channel-selector selected">Mixed channels</button>
+        <button id="red" class="channel-selector">Red channel</button>
+        <button id="green" class="channel-selector">Green channel</button>
+        <button id="blue" class="channel-selector">Blue channel</button>
+      </div>
+    </div>
+  </div>
+
+  <img id="iris" src="img/iris.png" class="flowers" />
+
+  <p id="reportmessage"></p>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+
+    <ul>
+      <li>Create a test Picture entity</li>
+      <li>Create a curveWeights filter and apply it to the test entity</li>
+      <li>Update the weights array using a second canvas displaying a set of curve controls</li>
+    </ul>
+
+    <p>Usually best to create the weights array using some sort of tool where the user can shape and manipulate the curve - and also curves for each individual channel - to get the output they require for a given image.</p>
+
+    <p><a href="../docs/demo/filters-024.html">Annotated code</a></p>
+  </div>
+
+  <script src="filters-024.js" type="module"></script>
+
+</body>
+
+</html>

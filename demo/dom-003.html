@@ -13,7 +13,7 @@
     #mystack {
       width: 500px;
       height: 500px;
-      perspective: 1200px;
+      /*perspective: 1200px;*/
       margin: 0 auto;
     }
 
@@ -338,6 +338,9 @@
       <li>Import SVG elements into a Scrawl-canvas stack, by including the SVG 'inline' within the HTML markup</li>
       <li>Check that the SVG elements can be dragged and dropped, like other elements</li>
     </ul>
+
+    <p><b>Known issue:</b> When Scrawl-canvas initializes, it checks for stack elements and attempts to replicate their CSS attributes. Reading the perspective attribute fails and leads to some interesting outcomes. Current workaround is to always set SC perspectiveZ value in Javascript code.</p>
+
     <p><a href="../docs/demo/dom-003.html">Annotated code</a></p>
   </div>
 

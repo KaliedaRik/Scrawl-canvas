@@ -4,6 +4,8 @@
 // [Run code](../../demo/canvas-012.html)
 import scrawl from '../source/scrawl.js'
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -104,26 +106,20 @@ for (let i = 0.01; i < 1; i += 0.01) {
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
+    let [startX, startY] = arrow.start;
+    let [handleX, handleY] = arrow.handle;
+    let [offsetX, offsetY] = arrow.offset;
 
-    return function () {
+    let {roll, scale, length} = arrow;
 
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Arrow path length: ${arrow.length}
-    Start - x: ${arrow.start[0]}, y: ${arrow.start[1]}
-    Handle - x: ${arrow.handle[0]}, y: ${arrow.handle[1]}
-    Offset - x: ${arrow.offset[0]}, y: ${arrow.offset[1]}
-    Roll: ${arrow.roll}; Scale: ${arrow.scale}`;
-    };
-}();
+    return `    Arrow path length: ${length}
+    Start - x: ${startX}, y: ${startY}
+    Handle - x: ${handleX}, y: ${handleY}
+    Offset - x: ${offsetX}, y: ${offsetY}
+    Roll: ${roll}; Scale: ${scale}`;
+});
 
 
 // Create the Display cycle animation

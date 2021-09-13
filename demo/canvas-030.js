@@ -5,6 +5,8 @@
 // [Run code](../../demo/canvas-030.html)
 import scrawl from '../source/scrawl.js'
 
+import { reportSpeed, killPolylineArtefact } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -204,22 +206,9 @@ scrawl.makeDragZone({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
-
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-Bounding box: ${myline.getBoundingBox().join(', ')}`;
-    };
-}();
+const report = reportSpeed('#reportmessage', function () {
+    return `Bounding box: ${myline.getBoundingBox().join(', ')}`;
+});
 
 
 // Create the Display cycle animation
@@ -286,75 +275,8 @@ document.querySelector('#scale').value = 1;
 
 
 // #### Development and testing
-console.log(scrawl.library.entity);
+console.log(scrawl.library);
 
+console.log('Performing tests ...');
 
-// To test kill functionality
-let killArtefact = (name, time, restore) => {
-
-    let groupname = 'mycanvas_base',
-        packet;
-
-    let checkGroupBucket = (name, groupname) => {
-
-        let res = scrawl.library.group[groupname].artefactBuckets.filter(e => e.name === name );
-        return (res.length) ? 'no' : 'yes';
-    };
-
-    let checkPinsArray = (name) => {
-
-        if (myline.pins.indexOf(name) >= 0) return 'no';
-
-        let res = myline.pins.filter(e => e && e.name === name );
-        return (res.length) ? 'no' : 'yes';
-    };
-
-    setTimeout(() => {
-
-        console.log(`${name} alive
-    removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
-    removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
-    removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from polyline pins array: ${checkPinsArray(name)}
-    removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
-
-        packet = scrawl.library.artefact[name].saveAsPacket();
-
-        scrawl.library.artefact[name].kill();
-
-        setTimeout(() => {
-
-            console.log(`${name} killed
-    removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
-    removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
-    removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from polyline pins array: ${checkPinsArray(name)}
-    removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
-
-            canvas.actionPacket(packet);
-
-            setTimeout(() => {
-
-                if (restore) restore();
-
-                console.log(`${name} resurrected
-    removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
-    removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
-    removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from polyline pins array: ${checkPinsArray(name)}
-    removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
-
-                console.log(myline.saveAsPacket());
-
-            }, 500);
-        }, 500);
-    }, time);
-};
-
-killArtefact('pin-2', 3000, () => myline.updatePinAt('pin-2', 2));
+killPolylineArtefact(canvas, 'pin-2', 3000, myline, () => myline.updatePinAt('pin-2', 2));

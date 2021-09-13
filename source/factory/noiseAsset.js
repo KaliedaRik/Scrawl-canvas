@@ -32,7 +32,8 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { mergeOver, λnull, λthis, λfirstArg, removeItem, seededRandomNumberGenerator, interpolate, easeOutSine, easeInSine, easeOutInSine, easeOutQuad, easeInQuad, easeOutInQuad, easeOutCubic, easeInCubic, easeOutInCubic, easeOutQuart, easeInQuart, easeOutInQuart, easeOutQuint, easeInQuint, easeOutInQuint, easeOutExpo, easeInExpo, easeOutInExpo, easeOutCirc, easeInCirc, easeOutInCirc, easeOutBack, easeInBack, easeOutInBack, easeOutElastic, easeInElastic, easeOutInElastic, easeOutBounce, easeInBounce, easeOutInBounce, Ωempty } from '../core/utilities.js';
+import { seededRandomNumberGenerator } from '../core/random-seed.js';
+import { mergeOver, λnull, λthis, λfirstArg, removeItem, interpolate, easeOutSine, easeInSine, easeOutInSine, easeOutQuad, easeInQuad, easeOutInQuad, easeOutCubic, easeInCubic, easeOutInCubic, easeOutQuart, easeInQuart, easeOutInQuart, easeOutQuint, easeInQuint, easeOutInQuint, easeOutExpo, easeInExpo, easeOutInExpo, easeOutCirc, easeInCirc, easeOutInCirc, easeOutBack, easeInBack, easeOutInBack, easeOutElastic, easeInElastic, easeOutInElastic, easeOutBounce, easeInBounce, easeOutInBounce, Ωempty } from '../core/utilities.js';
 
 import { makeColor } from './color.js';
 
@@ -129,7 +130,7 @@ let defaultAttributes = {
     // Post-processing the noise map: The __sumFunction__ attribute - a String value - identifies the smoothing function that will be applied to the noise map once the noise calculations complete. 
     // + Permitted values include: `none`, `sine-x`, `sine-y`, `sine`, `modular`
     // + __sineFrequencyCoeff__ - a Number - is used by sine-based sum functions
-    // + __modularAmplitude__ - a Number - is used by the modular sum function
+    // + __sumAmplitude__ - a Number - is used by the modular sum function
     sumFunction: 'none',
     sineFrequencyCoeff: 1,
     sumAmplitude: 5,

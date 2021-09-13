@@ -4,6 +4,8 @@
 // [Run code](../../demo/canvas-040.html)
 import scrawl from '../source/scrawl.js';
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -455,23 +457,11 @@ const myTween = scrawl.makeTween({
 
 
 // Function to display frames-per-second data, and other information relevant to the demo
-const report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Arrow length: ${arrow.length}
+    return `    Arrow length: ${arrow.length}
     Line progress: ${progressElement.value}`;
-    };
-}();
+});
 
 
 // Create the Display cycle animation

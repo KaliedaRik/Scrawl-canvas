@@ -4,6 +4,8 @@
 // [Run code](../../demo/particles-001.html)
 import scrawl from '../source/scrawl.js'
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -183,48 +185,20 @@ const myEmitter = scrawl.makeEmitter({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const particlenames = scrawl.library.particlenames,
+    particle = scrawl.library.particle;
 
-    let testTicker = Date.now(),
-        testTime, testNow, dragging,
-        testMessage = document.querySelector('#reportmessage');
+const report = reportSpeed('#reportmessage', function () {
 
-    let particlenames = scrawl.library.particlenames,
-        particle = scrawl.library.particle,
-        historyCount;
+    // ParticleHistory arrays are not saved in the Scrawl-canvas library; instead we need to count them in each particle
+    let historyCount = 0;
+    particlenames.forEach(n => {
 
-    let worldSpeed = document.querySelector('#world-speed'),
-        maxColorController = document.querySelector('#maxcolor-controller'),
-        minColorController = document.querySelector('#mincolor-controller'),
-        colorAlpha = document.querySelector('#color-alpha'),
-        background = document.querySelector('#background'),
-        historyLength = document.querySelector('#historyLength'),
-        killAfterTime = document.querySelector('#killAfterTime'),
-        killAfterTimeVariation = document.querySelector('#killAfterTimeVariation'),
-        rangeX = document.querySelector('#range_x'),
-        rangeFromX = document.querySelector('#rangefrom_x'),
-        rangeY = document.querySelector('#range_y'),
-        rangeFromY = document.querySelector('#rangefrom_y'),
-        rangeZ = document.querySelector('#range_z'),
-        rangeFromZ = document.querySelector('#rangefrom_z'),
-        generationRate = document.querySelector('#generationRate');
+        let p = particle[n];
+        if (p) historyCount += p.history.length;
+    });
 
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        // ParticleHistory arrays are not saved in the Scrawl-canvas library; instead we need to count them in each particle
-        historyCount = 0;
-        particlenames.forEach(n => {
-
-            let p = particle[n];
-            if (p) historyCount += p.history.length;
-        });
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Particles: ${particlenames.length}, generationRate: ${generationRate.value}, historyLength: ${historyLength.value}
+    return `    Particles: ${particlenames.length}, generationRate: ${generationRate.value}, historyLength: ${historyLength.value}
     Stamps per display: ${historyCount}
 
     backgroundColor: ${background.value}, tickMultiplier: ${worldSpeed.value}
@@ -235,8 +209,8 @@ let report = function () {
     Range - X: from ${rangeFromX.value} to ${parseFloat(rangeFromX.value) + parseFloat(rangeX.value)}
     Range - Y: from ${rangeFromY.value} to ${parseFloat(rangeFromY.value) + parseFloat(rangeY.value)}
     Range - Z: from ${rangeFromZ.value} to ${parseFloat(rangeFromZ.value) + parseFloat(rangeZ.value)}`;
-    }
-}();
+});
+
 
 // We want the Emitter to attach itself to the mouse cursor whenever it is active over the &lt;canvas> element
 let mouseCheck = function () {
@@ -303,12 +277,12 @@ scrawl.observeAndUpdate({
         historyLength: ['historyLength', 'int'],
         killAfterTime: ['killAfterTime', 'float'],
         killAfterTimeVariation: ['killAfterTimeVariation', 'float'],
-        'range_x': ['rangeX', 'float'],
-        'rangefrom_x': ['rangeFromX', 'float'],
-        'range_y': ['rangeY', 'float'],
-        'rangefrom_y': ['rangeFromY', 'float'],
-        'range_z': ['rangeZ', 'float'],
-        'rangefrom_z': ['rangeFromZ', 'float'],
+        range_x: ['rangeX', 'float'],
+        rangefrom_x: ['rangeFromX', 'float'],
+        range_y: ['rangeY', 'float'],
+        rangefrom_y: ['rangeFromY', 'float'],
+        range_z: ['rangeZ', 'float'],
+        rangefrom_z: ['rangeFromZ', 'float'],
     },
 });
 
@@ -350,39 +324,45 @@ const useGravity = function () {
 }();
 scrawl.addNativeListener(['input', 'change'], useGravity, '#gravity');
 
-document.querySelector('#maxcolor-controller').value = '#F0F8FF';
-document.querySelector('#mincolor-controller').value = '#F0F8FF';
-document.querySelector('#world-speed').value = 2;
-document.querySelector('#color-alpha').value = 6;
+
+const worldSpeed = document.querySelector('#world-speed'),
+    maxColorController = document.querySelector('#maxcolor-controller'),
+    minColorController = document.querySelector('#mincolor-controller'),
+    colorAlpha = document.querySelector('#color-alpha'),
+
+    background = document.querySelector('#background'),
+
+    rangeX = document.querySelector('#range_x'),
+    rangeFromX = document.querySelector('#rangefrom_x'),
+    rangeY = document.querySelector('#range_y'),
+    rangeFromY = document.querySelector('#rangefrom_y'),
+    rangeZ = document.querySelector('#range_z'),
+    rangeFromZ = document.querySelector('#rangefrom_z'),
+
+    historyLength = document.querySelector('#historyLength'),
+    killAfterTime = document.querySelector('#killAfterTime'),
+    killAfterTimeVariation = document.querySelector('#killAfterTimeVariation'),
+    generationRate = document.querySelector('#generationRate');
+
+maxColorController.value = '#F0F8FF';
+minColorController.value = '#F0F8FF';
+worldSpeed.value = 2;
+colorAlpha.value = 6;
+
 document.querySelector('#gravity').value = 'no';
 
-document.querySelector('#generationRate').value = 60;
-document.querySelector('#historyLength').value = 100;
-document.querySelector('#killAfterTime').value = 5;
-document.querySelector('#killAfterTimeVariation').value = 0.1;
+rangeX.value = 40;
+rangeFromX.value = -20;
+rangeY.value = 40;
+rangeFromY.value = -20;
+rangeZ.value = -1;
+rangeFromZ.value = -0.2;
 
-document.querySelector('#range_x').value = 40;
-document.querySelector('#rangefrom_x').value = -20;
-document.querySelector('#range_y').value = 40;
-document.querySelector('#rangefrom_y').value = -20;
-document.querySelector('#range_z').value = -1;
-document.querySelector('#rangefrom_z').value = -0.2;
+generationRate.value = 60;
+historyLength.value = 100;
+killAfterTime.value = 5;
+killAfterTimeVariation.value = 0.1;
 
 
 // #### Development and testing
 console.log(scrawl.library);
-
-// Additional error capture events, for debugging work.
-window.onerror = function (message, file, line, col, error) {
-   alert("Trigger 1 (onerror) - Error occurred: " + error.message);
-   return false;
-};
-window.addEventListener("error", function (e) {
-   alert("Trigger 2 (addEventListener - error) - Error occurred: " + e.error.message);
-   return false;
-});
-window.addEventListener('unhandledrejection', function (e) {
-  alert("Trigger 2 (addEventListener - unhandledrejection) - Error occurred: " + e.reason.message);
-});
-
-

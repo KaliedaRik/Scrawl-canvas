@@ -45,6 +45,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/random-seed.html">
+                  ./source/core/random-seed.js
+                </a>
+              
+                
                 <a class="source" href="../core/snippets.html">
                   ./source/core/snippets.js
                 </a>
@@ -493,7 +498,7 @@
 <span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 <span class="hljs-keyword">import</span> {requestCell, releaseCell} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./cell.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { seededRandomNumberGenerator } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> { seededRandomNumberGenerator } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/random-seed.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -1367,6 +1372,31 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
         b = <span class="hljs-title function_">calculator</span>(tb, tempLum1, tempLum2) * <span class="hljs-number">255</span>;
 
     <span class="hljs-keyword">return</span> [r, g, b];
+};
+
+P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">gradient</span>) {
+
+    <span class="hljs-keyword">const</span> mycell = <span class="hljs-title function_">requestCell</span>();
+
+    <span class="hljs-keyword">const</span> {engine, element} = mycell;
+
+    element.<span class="hljs-property">width</span> = <span class="hljs-number">256</span>;
+    element.<span class="hljs-property">height</span> = <span class="hljs-number">1</span>;
+
+    gradient.<span class="hljs-property">palette</span>.<span class="hljs-title function_">recalculate</span>();
+
+    <span class="hljs-keyword">const</span> G = engine.<span class="hljs-title function_">createLinearGradient</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">255</span>, <span class="hljs-number">0</span>);
+
+    gradient.<span class="hljs-title function_">addStopsToGradient</span>(G, gradient.<span class="hljs-property">paletteStart</span>, gradient.<span class="hljs-property">paletteEnd</span>, gradient.<span class="hljs-property">cyclePalette</span>);
+
+    engine.<span class="hljs-property">fillStyle</span> = G;
+    engine.<span class="hljs-title function_">fillRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">256</span>, <span class="hljs-number">1</span>);
+
+    <span class="hljs-keyword">let</span> data = engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">256</span>, <span class="hljs-number">1</span>).<span class="hljs-property">data</span>;
+
+    <span class="hljs-title function_">releaseCell</span>(mycell);
+
+    <span class="hljs-keyword">return</span> data;
 };</pre></div></div>
             
         </li>
@@ -1425,10 +1455,13 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
             a = b + <span class="hljs-number">1</span>;
             aVal = iData[a];
 
-            oData[r] = (includeRed) ? aVal : ((excludeRed) ? <span class="hljs-number">0</span> : iData[r]);
-            oData[g] = (includeGreen) ? aVal : ((excludeGreen) ? <span class="hljs-number">0</span> : iData[g]);
-            oData[b] = (includeBlue) ? aVal : ((excludeBlue) ? <span class="hljs-number">0</span> : iData[b]);
-            oData[a] = <span class="hljs-number">255</span>;
+            <span class="hljs-keyword">if</span> (aVal) {
+
+                oData[r] = (includeRed) ? aVal : ((excludeRed) ? <span class="hljs-number">0</span> : iData[r]);
+                oData[g] = (includeGreen) ? aVal : ((excludeGreen) ? <span class="hljs-number">0</span> : iData[g]);
+                oData[b] = (includeBlue) ? aVal : ((excludeBlue) ? <span class="hljs-number">0</span> : iData[b]);
+                oData[a] = <span class="hljs-number">255</span>;
+            }
         }
 
         <span class="hljs-keyword">if</span> (lineOut) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(output, input, <span class="hljs-number">1</span> - opacity);
@@ -1734,20 +1767,23 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
                         ia = ir + <span class="hljs-number">3</span>;
                         ma = mr + <span class="hljs-number">3</span>;
 
-                        <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ia]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!mData[ma]) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
-                        <span class="hljs-keyword">else</span> {
+                        <span class="hljs-keyword">if</span> (iData[ia]) {
 
-                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = <span class="hljs-title function_">getChannelNormals</span>(ir, mr);
+                            <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ia]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!mData[ma]) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
+                            <span class="hljs-keyword">else</span> {
 
-                            ig = ir + <span class="hljs-number">1</span>;
-                            ib = ig + <span class="hljs-number">1</span>;
+                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = <span class="hljs-title function_">getChannelNormals</span>(ir, mr);
 
-                            oData[ir] = <span class="hljs-title function_">colorburnCalc</span>(dinR, dmixR);
-                            oData[ig] = <span class="hljs-title function_">colorburnCalc</span>(dinG, dmixG);
-                            oData[ib] = <span class="hljs-title function_">colorburnCalc</span>(dinB, dmixB);
-                            oData[ia] = <span class="hljs-title function_">alphaCalc</span>(dinA, dmixA);
+                                ig = ir + <span class="hljs-number">1</span>;
+                                ib = ig + <span class="hljs-number">1</span>;
+
+                                oData[ir] = <span class="hljs-title function_">colorburnCalc</span>(dinR, dmixR);
+                                oData[ig] = <span class="hljs-title function_">colorburnCalc</span>(dinG, dmixG);
+                                oData[ib] = <span class="hljs-title function_">colorburnCalc</span>(dinB, dmixB);
+                                oData[ia] = <span class="hljs-title function_">alphaCalc</span>(dinA, dmixA);
+                            }
                         }
                     }
                 }
@@ -1769,20 +1805,23 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
                         ia = ir + <span class="hljs-number">3</span>;
                         ma = mr + <span class="hljs-number">3</span>;
 
-                        <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ia]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!mData[ma]) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
-                        <span class="hljs-keyword">else</span> {
+                        <span class="hljs-keyword">if</span> (iData[ia]) {
 
-                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = <span class="hljs-title function_">getChannelNormals</span>(ir, mr);
+                            <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ia]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!mData[ma]) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
+                            <span class="hljs-keyword">else</span> {
 
-                            ig = ir + <span class="hljs-number">1</span>;
-                            ib = ig + <span class="hljs-number">1</span>;
+                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = <span class="hljs-title function_">getChannelNormals</span>(ir, mr);
 
-                            oData[ir] = <span class="hljs-title function_">colordodgeCalc</span>(dinR, dmixR);
-                            oData[ig] = <span class="hljs-title function_">colordodgeCalc</span>(dinG, dmixG);
-                            oData[ib] = <span class="hljs-title function_">colordodgeCalc</span>(dinB, dmixB);
-                            oData[ia] = <span class="hljs-title function_">alphaCalc</span>(dinA, dmixA);
+                                ig = ir + <span class="hljs-number">1</span>;
+                                ib = ig + <span class="hljs-number">1</span>;
+
+                                oData[ir] = <span class="hljs-title function_">colordodgeCalc</span>(dinR, dmixR);
+                                oData[ig] = <span class="hljs-title function_">colordodgeCalc</span>(dinG, dmixG);
+                                oData[ib] = <span class="hljs-title function_">colordodgeCalc</span>(dinB, dmixB);
+                                oData[ia] = <span class="hljs-title function_">alphaCalc</span>(dinA, dmixA);
+                            }
                         }
                     }
                 }
@@ -1800,20 +1839,23 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
                         ia = ir + <span class="hljs-number">3</span>;
                         ma = mr + <span class="hljs-number">3</span>;
 
-                        <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ia]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!mData[ma]) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
-                        <span class="hljs-keyword">else</span> {
+                        <span class="hljs-keyword">if</span> (iData[ia]) {
 
-                            ig = ir + <span class="hljs-number">1</span>;
-                            ib = ig + <span class="hljs-number">1</span>;
-                            mg = mr + <span class="hljs-number">1</span>;
-                            mb = mg + <span class="hljs-number">1</span>;
+                            <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ia]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!mData[ma]) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
+                            <span class="hljs-keyword">else</span> {
 
-                            oData[ir] = <span class="hljs-title function_">darkenCalc</span>(iData[ir], mData[mr]);
-                            oData[ig] = <span class="hljs-title function_">darkenCalc</span>(iData[ig], mData[mg]);
-                            oData[ib] = <span class="hljs-title function_">darkenCalc</span>(iData[ib], mData[mb]);
-                            oData[ia] = <span class="hljs-title function_">alphaCalc</span>(iData[ia] / <span class="hljs-number">255</span>, mData[ma] / <span class="hljs-number">255</span>);
+                                ig = ir + <span class="hljs-number">1</span>;
+                                ib = ig + <span class="hljs-number">1</span>;
+                                mg = mr + <span class="hljs-number">1</span>;
+                                mb = mg + <span class="hljs-number">1</span>;
+
+                                oData[ir] = <span class="hljs-title function_">darkenCalc</span>(iData[ir], mData[mr]);
+                                oData[ig] = <span class="hljs-title function_">darkenCalc</span>(iData[ig], mData[mg]);
+                                oData[ib] = <span class="hljs-title function_">darkenCalc</span>(iData[ib], mData[mb]);
+                                oData[ia] = <span class="hljs-title function_">alphaCalc</span>(iData[ia] / <span class="hljs-number">255</span>, mData[ma] / <span class="hljs-number">255</span>);
+                            }
                         }
                     }
                 }
@@ -1830,19 +1872,22 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
 
                         ia = ir + <span class="hljs-number">3</span>;
 
-                        <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ia]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
-                        <span class="hljs-keyword">else</span> {
+                        <span class="hljs-keyword">if</span> (iData[ia]) {
 
-                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = <span class="hljs-title function_">getChannelNormals</span>(ir, mr);
+                            <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ia]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
+                            <span class="hljs-keyword">else</span> {
 
-                            ig = ir + <span class="hljs-number">1</span>;
-                            ib = ig + <span class="hljs-number">1</span>;
+                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = <span class="hljs-title function_">getChannelNormals</span>(ir, mr);
 
-                            oData[ir] = <span class="hljs-title function_">differenceCalc</span>(dinR, dmixR);
-                            oData[ig] = <span class="hljs-title function_">differenceCalc</span>(dinG, dmixG);
-                            oData[ib] = <span class="hljs-title function_">differenceCalc</span>(dinB, dmixB);
-                            oData[ia] = <span class="hljs-title function_">alphaCalc</span>(dinA, dmixA);
+                                ig = ir + <span class="hljs-number">1</span>;
+                                ib = ig + <span class="hljs-number">1</span>;
+
+                                oData[ir] = <span class="hljs-title function_">differenceCalc</span>(dinR, dmixR);
+                                oData[ig] = <span class="hljs-title function_">differenceCalc</span>(dinG, dmixG);
+                                oData[ib] = <span class="hljs-title function_">differenceCalc</span>(dinB, dmixB);
+                                oData[ia] = <span class="hljs-title function_">alphaCalc</span>(dinA, dmixA);
+                            }
                         }
                     }
                 }
@@ -1859,19 +1904,22 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
 
                         ia = ir + <span class="hljs-number">3</span>;
 
-                        <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ia]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
-                        <span class="hljs-keyword">else</span> {
+                        <span class="hljs-keyword">if</span> (iData[ia]) {
 
-                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = <span class="hljs-title function_">getChannelNormals</span>(ir, mr);
+                            <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ia]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
+                            <span class="hljs-keyword">else</span> {
 
-                            ig = ir + <span class="hljs-number">1</span>;
-                            ib = ig + <span class="hljs-number">1</span>;
+                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = <span class="hljs-title function_">getChannelNormals</span>(ir, mr);
 
-                            oData[ir] = <span class="hljs-title function_">exclusionCalc</span>(dinR, dmixR);
-                            oData[ig] = <span class="hljs-title function_">exclusionCalc</span>(dinG, dmixG);
-                            oData[ib] = <span class="hljs-title function_">exclusionCalc</span>(dinB, dmixB);
-                            oData[ia] = <span class="hljs-title function_">alphaCalc</span>(dinA, dmixA);
+                                ig = ir + <span class="hljs-number">1</span>;
+                                ib = ig + <span class="hljs-number">1</span>;
+
+                                oData[ir] = <span class="hljs-title function_">exclusionCalc</span>(dinR, dmixR);
+                                oData[ig] = <span class="hljs-title function_">exclusionCalc</span>(dinG, dmixG);
+                                oData[ib] = <span class="hljs-title function_">exclusionCalc</span>(dinB, dmixB);
+                                oData[ia] = <span class="hljs-title function_">alphaCalc</span>(dinA, dmixA);
+                            }
                         }
                     }
                 }
@@ -1888,19 +1936,22 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
 
                         ia = ir + <span class="hljs-number">3</span>;
 
-                        <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ia]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
-                        <span class="hljs-keyword">else</span> {
+                        <span class="hljs-keyword">if</span> (iData[ia]) {
 
-                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = <span class="hljs-title function_">getChannelNormals</span>(ir, mr);
+                            <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ia]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
+                            <span class="hljs-keyword">else</span> {
 
-                            ig = ir + <span class="hljs-number">1</span>;
-                            ib = ig + <span class="hljs-number">1</span>;
+                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = <span class="hljs-title function_">getChannelNormals</span>(ir, mr);
 
-                            oData[ir] = <span class="hljs-title function_">hardlightCalc</span>(dinR, dmixR);
-                            oData[ig] = <span class="hljs-title function_">hardlightCalc</span>(dinG, dmixG);
-                            oData[ib] = <span class="hljs-title function_">hardlightCalc</span>(dinB, dmixB);
-                            oData[ia] = <span class="hljs-title function_">alphaCalc</span>(dinA, dmixA);
+                                ig = ir + <span class="hljs-number">1</span>;
+                                ib = ig + <span class="hljs-number">1</span>;
+
+                                oData[ir] = <span class="hljs-title function_">hardlightCalc</span>(dinR, dmixR);
+                                oData[ig] = <span class="hljs-title function_">hardlightCalc</span>(dinG, dmixG);
+                                oData[ib] = <span class="hljs-title function_">hardlightCalc</span>(dinB, dmixB);
+                                oData[ia] = <span class="hljs-title function_">alphaCalc</span>(dinA, dmixA);
+                            }
                         }
                     }
                 }
@@ -1917,20 +1968,23 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
 
                         ia = ir + <span class="hljs-number">3</span>;
 
-                        <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ir]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
-                        <span class="hljs-keyword">else</span> {
+                        <span class="hljs-keyword">if</span> (iData[ia]) {
 
-                            ig = ir + <span class="hljs-number">1</span>;
-                            ib = ig + <span class="hljs-number">1</span>;
-                            mg = mr + <span class="hljs-number">1</span>;
-                            mb = mg + <span class="hljs-number">1</span>;
-                            ma = mb + <span class="hljs-number">1</span>;
+                            <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ir]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
+                            <span class="hljs-keyword">else</span> {
 
-                            oData[ir] = <span class="hljs-title function_">lightenCalc</span>(iData[ir], mData[mr]);
-                            oData[ig] = <span class="hljs-title function_">lightenCalc</span>(iData[ig], mData[mg]);
-                            oData[ib] = <span class="hljs-title function_">lightenCalc</span>(iData[ib], mData[mb]);
-                            oData[ia] = <span class="hljs-title function_">alphaCalc</span>(iData[ia] / <span class="hljs-number">255</span>, mData[ma] / <span class="hljs-number">255</span>);
+                                ig = ir + <span class="hljs-number">1</span>;
+                                ib = ig + <span class="hljs-number">1</span>;
+                                mg = mr + <span class="hljs-number">1</span>;
+                                mb = mg + <span class="hljs-number">1</span>;
+                                ma = mb + <span class="hljs-number">1</span>;
+
+                                oData[ir] = <span class="hljs-title function_">lightenCalc</span>(iData[ir], mData[mr]);
+                                oData[ig] = <span class="hljs-title function_">lightenCalc</span>(iData[ig], mData[mg]);
+                                oData[ib] = <span class="hljs-title function_">lightenCalc</span>(iData[ib], mData[mb]);
+                                oData[ia] = <span class="hljs-title function_">alphaCalc</span>(iData[ia] / <span class="hljs-number">255</span>, mData[ma] / <span class="hljs-number">255</span>);
+                            }
                         }
                     }
                 }
@@ -1947,19 +2001,22 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
 
                         ia = ir + <span class="hljs-number">3</span>;
 
-                        <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ia]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
-                        <span class="hljs-keyword">else</span> {
+                        <span class="hljs-keyword">if</span> (iData[ia]) {
 
-                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = <span class="hljs-title function_">getChannelNormals</span>(ir, mr);
+                            <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ia]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
+                            <span class="hljs-keyword">else</span> {
 
-                            ig = ir + <span class="hljs-number">1</span>;
-                            ib = ig + <span class="hljs-number">1</span>;
+                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = <span class="hljs-title function_">getChannelNormals</span>(ir, mr);
 
-                            oData[ir] = <span class="hljs-title function_">lighterCalc</span>(dinR, dmixR);
-                            oData[ig] = <span class="hljs-title function_">lighterCalc</span>(dinG, dmixG);
-                            oData[ib] = <span class="hljs-title function_">lighterCalc</span>(dinB, dmixB);
-                            oData[ia] = <span class="hljs-title function_">alphaCalc</span>(dinA, dmixA);
+                                ig = ir + <span class="hljs-number">1</span>;
+                                ib = ig + <span class="hljs-number">1</span>;
+
+                                oData[ir] = <span class="hljs-title function_">lighterCalc</span>(dinR, dmixR);
+                                oData[ig] = <span class="hljs-title function_">lighterCalc</span>(dinG, dmixG);
+                                oData[ib] = <span class="hljs-title function_">lighterCalc</span>(dinB, dmixB);
+                                oData[ia] = <span class="hljs-title function_">alphaCalc</span>(dinA, dmixA);
+                            }
                         }
                     }
                 }
@@ -1977,20 +2034,23 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
                         ia = ir + <span class="hljs-number">3</span>;
                         ma = mr + <span class="hljs-number">3</span>;
 
-                        <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ia]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!mData[ma]) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
-                        <span class="hljs-keyword">else</span> {
+                        <span class="hljs-keyword">if</span> (iData[ia]) {
 
-                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = <span class="hljs-title function_">getChannelNormals</span>(ir, mr);
+                            <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ia]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!mData[ma]) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
+                            <span class="hljs-keyword">else</span> {
 
-                            ig = ir + <span class="hljs-number">1</span>;
-                            ib = ig + <span class="hljs-number">1</span>;
+                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = <span class="hljs-title function_">getChannelNormals</span>(ir, mr);
 
-                            oData[ir] = <span class="hljs-title function_">multiplyCalc</span>(dinR, dmixR);
-                            oData[ig] = <span class="hljs-title function_">multiplyCalc</span>(dinG, dmixG);
-                            oData[ib] = <span class="hljs-title function_">multiplyCalc</span>(dinB, dmixB);
-                            oData[ia] = <span class="hljs-title function_">alphaCalc</span>(dinA, dmixA);
+                                ig = ir + <span class="hljs-number">1</span>;
+                                ib = ig + <span class="hljs-number">1</span>;
+
+                                oData[ir] = <span class="hljs-title function_">multiplyCalc</span>(dinR, dmixR);
+                                oData[ig] = <span class="hljs-title function_">multiplyCalc</span>(dinG, dmixG);
+                                oData[ib] = <span class="hljs-title function_">multiplyCalc</span>(dinB, dmixB);
+                                oData[ia] = <span class="hljs-title function_">alphaCalc</span>(dinA, dmixA);
+                            }
                         }
                     }
                 }
@@ -2007,19 +2067,22 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
 
                         ia = ir + <span class="hljs-number">3</span>;
 
-                        <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ia]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
-                        <span class="hljs-keyword">else</span> {
+                        <span class="hljs-keyword">if</span> (iData[ia]) {
 
-                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = <span class="hljs-title function_">getChannelNormals</span>(ir, mr);
+                            <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ia]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
+                            <span class="hljs-keyword">else</span> {
 
-                            ig = ir + <span class="hljs-number">1</span>;
-                            ib = ig + <span class="hljs-number">1</span>;
+                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = <span class="hljs-title function_">getChannelNormals</span>(ir, mr);
 
-                            oData[ir] = <span class="hljs-title function_">overlayCalc</span>(dinR, dmixR);
-                            oData[ig] = <span class="hljs-title function_">overlayCalc</span>(dinG, dmixG);
-                            oData[ib] = <span class="hljs-title function_">overlayCalc</span>(dinB, dmixB);
-                            oData[ia] = <span class="hljs-title function_">alphaCalc</span>(dinA, dmixA);
+                                ig = ir + <span class="hljs-number">1</span>;
+                                ib = ig + <span class="hljs-number">1</span>;
+
+                                oData[ir] = <span class="hljs-title function_">overlayCalc</span>(dinR, dmixR);
+                                oData[ig] = <span class="hljs-title function_">overlayCalc</span>(dinG, dmixG);
+                                oData[ib] = <span class="hljs-title function_">overlayCalc</span>(dinB, dmixB);
+                                oData[ia] = <span class="hljs-title function_">alphaCalc</span>(dinA, dmixA);
+                            }
                         }
                     }
                 }
@@ -2036,19 +2099,22 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
 
                         ia = ir + <span class="hljs-number">3</span>;
 
-                        <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ia]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
-                        <span class="hljs-keyword">else</span> {
+                        <span class="hljs-keyword">if</span> (iData[ia]) {
 
-                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = <span class="hljs-title function_">getChannelNormals</span>(ir, mr);
+                            <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ia]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
+                            <span class="hljs-keyword">else</span> {
 
-                            ig = ir + <span class="hljs-number">1</span>;
-                            ib = ig + <span class="hljs-number">1</span>;
+                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = <span class="hljs-title function_">getChannelNormals</span>(ir, mr);
 
-                            oData[ir] = <span class="hljs-title function_">screenCalc</span>(dinR, dmixR);
-                            oData[ig] = <span class="hljs-title function_">screenCalc</span>(dinG, dmixG);
-                            oData[ib] = <span class="hljs-title function_">screenCalc</span>(dinB, dmixB);
-                            oData[ia] = <span class="hljs-title function_">alphaCalc</span>(dinA, dmixA);
+                                ig = ir + <span class="hljs-number">1</span>;
+                                ib = ig + <span class="hljs-number">1</span>;
+
+                                oData[ir] = <span class="hljs-title function_">screenCalc</span>(dinR, dmixR);
+                                oData[ig] = <span class="hljs-title function_">screenCalc</span>(dinG, dmixG);
+                                oData[ib] = <span class="hljs-title function_">screenCalc</span>(dinB, dmixB);
+                                oData[ia] = <span class="hljs-title function_">alphaCalc</span>(dinA, dmixA);
+                            }
                         }
                     }
                 }
@@ -2074,20 +2140,23 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
                         ia = ir + <span class="hljs-number">3</span>;
                         ma = mr + <span class="hljs-number">3</span>;
 
-                        <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ia]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!mData[ma]) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
-                        <span class="hljs-keyword">else</span> {
+                        <span class="hljs-keyword">if</span> (iData[ia]) {
 
-                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = <span class="hljs-title function_">getChannelNormals</span>(ir, mr);
+                            <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ia]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!mData[ma]) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
+                            <span class="hljs-keyword">else</span> {
 
-                            ig = ir + <span class="hljs-number">1</span>;
-                            ib = ig + <span class="hljs-number">1</span>;
+                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = <span class="hljs-title function_">getChannelNormals</span>(ir, mr);
 
-                            oData[ir] = <span class="hljs-title function_">softlightCalc</span>(dinR, dmixR);
-                            oData[ig] = <span class="hljs-title function_">softlightCalc</span>(dinG, dmixG);
-                            oData[ib] = <span class="hljs-title function_">softlightCalc</span>(dinB, dmixB);
-                            oData[ia] = <span class="hljs-title function_">alphaCalc</span>(dinA, dmixA);
+                                ig = ir + <span class="hljs-number">1</span>;
+                                ib = ig + <span class="hljs-number">1</span>;
+
+                                oData[ir] = <span class="hljs-title function_">softlightCalc</span>(dinR, dmixR);
+                                oData[ig] = <span class="hljs-title function_">softlightCalc</span>(dinG, dmixG);
+                                oData[ib] = <span class="hljs-title function_">softlightCalc</span>(dinB, dmixB);
+                                oData[ia] = <span class="hljs-title function_">alphaCalc</span>(dinA, dmixA);
+                            }
                         }
                     }
                 }
@@ -2111,22 +2180,25 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
                         ia = ir + <span class="hljs-number">3</span>;
                         ma = mr + <span class="hljs-number">3</span>;
 
-                        <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ia]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!mData[ma]) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
-                        <span class="hljs-keyword">else</span> {
+                        <span class="hljs-keyword">if</span> (iData[ia]) {
 
-                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = <span class="hljs-title function_">getChannelNormals</span>(ir, mr);
+                            <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ia]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!mData[ma]) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
+                            <span class="hljs-keyword">else</span> {
 
-                            [cr, cg, cb] = <span class="hljs-title function_">colorCalc</span>(dinR, dinG, dinB, dmixR, dmixG, dmixB);
+                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = <span class="hljs-title function_">getChannelNormals</span>(ir, mr);
 
-                            ig = ir + <span class="hljs-number">1</span>;
-                            ib = ig + <span class="hljs-number">1</span>;
+                                [cr, cg, cb] = <span class="hljs-title function_">colorCalc</span>(dinR, dinG, dinB, dmixR, dmixG, dmixB);
 
-                            oData[ir] = cr;
-                            oData[ig] = cg;
-                            oData[ib] = cb;
-                            oData[ia] = <span class="hljs-title function_">alphaCalc</span>(dinA, dmixA);
+                                ig = ir + <span class="hljs-number">1</span>;
+                                ib = ig + <span class="hljs-number">1</span>;
+
+                                oData[ir] = cr;
+                                oData[ig] = cg;
+                                oData[ib] = cb;
+                                oData[ia] = <span class="hljs-title function_">alphaCalc</span>(dinA, dmixA);
+                            }
                         }
                     }
                 }
@@ -2150,22 +2222,25 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
                         ia = ir + <span class="hljs-number">3</span>;
                         ma = mr + <span class="hljs-number">3</span>;
 
-                        <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ia]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!mData[ma]) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
-                        <span class="hljs-keyword">else</span> {
+                        <span class="hljs-keyword">if</span> (iData[ia]) {
 
-                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = <span class="hljs-title function_">getChannelNormals</span>(ir, mr);
+                            <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ia]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!mData[ma]) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
+                            <span class="hljs-keyword">else</span> {
 
-                            [cr, cg, cb] = <span class="hljs-title function_">hueCalc</span>(dinR, dinG, dinB, dmixR, dmixG, dmixB);
+                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = <span class="hljs-title function_">getChannelNormals</span>(ir, mr);
 
-                            ig = ir + <span class="hljs-number">1</span>;
-                            ib = ig + <span class="hljs-number">1</span>;
+                                [cr, cg, cb] = <span class="hljs-title function_">hueCalc</span>(dinR, dinG, dinB, dmixR, dmixG, dmixB);
 
-                            oData[ir] = cr;
-                            oData[ig] = cg;
-                            oData[ib] = cb;
-                            oData[ia] = <span class="hljs-title function_">alphaCalc</span>(dinA, dmixA);
+                                ig = ir + <span class="hljs-number">1</span>;
+                                ib = ig + <span class="hljs-number">1</span>;
+
+                                oData[ir] = cr;
+                                oData[ig] = cg;
+                                oData[ib] = cb;
+                                oData[ia] = <span class="hljs-title function_">alphaCalc</span>(dinA, dmixA);
+                            }
                         }
                     }
                 }
@@ -2189,22 +2264,25 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
                         ia = ir + <span class="hljs-number">3</span>;
                         ma = mr + <span class="hljs-number">3</span>;
 
-                        <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ia]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!mData[ma]) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
-                        <span class="hljs-keyword">else</span> {
+                        <span class="hljs-keyword">if</span> (iData[ia]) {
 
-                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = <span class="hljs-title function_">getChannelNormals</span>(ir, mr);
+                            <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ia]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!mData[ma]) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
+                            <span class="hljs-keyword">else</span> {
 
-                            [cr, cg, cb] = <span class="hljs-title function_">luminosityCalc</span>(dinR, dinG, dinB, dmixR, dmixG, dmixB);
+                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = <span class="hljs-title function_">getChannelNormals</span>(ir, mr);
 
-                            ig = ir + <span class="hljs-number">1</span>;
-                            ib = ig + <span class="hljs-number">1</span>;
+                                [cr, cg, cb] = <span class="hljs-title function_">luminosityCalc</span>(dinR, dinG, dinB, dmixR, dmixG, dmixB);
 
-                            oData[ir] = cr;
-                            oData[ig] = cg;
-                            oData[ib] = cb;
-                            oData[ia] = <span class="hljs-title function_">alphaCalc</span>(dinA, dmixA);
+                                ig = ir + <span class="hljs-number">1</span>;
+                                ib = ig + <span class="hljs-number">1</span>;
+
+                                oData[ir] = cr;
+                                oData[ig] = cg;
+                                oData[ib] = cb;
+                                oData[ia] = <span class="hljs-title function_">alphaCalc</span>(dinA, dmixA);
+                            }
                         }
                     }
                 }
@@ -2228,22 +2306,25 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
                         ia = ir + <span class="hljs-number">3</span>;
                         ma = mr + <span class="hljs-number">3</span>;
 
-                        <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ia]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!mData[ma]) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
-                        <span class="hljs-keyword">else</span> {
+                        <span class="hljs-keyword">if</span> (iData[ia]) {
 
-                            [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = <span class="hljs-title function_">getChannelNormals</span>(ir, mr);
+                            <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ia]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!mData[ma]) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
+                            <span class="hljs-keyword">else</span> {
 
-                            [cr, cg, cb] = <span class="hljs-title function_">saturationCalc</span>(dinR, dinG, dinB, dmixR, dmixG, dmixB);
+                                [dinR, dinG, dinB, dinA, dmixR, dmixG, dmixB, dmixA] = <span class="hljs-title function_">getChannelNormals</span>(ir, mr);
 
-                            ig = ir + <span class="hljs-number">1</span>;
-                            ib = ig + <span class="hljs-number">1</span>;
+                                [cr, cg, cb] = <span class="hljs-title function_">saturationCalc</span>(dinR, dinG, dinB, dmixR, dmixG, dmixB);
 
-                            oData[ir] = cr;
-                            oData[ig] = cg;
-                            oData[ib] = cb;
-                            oData[ia] = <span class="hljs-title function_">alphaCalc</span>(dinA, dmixA);
+                                ig = ir + <span class="hljs-number">1</span>;
+                                ib = ig + <span class="hljs-number">1</span>;
+
+                                oData[ir] = cr;
+                                oData[ig] = cg;
+                                oData[ib] = cb;
+                                oData[ia] = <span class="hljs-title function_">alphaCalc</span>(dinA, dmixA);
+                            }
                         }
                     }
                 }
@@ -2259,23 +2340,26 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
 
                         ia = ir + <span class="hljs-number">3</span>;
 
-                        <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
-                        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ia]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
-                        <span class="hljs-keyword">else</span> {
+                        <span class="hljs-keyword">if</span> (iData[ia]) {
 
-                            ig = ir + <span class="hljs-number">1</span>;
-                            ib = ig + <span class="hljs-number">1</span>;
-                            mg = mr + <span class="hljs-number">1</span>;
-                            mb = mg + <span class="hljs-number">1</span>;
-                            ma = mb + <span class="hljs-number">1</span>;
+                            <span class="hljs-keyword">if</span> (mr &lt; <span class="hljs-number">0</span>) <span class="hljs-title function_">copyPixel</span>(ir, ir, iData);
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!iData[ia]) <span class="hljs-title function_">copyPixel</span>(mr, ir, mData);
+                            <span class="hljs-keyword">else</span> {
 
-                            dinA = iData[ia] / <span class="hljs-number">255</span>;
-                            dmixA = mData[ma] / <span class="hljs-number">255</span>;
+                                ig = ir + <span class="hljs-number">1</span>;
+                                ib = ig + <span class="hljs-number">1</span>;
+                                mg = mr + <span class="hljs-number">1</span>;
+                                mb = mg + <span class="hljs-number">1</span>;
+                                ma = mb + <span class="hljs-number">1</span>;
 
-                            oData[ir] = <span class="hljs-title function_">normalCalc</span>(iData[ir], dinA, mData[mr], dmixA);
-                            oData[ig] = <span class="hljs-title function_">normalCalc</span>(iData[ig], dinA, mData[mg], dmixA);
-                            oData[ib] = <span class="hljs-title function_">normalCalc</span>(iData[ib], dinA, mData[mb], dmixA);
-                            oData[ia] = <span class="hljs-title function_">alphaCalc</span>(dinA, dmixA)
+                                dinA = iData[ia] / <span class="hljs-number">255</span>;
+                                dmixA = mData[ma] / <span class="hljs-number">255</span>;
+
+                                oData[ir] = <span class="hljs-title function_">normalCalc</span>(iData[ir], dinA, mData[mr], dmixA);
+                                oData[ig] = <span class="hljs-title function_">normalCalc</span>(iData[ig], dinA, mData[mg], dmixA);
+                                oData[ib] = <span class="hljs-title function_">normalCalc</span>(iData[ib], dinA, mData[mb], dmixA);
+                                oData[ia] = <span class="hljs-title function_">alphaCalc</span>(dinA, dmixA)
+                            }
                         }
                     }
                 }
@@ -2303,7 +2387,7 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;blur&#x27;</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">requirements</span>) {
 
-        <span class="hljs-keyword">const</span> getValue = <span class="hljs-keyword">function</span> (<span class="hljs-params">flag, gridStore, pos, data, offset</span>) {
+        <span class="hljs-keyword">const</span> getUncheckedValue = <span class="hljs-keyword">function</span> (<span class="hljs-params">flag, gridStore, pos, data, offset</span>) {
 
             <span class="hljs-keyword">if</span> (flag) {
 
@@ -2400,7 +2484,7 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
 
         <span class="hljs-keyword">const</span> hold = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint</span>8ClampedArray(iData);
 
-        <span class="hljs-keyword">const</span> selectedMethod = (excludeTransparentPixels) ? getCheckedValue : getValue;
+        <span class="hljs-keyword">const</span> selectedMethod = (excludeTransparentPixels) ? getCheckedValue : getUncheckedValue;
 
         <span class="hljs-keyword">for</span> (pass = <span class="hljs-number">0</span>; pass &lt; passes; pass++) {
 
@@ -2418,7 +2502,7 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
                         oData[r] = <span class="hljs-title function_">selectedMethod</span>(includeRed, horizontalBlurGrid, counter, hold, <span class="hljs-number">0</span>);
                         oData[g] = <span class="hljs-title function_">selectedMethod</span>(includeGreen, horizontalBlurGrid, counter, hold, <span class="hljs-number">1</span>);
                         oData[b] = <span class="hljs-title function_">selectedMethod</span>(includeBlue, horizontalBlurGrid, counter, hold, <span class="hljs-number">2</span>);
-                        oData[a] = <span class="hljs-title function_">getValue</span>(includeAlpha, horizontalBlurGrid, counter, hold, <span class="hljs-number">3</span>);
+                        oData[a] = <span class="hljs-title function_">getUncheckedValue</span>(includeAlpha, horizontalBlurGrid, counter, hold, <span class="hljs-number">3</span>);
                     }
                 }
 
@@ -2439,7 +2523,7 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
                         oData[r] = <span class="hljs-title function_">selectedMethod</span>(includeRed, verticalBlurGrid, counter, hold, <span class="hljs-number">0</span>);
                         oData[g] = <span class="hljs-title function_">selectedMethod</span>(includeGreen, verticalBlurGrid, counter, hold, <span class="hljs-number">1</span>);
                         oData[b] = <span class="hljs-title function_">selectedMethod</span>(includeBlue, verticalBlurGrid, counter, hold, <span class="hljs-number">2</span>);
-                        oData[a] = <span class="hljs-title function_">getValue</span>(includeAlpha, verticalBlurGrid, counter, hold, <span class="hljs-number">3</span>);
+                        oData[a] = <span class="hljs-title function_">getUncheckedValue</span>(includeAlpha, verticalBlurGrid, counter, hold, <span class="hljs-number">3</span>);
                     }
                 }
                 <span class="hljs-keyword">if</span> (pass &lt; passes - <span class="hljs-number">1</span>) hold.<span class="hljs-title function_">set</span>(oData);
@@ -2662,7 +2746,7 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;colors-to-alpha&#x27;</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">requirements</span>) {
 
-        <span class="hljs-keyword">const</span> getValue = <span class="hljs-keyword">function</span> (<span class="hljs-params">dr, dg, db</span>) {
+        <span class="hljs-keyword">const</span> getCTAValue = <span class="hljs-keyword">function</span> (<span class="hljs-params">dr, dg, db</span>) {
 
             <span class="hljs-keyword">let</span> diff = (<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(red - dr) + <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(green - dg) + <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">abs</span>(blue - db)) / <span class="hljs-number">3</span>;
 
@@ -2676,7 +2760,7 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
         <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>,
             len = iData.<span class="hljs-property">length</span>,
-            r, g, b, a, vr, vg, vb, i;
+            r, g, b, a, vr, vg, vb, va, i;
 
         <span class="hljs-keyword">let</span> {opacity, red, green, blue, opaqueAt, transparentAt, lineOut} = requirements;
 
@@ -2687,7 +2771,7 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opaqueAt) opaqueAt = <span class="hljs-number">1</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == transparentAt) transparentAt = <span class="hljs-number">0</span>;
 
-        <span class="hljs-keyword">const</span> maxDiff = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(((red + green + blue) / <span class="hljs-number">3</span>), (((<span class="hljs-number">255</span> - red) + (<span class="hljs-number">255</span> - green) + (<span class="hljs-number">255</span> - blue)) / <span class="hljs-number">3</span>)),
+        <span class="hljs-keyword">let</span> maxDiff = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">max</span>(((red + green + blue) / <span class="hljs-number">3</span>), (((<span class="hljs-number">255</span> - red) + (<span class="hljs-number">255</span> - green) + (<span class="hljs-number">255</span> - blue)) / <span class="hljs-number">3</span>)),
             transparent = transparentAt * maxDiff,
             opaque = opaqueAt * maxDiff,
             range = opaque - transparent;
@@ -2699,14 +2783,17 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
             b = g + <span class="hljs-number">1</span>;
             a = b + <span class="hljs-number">1</span>;
 
-            vr = iData[r];
-            vg = iData[g];
-            vb = iData[b];
+            <span class="hljs-keyword">if</span> (iData[a]) {
 
-            oData[r] = vr;
-            oData[g] = vg;
-            oData[b] = vb;
-            oData[a] = <span class="hljs-title function_">getValue</span>(vr, vg, vb);
+                vr = iData[r];
+                vg = iData[g];
+                vb = iData[b];
+
+                oData[r] = vr;
+                oData[g] = vg;
+                oData[b] = vb;
+                oData[a] = <span class="hljs-title function_">getCTAValue</span>(vr, vg, vb);
+            }
         }
 
         <span class="hljs-keyword">if</span> (lineOut) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(output, input, <span class="hljs-number">1</span> - opacity);
@@ -3275,7 +3362,6 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
                 <span class="hljs-keyword">else</span> <span class="hljs-title function_">copyPixel</span>(iPos, iPos, iData);
             }
         }
-
         <span class="hljs-keyword">if</span> (lineOut) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(output, input, <span class="hljs-number">1</span> - opacity);
         <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">cache</span>.<span class="hljs-property">work</span>, output, opacity);
     },</pre></div></div>
@@ -3468,17 +3554,20 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
 
         <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i += <span class="hljs-number">4</span>) {
 
-            c = i;
-            oData[c] = red;
+            <span class="hljs-keyword">if</span> (iData[i + <span class="hljs-number">3</span>]) {
 
-            c++;
-            oData[c] = green;
+                c = i;
+                oData[c] = red;
 
-            c++;
-            oData[c] = blue;
+                c++;
+                oData[c] = green;
 
-            c++;
-            oData[c] = alpha;
+                c++;
+                oData[c] = blue;
+
+                c++;
+                oData[c] = alpha;
+            }
         }
 
         <span class="hljs-keyword">if</span> (lineOut) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(output, input, <span class="hljs-number">1</span> - opacity);
@@ -3861,7 +3950,7 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;lock-channels-to-levels&#x27;</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">requirements</span>) {
 
-        <span class="hljs-keyword">const</span> getValue = <span class="hljs-keyword">function</span> (<span class="hljs-params">val, levels</span>) {
+        <span class="hljs-keyword">const</span> getLCTLValue = <span class="hljs-keyword">function</span> (<span class="hljs-params">val, levels</span>) {
 
             <span class="hljs-keyword">if</span> (!levels.<span class="hljs-property">length</span>) <span class="hljs-keyword">return</span> val;
 
@@ -3896,10 +3985,10 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
             b = g + <span class="hljs-number">1</span>;
             a = b + <span class="hljs-number">1</span>;
 
-            oData[r] = <span class="hljs-title function_">getValue</span>(iData[r], red);
-            oData[g] = <span class="hljs-title function_">getValue</span>(iData[g], green);
-            oData[b] = <span class="hljs-title function_">getValue</span>(iData[b], blue);
-            oData[a] = <span class="hljs-title function_">getValue</span>(iData[a], alpha);
+            oData[r] = <span class="hljs-title function_">getLCTLValue</span>(iData[r], red);
+            oData[g] = <span class="hljs-title function_">getLCTLValue</span>(iData[g], green);
+            oData[b] = <span class="hljs-title function_">getLCTLValue</span>(iData[b], blue);
+            oData[a] = <span class="hljs-title function_">getLCTLValue</span>(iData[a], alpha);
         }
 
         <span class="hljs-keyword">if</span> (lineOut) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(output, input, <span class="hljs-number">1</span> - opacity);
@@ -3936,25 +4025,7 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
 
         <span class="hljs-keyword">if</span> (gradient) {
 
-            <span class="hljs-keyword">const</span> mycell = <span class="hljs-title function_">requestCell</span>();
-
-            <span class="hljs-keyword">const</span> {engine, element} = mycell;
-
-            element.<span class="hljs-property">width</span> = <span class="hljs-number">256</span>;
-            element.<span class="hljs-property">height</span> = <span class="hljs-number">1</span>;
-
-            gradient.<span class="hljs-property">palette</span>.<span class="hljs-title function_">recalculate</span>();
-
-            G = engine.<span class="hljs-title function_">createLinearGradient</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">255</span>, <span class="hljs-number">0</span>);
-
-            gradient.<span class="hljs-title function_">addStopsToGradient</span>(G, gradient.<span class="hljs-property">paletteStart</span>, gradient.<span class="hljs-property">paletteEnd</span>, gradient.<span class="hljs-property">cyclePalette</span>);
-
-            engine.<span class="hljs-property">fillStyle</span> = G;
-            engine.<span class="hljs-title function_">fillRect</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">256</span>, <span class="hljs-number">1</span>);
-
-            <span class="hljs-keyword">let</span> rainbowData = engine.<span class="hljs-title function_">getImageData</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">256</span>, <span class="hljs-number">1</span>).<span class="hljs-property">data</span>;
-
-            <span class="hljs-title function_">releaseCell</span>(mycell);
+            <span class="hljs-keyword">let</span> rainbowData = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getGradientData</span>(gradient);
 
             <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i += <span class="hljs-number">4</span>) {
 
@@ -3963,15 +4034,18 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
                 b = g + <span class="hljs-number">1</span>;
                 a = b + <span class="hljs-number">1</span>;
 
-                <span class="hljs-keyword">if</span> (useNaturalGrayscale) avg = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>((<span class="hljs-number">0.2126</span> * iData[r]) + (<span class="hljs-number">0.7152</span> * iData[g]) + (<span class="hljs-number">0.0722</span> * iData[b]));
-                <span class="hljs-keyword">else</span> avg = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>((<span class="hljs-number">0.3333</span> * iData[r]) + (<span class="hljs-number">0.3333</span> * iData[g]) + (<span class="hljs-number">0.3333</span> * iData[b]));
+                <span class="hljs-keyword">if</span> (iData[a]) {
 
-                v = avg * <span class="hljs-number">4</span>;
+                    <span class="hljs-keyword">if</span> (useNaturalGrayscale) avg = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>((<span class="hljs-number">0.2126</span> * iData[r]) + (<span class="hljs-number">0.7152</span> * iData[g]) + (<span class="hljs-number">0.0722</span> * iData[b]));
+                    <span class="hljs-keyword">else</span> avg = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>((<span class="hljs-number">0.3333</span> * iData[r]) + (<span class="hljs-number">0.3333</span> * iData[g]) + (<span class="hljs-number">0.3333</span> * iData[b]));
 
-                oData[r] = rainbowData[v];
-                oData[g] = rainbowData[++v];
-                oData[b] = rainbowData[++v];
-                oData[a] = rainbowData[++v];
+                    v = avg * <span class="hljs-number">4</span>;
+
+                    oData[r] = rainbowData[v];
+                    oData[g] = rainbowData[++v];
+                    oData[b] = rainbowData[++v];
+                    oData[a] = rainbowData[++v];
+                }
             }
         }
         <span class="hljs-keyword">else</span> {
@@ -4081,7 +4155,7 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
               <div class="sswrap ">
                 <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
-              <p><strong>modulate-channels</strong> - Multiplies each channel’s value by the supplied argument value. A channel-argument’s value of ‘0’ will set that channel’s value to zero; a value of ‘1’ will leave the channel value unchanged. If the “saturation” flag is set to ‘true’ the calculation changes to start at the color range mid point. The ‘brightness’ and ‘saturation’ filters are special forms of the ‘channels’ filter which use a single “levels” argument to set all three color channel arguments to the same value.</p>
+              <p><strong>modulate-channels</strong> - Multiplies each channel’s value by the supplied argument value. A channel-argument’s value of ‘0’ will set that channel’s value to zero; a value of ‘1’ will leave the channel value unchanged. If the “saturation” flag is set to ‘true’ the calculation changes to start at that pixel’s grayscale values. The ‘brightness’ and ‘saturation’ filters are special forms of the ‘channels’ filter which use a single “levels” argument to set all three color channel arguments to the same value.</p>
 
             </div>
             
@@ -4092,7 +4166,7 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
         <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
             oData = output.<span class="hljs-property">data</span>,
             len = iData.<span class="hljs-property">length</span>,
-            r, g, b, a, i;
+            r, g, b, a, gray, vr, vg, vb, i;
 
         <span class="hljs-keyword">let</span> {opacity, red, green, blue, alpha, saturation, lineOut} = requirements;
 
@@ -4112,10 +4186,16 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
                 b = g + <span class="hljs-number">1</span>;
                 a = b + <span class="hljs-number">1</span>;
 
-                oData[r] = <span class="hljs-number">127</span> + ((iData[r] - <span class="hljs-number">127</span>) * red);
-                oData[g] = <span class="hljs-number">127</span> + ((iData[g] - <span class="hljs-number">127</span>) * green);
-                oData[b] = <span class="hljs-number">127</span> + ((iData[b] - <span class="hljs-number">127</span>) * blue);
-                oData[a] = <span class="hljs-number">127</span> + ((iData[a] - <span class="hljs-number">127</span>) * alpha);
+                vr = iData[r];
+                vg = iData[g];
+                vb = iData[b];
+
+                gray = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>((<span class="hljs-number">0.2126</span> * vr) + (<span class="hljs-number">0.7152</span> * vg) + (<span class="hljs-number">0.0722</span> * vb));
+
+                oData[r] = gray + ((vr - gray) * red);
+                oData[g] = gray + ((vg - gray) * green);
+                oData[b] = gray + ((vb - gray) * blue);
+                oData[a] = iData[a] * alpha;
             }
         }
         <span class="hljs-keyword">else</span> {
@@ -4377,7 +4457,7 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == width) width = <span class="hljs-number">1</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == height) height = <span class="hljs-number">1</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == level) level = <span class="hljs-number">0.5</span>;
-        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == seed) level = <span class="hljs-string">&#x27;some-random-string-or-other&#x27;</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == seed) seed = <span class="hljs-string">&#x27;some-random-string-or-other&#x27;</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeRed) includeRed = <span class="hljs-literal">true</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeGreen) includeGreen = <span class="hljs-literal">true</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == includeBlue) includeBlue = <span class="hljs-literal">true</span>;
@@ -4675,8 +4755,7 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
 
         <span class="hljs-keyword">if</span> (lineOut) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(output, input, <span class="hljs-number">1</span> - opacity);
         <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">cache</span>.<span class="hljs-property">work</span>, output, opacity);
-    },
-};</pre></div></div>
+    },</pre></div></div>
             
         </li>
         
@@ -4686,6 +4765,86 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
               
               <div class="sswrap ">
                 <a class="ss" href="#section-60">&#x00a7;</a>
+              </div>
+              <p><strong>vary-channels-by-weights</strong> - manipulate colors using a set of channel curve arrays.</p>
+<ul>
+<li>The weights Array is (256 * 4) elements long. For each color level, we supply four weights: <code>redweight, greenweight, blueweight, allweight</code></li>
+<li>The default weighting for all elements is <code>0</code>. Weights are added to a pixel channel’s value, thus weighting values need to be integer Numbers, either positive or negative</li>
+<li>The <code>useMixedChannel</code> flag uses a different calculation, where a pixel’s channel values are combined to give their grayscale value, then that weighting (stored as the <code>allweight</code> weighting value) is added to each channel value, pro-rata in line with the grayscale channel weightings. (Note: this produces a different result compared to tools supplied in various other graphic manipulation software)</li>
+<li>Using this method, we can perform a <strong>curve</strong> (image tonality) filter</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;vary-channels-by-weights&#x27;</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">requirements</span>) {
+
+        <span class="hljs-keyword">let</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
+
+        <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
+            oData = output.<span class="hljs-property">data</span>,
+            len = iData.<span class="hljs-property">length</span>,
+            i, r, g, b, a, red, green, blue, gray, all, allR, allG, allB;
+
+        <span class="hljs-keyword">let</span> {opacity, weights, useMixedChannel, lineOut} = requirements;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == useMixedChannel) useMixedChannel = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == weights) weights = <span class="hljs-literal">false</span>;
+
+        <span class="hljs-keyword">if</span> (!weights || weights.<span class="hljs-property">length</span> !== <span class="hljs-number">1024</span>) {
+
+            weights = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Array</span>(<span class="hljs-number">1024</span>);
+            weights.<span class="hljs-title function_">fill</span>(<span class="hljs-number">0</span>);
+        }
+
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i += <span class="hljs-number">4</span>) {
+
+            r = i;
+            g = r + <span class="hljs-number">1</span>;
+            b = g + <span class="hljs-number">1</span>;
+            a = b + <span class="hljs-number">1</span>;
+
+            red = iData[r];
+            green = iData[g];
+            blue = iData[b];
+
+            <span class="hljs-keyword">if</span> (useMixedChannel) {
+
+                gray = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>((<span class="hljs-number">0.2126</span> * red) + (<span class="hljs-number">0.7152</span> * green) + (<span class="hljs-number">0.0722</span> * blue));
+
+                all = weights[(gray * <span class="hljs-number">4</span>) + <span class="hljs-number">3</span>];
+
+                allR = all * <span class="hljs-number">0.2126</span>;
+                allG = all * <span class="hljs-number">0.7152</span>;
+                allB = all * <span class="hljs-number">0.0722</span>;
+
+                oData[r] = red + allR;
+                oData[g] = green + allG;
+                oData[b] = blue + allB;
+                oData[a] = iData[a];
+            }
+            <span class="hljs-keyword">else</span> {
+
+                oData[r] = red + weights[red * <span class="hljs-number">4</span>];
+                oData[g] = green + weights[(green * <span class="hljs-number">4</span>) + <span class="hljs-number">1</span>];
+                oData[b] = blue + weights[(blue * <span class="hljs-number">4</span>) + <span class="hljs-number">2</span>];
+                oData[a] = iData[a];
+            }
+        }
+        <span class="hljs-keyword">if</span> (lineOut) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(output, input, <span class="hljs-number">1</span> - opacity);
+        <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">cache</span>.<span class="hljs-property">work</span>, output, opacity);
+    },
+
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-61">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
@@ -4701,11 +4860,11 @@ constructors.<span class="hljs-property">FilterEngine</span> = <span class="hljs
         </li>
         
         
-        <li id="section-61">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p>Create a singleton filter engine, for export and use within this code base</p>
 
@@ -4716,11 +4875,11 @@ constructors.<span class="hljs-property">FilterEngine</span> = <span class="hljs
         </li>
         
         
-        <li id="section-62">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

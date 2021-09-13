@@ -4,6 +4,8 @@
 // [Run code](../../demo/canvas-041.html)
 import scrawl from '../source/scrawl.js';
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 // + TODO: work out how to make this work with high DPR screens
 scrawl.setIgnorePixelRatio(true);
@@ -111,22 +113,11 @@ const drawBoxes = function () {
 }();
 
 // Speed reporter
-let report = (function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime,
-        testNow,
-        testMessage = document.querySelector("#reportmessage");
+    return `Box count: ${boxes.length}`;
+});
 
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.floor(1000 / testTime)}fps. Box count: ${boxes.length}`;
-    };
-})();
 
 
 // The animation loop object

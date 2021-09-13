@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Snippets 005</title>
+  <link href="css/normalize.css" rel="stylesheet" />
+  <link href="css/tests.css" rel="stylesheet" />
+  
+  <style>
+    body {
+      margin:  0;
+      border: 0;
+      padding: 0;
+    }
+
+    p {
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 800px;
+      margin: 1em auto;
+      padding: 0 1em;
+    }
+  </style>
+</head>
+
+<body>
+  <h1><a href="index.html">Scrawl-canvas v8</a> - Snippets test 005</h1>
+  <h2>Create a responsive, interactive and accessible before/after slider infographic</h2>
+
+  <!--
+    We start creating the infographic using HTML and CSS. This code will display for users who prefer to visit websites using a browser with Javascript disabled.
+  -->
+  <style>
+  
+    /* Define the values of the various colors our pin labels and link texts can use */
+    :root {
+      --sc-default: white;
+      --sc-shadow: black;
+      --sc-link: yellow;
+      --sc-linkunderline: yellow;
+      --sc-red: #ff8888;
+      --sc-blue: #8888ff;
+      --sc-green: #88ff88;
+      --sc-black: #404040;
+      --sc-white: #f0f0f0;
+      --sc-gray: #b0b0b0;
+    }
+
+    .slider-infographic {
+      margin: 0;
+      border: 0;
+      padding: 0;
+
+      overflow: hidden;
+      width: 100%;
+      visibility: hidden;
+    }
+
+    /* We need to give the infographic container a height value; the height value needs to be responsive, updating as the width value changes - best to do this on individually identified infographics as they may have differing height requirements */
+    #beirut-infographic {
+      height: calc(100vw / 2);
+    }
+
+    /* The Javascript we run will add a <canvas> element to our infographic container - we want that canvas to always have the same dimensions as its container element */
+    .slider-infographic canvas {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+
+  <!--
+    The outer container includes an id value, alongside data-label and data-description attributes which describe what's happening in the infographic
+  -->
+  <div id="beirut-infographic"
+
+    class="slider-infographic"
+
+    data-label="Beirut explosion: satellite images before and after the blast"
+
+    data-description="Satellite images show the scale of the damage caused by the 2020 explosions in the Lebanese capital, with buildings miles from the port lying in ruin. Points of interest include: 1, center-left (before) a very large shed on the dockside surrounded by lorries and containers; 2, center-right (after) a similar shed, completely destroyed; 3, bottom-center (both images) a boat in the harbour afloat (before) and rolled on its side (after); 4, top-right (before) some large transport containers, missing in the after image; 5, centre (both images) a roundabout connecting the sheds to the transport network. Before image taken on 31 July; after image taken 5 August. Photograph: Maxar Tech/AFP via Getty Images.">
+
+    <!--
+      The container contains two <div> elements, one for each panel of the infographic. Each element includes an <img> element and however many <p> elements are required to add hotspot information points (which trigger when hovered over or tapped) to that panel. 
+
+      The <div> elements need an id value, alongside a data-frame attribute set to either "left" or "right", so we can position the panels correctly
+    -->
+    <div 
+      id="beirut-infographic-before"
+      data-frame="left">
+
+      <!--
+        Give each <img> element an id value alongside some alt text and a src url
+      -->
+      <!-- https://assets.codepen.io/128723/temp-beirut-before.jpeg -->
+      <img 
+        id="beirut-infographic-before-image"
+        alt="Beirut harbour before the explosion" 
+        src="img/beirut-2020-before.webp" />
+      <!--
+        Each <p> element needs an id value together with some data- attributes
+
+          - data-type="pin" - for proof of concept we're only handling spot pins, not area pins
+
+          - data-position - a string of two percentage values, separated by a comma - these are the x and y coordinates of where the pin will appear over the image
+
+          - data-type="pin" - required (no default value)
+            - for proof of concept we're only handling spot pins, not area pins
+
+          - data-position - required (no default value)
+            - a string of two percentage values, separated by a comma 
+            - these are the 'x%, y%' coords where the pin will appear on image
+
+          - data-fill - pin fill color - default is "red"
+          - data-stroke - pin stroke color - default is "yellow"
+          - data-labelwidth - percentage label width value - default is "20%"
+          - data-labelbackground - defaults to "darkslategray" - can be made translucent using rgba() value
+
+          - data-labelposition - default is "below"
+            - where we want the text to appear relative to the pin's location 
+            - acceptable values: "left", "right", "above", "below"
+
+          - data-shared - default is not included
+            - if included, we create the pin on both panels
+
+        The text in the <p> element is the text that will be used for the pin's 
+        label. Note that the snippet has been set up to interpret and display 
+        the following inline markup: 
+          - <b></b>, <strong></strong>, <i></i>, <em></em>
+          - <span class="sc-red"></span>, etc
+
+          - If initial word markup doesn't show correctly in the label, place a non-breaking space at the start of the text
+      -->
+      <p 
+        id="beirut-infographic-roundabout" 
+        data-type="pin" 
+        data-position="59%, 21%" 
+        data-fill="blue",
+        data-stroke="yellow",
+        data-labelwidth="30%"
+        data-labelposition="left"
+        data-labelbackground="rgba(0, 127, 0, 0.2)"
+        data-shared>This roundabout <em>remained</em> navigable.</p>
+
+      <p 
+        id="beirut-infographic-working-shed" 
+        data-type="pin" 
+        data-position="30%, 45%" 
+        data-fill="red",
+        data-stroke="yellow",
+        data-labelwidth="25%"
+        data-labelposition="left">Before the <span class="sc-red">explosion</span> the <span class="sc-green">sheds</span> were <i>very</i> busy.</p>
+
+      <p 
+        id="beirut-infographic-containers" 
+        data-type="pin" 
+        data-position="80%, 6%" 
+        data-labelwidth="25%"
+        data-labelposition="below">These <strong><span class="sc-red">containers</span> were moved</strong> before the <span class="sc-red">explosion</span> happened.</p>
+    </div>
+
+    <div 
+      id="beirut-infographic-after"
+      data-frame="right">
+      
+      <!-- https://assets.codepen.io/128723/temp-beirut-after.jpeg -->
+      <img 
+        id="beirut-infographic-after-image"
+        alt="Beirut harbour after the explosion" 
+        src="img/beirut-2020-after.jpeg" />
+
+      <p 
+        id="beirut-infographic-destroyed-shed" 
+        data-type="pin" 
+        data-position="72%, 62%" 
+        data-fill="orange",
+        data-stroke="white",
+        data-labelwidth="20%"
+        data-labelposition="right">This <span class="sc-green">shed</span> has been <b>reduced</b> to its foundations.</p>
+
+      <p 
+        id="beirut-infographic-ship" 
+        data-type="pin" 
+        data-position="40%, 56%" 
+        data-labelwidth="25%"
+        data-labelposition="above">&nbsp;<em><span class="sc-gray">This ship</span> suffered <span class="sc-blue">catastrophic</span> damage.</em></p>
+    </div>
+
+    <!--
+      If we also want to include any clickable links in the infographic, we can include them in a <nav> element. The following data- attributes apply
+
+        - data-position - required (no default value)
+          - a string of two percentage values, separated by a comma 
+          - these are the 'x%, y%' coords where the link will appear over image
+
+        - data-justify - one of: "left", "right", "center" (default)
+        - data-width - defaults to "20%"
+        - data-background - defaults to "rgba(0,0,0,0.2)" 
+    -->
+    <nav>
+
+      <a 
+        id="beirut-infographic-guardian-article" 
+        href="https://www.theguardian.com/world/2020/aug/06/beirut-explosion-before-and-after-satellite-images" 
+        data-position="25%, 96%" 
+        data-width="25%"
+        data-background="darkblue"
+        data-justify="center">Guardian article</a>
+
+      <a 
+        id="beirut-infographic-wikipedia-port-blast-article" 
+        href="https://en.wikipedia.org/wiki/2020_Beirut_explosion" 
+        data-position="75%, 96%" 
+        data-width="25%"
+        data-justify="center">Wikipedia entry</a>
+    </nav>
+
+  </div>
+
+  <!--
+    The noscript code runs in situations where Javascript is not available. Use this space to style the content to make it more readable and understandable.
+  -->
+  <noscript>
+    <style>
+      /* We made the slider container invisible earlier, and set its height appropriately for the canvas-based slider. Now that we are not creating the Javascript slider, we need to reverse those changes */
+      .slider-infographic {
+        visibility: visible;
+        height: auto !important;
+      }
+
+      .sc-red {
+        color: var(--sc-red, red);
+      }
+      .sc-green {
+        color: var(--sc-green, green);
+      }
+      .sc-blue {
+        color: var(--sc-blue, blue);
+      }
+      .sc-black {
+        color: var(--sc-black, black);
+      }
+      .sc-white {
+        color: var(--sc-white, white);
+      }
+      .sc-gray {
+        color: var(--sc-gray, gray);
+      }
+    </style>
+  </noscript>
+
+  <div class="testinfo">
+    <h4>Test purpose</h4>
+    <ul>
+      <li>Initial code is friendly to non-Javascript users</li>
+      <li>Import the before-after-slider-infographic.js snippet code</li>
+      <li>Apply the snippet to our markup. Make sure that the code:</li>
+      <ul>
+        <li>Creates a &lt;canvas> element</li>
+        <li>Parses the supplied element's children, extracting data, and then deletes those children from the DOM</li>
+        <li>Loads the images into the correct panels</li>
+        <li>Creates all required pins and positions them correctly on the canvas</li>
+        <li>Styles the pins in accordance with their data-attribute values</li>
+        <li>Creates the slider functionality</li>
+        <li>Displays pin labels when user hovers over pins</li>
+        <li>Formats the pin label text correctly</li>
+        <li>Adds the linked entitys to the canvas</li>
+        <li>Underlines links when user hovers over them</li>
+        <li>Opens the correct web page when user clicks on the link</li>
+        <li>Allows user to tab through links, and open links using enter,shift+enter, etc key presses</li>
+        <li>Adjustsd text sizes of labels and links when user resizes browser window</li>
+      </ul>
+    </ul>
+
+    <ul>
+      <li><a href="../docs/demo/snippets-005.html">Annotated code</a></li>
+      <li><a href="../docs/demo/snippets/before-after-slider-infographic.html">Before/after slider infographic snippet</a></li>
+    </ul>
+  </div>
+
+  <!-- 
+    We use Javascript to turn the infographic container's HTML/CSS code into a canvas-based infographic which will replace that code
+  -->
+  <script src="snippets-005.js" type="module"></script>
+
+</body>
+
+</html>

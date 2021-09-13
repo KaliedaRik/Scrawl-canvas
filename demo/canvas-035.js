@@ -4,6 +4,8 @@
 // [Run code](../../demo/canvas-035.html)
 import scrawl from '../source/scrawl.js'
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -148,28 +150,13 @@ const myBlock = scrawl.makeBlock({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-const report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
+    let matrix = styles['bunny-pattern'].patternMatrix;
+    if (matrix) return `Matrix - A: ${matrix.a}, B: ${matrix.b}, C: ${matrix.c}, D: ${matrix.d}, E: ${matrix.e}, F: ${matrix.f}`;
+    return 'Matrix not available'
+});
 
-    let matrix, matrixVals = '';
-
-    return function () {
-
-        if (!matrix) matrix = videoPattern.patternMatrix;matrixVals
-
-        if (matrix) matrixVals = `A: ${matrix.a}, B: ${matrix.b}, C: ${matrix.c}, D: ${matrix.d}, E: ${matrix.e}, F: ${matrix.f}`;
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Matrix - ${matrixVals}`;
-    };
-}();
 
 // Create the Display cycle animation
 scrawl.makeRender({

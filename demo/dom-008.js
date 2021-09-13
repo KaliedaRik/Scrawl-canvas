@@ -4,6 +4,8 @@
 // [Run code](../../demo/dom-008.html)
 import scrawl from '../source/scrawl.js'
 
+import { reportSpeed } from './utilities.js';
+
 
 // #### Scene setup
 let artefact = scrawl.library.artefact,
@@ -136,21 +138,7 @@ let stackCheck = function () {
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
-
-    let testTicker = Date.now(),
-        testTime, testNow, text,
-        testMessage = document.querySelector('#reportmessage');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
-    };
-}();
+const report = reportSpeed('#reportmessage');
 
 
 // Create the Display cycle animation

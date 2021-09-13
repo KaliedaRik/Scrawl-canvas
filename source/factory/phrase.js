@@ -38,6 +38,13 @@
 // + [Packets-002](../../demo/packets-002.html) - Scrawl-canvas packets - save and load a range of different entitys
 // + [Modules-001](../../demo/modules-001.html) - Scrawl-canvas modularized code - London crime charts
 
+// #### TODO:
+// The [CSS Font Loading API](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Font_Loading_API) is beginning to stabilize across browsers, which means we can watch for font loads and then perform text measurements using the [TextMetrics interface](https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics)
+// + Currently we need to calculate font/text height using temporary DOM elements - this is both ugly and less than accurate
+// + Text metrics will give us much better height measurements, and also glyph width measurements (and thus advance values for eg text along a path)
+// + However progress with the enhanced TextMetrics is slower across browsers, meaning that any code we develop is likely to bloat the code base as we cannot (yet) afford to discard existing code.
+// + More details in Demo [Canvas-029](../../demo/canvas-029.html) - Phrase entitys and gradients
+
 
 // #### Imports
 import { constructors, cell, cellnames, styles, stylesnames, artefact, sectionClasses } from '../core/library.js';
@@ -552,7 +559,7 @@ D.textPathPosition = function (item) {
 // + The font String is not retained. Rather we break it down into its constituent parts, and rebuild the font String when needed.
 G.font = function () {
 
-    return this.fontAttributes.get('font');
+    return this.fontAttributes.getFontString();
 };
 S.font = function (item) {
 
@@ -843,14 +850,28 @@ P.buildText = function () {
 
             if (!this.exposedTextHoldAttached) {
 
-                if(this.currentHost && this.currentHost.controller && this.currentHost.controller.textHold) {
+                if (this.currentHost) {
 
-                    this.currentHost.controller.textHold.appendChild(this.exposedTextHold);
-                    this.exposedTextHoldAttached = true;
+                    let hold = this.getCanvasTextHold(this.currentHost);
+
+                    if (hold && hold.textHold) {
+
+                        hold.textHold.appendChild(this.exposedTextHold);
+                        this.exposedTextHoldAttached = true;
+                    }
                 }
             }
         }
     }
+};
+
+P.getCanvasTextHold = function (item) {
+
+    if (item && item.type === 'Cell' && item.controller && item.controller.type === 'Canvas' && item.controller.textHold) return item.controller;
+
+    if (item && item.type === 'Cell' && item.currentHost) return this.getCanvasTextHold(item.currentHost);
+
+    return false;
 };
 
 
@@ -1020,14 +1041,16 @@ P.calculateTextPositions = function (mytext) {
                 item = gStyle.stroke;
                 if (item && item !== currentStrokeStyle) {
 
-                    currentStrokeStyle = makeStyle(gStyle.stroke);
+                    if ('default' === item) currentStrokeStyle = defaultStrokeStyle;
+                    else currentStrokeStyle = makeStyle(gStyle.stroke);
                     gPos[1] = currentStrokeStyle;
                 };
 
                 item = gStyle.fill;
                 if (item && item !== currentFillStyle) {
 
-                    currentFillStyle = makeStyle(gStyle.fill);
+                    if ('default' === item) currentFillStyle = defaultFillStyle;
+                    else currentFillStyle = makeStyle(gStyle.fill);
                     gPos[2] = currentFillStyle;
                 };
 

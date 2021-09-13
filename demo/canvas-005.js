@@ -4,6 +4,8 @@
 // [Run code](../../demo/canvas-005.html)
 import scrawl from '../source/scrawl.js'
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -190,6 +192,16 @@ scrawl.makeWheel({
 });
 
 
+// #### User interaction
+// Create the drag-and-drop zone
+let current = scrawl.makeDragZone({
+
+    zone: canvas,
+    endOn: ['up', 'leave'],
+    exposeCurrentArtefact: true,
+});
+
+
 // #### Scene animation
 // Tween, and the engine used by the tween to calculate values
 let tweenEngine = (start, change, position) => {
@@ -228,24 +240,10 @@ let tweeny = scrawl.makeTween({
 
 
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
-
-    let testTicker = Date.now(),
-        testTime, testNow, dragging,
-        testMessage = document.querySelector('#reportmessage');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        dragging = current();
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-Currently dragging: ${(dragging) ? dragging.artefact.name : 'nothing'}`;
-    };
-}();
+const report = reportSpeed('#reportmessage', function () {
+    const dragging = current();
+    return `Currently dragging: ${(dragging) ? dragging.artefact.name : 'nothing'}`;
+});
 
 
 // Function to animate the gradients
@@ -270,16 +268,6 @@ scrawl.makeRender({
     target: canvas,
     commence: animateGradients,
     afterShow: report,
-});
-
-
-// #### User interaction
-// Create the drag-and-drop zone
-let current = scrawl.makeDragZone({
-
-    zone: canvas,
-    endOn: ['up', 'leave'],
-    exposeCurrentArtefact: true,
 });
 
 

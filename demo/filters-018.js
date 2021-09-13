@@ -4,6 +4,8 @@
 // [Run code](../../demo/filters-018.html)
 import scrawl from '../source/scrawl.js';
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -55,30 +57,12 @@ scrawl.makePicture({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
-
-    let strength = document.querySelector('#strength'),
-        angle = document.querySelector('#angle'),
-        smoothing = document.querySelector('#smoothing'),
-        clamp = document.querySelector('#clamp'),
-        tolerance = document.querySelector('#tolerance');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Angle - ${angle.value}°, Strength - ${strength.value}, Smoothing - ${smoothing.value}, Clamp - ${clamp.value}
+    return `    Angle - ${angle.value}°, Strength - ${strength.value}, Smoothing - ${smoothing.value}, Clamp - ${clamp.value}
     Tolerance - ${tolerance.value}
-    Opacity - ${opacity.value}`;
-    };
-}();
+    Opacity: ${opacity.value}`;
+});
 
 
 // Create the Display cycle animation
@@ -117,15 +101,23 @@ scrawl.observeAndUpdate({
 });
 
 // Setup form
-document.querySelector('#strength').value = 3;
-document.querySelector('#angle').value = 225;
-document.querySelector('#smoothing').value = 0;
-document.querySelector('#tolerance').value = 0;
-document.querySelector('#clamp').value = 0;
+let strength = document.querySelector('#strength'),
+    angle = document.querySelector('#angle'),
+    smoothing = document.querySelector('#smoothing'),
+    clamp = document.querySelector('#clamp'),
+    tolerance = document.querySelector('#tolerance'),
+    opacity = document.querySelector('#opacity');
+
+strength.value = 3;
+angle.value = 225;
+smoothing.value = 0;
+tolerance.value = 0;
+clamp.value = 0;
+opacity.value = 1;
+
 document.querySelector('#postProcessResults').options.selectedIndex = 1;
 document.querySelector('#useNaturalGrayscale').options.selectedIndex = 0;
 document.querySelector('#keepOnlyChangedAreas').options.selectedIndex = 0;
-document.querySelector('#opacity').value = 1;
 
 
 // #### Development and testing

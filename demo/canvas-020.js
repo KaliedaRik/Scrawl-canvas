@@ -4,6 +4,8 @@
 // [Run code](../../demo/canvas-020.html)
 import scrawl from '../source/scrawl.js'
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -259,21 +261,7 @@ scrawl.makePhrase({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
-
-    let testTicker = Date.now(),
-        testTime, testNow, dragging,
-        testMessage = document.querySelector('#reportmessage');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
-    };
-}();
+const report = reportSpeed('#reportmessage');
 
 
 // Create the Display cycle animation - note that the render is not targeted, thus will run document-wide to act on both &lt;canvas> elements

@@ -5,6 +5,8 @@
 
 import scrawl from '../source/scrawl.js'
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -106,35 +108,22 @@ scrawl.addListener('move', (e) => {
     });
 }, canvas.domElement);
 
+
 // Function to display frames-per-second data, and other information relevant to the demo
-const report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
+    const here = canvas.here;
+    const basehere = canvas.base.here;
 
-    return function () {
-
-        // We only want this function to run in the stack render animation, not the canvas render. If it runs in both then the second run will register a testTime of just over 0 milliseconds (and a framerate of infinity)
-        if (this.target.name == 'mystack') {
-
-            testNow = Date.now();
-
-            testTime = testNow - testTicker;
-            testTicker = testNow;
-
-            testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    client: ${clientX}, ${clientY}
+    return `    client: ${clientX}, ${clientY}
     offset: ${offsetX}, ${offsetY}
     page: ${pageX}, ${pageY}
     screen: ${screenX}, ${screenY}
     movement: ${movementX}, ${movementY}
 
-    canvas here x/y: ${canvas.here.x}, ${canvas.here.y}; dims: ${canvas.here.w}, ${canvas.here.h}; original dims: ${canvas.here.originalWidth}, ${canvas.here.originalHeight}; active: ${canvas.here.active}
-    base here x/y: ${canvas.base.here.x}, ${canvas.base.here.y}; dims: ${canvas.base.here.w}, ${canvas.base.here.h}; active: ${canvas.base.here.active}`;
-        }
-    };
-}();
+    canvas here x/y: ${here.x}, ${here.y}; dims: ${here.w}, ${here.h}; original dims: ${here.originalWidth}, ${here.originalHeight}; active: ${here.active}
+    base here x/y: ${basehere.x}, ${basehere.y}; dims: ${basehere.w}, ${basehere.h}; active: ${basehere.active}`;
+});
 
 
 // Create the Display cycle animation

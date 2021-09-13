@@ -1,6 +1,6 @@
 // # Scrawl-canvas
 //
-// #### Version 8.6.0 - 24 Jul 2021
+// #### Version 8.6.1 - 12 Sept 2021
 //
 // ---------------------------------------------------------------------------------
 // The MIT License (MIT)
@@ -61,6 +61,12 @@ import {
     colorSchemeActions,
     setColorSchemeDarkAction,
     setColorSchemeLightAction,
+    reducedTransparencyActions,
+    setReduceTransparencyAction,
+    setNoPreferenceTransparencyAction,
+    reducedDataActions,
+    setReduceDataAction,
+    setNoPreferenceDataAction,
     getPixelRatio,
     setPixelRatioChangeAction,
     getIgnorePixelRatio,
@@ -69,6 +75,11 @@ import {
 
 
 import * as library from './core/library.js';
+
+
+import { 
+    seededRandomNumberGenerator,
+} from './core/random-seed.js';
 
 
 import { 
@@ -380,10 +391,20 @@ export default {
     colorSchemeActions,
     setColorSchemeDarkAction,
     setColorSchemeLightAction,
+    reducedTransparencyActions,
+    setReduceTransparencyAction,
+    setNoPreferenceTransparencyAction,
+    reducedDataActions,
+    setReduceDataAction,
+    setNoPreferenceDataAction,
     getPixelRatio,
     setPixelRatioChangeAction,
     getIgnorePixelRatio,
     setIgnorePixelRatio,
+
+
+    // core/random-seed.js
+    seededRandomNumberGenerator,
 
 
     // core/snippets.js

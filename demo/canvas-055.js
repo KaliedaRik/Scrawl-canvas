@@ -4,6 +4,8 @@
 // [Run code](../../demo/canvas-055.html)
 import scrawl from '../source/scrawl.js'
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -38,21 +40,18 @@ scrawl.makeWheel({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
+    let [startX, startY] = myMoon.start;
+    let [handleX, handleY] = myMoon.handle;
 
-    return function () {
+    let {roll, scale, outerRadius, innerRadius, displacement} = myMoon;
 
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
-    };
-}();
+    return `    Start - x: ${startX}, y: ${startY}
+    Handle - x: ${handleX}, y: ${handleY}
+    Radius - outer: ${outerRadius}, inner: ${innerRadius}, displacement: ${displacement}
+    Roll: ${roll}; Scale: ${scale}`;
+});
 
 
 // Create the Display cycle animation

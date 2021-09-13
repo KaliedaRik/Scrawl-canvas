@@ -4,6 +4,8 @@
 // [Run code](../../demo/canvas-002.html)
 import scrawl from '../source/scrawl.js'
 
+import { reportSpeed, killArtefact } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -191,41 +193,7 @@ let mouseCheck = function () {
     };
 }();
 
-
-// #### Scene animation
-// Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
-
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
-
-    const alpha = document.querySelector('#clearAlpha');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    clearAlpha: ${alpha.value}`;
-    };
-}();
-
-
-// Create the Display cycle animation
-scrawl.makeRender({
-
-    name: 'demo-animation',
-    target: canvas,
-    commence: mouseCheck,
-    afterShow: report,
-});
-
-
-// #### User interaction
-// Setup form observer functionality. We're doing it this way (wrapped in a function) so we can test that it can be killed, and then recreated, later
+// Setup form observer functionality.
 scrawl.observeAndUpdate({
 
     event: ['input', 'change'],
@@ -242,68 +210,36 @@ scrawl.observeAndUpdate({
         clearAlpha: ['clearAlpha', 'float'],
     },
 });
-document.querySelector('#backgroundColor').value = '';
-document.querySelector('#clearAlpha').value = 0.9;
+
+const backgroundColorSelector = document.querySelector('#backgroundColor'),
+    clearAlphaInput = document.querySelector('#clearAlpha');
+
+backgroundColorSelector.value = '';
+clearAlphaInput.value = 0.9;
+
+
+// #### Scene animation
+// Function to display frames-per-second data, and other information relevant to the demo
+const report = reportSpeed('#reportmessage', function () {
+    return `    clearAlpha: ${clearAlphaInput.value}`;
+});
+
+// Create the Display cycle animation
+scrawl.makeRender({
+
+    name: 'demo-animation',
+    target: canvas,
+    commence: mouseCheck,
+    afterShow: report,
+});
+
 
 // #### Development and testing
 console.log(scrawl.library);
 
-// To test kill functionality
-let killArtefact = (name, time, finishResurrection) => {
+console.log('Performing tests ...');
 
-    let groupname = 'mycanvas_base',
-        packet;
-
-    let checkGroupBucket = (name, groupname) => {
-
-        let res = scrawl.library.group[groupname].artefactBuckets.filter(e => e.name === name );
-        return (res.length) ? 'no' : 'yes';
-    };
-
-    setTimeout(() => {
-
-        console.log(`${name} alive
-    removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
-    removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
-    removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
-
-        packet = scrawl.library.artefact[name].saveAsPacket();
-
-        scrawl.library.artefact[name].kill();
-
-        setTimeout(() => {
-
-            console.log(`${name} killed
-    removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
-    removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
-    removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
-
-            canvas.actionPacket(packet);
-
-            setTimeout(() => {
-
-                console.log(`${name} resurrected
-    removed from artefact: ${(scrawl.library.artefact[name]) ? 'no' : 'yes'}
-    removed from artefactnames: ${(scrawl.library.artefactnames.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from entity: ${(scrawl.library.entity[name]) ? 'no' : 'yes'}
-    removed from entitynames: ${(scrawl.library.entitynames.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from group.artefacts: ${(scrawl.library.group[groupname].artefacts.indexOf(name) >= 0) ? 'no' : 'yes'}
-    removed from group.artefactBuckets: ${checkGroupBucket(name, groupname)}`);
-
-                finishResurrection();
-
-            }, 100);
-        }, 100);
-    }, time);
-};
-
-killArtefact('mouse-pivot', 4000, () => {
+killArtefact(canvas, 'mouse-pivot', 4000, () => {
 
     myPivot = scrawl.library.entity['mouse-pivot'];
 
@@ -320,4 +256,4 @@ killArtefact('mouse-pivot', 4000, () => {
     });
 });
 
-killArtefact('mimic-block', 6000, () => {});
+killArtefact(canvas, 'mimic-block', 6000);

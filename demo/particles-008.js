@@ -4,6 +4,8 @@
 // [Run code](../../demo/particles-008.html)
 import scrawl from '../source/scrawl.js'
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -200,33 +202,15 @@ scrawl.makePicture({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow, dragging,
-        testMessage = document.querySelector('#reportmessage');
-
-    let springConst = document.querySelector('#springConstant'),
-        mass = document.querySelector('#mass'),
-        restLength = document.querySelector('#restLength'),
-        tickMultiplier = document.querySelector('#tickMultiplier'),
-        damperConst = document.querySelector('#damperConstant');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Tick multiplier: ${tickMultiplier.value}
+    return `    Tick multiplier: ${tickMultiplier.value}
     Particle mass: ${mass.value}
     Rest length multiplier: ${restLength.value}
     Wind speed: ${myWorld.wind.toFixed(2)}
     Spring constant: ${springConst.value}
     Damper constant: ${damperConst.value}`;
-    };
-}();
+});
 
 // Create the Display cycle animation
 scrawl.makeRender({
@@ -257,13 +241,20 @@ const updateSprings = function (e) {
 };
 scrawl.addNativeListener(['input', 'change'], updateSprings, '.controlItem');
 
+const springConst = document.querySelector('#springConstant'),
+    mass = document.querySelector('#mass'),
+    restLength = document.querySelector('#restLength'),
+    tickMultiplier = document.querySelector('#tickMultiplier'),
+    damperConst = document.querySelector('#damperConstant');
+
+springConst.value = 50;
+damperConst.value = 5;
+restLength.value = 1;
+mass.value = 1;
+tickMultiplier.value = 2;
+
 document.querySelector('#generate').value = 'weak-net';
-document.querySelector('#springConstant').value = 50;
-document.querySelector('#damperConstant').value = 5;
-document.querySelector('#restLength').value = 1;
-document.querySelector('#mass').value = 1;
 document.querySelector('#engine').value = 'runge-kutta';
-document.querySelector('#tickMultiplier').value = 2;
 
 
 // #### Development and testing

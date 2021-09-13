@@ -10,7 +10,8 @@
 
 // #### Imports
 import { constructors, entity } from '../core/library.js';
-import { mergeOver, λnull, λthis, λfirstArg, removeItem, seededRandomNumberGenerator, Ωempty } from '../core/utilities.js';
+import { seededRandomNumberGenerator } from '../core/random-seed.js';
+import { mergeOver, λnull, λthis, λfirstArg, removeItem, Ωempty } from '../core/utilities.js';
 
 import { makeColor } from './color.js';
 import { requestCell, releaseCell } from './cell.js';

@@ -106,6 +106,7 @@ export default function (P = Ωempty) {
     S.pathDefinition = function (item) {
 
         if (item.substring) this.pathDefinition = item;
+        this.pathCalculatedOnce = false;
         this.dirtyPathObject = true;
     };
 
@@ -320,7 +321,9 @@ export default function (P = Ωempty) {
         return false;
     }
 
-    // `getPathPositionData`
+    // `getPathPositionData` - function called by `getPathPositionData`
+    // + Also useful in user code to retrieve the Cell-relative coordinates of any point (measured as a float Number between `0` and `1` along the path)
+    // + The second argument - a Boolean - rectifies for constant speed
     P.getPathPositionData = function (pos, constantSpeed = false) {
 
         if (this.useAsPath && xt(pos) && pos.toFixed) {
@@ -358,7 +361,7 @@ export default function (P = Ωempty) {
             return this.buildPathPositionObject(unit, myLen);
         }
         return false;
-    }
+    };
 
 
 // #### Display cycle functionality

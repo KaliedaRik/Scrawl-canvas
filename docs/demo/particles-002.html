@@ -305,6 +305,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-056.html">
+                  ./demo/canvas-056.js
+                </a>
+              
+                
                 <a class="source" href="core-001.html">
                   ./demo/core-001.js
                 </a>
@@ -382,21 +387,6 @@
                 
                 <a class="source" href="dom-013.html">
                   ./demo/dom-013.js
-                </a>
-              
-                
-                <a class="source" href="dom-014a.html">
-                  ./demo/dom-014a.js
-                </a>
-              
-                
-                <a class="source" href="dom-014b.html">
-                  ./demo/dom-014b.js
-                </a>
-              
-                
-                <a class="source" href="dom-014c.html">
-                  ./demo/dom-014c.js
                 </a>
               
                 
@@ -527,6 +517,11 @@
                 
                 <a class="source" href="filters-023.html">
                   ./demo/filters-023.js
+                </a>
+              
+                
+                <a class="source" href="filters-024.html">
+                  ./demo/filters-024.js
                 </a>
               
                 
@@ -675,6 +670,11 @@
                 </a>
               
                 
+                <a class="source" href="rapier-001.html">
+                  ./demo/rapier-001.js
+                </a>
+              
+                
                 <a class="source" href="snippets-001.html">
                   ./demo/snippets-001.js
                 </a>
@@ -695,6 +695,16 @@
                 </a>
               
                 
+                <a class="source" href="snippets-005.html">
+                  ./demo/snippets-005.js
+                </a>
+              
+                
+                <a class="source" href="temp-000.html">
+                  ./demo/temp-000.js
+                </a>
+              
+                
                 <a class="source" href="temp-001.html">
                   ./demo/temp-001.js
                 </a>
@@ -710,6 +720,66 @@
                 </a>
               
                 
+                <a class="source" href="temp-004.html">
+                  ./demo/temp-004.js
+                </a>
+              
+                
+                <a class="source" href="temp-005.html">
+                  ./demo/temp-005.js
+                </a>
+              
+                
+                <a class="source" href="temp-006.html">
+                  ./demo/temp-006.js
+                </a>
+              
+                
+                <a class="source" href="temp-007.html">
+                  ./demo/temp-007.js
+                </a>
+              
+                
+                <a class="source" href="temp-008.html">
+                  ./demo/temp-008.js
+                </a>
+              
+                
+                <a class="source" href="temp-009.html">
+                  ./demo/temp-009.js
+                </a>
+              
+                
+                <a class="source" href="temp-010.html">
+                  ./demo/temp-010.js
+                </a>
+              
+                
+                <a class="source" href="temp-100.html">
+                  ./demo/temp-100.js
+                </a>
+              
+                
+                <a class="source" href="temp-101.html">
+                  ./demo/temp-101.js
+                </a>
+              
+                
+                <a class="source" href="temp-102.html">
+                  ./demo/temp-102.js
+                </a>
+              
+                
+                <a class="source" href="temp-103.html">
+                  ./demo/temp-103.js
+                </a>
+              
+                
+                <a class="source" href="temp-104.html">
+                  ./demo/temp-104.js
+                </a>
+              
+                
                 <a class="source" href="temp-inkscapeSvgFilters.html">
                   ./demo/temp-inkscapeSvgFilters.js
                 </a>
@@ -722,6 +792,11 @@
                 
                 <a class="source" href="tensorflow-002.html">
                   ./demo/tensorflow-002.js
+                </a>
+              
+                
+                <a class="source" href="utilities.html">
+                  ./demo/utilities.js
                 </a>
               
             </div>
@@ -757,7 +832,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>
+
+<span class="hljs-keyword">import</span> { reportSpeed } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -1125,53 +1202,42 @@ canvas.<span class="hljs-title function_">setBase</span>({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> particlenames = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">particlenames</span>,
+    particle = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">particle</span>;
 
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
-        testTime, testNow, dragging,
-        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
+<span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-20">&#x00a7;</a>
+              </div>
+              <p>ParticleHistory arrays are not saved in the Scrawl-canvas library; instead we need to count them in each particle</p>
 
-    <span class="hljs-keyword">let</span> particlenames = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">particlenames</span>,
-        particle = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">particle</span>,
-        historyCount, kr, krv;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">let</span> historyCount = <span class="hljs-number">0</span>;
+    particlenames.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> {
 
-    <span class="hljs-keyword">let</span> worldSpeed = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#world-speed&#x27;</span>),
-        minFill = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#min-fill&#x27;</span>),
-        maxFill = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#max-fill&#x27;</span>),
-        background = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#background&#x27;</span>),
-        outlineColor = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#outline-color&#x27;</span>),
-        opacity = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#opacity&#x27;</span>),
-        killRadius = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#kill-radius&#x27;</span>),
-        killRadiusVariation = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#kill-radius-variation&#x27;</span>),
-        historyLength = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#historyLength&#x27;</span>),
-        generationRate = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#generationRate&#x27;</span>);
+        <span class="hljs-keyword">let</span> p = particle[n];
+        <span class="hljs-keyword">if</span> (p) historyCount += p.<span class="hljs-property">history</span>.<span class="hljs-property">length</span>;
+    });
 
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        historyCount = <span class="hljs-number">0</span>;
-        particlenames.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> {
-
-            <span class="hljs-keyword">let</span> p = particle[n];
-            <span class="hljs-keyword">if</span> (p) historyCount += p.<span class="hljs-property">history</span>.<span class="hljs-property">length</span>;
-        });
-
-        kr = <span class="hljs-built_in">parseFloat</span>(killRadius.<span class="hljs-property">value</span>);
+    <span class="hljs-keyword">let</span> kr = <span class="hljs-built_in">parseFloat</span>(killRadius.<span class="hljs-property">value</span>),
         krv = <span class="hljs-built_in">parseFloat</span>(killRadiusVariation.<span class="hljs-property">value</span>) / <span class="hljs-number">2</span>;
 
-        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
-    Particles: <span class="hljs-subst">${particlenames.length}</span>, generationRate: <span class="hljs-subst">${generationRate.value}</span>, historyLength: <span class="hljs-subst">${historyLength.value}</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-string">`    Particles: <span class="hljs-subst">${particlenames.length}</span>, generationRate: <span class="hljs-subst">${generationRate.value}</span>, historyLength: <span class="hljs-subst">${historyLength.value}</span>
     Stamps per display: <span class="hljs-subst">${historyCount}</span>
 
     Background color: <span class="hljs-subst">${background.value}</span>, World speed (tickMultiplier): <span class="hljs-subst">${worldSpeed.value}</span>
     Outline color (strokeStyle): <span class="hljs-subst">${outlineColor.value}</span>, Opacity (globalAlpha): <span class="hljs-subst">${opacity.value}</span>
     Kill radius: from <span class="hljs-subst">${(kr - krv) &gt; <span class="hljs-number">0</span> ? kr - krv : <span class="hljs-number">0</span>}</span>px to <span class="hljs-subst">${kr + krv}</span>px
-    Minimum fill color: <span class="hljs-subst">${minFill.value}</span>, Maximum fill color: <span class="hljs-subst">${maxFill.value}</span> - (fillStyle)`</span>;
-    };
-}();
+    Minimum fill color: <span class="hljs-subst">${minFill.value}</span>, Maximum fill color: <span class="hljs-subst">${maxFill.value}</span>`</span>;
+});
 
 <span class="hljs-keyword">let</span> mouseCheck = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
@@ -1193,11 +1259,11 @@ canvas.<span class="hljs-title function_">setBase</span>({
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p>Create the Display cycle animation</p>
 
@@ -1214,11 +1280,11 @@ canvas.<span class="hljs-title function_">setBase</span>({
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <h4 id="user-interaction">User interaction</h4>
 <p>Setting (restricting) the range of colors assigned to particles when they are generated.</p>
@@ -1252,11 +1318,11 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <p>Change the artefact to be used in the animation</p>
 
@@ -1309,11 +1375,11 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p>Setup other form observer functionality</p>
 
@@ -1372,26 +1438,39 @@ scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
     },
 });
 
-<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#min-fill&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;#000000&#x27;</span>;
-<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#max-fill&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;#ffffff&#x27;</span>;
-<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#outline-color&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;#F0F8FF&#x27;</span>;
-<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#background&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;#000040&#x27;</span>;
-<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#world-speed&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">2</span>;
-<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#opacity&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0.2</span>;
-<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#generationRate&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">10</span>;
-<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#historyLength&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">20</span>;
-<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#kill-radius&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;
-<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#kill-radius-variation&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+
+<span class="hljs-keyword">const</span> worldSpeed = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#world-speed&#x27;</span>),
+    minFill = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#min-fill&#x27;</span>),
+    maxFill = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#max-fill&#x27;</span>),
+    background = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#background&#x27;</span>),
+    outlineColor = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#outline-color&#x27;</span>),
+    opacity = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#opacity&#x27;</span>),
+    killRadius = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#kill-radius&#x27;</span>),
+    killRadiusVariation = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#kill-radius-variation&#x27;</span>),
+    historyLength = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#historyLength&#x27;</span>),
+    generationRate = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#generationRate&#x27;</span>);
+
+minFill.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;#000000&#x27;</span>;
+maxFill.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;#ffffff&#x27;</span>;
+outlineColor.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;#F0F8FF&#x27;</span>;
+background.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;#000040&#x27;</span>;
+worldSpeed.<span class="hljs-property">value</span> = <span class="hljs-number">2</span>;
+opacity.<span class="hljs-property">value</span> = <span class="hljs-number">0.2</span>;
+generationRate.<span class="hljs-property">value</span> = <span class="hljs-number">10</span>;
+historyLength.<span class="hljs-property">value</span> = <span class="hljs-number">20</span>;
+killRadius.<span class="hljs-property">value</span> = <span class="hljs-number">50</span>;
+killRadiusVariation.<span class="hljs-property">value</span> = <span class="hljs-number">0</span>;
+
 <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#artefact&#x27;</span>).<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;star&#x27;</span>;</pre></div></div>
             
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

@@ -4,6 +4,8 @@
 // [Run code](../../demo/filters-010.html)
 import scrawl from '../source/scrawl.js';
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -46,28 +48,12 @@ scrawl.makePicture({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
-
-    let lowCol = document.querySelector('#lowColor'),
-        highCol = document.querySelector('#highColor'),
-        opacity = document.querySelector('#opacity');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    (Low color: ${lowCol.value}, High color: ${highCol.value})
+    return `    (Low color: ${lowCol.value}, High color: ${highCol.value})
     Range: [${myFilter.ranges}]
     Opacity: ${opacity.value}`;
-    };
-}();
+});
 
 
 // Create the Display cycle animation
@@ -126,9 +112,13 @@ scrawl.addNativeListener(
 
 
 // Setup form
-document.querySelector('#lowColor').value = '#000000';
-document.querySelector('#highColor').value = '#5c7f5c';
-document.querySelector('#opacity').value = 1;
+const lowCol = document.querySelector('#lowColor'),
+    highCol = document.querySelector('#highColor'),
+    opacity = document.querySelector('#opacity');
+
+lowCol.value = '#000000';
+highCol.value = '#5c7f5c';
+opacity.value = 1;
 
 
 // #### Development and testing

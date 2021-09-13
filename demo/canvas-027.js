@@ -4,6 +4,8 @@
 // [Run code](../../demo/canvas-027.html)
 import scrawl from '../source/scrawl.js'
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -15,23 +17,10 @@ let canvas = scrawl.library.canvas.mycanvas;
 canvas.set({
 
     checkForResize: true,
+    fit: 'contain',
+    checkForResize: true,
+    ignoreCanvasCssDimensions: true,
 
-    // The __base-matches-display__ approach
-    // + TODO: the swan hit detection is flaky
-    // + TODO: issues with Phrase positioning picking up on canvas dimensions changes
-    // + On the positive side, text doesn't distort
-
-    // baseMatchesCanvasDimensions: true,
-
-    // The __fit-base-into-display__ approach
-    // + Positives - collision detection is a lot better
-    // + 'fill' - distorts display
-    // + 'cover', 'none' - leads to situations where controls disappear from view
-    // + 'contain' - at more extreme letterbox/chimney displays the text gets too small to be useful
-
-    fit: 'fill',
-
-// Comment setBase out for base-matches-display approach
 }).setBase({
 
     width: 640,
@@ -99,6 +88,7 @@ scrawl.makePhrase({
         });
 
         // '§UNDERLINE§' is a section class marker which makes subsequent letters underlined
+        // ___Note:___ - dynamic underlining is currently not triggering in Firefox browser
         this.set({
             text: `§UNDERLINE§${this.text}`,
         });
@@ -484,22 +474,12 @@ let videoTimeBar = function () {
 }();
 
 
-let report = function () {
+// #### Scene animation
+// Function to display frames-per-second data, and other information relevant to the demo
+const report = reportSpeed('#reportmessage');
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
 
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
-    };
-}();
-
+// Create the Animation loop which will run the Display cycle
 scrawl.makeRender({
     name: 'test-animation',
     target: canvas,
@@ -508,4 +488,6 @@ scrawl.makeRender({
     afterShow: report,
 });
 
+
+// #### Development and testing
 console.log(scrawl.library);

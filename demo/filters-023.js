@@ -4,6 +4,8 @@
 // [Run code](../../demo/filters-023.html)
 import scrawl from '../source/scrawl.js';
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -47,29 +49,12 @@ scrawl.makePicture({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
-
-    let width = document.querySelector('#width');
-    let height = document.querySelector('#height');
-    let level = document.querySelector('#level');
-    let opacity = document.querySelector('#opacity');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Width: ${width.value}, Height: ${height.value}
+    return `    Width: ${width.value}, Height: ${height.value}
     Level: ${level.value}
-    Opacity: ${opacity.value}`;
-    };
-}();
+    Opacity - ${opacity.value}`;
+});
 
 
 // Create the Display cycle animation
@@ -106,14 +91,20 @@ scrawl.observeAndUpdate({
 });
 
 // Setup form
+const width = document.querySelector('#width'), 
+    height = document.querySelector('#height'), 
+    level = document.querySelector('#level'),
+    opacity = document.querySelector('#opacity');
+
+width.value = 6;
+height.value = 6;
+level.value = 0.5;
+opacity.value = 1;
+
 document.querySelector('#includeRed').options.selectedIndex = 1;
 document.querySelector('#includeGreen').options.selectedIndex = 1;
 document.querySelector('#includeBlue').options.selectedIndex = 1;
 document.querySelector('#includeAlpha').options.selectedIndex = 1;
-document.querySelector('#width').value = 6;
-document.querySelector('#height').value = 6;
-document.querySelector('#level').value = 0.5;
-document.querySelector('#opacity').value = 1;
 
 
 // #### Development and testing

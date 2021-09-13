@@ -45,6 +45,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/random-seed.html">
+                  ./source/core/random-seed.js
+                </a>
+              
+                
                 <a class="source" href="../core/snippets.html">
                   ./source/core/snippets.js
                 </a>
@@ -1380,7 +1385,10 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
               <div class="sswrap ">
                 <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
-              <p>TODO - this isn’t working! </p>
+              <p>TODO - this isn’t working! see Demo DOM 003 where attempting to set the perspective in CSS causes the demo to fail</p>
+<ul>
+<li>Workaround is to explicitly set the stack’s perspectiveZ value in Javascript</li>
+</ul>
 
             </div>
             
@@ -2041,9 +2049,7 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">stamp</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-        <span class="hljs-keyword">let</span> self = <span class="hljs-variable language_">this</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">stamp</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {</pre></div></div>
             
         </li>
         
@@ -2054,9 +2060,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
               <div class="sswrap ">
                 <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
-              <p>return new Promise((resolve, reject) =&gt; {</p>
+              <p>do not process if the DOM element is missing</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         
@@ -2067,11 +2075,46 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
               <div class="sswrap ">
                 <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
-              <pre><code><span class="hljs-comment">// do not process if the DOM element is missing</span>
-<span class="hljs-keyword">if</span> (!self.<span class="hljs-property">domElement</span>) <span class="hljs-title function_">reject</span>(<span class="hljs-literal">false</span>);
-</code></pre>
+              <p>calculate transform strings on each iteration</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">let</span> [stampX, stampY] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>,
+            [handleX, handleY] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampHandlePosition</span>,
+            scale = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentScale</span>;
+
+        <span class="hljs-keyword">let</span> rotation = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentRotation</span>,
+            v, vx, vy, vz, angle;
+
+        <span class="hljs-keyword">let</span> nTransformOrigin = <span class="hljs-string">`<span class="hljs-subst">${handleX}</span>px <span class="hljs-subst">${handleY}</span>px 0`</span>,
+            nTransform = <span class="hljs-string">`translate(<span class="hljs-subst">${stampX - handleX}</span>px,<span class="hljs-subst">${stampY - handleY}</span>px)`</span>;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">yaw</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">pitch</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">roll</span> || (<span class="hljs-variable language_">this</span>.<span class="hljs-property">pivot</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">addPivotRotation</span>) || (<span class="hljs-variable language_">this</span>.<span class="hljs-property">mimic</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">useMimicRotation</span>) || (<span class="hljs-variable language_">this</span>.<span class="hljs-property">path</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">addPathRotation</span>)) {
+
+            v = rotation.<span class="hljs-property">v</span>;
+            vx = v.<span class="hljs-property">x</span>;
+            vy = v.<span class="hljs-property">y</span>;
+            vz = v.<span class="hljs-property">z</span>;
+            angle = rotation.<span class="hljs-title function_">getAngle</span>(<span class="hljs-literal">false</span>);
+
+            nTransform += <span class="hljs-string">` rotate3d(<span class="hljs-subst">${vx}</span>,<span class="hljs-subst">${vy}</span>,<span class="hljs-subst">${vz}</span>,<span class="hljs-subst">${angle}</span>rad)`</span>;
+        }
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">offsetZ</span>) nTransform += <span class="hljs-string">` translateZ(<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.offsetZ}</span>px)`</span>;
+
+        <span class="hljs-keyword">if</span> (scale !== <span class="hljs-number">1</span>) nTransform += <span class="hljs-string">` scale(<span class="hljs-subst">${scale}</span>,<span class="hljs-subst">${scale}</span>)`</span>;
+
+        <span class="hljs-keyword">if</span> (nTransform !== <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentTransformString</span>) {
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentTransformString</span> = nTransform;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyTransform</span> = <span class="hljs-literal">true</span>;
+        }
+
+        <span class="hljs-keyword">if</span> (nTransformOrigin !== <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentTransformOriginString</span>) {
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentTransformOriginString</span> = nTransformOrigin;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyTransformOrigin</span> = <span class="hljs-literal">true</span>;
+        }</pre></div></div>
             
         </li>
         
@@ -2082,13 +2125,15 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
               <div class="sswrap ">
                 <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
-              <pre><code><span class="hljs-comment">// calculate transform strings on each iteration</span>
-<span class="hljs-keyword">let</span> [stampX, stampY] = self.<span class="hljs-property">currentStampPosition</span>,
-    [handleX, handleY] = self.<span class="hljs-property">currentStampHandlePosition</span>,
-    scale = self.<span class="hljs-property">currentScale</span>;
-</code></pre>
+              <p>determine whether there is a need to trigger a redraw of the DOM element</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyTransform</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPerspective</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPosition</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDomDimensions</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyTransformOrigin</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyVisibility</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCss</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyClasses</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">domShowRequired</span>) {
+
+            <span class="hljs-title function_">addDomShowElement</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
+            <span class="hljs-title function_">setDomShowRequired</span>(<span class="hljs-literal">true</span>);
+        }</pre></div></div>
             
         </li>
         
@@ -2099,11 +2144,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
               <div class="sswrap ">
                 <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
-              <pre><code><span class="hljs-keyword">let</span> rotation = self.<span class="hljs-property">currentRotation</span>,
-    v, vx, vy, vz, angle;
-</code></pre>
+              <p>update artefacts subscribed to this artefact (using it as their pivot or mimic source), if required</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPositionSubscribers</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updatePositionSubscribers</span>();</pre></div></div>
             
         </li>
         
@@ -2114,11 +2159,23 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
               <div class="sswrap ">
                 <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
-              <pre><code><span class="hljs-keyword">let</span> nTransformOrigin = <span class="hljs-string">`<span class="hljs-subst">${handleX}</span>px <span class="hljs-subst">${handleY}</span>px 0`</span>,
-    nTransform = <span class="hljs-string">`translate(<span class="hljs-subst">${stampX - handleX}</span>px,<span class="hljs-subst">${stampY - handleY}</span>px)`</span>;
-</code></pre>
+              <p>if this artefact’s pivot or mimic source was playing up, reset appropriate dirty flags so we can try and fix on next iteration</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyMimicRotation</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPivotRotation</span>) {
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyMimicRotation</span> = <span class="hljs-literal">false</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPivotRotation</span> = <span class="hljs-literal">false</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyRotation</span> = <span class="hljs-literal">true</span>;
+        }
+
+        <span class="hljs-keyword">if</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyMimicScale</span>) {
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyMimicScale</span> = <span class="hljs-literal">false</span>;
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScale</span> = <span class="hljs-literal">true</span>;
+        }
+    };</pre></div></div>
             
         </li>
         
@@ -2128,390 +2185,6 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
               
               <div class="sswrap ">
                 <a class="ss" href="#section-72">&#x00a7;</a>
-              </div>
-              <pre><code><span class="hljs-keyword">if</span> (self.<span class="hljs-property">yaw</span> || self.<span class="hljs-property">pitch</span> || self.<span class="hljs-property">roll</span> || (self.<span class="hljs-property">pivot</span> &amp;&amp; self.<span class="hljs-property">addPivotRotation</span>) || (self.<span class="hljs-property">mimic</span> &amp;&amp; self.<span class="hljs-property">useMimicRotation</span>) || (self.<span class="hljs-property">path</span> &amp;&amp; self.<span class="hljs-property">addPathRotation</span>)) {
-</code></pre>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-73">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-73">&#x00a7;</a>
-              </div>
-              <pre><code>    v = rotation.<span class="hljs-property">v</span>;
-    vx = v.<span class="hljs-property">x</span>;
-    vy = v.<span class="hljs-property">y</span>;
-    vz = v.<span class="hljs-property">z</span>;
-    angle = rotation.<span class="hljs-title function_">getAngle</span>(<span class="hljs-literal">false</span>);
-</code></pre>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-74">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-74">&#x00a7;</a>
-              </div>
-              <pre><code>    nTransform += <span class="hljs-string">` rotate3d(<span class="hljs-subst">${vx}</span>,<span class="hljs-subst">${vy}</span>,<span class="hljs-subst">${vz}</span>,<span class="hljs-subst">${angle}</span>rad)`</span>;
-}
-</code></pre>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-75">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-75">&#x00a7;</a>
-              </div>
-              <pre><code><span class="hljs-keyword">if</span> (self.<span class="hljs-property">offsetZ</span>) nTransform += <span class="hljs-string">` translateZ(<span class="hljs-subst">${self.offsetZ}</span>px)`</span>;
-</code></pre>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-76">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-76">&#x00a7;</a>
-              </div>
-              <pre><code><span class="hljs-keyword">if</span> (scale !== <span class="hljs-number">1</span>) nTransform += <span class="hljs-string">` scale(<span class="hljs-subst">${scale}</span>,<span class="hljs-subst">${scale}</span>)`</span>;
-</code></pre>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-77">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-77">&#x00a7;</a>
-              </div>
-              <pre><code><span class="hljs-keyword">if</span> (nTransform !== self.<span class="hljs-property">currentTransformString</span>) {
-</code></pre>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-78">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-78">&#x00a7;</a>
-              </div>
-              <pre><code>    self.<span class="hljs-property">currentTransformString</span> = nTransform;
-    self.<span class="hljs-property">dirtyTransform</span> = <span class="hljs-literal">true</span>;
-}
-</code></pre>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-79">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-79">&#x00a7;</a>
-              </div>
-              <pre><code><span class="hljs-keyword">if</span> (nTransformOrigin !== self.<span class="hljs-property">currentTransformOriginString</span>) {
-</code></pre>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-80">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-80">&#x00a7;</a>
-              </div>
-              <pre><code>    self.<span class="hljs-property">currentTransformOriginString</span> = nTransformOrigin;
-    self.<span class="hljs-property">dirtyTransformOrigin</span> = <span class="hljs-literal">true</span>;
-}
-</code></pre>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-81">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-81">&#x00a7;</a>
-              </div>
-              <pre><code><span class="hljs-comment">// determine whether there is a need to trigger a redraw of the DOM element</span>
-<span class="hljs-keyword">if</span> (self.<span class="hljs-property">dirtyTransform</span> || self.<span class="hljs-property">dirtyPerspective</span> || self.<span class="hljs-property">dirtyPosition</span> || self.<span class="hljs-property">dirtyDomDimensions</span> || self.<span class="hljs-property">dirtyTransformOrigin</span> || self.<span class="hljs-property">dirtyVisibility</span> || self.<span class="hljs-property">dirtyCss</span> || self.<span class="hljs-property">dirtyClasses</span> || self.<span class="hljs-property">domShowRequired</span>) {
-</code></pre>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-82">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-82">&#x00a7;</a>
-              </div>
-              <pre><code>    <span class="hljs-title function_">addDomShowElement</span>(self.<span class="hljs-property">name</span>);
-    <span class="hljs-title function_">setDomShowRequired</span>(<span class="hljs-literal">true</span>);
-}
-</code></pre>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-83">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-83">&#x00a7;</a>
-              </div>
-              <pre><code><span class="hljs-comment">// update artefacts subscribed to this artefact (using it as their pivot or mimic source), if required</span>
-<span class="hljs-keyword">if</span> (self.<span class="hljs-property">dirtyPositionSubscribers</span>) self.<span class="hljs-title function_">updatePositionSubscribers</span>();
-</code></pre>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-84">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-84">&#x00a7;</a>
-              </div>
-              <pre><code><span class="hljs-comment">// if this artefact&#x27;s pivot or mimic source was playing up, reset appropriate dirty flags so we can try and fix on next iteration</span>
-<span class="hljs-keyword">if</span>(self.<span class="hljs-property">dirtyMimicRotation</span> || self.<span class="hljs-property">dirtyPivotRotation</span>) {
-</code></pre>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-85">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-85">&#x00a7;</a>
-              </div>
-              <pre><code>    self.<span class="hljs-property">dirtyMimicRotation</span> = <span class="hljs-literal">false</span>;
-    self.<span class="hljs-property">dirtyPivotRotation</span> = <span class="hljs-literal">false</span>;
-    self.<span class="hljs-property">dirtyRotation</span> = <span class="hljs-literal">true</span>;
-}
-</code></pre>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-86">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-86">&#x00a7;</a>
-              </div>
-              <pre><code><span class="hljs-keyword">if</span>(self.<span class="hljs-property">dirtyMimicScale</span>) {
-</code></pre>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-87">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-87">&#x00a7;</a>
-              </div>
-              <pre><code>    self.<span class="hljs-property">dirtyMimicScale</span> = <span class="hljs-literal">false</span>;
-    self.<span class="hljs-property">dirtyScale</span> = <span class="hljs-literal">true</span>;
-}
-</code></pre>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-88">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-88">&#x00a7;</a>
-              </div>
-              <pre><code><span class="hljs-title function_">resolve</span>(<span class="hljs-literal">true</span>);
-</code></pre>
-<p>});</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-89">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-89">&#x00a7;</a>
-              </div>
-              <p>do not process if the DOM element is missing</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-90">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-90">&#x00a7;</a>
-              </div>
-              <p>calculate transform strings on each iteration</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">let</span> [stampX, stampY] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampPosition</span>,
-                [handleX, handleY] = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStampHandlePosition</span>,
-                scale = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentScale</span>;
-
-            <span class="hljs-keyword">let</span> rotation = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentRotation</span>,
-                v, vx, vy, vz, angle;
-
-            <span class="hljs-keyword">let</span> nTransformOrigin = <span class="hljs-string">`<span class="hljs-subst">${handleX}</span>px <span class="hljs-subst">${handleY}</span>px 0`</span>,
-                nTransform = <span class="hljs-string">`translate(<span class="hljs-subst">${stampX - handleX}</span>px,<span class="hljs-subst">${stampY - handleY}</span>px)`</span>;
-
-            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">yaw</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">pitch</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">roll</span> || (<span class="hljs-variable language_">this</span>.<span class="hljs-property">pivot</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">addPivotRotation</span>) || (<span class="hljs-variable language_">this</span>.<span class="hljs-property">mimic</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">useMimicRotation</span>) || (<span class="hljs-variable language_">this</span>.<span class="hljs-property">path</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">addPathRotation</span>)) {
-
-                v = rotation.<span class="hljs-property">v</span>;
-                vx = v.<span class="hljs-property">x</span>;
-                vy = v.<span class="hljs-property">y</span>;
-                vz = v.<span class="hljs-property">z</span>;
-                angle = rotation.<span class="hljs-title function_">getAngle</span>(<span class="hljs-literal">false</span>);
-
-                nTransform += <span class="hljs-string">` rotate3d(<span class="hljs-subst">${vx}</span>,<span class="hljs-subst">${vy}</span>,<span class="hljs-subst">${vz}</span>,<span class="hljs-subst">${angle}</span>rad)`</span>;
-            }
-
-            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">offsetZ</span>) nTransform += <span class="hljs-string">` translateZ(<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.offsetZ}</span>px)`</span>;
-
-            <span class="hljs-keyword">if</span> (scale !== <span class="hljs-number">1</span>) nTransform += <span class="hljs-string">` scale(<span class="hljs-subst">${scale}</span>,<span class="hljs-subst">${scale}</span>)`</span>;
-
-            <span class="hljs-keyword">if</span> (nTransform !== <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentTransformString</span>) {
-
-                <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentTransformString</span> = nTransform;
-                <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyTransform</span> = <span class="hljs-literal">true</span>;
-            }
-
-            <span class="hljs-keyword">if</span> (nTransformOrigin !== <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentTransformOriginString</span>) {
-
-                <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentTransformOriginString</span> = nTransformOrigin;
-                <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyTransformOrigin</span> = <span class="hljs-literal">true</span>;
-            }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-91">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-91">&#x00a7;</a>
-              </div>
-              <p>determine whether there is a need to trigger a redraw of the DOM element</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyTransform</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPerspective</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPosition</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDomDimensions</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyTransformOrigin</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyVisibility</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCss</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyClasses</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">domShowRequired</span>) {
-
-                <span class="hljs-title function_">addDomShowElement</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
-                <span class="hljs-title function_">setDomShowRequired</span>(<span class="hljs-literal">true</span>);
-            }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-92">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-92">&#x00a7;</a>
-              </div>
-              <p>update artefacts subscribed to this artefact (using it as their pivot or mimic source), if required</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPositionSubscribers</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updatePositionSubscribers</span>();</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-93">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-93">&#x00a7;</a>
-              </div>
-              <p>if this artefact’s pivot or mimic source was playing up, reset appropriate dirty flags so we can try and fix on next iteration</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyMimicRotation</span> || <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPivotRotation</span>) {
-
-                <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyMimicRotation</span> = <span class="hljs-literal">false</span>;
-                <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPivotRotation</span> = <span class="hljs-literal">false</span>;
-                <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyRotation</span> = <span class="hljs-literal">true</span>;
-            }
-
-            <span class="hljs-keyword">if</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyMimicScale</span>) {
-
-                <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyMimicScale</span> = <span class="hljs-literal">false</span>;
-                <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyScale</span> = <span class="hljs-literal">true</span>;
-            }
-    };</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-94">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-94">&#x00a7;</a>
               </div>
               <p><code>apply</code></p>
 <ul>
@@ -2536,11 +2209,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-95">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-95">&#x00a7;</a>
+                <a class="ss" href="#section-73">&#x00a7;</a>
               </div>
               <p>Return the prototype</p>
 

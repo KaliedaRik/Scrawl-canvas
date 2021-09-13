@@ -4,6 +4,8 @@
 // [Run code](../../demo/filters-017.html)
 import scrawl from '../source/scrawl.js';
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -67,30 +69,12 @@ scrawl.makePicture({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
-
-    let scale_x = document.querySelector('#scale_x'),
-        scale_y = document.querySelector('#scale_y'),
-        offset_x = document.querySelector('#offset_x'),
-        offset_y = document.querySelector('#offset_y'),
-        opacity = document.querySelector('#opacity');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Scales - x: ${scale_x.value} y: ${scale_y.value}
-    Offsets - x: ${offset_x.value} y: ${offset_y.value}
-    Opacity - ${opacity.value}`;
-    };
-}();
+    return `    Scales - x: ${scaleX.value}, y: ${scaleY.value}
+    Offset - x: ${offsetX.value}, y: ${offsetY.value}
+    Opacity: ${opacity.value}`;
+});
 
 
 // Create the Display cycle animation
@@ -126,11 +110,18 @@ scrawl.observeAndUpdate({
 });
 
 // Setup form
-document.querySelector('#offset_x').value = 0;
-document.querySelector('#offset_y').value = 0;
-document.querySelector('#scale_x').value = 1;
-document.querySelector('#scale_y').value = 1;
-document.querySelector('#opacity').value = 1;
+const offsetX = document.querySelector('#offset_x'),
+    offsetY = document.querySelector('#offset_y'),
+    scaleX = document.querySelector('#scale_x'),
+    scaleY = document.querySelector('#scale_y'),
+    opacity = document.querySelector('#opacity');
+
+offsetX.value = 0;
+offsetY.value = 0;
+scaleX.value = 1;
+scaleY.value = 1;
+opacity.value = 1;
+
 document.querySelector('#transparent_edges').options.selectedIndex = 0;
 
 

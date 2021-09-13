@@ -4,6 +4,8 @@
 // [Run code](../../demo/dom-002.html)
 import scrawl from '../source/scrawl.js'
 
+import { reportSpeed } from './utilities.js';
+
 
 // #### Scene setup
 // Create some useful variables for use elsewhere in the script
@@ -92,24 +94,23 @@ let stackCheck = function () {
 
 
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
+    const [width, height] = element.dimensions;
+    const [startX, startY] = element.start;
+    const [handleX, handleY] = element.handle;
 
-    return function () {
+    const lockTo = element.lockTo.join(', ');
 
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
+    const {roll, pitch, yaw, scale} = element;
 
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-lock to: «${element.lockTo}»; width: ${element.get('width')}; height: ${element.get('height')}
-start: [${element.start}]; handle: [${element.handle}]
-scale: ${element.get('scale')}; roll: ${element.get('roll')}°; pitch: ${element.get('pitch')}°; yaw: ${element.get('yaw')}°`;
-    };
-}();
+    return `    lock to: «${lockTo}»
+    dimensions - width: ${width}, height: ${height}
+    start - x: ${startX}, y: ${startY}
+    handle - x: ${handleX}, y: ${handleY}
+    scale: ${scale}
+    roll: ${roll}°, pitch: ${pitch}°, yaw: ${yaw}°`;
+});
 
 
 // Create the Display cycle animation

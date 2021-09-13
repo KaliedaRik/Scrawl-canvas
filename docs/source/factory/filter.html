@@ -45,6 +45,11 @@
                 </a>
               
                 
+                <a class="source" href="../core/random-seed.html">
+                  ./source/core/random-seed.js
+                </a>
+              
+                
                 <a class="source" href="../core/snippets.html">
                   ./source/core/snippets.js
                 </a>
@@ -513,7 +518,8 @@
 <p><code>step-channels</code> - Takes three divisor values - “red”, “green”, “blue”. For each pixel, its color channel values are divided by the corresponding color divisor, floored to the integer value and then multiplied by the divisor. For example a divisor value of ‘50’ applied to a channel value of ‘120’ will give a result of ‘100’. The output is a form of posterization. Object attributes: <code>action, lineIn, lineOut, opacity, red, green, blue</code></p>
 <p><code>threshold</code> - Grayscales the input then, for each pixel, checks the color channel values against a “level” argument: pixels with channel values above the level value are assigned to the ‘high’ color; otherwise they are updated to the ‘low’ color. The “high” and “low” arguments are [red, green, blue] integer Number Arrays. The convenience function will accept the pseudo-attributes “highRed”, “lowRed” etc in place of the “high” and “low” Arrays. Object attributes: <code>action, lineIn, lineOut, opacity, low, high; pseudo-arguments: lowRed, lowGreen, lowBlue, highRed, highGreen, highBlue</code></p>
 <p><code>tint-channels</code> - Has similarities to the SVG <feColorMatrix> filter element, but excludes the alpha channel from calculations. Rather than set a matrix, we set nine arguments to determine how the value of each color channel in a pixel will affect both itself and its fellow color channels. The ‘sepia’ convenience filter presets these values to create a sepia effect. Object attributes: <code>action, lineIn, lineOut, opacity, redInRed, redInGreen, redInBlue, greenInRed, greenInGreen, greenInBlue, blueInRed, blueInGreen, blueInBlue</code></p>
-<p><code>user-defined-legacy</code> - Previous to Scrawl-canvas version 8.4.0, filters could be defined with an argument which passed a function string to a filter web worker, which the worker would then run against the source input image as-and-when required. This functionality has been removed from the new filter system. All such filters will now return the input image unchanged. Object attributes: action, lineIn, lineOut, opacity</p>
+<p><code>user-defined-legacy</code> - Previous to Scrawl-canvas version 8.4.0, filters could be defined with an argument which passed a function string to a filter web worker, which the worker would then run against the source input image as-and-when required. This functionality has been removed from the new filter system. All such filters will now return the input image unchanged. Object attributes: <code>action, lineIn, lineOut, opacity</code></p>
+<p><code>vary-channels-by-weights</code> - curves filter (for image processing tonality). The weights array must by 1024 elements long, with each element defaulting to a value of <code>1.0</code>. Object attributes: <code>action, lineIn, lineOut, opacity, weights, useMixedChannel</code></p>
 <pre><code><span class="hljs-comment">// Example: the following code creates a filter that applies a thick red border around the entitys </span>
 <span class="hljs-comment">// it is applied to; if used on a group then it will outline the outside of the group&#x27;s entitys, </span>
 <span class="hljs-comment">// ignoring overlaps between entitys:</span>
@@ -707,7 +713,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
 <ul>
 <li>Filter factory invocations which include the method attribute in their argument object do not need to include an actions attribute; the factory will build the action objects for us.</li>
 <li>When using the method attribute, other attributes can be included alongside it. The filter factory will automatically transpose these attributes to the action object.</li>
-<li>The following Strings are valid methods: <code>&#39;areaAlpha&#39;, &#39;binary&#39;, &#39;blend&#39;, &#39;blue&#39;, &#39;blur&#39;, &#39;brightness&#39;, &#39;channelLevels&#39;, &#39;channels&#39;, &#39;channelstep&#39;, &#39;channelsToAlpha&#39;, &#39;chroma&#39;, &#39;chromakey&#39;, &#39;clampChannels&#39;, &#39;compose&#39;, &#39;cyan&#39;, &#39;displace&#39;, &#39;edgeDetect&#39;,  &#39;emboss&#39;, &#39;flood&#39;, &#39;gray&#39;, &#39;grayscale&#39;, &#39;green&#39;, &#39;image&#39;, &#39;invert&#39;, &#39;magenta&#39;, &#39;matrix&#39;, &#39;matrix5&#39;, &#39;notblue&#39;, &#39;notgreen&#39;, &#39;notred&#39;, &#39;offset&#39;, &#39;offsetChannels&#39;, &#39;pixelate&#39;, &#39;red&#39;, &#39;saturation&#39;, &#39;sepia&#39;, &#39;sharpen&#39;, &#39;threshold&#39;, &#39;tint&#39;, &#39;userDefined&#39;, &#39;yellow&#39;</code></li>
+<li>The following Strings are valid methods: <code>&#39;alphaToChannels&#39;, &#39;areaAlpha&#39;, &#39;binary&#39;, &#39;blend&#39;, &#39;blue&#39;, &#39;blur&#39;, &#39;brightness&#39;, &#39;channelLevels&#39;, &#39;channels&#39;, &#39;channelstep&#39;, &#39;channelsToAlpha&#39;, &#39;chroma&#39;, &#39;chromakey&#39;, &#39;clampChannels&#39;, &#39;compose&#39;, &#39;corrode&#39;, &#39;curveWeights&#39;, &#39;cyan&#39;, &#39;displace&#39;, &#39;edgeDetect&#39;,  &#39;emboss&#39;, &#39;flood&#39;, &#39;gaussianBlur&#39;, &#39;gray&#39;, &#39;grayscale&#39;, &#39;green&#39;, &#39;image&#39;, &#39;invert&#39;, &#39;magenta&#39;, &#39;mapToGradient&#39;, &#39;matrix&#39;, &#39;matrix5&#39;, &#39;notblue&#39;, &#39;notgreen&#39;, &#39;notred&#39;, &#39;offset&#39;, &#39;offsetChannels&#39;, &#39;pixelate&#39;, &#39;randomNoise&#39;, &#39;red&#39;, &#39;saturation&#39;, &#39;sepia&#39;, &#39;sharpen&#39;, &#39;threshold&#39;, &#39;tint&#39;, &#39;userDefined&#39;, &#39;yellow&#39;</code></li>
 </ul>
 
             </div>
@@ -797,6 +803,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
 <li><a href="../../demo/filters-021.html">Filters-021</a> - Parameters for: corrode filter</li>
 <li><a href="../../demo/filters-022.html">Filters-022</a> - Parameters for: mapToGradient filter</li>
 <li><a href="../../demo/filters-023.html">Filters-023</a> - Parameters for: randomNoise filter</li>
+<li><a href="../../demo/filters-024.html">Filters-024</a> - Parameters for: curveNoise filter</li>
 </ul>
 
             </div>
@@ -876,6 +883,7 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
     <span class="hljs-attr">tolerance</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">transparentAt</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">transparentEdges</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">useMixedChannel</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">useNaturalGrayscale</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">weights</span>: <span class="hljs-literal">null</span>,
     <span class="hljs-attr">width</span>: <span class="hljs-number">1</span>,
@@ -1314,29 +1322,6 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
-              <p><strong>gaussianBlur</strong> - from this GitHub repository: <a href="https://github.com/nodeca/glur/blob/master/index.js">https://github.com/nodeca/glur/blob/master/index.js</a> (code accessed 1 June 2021)</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">gaussianBlur</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
-        f.<span class="hljs-property">actions</span> = [{
-            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;gaussian-blur&#x27;</span>,
-            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
-            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
-            <span class="hljs-attr">radius</span>: (f.<span class="hljs-property">radius</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">radius</span> : <span class="hljs-number">1</span>,
-        }];
-    },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-30">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
-              </div>
               <p><strong>brightness</strong> - adjusts the brightness of the image</p>
 
             </div>
@@ -1358,11 +1343,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-31">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p><strong>channelLevels</strong> (new in v8.4.0) - produces a posterize effect. Takes in four arguments - <code>red</code>, <code>green</code>, <code>blue</code> and <code>alpha</code> - each of which is an Array of zero or more integer Numbers (between 0 and 255). The filter works by looking at each pixel’s channel value and determines which of the corresponding Array’s Number values it is closest to; it then sets the channel value to that Number value</p>
 
@@ -1384,11 +1369,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-32">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p><strong>channels</strong> - adjust the value of each channel by a specified multiplier</p>
 
@@ -1410,11 +1395,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-33">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p><strong>channelstep</strong> - restrict the number of color values that each channel can set by imposing regular bands on each channel</p>
 
@@ -1435,11 +1420,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-34">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p><strong>channelsToAlpha</strong> (new in v8.4.0) - calculates an average value from each pixel’s included channels and applies that value to the alpha channel.</p>
 
@@ -1460,11 +1445,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-35">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p><strong>chroma</strong> - using an array of <code>range</code> arrays, determine whether a pixel’s values lie entirely within a range’s values and, if true, sets that pixel’s alpha channel value to zero. Each range array comprises six Numbers representing <code>[minimum-red, minimum-green, minimum-blue, maximum-red, maximum-green, maximum-blue]</code> values.</p>
 
@@ -1483,11 +1468,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-36">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p><strong>chromakey</strong> (new in v8.4.0) - determine the alpha channel value for each pixel depending on the closeness to that pixel’s color channel values to a reference color supplied in the <code>red</code>, <code>green</code> and <code>blue</code> arguments. The sensitivity of the effect can be manipulated using the <code>transparentAt</code> and <code>opaqueAt</code> values, both of which lie in the range 0-1.</p>
 
@@ -1510,11 +1495,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-37">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p><strong>clampChannels</strong> (new in v8.4.0) - clamp each color channel to a range set by <code>lowColor</code> and <code>highColor</code> values</p>
 
@@ -1538,11 +1523,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-38">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p><strong>compose</strong> (new in v8.4.0) - perform a composite operation on two images; available <code>compose</code> options include: <code>&#39;destination-only&#39;, &#39;destination-over&#39;, &#39;destination-in&#39;, &#39;destination-out&#39;, &#39;destination-atop&#39;, &#39;source-only&#39;, &#39;source-over&#39; (default), &#39;source-in&#39;, &#39;source-out&#39;, &#39;source-atop&#39;, &#39;clear&#39;, and &#39;xor&#39;</code> - see <a href="https://www.w3.org/TR/compositing-1/#porterduffcompositingoperators">W3C Compositing and Blending recommendations</a></p>
 
@@ -1564,11 +1549,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-39">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p><strong>corrode</strong> (new in v8.5.2) - performs a special form of matrix operation on each pixel’s color and alpha channels, calculating the new value using neighbouring pixel values. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the <code>width</code> and <code>height</code> arguments, while setting the home pixel’s position within the matrix can be set using the <code>offsetX</code> and <code>offsetY</code> arguments. The operation will set the pixel’s channel value to match either the lowest, highest, mean or median values as dictated by its neighbours - this value is set in the <code>level</code> attribute. Channels can be selected by setting the <code>includeRed</code>, <code>includeGreen</code>, <code>includeBlue</code> (all false by default) and <code>includeAlpha</code> (default: true) flags.</p>
 
@@ -1589,6 +1574,30 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
             <span class="hljs-attr">includeAlpha</span>: (f.<span class="hljs-property">includeAlpha</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">includeAlpha</span> : <span class="hljs-literal">true</span>,
             <span class="hljs-attr">operation</span>: (f.<span class="hljs-property">operation</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">operation</span> : <span class="hljs-string">&#x27;mean&#x27;</span>,
             <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
+        }];
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-39">&#x00a7;</a>
+              </div>
+              <p><strong>curveWeights</strong> (new in v8.6.1) - curves filter (for image processing tonality). The weights array must by 1024 elements long, with each element defaulting to a value of 1.0</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">curveWeights</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
+            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;vary-channels-by-weights&#x27;</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">weights</span>: (f.<span class="hljs-property">weights</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">weights</span> : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">useMixedChannel</span>: (f.<span class="hljs-property">useMixedChannel</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">useMixedChannel</span> : <span class="hljs-literal">true</span>,
         }];
     },</pre></div></div>
             
@@ -1780,6 +1789,29 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
+              <p><strong>gaussianBlur</strong> - from this GitHub repository: <a href="https://github.com/nodeca/glur/blob/master/index.js">https://github.com/nodeca/glur/blob/master/index.js</a> (code accessed 1 June 2021)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">gaussianBlur</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
+            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;gaussian-blur&#x27;</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">radius</span>: (f.<span class="hljs-property">radius</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">radius</span> : <span class="hljs-number">1</span>,
+        }];
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-46">&#x00a7;</a>
+              </div>
               <p><strong>gray</strong> (new in v8.4.0) - averages the three color channel colors</p>
 
             </div>
@@ -1799,11 +1831,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-46">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p><strong>grayscale</strong> - produces a more realistic black-and-white photograph effect</p>
 
@@ -1821,11 +1853,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p><strong>green</strong> - removes red and blue channel color from the image</p>
 
@@ -1845,11 +1877,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p><strong>image</strong> (new in v8.4.0) - load an image into the filter engine, where it can then be used by other filter actions - useful for effects such as watermarking an image</p>
 
@@ -1873,11 +1905,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p><strong>invert</strong> - inverts the colors in the image, producing an effect similar to a photograph negative</p>
 
@@ -1898,11 +1930,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p><strong>magenta</strong> - removes green channel color from the image, and averages the remaining channel colors</p>
 
@@ -1923,11 +1955,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-51">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p><strong>mapToGradient</strong> - produces a more realistic black-and-white photograph effect</p>
 
@@ -1950,11 +1982,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-52">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p><strong>matrix</strong> - applies a 3x3 convolution matrix, kernel or mask operation to the image</p>
 
@@ -1981,11 +2013,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-53">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p><strong>matrix5</strong> - applies a 5x5 convolution matrix, kernel or mask operation to the image</p>
 
@@ -2012,11 +2044,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-54">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p><strong>notblue</strong> - zeroes the blue channel values (not the same effect as the yellow filter)</p>
 
@@ -2036,11 +2068,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-55">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p><strong>notgreen</strong> - zeroes the green channel values (not the same effect as the magenta filter)</p>
 
@@ -2060,11 +2092,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-56">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p><strong>notred</strong> - zeroes the red channel values (not the same effect as the cyan filter)</p>
 
@@ -2084,11 +2116,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-57">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p><strong>offset</strong> (new in v8.4.0) - moves the image in its entirety by the given offset</p>
 
@@ -2114,11 +2146,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-58">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p><strong>offsetChannels</strong> (new in v8.4.0) - moves each channel  by an offset set for that channel. Can create a crude stereoscopic output</p>
 
@@ -2144,11 +2176,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-59">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <p><strong>pixelate</strong> - averages the colors in a block to produce a series of obscuring tiles</p>
 
@@ -2174,13 +2206,13 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-60">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
-              <p><strong>randomNoise</strong> - creates a stippling effect across the image</p>
+              <p><strong>randomNoise</strong> (new in v8.6.0) - creates a stippling effect across the image</p>
 
             </div>
             
@@ -2205,11 +2237,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-61">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p><strong>red</strong> - removes blue and green channel color from the image</p>
 
@@ -2229,11 +2261,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-62">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p><strong>saturation</strong> - alters the saturation level of the image</p>
 
@@ -2257,11 +2289,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-63">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <p><strong>sepia</strong> - recalculates the values of each color channel (a tint action) to create a more ‘antique’ version of the image</p>
 
@@ -2288,11 +2320,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-64">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <p><strong>sharpen</strong> (new in v8.4.0) - applies a preset 3x3 sharpen matrix to the image</p>
 
@@ -2319,11 +2351,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-65">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <p><strong>threshold</strong> - creates a duotone effect - grayscales the input then, for each pixel, checks the color channel values against a “level” argument: pixels with channel values above the level value are assigned to the ‘high’ color; otherwise they are updated to the ‘low’ color.</p>
 
@@ -2358,11 +2390,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-66">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <p><strong>tint</strong> - has similarities to the SVG &lt;feColorMatrix&gt; filter element, but excludes the alpha channel from calculations. Rather than set a matrix, we set nine arguments to determine how the value of each color channel in a pixel will affect both itself and its fellow color channels.</p>
 
@@ -2389,11 +2421,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-67">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <p><strong>userDefined</strong> - DEPRECATED - this filter method no longer has any effect, returning an unchanged image</p>
 
@@ -2411,11 +2443,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-68">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <p><strong>yellow</strong> - removes blue channel color from the image, and averages the remaining channel colors</p>
 
@@ -2437,11 +2469,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-69">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 <p>No additional prototype functions defined</p>
@@ -2451,11 +2483,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-70">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
@@ -2472,11 +2504,11 @@ constructors.<span class="hljs-property">Filter</span> = <span class="hljs-title
         </li>
         
         
-        <li id="section-71">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

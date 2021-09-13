@@ -255,6 +255,19 @@ D.startControlPathPosition = function (item) {
 
 // __startControl__
 // + pseudo-attributes __startControlX__, __startControlY__
+G.startControlPositionX = function () {
+
+    return this.currentStartControl[0];
+};
+G.startControlPositionY = function () {
+
+    return this.currentStartControl[1];
+};
+G.startControlPosition = function () {
+
+    return [].concat(this.currentStartControl);
+};
+
 S.startControlX = function (coord) {
 
     if (coord != null) {
@@ -308,6 +321,19 @@ D.startControl = function (x, y) {
 
 // __endControl__
 // + pseudo-attributes __endControlX__, __endControlY__
+G.endControlPositionX = function () {
+
+    return this.currentEndControl[0];
+};
+G.endControlPositionY = function () {
+
+    return this.currentEndControl[1];
+};
+G.endControlPosition = function () {
+
+    return [].concat(this.currentEndControl);
+};
+
 S.endControlX = function (coord) {
 
     if (coord != null) {

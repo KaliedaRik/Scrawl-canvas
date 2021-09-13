@@ -4,6 +4,8 @@
 // [Run code](../../demo/filters-012.html)
 import scrawl from '../source/scrawl.js';
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -53,26 +55,12 @@ const target = scrawl.makePicture({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
-
-    let opacity = document.querySelector('#opacity');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    matrix3 weights array: ${matrix3.weights}
+    return `    matrix3 weights array: ${matrix3.weights}
     matrix5 weights array: ${matrix5.weights}
     Opacity: ${opacity.value}`;
-    };
-}();
+});
 
 
 // Create the Display cycle animation
@@ -100,32 +88,6 @@ const changeMatrix = function () {
 scrawl.addNativeListener(['input', 'change'], changeMatrix, '#selectMatrix');
 
 const updateWeights = function () {
-
-    const m11 = document.querySelector('#m11');
-    const m12 = document.querySelector('#m12');
-    const m13 = document.querySelector('#m13');
-    const m14 = document.querySelector('#m14');
-    const m15 = document.querySelector('#m15');
-    const m21 = document.querySelector('#m21');
-    const m22 = document.querySelector('#m22');
-    const m23 = document.querySelector('#m23');
-    const m24 = document.querySelector('#m24');
-    const m25 = document.querySelector('#m25');
-    const m31 = document.querySelector('#m31');
-    const m32 = document.querySelector('#m32');
-    const m33 = document.querySelector('#m33');
-    const m34 = document.querySelector('#m34');
-    const m35 = document.querySelector('#m35');
-    const m41 = document.querySelector('#m41');
-    const m42 = document.querySelector('#m42');
-    const m43 = document.querySelector('#m43');
-    const m44 = document.querySelector('#m44');
-    const m45 = document.querySelector('#m45');
-    const m51 = document.querySelector('#m51');
-    const m52 = document.querySelector('#m52');
-    const m53 = document.querySelector('#m53');
-    const m54 = document.querySelector('#m54');
-    const m55 = document.querySelector('#m55');
 
     let weights3, weights5;
 
@@ -195,37 +157,65 @@ scrawl.observeAndUpdate({
 });
 
 // Setup form
+const m11 = document.querySelector('#m11'),
+    m12 = document.querySelector('#m12'),
+    m13 = document.querySelector('#m13'),
+    m14 = document.querySelector('#m14'),
+    m15 = document.querySelector('#m15'),
+    m21 = document.querySelector('#m21'),
+    m22 = document.querySelector('#m22'),
+    m23 = document.querySelector('#m23'),
+    m24 = document.querySelector('#m24'),
+    m25 = document.querySelector('#m25'),
+    m31 = document.querySelector('#m31'),
+    m32 = document.querySelector('#m32'),
+    m33 = document.querySelector('#m33'),
+    m34 = document.querySelector('#m34'),
+    m35 = document.querySelector('#m35'),
+    m41 = document.querySelector('#m41'),
+    m42 = document.querySelector('#m42'),
+    m43 = document.querySelector('#m43'),
+    m44 = document.querySelector('#m44'),
+    m45 = document.querySelector('#m45'),
+    m51 = document.querySelector('#m51'),
+    m52 = document.querySelector('#m52'),
+    m53 = document.querySelector('#m53'),
+    m54 = document.querySelector('#m54'),
+    m55 = document.querySelector('#m55'),
+    opacity = document.querySelector('#opacity');
+
+m11.value = 0;
+m12.value = 0;
+m13.value = 0;
+m14.value = 0;
+m15.value = 0;
+m21.value = 0;
+m22.value = 0;
+m23.value = 0;
+m24.value = 0;
+m25.value = 0;
+m31.value = 0;
+m32.value = 0;
+m33.value = 1;
+m34.value = 0;
+m35.value = 0;
+m41.value = 0;
+m42.value = 0;
+m43.value = 0;
+m44.value = 0;
+m45.value = 0;
+m51.value = 0;
+m52.value = 0;
+m53.value = 0;
+m54.value = 0;
+m55.value = 0;
+opacity.value = 1;
+
 document.querySelector('#selectMatrix').value = 'matrix3';
-document.querySelector('#m11').value = 0;
-document.querySelector('#m12').value = 0;
-document.querySelector('#m13').value = 0;
-document.querySelector('#m14').value = 0;
-document.querySelector('#m15').value = 0;
-document.querySelector('#m21').value = 0;
-document.querySelector('#m22').value = 0;
-document.querySelector('#m23').value = 0;
-document.querySelector('#m24').value = 0;
-document.querySelector('#m25').value = 0;
-document.querySelector('#m31').value = 0;
-document.querySelector('#m32').value = 0;
-document.querySelector('#m33').value = 1;
-document.querySelector('#m34').value = 0;
-document.querySelector('#m35').value = 0;
-document.querySelector('#m41').value = 0;
-document.querySelector('#m42').value = 0;
-document.querySelector('#m43').value = 0;
-document.querySelector('#m44').value = 0;
-document.querySelector('#m45').value = 0;
-document.querySelector('#m51').value = 0;
-document.querySelector('#m52').value = 0;
-document.querySelector('#m53').value = 0;
-document.querySelector('#m54').value = 0;
-document.querySelector('#m55').value = 0;
 document.querySelector('#includeRed').options.selectedIndex = 1;
 document.querySelector('#includeGreen').options.selectedIndex = 1;
 document.querySelector('#includeBlue').options.selectedIndex = 1;
 document.querySelector('#includeAlpha').options.selectedIndex = 0;
-document.querySelector('#opacity').value = 1;
 
 
 // #### Development and testing

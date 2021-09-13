@@ -71,8 +71,9 @@ const build = function (namespace, canvas, backgroundImage) {
 
         fillStyle: 'black',
 
-        shadowColor: 'white',
-        shadowBlur: 6,
+        // Adding shadow text to a canvas graphic kills performance in Firefox browsers
+        // shadowColor: 'white',
+        // shadowBlur: 6,
     });
 
     subtitle = title.clone({
@@ -100,8 +101,8 @@ const build = function (namespace, canvas, backgroundImage) {
 
         fillStyle: 'darkred',
 
-        shadowColor: 'white',
-        shadowBlur: 6,
+        // shadowColor: 'white',
+        // shadowBlur: 6,
     });
 
     yLabelBottom = yLabelTop.clone({

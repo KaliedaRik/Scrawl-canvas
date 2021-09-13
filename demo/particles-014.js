@@ -4,6 +4,8 @@
 // [Run code](../../demo/particles-014.html)
 import scrawl from '../source/scrawl.js';
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -68,7 +70,6 @@ let emitter = scrawl.makeEmitter({
     killAfterTime: 1.5,
     killBeyondCanvas: true,
 
-    // ...
     generateFromExistingParticles: true,
 
     fillMinimumColor: 'black',
@@ -77,10 +78,6 @@ let emitter = scrawl.makeEmitter({
     rangeX: 40,
     rangeFromX: -20,
     limitDirectionToAngleMultiples: 45,
-    // rangeY: 40,
-    // rangeFromY: -20,
-    // rangeZ: -1,
-    // rangeFromZ: -0.2,
 
     artefact: scrawl.makeWheel({
         name: 'trace',
@@ -124,21 +121,8 @@ scrawl.makeTween({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage');
 
-    let testTicker = Date.now(),
-        testTime, testNow, dragging,
-        testMessage = document.querySelector('#reportmessage');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}`;
-    };
-}();
 
 // Create the Display cycle animation
 const demoAnimation = scrawl.makeRender({

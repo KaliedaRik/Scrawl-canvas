@@ -305,6 +305,11 @@
                 </a>
               
                 
+                <a class="source" href="canvas-056.html">
+                  ./demo/canvas-056.js
+                </a>
+              
+                
                 <a class="source" href="core-001.html">
                   ./demo/core-001.js
                 </a>
@@ -382,21 +387,6 @@
                 
                 <a class="source" href="dom-013.html">
                   ./demo/dom-013.js
-                </a>
-              
-                
-                <a class="source" href="dom-014a.html">
-                  ./demo/dom-014a.js
-                </a>
-              
-                
-                <a class="source" href="dom-014b.html">
-                  ./demo/dom-014b.js
-                </a>
-              
-                
-                <a class="source" href="dom-014c.html">
-                  ./demo/dom-014c.js
                 </a>
               
                 
@@ -527,6 +517,11 @@
                 
                 <a class="source" href="filters-023.html">
                   ./demo/filters-023.js
+                </a>
+              
+                
+                <a class="source" href="filters-024.html">
+                  ./demo/filters-024.js
                 </a>
               
                 
@@ -675,6 +670,11 @@
                 </a>
               
                 
+                <a class="source" href="rapier-001.html">
+                  ./demo/rapier-001.js
+                </a>
+              
+                
                 <a class="source" href="snippets-001.html">
                   ./demo/snippets-001.js
                 </a>
@@ -695,6 +695,16 @@
                 </a>
               
                 
+                <a class="source" href="snippets-005.html">
+                  ./demo/snippets-005.js
+                </a>
+              
+                
+                <a class="source" href="temp-000.html">
+                  ./demo/temp-000.js
+                </a>
+              
+                
                 <a class="source" href="temp-001.html">
                   ./demo/temp-001.js
                 </a>
@@ -710,6 +720,66 @@
                 </a>
               
                 
+                <a class="source" href="temp-004.html">
+                  ./demo/temp-004.js
+                </a>
+              
+                
+                <a class="source" href="temp-005.html">
+                  ./demo/temp-005.js
+                </a>
+              
+                
+                <a class="source" href="temp-006.html">
+                  ./demo/temp-006.js
+                </a>
+              
+                
+                <a class="source" href="temp-007.html">
+                  ./demo/temp-007.js
+                </a>
+              
+                
+                <a class="source" href="temp-008.html">
+                  ./demo/temp-008.js
+                </a>
+              
+                
+                <a class="source" href="temp-009.html">
+                  ./demo/temp-009.js
+                </a>
+              
+                
+                <a class="source" href="temp-010.html">
+                  ./demo/temp-010.js
+                </a>
+              
+                
+                <a class="source" href="temp-100.html">
+                  ./demo/temp-100.js
+                </a>
+              
+                
+                <a class="source" href="temp-101.html">
+                  ./demo/temp-101.js
+                </a>
+              
+                
+                <a class="source" href="temp-102.html">
+                  ./demo/temp-102.js
+                </a>
+              
+                
+                <a class="source" href="temp-103.html">
+                  ./demo/temp-103.js
+                </a>
+              
+                
+                <a class="source" href="temp-104.html">
+                  ./demo/temp-104.js
+                </a>
+              
+                
                 <a class="source" href="temp-inkscapeSvgFilters.html">
                   ./demo/temp-inkscapeSvgFilters.js
                 </a>
@@ -722,6 +792,11 @@
                 
                 <a class="source" href="tensorflow-002.html">
                   ./demo/tensorflow-002.js
+                </a>
+              
+                
+                <a class="source" href="utilities.html">
+                  ./demo/utilities.js
                 </a>
               
             </div>
@@ -757,7 +832,9 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> scrawl <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../source/scrawl.js&#x27;</span>
+
+<span class="hljs-keyword">import</span> { reportSpeed, killArtefactAndAnchor, killStyle } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./utilities.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -1382,22 +1459,9 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> report = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-    <span class="hljs-keyword">let</span> testTicker = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(),
-        testTime, testNow,
-        testMessage = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>);
-
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
-
-        testNow = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.<span class="hljs-property">textContent</span> = <span class="hljs-string">`Screen refresh: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.ceil(testTime)}</span>ms; fps: <span class="hljs-subst">${<span class="hljs-built_in">Math</span>.floor(<span class="hljs-number">1000</span> / testTime)}</span>
-Hits: <span class="hljs-subst">${interactionResults}</span>`</span>;
-    };
-}();</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> report = <span class="hljs-title function_">reportSpeed</span>(<span class="hljs-string">&#x27;#reportmessage&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+    <span class="hljs-keyword">return</span> <span class="hljs-string">`Hits: <span class="hljs-subst">${interactionResults}</span>`</span>;
+});</pre></div></div>
             
         </li>
         
@@ -1432,7 +1496,9 @@ Hits: <span class="hljs-subst">${interactionResults}</span>`</span>;
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(scrawl.<span class="hljs-property">library</span>);
+
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Performing tests ...&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1443,81 +1509,11 @@ Hits: <span class="hljs-subst">${interactionResults}</span>`</span>;
               <div class="sswrap ">
                 <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
-              <p>To test artefact kill functionality</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> <span class="hljs-title function_">killArtefact</span> = (<span class="hljs-params">name, anchorname, time, finishResurrection</span>) =&gt; {
-
-    <span class="hljs-keyword">let</span> groupname = <span class="hljs-string">&#x27;mycanvas_base&#x27;</span>,
-        packet;
-
-    <span class="hljs-keyword">let</span> <span class="hljs-title function_">checkGroupBucket</span> = (<span class="hljs-params">name, groupname</span>) =&gt; {
-
-        <span class="hljs-keyword">let</span> res = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">group</span>[groupname].<span class="hljs-property">artefactBuckets</span>.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> e.<span class="hljs-property">name</span> === name );
-        <span class="hljs-keyword">return</span> (res.<span class="hljs-property">length</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>;
-    };
-
-    <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
-
-        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`<span class="hljs-subst">${name}</span> alive
-    removed from artefact: <span class="hljs-subst">${(scrawl.library.artefact[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
-    removed from artefactnames: <span class="hljs-subst">${(scrawl.library.artefactnames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
-    removed from entity: <span class="hljs-subst">${(scrawl.library.entity[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
-    removed from entitynames: <span class="hljs-subst">${(scrawl.library.entitynames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
-    removed from group.artefacts: <span class="hljs-subst">${(scrawl.library.group[groupname].artefacts.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
-    removed from group.artefactBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>
-    anchor removed: <span class="hljs-subst">${(scrawl.library.anchor[anchorname]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>`</span>);
-
-        packet = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>[name].<span class="hljs-title function_">saveAsPacket</span>();
-
-        scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>[name].<span class="hljs-title function_">kill</span>();
-
-        <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
-
-            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`<span class="hljs-subst">${name}</span> killed
-    removed from artefact: <span class="hljs-subst">${(scrawl.library.artefact[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
-    removed from artefactnames: <span class="hljs-subst">${(scrawl.library.artefactnames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
-    removed from entity: <span class="hljs-subst">${(scrawl.library.entity[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
-    removed from entitynames: <span class="hljs-subst">${(scrawl.library.entitynames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
-    removed from group.artefacts: <span class="hljs-subst">${(scrawl.library.group[groupname].artefacts.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
-    removed from group.artefactBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>
-    anchor removed: <span class="hljs-subst">${(scrawl.library.anchor[anchorname]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>`</span>);
-
-            canvas.<span class="hljs-title function_">actionPacket</span>(packet);
-
-            <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
-
-                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`<span class="hljs-subst">${name}</span> resurrected
-    removed from artefact: <span class="hljs-subst">${(scrawl.library.artefact[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
-    removed from artefactnames: <span class="hljs-subst">${(scrawl.library.artefactnames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
-    removed from entity: <span class="hljs-subst">${(scrawl.library.entity[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
-    removed from entitynames: <span class="hljs-subst">${(scrawl.library.entitynames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
-    removed from group.artefacts: <span class="hljs-subst">${(scrawl.library.group[groupname].artefacts.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
-    removed from group.artefactBuckets: <span class="hljs-subst">${checkGroupBucket(name, groupname)}</span>
-    anchor removed: <span class="hljs-subst">${(scrawl.library.anchor[anchorname]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>`</span>);
-
-                <span class="hljs-title function_">finishResurrection</span>();
-
-            }, <span class="hljs-number">100</span>);
-        }, <span class="hljs-number">100</span>);
-    }, time);
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-36">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
-              </div>
               <p>We use the <strong>canvas</strong> and <strong>myTracker</strong> variables in our blocks’ onEnter, onLeave and onUp functions. While this works fine for the blocks created in the scope of this module file’s code, it will fail when we kill and resurrect a block - in the resurrected block the canvas and myTracker variables will be ‘undefined’. So we need to reset the block’s ‘on…’ functions (in this module file’s code) after the block has resurrected</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">killArtefact</span>(<span class="hljs-string">&#x27;brick-in-marble&#x27;</span>, <span class="hljs-string">&#x27;wikipedia-brick-link&#x27;</span>, <span class="hljs-number">2000</span>, <span class="hljs-function">() =&gt;</span> {
+            <div class="content"><div class='highlight'><pre><span class="hljs-title function_">killArtefactAndAnchor</span>(canvas, <span class="hljs-string">&#x27;brick-in-marble&#x27;</span>, <span class="hljs-string">&#x27;wikipedia-brick-link&#x27;</span>, <span class="hljs-number">2000</span>, <span class="hljs-function">() =&gt;</span> {
 
     scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">artefact</span>[<span class="hljs-string">&#x27;brick-in-marble&#x27;</span>].<span class="hljs-title function_">set</span>({
 
@@ -1542,68 +1538,18 @@ Hits: <span class="hljs-subst">${interactionResults}</span>`</span>;
             <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">clickAnchor</span>();
         },
     });
-});</pre></div></div>
+});
+
+<span class="hljs-title function_">killStyle</span>(canvas, <span class="hljs-string">&#x27;marble-pattern&#x27;</span>, <span class="hljs-number">3000</span>, <span class="hljs-function">() =&gt;</span> {</pre></div></div>
             
         </li>
         
         
-        <li id="section-37">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
-              </div>
-              <p>To test styles (Pattern) kill functionality</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> <span class="hljs-title function_">killStyle</span> = (<span class="hljs-params">name, time, finishResurrection</span>) =&gt; {
-
-    <span class="hljs-keyword">let</span> packet;
-
-    <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
-
-        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`<span class="hljs-subst">${name}</span> alive
-    removed from styles: <span class="hljs-subst">${(scrawl.library.styles[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
-    removed from stylesnames: <span class="hljs-subst">${(scrawl.library.stylesnames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>`</span>);
-
-        packet = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">styles</span>[name].<span class="hljs-title function_">saveAsPacket</span>();
-
-        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(packet);
-
-        scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">styles</span>[name].<span class="hljs-title function_">kill</span>();
-
-        <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
-
-            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`<span class="hljs-subst">${name}</span> killed
-    removed from styles: <span class="hljs-subst">${(scrawl.library.styles[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
-    removed from stylesnames: <span class="hljs-subst">${(scrawl.library.stylesnames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>`</span>);
-
-            canvas.<span class="hljs-title function_">actionPacket</span>(packet);
-
-            <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
-
-                <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`<span class="hljs-subst">${name}</span> resurrected
-    removed from styles: <span class="hljs-subst">${(scrawl.library.styles[name]) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>
-    removed from stylesnames: <span class="hljs-subst">${(scrawl.library.stylesnames.indexOf(name) &gt;= <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;no&#x27;</span> : <span class="hljs-string">&#x27;yes&#x27;</span>}</span>`</span>);
-
-                <span class="hljs-title function_">finishResurrection</span>();
-
-            }, <span class="hljs-number">100</span>);
-        }, <span class="hljs-number">100</span>);
-    }, time);
-};
-
-<span class="hljs-title function_">killStyle</span>(<span class="hljs-string">&#x27;marble-pattern&#x27;</span>, <span class="hljs-number">3000</span>, <span class="hljs-function">() =&gt;</span> {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-38">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p>Reset entitys, whose fill/strokeStyles will have been set to default values when the Pattern died</p>
 

@@ -239,14 +239,14 @@ export default function (P = Ωempty) {
         mimicked: null,
 
 // __particle__ - attribute to store any particle the artefact mey be using for its position reference
-		particle: null,
+        particle: null,
 
 // __lockTo__ - `[x-lock, y-lock]` Array; locks can be set to: `start` (the default), `pivot`, `path`, `mimic`, `particle`, or `mouse`.
 // + The lock values can be set individually using the pseudo-attributes __lockXTo__ and __lockYTo__.
         lockTo: null,
 
 // __bringToFrontOnDrag__ - flag which, when set (default), will force the artefact currently being dragged to appear on top of other artefacts
-		bringToFrontOnDrag: true,
+        bringToFrontOnDrag: true,
 
 
 // All artefacts (except compound entities such as Loom) can be scaled by setting their __scale__ attribute to an appropriate float Number value:

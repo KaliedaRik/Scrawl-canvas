@@ -4,6 +4,8 @@
 // [Run code](../../demo/filters-001.html)
 import scrawl from '../source/scrawl.js';
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -63,28 +65,11 @@ const piccy = scrawl.makePicture({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
-
-    let radius = document.querySelector('#radius'),
-        passes = document.querySelector('#passes'),
-        step = document.querySelector('#step'),
-        opacity = document.querySelector('#opacity');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Radius: ${radius.value}, Step: ${step.value}, Passes: ${passes.value}
+    return `    Radius: ${radius.value}, Step: ${step.value}, Passes: ${passes.value}
     Opacity: ${opacity.value}`;
-    };
-}();
+});
 
 
 // Create the Display cycle animation
@@ -110,7 +95,6 @@ scrawl.observeAndUpdate({
 
     updates: {
 
-        // radius: ['radius', 'round'],
         passes: ['passes', 'round'],
         step: ['step', 'round'],
 
@@ -122,8 +106,6 @@ scrawl.observeAndUpdate({
         processHorizontal: ['processHorizontal', 'boolean'],
         processVertical: ['processVertical', 'boolean'],
         excludeTransparentPixels: ['excludeTransparentPixels', 'boolean'],
-
-        // opacity: ['opacity', 'float'],
     },
 });
 
@@ -167,10 +149,17 @@ scrawl.addNativeListener(['update', 'change'], (e) => {
 }, '#opacity');
 
 // Setup form
+const radius = document.querySelector('#radius');
+const passes = document.querySelector('#passes');
+const step = document.querySelector('#step');
+const opacity = document.querySelector('#opacity');
+
+radius.value = 10;
+passes.value = 1;
+step.value = 1;
+opacity.value = 1;
+
 document.querySelector('#blurFilter').options.selectedIndex = 1;
-document.querySelector('#radius').value = 10;
-document.querySelector('#passes').value = 1;
-document.querySelector('#step').value = 1;
 document.querySelector('#includeRed').options.selectedIndex = 1;
 document.querySelector('#includeGreen').options.selectedIndex = 1;
 document.querySelector('#includeBlue').options.selectedIndex = 1;
@@ -178,7 +167,6 @@ document.querySelector('#includeAlpha').options.selectedIndex = 0;
 document.querySelector('#processHorizontal').options.selectedIndex = 1;
 document.querySelector('#processVertical').options.selectedIndex = 1;
 document.querySelector('#excludeTransparentPixels').options.selectedIndex = 1;
-document.querySelector('#opacity').value = 1;
 
 
 // #### Development and testing

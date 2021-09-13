@@ -4,6 +4,8 @@
 // [Run code](../../demo/filters-014.html)
 import scrawl from '../source/scrawl.js';
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -51,38 +53,14 @@ scrawl.makePicture({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testTicker = Date.now(),
-        testTime, testNow,
-        testMessage = document.querySelector('#reportmessage');
-
-    let tile_width = document.querySelector('#tile_width'),
-        tile_height = document.querySelector('#tile_height'),
-        gutter_width = document.querySelector('#gutter_width'),
-        gutter_height = document.querySelector('#gutter_height'),
-        alpha_0 = document.querySelector('#alpha_0'),
-        alpha_1 = document.querySelector('#alpha_1'),
-        alpha_2 = document.querySelector('#alpha_2'),
-        alpha_3 = document.querySelector('#alpha_3'),
-        offset_x = document.querySelector('#offset_x'),
-        offset_y = document.querySelector('#offset_y'),
-        opacity = document.querySelector('#opacity');
-
-    return function () {
-
-        testNow = Date.now();
-        testTime = testNow - testTicker;
-        testTicker = testNow;
-
-        testMessage.textContent = `Screen refresh: ${Math.ceil(testTime)}ms; fps: ${Math.floor(1000 / testTime)}
-    Tile dimensions - width: ${tile_width.value} height: ${tile_height.value}
+    return `    Tile dimensions - width: ${tile_width.value} height: ${tile_height.value}
     Gutter dimensions - width: ${gutter_width.value} height: ${gutter_height.value}
     Offset - x: ${offset_x.value} y: ${offset_y.value}
     areaAlphaLevels array: [${alpha_0.value}, ${alpha_1.value}, ${alpha_2.value}, ${alpha_3.value}]
     Opacity: ${opacity.value}`;
-    };
-}();
+});
 
 
 // Create the Display cycle animation
@@ -132,17 +110,29 @@ scrawl.addNativeListener(['input', 'change'], function (e) {
 }, '.alphas');
 
 // Setup form
-document.querySelector('#tile_width').value = 10;
-document.querySelector('#tile_height').value = 10;
-document.querySelector('#gutter_width').value = 10;
-document.querySelector('#gutter_height').value = 10;
-document.querySelector('#offset_x').value = 0;
-document.querySelector('#offset_y').value = 0;
-document.querySelector('#opacity').value = 1;
-document.querySelector('#alpha_0').value = 255;
-document.querySelector('#alpha_1').value = 0;
-document.querySelector('#alpha_2').value = 255;
-document.querySelector('#alpha_3').value = 0;
+const tile_width = document.querySelector('#tile_width'),
+    tile_height = document.querySelector('#tile_height'),
+    gutter_width = document.querySelector('#gutter_width'),
+    gutter_height = document.querySelector('#gutter_height'),
+    alpha_0 = document.querySelector('#alpha_0'),
+    alpha_1 = document.querySelector('#alpha_1'),
+    alpha_2 = document.querySelector('#alpha_2'),
+    alpha_3 = document.querySelector('#alpha_3'),
+    offset_x = document.querySelector('#offset_x'),
+    offset_y = document.querySelector('#offset_y'),
+    opacity = document.querySelector('#opacity');
+
+tile_width.value = 10;
+tile_height.value = 10;
+gutter_width.value = 10;
+gutter_height.value = 10;
+offset_x.value = 0;
+offset_y.value = 0;
+opacity.value = 1;
+alpha_0.value = 255;
+alpha_1.value = 0;
+alpha_2.value = 255;
+alpha_3.value = 0;
 
 
 // #### Development and testing

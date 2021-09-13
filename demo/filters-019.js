@@ -4,6 +4,8 @@
 // [Run code](../../demo/filters-019.html)
 import scrawl from '../source/scrawl.js';
 
+import { reportSpeed } from './utilities.js';
+
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
 
@@ -24,15 +26,57 @@ let noiseAsset = scrawl.makeNoiseAsset({
     noiseEngine: 'improved-perlin',
 
     rainbowColors: [
-        [0, '#fae8c0'],
-        [249, '#f8f6f3'],
-        [289, '#fbf6eb'],
-        [410, '#fee1b5'],
-        [450, '#c98b05'],
-        [482, '#f8f6f3'],
-        [749, '#fae8c0'],
-        [812, '#fed9a1'],
-        [999, '#fae8c0'],
+        [0, '#000000'],
+        [19, '#806e58'],
+        [39, '#ab7533'],
+        [59, '#f78b07'],
+        [79, '#fae69d'],
+        [99, '#e8e7e3'],
+        [119, '#babab6'],
+        [139, '#f7f7f2'],
+        [159, '#b0b094'],
+        [179, '#f2f2dc'],
+        [199, '#757544'],
+        [219, '#e6e670'],
+        [239, '#dbdb2a'],
+        [259, '#919129'],
+        [279, '#969608'],
+        [299, '#f5f50c'],
+        [319, '#f5da0c'],
+        [339, '#968606'],
+        [359, '#d6c53a'],
+        [379, '#918839'],
+        [399, '#f5eb90'],
+        [419, '#c7c293'],
+        [439, '#c7b093'],
+        [459, '#c9c0b3'],
+        [479, '#f7f0e6'],
+        [499, '#bf9a65'],
+        [519, '#b56e07'],
+        [539, '#f79502'],
+        [559, '#d69533'],
+        [579, '#704402'],
+        [599, '#805d2a'],
+        [619, '#ebd9d5'],
+        [639, '#dfede1'],
+        [659, '#dfe9ed'],
+        [679, '#a0cadb'],
+        [699, '#d2f0fc'],
+        [719, '#7d888c'],
+        [739, '#a8b2b5'],
+        [759, '#edf3f5'],
+        [779, '#a2c0de'],
+        [799, '#8a98a6'],
+        [819, '#b4b6b8'],
+        [839, '#f2f5f7'],
+        [859, '#eaebda'],
+        [879, '#d2d687'],
+        [899, '#686b2e'],
+        [919, '#aab038'],
+        [939, '#474a14'],
+        [959, '#b4bd28'],
+        [979, '#656b03'],
+        [999, '#000000'],
     ],
 });
 
@@ -100,36 +144,15 @@ scrawl.makePicture({
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo
-let report = function () {
+const report = reportSpeed('#reportmessage', function () {
 
-    let testMessage = document.querySelector('#reportmessage'),
-        width = document.querySelector('#width'),
-        height = document.querySelector('#height'),
-        octaves = document.querySelector('#octaves'),
-        sineFrequencyCoeff = document.querySelector('#sineFrequencyCoeff'),
-        scale = document.querySelector('#scale'),
-        size = document.querySelector('#size'),
-        persistence = document.querySelector('#persistence'),
-        lacunarity = document.querySelector('#lacunarity'),
-        monochromeStart = document.querySelector('#monochromeStart'),
-        monochromeRange = document.querySelector('#monochromeRange'),
-        hueStart = document.querySelector('#hueStart'),
-        hueRange = document.querySelector('#hueRange'),
-        saturation = document.querySelector('#saturation'),
-        luminosity = document.querySelector('#luminosity'),
-        sumAmplitude = document.querySelector('#sumAmplitude'),
-        worleyDepth = document.querySelector('#worleyDepth');
-
-    return function () {
-
-        testMessage.textContent = `Dimensions: width - ${width.value}, height - ${height.value}
+    return `Dimensions: width - ${width.value}, height - ${height.value}
 Color (monochrome): start: ${monochromeStart.value}; range: ${monochromeRange.value}
 Color (hue): start: ${hueStart.value}; range: ${hueRange.value}; saturation: ${saturation.value}; luminosity: ${luminosity.value}
 Scale: ${scale.value}; Size: ${size.value}
 Octaves: ${octaves.value}; Sine frequency coefficient: ${sineFrequencyCoeff.value}
 Persistence: ${persistence.value}; Lacunarity: ${lacunarity.value}; Sum amplitude: ${sumAmplitude.value}; Worley depth: ${worleyDepth.value}`;
-    };
-}();
+});
 
 
 // Create the Display cycle animation
@@ -185,124 +208,139 @@ scrawl.observeAndUpdate({
 
 scrawl.addNativeListener(['input', 'change'], function (e) {
 
-    let val = e.target.value,
-        sfc = document.querySelector('#sineFrequencyCoeff'),
-        ma = document.querySelector('#sumAmplitude');
+    let val = e.target.value;
 
     if (val === 'sine' || val === 'sine-x' || val === 'sine-y') {
 
-        sfc.removeAttribute('disabled');
-        ma.setAttribute('disabled', 'true');
+        sineFrequencyCoeff.removeAttribute('disabled');
+        sumAmplitude.setAttribute('disabled', 'true');
     }
     else if (val === 'modular' || val === 'random') {
 
-        sfc.setAttribute('disabled', 'true');
-        ma.removeAttribute('disabled');
+        sineFrequencyCoeff.setAttribute('disabled', 'true');
+        sumAmplitude.removeAttribute('disabled');
     }
     else {
 
-        sfc.setAttribute('disabled', 'true');
-        ma.setAttribute('disabled', 'true');
+        sineFrequencyCoeff.setAttribute('disabled', 'true');
+        sumAmplitude.setAttribute('disabled', 'true');
     }
 
 }, '#sumFunction');
 
 scrawl.addNativeListener(['input', 'change'], function (e) {
 
-    let val = e.target.value,
-        s = document.querySelector('#smoothing');
+    let val = e.target.value;
 
-    if (val === 'simplex') s.setAttribute('disabled', 'true');
-    else s.removeAttribute('disabled');
+    if (val === 'simplex') smoothing.setAttribute('disabled', 'true');
+    else smoothing.removeAttribute('disabled');
 
 }, '#noiseEngine');
 
 scrawl.addNativeListener(['input', 'change'], function (e) {
 
-    let val = parseFloat(e.target.value),
-        p = document.querySelector('#persistence'),
-        l = document.querySelector('#lacunarity');
+    let val = parseFloat(e.target.value);
 
     if (val > 1) {
-        p.removeAttribute('disabled');
-        l.removeAttribute('disabled');
+        persistence.removeAttribute('disabled');
+        lacunarity.removeAttribute('disabled');
     }
     else {
-        p.setAttribute('disabled', 'true');
-        l.setAttribute('disabled', 'true');
+        persistence.setAttribute('disabled', 'true');
+        lacunarity.setAttribute('disabled', 'true');
     }
 }, '#octaves');
 
 scrawl.addNativeListener(['input', 'change'], function (e) {
 
-    let val = e.target.value,
-        ms = document.querySelector('#monochromeStart'),
-        mr = document.querySelector('#monochromeRange'),
-        gs = document.querySelector('#gradientStart'),
-        ge = document.querySelector('#gradientEnd'),
-        hs = document.querySelector('#hueStart'),
-        hr = document.querySelector('#hueRange'),
-        s = document.querySelector('#saturation'),
-        l = document.querySelector('#luminosity');
+    let val = e.target.value;
 
     if (val === 'monochrome') {
-        ms.removeAttribute('disabled');
-        mr.removeAttribute('disabled');
-        gs.setAttribute('disabled', 'true');
-        ge.setAttribute('disabled', 'true');
-        hs.setAttribute('disabled', 'true');
-        hr.setAttribute('disabled', 'true');
-        s.setAttribute('disabled', 'true');
-        l.setAttribute('disabled', 'true');
+        monochromeStart.removeAttribute('disabled');
+        monochromeRange.removeAttribute('disabled');
+        gradientStart.setAttribute('disabled', 'true');
+        gradientEnd.setAttribute('disabled', 'true');
+        hueStart.setAttribute('disabled', 'true');
+        hueRange.setAttribute('disabled', 'true');
+        saturation.setAttribute('disabled', 'true');
+        luminosity.setAttribute('disabled', 'true');
     }
     else if (val === 'hue') {
-        hs.removeAttribute('disabled');
-        hr.removeAttribute('disabled');
-        s.removeAttribute('disabled');
-        l.removeAttribute('disabled');
-        ms.setAttribute('disabled', 'true');
-        mr.setAttribute('disabled', 'true');
-        gs.setAttribute('disabled', 'true');
-        ge.setAttribute('disabled', 'true');
+        hueStart.removeAttribute('disabled');
+        hueRange.removeAttribute('disabled');
+        saturation.removeAttribute('disabled');
+        luminosity.removeAttribute('disabled');
+        monochromeStart.setAttribute('disabled', 'true');
+        monochromeRange.setAttribute('disabled', 'true');
+        gradientStart.setAttribute('disabled', 'true');
+        gradientEnd.setAttribute('disabled', 'true');
     }
     else {
-        gs.removeAttribute('disabled');
-        ge.removeAttribute('disabled');
-        ms.setAttribute('disabled', 'true');
-        mr.setAttribute('disabled', 'true');
-        hs.setAttribute('disabled', 'true');
-        hr.setAttribute('disabled', 'true');
-        s.setAttribute('disabled', 'true');
-        l.setAttribute('disabled', 'true');
+        gradientStart.removeAttribute('disabled');
+        gradientEnd.removeAttribute('disabled');
+        monochromeStart.setAttribute('disabled', 'true');
+        monochromeRange.setAttribute('disabled', 'true');
+        hueStart.setAttribute('disabled', 'true');
+        hueRange.setAttribute('disabled', 'true');
+        saturation.setAttribute('disabled', 'true');
+        luminosity.setAttribute('disabled', 'true');
     }
 }, '#color');
 
 // Setup form
-document.querySelector('#width').value = 400;
-document.querySelector('#height').value = 400;
-document.querySelector('#noiseEngine').options.selectedIndex = 1;
-document.querySelector('#color').options.selectedIndex = 0;
-document.querySelector('#gradientStart').value = '#ff0000';
-document.querySelector('#gradientEnd').value = '#00ff00';
-document.querySelector('#octaveFunction').options.selectedIndex = 0;
-document.querySelector('#octaves').value = 1;
-document.querySelector('#sumFunction').options.selectedIndex = 0;
-document.querySelector('#sineFrequencyCoeff').value = 1;
-document.querySelector('#smoothing').options.selectedIndex = 3;
-document.querySelector('#scale').value = 50;
-document.querySelector('#size').value = 256;
-document.querySelector('#seed').value = 'noize';
-document.querySelector('#persistence').value = 0.5;
-document.querySelector('#lacunarity').value = 2;
-document.querySelector('#sumAmplitude').value = 5;
-document.querySelector('#monochromeStart').value = 0;
-document.querySelector('#monochromeRange').value = 255;
-document.querySelector('#hueStart').value = 0;
-document.querySelector('#hueRange').value = 120;
-document.querySelector('#saturation').value = 100;
-document.querySelector('#luminosity').value = 50;
-document.querySelector('#worleyOutput').options.selectedIndex = 0;
-document.querySelector('#worleyDepth').value = 0;
+const width = document.querySelector('#width'),
+    height = document.querySelector('#height'),
+    octaves = document.querySelector('#octaves'),
+    sineFrequencyCoeff = document.querySelector('#sineFrequencyCoeff'),
+    scale = document.querySelector('#scale'),
+    size = document.querySelector('#size'),
+    persistence = document.querySelector('#persistence'),
+    lacunarity = document.querySelector('#lacunarity'),
+    monochromeStart = document.querySelector('#monochromeStart'),
+    monochromeRange = document.querySelector('#monochromeRange'),
+    hueStart = document.querySelector('#hueStart'),
+    hueRange = document.querySelector('#hueRange'),
+    saturation = document.querySelector('#saturation'),
+    luminosity = document.querySelector('#luminosity'),
+    sumAmplitude = document.querySelector('#sumAmplitude'),
+    worleyDepth = document.querySelector('#worleyDepth');
+
+const noiseEngine = document.querySelector('#noiseEngine'),
+    color = document.querySelector('#color'),
+    gradientStart = document.querySelector('#gradientStart'),
+    gradientEnd = document.querySelector('#gradientEnd'),
+    octaveFunction = document.querySelector('#octaveFunction'),
+    sumFunction = document.querySelector('#sumFunction'),
+    smoothing = document.querySelector('#smoothing'),
+    seed = document.querySelector('#seed'),
+    worleyOutput = document.querySelector('#worleyOutput');
+
+width.value = 400;
+height.value = 400;
+octaves.value = 1;
+sineFrequencyCoeff.value = 1;
+scale.value = 50;
+size.value = 256;
+persistence.value = 0.5;
+lacunarity.value = 2;
+monochromeStart.value = 0;
+monochromeRange.value = 255;
+hueStart.value = 0;
+hueRange.value = 120;
+saturation.value = 100;
+luminosity.value = 50;
+sumAmplitude.value = 5;
+worleyDepth.value = 0;
+
+noiseEngine.options.selectedIndex = 1;
+color.options.selectedIndex = 0;
+gradientStart.value = '#ff0000';
+gradientEnd.value = '#00ff00';
+octaveFunction.options.selectedIndex = 0;
+sumFunction.options.selectedIndex = 0;
+smoothing.options.selectedIndex = 3;
+seed.value = 'noize';
+worleyOutput.options.selectedIndex = 0;
 
 
 // #### Development and testing
