@@ -177,8 +177,6 @@ P.scalarDivide = function (item) {
 // Get the Array's __magnitude__ value (treating the Coordinate as if it was a 2D vector)
 P.getMagnitude = function () {
 
-console.log('hi2')
-
     return Math.hypot(...this);
 };
 
