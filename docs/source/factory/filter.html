@@ -860,6 +860,14 @@ P.<span class="hljs-property">isAsset</span> = <span class="hljs-literal">false<
     <span class="hljs-attr">offsetRedY</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">offsetX</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">offsetY</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">offsetBlueMin</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">offsetBlueMax</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">offsetGreenMin</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">offsetGreenMax</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">offsetRedMin</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">offsetRedMax</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">offsetMin</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">offsetMax</span>: <span class="hljs-number">0</span>,
     <span class="hljs-attr">opaqueAt</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">operation</span>: <span class="hljs-string">&#x27;mean&#x27;</span>,
     <span class="hljs-attr">passes</span>: <span class="hljs-number">1</span>,
@@ -1812,6 +1820,40 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
               <div class="sswrap ">
                 <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
+              <p><strong>glitch</strong> - semi-randomly shift rows left/right</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">glitch</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">f</span>) {
+        f.<span class="hljs-property">actions</span> = [{
+            <span class="hljs-attr">action</span>: <span class="hljs-string">&#x27;glitch&#x27;</span>,
+            <span class="hljs-attr">lineIn</span>: (f.<span class="hljs-property">lineIn</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineIn</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">lineOut</span>: (f.<span class="hljs-property">lineOut</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">lineOut</span> : <span class="hljs-string">&#x27;&#x27;</span>,
+            <span class="hljs-attr">opacity</span>: (f.<span class="hljs-property">opacity</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">opacity</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">useMixedChannel</span>: (f.<span class="hljs-property">useMixedChannel</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">useMixedChannel</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">seed</span>: (f.<span class="hljs-property">seed</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">seed</span> : <span class="hljs-string">&#x27;some-random-string-or-other&#x27;</span>,
+            <span class="hljs-attr">step</span>: (f.<span class="hljs-property">step</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">step</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">offsetMin</span>: (f.<span class="hljs-property">offsetMin</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetMin</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">offsetMax</span>: (f.<span class="hljs-property">offsetMax</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetMax</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">offsetRedMin</span>: (f.<span class="hljs-property">offsetRedMin</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetRedMin</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">offsetRedMax</span>: (f.<span class="hljs-property">offsetRedMax</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetRedMax</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">offsetGreenMin</span>: (f.<span class="hljs-property">offsetGreenMin</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetGreenMin</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">offsetGreenMax</span>: (f.<span class="hljs-property">offsetGreenMax</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetGreenMax</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">offsetBlueMin</span>: (f.<span class="hljs-property">offsetBlueMin</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetBlueMin</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">offsetBlueMax</span>: (f.<span class="hljs-property">offsetBlueMax</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">offsetBlueMax</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">level</span>: (f.<span class="hljs-property">level</span> != <span class="hljs-literal">null</span>) ? f.<span class="hljs-property">level</span> : <span class="hljs-number">0</span>,
+        }];
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-47">&#x00a7;</a>
+              </div>
               <p><strong>gray</strong> (new in v8.4.0) - averages the three color channel colors</p>
 
             </div>
@@ -1831,11 +1873,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p><strong>grayscale</strong> - produces a more realistic black-and-white photograph effect</p>
 
@@ -1853,11 +1895,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p><strong>green</strong> - removes red and blue channel color from the image</p>
 
@@ -1877,11 +1919,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p><strong>image</strong> (new in v8.4.0) - load an image into the filter engine, where it can then be used by other filter actions - useful for effects such as watermarking an image</p>
 
@@ -1905,11 +1947,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p><strong>invert</strong> - inverts the colors in the image, producing an effect similar to a photograph negative</p>
 
@@ -1930,11 +1972,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-51">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p><strong>magenta</strong> - removes green channel color from the image, and averages the remaining channel colors</p>
 
@@ -1955,11 +1997,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-52">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p><strong>mapToGradient</strong> - produces a more realistic black-and-white photograph effect</p>
 
@@ -1982,11 +2024,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-53">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p><strong>matrix</strong> - applies a 3x3 convolution matrix, kernel or mask operation to the image</p>
 
@@ -2013,11 +2055,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-54">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p><strong>matrix5</strong> - applies a 5x5 convolution matrix, kernel or mask operation to the image</p>
 
@@ -2044,11 +2086,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-55">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p><strong>notblue</strong> - zeroes the blue channel values (not the same effect as the yellow filter)</p>
 
@@ -2068,11 +2110,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-56">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p><strong>notgreen</strong> - zeroes the green channel values (not the same effect as the magenta filter)</p>
 
@@ -2092,11 +2134,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-57">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p><strong>notred</strong> - zeroes the red channel values (not the same effect as the cyan filter)</p>
 
@@ -2116,11 +2158,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-58">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p><strong>offset</strong> (new in v8.4.0) - moves the image in its entirety by the given offset</p>
 
@@ -2146,11 +2188,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-59">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <p><strong>offsetChannels</strong> (new in v8.4.0) - moves each channel  by an offset set for that channel. Can create a crude stereoscopic output</p>
 
@@ -2176,11 +2218,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-60">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p><strong>pixelate</strong> - averages the colors in a block to produce a series of obscuring tiles</p>
 
@@ -2206,11 +2248,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-61">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p><strong>randomNoise</strong> (new in v8.6.0) - creates a stippling effect across the image</p>
 
@@ -2237,11 +2279,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-62">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p><strong>red</strong> - removes blue and green channel color from the image</p>
 
@@ -2261,11 +2303,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-63">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <p><strong>saturation</strong> - alters the saturation level of the image</p>
 
@@ -2289,11 +2331,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-64">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <p><strong>sepia</strong> - recalculates the values of each color channel (a tint action) to create a more ‘antique’ version of the image</p>
 
@@ -2320,11 +2362,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-65">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <p><strong>sharpen</strong> (new in v8.4.0) - applies a preset 3x3 sharpen matrix to the image</p>
 
@@ -2351,11 +2393,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-66">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <p><strong>threshold</strong> - creates a duotone effect - grayscales the input then, for each pixel, checks the color channel values against a “level” argument: pixels with channel values above the level value are assigned to the ‘high’ color; otherwise they are updated to the ‘low’ color.</p>
 
@@ -2390,11 +2432,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-67">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <p><strong>tint</strong> - has similarities to the SVG &lt;feColorMatrix&gt; filter element, but excludes the alpha channel from calculations. Rather than set a matrix, we set nine arguments to determine how the value of each color channel in a pixel will affect both itself and its fellow color channels.</p>
 
@@ -2421,11 +2463,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-68">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <p><strong>userDefined</strong> - DEPRECATED - this filter method no longer has any effect, returning an unchanged image</p>
 
@@ -2443,11 +2485,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-69">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <p><strong>yellow</strong> - removes blue channel color from the image, and averages the remaining channel colors</p>
 
@@ -2469,11 +2511,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-70">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 <p>No additional prototype functions defined</p>
@@ -2483,11 +2525,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-71">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
@@ -2504,11 +2546,11 @@ constructors.<span class="hljs-property">Filter</span> = <span class="hljs-title
         </li>
         
         
-        <li id="section-72">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-72">&#x00a7;</a>
+                <a class="ss" href="#section-73">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

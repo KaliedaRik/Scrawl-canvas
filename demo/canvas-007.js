@@ -387,6 +387,19 @@ scrawl.makeFilter({
     opacity: 0.5,
 });
 
+// __Glitch__ filter
+scrawl.makeFilter({
+    name: 'glitch',
+    method: 'glitch',
+    level: 0.3,
+    offsetRedMin: -20,
+    offsetRedMax: 20,
+    offsetBlueMin: 0,
+    offsetBlueMax: 6,
+    useMixedChannel: false,
+    step: 7,
+});
+
 // __Offset Channels__ filter
 scrawl.makeFilter({
     name: 'offsetChannels',
@@ -577,32 +590,19 @@ scrawl.makeFilter({
         {
             action: 'gaussian-blur',
             lineIn: 'source-alpha',
-            lineOut: 'shadow',
+            lineOut: 'border',
             radius: 2,
         },
         {
-            action: 'binary',
-            lineIn: 'shadow',
-            lineOut: 'shadow',
-            alpha: 1, 
-        },
-        {
             action: 'flood',
-            lineIn: 'shadow',
-            lineOut: 'red-flood',
+            lineIn: 'border',
+            lineOut: 'border',
             red: 255,
         },
         {
             action: 'compose',
-            lineIn: 'shadow',
-            lineMix: 'red-flood',
-            lineOut: 'colorized',
-            compose: 'destination-in',
-        },
-        {
-            action: 'compose',
             lineIn: 'source',
-            lineMix: 'colorized',
+            lineMix: 'border',
         }
     ],
 });

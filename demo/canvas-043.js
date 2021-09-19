@@ -127,6 +127,7 @@ scrawl.makePicture({
 });
 
 // We're not interested with associating the canvas 1 drag group with the canvas's base cell - the entitys in this group will already be assigned to the clip groups, thus will already be included in the canvas's Display cycle
+// + KNOWN BUG - the entitys are not draggable on first user mousedown, but are draggable afterwards
 scrawl.makeGroup({
 
     name: 'canvas1-drag-group',
@@ -251,6 +252,7 @@ const canvasTwoPostInitialization = function () {
     let drag = scrawl.library.group['canvas2-drag-group'];
 
     // create our drag group and dragzone, if they don't already exist
+    // + KNOWN BUG - the entitys are not draggable on first user mousedown, but are draggable afterwards
     if (!drag) {
 
         drag = scrawl.makeGroup({
@@ -354,6 +356,7 @@ const canvasThreePostInitialization = function () {
     let drag = scrawl.library.group['canvas3-drag-group'];
 
     // create our drag group and dragzone, if they don't already exist
+    // + KNOWN BUG - the entitys are not draggable on first user mousedown, but are draggable afterwards
     if (!drag) {
 
         drag = scrawl.makeGroup({

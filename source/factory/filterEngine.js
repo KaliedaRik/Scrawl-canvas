@@ -2841,6 +2841,115 @@ P.theBigActionsObject = {
         else this.processResults(this.cache.work, output, opacity);
     },
 
+// __glitch__ - Swap pixels at random within a given box (width/height) distance of each other, dependent on the level setting - lower levels mean less noise. Uses a pseudo-random numbers generator to ensure consistent results across runs. Takes into account choices to include red, green, blue and alpha channels, and whether to ignore transparent pixels
+    'glitch': function (requirements) {
+
+        let [input, output] = this.getInputAndOutputLines(requirements);
+
+        let iData = input.data,
+            oData = output.data,
+            len = iData.length,
+            iWidth = input.width,
+            iHeight = input.height,
+            i, j, affectedRow, shift, shiftR, shiftG, shiftB,
+            cursor, r, g, b, a, w, currentRow, currentRowStart, currentRowEnd, dr, dg, db;
+
+        let {opacity, useMixedChannel, seed, level, step, offsetMin, offsetMax, offsetRedMin, offsetRedMax, offsetGreenMin, offsetGreenMax, offsetBlueMin, offsetBlueMax, lineOut} = requirements;
+
+        if (null == opacity) opacity = 1;
+        if (null == useMixedChannel) useMixedChannel = true;
+        if (null == seed) seed = 'some-random-string-or-other';
+        if (null == level) level = 0;
+        if (null == step) step = 1;
+        if (null == offsetMin) offsetMin = 0;
+        if (null == offsetMax) offsetMax = 0;
+        if (null == offsetRedMin) offsetRedMin = 0;
+        if (null == offsetRedMax) offsetRedMax = 0;
+        if (null == offsetGreenMin) offsetGreenMin = 0;
+        if (null == offsetGreenMax) offsetGreenMax = 0;
+        if (null == offsetBlueMin) offsetBlueMin = 0;
+        if (null == offsetBlueMax) offsetBlueMax = 0;
+
+        const rndEngine = seededRandomNumberGenerator(seed),
+            range = offsetMax - offsetMin,
+            redRange = offsetRedMax - offsetRedMin,
+            greenRange = offsetGreenMax - offsetGreenMin,
+            blueRange = offsetBlueMax - offsetBlueMin;
+
+        const rows = [];
+
+        step = Math.floor(step);
+        if (step < 1) step = 1;
+
+        for (i = 0; i < iHeight; i += step) {
+
+            affectedRow = (rndEngine.random() < level) ? true : false;
+
+            if (affectedRow) {
+
+                if (useMixedChannel) {
+
+                    shift = (offsetMin + Math.floor(rndEngine.random() * range)) * 4;
+
+                    for (j = 0; j < step; j++) {
+
+                        rows.push([shift, shift, shift]);
+                    }
+                }
+                else {
+
+                    shiftR = (offsetRedMin + Math.floor(rndEngine.random() * redRange)) * 4;
+                    shiftG = (offsetGreenMin + Math.floor(rndEngine.random() * greenRange)) * 4;
+                    shiftB= (offsetBlueMin + Math.floor(rndEngine.random() * blueRange)) * 4;
+                    
+                    for (j = 0; j < step; j++) {
+
+                        rows.push([shiftR, shiftG, shiftB]);
+                    }
+                }
+            }
+            else {
+
+                for (j = 0; j < step; j++) {
+
+                    rows.push([0, 0, 0]);
+                }
+            }
+        }
+
+        for (i = 0; i < len; i += 4) {
+
+            r = i;
+            g = r + 1;
+            b = g + 1;
+            a = b + 1;
+
+            if (iData[a]) {
+
+                w = iWidth * 4;
+                currentRow = Math.floor(i / w);
+                currentRowStart = (currentRow * 4);
+                currentRowEnd = currentRowStart + w - 4;
+
+                [dr, dg, db] = rows[currentRow];
+
+                oData[r] = iData[r + dr];
+                oData[g] = iData[g + dg];
+                oData[b] = iData[b + db];
+                oData[a] = iData[a];
+            }
+            else {
+
+                oData[r] = iData[r];
+                oData[g] = iData[g];
+                oData[b] = iData[b];
+                oData[a] = iData[a];
+            }
+        }
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
+    },
+
 // __grayscale__ - For each pixel, averages the weighted color channels and applies the result across all the color channels. This gives a more realistic monochrome effect.
     'grayscale': function (requirements) {
 

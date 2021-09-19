@@ -270,6 +270,14 @@ let defaultAttributes = {
     offsetRedY: 0,
     offsetX: 0,
     offsetY: 0,
+    offsetBlueMin: 0,
+    offsetBlueMax: 0,
+    offsetGreenMin: 0,
+    offsetGreenMax: 0,
+    offsetRedMin: 0,
+    offsetRedMax: 0,
+    offsetMin: 0,
+    offsetMax: 0,
     opaqueAt: 1,
     operation: 'mean',
     passes: 1,
@@ -821,6 +829,28 @@ const setActionsArray = {
             lineOut: (f.lineOut != null) ? f.lineOut : '',
             opacity: (f.opacity != null) ? f.opacity : 1,
             radius: (f.radius != null) ? f.radius : 1,
+        }];
+    },
+
+// __glitch__ - semi-randomly shift rows left/right
+    glitch: function (f) {
+        f.actions = [{
+            action: 'glitch',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            useMixedChannel: (f.useMixedChannel != null) ? f.useMixedChannel : true,
+            seed: (f.seed != null) ? f.seed : 'some-random-string-or-other',
+            step: (f.step != null) ? f.step : 1,
+            offsetMin: (f.offsetMin != null) ? f.offsetMin : 0,
+            offsetMax: (f.offsetMax != null) ? f.offsetMax : 0,
+            offsetRedMin: (f.offsetRedMin != null) ? f.offsetRedMin : 0,
+            offsetRedMax: (f.offsetRedMax != null) ? f.offsetRedMax : 0,
+            offsetGreenMin: (f.offsetGreenMin != null) ? f.offsetGreenMin : 0,
+            offsetGreenMax: (f.offsetGreenMax != null) ? f.offsetGreenMax : 0,
+            offsetBlueMin: (f.offsetBlueMin != null) ? f.offsetBlueMin : 0,
+            offsetBlueMax: (f.offsetBlueMax != null) ? f.offsetBlueMax : 0,
+            level: (f.level != null) ? f.level : 0,
         }];
     },
 

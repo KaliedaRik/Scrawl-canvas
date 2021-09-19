@@ -729,6 +729,7 @@ export default function (el) {
             });
 
             // __12. Build the drag bar functionality__
+            // + KNOWN BUG - the drag bar not draggable on first user mousedown, but is draggable afterwards
             scrawl.makeGroup({
                 name: `${name}-drag-group`,
             }).addArtefacts(`${name}-drag-bar`,);

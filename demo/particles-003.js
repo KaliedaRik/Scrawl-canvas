@@ -277,6 +277,7 @@ scrawl.makeRender({
 
 // #### User interaction
 // Make the Emitter draggable
+// + KNOWN BUG - the emitter is not draggable on first user mousedown, but is draggable afterwards
 scrawl.makeGroup({
 
     name: 'my-draggable-group',

@@ -525,6 +525,11 @@
                 </a>
               
                 
+                <a class="source" href="filters-025.html">
+                  ./demo/filters-025.js
+                </a>
+              
+                
                 <a class="source" href="filters-501.html">
                   ./demo/filters-501.js
                 </a>
@@ -752,6 +757,16 @@
                 
                 <a class="source" href="temp-010.html">
                   ./demo/temp-010.js
+                </a>
+              
+                
+                <a class="source" href="temp-011.html">
+                  ./demo/temp-011.js
+                </a>
+              
+                
+                <a class="source" href="temp-012.html">
+                  ./demo/temp-012.js
                 </a>
               
                 
@@ -1134,6 +1149,7 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         <span class="hljs-attr">copyStartX</span>: <span class="hljs-string">&#x27;10%&#x27;</span>,
         <span class="hljs-attr">copyStartY</span>: <span class="hljs-string">&#x27;10%&#x27;</span>,
 
+        <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
         <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;destination-over&#x27;</span>,
     });
 
@@ -1141,6 +1157,7 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
 
         <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;body&#x27;</span>,
         <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
+        <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span>,
         <span class="hljs-attr">globalCompositeOperation</span>: <span class="hljs-string">&#x27;source-in&#x27;</span>,
     });</pre></div></div>
             
@@ -1255,7 +1272,21 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;backgroundFilter&#x27;</span> === id) {
 
             myBackground.<span class="hljs-title function_">clearFilters</span>();
-            <span class="hljs-keyword">if</span> (val) myBackground.<span class="hljs-title function_">addFilters</span>(val);
+
+            <span class="hljs-keyword">if</span> (val) {
+
+                myBackground.<span class="hljs-title function_">set</span>({
+                    <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span>,
+                });
+                
+                myBackground.<span class="hljs-title function_">addFilters</span>(val);
+            }
+            <span class="hljs-keyword">else</span> {
+
+                myBackground.<span class="hljs-title function_">set</span>({
+                    <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
+                });
+            }
         }
         <span class="hljs-keyword">else</span> {
 

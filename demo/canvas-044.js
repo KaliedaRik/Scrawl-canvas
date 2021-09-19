@@ -283,6 +283,7 @@ scrawl.makeRender({
 
 
 // #### User interaction
+// + KNOWN BUG - the entitys are not draggable on first user mousedown, but are draggable afterwards
 scrawl.makeGroup({
     name: 'my-draggable-entitys',
 }).addArtefacts('hex', 'egg', 'arrow', 'boring-block', 'tipsy-block');

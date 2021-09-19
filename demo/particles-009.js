@@ -221,6 +221,7 @@ scrawl.makeRender({
 
 // #### User interaction
 // Make both the Net entity's Particles, and the big ball, draggable
+// + KNOWN BUG - the entitys/particles are not draggable on first user mousedown, but are draggable afterwards
 scrawl.makeGroup({
 
     name: 'my-draggable-group',

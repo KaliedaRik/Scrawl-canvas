@@ -161,6 +161,7 @@ scrawl.importMediaStream({
         copyStartX: '10%',
         copyStartY: '10%',
 
+        visibility: false,
         globalCompositeOperation: 'destination-over',
     });
 
@@ -168,6 +169,7 @@ scrawl.importMediaStream({
 
         name: 'body',
         order: 1,
+        visibility: true,
         globalCompositeOperation: 'source-in',
     });
 
@@ -225,7 +227,21 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
         if ('backgroundFilter' === id) {
 
             myBackground.clearFilters();
-            if (val) myBackground.addFilters(val);
+
+            if (val) {
+
+                myBackground.set({
+                    visibility: true,
+                });
+                
+                myBackground.addFilters(val);
+            }
+            else {
+
+                myBackground.set({
+                    visibility: false,
+                });
+            }
         }
         else {
 

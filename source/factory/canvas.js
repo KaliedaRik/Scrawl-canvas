@@ -587,7 +587,10 @@ P.show = function(){
     }
 
     // Clear Display canvas, and get the base cell to stamp itself onto it
-    this.engine.clearRect(0, 0, this.localWidth, this.localHeight);
+    // console.log('Canvas 590 clearRect', this.localWidth, this.localHeight);
+    // this.engine.clearRect(0, 0, this.localWidth, this.localHeight);
+
+    // Get the base cell to stamp itself onto the display canvas
     this.base.show();
 
     // Handle DOM-related positioning and display requirements, including ARIA updates
