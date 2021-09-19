@@ -90,6 +90,7 @@ scrawl.observeAndUpdate({
         offsetBlueMin: ['offsetBlueMin', 'round'],
         offsetBlueMax: ['offsetBlueMax', 'round'],
         useMixedChannel: ['useMixedChannel', 'boolean'],
+        transparentEdges: ['transparentEdges', 'boolean'],
     },
 });
 
@@ -97,6 +98,7 @@ scrawl.observeAndUpdate({
 const level = document.querySelector('#level');
 const step = document.querySelector('#step');
 const useMixedChannel = document.querySelector('#useMixedChannel');
+const transparentEdges = document.querySelector('#transparentEdges');
 const offsetMin = document.querySelector('#offsetMin');
 const offsetMax = document.querySelector('#offsetMax');
 const offsetRedMin = document.querySelector('#offsetRedMin');
@@ -110,6 +112,7 @@ const opacity = document.querySelector('#opacity');
 level.value = 0.2;
 step.value = 1;
 useMixedChannel.options.selectedIndex = 1;
+transparentEdges.options.selectedIndex = 0;
 offsetMin.value = -10;
 offsetMax.value = 10;
 offsetRedMin.value = 0;

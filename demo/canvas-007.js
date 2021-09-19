@@ -346,6 +346,18 @@ scrawl.makeFilter({
     highBlue: 60,
 });
 
+// __Swirl__ filter
+scrawl.makeFilter({
+    name: 'swirl',
+    method: 'swirl',
+    startX: '50%',
+    startY: '50%',
+    innerRadius: 0,
+    outerRadius: '50%',
+    angle: 240,
+    easing: 'easeOutSine',
+});
+
 // __Channels__ filter
 scrawl.makeFilter({
     name: 'channels',
@@ -395,9 +407,10 @@ scrawl.makeFilter({
     offsetRedMin: -20,
     offsetRedMax: 20,
     offsetBlueMin: 0,
-    offsetBlueMax: 6,
+    offsetBlueMax: 15,
     useMixedChannel: false,
-    step: 7,
+    transparentEdges: true,
+    step: 4,
 });
 
 // __Offset Channels__ filter

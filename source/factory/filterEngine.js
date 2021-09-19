@@ -5,9 +5,11 @@
 
 
 import { constructors } from '../core/library.js';
-import {requestCell, releaseCell} from './cell.js';
-
 import { seededRandomNumberGenerator } from '../core/random-seed.js';
+import { easeOutSine, easeInSine, easeOutInSine, easeOutQuad, easeInQuad, easeOutInQuad, easeOutCubic, easeInCubic, easeOutInCubic, easeOutQuart, easeInQuart, easeOutInQuart, easeOutQuint, easeInQuint, easeOutInQuint, easeOutExpo, easeInExpo, easeOutInExpo, easeOutCirc, easeInCirc, easeOutInCirc, easeOutBack, easeInBack, easeOutInBack, easeOutElastic, easeInElastic, easeOutInElastic, easeOutBounce, easeInBounce, easeOutInBounce } from '../core/utilities.js';
+
+import {requestCell, releaseCell} from './cell.js';
+import {requestCoordinate, releaseCoordinate} from './coordinate.js';
 
 // #### FilterEngine constructor
 const FilterEngine = function () {
@@ -663,6 +665,106 @@ P.getGradientData = function (gradient) {
     return data;
 };
 
+// Assuming val is going to be a float Number between 0 and 1
+P.getEasedValue = function (val, easing) {
+
+    switch (easing) {
+        case 'easeOutSine' :
+            val = easeOutSine(val);
+            break;
+        case 'easeInSine' :
+            val = easeInSine(val);
+            break;
+        case 'easeOutInSine' :
+            val = easeOutInSine(val);
+            break;
+        case 'easeOutQuad' :
+            val = easeOutQuad(val);
+            break;
+        case 'easeInQuad' :
+            val = easeInQuad(val);
+            break;
+        case 'easeOutInQuad' :
+            val = easeOutInQuad(val);
+            break;
+        case 'easeOutCubic' :
+            val = easeOutCubic(val);
+            break;
+        case 'easeInCubic' :
+            val = easeInCubic(val);
+            break;
+        case 'easeOutInCubic' :
+            val = easeOutInCubic(val);
+            break;
+        case 'easeOutQuart' :
+            val = easeOutQuart(val);
+            break;
+        case 'easeInQuart' :
+            val = easeInQuart(val);
+            break;
+        case 'easeOutInQuart' :
+            val = easeOutInQuart(val);
+            break;
+        case 'easeOutQuint' :
+            val = easeOutQuint(val);
+            break;
+        case 'easeInQuint' :
+            val = easeInQuint(val);
+            break;
+        case 'easeOutInQuint' :
+            val = easeOutInQuint(val);
+            break;
+        case 'easeOutExpo' :
+            val = easeOutExpo(val);
+            break;
+        case 'easeInExpo' :
+            val = easeInExpo(val);
+            break;
+        case 'easeOutInExpo' :
+            val = easeOutInExpo(val);
+            break;
+        case 'easeOutCirc' :
+            val = easeOutCirc(val);
+            break;
+        case 'easeInCirc' :
+            val = easeInCirc(val);
+            break;
+        case 'easeOutInCirc' :
+            val = easeOutInCirc(val);
+            break;
+        case 'easeOutBack' :
+            val = easeOutBack(val);
+            break;
+        case 'easeInBack' :
+            val = easeInBack(val);
+            break;
+        case 'easeOutInBack' :
+            val = easeOutInBack(val);
+            break;
+        case 'easeOutElastic' :
+            val = easeOutElastic(val);
+            break;
+        case 'easeInElastic' :
+            val = easeInElastic(val);
+            break;
+        case 'easeOutInElastic' :
+            val = easeOutInElastic(val);
+            break;
+        case 'easeOutBounce' :
+            val = easeOutBounce(val);
+            break;
+        case 'easeInBounce' :
+            val = easeInBounce(val);
+            break;
+        case 'easeOutInBounce' :
+            val = easeOutInBounce(val);
+            break;
+    }
+
+    if (isNaN(val)) val = 1;
+
+    return val;
+};
 
 // ## Filter action functions
 // Each function is held in the `theBigActionsObject` object, for convenience
@@ -2851,10 +2953,11 @@ P.theBigActionsObject = {
             len = iData.length,
             iWidth = input.width,
             iHeight = input.height,
-            i, j, affectedRow, shift, shiftR, shiftG, shiftB,
-            cursor, r, g, b, a, w, currentRow, currentRowStart, currentRowEnd, dr, dg, db;
+            i, j, affectedRow, shift, shiftR, shiftG, shiftB, shiftA,
+            r, g, b, a, w, currentRow, currentRowStart, currentRowEnd, cursor, 
+            dr, dg, db, da, ur, ug, ub, ua;
 
-        let {opacity, useMixedChannel, seed, level, step, offsetMin, offsetMax, offsetRedMin, offsetRedMax, offsetGreenMin, offsetGreenMax, offsetBlueMin, offsetBlueMax, lineOut} = requirements;
+        let {opacity, useMixedChannel, seed, level, step, offsetMin, offsetMax, offsetRedMin, offsetRedMax, offsetGreenMin, offsetGreenMax, offsetBlueMin, offsetBlueMax, offsetAlphaMin, offsetAlphaMax, transparentEdges, lineOut} = requirements;
 
         if (null == opacity) opacity = 1;
         if (null == useMixedChannel) useMixedChannel = true;
@@ -2869,12 +2972,16 @@ P.theBigActionsObject = {
         if (null == offsetGreenMax) offsetGreenMax = 0;
         if (null == offsetBlueMin) offsetBlueMin = 0;
         if (null == offsetBlueMax) offsetBlueMax = 0;
+        if (null == offsetAlphaMin) offsetAlphaMin = 0;
+        if (null == offsetAlphaMax) offsetAlphaMax = 0;
+        if (null == transparentEdges) transparentEdges = false;
 
         const rndEngine = seededRandomNumberGenerator(seed),
             range = offsetMax - offsetMin,
             redRange = offsetRedMax - offsetRedMin,
             greenRange = offsetGreenMax - offsetGreenMin,
-            blueRange = offsetBlueMax - offsetBlueMin;
+            blueRange = offsetBlueMax - offsetBlueMin,
+            alphaRange = offsetAlphaMax - offsetAlphaMin;
 
         const rows = [];
 
@@ -2893,7 +3000,7 @@ P.theBigActionsObject = {
 
                     for (j = 0; j < step; j++) {
 
-                        rows.push([shift, shift, shift]);
+                        rows.push(shift, shift, shift, shift);
                     }
                 }
                 else {
@@ -2901,10 +3008,11 @@ P.theBigActionsObject = {
                     shiftR = (offsetRedMin + Math.floor(rndEngine.random() * redRange)) * 4;
                     shiftG = (offsetGreenMin + Math.floor(rndEngine.random() * greenRange)) * 4;
                     shiftB= (offsetBlueMin + Math.floor(rndEngine.random() * blueRange)) * 4;
+                    shiftA= (offsetAlphaMin + Math.floor(rndEngine.random() * alphaRange)) * 4;
                     
                     for (j = 0; j < step; j++) {
 
-                        rows.push([shiftR, shiftG, shiftB]);
+                        rows.push(shiftR, shiftG, shiftB, shiftA);
                     }
                 }
             }
@@ -2912,7 +3020,7 @@ P.theBigActionsObject = {
 
                 for (j = 0; j < step; j++) {
 
-                    rows.push([0, 0, 0]);
+                    rows.push(0, 0, 0, 0);
                 }
             }
         }
@@ -2924,27 +3032,33 @@ P.theBigActionsObject = {
             b = g + 1;
             a = b + 1;
 
-            if (iData[a]) {
+            w = iWidth * 4;
+            currentRow = Math.floor(i / w);
+            cursor = currentRow * 4;
 
-                w = iWidth * 4;
-                currentRow = Math.floor(i / w);
-                currentRowStart = (currentRow * 4);
-                currentRowEnd = currentRowStart + w - 4;
+            dr = rows[cursor];
+            dg = rows[++cursor];
+            db = rows[++cursor];
+            da = rows[++cursor];
 
-                [dr, dg, db] = rows[currentRow];
+            ur = r + dr;
+            ug = g + dg;
+            ub = b + db;
+            ua = a + da;
 
-                oData[r] = iData[r + dr];
-                oData[g] = iData[g + dg];
-                oData[b] = iData[b + db];
-                oData[a] = iData[a];
+            oData[r] = iData[ur];
+            oData[g] = iData[ug];
+            oData[b] = iData[ub];
+
+            if (transparentEdges) {
+
+                currentRowStart = currentRow * w;
+                currentRowEnd = currentRowStart + w;
+
+                if (ur < currentRowStart || ur > currentRowEnd || ug < currentRowStart || ug > currentRowEnd || ub < currentRowStart || ub > currentRowEnd || ua < currentRowStart || ua > currentRowEnd) oData[a] = 0;
+                else oData[a] = iData[ua];
             }
-            else {
-
-                oData[r] = iData[r];
-                oData[g] = iData[g];
-                oData[b] = iData[b];
-                oData[a] = iData[a];
-            }
+            else oData[a] = iData[ua];
         }
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);
@@ -3569,6 +3683,138 @@ P.theBigActionsObject = {
             oData[a] = iData[a];
         }
 
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
+    },
+
+// __swirl__ - For each pixel, move the pixel radially according to its distance from a given coordinate and associated angle for that coordinate.
+// + TODO: concurrency - want to be able to process more than one swirl in the same filter. When concurrency flag is true, then each pixels value, when the pixel is affected by more than one swirl, needs to pro-rata the effects of those swirls; when concurrency is false, need to process the entire image for each swirl in turn.
+// + TODO: this filter is too slow - we need to cache the calculations as a lookup table to speed things up.
+    'swirl': function (requirements) {
+
+        let [input, output] = this.getInputAndOutputLines(requirements);
+
+        let iData = input.data,
+            oData = output.data,
+            len = iData.length,
+            iWidth = input.width,
+            iHeight = input.height,
+            floor = Math.floor,
+            r, g, b, a, i, pos, x, y, distance, dr, dg, db, da, dx, dy, dLen;
+
+        let {opacity, swirls, concurrent, lineOut} = requirements;
+
+        if (null == opacity) opacity = 1;
+        if (null == swirls) swirls = [];
+        if (null == concurrent) concurrent = false;
+
+        // for now just process one swirl
+        if (Array.isArray(swirls) && swirls.length) {
+
+            const getEasedValue = this.getEasedValue;
+
+            const [startX, startY, innerRadius, outerRadius, angle, easing] = swirls[0];
+
+            const sx = (startX.substring) ? floor((parseFloat(startX) / 100) * iWidth) : startX;
+            const sy = (startY.substring) ? floor((parseFloat(startY) / 100) * iHeight) : startY;
+            let outer = (outerRadius.substring) ? floor((parseFloat(outerRadius) / 100) * iWidth) : outerRadius;
+            let inner = (innerRadius.substring) ? floor((parseFloat(innerRadius) / 100) * iWidth) : innerRadius;
+
+            if (inner > outer) {
+
+                let temp = inner;
+                inner = outer;
+                outer = temp;
+            }
+
+            const complexLen = outer - inner;
+
+            const start = requestCoordinate([sx, sy]);
+            const coord = requestCoordinate();
+
+            for (i = 0; i < len; i += 4) {
+
+                pos = floor (i / 4);
+                y = floor(pos / iWidth);
+                x = pos - (y * iWidth);
+
+                r = i;
+                g = r + 1;
+                b = g + 1;
+                a = b + 1;
+
+                distance = coord.set([x, y]).subtract(start).getMagnitude();
+
+                if (distance > outer) {
+
+                    dr = r;
+                    dg = g;
+                    db = b;
+                    da = a;
+                }
+                else if (distance < inner) {
+
+                    coord.rotate(angle).add(start);
+
+                    [dx, dy] = coord;
+
+                    if (dx < 0) dx += iWidth;
+                    else if (dx >= iWidth) dx -= iWidth;
+
+                    if (dy < 0) dy += iHeight;
+                    else if (dy >= iHeight) dy -= iHeight;
+
+                    dr = ((floor(dy) * iWidth) + floor(dx)) * 4;
+                    dg = dr + 1;
+                    db = dg + 1;
+                    da = db + 1;
+                }
+                else {
+
+                    dLen = 1 - ((distance - inner) / complexLen);
+
+                    dLen = getEasedValue(dLen, easing);
+
+                    coord.rotate(angle * dLen).add(start);
+
+                    [dx, dy] = coord;
+
+                    if (dx < 0) dx += iWidth;
+                    else if (dx >= iWidth) dx -= iWidth;
+
+                    if (dy < 0) dy += iHeight;
+                    else if (dy >= iHeight) dy -= iHeight;
+
+                    dr = ((floor(dy) * iWidth) + floor(dx)) * 4;
+                    dg = dr + 1;
+                    db = dg + 1;
+                    da = db + 1;
+                }
+
+                oData[r] = iData[dr];
+                oData[g] = iData[dg];
+                oData[b] = iData[db];
+                oData[a] = iData[da];
+            }
+
+            releaseCoordinate(coord);
+            releaseCoordinate(start);
+        }
+        else {
+
+            for (i = 0; i < len; i += 4) {
+
+                r = i;
+                g = r + 1;
+                b = g + 1;
+                a = b + 1;
+
+                oData[r] = iData[r];
+                oData[g] = iData[g];
+                oData[b] = iData[b];
+                oData[a] = iData[a];
+            }
+        }
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);
     },
