@@ -26,6 +26,12 @@ const swirl = scrawl.makeFilter({
     innerRadius: 0,
     outerRadius: '30%',
     angle: 90,
+    staticSwirls: [
+        ['20%', '20%', 0, '10%', 270, 'easeOutInSine'],
+        ['20%', '80%', 0, '10%', -270, 'easeOutInSine'],
+        ['80%', '80%', 0, '10%', -270, 'easeOutInSine'],
+        ['80%', '20%', 0, '10%', 270, 'easeOutInSine']
+    ]
 });
 
 
@@ -100,7 +106,7 @@ const opacity = document.querySelector('#opacity');
 const angle = document.querySelector('#angle');
 
 opacity.value = 1;
-opacity.value = 90;
+angle.value = 90;
 
 document.querySelector('#start_xPercent').value = 50;
 document.querySelector('#start_yPercent').value = 50;

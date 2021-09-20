@@ -164,6 +164,38 @@ P.buildImageGrid = function (image) {
     return false;
 };
 
+P.buildImageCoordinateLookup = function (image) {
+
+    let { cache, workstore, workstoreLastAccessed } = this;
+
+    if (!image) image = cache.source;
+
+    let { width, height } = image
+
+    if (width && height) {
+
+        let name = `coords-lookup-${width}-${height}`;
+        if (workstore[name]) {
+            workstoreLastAccessed[name] = Date.now();
+            return workstore[name];
+        }
+
+        let lookup = []
+
+        for (let y = 0; y < height; y++) {
+
+            for (let x = 0; x < width; x++) {
+                
+                lookup.push([x, y]);
+            }
+        }
+        workstore[name] = lookup;
+        workstoreLastAccessed[name] = Date.now();
+        return lookup;
+    }
+    return false;
+};
+
 // `buildAlphaTileSets` - creates a record of which pixels belong to which tile - used for manipulating alpha channel values. Resulting object will be cached in the store
 P.buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeight, offsetX, offsetY, areaAlphaLevels, image) {
 
@@ -3688,9 +3720,13 @@ P.theBigActionsObject = {
     },
 
 // __swirl__ - For each pixel, move the pixel radially according to its distance from a given coordinate and associated angle for that coordinate.
-// + TODO: concurrency - want to be able to process more than one swirl in the same filter. When concurrency flag is true, then each pixels value, when the pixel is affected by more than one swirl, needs to pro-rata the effects of those swirls; when concurrency is false, need to process the entire image for each swirl in turn.
-// + TODO: this filter is too slow - we need to cache the calculations as a lookup table to speed things up.
+// + This filter can handle multiple swirls in a single pass
     'swirl': function (requirements) {
+
+        const getValue = function (val, dim) {
+
+            return (val.substring) ? floor((parseFloat(val) / 100) * dim) : val;
+        };
 
         let [input, output] = this.getInputAndOutputLines(requirements);
 
@@ -3700,120 +3736,165 @@ P.theBigActionsObject = {
             iWidth = input.width,
             iHeight = input.height,
             floor = Math.floor,
-            r, g, b, a, i, pos, x, y, distance, dr, dg, db, da, dx, dy, dLen;
+            r, g, b, a, s, sz, counter, pos, x, y, xz, yz, i, j, 
+            distance, dr, dg, db, da, dx, dy, dLen;
 
-        let {opacity, swirls, concurrent, lineOut} = requirements;
+        let tempInput = new ImageData(iWidth, iHeight),
+            tData = tempInput.data,
+            tWidth = tempInput.width,
+            tHeight = tempInput.height;
+
+        let {opacity, swirls, lineOut} = requirements;
 
         if (null == opacity) opacity = 1;
         if (null == swirls) swirls = [];
-        if (null == concurrent) concurrent = false;
 
-        // for now just process one swirl
+
+        for (i = 0; i < len; i += 4) {
+
+            r = i;
+            g = r + 1;
+            b = g + 1;
+            a = b + 1;
+
+            tData[r] = iData[r];
+            tData[g] = iData[g];
+            tData[b] = iData[b];
+            tData[a] = iData[a];
+
+            oData[r] = iData[r];
+            oData[g] = iData[g];
+            oData[b] = iData[b];
+            oData[a] = iData[a];
+        }
+
         if (Array.isArray(swirls) && swirls.length) {
+
+            let grid = this.buildImageGrid(input);
 
             const getEasedValue = this.getEasedValue;
 
-            const [startX, startY, innerRadius, outerRadius, angle, easing] = swirls[0];
-
-            const sx = (startX.substring) ? floor((parseFloat(startX) / 100) * iWidth) : startX;
-            const sy = (startY.substring) ? floor((parseFloat(startY) / 100) * iHeight) : startY;
-            let outer = (outerRadius.substring) ? floor((parseFloat(outerRadius) / 100) * iWidth) : outerRadius;
-            let inner = (innerRadius.substring) ? floor((parseFloat(innerRadius) / 100) * iWidth) : innerRadius;
-
-            if (inner > outer) {
-
-                let temp = inner;
-                inner = outer;
-                outer = temp;
-            }
-
-            const complexLen = outer - inner;
-
-            const start = requestCoordinate([sx, sy]);
+            const start = requestCoordinate();
             const coord = requestCoordinate();
 
-            for (i = 0; i < len; i += 4) {
+            for (s = 0, sz = swirls.length; s < sz; s++) {
 
-                pos = floor (i / 4);
-                y = floor(pos / iWidth);
-                x = pos - (y * iWidth);
+                const [startX, startY, innerRadius, outerRadius, angle, easing] = swirls[s];
 
-                r = i;
-                g = r + 1;
-                b = g + 1;
-                a = b + 1;
+                const sx = getValue(startX, iWidth),
+                    sy = getValue(startY, iHeight);
 
-                distance = coord.set([x, y]).subtract(start).getMagnitude();
+                let outer = getValue(outerRadius, iWidth),
+                    inner = getValue(innerRadius, iWidth);
 
-                if (distance > outer) {
+                if (inner > outer) {
 
-                    dr = r;
-                    dg = g;
-                    db = b;
-                    da = a;
-                }
-                else if (distance < inner) {
-
-                    coord.rotate(angle).add(start);
-
-                    [dx, dy] = coord;
-
-                    if (dx < 0) dx += iWidth;
-                    else if (dx >= iWidth) dx -= iWidth;
-
-                    if (dy < 0) dy += iHeight;
-                    else if (dy >= iHeight) dy -= iHeight;
-
-                    dr = ((floor(dy) * iWidth) + floor(dx)) * 4;
-                    dg = dr + 1;
-                    db = dg + 1;
-                    da = db + 1;
-                }
-                else {
-
-                    dLen = 1 - ((distance - inner) / complexLen);
-
-                    dLen = getEasedValue(dLen, easing);
-
-                    coord.rotate(angle * dLen).add(start);
-
-                    [dx, dy] = coord;
-
-                    if (dx < 0) dx += iWidth;
-                    else if (dx >= iWidth) dx -= iWidth;
-
-                    if (dy < 0) dy += iHeight;
-                    else if (dy >= iHeight) dy -= iHeight;
-
-                    dr = ((floor(dy) * iWidth) + floor(dx)) * 4;
-                    dg = dr + 1;
-                    db = dg + 1;
-                    da = db + 1;
+                    let temp = inner;
+                    inner = outer;
+                    outer = temp;
                 }
 
-                oData[r] = iData[dr];
-                oData[g] = iData[dg];
-                oData[b] = iData[db];
-                oData[a] = iData[da];
+                const complexLen = outer - inner;
+
+                x = sx - outer;
+                if (x < 0) x = 0;
+                xz = sx + outer
+                if (xz > tWidth) xz = tWidth;
+                y = sy - outer;
+                if (y < 0) y = 0;
+                yz = sy + outer
+                if (yz >= tHeight) yz = tHeight;
+
+                if (x < xz && y < yz && x < tWidth && xz > 0 && y < tHeight && yz > 0) {
+
+                    start.setFromArray([sx, sy]);
+
+                    for (i = y; i < yz; i++) {
+
+                        for (j = x; j < xz; j++) {
+                            
+                            pos = [j, i];
+
+                            r = grid[i][j] * 4;
+                            g = r + 1;
+                            b = g + 1;
+                            a = b + 1;
+
+                            distance = coord.set(pos).subtract(start).getMagnitude();
+
+                            if (distance > outer) {
+
+                                dr = r;
+                                dg = g;
+                                db = b;
+                                da = a;
+                            }
+                            else if (distance < inner) {
+
+                                coord.rotate(angle).add(start);
+
+                                dx = floor(coord[0]);
+                                dy = floor(coord[1]);
+
+                                if (dx < 0) dx += iWidth;
+                                else if (dx >= iWidth) dx -= iWidth;
+
+                                if (dy < 0) dy += iHeight;
+                                else if (dy >= iHeight) dy -= iHeight;
+
+                                dr = grid[dy][dx] * 4;
+                                dg = dr + 1;
+                                db = dg + 1;
+                                da = db + 1;
+                            }
+                            else {
+
+                                dLen = 1 - ((distance - inner) / complexLen);
+
+                                dLen = getEasedValue(dLen, easing);
+
+                                coord.rotate(angle * dLen).add(start);
+
+                                dx = floor(coord[0]);
+                                dy = floor(coord[1]);
+
+                                if (dx < 0) dx += iWidth;
+                                else if (dx >= iWidth) dx -= iWidth;
+
+                                if (dy < 0) dy += iHeight;
+                                else if (dy >= iHeight) dy -= iHeight;
+
+                                dr = grid[dy][dx] * 4;
+                                dg = dr + 1;
+                                db = dg + 1;
+                                da = db + 1;
+                            }
+                            oData[r] = tData[dr];
+                            oData[g] = tData[dg];
+                            oData[b] = tData[db];
+                            oData[a] = tData[da];
+                        }
+                    }
+
+                    for (i = y; i < yz; i++) {
+                        
+                        for (j = x; j < xz; j++) {
+                            
+                            r = grid[i][j] * 4;
+                            g = r + 1;
+                            b = g + 1;
+                            a = b + 1;
+
+                            tData[r] = oData[r];
+                            tData[g] = oData[g];
+                            tData[b] = oData[b];
+                            tData[a] = oData[a];
+                        }
+                    }
+                }
             }
-
             releaseCoordinate(coord);
             releaseCoordinate(start);
-        }
-        else {
-
-            for (i = 0; i < len; i += 4) {
-
-                r = i;
-                g = r + 1;
-                b = g + 1;
-                a = b + 1;
-
-                oData[r] = iData[r];
-                oData[g] = iData[g];
-                oData[b] = iData[b];
-                oData[a] = iData[a];
-            }
         }
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);

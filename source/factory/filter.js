@@ -62,7 +62,7 @@
 // 
 // `step-channels` - Takes three divisor values - "red", "green", "blue". For each pixel, its color channel values are divided by the corresponding color divisor, floored to the integer value and then multiplied by the divisor. For example a divisor value of '50' applied to a channel value of '120' will give a result of '100'. The output is a form of posterization. Object attributes: `action, lineIn, lineOut, opacity, red, green, blue`
 // 
-// `swirl` - For each pixel, move the pixel radially according to its distance from a given coordinate and associated angle for that coordinate. Object attributes: `action, lineIn, lineOut, opacity, swirls (array of arrays), concurrent`; pseudo-arguments (for one swirl): startX, startY, innerRadius, outerRadius, angle, easing`. Note that the start paramenters can be absolute (Number) or relative (String) values, with values relative to the host Cell's dimensions; inner and outer radius values can also be Strings relative to the host Cell's width. Supported easing values are included in demo Filters-026
+// `swirl` - For each pixel, move the pixel radially according to its distance from a given coordinate and associated angle for that coordinate. Object attributes: `action, lineIn, lineOut, opacity, swirls (array of arrays)`; pseudo-arguments (for one swirl): startX, startY, innerRadius, outerRadius, angle, easing, staticSwirls`. Note that the start paramenters can be absolute (Number) or relative (String) values, with values relative to the host Cell's dimensions; inner and outer radius values can also be Strings relative to the host Cell's width. Supported easing values are included in demo Filters-026
 //
 // `threshold` - Grayscales the input then, for each pixel, checks the color channel values against a "level" argument: pixels with channel values above the level value are assigned to the 'high' color; otherwise they are updated to the 'low' color. The "high" and "low" arguments are [red, green, blue] integer Number Arrays. The convenience function will accept the pseudo-attributes "highRed", "lowRed" etc in place of the "high" and "low" Arrays. Object attributes: `action, lineIn, lineOut, opacity, low, high; pseudo-arguments: lowRed, lowGreen, lowBlue, highRed, highGreen, highBlue`
 // 
@@ -310,7 +310,7 @@ let defaultAttributes = {
     startY: '50%',
     step: 1,
     strength: 1,
-    swirls: null,
+    staticSwirls: null,
     tileHeight: 1,
     tileWidth: 1,
     tolerance: 0,
@@ -1177,7 +1177,8 @@ const setActionsArray = {
         }];
     },
 
-// __swirl__ - produces a more realistic black-and-white photograph effect
+// __swirl__ - for each pixel, move the pixel radially according to its distance from a given coordinate and associated angle for that coordinate.
+// + This filter can handle multiple swirls in a single pass
     swirl: function (f) {
     	let startX = (f.startX != null) ? f.startX : '50%',
             startY = (f.startY != null) ? f.startY : '50%',
@@ -1185,17 +1186,17 @@ const setActionsArray = {
             outerRadius = (f.outerRadius != null) ? f.outerRadius : '30%',
             angle = (f.angle != null) ? f.angle : 0,
             easing = (f.easing != null) ? f.easing : 'linear',
-            swirls = (f.swirls != null) ? f.swirls : [];
+            staticSwirls = (f.staticSwirls != null) ? f.staticSwirls : [];
 
+        const swirls = [...staticSwirls];
         swirls.push([startX, startY, innerRadius, outerRadius, angle, easing]);
 
         f.actions = [{
             action: 'swirl',
             lineIn: (f.lineIn != null) ? f.lineIn : '',
             lineOut: (f.lineOut != null) ? f.lineOut : '',
-            swirls, 
-            concurrent: (f.concurrent != null) ? f.concurrent : false,
             opacity: (f.opacity != null) ? f.opacity : 1,
+            swirls, 
         }];
     },
 
