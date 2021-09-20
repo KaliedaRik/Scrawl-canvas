@@ -154,7 +154,7 @@ const isa_fn = item => (typeof item === 'function') ? true : false;
 
 
 // __isa_number__ checks to make sure the argument is true number (excluding NaN)
-const isa_number = item => (typeof item != 'undefined' && item.toFixed && !Number.isNaN(item)) ? true : false;
+const isa_number = item => (item != null && item.toFixed && !Number.isNaN(item)) ? true : false;
 
 
 // __isa_obj__ checks to make sure the argument is a JavaScript Object
