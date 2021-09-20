@@ -496,9 +496,11 @@
             <div class="content"><div class='highlight'><pre>
 
 <span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
-<span class="hljs-keyword">import</span> {requestCell, releaseCell} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./cell.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { seededRandomNumberGenerator } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/random-seed.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { easeOutSine, easeInSine, easeOutInSine, easeOutQuad, easeInQuad, easeOutInQuad, easeOutCubic, easeInCubic, easeOutInCubic, easeOutQuart, easeInQuart, easeOutInQuart, easeOutQuint, easeInQuint, easeOutInQuint, easeOutExpo, easeInExpo, easeOutInExpo, easeOutCirc, easeInCirc, easeOutInCirc, easeOutBack, easeInBack, easeOutInBack, easeOutElastic, easeInElastic, easeOutInElastic, easeOutBounce, easeInBounce, easeOutInBounce } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
-<span class="hljs-keyword">import</span> { seededRandomNumberGenerator } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/random-seed.js&#x27;</span>;</pre></div></div>
+<span class="hljs-keyword">import</span> {requestCell, releaseCell} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./cell.js&#x27;</span>;
+<span class="hljs-keyword">import</span> {requestCoordinate, releaseCoordinate} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./coordinate.js&#x27;</span>;</pre></div></div>
             
         </li>
         
@@ -762,6 +764,38 @@ P.<span class="hljs-property">workstoreLastAccessed</span> = {};</pre></div></di
         workstore[name] = grid;
         workstoreLastAccessed[name] = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
         <span class="hljs-keyword">return</span> grid;
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+};
+
+P.<span class="hljs-property">buildImageCoordinateLookup</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">image</span>) {
+
+    <span class="hljs-keyword">let</span> { cache, workstore, workstoreLastAccessed } = <span class="hljs-variable language_">this</span>;
+
+    <span class="hljs-keyword">if</span> (!image) image = cache.<span class="hljs-property">source</span>;
+
+    <span class="hljs-keyword">let</span> { width, height } = image
+
+    <span class="hljs-keyword">if</span> (width &amp;&amp; height) {
+
+        <span class="hljs-keyword">let</span> name = <span class="hljs-string">`coords-lookup-<span class="hljs-subst">${width}</span>-<span class="hljs-subst">${height}</span>`</span>;
+        <span class="hljs-keyword">if</span> (workstore[name]) {
+            workstoreLastAccessed[name] = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
+            <span class="hljs-keyword">return</span> workstore[name];
+        }
+
+        <span class="hljs-keyword">let</span> lookup = []
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> y = <span class="hljs-number">0</span>; y &lt; height; y++) {
+
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> x = <span class="hljs-number">0</span>; x &lt; width; x++) {
+                
+                lookup.<span class="hljs-title function_">push</span>([x, y]);
+            }
+        }
+        workstore[name] = lookup;
+        workstoreLastAccessed[name] = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
+        <span class="hljs-keyword">return</span> lookup;
     }
     <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 };</pre></div></div>
@@ -1408,6 +1442,119 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
               <div class="sswrap ">
                 <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
+              <p>Assuming val is going to be a float Number between 0 and 1</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getEasedValue</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val, easing</span>) {
+
+    <span class="hljs-keyword">switch</span> (easing) {
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutSine&#x27;</span> :
+            val = <span class="hljs-title function_">easeOutSine</span>(val);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeInSine&#x27;</span> :
+            val = <span class="hljs-title function_">easeInSine</span>(val);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutInSine&#x27;</span> :
+            val = <span class="hljs-title function_">easeOutInSine</span>(val);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutQuad&#x27;</span> :
+            val = <span class="hljs-title function_">easeOutQuad</span>(val);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeInQuad&#x27;</span> :
+            val = <span class="hljs-title function_">easeInQuad</span>(val);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutInQuad&#x27;</span> :
+            val = <span class="hljs-title function_">easeOutInQuad</span>(val);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutCubic&#x27;</span> :
+            val = <span class="hljs-title function_">easeOutCubic</span>(val);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeInCubic&#x27;</span> :
+            val = <span class="hljs-title function_">easeInCubic</span>(val);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutInCubic&#x27;</span> :
+            val = <span class="hljs-title function_">easeOutInCubic</span>(val);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutQuart&#x27;</span> :
+            val = <span class="hljs-title function_">easeOutQuart</span>(val);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeInQuart&#x27;</span> :
+            val = <span class="hljs-title function_">easeInQuart</span>(val);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutInQuart&#x27;</span> :
+            val = <span class="hljs-title function_">easeOutInQuart</span>(val);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutQuint&#x27;</span> :
+            val = <span class="hljs-title function_">easeOutQuint</span>(val);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeInQuint&#x27;</span> :
+            val = <span class="hljs-title function_">easeInQuint</span>(val);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutInQuint&#x27;</span> :
+            val = <span class="hljs-title function_">easeOutInQuint</span>(val);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutExpo&#x27;</span> :
+            val = <span class="hljs-title function_">easeOutExpo</span>(val);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeInExpo&#x27;</span> :
+            val = <span class="hljs-title function_">easeInExpo</span>(val);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutInExpo&#x27;</span> :
+            val = <span class="hljs-title function_">easeOutInExpo</span>(val);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutCirc&#x27;</span> :
+            val = <span class="hljs-title function_">easeOutCirc</span>(val);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeInCirc&#x27;</span> :
+            val = <span class="hljs-title function_">easeInCirc</span>(val);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutInCirc&#x27;</span> :
+            val = <span class="hljs-title function_">easeOutInCirc</span>(val);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutBack&#x27;</span> :
+            val = <span class="hljs-title function_">easeOutBack</span>(val);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeInBack&#x27;</span> :
+            val = <span class="hljs-title function_">easeInBack</span>(val);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutInBack&#x27;</span> :
+            val = <span class="hljs-title function_">easeOutInBack</span>(val);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutElastic&#x27;</span> :
+            val = <span class="hljs-title function_">easeOutElastic</span>(val);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeInElastic&#x27;</span> :
+            val = <span class="hljs-title function_">easeInElastic</span>(val);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutInElastic&#x27;</span> :
+            val = <span class="hljs-title function_">easeOutInElastic</span>(val);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutBounce&#x27;</span> :
+            val = <span class="hljs-title function_">easeOutBounce</span>(val);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeInBounce&#x27;</span> :
+            val = <span class="hljs-title function_">easeInBounce</span>(val);
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;easeOutInBounce&#x27;</span> :
+            val = <span class="hljs-title function_">easeOutInBounce</span>(val);
+            <span class="hljs-keyword">break</span>;
+    }
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(val)) val = <span class="hljs-number">1</span>;
+
+    <span class="hljs-keyword">return</span> val;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-24">&#x00a7;</a>
+              </div>
               <h2 id="filter-action-functions">Filter action functions</h2>
 <p>Each function is held in the <code>theBigActionsObject</code> object, for convenience</p>
 
@@ -1418,11 +1565,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p><strong>alpha-to-channels</strong> - Copies the alpha channel value over to the selected value or, alternatively, sets that channel’s value to zero, or leaves the channel’s value unchanged. Setting the appropriate “includeChannel” flags will copy the alpha channel value to that channel; when that flag is false, setting the appropriate “excludeChannel” flag will set that channel’s value to zero.</p>
 
@@ -1471,11 +1618,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p><strong>area-alpha</strong> - Places a tile schema across the input, quarters each tile and then sets the alpha channels of the pixels in selected quarters of each tile to zero. Can be used to create horizontal or vertical bars, or chequerboard effects.</p>
 
@@ -1532,11 +1679,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-26">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p><strong>average-channels</strong> - Calculates an average value from each pixel’s included channels and applies that value to all channels that have not been specifically excluded; excluded channels have their values set to 0.</p>
 
@@ -1614,11 +1761,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-27">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p><strong>binary</strong> - Set the channel to either 0 or 255, depending on whether the channel value is below or above a given level. Level values are set using the “red”, “green”, “blue” and “alpha” arguments. Setting these values to 0 disables the action for that channel.</p>
 
@@ -1668,11 +1815,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-28">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p><strong>blend</strong> - Using two source images (from the “lineIn” and “lineMix” arguments), combine their color information using various separable and non-separable blend modes (as defined by the W3C Compositing and Blending Level 1 recommendations. The blending method is determined by the String value supplied in the “blend” argument; permitted values are: ‘color-burn’, ‘color-dodge’, ‘darken’, ‘difference’, ‘exclusion’, ‘hard-light’, ‘lighten’, ‘lighter’, ‘multiply’, ‘overlay’, ‘screen’, ‘soft-light’, ‘color’, ‘hue’, ‘luminosity’, and ‘saturation’. Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the “offsetX” and “offsetY” arguments.</p>
 
@@ -2372,11 +2519,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-29">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p>DEPRECATED! <strong>blur</strong> - Performs a multi-loop, two-step ‘horizontal-then-vertical averaging sweep’ calculation across all pixels to create a blur effect. Note that this filter is expensive, thus much slower to complete compared to other filter effects.</p>
 <ul>
@@ -2537,11 +2684,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-30">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p><strong>channels-to-alpha</strong> - Calculates an average value from each pixel’s included channels and applies that value to the alpha channel.</p>
 
@@ -2603,11 +2750,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-31">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p><strong>chroma</strong> - Using an array of ‘range’ arrays, determine whether a pixel’s values lie entirely within a range’s values and, if true, sets that pixel’s alpha channel value to zero. Each ‘range’ array comprises six Numbers representing [minimum-red, minimum-green, minimum-blue, maximum-red, maximum-green, maximum-blue] values.</p>
 
@@ -2663,11 +2810,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-32">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p><strong>clamp-channels</strong> - Clamp each color channel to a range set by lowColor and highColor values</p>
 
@@ -2734,11 +2881,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-33">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <p><strong>colors-to-alpha</strong> - Determine the alpha channel value for each pixel depending on the closeness to that pixel’s color channel values to a reference color supplied in the “red”, “green” and “blue” arguments. The sensitivity of the effect can be manipulated using the “transparentAt” and “opaqueAt” values, both of which lie in the range 0-1.</p>
 
@@ -2803,11 +2950,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-34">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p><strong>compose</strong> - Using two source images (from the “lineIn” and “lineMix” arguments), combine their color information using alpha compositing rules (as defined by Porter/Duff). The compositing method is determined by the String value supplied in the “compose” argument; permitted values are: ‘destination-only’, ‘destination-over’, ‘destination-in’, ‘destination-out’, ‘destination-atop’, ‘source-only’, ‘source-over’ (default), ‘source-in’, ‘source-out’, ‘source-atop’, ‘clear’, ‘xor’, or ‘lighter’. Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the “offsetX” and “offsetY” arguments.</p>
 
@@ -3150,11 +3297,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-35">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p><strong>corrode</strong> - Performs a special form of matrix operation on each pixel’s color and alpha channels, calculating the new value using neighbouring pixel values. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the “width” and “height” arguments, while setting the home pixel’s position within the matrix can be set using the “offsetX” and “offsetY” arguments. The operation will set the pixel’s channel value to match either the lowest, highest, mean or median values as dictated by its neighbours - this value is set in the “level” attribute. Channels can be selected by setting the “includeRed”, “includeGreen”, “includeBlue” (all false by default) and “includeAlpha” (default: true) flags.</p>
 
@@ -3173,11 +3320,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-36">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p>need to remove the pixel’s own value?</p>
 
@@ -3255,11 +3402,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-37">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p><strong>displace</strong> - Shift pixels around the image, based on the values supplied in a displacement image</p>
 
@@ -3369,11 +3516,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-38">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p><strong>emboss</strong> - A 3x3 matrix transform; the matrix weights are calculated internally from the values of two arguments: “strength”, and “angle” - which is a value measured in degrees, with 0 degrees pointing to the right of the origin (along the positive x axis). Post-processing options include removing unchanged pixels, or setting then to mid-gray. The convenience method includes additional arguments which will add a choice of grayscale, then channel clamping, then blurring actions before passing the results to this emboss action</p>
 
@@ -3525,11 +3672,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-39">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p><strong>flood</strong> - Set all pixels to the channel values supplied in the “red”, “green”, “blue” and “alpha” arguments</p>
 
@@ -3577,11 +3724,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p><strong>gaussian-blur</strong> - from this GitHub repository: <a href="https://github.com/nodeca/glur/blob/master/index.js">https://github.com/nodeca/glur/blob/master/index.js</a> (code accessed 1 June 2021)</p>
 
@@ -3612,11 +3759,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-41">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p>Attempt to force type to FP32.</p>
 
@@ -3630,11 +3777,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-42">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p>takes src image and writes the blurred and transposed result into out</p>
 
@@ -3661,11 +3808,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p>left to right</p>
 
@@ -3736,11 +3883,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-44">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p>right to left</p>
 
@@ -3846,11 +3993,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-45">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p><strong>glitch</strong> - Swap pixels at random within a given box (width/height) distance of each other, dependent on the level setting - lower levels mean less noise. Uses a pseudo-random numbers generator to ensure consistent results across runs. Takes into account choices to include red, green, blue and alpha channels, and whether to ignore transparent pixels</p>
 
@@ -3865,10 +4012,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
             len = iData.<span class="hljs-property">length</span>,
             iWidth = input.<span class="hljs-property">width</span>,
             iHeight = input.<span class="hljs-property">height</span>,
-            i, j, affectedRow, shift, shiftR, shiftG, shiftB,
-            cursor, r, g, b, a, w, currentRow, currentRowStart, currentRowEnd, dr, dg, db;
+            i, j, affectedRow, shift, shiftR, shiftG, shiftB, shiftA,
+            r, g, b, a, w, currentRow, currentRowStart, currentRowEnd, cursor, 
+            dr, dg, db, da, ur, ug, ub, ua;
 
-        <span class="hljs-keyword">let</span> {opacity, useMixedChannel, seed, level, step, offsetMin, offsetMax, offsetRedMin, offsetRedMax, offsetGreenMin, offsetGreenMax, offsetBlueMin, offsetBlueMax, lineOut} = requirements;
+        <span class="hljs-keyword">let</span> {opacity, useMixedChannel, seed, level, step, offsetMin, offsetMax, offsetRedMin, offsetRedMax, offsetGreenMin, offsetGreenMax, offsetBlueMin, offsetBlueMax, offsetAlphaMin, offsetAlphaMax, transparentEdges, lineOut} = requirements;
 
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == useMixedChannel) useMixedChannel = <span class="hljs-literal">true</span>;
@@ -3883,12 +4031,16 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetGreenMax) offsetGreenMax = <span class="hljs-number">0</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetBlueMin) offsetBlueMin = <span class="hljs-number">0</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetBlueMax) offsetBlueMax = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetAlphaMin) offsetAlphaMin = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == offsetAlphaMax) offsetAlphaMax = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == transparentEdges) transparentEdges = <span class="hljs-literal">false</span>;
 
         <span class="hljs-keyword">const</span> rndEngine = <span class="hljs-title function_">seededRandomNumberGenerator</span>(seed),
             range = offsetMax - offsetMin,
             redRange = offsetRedMax - offsetRedMin,
             greenRange = offsetGreenMax - offsetGreenMin,
-            blueRange = offsetBlueMax - offsetBlueMin;
+            blueRange = offsetBlueMax - offsetBlueMin,
+            alphaRange = offsetAlphaMax - offsetAlphaMin;
 
         <span class="hljs-keyword">const</span> rows = [];
 
@@ -3907,7 +4059,7 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
 
                     <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; step; j++) {
 
-                        rows.<span class="hljs-title function_">push</span>([shift, shift, shift]);
+                        rows.<span class="hljs-title function_">push</span>(shift, shift, shift, shift);
                     }
                 }
                 <span class="hljs-keyword">else</span> {
@@ -3915,10 +4067,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
                     shiftR = (offsetRedMin + <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(rndEngine.<span class="hljs-title function_">random</span>() * redRange)) * <span class="hljs-number">4</span>;
                     shiftG = (offsetGreenMin + <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(rndEngine.<span class="hljs-title function_">random</span>() * greenRange)) * <span class="hljs-number">4</span>;
                     shiftB= (offsetBlueMin + <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(rndEngine.<span class="hljs-title function_">random</span>() * blueRange)) * <span class="hljs-number">4</span>;
+                    shiftA= (offsetAlphaMin + <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(rndEngine.<span class="hljs-title function_">random</span>() * alphaRange)) * <span class="hljs-number">4</span>;
                     
                     <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; step; j++) {
 
-                        rows.<span class="hljs-title function_">push</span>([shiftR, shiftG, shiftB]);
+                        rows.<span class="hljs-title function_">push</span>(shiftR, shiftG, shiftB, shiftA);
                     }
                 }
             }
@@ -3926,7 +4079,7 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
 
                 <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; step; j++) {
 
-                    rows.<span class="hljs-title function_">push</span>([<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>]);
+                    rows.<span class="hljs-title function_">push</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
                 }
             }
         }
@@ -3938,27 +4091,33 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
             b = g + <span class="hljs-number">1</span>;
             a = b + <span class="hljs-number">1</span>;
 
-            <span class="hljs-keyword">if</span> (iData[a]) {
+            w = iWidth * <span class="hljs-number">4</span>;
+            currentRow = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(i / w);
+            cursor = currentRow * <span class="hljs-number">4</span>;
 
-                w = iWidth * <span class="hljs-number">4</span>;
-                currentRow = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(i / w);
-                currentRowStart = (currentRow * <span class="hljs-number">4</span>);
-                currentRowEnd = currentRowStart + w - <span class="hljs-number">4</span>;
+            dr = rows[cursor];
+            dg = rows[++cursor];
+            db = rows[++cursor];
+            da = rows[++cursor];
 
-                [dr, dg, db] = rows[currentRow];
+            ur = r + dr;
+            ug = g + dg;
+            ub = b + db;
+            ua = a + da;
 
-                oData[r] = iData[r + dr];
-                oData[g] = iData[g + dg];
-                oData[b] = iData[b + db];
-                oData[a] = iData[a];
+            oData[r] = iData[ur];
+            oData[g] = iData[ug];
+            oData[b] = iData[ub];
+
+            <span class="hljs-keyword">if</span> (transparentEdges) {
+
+                currentRowStart = currentRow * w;
+                currentRowEnd = currentRowStart + w;
+
+                <span class="hljs-keyword">if</span> (ur &lt; currentRowStart || ur &gt; currentRowEnd || ug &lt; currentRowStart || ug &gt; currentRowEnd || ub &lt; currentRowStart || ub &gt; currentRowEnd || ua &lt; currentRowStart || ua &gt; currentRowEnd) oData[a] = <span class="hljs-number">0</span>;
+                <span class="hljs-keyword">else</span> oData[a] = iData[ua];
             }
-            <span class="hljs-keyword">else</span> {
-
-                oData[r] = iData[r];
-                oData[g] = iData[g];
-                oData[b] = iData[b];
-                oData[a] = iData[a];
-            }
+            <span class="hljs-keyword">else</span> oData[a] = iData[ua];
         }
         <span class="hljs-keyword">if</span> (lineOut) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(output, input, <span class="hljs-number">1</span> - opacity);
         <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">cache</span>.<span class="hljs-property">work</span>, output, opacity);
@@ -3967,11 +4126,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-46">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p><strong>grayscale</strong> - For each pixel, averages the weighted color channels and applies the result across all the color channels. This gives a more realistic monochrome effect.</p>
 
@@ -4012,11 +4171,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p><strong>invert-channels</strong> - For each pixel, subtracts its current channel values - when included - from 255.</p>
 
@@ -4059,11 +4218,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p><strong>lock-channels-to-levels</strong> - Produces a posterize effect. Takes in four arguments - “red”, “green”, “blue” and “alpha” - each of which is an Array of zero or more integer Numbers (between 0 and 255). The filter works by looking at each pixel’s channel value and determines which of the corresponding Array’s Number values it is closest to; it then sets the channel value to that Number value.</p>
 
@@ -4119,11 +4278,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p><strong>map-to-gradient</strong> - maps the colors in the supplied (complex) gradient to a grayscaled input.</p>
 
@@ -4191,11 +4350,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p><strong>matrix</strong> - Performs a matrix operation on each pixel’s channels, calculating the new value using neighbouring pixel weighted values. Also known as a convolution matrix, kernel or mask operation. Note that this filter is expensive, thus much slower to complete compared to other filter effects. The matrix dimensions can be set using the “width” and “height” arguments, while setting the home pixel’s position within the matrix can be set using the “offsetX” and “offsetY” arguments. The weights to be applied need to be supplied in the “weights” argument - an Array listing the weights row-by-row starting from the top-left corner of the matrix. By default all color channels are included in the calculations while the alpha channel is excluded. The ‘edgeDetect’, ‘emboss’ and ‘sharpen’ convenience filter methods all use the matrix action, pre-setting the required weights.</p>
 
@@ -4270,11 +4429,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-51">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p><strong>modulate-channels</strong> - Multiplies each channel’s value by the supplied argument value. A channel-argument’s value of ‘0’ will set that channel’s value to zero; a value of ‘1’ will leave the channel value unchanged. If the “saturation” flag is set to ‘true’ the calculation changes to start at that pixel’s grayscale values. The ‘brightness’ and ‘saturation’ filters are special forms of the ‘channels’ filter which use a single “levels” argument to set all three color channel arguments to the same value.</p>
 
@@ -4342,11 +4501,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-52">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p><strong>offset</strong> - Offset the input image in the output image.</p>
 
@@ -4448,11 +4607,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-53">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p><strong>pixelate</strong> - Pixelizes the input image by creating a grid of tiles across it and then averaging the color values of each pixel in a tile and setting its value to the average. Tile width and height, and their offset from the top left corner of the image, are set via the “tileWidth”, “tileHeight”, “offsetX” and “offsetY” arguments.</p>
 
@@ -4524,11 +4683,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-54">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p><strong>process-image</strong> - Add an asset image to the filter process chain. The asset - the String name of the asset object - must be pre-loaded before it can be included in the filter. The “width” and “height” arguments are measured in integer Number pixels; the “copy” arguments can be either percentage Strings (relative to the asset’s natural dimensions) or absolute Number values (in pixels). The “lineOut” argument is required - be aware that the filter action does not check for any pre-existing assets cached under this name and, if they exist, will overwrite them with this asset’s data.</p>
 
@@ -4552,11 +4711,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-55">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p><strong>random-noise</strong> - Swap pixels at random within a given box (width/height) distance of each other, dependent on the level setting - lower levels mean less noise. Uses a pseudo-random numbers generator to ensure consistent results across runs. Takes into account choices to include red, green, blue and alpha channels, and whether to ignore transparent pixels</p>
 
@@ -4639,11 +4798,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-56">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p><strong>set-channel-to-level</strong> - Sets the value of each pixel’s included channel to the value supplied in the “level” argument.</p>
 
@@ -4687,11 +4846,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-57">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p><strong>step-channels</strong> - Takes three divisor values - “red”, “green”, “blue”. For each pixel, its color channel values are divided by the corresponding color divisor, floored to the integer value and then multiplied by the divisor. For example a divisor value of ‘50’ applied to a channel value of ‘120’ will give a result of ‘100’. The output is a form of posterization.</p>
 
@@ -4734,11 +4893,206 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-58">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
+              </div>
+              <p><strong>swirl</strong> - For each pixel, move the pixel radially according to its distance from a given coordinate and associated angle for that coordinate.</p>
+<ul>
+<li>This filter can handle multiple swirls in a single pass</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">&#x27;swirl&#x27;</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params">requirements</span>) {
+
+        <span class="hljs-keyword">const</span> getValue = <span class="hljs-keyword">function</span> (<span class="hljs-params">val, dim</span>) {
+
+            <span class="hljs-keyword">return</span> (val.<span class="hljs-property">substring</span>) ? <span class="hljs-title function_">floor</span>((<span class="hljs-built_in">parseFloat</span>(val) / <span class="hljs-number">100</span>) * dim) : val;
+        };
+
+        <span class="hljs-keyword">let</span> [input, output] = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">getInputAndOutputLines</span>(requirements);
+
+        <span class="hljs-keyword">let</span> iData = input.<span class="hljs-property">data</span>,
+            oData = output.<span class="hljs-property">data</span>,
+            len = iData.<span class="hljs-property">length</span>,
+            iWidth = input.<span class="hljs-property">width</span>,
+            iHeight = input.<span class="hljs-property">height</span>,
+            floor = <span class="hljs-title class_">Math</span>.<span class="hljs-property">floor</span>,
+            r, g, b, a, s, sz, counter, pos, x, y, xz, yz, i, j, 
+            distance, dr, dg, db, da, dx, dy, dLen;
+
+        <span class="hljs-keyword">let</span> tempInput = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ImageData</span>(iWidth, iHeight),
+            tData = tempInput.<span class="hljs-property">data</span>,
+            tWidth = tempInput.<span class="hljs-property">width</span>,
+            tHeight = tempInput.<span class="hljs-property">height</span>;
+
+        <span class="hljs-keyword">let</span> {opacity, swirls, lineOut} = requirements;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == opacity) opacity = <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == swirls) swirls = [];
+
+
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i += <span class="hljs-number">4</span>) {
+
+            r = i;
+            g = r + <span class="hljs-number">1</span>;
+            b = g + <span class="hljs-number">1</span>;
+            a = b + <span class="hljs-number">1</span>;
+
+            tData[r] = iData[r];
+            tData[g] = iData[g];
+            tData[b] = iData[b];
+            tData[a] = iData[a];
+
+            oData[r] = iData[r];
+            oData[g] = iData[g];
+            oData[b] = iData[b];
+            oData[a] = iData[a];
+        }
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(swirls) &amp;&amp; swirls.<span class="hljs-property">length</span>) {
+
+            <span class="hljs-keyword">let</span> grid = <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">buildImageGrid</span>(input);
+
+            <span class="hljs-keyword">const</span> getEasedValue = <span class="hljs-variable language_">this</span>.<span class="hljs-property">getEasedValue</span>;
+
+            <span class="hljs-keyword">const</span> start = <span class="hljs-title function_">requestCoordinate</span>();
+            <span class="hljs-keyword">const</span> coord = <span class="hljs-title function_">requestCoordinate</span>();
+
+            <span class="hljs-keyword">for</span> (s = <span class="hljs-number">0</span>, sz = swirls.<span class="hljs-property">length</span>; s &lt; sz; s++) {
+
+                <span class="hljs-keyword">const</span> [startX, startY, innerRadius, outerRadius, angle, easing] = swirls[s];
+
+                <span class="hljs-keyword">const</span> sx = <span class="hljs-title function_">getValue</span>(startX, iWidth),
+                    sy = <span class="hljs-title function_">getValue</span>(startY, iHeight);
+
+                <span class="hljs-keyword">let</span> outer = <span class="hljs-title function_">getValue</span>(outerRadius, iWidth),
+                    inner = <span class="hljs-title function_">getValue</span>(innerRadius, iWidth);
+
+                <span class="hljs-keyword">if</span> (inner &gt; outer) {
+
+                    <span class="hljs-keyword">let</span> temp = inner;
+                    inner = outer;
+                    outer = temp;
+                }
+
+                <span class="hljs-keyword">const</span> complexLen = outer - inner;
+
+                x = sx - outer;
+                <span class="hljs-keyword">if</span> (x &lt; <span class="hljs-number">0</span>) x = <span class="hljs-number">0</span>;
+                xz = sx + outer
+                <span class="hljs-keyword">if</span> (xz &gt; tWidth) xz = tWidth;
+                y = sy - outer;
+                <span class="hljs-keyword">if</span> (y &lt; <span class="hljs-number">0</span>) y = <span class="hljs-number">0</span>;
+                yz = sy + outer
+                <span class="hljs-keyword">if</span> (yz &gt;= tHeight) yz = tHeight;
+
+                <span class="hljs-keyword">if</span> (x &lt; xz &amp;&amp; y &lt; yz &amp;&amp; x &lt; tWidth &amp;&amp; xz &gt; <span class="hljs-number">0</span> &amp;&amp; y &lt; tHeight &amp;&amp; yz &gt; <span class="hljs-number">0</span>) {
+
+                    start.<span class="hljs-title function_">setFromArray</span>([sx, sy]);
+
+                    <span class="hljs-keyword">for</span> (i = y; i &lt; yz; i++) {
+
+                        <span class="hljs-keyword">for</span> (j = x; j &lt; xz; j++) {
+                            
+                            pos = [j, i];
+
+                            r = grid[i][j] * <span class="hljs-number">4</span>;
+                            g = r + <span class="hljs-number">1</span>;
+                            b = g + <span class="hljs-number">1</span>;
+                            a = b + <span class="hljs-number">1</span>;
+
+                            distance = coord.<span class="hljs-title function_">set</span>(pos).<span class="hljs-title function_">subtract</span>(start).<span class="hljs-title function_">getMagnitude</span>();
+
+                            <span class="hljs-keyword">if</span> (distance &gt; outer) {
+
+                                dr = r;
+                                dg = g;
+                                db = b;
+                                da = a;
+                            }
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (distance &lt; inner) {
+
+                                coord.<span class="hljs-title function_">rotate</span>(angle).<span class="hljs-title function_">add</span>(start);
+
+                                dx = <span class="hljs-title function_">floor</span>(coord[<span class="hljs-number">0</span>]);
+                                dy = <span class="hljs-title function_">floor</span>(coord[<span class="hljs-number">1</span>]);
+
+                                <span class="hljs-keyword">if</span> (dx &lt; <span class="hljs-number">0</span>) dx += iWidth;
+                                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (dx &gt;= iWidth) dx -= iWidth;
+
+                                <span class="hljs-keyword">if</span> (dy &lt; <span class="hljs-number">0</span>) dy += iHeight;
+                                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (dy &gt;= iHeight) dy -= iHeight;
+
+                                dr = grid[dy][dx] * <span class="hljs-number">4</span>;
+                                dg = dr + <span class="hljs-number">1</span>;
+                                db = dg + <span class="hljs-number">1</span>;
+                                da = db + <span class="hljs-number">1</span>;
+                            }
+                            <span class="hljs-keyword">else</span> {
+
+                                dLen = <span class="hljs-number">1</span> - ((distance - inner) / complexLen);
+
+                                dLen = <span class="hljs-title function_">getEasedValue</span>(dLen, easing);
+
+                                coord.<span class="hljs-title function_">rotate</span>(angle * dLen).<span class="hljs-title function_">add</span>(start);
+
+                                dx = <span class="hljs-title function_">floor</span>(coord[<span class="hljs-number">0</span>]);
+                                dy = <span class="hljs-title function_">floor</span>(coord[<span class="hljs-number">1</span>]);
+
+                                <span class="hljs-keyword">if</span> (dx &lt; <span class="hljs-number">0</span>) dx += iWidth;
+                                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (dx &gt;= iWidth) dx -= iWidth;
+
+                                <span class="hljs-keyword">if</span> (dy &lt; <span class="hljs-number">0</span>) dy += iHeight;
+                                <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (dy &gt;= iHeight) dy -= iHeight;
+
+                                dr = grid[dy][dx] * <span class="hljs-number">4</span>;
+                                dg = dr + <span class="hljs-number">1</span>;
+                                db = dg + <span class="hljs-number">1</span>;
+                                da = db + <span class="hljs-number">1</span>;
+                            }
+                            oData[r] = tData[dr];
+                            oData[g] = tData[dg];
+                            oData[b] = tData[db];
+                            oData[a] = tData[da];
+                        }
+                    }
+
+                    <span class="hljs-keyword">for</span> (i = y; i &lt; yz; i++) {
+                        
+                        <span class="hljs-keyword">for</span> (j = x; j &lt; xz; j++) {
+                            
+                            r = grid[i][j] * <span class="hljs-number">4</span>;
+                            g = r + <span class="hljs-number">1</span>;
+                            b = g + <span class="hljs-number">1</span>;
+                            a = b + <span class="hljs-number">1</span>;
+
+                            tData[r] = oData[r];
+                            tData[g] = oData[g];
+                            tData[b] = oData[b];
+                            tData[a] = oData[a];
+                        }
+                    }
+                }
+            }
+            <span class="hljs-title function_">releaseCoordinate</span>(coord);
+            <span class="hljs-title function_">releaseCoordinate</span>(start);
+        }
+        <span class="hljs-keyword">if</span> (lineOut) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(output, input, <span class="hljs-number">1</span> - opacity);
+        <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">cache</span>.<span class="hljs-property">work</span>, output, opacity);
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-60">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <p><strong>threshold</strong> - Grayscales the input then, for each pixel, checks the color channel values against a “level” argument: pixels with channel values above the level value are assigned to the ‘high’ color; otherwise they are updated to the ‘low’ color. The “high” and “low” arguments are [red, green, blue] integer Number Arrays. The convenience function will accept the pseudo-attributes “highRed”, “lowRed” etc in place of the “high” and “low” Arrays.</p>
 
@@ -4797,11 +5151,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-59">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p><strong>tint-channels</strong> - Has similarities to the SVG &lt;feColorMatrix&gt; filter element, but excludes the alpha channel from calculations. Rather than set a matrix, we set nine arguments to determine how the value of each color channel in a pixel will affect both itself and its fellow color channels. The ‘sepia’ convenience filter presets these values to create a sepia effect.</p>
 
@@ -4853,11 +5207,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-60">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p><strong>user-defined-legacy</strong> - Previous to version 8.4, filters could be defined with an argument which passed a function string to the filter engine, which the engine would then run against the source input image as-and-when required. This functionality has been removed from the new filter functionality. All such filters will now return the input image unchanged.</p>
 
@@ -4881,11 +5235,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-61">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p><strong>vary-channels-by-weights</strong> - manipulate colors using a set of channel curve arrays.</p>
 <ul>
@@ -4961,11 +5315,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
         </li>
         
         
-        <li id="section-62">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
@@ -4981,11 +5335,11 @@ constructors.<span class="hljs-property">FilterEngine</span> = <span class="hljs
         </li>
         
         
-        <li id="section-63">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <p>Create a singleton filter engine, for export and use within this code base</p>
 
@@ -4996,11 +5350,11 @@ constructors.<span class="hljs-property">FilterEngine</span> = <span class="hljs
         </li>
         
         
-        <li id="section-64">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 
