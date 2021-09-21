@@ -5,9 +5,11 @@
 
 
 import { constructors } from '../core/library.js';
-import {requestCell, releaseCell} from './cell.js';
-
 import { seededRandomNumberGenerator } from '../core/random-seed.js';
+import { easeOutSine, easeInSine, easeOutInSine, easeOutQuad, easeInQuad, easeOutInQuad, easeOutCubic, easeInCubic, easeOutInCubic, easeOutQuart, easeInQuart, easeOutInQuart, easeOutQuint, easeInQuint, easeOutInQuint, easeOutExpo, easeInExpo, easeOutInExpo, easeOutCirc, easeInCirc, easeOutInCirc, easeOutBack, easeInBack, easeOutInBack, easeOutElastic, easeInElastic, easeOutInElastic, easeOutBounce, easeInBounce, easeOutInBounce } from '../core/utilities.js';
+
+import {requestCell, releaseCell} from './cell.js';
+import {requestCoordinate, releaseCoordinate} from './coordinate.js';
 
 // #### FilterEngine constructor
 const FilterEngine = function () {
@@ -158,6 +160,38 @@ P.buildImageGrid = function (image) {
         workstore[name] = grid;
         workstoreLastAccessed[name] = Date.now();
         return grid;
+    }
+    return false;
+};
+
+P.buildImageCoordinateLookup = function (image) {
+
+    let { cache, workstore, workstoreLastAccessed } = this;
+
+    if (!image) image = cache.source;
+
+    let { width, height } = image
+
+    if (width && height) {
+
+        let name = `coords-lookup-${width}-${height}`;
+        if (workstore[name]) {
+            workstoreLastAccessed[name] = Date.now();
+            return workstore[name];
+        }
+
+        let lookup = []
+
+        for (let y = 0; y < height; y++) {
+
+            for (let x = 0; x < width; x++) {
+                
+                lookup.push([x, y]);
+            }
+        }
+        workstore[name] = lookup;
+        workstoreLastAccessed[name] = Date.now();
+        return lookup;
     }
     return false;
 };
@@ -663,6 +697,106 @@ P.getGradientData = function (gradient) {
     return data;
 };
 
+// Assuming val is going to be a float Number between 0 and 1
+P.getEasedValue = function (val, easing) {
+
+    switch (easing) {
+        case 'easeOutSine' :
+            val = easeOutSine(val);
+            break;
+        case 'easeInSine' :
+            val = easeInSine(val);
+            break;
+        case 'easeOutInSine' :
+            val = easeOutInSine(val);
+            break;
+        case 'easeOutQuad' :
+            val = easeOutQuad(val);
+            break;
+        case 'easeInQuad' :
+            val = easeInQuad(val);
+            break;
+        case 'easeOutInQuad' :
+            val = easeOutInQuad(val);
+            break;
+        case 'easeOutCubic' :
+            val = easeOutCubic(val);
+            break;
+        case 'easeInCubic' :
+            val = easeInCubic(val);
+            break;
+        case 'easeOutInCubic' :
+            val = easeOutInCubic(val);
+            break;
+        case 'easeOutQuart' :
+            val = easeOutQuart(val);
+            break;
+        case 'easeInQuart' :
+            val = easeInQuart(val);
+            break;
+        case 'easeOutInQuart' :
+            val = easeOutInQuart(val);
+            break;
+        case 'easeOutQuint' :
+            val = easeOutQuint(val);
+            break;
+        case 'easeInQuint' :
+            val = easeInQuint(val);
+            break;
+        case 'easeOutInQuint' :
+            val = easeOutInQuint(val);
+            break;
+        case 'easeOutExpo' :
+            val = easeOutExpo(val);
+            break;
+        case 'easeInExpo' :
+            val = easeInExpo(val);
+            break;
+        case 'easeOutInExpo' :
+            val = easeOutInExpo(val);
+            break;
+        case 'easeOutCirc' :
+            val = easeOutCirc(val);
+            break;
+        case 'easeInCirc' :
+            val = easeInCirc(val);
+            break;
+        case 'easeOutInCirc' :
+            val = easeOutInCirc(val);
+            break;
+        case 'easeOutBack' :
+            val = easeOutBack(val);
+            break;
+        case 'easeInBack' :
+            val = easeInBack(val);
+            break;
+        case 'easeOutInBack' :
+            val = easeOutInBack(val);
+            break;
+        case 'easeOutElastic' :
+            val = easeOutElastic(val);
+            break;
+        case 'easeInElastic' :
+            val = easeInElastic(val);
+            break;
+        case 'easeOutInElastic' :
+            val = easeOutInElastic(val);
+            break;
+        case 'easeOutBounce' :
+            val = easeOutBounce(val);
+            break;
+        case 'easeInBounce' :
+            val = easeInBounce(val);
+            break;
+        case 'easeOutInBounce' :
+            val = easeOutInBounce(val);
+            break;
+    }
+
+    if (isNaN(val)) val = 1;
+
+    return val;
+};
 
 // ## Filter action functions
 // Each function is held in the `theBigActionsObject` object, for convenience
@@ -2841,6 +2975,127 @@ P.theBigActionsObject = {
         else this.processResults(this.cache.work, output, opacity);
     },
 
+// __glitch__ - Swap pixels at random within a given box (width/height) distance of each other, dependent on the level setting - lower levels mean less noise. Uses a pseudo-random numbers generator to ensure consistent results across runs. Takes into account choices to include red, green, blue and alpha channels, and whether to ignore transparent pixels
+    'glitch': function (requirements) {
+
+        let [input, output] = this.getInputAndOutputLines(requirements);
+
+        let iData = input.data,
+            oData = output.data,
+            len = iData.length,
+            iWidth = input.width,
+            iHeight = input.height,
+            i, j, affectedRow, shift, shiftR, shiftG, shiftB, shiftA,
+            r, g, b, a, w, currentRow, currentRowStart, currentRowEnd, cursor, 
+            dr, dg, db, da, ur, ug, ub, ua;
+
+        let {opacity, useMixedChannel, seed, level, step, offsetMin, offsetMax, offsetRedMin, offsetRedMax, offsetGreenMin, offsetGreenMax, offsetBlueMin, offsetBlueMax, offsetAlphaMin, offsetAlphaMax, transparentEdges, lineOut} = requirements;
+
+        if (null == opacity) opacity = 1;
+        if (null == useMixedChannel) useMixedChannel = true;
+        if (null == seed) seed = 'some-random-string-or-other';
+        if (null == level) level = 0;
+        if (null == step) step = 1;
+        if (null == offsetMin) offsetMin = 0;
+        if (null == offsetMax) offsetMax = 0;
+        if (null == offsetRedMin) offsetRedMin = 0;
+        if (null == offsetRedMax) offsetRedMax = 0;
+        if (null == offsetGreenMin) offsetGreenMin = 0;
+        if (null == offsetGreenMax) offsetGreenMax = 0;
+        if (null == offsetBlueMin) offsetBlueMin = 0;
+        if (null == offsetBlueMax) offsetBlueMax = 0;
+        if (null == offsetAlphaMin) offsetAlphaMin = 0;
+        if (null == offsetAlphaMax) offsetAlphaMax = 0;
+        if (null == transparentEdges) transparentEdges = false;
+
+        const rndEngine = seededRandomNumberGenerator(seed),
+            range = offsetMax - offsetMin,
+            redRange = offsetRedMax - offsetRedMin,
+            greenRange = offsetGreenMax - offsetGreenMin,
+            blueRange = offsetBlueMax - offsetBlueMin,
+            alphaRange = offsetAlphaMax - offsetAlphaMin;
+
+        const rows = [];
+
+        step = Math.floor(step);
+        if (step < 1) step = 1;
+
+        for (i = 0; i < iHeight; i += step) {
+
+            affectedRow = (rndEngine.random() < level) ? true : false;
+
+            if (affectedRow) {
+
+                if (useMixedChannel) {
+
+                    shift = (offsetMin + Math.floor(rndEngine.random() * range)) * 4;
+
+                    for (j = 0; j < step; j++) {
+
+                        rows.push(shift, shift, shift, shift);
+                    }
+                }
+                else {
+
+                    shiftR = (offsetRedMin + Math.floor(rndEngine.random() * redRange)) * 4;
+                    shiftG = (offsetGreenMin + Math.floor(rndEngine.random() * greenRange)) * 4;
+                    shiftB= (offsetBlueMin + Math.floor(rndEngine.random() * blueRange)) * 4;
+                    shiftA= (offsetAlphaMin + Math.floor(rndEngine.random() * alphaRange)) * 4;
+                    
+                    for (j = 0; j < step; j++) {
+
+                        rows.push(shiftR, shiftG, shiftB, shiftA);
+                    }
+                }
+            }
+            else {
+
+                for (j = 0; j < step; j++) {
+
+                    rows.push(0, 0, 0, 0);
+                }
+            }
+        }
+
+        for (i = 0; i < len; i += 4) {
+
+            r = i;
+            g = r + 1;
+            b = g + 1;
+            a = b + 1;
+
+            w = iWidth * 4;
+            currentRow = Math.floor(i / w);
+            cursor = currentRow * 4;
+
+            dr = rows[cursor];
+            dg = rows[++cursor];
+            db = rows[++cursor];
+            da = rows[++cursor];
+
+            ur = r + dr;
+            ug = g + dg;
+            ub = b + db;
+            ua = a + da;
+
+            oData[r] = iData[ur];
+            oData[g] = iData[ug];
+            oData[b] = iData[ub];
+
+            if (transparentEdges) {
+
+                currentRowStart = currentRow * w;
+                currentRowEnd = currentRowStart + w;
+
+                if (ur < currentRowStart || ur > currentRowEnd || ug < currentRowStart || ug > currentRowEnd || ub < currentRowStart || ub > currentRowEnd || ua < currentRowStart || ua > currentRowEnd) oData[a] = 0;
+                else oData[a] = iData[ua];
+            }
+            else oData[a] = iData[ua];
+        }
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
+    },
+
 // __grayscale__ - For each pixel, averages the weighted color channels and applies the result across all the color channels. This gives a more realistic monochrome effect.
     'grayscale': function (requirements) {
 
@@ -3460,6 +3715,187 @@ P.theBigActionsObject = {
             oData[a] = iData[a];
         }
 
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
+    },
+
+// __swirl__ - For each pixel, move the pixel radially according to its distance from a given coordinate and associated angle for that coordinate.
+// + This filter can handle multiple swirls in a single pass
+    'swirl': function (requirements) {
+
+        const getValue = function (val, dim) {
+
+            return (val.substring) ? floor((parseFloat(val) / 100) * dim) : val;
+        };
+
+        let [input, output] = this.getInputAndOutputLines(requirements);
+
+        let iData = input.data,
+            oData = output.data,
+            len = iData.length,
+            iWidth = input.width,
+            iHeight = input.height,
+            floor = Math.floor,
+            r, g, b, a, s, sz, counter, pos, x, y, xz, yz, i, j, 
+            distance, dr, dg, db, da, dx, dy, dLen;
+
+        let tempInput = new ImageData(iWidth, iHeight),
+            tData = tempInput.data,
+            tWidth = tempInput.width,
+            tHeight = tempInput.height;
+
+        let {opacity, swirls, lineOut} = requirements;
+
+        if (null == opacity) opacity = 1;
+        if (null == swirls) swirls = [];
+
+
+        for (i = 0; i < len; i += 4) {
+
+            r = i;
+            g = r + 1;
+            b = g + 1;
+            a = b + 1;
+
+            tData[r] = iData[r];
+            tData[g] = iData[g];
+            tData[b] = iData[b];
+            tData[a] = iData[a];
+
+            oData[r] = iData[r];
+            oData[g] = iData[g];
+            oData[b] = iData[b];
+            oData[a] = iData[a];
+        }
+
+        if (Array.isArray(swirls) && swirls.length) {
+
+            let grid = this.buildImageGrid(input);
+
+            const getEasedValue = this.getEasedValue;
+
+            const start = requestCoordinate();
+            const coord = requestCoordinate();
+
+            for (s = 0, sz = swirls.length; s < sz; s++) {
+
+                const [startX, startY, innerRadius, outerRadius, angle, easing] = swirls[s];
+
+                const sx = getValue(startX, iWidth),
+                    sy = getValue(startY, iHeight);
+
+                let outer = getValue(outerRadius, iWidth),
+                    inner = getValue(innerRadius, iWidth);
+
+                if (inner > outer) {
+
+                    let temp = inner;
+                    inner = outer;
+                    outer = temp;
+                }
+
+                const complexLen = outer - inner;
+
+                x = sx - outer;
+                if (x < 0) x = 0;
+                xz = sx + outer
+                if (xz > tWidth) xz = tWidth;
+                y = sy - outer;
+                if (y < 0) y = 0;
+                yz = sy + outer
+                if (yz >= tHeight) yz = tHeight;
+
+                if (x < xz && y < yz && x < tWidth && xz > 0 && y < tHeight && yz > 0) {
+
+                    start.setFromArray([sx, sy]);
+
+                    for (i = y; i < yz; i++) {
+
+                        for (j = x; j < xz; j++) {
+                            
+                            pos = [j, i];
+
+                            r = grid[i][j] * 4;
+                            g = r + 1;
+                            b = g + 1;
+                            a = b + 1;
+
+                            distance = coord.set(pos).subtract(start).getMagnitude();
+
+                            if (distance > outer) {
+
+                                dr = r;
+                                dg = g;
+                                db = b;
+                                da = a;
+                            }
+                            else if (distance < inner) {
+
+                                coord.rotate(angle).add(start);
+
+                                dx = floor(coord[0]);
+                                dy = floor(coord[1]);
+
+                                if (dx < 0) dx += iWidth;
+                                else if (dx >= iWidth) dx -= iWidth;
+
+                                if (dy < 0) dy += iHeight;
+                                else if (dy >= iHeight) dy -= iHeight;
+
+                                dr = grid[dy][dx] * 4;
+                                dg = dr + 1;
+                                db = dg + 1;
+                                da = db + 1;
+                            }
+                            else {
+
+                                dLen = 1 - ((distance - inner) / complexLen);
+
+                                dLen = getEasedValue(dLen, easing);
+
+                                coord.rotate(angle * dLen).add(start);
+
+                                dx = floor(coord[0]);
+                                dy = floor(coord[1]);
+
+                                if (dx < 0) dx += iWidth;
+                                else if (dx >= iWidth) dx -= iWidth;
+
+                                if (dy < 0) dy += iHeight;
+                                else if (dy >= iHeight) dy -= iHeight;
+
+                                dr = grid[dy][dx] * 4;
+                                dg = dr + 1;
+                                db = dg + 1;
+                                da = db + 1;
+                            }
+                            oData[r] = tData[dr];
+                            oData[g] = tData[dg];
+                            oData[b] = tData[db];
+                            oData[a] = tData[da];
+                        }
+                    }
+
+                    for (i = y; i < yz; i++) {
+                        
+                        for (j = x; j < xz; j++) {
+                            
+                            r = grid[i][j] * 4;
+                            g = r + 1;
+                            b = g + 1;
+                            a = b + 1;
+
+                            tData[r] = oData[r];
+                            tData[g] = oData[g];
+                            tData[b] = oData[b];
+                            tData[a] = oData[a];
+                        }
+                    }
+                }
+            }
+            releaseCoordinate(coord);
+            releaseCoordinate(start);
+        }
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);
     },

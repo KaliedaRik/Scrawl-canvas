@@ -64,10 +64,8 @@ P.setFromArray = function (item) {
 
 P.setFromVector = function (item) {
 
-    let {x, y} = item;
-
-    this[0] = x;
-    this[1] = y;
+    this[0] = item.x;
+    this[1] = item.y;
 
     return this;
 };
@@ -86,10 +84,8 @@ P.zero = function () {
 // Add a Vector object's __x__ and __y__ attributes to the Coordinate members' values
 P.vectorAdd = function (item) {
 
-    let {x, y} = item;
-
-    this[0] += x;
-    this[1] += y;
+    this[0] += item.x;
+    this[1] += item.y;
 
     return this;
 };
@@ -97,10 +93,8 @@ P.vectorAdd = function (item) {
 // Subtract a Vector object's __x__ and __y__ attributes from the Coordinate members' values
 P.vectorSubtract = function (item) {
 
-    let {x, y} = item;
-
-    this[0] -= x;
-    this[1] -= y;
+    this[0] -= item.x;
+    this[1] -= item.y;
 
     return this;
 };
@@ -108,10 +102,8 @@ P.vectorSubtract = function (item) {
 // Array addition - argument is a `[Number, Number]` Array
 P.add = function (item) {
 
-    let [x, y] = item;
-
-    this[0] += x;
-    this[1] += y;
+    this[0] += item[0];
+    this[1] += item[1];
 
     return this;
 };
@@ -119,10 +111,8 @@ P.add = function (item) {
 // Array subtraction - argument is a `[Number, Number]` Array
 P.subtract = function (item) {
 
-    let [x, y] = item;
-
-    this[0] -= x;
-    this[1] -= y;
+    this[0] -= item[0];
+    this[1] -= item[1];
 
     return this;
 };
@@ -130,10 +120,8 @@ P.subtract = function (item) {
 // Array multiplication - argument is a `[Number, Number]` Array
 P.multiply = function (item) {
 
-    let [x, y] = item;
-
-    this[0] *= x;
-    this[1] *= y;
+    this[0] *= item[0];
+    this[1] *= item[1];
 
     return this;
 };
@@ -177,24 +165,22 @@ P.scalarDivide = function (item) {
 // Get the Array's __magnitude__ value (treating the Coordinate as if it was a 2D vector)
 P.getMagnitude = function () {
 
-console.log('hi2')
-
-    return Math.hypot(...this);
+    return Math.hypot(this[0], this[1]);
 };
 
 // Rotate the Coordinate by the argument number (treating the Coordinate as if it was a 2D vector) - the argument represents degrees, not radians
 P.rotate = function (angle) {
 
-    let stat_vr = [0, 0];
+    let x = this[0],
+        y = this[1],
+        r0, r1;
 
-    let [x, y] = this;
+    r0 = Math.atan2(y, x);
+    r0 += (angle * 0.01745329251);
+    r1 = Math.hypot(x, y);
 
-    stat_vr[0] = Math.atan2(y, x);
-    stat_vr[0] += (angle * 0.01745329251);
-    stat_vr[1] = Math.hypot(x, y);
-
-    this[0] = stat_vr[1] * Math.cos(stat_vr[0]);
-    this[1] = stat_vr[1] * Math.sin(stat_vr[0]);
+    this[0] = r1 * Math.cos(r0);
+    this[1] = r1 * Math.sin(r0);
 
     return this;
 };

@@ -346,6 +346,18 @@ scrawl.makeFilter({
     highBlue: 60,
 });
 
+// __Swirl__ filter
+scrawl.makeFilter({
+    name: 'swirl',
+    method: 'swirl',
+    startX: '50%',
+    startY: '50%',
+    innerRadius: 0,
+    outerRadius: '50%',
+    angle: 240,
+    easing: 'easeOutSine',
+});
+
 // __Channels__ filter
 scrawl.makeFilter({
     name: 'channels',
@@ -385,6 +397,20 @@ scrawl.makeFilter({
     offsetX: 12,
     offsetY: 12,
     opacity: 0.5,
+});
+
+// __Glitch__ filter
+scrawl.makeFilter({
+    name: 'glitch',
+    method: 'glitch',
+    level: 0.3,
+    offsetRedMin: -20,
+    offsetRedMax: 20,
+    offsetBlueMin: 0,
+    offsetBlueMax: 15,
+    useMixedChannel: false,
+    transparentEdges: true,
+    step: 4,
 });
 
 // __Offset Channels__ filter
@@ -577,32 +603,19 @@ scrawl.makeFilter({
         {
             action: 'gaussian-blur',
             lineIn: 'source-alpha',
-            lineOut: 'shadow',
+            lineOut: 'border',
             radius: 2,
         },
         {
-            action: 'binary',
-            lineIn: 'shadow',
-            lineOut: 'shadow',
-            alpha: 1, 
-        },
-        {
             action: 'flood',
-            lineIn: 'shadow',
-            lineOut: 'red-flood',
+            lineIn: 'border',
+            lineOut: 'border',
             red: 255,
         },
         {
             action: 'compose',
-            lineIn: 'shadow',
-            lineMix: 'red-flood',
-            lineOut: 'colorized',
-            compose: 'destination-in',
-        },
-        {
-            action: 'compose',
             lineIn: 'source',
-            lineMix: 'colorized',
+            lineMix: 'border',
         }
     ],
 });

@@ -796,7 +796,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_number</span> = item =&gt; (<span class="hljs-keyword">typeof</span> item != <span class="hljs-string">&#x27;undefined&#x27;</span> &amp;&amp; item.<span class="hljs-property">toFixed</span> &amp;&amp; !<span class="hljs-title class_">Number</span>.<span class="hljs-built_in">isNaN</span>(item)) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> <span class="hljs-title function_">isa_number</span> = item =&gt; (item != <span class="hljs-literal">null</span> &amp;&amp; item.<span class="hljs-property">toFixed</span> &amp;&amp; !<span class="hljs-title class_">Number</span>.<span class="hljs-built_in">isNaN</span>(item)) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;</pre></div></div>
             
         </li>
         

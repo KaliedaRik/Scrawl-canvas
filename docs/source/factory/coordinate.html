@@ -618,10 +618,8 @@ P.<span class="hljs-property">setFromArray</span> = <span class="hljs-keyword">f
 
 P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">let</span> {x, y} = item;
-
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>] = x;
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>] = y;
+    <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>] = item.<span class="hljs-property">x</span>;
+    <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>] = item.<span class="hljs-property">y</span>;
 
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
@@ -663,10 +661,8 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">vectorAdd</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">let</span> {x, y} = item;
-
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>] += x;
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>] += y;
+    <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>] += item.<span class="hljs-property">x</span>;
+    <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>] += item.<span class="hljs-property">y</span>;
 
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
@@ -686,10 +682,8 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">vectorSubtract</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">let</span> {x, y} = item;
-
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>] -= x;
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>] -= y;
+    <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>] -= item.<span class="hljs-property">x</span>;
+    <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>] -= item.<span class="hljs-property">y</span>;
 
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
@@ -709,10 +703,8 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">add</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">let</span> [x, y] = item;
-
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>] += x;
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>] += y;
+    <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>] += item[<span class="hljs-number">0</span>];
+    <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>] += item[<span class="hljs-number">1</span>];
 
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
@@ -732,10 +724,8 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">subtract</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">let</span> [x, y] = item;
-
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>] -= x;
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>] -= y;
+    <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>] -= item[<span class="hljs-number">0</span>];
+    <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>] -= item[<span class="hljs-number">1</span>];
 
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
@@ -755,10 +745,8 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">multiply</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">let</span> [x, y] = item;
-
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>] *= x;
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>] *= y;
+    <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>] *= item[<span class="hljs-number">0</span>];
+    <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>] *= item[<span class="hljs-number">1</span>];
 
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
@@ -850,9 +838,7 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">getMagnitude</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;hi2&#x27;</span>)
-
-    <span class="hljs-keyword">return</span> <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">hypot</span>(...<span class="hljs-variable language_">this</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">hypot</span>(<span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>], <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>]);
 };</pre></div></div>
             
         </li>
@@ -870,16 +856,16 @@ P.<span class="hljs-property">setFromVector</span> = <span class="hljs-keyword">
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">rotate</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">angle</span>) {
 
-    <span class="hljs-keyword">let</span> stat_vr = [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>];
+    <span class="hljs-keyword">let</span> x = <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>],
+        y = <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>],
+        r0, r1;
 
-    <span class="hljs-keyword">let</span> [x, y] = <span class="hljs-variable language_">this</span>;
+    r0 = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">atan2</span>(y, x);
+    r0 += (angle * <span class="hljs-number">0.01745329251</span>);
+    r1 = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">hypot</span>(x, y);
 
-    stat_vr[<span class="hljs-number">0</span>] = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">atan2</span>(y, x);
-    stat_vr[<span class="hljs-number">0</span>] += (angle * <span class="hljs-number">0.01745329251</span>);
-    stat_vr[<span class="hljs-number">1</span>] = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">hypot</span>(x, y);
-
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>] = stat_vr[<span class="hljs-number">1</span>] * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">cos</span>(stat_vr[<span class="hljs-number">0</span>]);
-    <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>] = stat_vr[<span class="hljs-number">1</span>] * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sin</span>(stat_vr[<span class="hljs-number">0</span>]);
+    <span class="hljs-variable language_">this</span>[<span class="hljs-number">0</span>] = r1 * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">cos</span>(r0);
+    <span class="hljs-variable language_">this</span>[<span class="hljs-number">1</span>] = r1 * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sin</span>(r0);
 
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>

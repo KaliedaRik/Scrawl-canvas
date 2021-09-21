@@ -639,6 +639,7 @@ const makeDragZone = function (items = Ωempty) {
     };
 
     const pickup = function (e) {
+
         checkE(e);
 
         let type = e.type;

@@ -212,6 +212,7 @@ scrawl.makeRender({
 
 // #### User interaction
 // Make the arrow draggable
+// + KNOWN BUG - the arrow is not draggable on first user mousedown, but is draggable afterwards
 scrawl.makeGroup({
 
     name: 'my-draggable-group',

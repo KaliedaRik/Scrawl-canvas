@@ -477,6 +477,7 @@ scrawl.makeRender({
 
 // #### User interaction
 // Make the Net Particles draggable
+// + KNOWN BUG - the particles are not draggable on first user mousedown, but are draggable afterwards
 scrawl.makeGroup({
 
     name: 'my-draggable-group',

@@ -147,7 +147,8 @@ let interactions = function () { canvas.cascadeEventAction('move') };
 scrawl.addListener('move', interactions, canvas.domElement);
 
 
-// Make both the Net entity's Particles, and the big ball, draggable
+// Create drag functionality
+// + KNOWN BUG - the particles are not draggable on first user mousedown, but are draggable afterwards
 scrawl.makeGroup({
 
     name: 'my-draggable-group',

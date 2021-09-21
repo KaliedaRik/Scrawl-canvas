@@ -164,6 +164,7 @@ scrawl.makeLoom({
 // Function to check whether mouse cursor is over stack, and lock the element artefact accordingly
 
 // A group to help manage pin drag-and-drop functionality
+// + KNOWN BUG - the element is not draggable on first user mousedown, but is draggable afterwards
 scrawl.makeGroup({
 
     name: 'draggable-artefacts',

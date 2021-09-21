@@ -38,6 +38,8 @@
 // 
 // `gaussianblur` - from this GitHub repository: https://github.com/nodeca/glur/blob/master/index.js (code accessed 1 June 2021). Object attributes: `action, lineIn, lineOut, opacity, radius`
 // 
+// `glitch` - CRT television/monitor glitching effect - shifts rows horizontally by a random amount (mediated by limits). Object attributes: `action, lineIn, lineOut, opacity, useMixedChannel, seed, step, offsetMin, offsetMax, offsetRedMin, offsetRedMax, offsetGreenMin, offsetGreenMax, offsetBlueMin, offsetBlueMax, offsetAlphaMin, offsetAlphaMax, transparentEdges, level`
+// 
 // `grayscale` - For each pixel, averages the weighted color channels and applies the result across all the color channels. This gives a more realistic monochrome effect. Object attributes: `action, lineIn, lineOut, opacity`
 // 
 // `invert-channels` - For each pixel, subtracts its current channel values - when included - from 255. Object attributes: `action, lineIn, lineOut, opacity, includeRed, includeGreen, includeBlue, includeAlpha`
@@ -60,6 +62,8 @@
 // 
 // `step-channels` - Takes three divisor values - "red", "green", "blue". For each pixel, its color channel values are divided by the corresponding color divisor, floored to the integer value and then multiplied by the divisor. For example a divisor value of '50' applied to a channel value of '120' will give a result of '100'. The output is a form of posterization. Object attributes: `action, lineIn, lineOut, opacity, red, green, blue`
 // 
+// `swirl` - For each pixel, move the pixel radially according to its distance from a given coordinate and associated angle for that coordinate. Object attributes: `action, lineIn, lineOut, opacity, swirls (array of arrays)`; pseudo-arguments (for one swirl): startX, startY, innerRadius, outerRadius, angle, easing, staticSwirls`. Note that the start paramenters can be absolute (Number) or relative (String) values, with values relative to the host Cell's dimensions; inner and outer radius values can also be Strings relative to the host Cell's width. Supported easing values are included in demo Filters-026
+//
 // `threshold` - Grayscales the input then, for each pixel, checks the color channel values against a "level" argument: pixels with channel values above the level value are assigned to the 'high' color; otherwise they are updated to the 'low' color. The "high" and "low" arguments are [red, green, blue] integer Number Arrays. The convenience function will accept the pseudo-attributes "highRed", "lowRed" etc in place of the "high" and "low" Arrays. Object attributes: `action, lineIn, lineOut, opacity, low, high; pseudo-arguments: lowRed, lowGreen, lowBlue, highRed, highGreen, highBlue`
 // 
 // `tint-channels` - Has similarities to the SVG <feColorMatrix> filter element, but excludes the alpha channel from calculations. Rather than set a matrix, we set nine arguments to determine how the value of each color channel in a pixel will affect both itself and its fellow color channels. The 'sepia' convenience filter presets these values to create a sepia effect. Object attributes: `action, lineIn, lineOut, opacity, redInRed, redInGreen, redInBlue, greenInRed, greenInGreen, greenInBlue, blueInRed, blueInGreen, blueInBlue`
@@ -218,6 +222,8 @@ let defaultAttributes = {
 // + [Filters-022](../../demo/filters-022.html) - Parameters for: mapToGradient filter
 // + [Filters-023](../../demo/filters-023.html) - Parameters for: randomNoise filter
 // + [Filters-024](../../demo/filters-024.html) - Parameters for: curveNoise filter
+// + [Filters-025](../../demo/filters-025.html) - Parameters for: glitch filter
+// + [Filters-026](../../demo/filters-026.html) - Parameters for: swirl filter
     alpha: 255,
     angle: 0,
     areaAlphaLevels: null,
@@ -235,6 +241,8 @@ let defaultAttributes = {
     copyWidth: 1,
     copyX: 0,
     copyY: 0,
+    concurrent: false,
+    easing: 'linear',
     excludeAlpha: true, 
     excludeBlue: false,
     excludeGreen: false,
@@ -255,6 +263,7 @@ let defaultAttributes = {
     includeBlue: true,
     includeGreen: true,
     includeRed: true,
+    innerRadius: 0,
     keepOnlyChangedAreas: false,
     level: 0,
     lowBlue: 0,
@@ -270,8 +279,19 @@ let defaultAttributes = {
     offsetRedY: 0,
     offsetX: 0,
     offsetY: 0,
+    offsetAlphaMin: 0,
+    offsetAlphaMax: 0,
+    offsetBlueMin: 0,
+    offsetBlueMax: 0,
+    offsetGreenMin: 0,
+    offsetGreenMax: 0,
+    offsetRedMin: 0,
+    offsetRedMax: 0,
+    offsetMin: 0,
+    offsetMax: 0,
     opaqueAt: 1,
     operation: 'mean',
+    outerRadius: '30%',
     passes: 1,
     postProcessResults: true,
     processHorizontal: true,
@@ -286,8 +306,11 @@ let defaultAttributes = {
     scaleY: 1,
     seed: 'some-random-string-or-other',
     smoothing: 0,
+    startX: '50%',
+    startY: '50%',
     step: 1,
     strength: 1,
+    staticSwirls: null,
     tileHeight: 1,
     tileWidth: 1,
     tolerance: 0,
@@ -824,6 +847,31 @@ const setActionsArray = {
         }];
     },
 
+// __glitch__ - semi-randomly shift rows left/right
+    glitch: function (f) {
+        f.actions = [{
+            action: 'glitch',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            useMixedChannel: (f.useMixedChannel != null) ? f.useMixedChannel : true,
+            seed: (f.seed != null) ? f.seed : 'some-random-string-or-other',
+            step: (f.step != null) ? f.step : 1,
+            offsetMin: (f.offsetMin != null) ? f.offsetMin : 0,
+            offsetMax: (f.offsetMax != null) ? f.offsetMax : 0,
+            offsetRedMin: (f.offsetRedMin != null) ? f.offsetRedMin : 0,
+            offsetRedMax: (f.offsetRedMax != null) ? f.offsetRedMax : 0,
+            offsetGreenMin: (f.offsetGreenMin != null) ? f.offsetGreenMin : 0,
+            offsetGreenMax: (f.offsetGreenMax != null) ? f.offsetGreenMax : 0,
+            offsetBlueMin: (f.offsetBlueMin != null) ? f.offsetBlueMin : 0,
+            offsetBlueMax: (f.offsetBlueMax != null) ? f.offsetBlueMax : 0,
+            offsetAlphaMin: (f.offsetAlphaMin != null) ? f.offsetAlphaMin : 0,
+            offsetAlphaMax: (f.offsetAlphaMax != null) ? f.offsetAlphaMax : 0,
+            transparentEdges: (f.transparentEdges != null) ? f.transparentEdges : false,
+            level: (f.level != null) ? f.level : 0,
+        }];
+    },
+
 // __gray__ (new in v8.4.0) - averages the three color channel colors
     gray: function (f) {
         f.actions = [{
@@ -1126,6 +1174,29 @@ const setActionsArray = {
             includeBlue: true,
             includeAlpha: false,
             weights: [0,-1,0,-1,5,-1,0,-1,0],
+        }];
+    },
+
+// __swirl__ - for each pixel, move the pixel radially according to its distance from a given coordinate and associated angle for that coordinate.
+// + This filter can handle multiple swirls in a single pass
+    swirl: function (f) {
+    	let startX = (f.startX != null) ? f.startX : '50%',
+            startY = (f.startY != null) ? f.startY : '50%',
+            innerRadius = (f.innerRadius != null) ? f.innerRadius : 0,
+            outerRadius = (f.outerRadius != null) ? f.outerRadius : '30%',
+            angle = (f.angle != null) ? f.angle : 0,
+            easing = (f.easing != null) ? f.easing : 'linear',
+            staticSwirls = (f.staticSwirls != null) ? f.staticSwirls : [];
+
+        const swirls = [...staticSwirls];
+        swirls.push([startX, startY, innerRadius, outerRadius, angle, easing]);
+
+        f.actions = [{
+            action: 'swirl',
+            lineIn: (f.lineIn != null) ? f.lineIn : '',
+            lineOut: (f.lineOut != null) ? f.lineOut : '',
+            opacity: (f.opacity != null) ? f.opacity : 1,
+            swirls, 
         }];
     },
 
