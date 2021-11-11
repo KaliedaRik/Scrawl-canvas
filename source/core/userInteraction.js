@@ -179,7 +179,6 @@ const updateUiSubscribedElement = function (art) {
         let [w, h] = dom.currentDimensions;
 
         if (dom.type === 'Canvas') {
-
             // Regardless of the setting of &lt;canvas> element's `boxSizing` style attribute:
             // + It will include padding and borders in its `getBoundingClientRect` object (and its `getComputedStyle` width/height values), but these are specifically excluded from the element's `width` and `height` attributes
             // + Which leads to the normal resize test - `if (w !== here.w || h !== here.h)` - triggering on every mouse/scroll/resize event, which in turn leads to the canvas dimensions increasing uncontrollably.
@@ -559,6 +558,7 @@ const observeAndUpdate = function (items = Ωempty) {
 // + __.endOn__ - Array of Strings
 // + __.updateOnStart__ - Function, or a `set` object to be applied to the current artefact
 // + __.updateOnEnd__ - Function, or a `set` object to be applied to the current artefact
+// + __.updateWhileMoving__ - Function to be run while drag is in progress
 // + __.exposeCurrentArtefact__ - Boolean
 // 
 // If `exposeCurrentArtefact` attribute is true, the factory returns a function that can be invoked at any time to get the collision data object (containing x, y, artefact attributes) for the artefact being dragged (false if nothing is being dragged). 
@@ -572,7 +572,7 @@ const observeAndUpdate = function (items = Ωempty) {
 // `Exported function` (to modules and the scrawl object). Add drag-and-drop functionality to a canvas or stack.
 const makeDragZone = function (items = Ωempty) {
 
-    let {zone, coordinateSource, collisionGroup, startOn, endOn, updateOnStart, updateOnEnd, exposeCurrentArtefact} = items
+    let {zone, coordinateSource, collisionGroup, startOn, endOn, updateOnStart, updateOnEnd, updateWhileMoving, exposeCurrentArtefact} = items
 
     // `zone` is required
     // + must be either a Canvas or Stack wrapper, or a wrapper's String name
@@ -626,12 +626,14 @@ const makeDragZone = function (items = Ωempty) {
     if (isa_obj(updateOnEnd)) updateOnEnd = function () { current.artefact.set(items.updateOnEnd) };
     if (!isa_fn(updateOnEnd)) updateOnEnd = λnull;
 
+    if (!isa_fn(updateWhileMoving)) updateWhileMoving = λnull;
+
     // `exposeCurrentArtefact` - if supplied, then needs to be a boolean
     if (!isa_boolean(exposeCurrentArtefact)) exposeCurrentArtefact = false;
 
     const checkE = function (e) {
 
-        if (e.cancelable) {
+        if (e && e.cancelable) {
             
             e.preventDefault();
             e.returnValue = false;
@@ -655,7 +657,13 @@ const makeDragZone = function (items = Ωempty) {
         }
     };
 
-    let drop = function (e) {
+    const move = function (e) {
+
+        checkE(e);
+        if (current) updateWhileMoving();
+    };
+
+    const drop = function (e) {
 
         checkE(e);
 
@@ -670,16 +678,22 @@ const makeDragZone = function (items = Ωempty) {
     const kill = function () {
 
         removeListener(startOn, pickup, target);
+        removeListener('move', move, target);
         removeListener(endOn, drop, target);
     };
 
     const getCurrent = function (actionKill = false) {
 
-        if (actionKill) kill();
+        if (isa_boolean(actionKill) && actionKill) kill();
+        else if (actionKill.substring) {
+            if (actionKill === 'drop') drop();
+            if (actionKill === 'kill') kill();
+        }
         else return current;
     };
 
     addListener(startOn, pickup, target);
+    addListener('move', move, target);
     addListener(endOn, drop, target);
 
     if (exposeCurrentArtefact) return getCurrent;

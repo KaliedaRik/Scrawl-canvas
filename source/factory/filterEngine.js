@@ -2553,7 +2553,6 @@ P.theBigActionsObject = {
             for (x = 0; x < iWidth; x++) {
 
                 [iPos, mPos] = getLinePositions(x, y);
-
                 if (mPos >= 0) {
 
                     dx = Math.floor(x + ((127 - mData[mPos + offsetForChannelX]) / 127) * scaleX);
@@ -2573,10 +2572,11 @@ P.theBigActionsObject = {
                         if (dx < 0 || dx >= iWidth || dy < 0 || dy >= iHeight) dPos = -1;
                         else dPos = ((dy * iWidth) + dx) * 4;
                     }
-
                     copyPixel(dPos, iPos, iData);
                 }
-                else copyPixel(iPos, iPos, iData);
+                else {
+                    copyPixel(iPos, iPos, iData);
+                }
             }
         }
         if (lineOut) this.processResults(output, input, 1 - opacity);

@@ -91,6 +91,9 @@ export default function (P = Ωempty) {
         activePadding: 5,
 
 // __domAttributes__ - pseudo-attribute which is not retained by the wrapper object. See `updateDomAttributes` function below for details on how to use this functionality when creating or updating (via `set`), for example, Element objects
+
+// __includeInTabNavigation__ - pseudo-attribute which is not retained by the wrapper object. See `updateDomAttributes` function below for details on how to use this functionality when creating or updating (via `set`), for example, Element objects
+        includeInTabNavigation: false,
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -260,7 +263,20 @@ S.trackHere = function(val) {
     S.domAttributes = function (item) {
 
         this.updateDomAttributes(item);
-    }
+    };
+
+    S.includeInTabNavigation = function (item) {
+
+        const el = this.domElement;
+
+        if (el) {
+
+            this.includeInTabNavigation = item;
+
+            if (item) el.setAttribute('tabindex', 0);
+            else el.setAttribute('tabindex', -1);
+        }
+    };
 
 
 // #### Prototype functions
@@ -440,9 +456,12 @@ S.trackHere = function(val) {
 // Scrawl-canvas keeps track of its DOM wrapper element's positions by creating four zero-dimension &lt;div> elements and adding them as absolutely positioned children to the element. We can then get these children to report on their real coordinates (even when the parent is 3D rotated) by calling `getClientRects` on them.
 
 // `addPathCorners`
+    P.emptyElementTagNames = ['AREA', 'BASE', 'BR', 'COL', 'EMBED', 'HR', 'IMG', 'INPUT', 'KEYGEN', 'LINK', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR', 'CANVAS'];
     P.addPathCorners = function () {
 
-        if (this.domElement && !this.noUserInteraction) {
+        if (this.domElement && 
+            !this.noUserInteraction && 
+            this.emptyElementTagNames.indexOf(this.domElement.tagName) < 0) {
 
             let pointMaker = function () {
 
@@ -585,18 +604,29 @@ S.trackHere = function(val) {
 
             if (!this.pathCorners.length) this.addPathCorners();
 
-            if (!this.currentCornersData) this.currentCornersData = [];
+            if (this.pathCorners.length) {
 
-            let cornerData = this.currentCornersData;
-            cornerData.length = 0;
-            cornerData.push(...this.checkCornerPositions());
+                if (!this.currentCornersData) this.currentCornersData = [];
 
-            let p = this.pathObject = new Path2D();
-            p.moveTo(cornerData[0], cornerData[1]);
-            p.lineTo(cornerData[2], cornerData[3]);
-            p.lineTo(cornerData[4], cornerData[5]);
-            p.lineTo(cornerData[6], cornerData[7]);
-            p.closePath();
+                let cornerData = this.currentCornersData;
+                cornerData.length = 0;
+                cornerData.push(...this.checkCornerPositions());
+
+                let p = this.pathObject = new Path2D();
+                p.moveTo(cornerData[0], cornerData[1]);
+                p.lineTo(cornerData[2], cornerData[3]);
+                p.lineTo(cornerData[4], cornerData[5]);
+                p.lineTo(cornerData[6], cornerData[7]);
+                p.closePath();
+            }
+            else {
+                let p = this.pathObject = new Path2D();
+                p.moveTo(0, 0);
+                p.lineTo(10, 0);
+                p.lineTo(0, 10);
+                p.lineTo(-10, 0);
+                p.closePath();
+            }
         }
     };
 

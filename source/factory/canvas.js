@@ -114,7 +114,7 @@ const Canvas = function (items = Ωempty) {
         setRootElementsSort();
 
         // ##### Accessibility
-        if (!el.getAttribute('role')) el.setAttribute('role', 'img');
+        // if (!el.getAttribute('role')) el.setAttribute('role', 'img');
 
         let navigation = document.createElement('nav');
         navigation.id = `${this.name}-navigation`;
@@ -232,6 +232,7 @@ let defaultAttributes = {
 // Scrawl-canvas attempts to automate _some_ (but not _all_) accessibility work through inclusion of the following Canvas attributes (specifically, Scrawl-canvas implements [ARIA attributes](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA)):
 // + __title__ - this attribute is applied to the &lt;canvas> element's 'title' attribute, and will appear as a tooltip when the user hovers over the canvas
 // + __label__ and __description__ - these attributes are applied to (offscreen) div elements which are referenced by the &lt;canvas> element using `aria-labelledby` and `aria-describedby` attributes
+// + __role__ - in most situations the &lt;canvas> element's ARIA role attribute should be left as `img` (the default value). However if the canvas contains a complex interactive GUI - for instance, a spreadsheet - then the role should be updated accordingly, for instance to `application`
 //
 // If no label value is supplied to the Canvas factory (as part of the function's argument object), then Scrawl-canvas will auto-generate a label based on the canvas's name. All three attributes can be updated dynamically using the usual `set()` functionality.
 //
@@ -239,6 +240,8 @@ let defaultAttributes = {
     title: '',
     label: '',
     description: '',
+
+    role: 'img',
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -327,6 +330,13 @@ S.label = function (item) {
 S.description = function (item) {
 
     this.description = item;
+    this.dirtyAria = true;
+};
+
+// `role` - String
+S.role = function (item) {
+
+    this.role = item;
     this.dirtyAria = true;
 };
 
@@ -774,11 +784,12 @@ P.cascadeEventAction = function (action) {
     return this.currentActiveEntityNames;
 };
 
-// `cleanAria` - internal function; transfers updated __title__, __label__ and __description__ attribute values into the relevant DOM elements
+// `cleanAria` - internal function; transfers updated __title__, __label__, __description__ and __role__ attribute values into the relevant DOM elements
 P.cleanAria = function () {
 
     this.dirtyAria = false;
     this.domElement.setAttribute('title', this.title);
+    this.domElement.setAttribute('role', this.role);
     this.ariaLabelElement.textContent = this.label;
     this.ariaDescriptionElement.textContent = this.description;
 }

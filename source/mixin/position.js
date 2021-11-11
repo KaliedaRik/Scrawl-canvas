@@ -248,6 +248,10 @@ export default function (P = Ωempty) {
 // __bringToFrontOnDrag__ - flag which, when set (default), will force the artefact currently being dragged to appear on top of other artefacts
         bringToFrontOnDrag: true,
 
+// __ignoreDragForX__, __ignoreDragForY__ - flag which, when set, will skip the drag effects for that particular direction
+        ignoreDragForX: false,
+        ignoreDragForY: false,
+
 
 // All artefacts (except compound entities such as Loom) can be scaled by setting their __scale__ attribute to an appropriate float Number value:
 // + A value of __0__ effectively makes the artefact disappear from the display (though setting the artefact's __visibility__ flag to false is a more efficient approach).
@@ -1279,7 +1283,16 @@ export default function (P = Ωempty) {
         }
         else {
 
-            let {isBeingDragged, lockTo, pivot, pivotCorner, pivotPin, addPivotOffset, path, addPathOffset, mimic, useMimicStart, useMimicOffset, addOwnStartToMimic, addOwnOffsetToMimic, particle:physParticle} = this;
+            let {isBeingDragged, lockTo, pivot, pivotCorner, pivotPin, addPivotOffset, path, addPathOffset, mimic, useMimicStart, useMimicOffset, addOwnStartToMimic, addOwnOffsetToMimic, particle:physParticle, ignoreDragForX, ignoreDragForY} = this;
+
+            const confirmLock = function (lock) {
+
+                if (lock === 'pivot' && !pivot) return 'start';
+                else if (lock === 'path' && !path) return 'start';
+                else if (lock === 'mimic' && !mimic) return 'start';
+                else if (lock === 'particle' && !particle) return 'start';
+                return lock;
+            };
 
             const getMethods = {
 
@@ -1366,24 +1379,21 @@ export default function (P = Ωempty) {
 
             localLockArray.length = 0;
 
+            // `x` and `y` coordinates can have different lockTo values
             if (isBeingDragged) {
 
-                localLockArray.push('mouse', 'mouse');
+                localLockArray.push(ignoreDragForX ? confirmLock(lockTo[0]) : 'mouse');
+                localLockArray.push(ignoreDragForY ? confirmLock(lockTo[1]) : 'mouse');
+
                 hereFlag = true;
 
                 if (this.getCornerCoordinate) this.cleanPathObject();
             }
             else {
                 
-                // `x` and `y` coordinates can have different lockTo values
                 for (i = 0; i < 2; i++) {
 
-                    lock = lockTo[i];
-
-                    if (lock === 'pivot' && !pivot) lock = 'start';
-                    else if (lock === 'path' && !path) lock = 'start';
-                    else if (lock === 'mimic' && !mimic) lock = 'start';
-                    else if (lock === 'particle' && !particle) lock = 'start';
+                    lock = confirmLock(lockTo[i]);
 
                     if (lock === 'mouse') hereFlag = true;
 
@@ -1467,7 +1477,7 @@ export default function (P = Ωempty) {
                     case 'mimic' :
                         if (this.useMimicHandle) {
 
-                            coord = mimic.currentHandle[i];
+                            coord = (mimic.stampHandle) ? mimic.stampHandle[i] : mimic.currentHandle[i];
 
                             if (this.addOwnHandleToMimic) coord += handle[i];
                         }

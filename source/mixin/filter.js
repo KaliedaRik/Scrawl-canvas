@@ -178,13 +178,30 @@ export default function (P = Ωempty) {
 
                     if (img) {
 
-                        if (img.type === 'Noise') {
+                        if (img.type === 'Noise' || img.type === 'Cell' || img.type === 'RawAsset' || img.type === 'RdAsset') {
 
                             img.checkSource();
                         }
 
-                        let width = img.sourceNaturalWidth || img.sourceNaturalDimensions[0] || img.currentDimensions[0],
-                            height = img.sourceNaturalHeight || img.sourceNaturalDimensions[1] || img.currentDimensions[1];
+                        let width = img.sourceNaturalWidth,
+                            height = img.sourceNaturalHeight,
+                            snd = img.sourceNaturalDimensions,
+                            cnd = img.currentDimensions;
+
+                        if (!width || !height) {
+
+                            if (snd && snd[0] && snd[1]) {
+
+                                width = width || snd[0];
+                                height = height || snd[1];
+                            }
+
+                            else if (cnd && cnd[0] && cnd[1]) {
+
+                                width = width || cnd[0];
+                                height = height || cnd[1];
+                            }
+                        }
 
                         if (width && height) {
 
@@ -262,7 +279,7 @@ export default function (P = Ωempty) {
                         obj.assetData = {
                             width: 1,
                             height: 1,
-                            data: [0, 0, 0, 0],
+                            data: new Uint8ClampedArray(4),
                         }
                     }
                 }

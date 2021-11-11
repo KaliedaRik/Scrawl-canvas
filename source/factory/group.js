@@ -543,6 +543,13 @@ P.addArtefacts = function (...args) {
     return this;
 };
 
+// `getArtefact` - return the artifact with the given name IF the artefact is a member of the group
+P.getArtefact = function (name) {
+
+    if (this.artefacts.indexOf(name) >= 0) return artefact[name] || false;
+    return false;
+};
+
 // `removeArtefacts` - remove an artefact from this Group
 P.removeArtefacts = function (...args) {
 

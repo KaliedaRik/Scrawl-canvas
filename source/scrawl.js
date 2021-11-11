@@ -27,7 +27,8 @@
 
 // ## Initialize Scrawl-canvas
 import { init } from './core/init.js';
-init();
+
+if (typeof window !== 'undefined') init();
 
 
 // ## Import Scrawl-canvas modules
@@ -349,6 +350,10 @@ import {
 
 // ## Export selected functionalities that users can use in their scripts
 export default {
+
+    // core/init.js
+    init,
+
 
     // core/library.js
     library,

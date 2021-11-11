@@ -129,6 +129,8 @@ const demoAnimation = scrawl.makeRender({
 
     name: "demo-animation",
     target: canvas,
+
+    // Non-base Cells do not routinely update their local here object, has to be triggered manually
     commence: () => mycell.updateHere(),
     afterShow: report,
 });

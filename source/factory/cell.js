@@ -107,6 +107,7 @@ const Cell = function (items = Ωempty) {
 
     this.subscribers = [];
     this.sourceNaturalDimensions = makeCoordinate();
+    this.dirtyDimensionsOverride = true;
 
     this.sourceLoaded = true;
 
@@ -320,10 +321,14 @@ G.width = function () {
 
     return this.currentDimensions[0] || this.element.getAttribute('width');
 };
-S.width = function (item) {
+S.width = function (val) {
 
-    this.dimensions[0] = item;
-    this.dirtyDimensions = true;
+    if (val != null) {
+
+        this.dimensions[0] = val;
+        this.dirtyDimensions = true;
+        this.dirtyDimensionsOverride = true;
+    }
 };
 
 // `height`
@@ -331,10 +336,28 @@ G.height = function () {
 
     return this.currentDimensions[1] || this.element.getAttribute('height');
 };
-S.height = function (item) {
+S.height = function (val) {
 
-    this.dimensions[1] = item;
+    if (val != null) {
+
+        this.dimensions[1] = val;
+        this.dirtyDimensions = true;
+        this.dirtyDimensionsOverride = true;
+    }
+};
+
+G.dimensions = function () {
+
+    const w = this.currentDimensions[0] || this.element.getAttribute('width');
+    const h = this.currentDimensions[1] || this.element.getAttribute('height');
+
+    return [w, h];
+};
+S.dimensions = function (w, h) {
+
+    this.setCoordinateHelper('dimensions', w, h);
     this.dirtyDimensions = true;
+    this.dirtyDimensionsOverride = true;
 };
 
 // Internal setters
@@ -538,56 +561,61 @@ P.cleanDimensionsAdditionalActions = function() {
         let dpr = getPixelRatio();
 
         // DEPRECATED (because it is a really bad name) __isComponent__ replaced by __baseMatchesCanvasDimensions__
-        if (ignoreDpr) {
+        if (this.cleared || this.dirtyDimensionsOverride) {
 
-            if (base && control && (control.baseMatchesCanvasDimensions || control.isComponent)) {
-
-                let controlDims = this.controller.currentDimensions,
-                    dims = this.dimensions;
-
-                dims[0] = current[0] = controlDims[0];
-                dims[1] = current[1] = controlDims[1];
-            }
-
-            let [w, h] = current;
-
-            element.width = w;
-            element.height = h;
-        }
-        else {
-
-            if (base && control && (control.baseMatchesCanvasDimensions || control.isComponent)) {
-
-                let controlDims = this.controller.currentDimensions,
-                    dims = this.dimensions;
-
-                dims[0] = current[0] = controlDims[0];
-                dims[1] = current[1] = controlDims[1];
-            }
-
-            let [w, h] = current;
+            this.dirtyDimensionsOverride = false;
 
             if (ignoreDpr) {
+
+                if (base && control && (control.baseMatchesCanvasDimensions || control.isComponent)) {
+
+                    let controlDims = this.controller.currentDimensions,
+                        dims = this.dimensions;
+
+                    dims[0] = current[0] = controlDims[0];
+                    dims[1] = current[1] = controlDims[1];
+                }
+
+                let [w, h] = current;
 
                 element.width = w;
                 element.height = h;
             }
             else {
 
-                element.width = w * dpr;
-                element.height = h * dpr;
+                if (base && control && (control.baseMatchesCanvasDimensions || control.isComponent)) {
+
+                    let controlDims = this.controller.currentDimensions,
+                        dims = this.dimensions;
+
+                    dims[0] = current[0] = controlDims[0];
+                    dims[1] = current[1] = controlDims[1];
+                }
+
+                let [w, h] = current;
+
+                if (ignoreDpr) {
+
+                    element.width = w;
+                    element.height = h;
+                }
+                else {
+
+                    element.width = w * dpr;
+                    element.height = h * dpr;
+                }
             }
-        }
 
-        this.setEngineFromState(this.engine);
+            this.setEngineFromState(this.engine);
 
-        if (base && control) control.updateBaseHere();
+            if (base && control) control.updateBaseHere();
 
-        if (this.groupBuckets) {
+            if (this.groupBuckets) {
 
-            this.updateArtefacts({
-                dirtyDimensions: true,
-            });
+                this.updateArtefacts({
+                    dirtyDimensions: true,
+                });
+            }
         }
     }
 };
@@ -934,10 +962,6 @@ P.clear = function () {
     let w = width * dpr,
         h = height * dpr;
 
-    // if (this.fixedDimensions && !this.isBase) {
-    //     element.style.width = `${width}px`;
-    //     element.style.height = `${height}px`;
-    // }
     if (this.useAsPattern) {
 
         element.width = width;

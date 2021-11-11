@@ -92,9 +92,6 @@ data.forEach(scene => {
             [999, 'black']
         ],
     });
-    // })
-    // .updateColor(0, `${scene.transparency}`)
-    // .updateColor(999, 'black');
 
     // Apply the gradient to the scene via a Block entity
     const filterBlock = scrawl.makeBlock({
