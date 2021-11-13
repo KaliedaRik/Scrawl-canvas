@@ -970,39 +970,44 @@ P.clear = function () {
 
     if (backgroundColor) {
 
-        let tempBackground = engine.fillStyle,
-            tempGCO = engine.globalCompositeOperation,
-            tempAlpha = engine.globalAlpha;
-
+        engine.save();
         engine.fillStyle = backgroundColor;
         engine.globalCompositeOperation = 'source-over';
         engine.globalAlpha = 1;
         engine.fillRect(0, 0, width, height);
-        engine.fillStyle = tempBackground;
-        engine.globalCompositeOperation = tempGCO;
-        engine.globalAlpha = tempAlpha;
+        engine.restore();
     }
     else if (clearAlpha) {
 
+        engine.save();
         let tempCell = requestCell();
         
         let {engine:tempEngine, element:tempEl} = tempCell;
 
-        tempEl.width = w;
-        tempEl.height = h;
+        if (this.useAsPattern) {
 
-        let data = engine.getImageData(0, 0, width, height);
-        tempEngine.putImageData(data, 0, 0, 0, 0, width, height);
+            tempEl.width = width;
+            tempEl.height = height;
 
-        let oldAlpha = engine.globalAlpha;
+            tempEngine.drawImage(element, 0, 0, width, height, 0, 0, width, height);
+            
+            engine.clearRect(0, 0, width, height);
+            engine.globalAlpha = clearAlpha;
 
-        engine.clearRect(0, 0, width, height);
-        engine.globalAlpha = clearAlpha;
+            engine.drawImage(tempEl, 0, 0, width, height, 0, 0, width, height);
+        }
+        else {
+            tempEl.width = w;
+            tempEl.height = h;
 
-        if (this.useAsPattern) engine.drawImage(tempEl, 0, 0, width, height, 0, 0, width, height);
-        else engine.drawImage(tempEl, 0, 0, w, h, 0, 0, width, height);
+            tempEngine.drawImage(element, 0, 0, width, height, 0, 0, width, height);
+            
+            engine.clearRect(0, 0, width, height);
+            engine.globalAlpha = clearAlpha;
 
-        engine.globalAlpha = oldAlpha;
+            engine.drawImage(tempEl, 0, 0, w, h, 0, 0, width, height);
+        }
+        engine.restore();
 
         releaseCell(tempCell);
     }
