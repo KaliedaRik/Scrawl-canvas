@@ -15,7 +15,6 @@ let canvas = scrawl.library.artefact.mycanvas;
 
 canvas.setBase({
     clearAlpha: 0.9,
-    // backgroundColor: 'aliceblue',
 });
 
 
@@ -238,23 +237,23 @@ scrawl.makeRender({
 // #### Development and testing
 console.log(scrawl.library);
 
-// console.log('Performing tests ...');
+console.log('Performing tests ...');
 
-// killArtefact(canvas, 'mouse-pivot', 4000, () => {
+killArtefact(canvas, 'mouse-pivot', 4000, () => {
 
-//     myPivot = scrawl.library.entity['mouse-pivot'];
+    myPivot = scrawl.library.entity['mouse-pivot'];
 
-//     scrawl.library.entity['base-block'].set({
+    scrawl.library.entity['base-block'].set({
 
-//         pivot: myPivot,
-//         lockTo: 'pivot',
-//     });
+        pivot: myPivot,
+        lockTo: 'pivot',
+    });
 
-//     scrawl.library.entity['base-wheel'].set({
+    scrawl.library.entity['base-wheel'].set({
 
-//         pivot: myPivot,
-//         lockTo: 'pivot',
-//     });
-// });
+        pivot: myPivot,
+        lockTo: 'pivot',
+    });
+});
 
-// killArtefact(canvas, 'mimic-block', 6000);
+killArtefact(canvas, 'mimic-block', 6000);
