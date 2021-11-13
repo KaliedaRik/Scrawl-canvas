@@ -60,6 +60,8 @@ import entityMix from '../mixin/entity.js';
 
 
 // Constants used by Phrase entitys
+const defaultTextForHeightMeasurements = '|/}ÁÅþ§¶¿∑ƒ⌈⌊qwertyd0123456789QWERTY';
+
 const fontHeightCalculator = document.createElement('div');
 fontHeightCalculator.style.padding = 0;
 fontHeightCalculator.style.border = 0;
@@ -67,7 +69,7 @@ fontHeightCalculator.style.margin = 0;
 fontHeightCalculator.style.height = 'auto';
 fontHeightCalculator.style.lineHeight = 1;
 fontHeightCalculator.style.boxSizing = 'border-box';
-fontHeightCalculator.innerHTML = '|/}ÁÅþ§¶¿∑ƒ⌈⌊qwertyd0123456789QWERTY';
+fontHeightCalculator.innerHTML = defaultTextForHeightMeasurements;
 fontHeightCalculator.setAttribute('aria-hidden', 'true');
 scrawlCanvasHold.appendChild(fontHeightCalculator);
 
@@ -1106,12 +1108,26 @@ P.calculateTextPositions = function (mytext) {
 
     // 5. Calculate the text `height` value
     // + All lines in a multiline Phrase will use the maximum text height value, even if they don't include the biggest value
+    engine.save();
     fontArray.forEach(font => {
 
-        fontHeightCalculator.style.font = font;
-        item = fontHeightCalculator.clientHeight;
-        fontLibrary[font] = item;
+        engine.font = font;
+
+        let f = engine.measureText(defaultTextForHeightMeasurements);
+
+        if (f.actualBoundingBoxAscent != null && f.actualBoundingBoxDescent != null) {
+
+            fontLibrary[font] = Math.ceil(f.actualBoundingBoxAscent + f.actualBoundingBoxDescent);
+        }
+        else {
+
+            // browsers differ in the value thy return for this measurement
+            fontHeightCalculator.style.font = font;
+            item = fontHeightCalculator.clientHeight;
+            fontLibrary[font] = item;
+        }
     });
+    engine.restore();
 
     maxHeight = Math.max(...Object.values(fontLibrary));
 

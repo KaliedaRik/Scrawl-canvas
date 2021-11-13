@@ -15,6 +15,7 @@ let canvas = scrawl.library.artefact.mycanvas;
 
 canvas.setBase({
     clearAlpha: 0.9,
+    backgroundColor: 'aliceblue',
 });
 
 

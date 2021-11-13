@@ -1477,7 +1477,8 @@ export default function (P = Ωempty) {
                     case 'mimic' :
                         if (this.useMimicHandle) {
 
-                            coord = (mimic.stampHandle) ? mimic.stampHandle[i] : mimic.currentHandle[i];
+                            // coord = (mimic.stampHandle) ? mimic.stampHandle[i] : mimic.currentHandle[i];
+                            coord = mimic.currentHandle[i];
 
                             if (this.addOwnHandleToMimic) coord += handle[i];
                         }
