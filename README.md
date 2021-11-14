@@ -2,8 +2,9 @@
 Version: `8.6.3 - 14 Nov 2021` 
 
 Scrawl-canvas website: [scrawl-v8.rikweb.org.uk](https://scrawl-v8.rikweb.org.uk).
+Scrawl-canvas on CodePen: [codepen.io/collection/RzzMjw](https://codepen.io/collection/RzzMjw).
 
-__Do you want to contribute?__ Don't be afraid - reach out and let's see what magic we can create together!
+__Do you want to contribute?__ Don't be afraid - reach out and let's see what website magic we can create together!
 
 [![Rate on Openbase](https://badges.openbase.io/js/rating/scrawl-canvas.svg)](https://openbase.io/js/scrawl-canvas?utm_source=embedded&utm_medium=badge&utm_campaign=rate-badge)
 
@@ -29,7 +30,7 @@ ___Sadly these advantages are also significant barriers:___
 + Working directly with the canvas-related APIs means writing significant amounts of Javascript boilerplate code.
 + &lt;canvas> elements can be resized and styled using CSS, but changing the CSS size does not affect the element's drawing dimensions - leading to ugly results.
 + Events work on the canvas, not on the graphical objects within the canvas - we cannot use those objects as links or hot-spots (click/tap events), we cannot give them the equivalent of a CSS hover state (focus/blur events), we cannot drag-and-drop them around the display (move events).
-+ Tracking a user's interaction with the various parts of a canvas display is particularly difficult.
++ Tracking a user's interaction with the various parts of a canvas display, for analytics and research on web page performance, is particularly difficult.
 + We cannot easily save and share displays, effects and animations; each &lt;canvas> element's output is tightly coupled to the code that defines that output.
 + __Of most concern__, canvases are entirely graphical - visual - by nature; they come with __significant accessibility issues__. Given the ever-stricter requirements for websites to be accessible to all users, this makes using a canvas to present important information a dangerous proposition.
 
