@@ -3,12 +3,12 @@ Version: `8.6.3 - 14 Nov 2021`
 
 Scrawl-canvas website: [scrawl-v8.rikweb.org.uk](https://scrawl-v8.rikweb.org.uk).
 
-__Do you want to contribute?__ I've been developing this project for too long by myself, and would really welcome contributions from - even collaboration with - people who can bring a different perspective and a fresh set of eyes to the work.
+__Do you want to contribute?__ Don't be afraid - reach out and let's see what magic we can create together!
 
 [![Rate on Openbase](https://badges.openbase.io/js/rating/scrawl-canvas.svg)](https://openbase.io/js/scrawl-canvas?utm_source=embedded&utm_medium=badge&utm_campaign=rate-badge)
 
 ### What?
-Scrawl-canvas is a JavaScript library for working with the HTML5 &lt;canvas> element. The library:
+Scrawl-canvas is a Javascript library for working with the HTML5 &lt;canvas> element. The library:
 + Defines a set of factory functions for creating a wide range of graphic artefacts and effects, which can be drawn on a canvas.
 + Includes an adaptable - yet easy to use - protocol for positioning, displaying and animating artefacts and effects across the canvas.
 + Adds functionality to make &lt;canvas> elements `responsive`, adapting their size to their surrounding environment while remaining fully `interactive`.
@@ -17,20 +17,28 @@ Scrawl-canvas is a JavaScript library for working with the HTML5 &lt;canvas> ele
 https://user-images.githubusercontent.com/5357530/141673995-df239c38-2ba1-43f3-831c-b655524f2f40.mp4
 
 ### Why?
-Working with the native Canvas API is hard work - particularly when the desired result is more complex than a couple of coloured boxes in a static display. But the benefits of using canvases for graphical displays and animations are also great: canvases are part of the DOM (unlike Flash); they are natively wired for events and user interactions; they use immediate mode redering (which makes them very quick); and the canvas-related APIs are designed to be used with Javascript.
+Working with the native Canvas API is hard work - particularly when the desired result is more complex than a couple of coloured boxes in a static display. 
+
+But the benefits of using canvases for graphical displays and animations are also great: 
++ Canvases are part of the DOM (unlike Flash); 
++ They are natively wired for events and user interactions; 
++ They use immediate mode redering (which makes them very quick); and 
++ The canvas-related APIs are designed to be used with Javascript.
 
 ___Sadly these advantages are also significant barriers:___
 + Working directly with the canvas-related APIs means writing significant amounts of JS boilerplate code.
 + &lt;canvas> elements can be resized and styled using CSS, but changing the CSS size does not affect the element's drawing dimensions - leading to sub-optimal graphic displays.
 + Events work on the canvas, not on the artefacts within the canvas - we cannot use artefacts as links or hot-spots (click/tap events), we cannot give them the equivalent of a CSS hover state (focus/blur events), we cannot drag-and-drop them around the display (move events).
 + Tracking a user's interaction with the various parts of a canvas display is particularly difficult.
-+ We cannot save and share artefacts and effects; each canvas display is tightly coupled to the code that defines the display.
++ We cannot save and share artefacts and effects; each canvas display is tightly coupled to the code that defines that display.
 + __Of most concern__, canvases are entirely graphical - visual - by nature; they come with __significant accessibility issues__. Given the ever-stricter requirements for websites to be accessible to all users, this makes using a canvas to present important information a dangerous proposition.
 
 ### Scrawl-canvas overcomes these barriers
-Scrawl-canvas is fast, and developer-friendly. It is suitable for building infographics, games, interactive videos - whatever we can imagine for a 2D graphical presentation.
+Scrawl-canvas is fast, and developer-friendly. It's suitable for building infographics, games, interactive videos - whatever we can imagine for a 2D graphical presentation. And it is modular - we can break the code for a particular effect into its own module file which can be reused in other projects
 
-There's other JS libraries that offer similar functionality. What they cannot offer is Scrawl-canvas's hard focus on making the &lt;canvas> element `accessible, responsive and fully interactive` while at the same time offering a `pleasant developer experience`. Scrawl-canvas is fun to work with!
+Scrawl-canvas offers all of this whiule never losing its har focus on making the &lt;canvas> element `accessible, responsive and fully interactive` while at the same time offering a `pleasant developer experience`. 
+
+Scrawl-canvas is fun to work with!
 
 ## Installation and use
 
