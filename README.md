@@ -26,17 +26,17 @@ But the benefits of using canvases for graphical displays and animations are als
 + The canvas-related APIs are designed to be used with Javascript.
 
 ___Sadly these advantages are also significant barriers:___
-+ Working directly with the canvas-related APIs means writing significant amounts of JS boilerplate code.
-+ &lt;canvas> elements can be resized and styled using CSS, but changing the CSS size does not affect the element's drawing dimensions - leading to sub-optimal graphic displays.
-+ Events work on the canvas, not on the artefacts within the canvas - we cannot use artefacts as links or hot-spots (click/tap events), we cannot give them the equivalent of a CSS hover state (focus/blur events), we cannot drag-and-drop them around the display (move events).
++ Working directly with the canvas-related APIs means writing significant amounts of Javascript boilerplate code.
++ &lt;canvas> elements can be resized and styled using CSS, but changing the CSS size does not affect the element's drawing dimensions - leading to ugly results.
++ Events work on the canvas, not on the graphical objects within the canvas - we cannot use those objects as links or hot-spots (click/tap events), we cannot give them the equivalent of a CSS hover state (focus/blur events), we cannot drag-and-drop them around the display (move events).
 + Tracking a user's interaction with the various parts of a canvas display is particularly difficult.
-+ We cannot save and share artefacts and effects; each canvas display is tightly coupled to the code that defines that display.
++ We cannot easily save and share displays, effects and animations; each &lt;canvas> element's output is tightly coupled to the code that defines that output.
 + __Of most concern__, canvases are entirely graphical - visual - by nature; they come with __significant accessibility issues__. Given the ever-stricter requirements for websites to be accessible to all users, this makes using a canvas to present important information a dangerous proposition.
 
 ### Scrawl-canvas overcomes these barriers
-Scrawl-canvas is fast, and developer-friendly. It's suitable for building infographics, games, interactive videos - whatever we can imagine for a 2D graphical presentation. And it is modular - we can break the code for a particular effect into its own module file which can be reused in other projects
+Scrawl-canvas is fast, and developer-friendly. It's suitable for building infographics, games, interactive videos - whatever we can imagine for a 2D graphical presentation. And it is modular - we can break the code for a particular effect into its own module file which can be reused in other projects.
 
-Scrawl-canvas offers all of this whiule never losing its har focus on making the &lt;canvas> element `accessible, responsive and fully interactive` while at the same time offering a `pleasant developer experience`. 
+Scrawl-canvas offers all of this while never losing its hard focus on making the &lt;canvas> element `accessible, responsive and fully interactive` while at the same time offering a `pleasant developer experience`. 
 
 Scrawl-canvas is fun to work with!
 
@@ -50,7 +50,7 @@ There are three main ways to include Scrawl-canvas in your project:
 2. Unzip the file to a folder in your project. 
 3. Import the library into the script code where you will be using it.
 
-Alternatively, a zip package of the v8.6.3 files can be downloaded from this link: [scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-6-3.zip](https://scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-6-3.zip) - this package only includes the minified file.
+Alternatively, a zip package of the v8.6.3 files can be downloaded from this link: [scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-6-3.zip](https://scrawl.rikweb.org.uk/downloads/scrawl-canvas_8-6-3.zip) - that package only includes the minified file.
 
 ```html
 <!-- Hello world -->
@@ -104,8 +104,6 @@ This will pull the requested npm package directly into your web page:
 ```
 
 ### NPM/Yarn
-This approach is still experimental: Scrawl-canvas has been designed for use in the browser, not server-side. ___Add the library to a React/Vue/Svelte/etc project at your own risk___ - your mileage may vary!
-
 1. Add the library to your project using NPM or Yarn
 2. Import the library into the script code where you will be using it.
 
@@ -124,7 +122,7 @@ import scrawl from 'scrawl-canvas';
 ```
 
 ## Local development and testing
-After downloading the library and unzipping it into a directory or folder, cd into that folder on the command line, run `yarn install` or `npm install` (for the toolchain - the library itself has no external dependencies) and start a local server. For instance if you have [light-server](https://github.com/txchen/light-server) installed:
+After forking this repo down to your local machine, `cd` into the scrawl-canvas folder, run `yarn install` or `npm install` (for the local build toolchain - the library itself has no external dependencies) and start a local server. For instance if you have [light-server](https://github.com/txchen/light-server) installed:
 
 ```sh
 $> cd ./path/to/Scrawl-canvas
