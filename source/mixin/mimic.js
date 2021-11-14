@@ -4,7 +4,7 @@
 
 // #### Imports
 import { artefact, asset } from '../core/library.js';
-import { mergeOver, pushUnique, isa_boolean, Ωempty } from '../core/utilities.js';
+import { mergeOver, pushUnique, isa_boolean, Ωempty, removeItem } from '../core/utilities.js';
 
 
 // #### Export function

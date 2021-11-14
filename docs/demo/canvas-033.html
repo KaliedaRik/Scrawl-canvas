@@ -1140,8 +1140,7 @@ canvas.<span class="hljs-title function_">setColorSchemeLightAction</span>(<span
     <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;demo-animation&quot;</span>,
     <span class="hljs-attr">target</span>: canvas,
     <span class="hljs-attr">afterShow</span>: report,
-
-    <span class="hljs-attr">afterCreated</span>: <span class="hljs-function">() =&gt;</span> {</pre></div></div>
+});</pre></div></div>
             
         </li>
         
@@ -1151,27 +1150,6 @@ canvas.<span class="hljs-title function_">setColorSchemeLightAction</span>(<span
               
               <div class="sswrap ">
                 <a class="ss" href="#section-10">&#x00a7;</a>
-              </div>
-              <p>Invoke prefers-color-scheme actions test</p>
-<ul>
-<li>Scrawl-canvas will automatically check to see if user changes their preference while the scene is running, and action the change when detected</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        canvas.<span class="hljs-title function_">colorSchemeActions</span>();
-        canvas.<span class="hljs-title function_">reducedMotionActions</span>();
-    },
-});</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <h4 id="prefers-reduced-motion-actions">prefers-reduced-motion actions</h4>
 
@@ -1214,11 +1192,11 @@ canvas.<span class="hljs-title function_">setNoPreferenceMotionAction</span>(<sp
         </li>
         
         
-        <li id="section-12">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 <p>In chrome browsers, open the inspector and enable the <strong>Rendering</strong> view - this includes selectors to emulate both <code>prefers-reduced-motion</code> and <code>prefers-color-scheme</code> user choices.</p>

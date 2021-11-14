@@ -723,6 +723,8 @@
 
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">readyToInitialize</span>) {
 
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">target</span>.<span class="hljs-title function_">checkAccessibilityValues</span>();
+
             <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">afterCreated</span>(<span class="hljs-variable language_">this</span>);
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">readyToInitialize</span> = <span class="hljs-literal">false</span>;
         }
@@ -1024,6 +1026,9 @@ P.<span class="hljs-property">saveAsPacket</span> = <span class="hljs-keyword">f
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">onRun</span>();
     <span class="hljs-title function_">pushUnique</span>(animate, <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
     <span class="hljs-title function_">resortAnimations</span>();
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">target</span>.<span class="hljs-title function_">checkAccessibilityValues</span>();
+    
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>
             

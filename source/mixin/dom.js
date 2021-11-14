@@ -1024,6 +1024,13 @@ S.trackHere = function(val) {
         }
     };
 
+    P.checkAccessibilityValues = function () {
+
+        this.reducedMotionActions();
+        this.colorSchemeActions();
+        this.reducedTransparencyActions();
+        this.reducedDataActions();
+    }
 
 // `apply`
 // + I really don't like this functionality - see if we can purge it from the code base?

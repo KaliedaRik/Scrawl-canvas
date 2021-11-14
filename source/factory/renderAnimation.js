@@ -102,6 +102,8 @@ const RenderAnimation = function (items = Ωempty) {
 
         if (this.readyToInitialize) {
 
+            this.target.checkAccessibilityValues();
+
             this.afterCreated(this);
             this.readyToInitialize = false;
         }
@@ -216,6 +218,9 @@ P.run = function () {
     this.onRun();
     pushUnique(animate, this.name);
     resortAnimations();
+
+    this.target.checkAccessibilityValues();
+    
     return this;
 };
 
@@ -235,7 +240,6 @@ P.halt = function () {
     resortAnimations();
     return this;
 };
-
 
 
 // #### Factory

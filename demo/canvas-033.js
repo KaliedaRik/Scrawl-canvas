@@ -119,14 +119,6 @@ const demoAnimation = scrawl.makeRender({
     name: "demo-animation",
     target: canvas,
     afterShow: report,
-
-    afterCreated: () => {
-
-        // Invoke prefers-color-scheme actions test
-        // + Scrawl-canvas will automatically check to see if user changes their preference while the scene is running, and action the change when detected
-        canvas.colorSchemeActions();
-        canvas.reducedMotionActions();
-    },
 });
 
 
