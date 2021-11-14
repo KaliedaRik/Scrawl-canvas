@@ -3483,7 +3483,6 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
             <span class="hljs-keyword">for</span> (x = <span class="hljs-number">0</span>; x &lt; iWidth; x++) {
 
                 [iPos, mPos] = <span class="hljs-title function_">getLinePositions</span>(x, y);
-
                 <span class="hljs-keyword">if</span> (mPos &gt;= <span class="hljs-number">0</span>) {
 
                     dx = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(x + ((<span class="hljs-number">127</span> - mData[mPos + offsetForChannelX]) / <span class="hljs-number">127</span>) * scaleX);
@@ -3503,10 +3502,11 @@ P.<span class="hljs-property">getGradientData</span> = <span class="hljs-keyword
                         <span class="hljs-keyword">if</span> (dx &lt; <span class="hljs-number">0</span> || dx &gt;= iWidth || dy &lt; <span class="hljs-number">0</span> || dy &gt;= iHeight) dPos = -<span class="hljs-number">1</span>;
                         <span class="hljs-keyword">else</span> dPos = ((dy * iWidth) + dx) * <span class="hljs-number">4</span>;
                     }
-
                     <span class="hljs-title function_">copyPixel</span>(dPos, iPos, iData);
                 }
-                <span class="hljs-keyword">else</span> <span class="hljs-title function_">copyPixel</span>(iPos, iPos, iData);
+                <span class="hljs-keyword">else</span> {
+                    <span class="hljs-title function_">copyPixel</span>(iPos, iPos, iData);
+                }
             }
         }
         <span class="hljs-keyword">if</span> (lineOut) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">processResults</span>(output, input, <span class="hljs-number">1</span> - opacity);

@@ -514,7 +514,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, artefact } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
-<span class="hljs-keyword">import</span> { mergeOver, pushUnique, removeItem, isa_obj, isa_dom, isa_quaternion, xt, xta, λ<span class="hljs-literal">null</span>, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
+<span class="hljs-keyword">import</span> { mergeOver, pushUnique, removeItem, isa_obj, isa_dom, isa_quaternion, xt, xta, λ<span class="hljs-literal">null</span>, Ωempty, isa_fn } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { uiSubscribedElements, currentCorePosition, applyCoreResizeListener, addLocalMouseMoveListener, removeLocalMouseMoveListener } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/userInteraction.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { addDomShowElement, setDomShowRequired, domShow } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/document.js&#x27;</span>;
 
@@ -752,9 +752,6 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    };
-    P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
-            
         </li>
         
         
@@ -763,6 +760,45 @@
               
               <div class="sswrap ">
                 <a class="ss" href="#section-16">&#x00a7;</a>
+              </div>
+              <p><strong>includeInTabNavigation</strong> - pseudo-attribute which is not retained by the wrapper object. See <code>updateDomAttributes</code> function below for details on how to use this functionality when creating or updating (via <code>set</code>), for example, Element objects</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">includeInTabNavigation</span>: <span class="hljs-literal">false</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-17">&#x00a7;</a>
+              </div>
+              <p>These actions are all related to user accessibility and the ability of the user to define their preferences at the operation system or device level. Listeners to capture the state of, and changes in, those values are set up in <code>core/userInteraction.js</code>. Each canvas, stack or (subscribed) element can take advantage of this functionality to update its appearance dependant on the user’s preferences.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-attr">reduceMotionAction</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">noPreferenceMotionAction</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">colorSchemeLightAction</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">colorSchemeDarkAction</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">reduceTransparencyAction</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">noPreferenceTransparencyAction</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">reduceDataAction</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">noPreferenceDataAction</span>: <span class="hljs-literal">null</span>,
+    };
+    P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">mergeOver</span>(P.<span class="hljs-property">defs</span>, defaultAttributes);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-18">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
@@ -774,11 +810,11 @@
         </li>
         
         
-        <li id="section-17">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-19">&#x00a7;</a>
               </div>
               <p><code>processDOMPacketOut</code> - internal helper function</p>
 
@@ -792,11 +828,11 @@
         </li>
         
         
-        <li id="section-18">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-20">&#x00a7;</a>
               </div>
               <p><code>processFactoryPacketOut</code> - internal helper function</p>
 
@@ -814,11 +850,11 @@
         </li>
         
         
-        <li id="section-19">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
+                <a class="ss" href="#section-21">&#x00a7;</a>
               </div>
               <p><code>finalizePacketOut</code> - internal helper function</p>
 
@@ -847,11 +883,11 @@
         </li>
         
         
-        <li id="section-20">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p><code>postCloneAction</code> - internal helper function</p>
@@ -871,11 +907,11 @@
         </li>
         
         
-        <li id="section-21">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-21">&#x00a7;</a>
+                <a class="ss" href="#section-23">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 <p>No additional kill functionality required</p>
@@ -885,11 +921,11 @@
         </li>
         
         
-        <li id="section-22">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-22">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -920,11 +956,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-23">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p><code>position</code></p>
 
@@ -939,11 +975,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-24">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <p><code>visibility</code></p>
 
@@ -958,11 +994,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-25">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <p><code>offsetZ</code></p>
 
@@ -983,11 +1019,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-26">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <p><code>roll</code></p>
 
@@ -1007,11 +1043,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-27">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <p><code>pitch</code></p>
 
@@ -1031,11 +1067,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-28">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p><code>yaw</code></p>
 
@@ -1055,11 +1091,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-29">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p><code>css</code></p>
 
@@ -1075,11 +1111,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-30">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
               <p><code>classes</code></p>
 
@@ -1095,11 +1131,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-31">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
               <p><code>domAttributes</code> - see <code>updateDomAttributes</code> below</p>
 
@@ -1108,16 +1144,29 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
             <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">domAttributes</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">updateDomAttributes</span>(item);
-    }</pre></div></div>
+    };
+
+    S.<span class="hljs-property">includeInTabNavigation</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+        <span class="hljs-keyword">const</span> el = <span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>;
+
+        <span class="hljs-keyword">if</span> (el) {
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">includeInTabNavigation</span> = item;
+
+            <span class="hljs-keyword">if</span> (item) el.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;tabindex&#x27;</span>, <span class="hljs-number">0</span>);
+            <span class="hljs-keyword">else</span> el.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;tabindex&#x27;</span>, -<span class="hljs-number">1</span>);
+        }
+    };</pre></div></div>
             
         </li>
         
         
-        <li id="section-32">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -1126,11 +1175,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-33">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p><code>checkRotationAngle</code> - internal function - a quick check for rotational (<code>roll</code>, <code>pitch</code>, <code>yaw</code>) setter/deltaSetter functionality. Attempts to keep values of these attributes between -360 and + 360</p>
 
@@ -1148,11 +1197,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-34">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p><code>updateDomAttributes</code> - DOM wrapper objects do not keep track of their DOM element attribute values; this function is a convenience function to make updating those attributes a bit easier. Function arguments can be one of:</p>
 <ul>
@@ -1188,11 +1237,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-35">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p><code>initializeDomLayout</code> - internal function </p>
 <ul>
@@ -1227,11 +1276,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-36">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p>TODO - discover scale</p>
 
@@ -1240,11 +1289,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-37">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p>discover dimensions (width, height)</p>
 
@@ -1258,11 +1307,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-38">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p>recover classes already assigned to the element</p>
 
@@ -1273,11 +1322,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-39">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p>go with lock defaults - no work required</p>
 
@@ -1286,11 +1335,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-40">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p>discover start (boundingClientRect - will be the difference between this object and its host (parent) object ‘top’ and ‘left’ values)</p>
 
@@ -1310,39 +1359,13 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-41">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
-              </div>
-              <p>TODO go with offset defaults - though may be worthwhile checking if the translate style has been set?</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-42">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
-              </div>
-              <p>TODO discover handle (transform, transformOrigin)</p>
-
-            </div>
-            
-        </li>
-        
-        
         <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
                 <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
-              <p>TODO go with rotation (pitch, yaw, roll) defaults - no further work required?</p>
+              <p>TODO go with offset defaults - though may be worthwhile checking if the translate style has been set?</p>
 
             </div>
             
@@ -1355,11 +1378,9 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
               <div class="sswrap ">
                 <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
-              <p>for Stack artefacts only, discover perspective and perspective-origin values</p>
+              <p>TODO discover handle (transform, transformOrigin)</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Stack&#x27;</span>) {</pre></div></div>
             
         </li>
         
@@ -1370,11 +1391,9 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
               <div class="sswrap ">
                 <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
-              <p>TODO - currently assumes all lengths supplied are in px - need a way to calculate non-px values</p>
+              <p>TODO go with rotation (pitch, yaw, roll) defaults - no further work required?</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xt</span>(items.<span class="hljs-property">perspective</span>) &amp;&amp; !<span class="hljs-title function_">xt</span>(items.<span class="hljs-property">perspectiveZ</span>)) {</pre></div></div>
             
         </li>
         
@@ -1384,6 +1403,36 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
               
               <div class="sswrap ">
                 <a class="ss" href="#section-46">&#x00a7;</a>
+              </div>
+              <p>for Stack artefacts only, discover perspective and perspective-origin values</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Stack&#x27;</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-47">&#x00a7;</a>
+              </div>
+              <p>TODO - currently assumes all lengths supplied are in px - need a way to calculate non-px values</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">xt</span>(items.<span class="hljs-property">perspective</span>) &amp;&amp; !<span class="hljs-title function_">xt</span>(items.<span class="hljs-property">perspectiveZ</span>)) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p>TODO - this isn’t working! see Demo DOM 003 where attempting to set the perspective in CSS causes the demo to fail</p>
 <ul>
@@ -1416,11 +1465,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-47">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <h5 id="dom-element-class-attribute-management">DOM element class attribute management</h5>
 
@@ -1429,11 +1478,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-48">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p><code>addClasses</code></p>
 
@@ -1461,11 +1510,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-49">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p><code>removeClasses</code></p>
 
@@ -1499,11 +1548,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-50">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <h5 id="dom-element-corners-management">DOM element corners management</h5>
 <p>Scrawl-canvas keeps track of its DOM wrapper element’s positions by creating four zero-dimension &lt;div&gt; elements and adding them as absolutely positioned children to the element. We can then get these children to report on their real coordinates (even when the parent is 3D rotated) by calling <code>getClientRects</code> on them.</p>
@@ -1513,19 +1562,22 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-51">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p><code>addPathCorners</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">addPathCorners</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">emptyElementTagNames</span> = [<span class="hljs-string">&#x27;AREA&#x27;</span>, <span class="hljs-string">&#x27;BASE&#x27;</span>, <span class="hljs-string">&#x27;BR&#x27;</span>, <span class="hljs-string">&#x27;COL&#x27;</span>, <span class="hljs-string">&#x27;EMBED&#x27;</span>, <span class="hljs-string">&#x27;HR&#x27;</span>, <span class="hljs-string">&#x27;IMG&#x27;</span>, <span class="hljs-string">&#x27;INPUT&#x27;</span>, <span class="hljs-string">&#x27;KEYGEN&#x27;</span>, <span class="hljs-string">&#x27;LINK&#x27;</span>, <span class="hljs-string">&#x27;META&#x27;</span>, <span class="hljs-string">&#x27;PARAM&#x27;</span>, <span class="hljs-string">&#x27;SOURCE&#x27;</span>, <span class="hljs-string">&#x27;TRACK&#x27;</span>, <span class="hljs-string">&#x27;WBR&#x27;</span>, <span class="hljs-string">&#x27;CANVAS&#x27;</span>];
+    P.<span class="hljs-property">addPathCorners</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span> &amp;&amp; !<span class="hljs-variable language_">this</span>.<span class="hljs-property">noUserInteraction</span>) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span> &amp;&amp; 
+            !<span class="hljs-variable language_">this</span>.<span class="hljs-property">noUserInteraction</span> &amp;&amp; 
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">emptyElementTagNames</span>.<span class="hljs-title function_">indexOf</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">domElement</span>.<span class="hljs-property">tagName</span>) &lt; <span class="hljs-number">0</span>) {
 
             <span class="hljs-keyword">let</span> pointMaker = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
@@ -1582,11 +1634,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-52">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p><code>checkCornerPositions</code></p>
 
@@ -1661,11 +1713,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-53">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p><code>getCornerCoordinate</code></p>
 
@@ -1681,11 +1733,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-54">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <h5 id="collision-detection">Collision detection</h5>
 
@@ -1694,11 +1746,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-55">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p><code>cleanPathObject</code></p>
 <ul>
@@ -1716,29 +1768,40 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
 
             <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathCorners</span>.<span class="hljs-property">length</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">addPathCorners</span>();
 
-            <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentCornersData</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentCornersData</span> = [];
+            <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">pathCorners</span>.<span class="hljs-property">length</span>) {
 
-            <span class="hljs-keyword">let</span> cornerData = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentCornersData</span>;
-            cornerData.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
-            cornerData.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkCornerPositions</span>());
+                <span class="hljs-keyword">if</span> (!<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentCornersData</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentCornersData</span> = [];
 
-            <span class="hljs-keyword">let</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path</span>2D();
-            p.<span class="hljs-title function_">moveTo</span>(cornerData[<span class="hljs-number">0</span>], cornerData[<span class="hljs-number">1</span>]);
-            p.<span class="hljs-title function_">lineTo</span>(cornerData[<span class="hljs-number">2</span>], cornerData[<span class="hljs-number">3</span>]);
-            p.<span class="hljs-title function_">lineTo</span>(cornerData[<span class="hljs-number">4</span>], cornerData[<span class="hljs-number">5</span>]);
-            p.<span class="hljs-title function_">lineTo</span>(cornerData[<span class="hljs-number">6</span>], cornerData[<span class="hljs-number">7</span>]);
-            p.<span class="hljs-title function_">closePath</span>();
+                <span class="hljs-keyword">let</span> cornerData = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentCornersData</span>;
+                cornerData.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+                cornerData.<span class="hljs-title function_">push</span>(...<span class="hljs-variable language_">this</span>.<span class="hljs-title function_">checkCornerPositions</span>());
+
+                <span class="hljs-keyword">let</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path</span>2D();
+                p.<span class="hljs-title function_">moveTo</span>(cornerData[<span class="hljs-number">0</span>], cornerData[<span class="hljs-number">1</span>]);
+                p.<span class="hljs-title function_">lineTo</span>(cornerData[<span class="hljs-number">2</span>], cornerData[<span class="hljs-number">3</span>]);
+                p.<span class="hljs-title function_">lineTo</span>(cornerData[<span class="hljs-number">4</span>], cornerData[<span class="hljs-number">5</span>]);
+                p.<span class="hljs-title function_">lineTo</span>(cornerData[<span class="hljs-number">6</span>], cornerData[<span class="hljs-number">7</span>]);
+                p.<span class="hljs-title function_">closePath</span>();
+            }
+            <span class="hljs-keyword">else</span> {
+                <span class="hljs-keyword">let</span> p = <span class="hljs-variable language_">this</span>.<span class="hljs-property">pathObject</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Path</span>2D();
+                p.<span class="hljs-title function_">moveTo</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+                p.<span class="hljs-title function_">lineTo</span>(<span class="hljs-number">10</span>, <span class="hljs-number">0</span>);
+                p.<span class="hljs-title function_">lineTo</span>(<span class="hljs-number">0</span>, <span class="hljs-number">10</span>);
+                p.<span class="hljs-title function_">lineTo</span>(-<span class="hljs-number">10</span>, <span class="hljs-number">0</span>);
+                p.<span class="hljs-title function_">closePath</span>();
+            }
         }
     };</pre></div></div>
             
         </li>
         
         
-        <li id="section-56">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p><code>checkHit</code></p>
 
@@ -1802,11 +1865,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-57">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <h5 id="display-cycle-functionality">Display cycle functionality</h5>
 
@@ -1815,11 +1878,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-58">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <p><code>cleanRotation</code></p>
 
@@ -1856,11 +1919,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-59">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p>TODO check to see if path roll needs to be added</p>
 
@@ -1900,11 +1963,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-60">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p><code>cleanOffsetZ</code></p>
 
@@ -1915,11 +1978,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-61">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p>nothing to do here - function only exists in case we need to do stuff in future Scrawl-canvas version</p>
 
@@ -1931,11 +1994,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-62">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <p><code>cleanContent</code></p>
 
@@ -1953,11 +2016,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-63">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <p><code>cleanDisplayShape</code> - overwritten in Stack and Canvas artefacts via the displayShape mixin</p>
 
@@ -1968,11 +2031,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-64">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <p><code>cleanDisplayArea</code> - overwritten in Stack and Canvas artefacts via the displayShape mixin</p>
 
@@ -1983,11 +2046,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-65">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <p><code>prepareStamp</code> - check all the dirty flags and call the appropriate <code>clean</code> functions if they are set</p>
 
@@ -2026,11 +2089,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-66">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <p><code>stamp</code> - builds a set of Strings which can then be applied to the DOM wrapper’s element’s <code>style</code> attribute.</p>
 <ul>
@@ -2054,11 +2117,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-67">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <p>do not process if the DOM element is missing</p>
 
@@ -2069,11 +2132,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-68">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <p>calculate transform strings on each iteration</p>
 
@@ -2119,11 +2182,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-69">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <p>determine whether there is a need to trigger a redraw of the DOM element</p>
 
@@ -2138,11 +2201,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-70">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <p>update artefacts subscribed to this artefact (using it as their pivot or mimic source), if required</p>
 
@@ -2153,11 +2216,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-71">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
+                <a class="ss" href="#section-73">&#x00a7;</a>
               </div>
               <p>if this artefact’s pivot or mimic source was playing up, reset appropriate dirty flags so we can try and fix on next iteration</p>
 
@@ -2180,11 +2243,200 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-72">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-72">&#x00a7;</a>
+                <a class="ss" href="#section-74">&#x00a7;</a>
+              </div>
+              <p><code>initializeAccessibility</code> - internal function - similar to <code>initializeDomLayout</code>, this function gets called by the Stack, Canvas and Element factory function constructors</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    P.<span class="hljs-property">initializeAccessibility</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">reduceMotionAction</span> = λ<span class="hljs-literal">null</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">noPreferenceMotionAction</span> = λ<span class="hljs-literal">null</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">colorSchemeLightAction</span> = λ<span class="hljs-literal">null</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">colorSchemeDarkAction</span> = λ<span class="hljs-literal">null</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">reduceTransparencyAction</span> = λ<span class="hljs-literal">null</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">noPreferenceTransparencyAction</span> = λ<span class="hljs-literal">null</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">reduceDataAction</span> = λ<span class="hljs-literal">null</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">noPreferenceDataAction</span> = λ<span class="hljs-literal">null</span>;
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-75">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-75">&#x00a7;</a>
+              </div>
+              <p><strong>prefers-reduced-motion</strong> accessibility user choice</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">reduceMotionAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">reduceMotionAction</span> = item;
+    };
+    P.<span class="hljs-property">setReduceMotionAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">reduceMotionAction</span> = item;
+    };
+    S.<span class="hljs-property">noPreferenceMotionAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">noPreferenceMotionAction</span> = item;
+    };
+    P.<span class="hljs-property">setNoPreferenceMotionAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">noPreferenceMotionAction</span> = item;
+    };
+    P.<span class="hljs-property">reducedMotionActions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+        <span class="hljs-keyword">const</span> here = <span class="hljs-variable language_">this</span>.<span class="hljs-property">here</span>;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(here)) {
+
+            <span class="hljs-keyword">const</span> accessibilityFlag = here.<span class="hljs-property">prefersReducedMotion</span>;
+
+            <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(accessibilityFlag)) {
+
+                <span class="hljs-keyword">if</span> (accessibilityFlag) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">reduceMotionAction</span>();
+                <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">noPreferenceMotionAction</span>();
+            }
+        }
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-76">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-76">&#x00a7;</a>
+              </div>
+              <p><strong>prefers-color-scheme</strong> accessibility user choice</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">colorSchemeLightAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">colorSchemeLightAction</span> = item;
+    };
+    P.<span class="hljs-property">setColorSchemeLightAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">colorSchemeLightAction</span> = item;
+    };
+    S.<span class="hljs-property">colorSchemeDarkAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">colorSchemeDarkAction</span> = item;
+    };
+    P.<span class="hljs-property">setColorSchemeDarkAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">colorSchemeDarkAction</span> = item;
+    };
+    P.<span class="hljs-property">colorSchemeActions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+        <span class="hljs-keyword">const</span> here = <span class="hljs-variable language_">this</span>.<span class="hljs-property">here</span>;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(here)) {
+
+            <span class="hljs-keyword">const</span> accessibilityFlag = here.<span class="hljs-property">prefersDarkColorScheme</span>;
+
+            <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(accessibilityFlag)) {
+
+                <span class="hljs-keyword">if</span> (accessibilityFlag) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">colorSchemeDarkAction</span>();
+                <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">colorSchemeLightAction</span>();
+            }
+        }
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-77">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-77">&#x00a7;</a>
+              </div>
+              <p><strong>prefers-reduced-transparency</strong> accessibility user choice</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">reduceTransparencyAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">reduceTransparencyAction</span> = item;
+    };
+    P.<span class="hljs-property">setReduceTransparencyAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">reduceTransparencyAction</span> = item;
+    };
+    S.<span class="hljs-property">noPreferenceTransparencyAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">noPreferenceTransparencyAction</span> = item;
+    };
+    P.<span class="hljs-property">setNoPreferenceTransparencyAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">noPreferenceTransparencyAction</span> = item;
+    };
+    P.<span class="hljs-property">reducedTransparencyActions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+        <span class="hljs-keyword">const</span> here = <span class="hljs-variable language_">this</span>.<span class="hljs-property">here</span>;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(here)) {
+
+            <span class="hljs-keyword">const</span> accessibilityFlag = here.<span class="hljs-property">prefersReduceTransparency</span>;
+
+            <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(accessibilityFlag)) {
+
+                <span class="hljs-keyword">if</span> (accessibilityFlag) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">reduceTransparencyAction</span>();
+                <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">noPreferenceTransparencyAction</span>();
+            }
+        }
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-78">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-78">&#x00a7;</a>
+              </div>
+              <p><strong>prefers-reduced-data</strong> accessibility user choice</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    S.<span class="hljs-property">reduceDataAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">reduceDataAction</span> = item;
+    };
+    P.<span class="hljs-property">setReduceDataAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">reduceDataAction</span> = item;
+    };
+    S.<span class="hljs-property">noPreferenceDataAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">noPreferenceDataAction</span> = item;
+    };
+    P.<span class="hljs-property">setNoPreferenceDataAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">noPreferenceDataAction</span> = item;
+    };
+    P.<span class="hljs-property">reducedDataActions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+        <span class="hljs-keyword">const</span> here = <span class="hljs-variable language_">this</span>.<span class="hljs-property">here</span>;
+
+        <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(here)) {
+
+            <span class="hljs-keyword">const</span> accessibilityFlag = here.<span class="hljs-property">prefersReduceData</span>;
+
+            <span class="hljs-keyword">if</span> (<span class="hljs-title function_">xt</span>(accessibilityFlag)) {
+
+                <span class="hljs-keyword">if</span> (accessibilityFlag) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">reduceDataAction</span>();
+                <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">noPreferenceDataAction</span>();
+            }
+        }
+    };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-79">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-79">&#x00a7;</a>
               </div>
               <p><code>apply</code></p>
 <ul>
@@ -2209,11 +2461,11 @@ S.<span class="hljs-property">trackHere</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-73">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-73">&#x00a7;</a>
+                <a class="ss" href="#section-80">&#x00a7;</a>
               </div>
               <p>Return the prototype</p>
 

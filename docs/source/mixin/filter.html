@@ -845,13 +845,30 @@
 
                     <span class="hljs-keyword">if</span> (img) {
 
-                        <span class="hljs-keyword">if</span> (img.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Noise&#x27;</span>) {
+                        <span class="hljs-keyword">if</span> (img.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Noise&#x27;</span> || img.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;Cell&#x27;</span> || img.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;RawAsset&#x27;</span> || img.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;RdAsset&#x27;</span>) {
 
                             img.<span class="hljs-title function_">checkSource</span>();
                         }
 
-                        <span class="hljs-keyword">let</span> width = img.<span class="hljs-property">sourceNaturalWidth</span> || img.<span class="hljs-property">sourceNaturalDimensions</span>[<span class="hljs-number">0</span>] || img.<span class="hljs-property">currentDimensions</span>[<span class="hljs-number">0</span>],
-                            height = img.<span class="hljs-property">sourceNaturalHeight</span> || img.<span class="hljs-property">sourceNaturalDimensions</span>[<span class="hljs-number">1</span>] || img.<span class="hljs-property">currentDimensions</span>[<span class="hljs-number">1</span>];
+                        <span class="hljs-keyword">let</span> width = img.<span class="hljs-property">sourceNaturalWidth</span>,
+                            height = img.<span class="hljs-property">sourceNaturalHeight</span>,
+                            snd = img.<span class="hljs-property">sourceNaturalDimensions</span>,
+                            cnd = img.<span class="hljs-property">currentDimensions</span>;
+
+                        <span class="hljs-keyword">if</span> (!width || !height) {
+
+                            <span class="hljs-keyword">if</span> (snd &amp;&amp; snd[<span class="hljs-number">0</span>] &amp;&amp; snd[<span class="hljs-number">1</span>]) {
+
+                                width = width || snd[<span class="hljs-number">0</span>];
+                                height = height || snd[<span class="hljs-number">1</span>];
+                            }
+
+                            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cnd &amp;&amp; cnd[<span class="hljs-number">0</span>] &amp;&amp; cnd[<span class="hljs-number">1</span>]) {
+
+                                width = width || cnd[<span class="hljs-number">0</span>];
+                                height = height || cnd[<span class="hljs-number">1</span>];
+                            }
+                        }
 
                         <span class="hljs-keyword">if</span> (width &amp;&amp; height) {
 
@@ -929,7 +946,7 @@
                         obj.<span class="hljs-property">assetData</span> = {
                             <span class="hljs-attr">width</span>: <span class="hljs-number">1</span>,
                             <span class="hljs-attr">height</span>: <span class="hljs-number">1</span>,
-                            <span class="hljs-attr">data</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>],
+                            <span class="hljs-attr">data</span>: <span class="hljs-keyword">new</span> <span class="hljs-title class_">Uint</span>8ClampedArray(<span class="hljs-number">4</span>),
                         }
                     }
                 }

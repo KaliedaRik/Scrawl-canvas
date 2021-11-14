@@ -838,244 +838,7 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
-              <h2 id="accessibility-and-user-defined-preferences">Accessibility, and user-defined, preferences</h2>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-12">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
-              </div>
-              <h4 id="demos">Demos:</h4>
-<ul>
-<li><a href="../../demo/canvas-033.html">Canvas-033</a> - User preferences: prefers-color-scheme; prefers-reduced-motion</li>
-</ul>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-13">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
-              </div>
-              <h4 id="prefers-reduced-motion-media-query">prefers-reduced-motion media query</h4>
-<p>In many devices users have the option to set a system-wide flag indicating that, wherever possible, application and website animations should be reduced and/or prevented from playing. Scrawl-canvas investigates for this setting and supplies hooks to which developers can attach hook functions defining the actions to take when reduced motion has been requested, and for whenever this setting is changed.</p>
-<p>Exported function <code>reducedMotionActions</code> - <strong>we strongly recommend that, whenever a &lt;canvas&gt; scene is animated, developers call this function as part of their definition code.</strong> By default this function will run the <code>reducedMotion_reduceAction</code> function when reduced motion has been requested; in all other cases the <code>reducedMotion_noPreferenceAction</code> function will be invoked.</p>
-<ul>
-<li><code>reducedMotion_reduceAction</code> is by default a null-function. If actions need to be taken to reduce the speed of a canvas animation, or to stop it, then coders should replace this hook function with their own. Set using the <code>scrawl.setReduceMotionAction()</code> function</li>
-<li><code>reducedMotion_noPreferenceAction</code> - again, a null function by default. Coders can replace it with their own function to revert the actions set out in their reduceAction function (for instance, to restart a canvas animation). Set using the <code>scrawl.setNoPreferenceMotionAction()</code> function</li>
-</ul>
-<pre><code>__Example code__
-
-<span class="hljs-keyword">const</span> myAnimation = scrawl.<span class="hljs-title function_">makeRender</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;scene-animation&#x27;</span>,
-    <span class="hljs-attr">target</span>: mycanvas,
-    <span class="hljs-attr">delay</span>: <span class="hljs-literal">true</span>,
-});
-
-scrawl.<span class="hljs-title function_">setReduceMotionAction</span>(<span class="hljs-function">() =&gt;</span> myAnimation.<span class="hljs-title function_">halt</span>());
-scrawl.<span class="hljs-title function_">setNoPreferenceMotionAction</span>(<span class="hljs-function">() =&gt;</span> myAnimation.<span class="hljs-title function_">run</span>());
-
-scrawl.<span class="hljs-title function_">reducedMotionActions</span>();
-</code></pre>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> reducedMotionMediaQuery = <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">matchMedia</span>(<span class="hljs-string">&quot;(prefers-reduced-motion: reduce)&quot;</span>);
-
-<span class="hljs-keyword">let</span> prefersReducedMotion = reducedMotionMediaQuery.<span class="hljs-property">matches</span>,
-    reducedMotion_reduceAction = λ<span class="hljs-literal">null</span>,
-    reducedMotion_noPreferenceAction = λ<span class="hljs-literal">null</span>;
-
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">reducedMotionActions</span> = (<span class="hljs-params"></span>) =&gt; {
-
-    <span class="hljs-keyword">if</span> (prefersReducedMotion) <span class="hljs-title function_">reducedMotion_reduceAction</span>();
-    <span class="hljs-keyword">else</span> <span class="hljs-title function_">reducedMotion_noPreferenceAction</span>();
-};
-
-reducedMotionMediaQuery.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;change&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
-
-    prefersReducedMotion = reducedMotionMediaQuery.<span class="hljs-property">matches</span>;
-    <span class="hljs-title function_">reducedMotionActions</span>();
-});
-
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">setReduceMotionAction</span> = (<span class="hljs-params">func</span>) =&gt; reducedMotion_reduceAction = func;
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">setNoPreferenceMotionAction</span> = (<span class="hljs-params">func</span>) =&gt; reducedMotion_noPreferenceAction = func;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-14">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
-              </div>
-              <h4 id="prefers-color-scheme-media-query">prefers-color-scheme media query</h4>
-<p>In many devices users have the option to set a system-wide flag indicating that, wherever possible, application and website interfaces should use a dark, or light, color scheme. Scrawl-canvas investigates for this setting and supplies hooks to which developers can attach hook functions defining the actions to take when a preference has been selected, and for whenever this setting is changed. Where no selection has been made, Scrawl-canvas assumes that a light color scheme is preferred.</p>
-<p>Exported function <code>colorSchemeActions</code> - depending on the user selection, the appropriate color scheme hook function is run; where no selection has been made, this will be the lightAction function.</p>
-<ul>
-<li><code>colorScheme_darkAction</code> is by default a null-function. If actions need to be taken to update a scene to match surrounding dark-theme designs, then coders should replace this hook function with their own. Set using the <code>scrawl.setColorSchemeDarkAction()</code> function</li>
-<li><code>colorScheme_lightAction</code> - again, a null function by default. Coders can replace it with their own function to revert the actions set out in their darkAction function. Set using the <code>scrawl.setColorSchemeLightAction()</code> function</li>
-</ul>
-<pre><code>__Example code__
-
-<span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">mycanvas</span>;
-
-<span class="hljs-keyword">const</span> myBlock = scrawl.<span class="hljs-title function_">makeBlock</span>({
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;myThemedBlock&#x27;</span>,
-    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
-    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;30%&#x27;</span>, <span class="hljs-string">&#x27;30%&#x27;</span>],
-    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fill&#x27;</span>,
-});
-
-scrawl.<span class="hljs-title function_">setColorSchemeDarkAction</span>(<span class="hljs-function">() =&gt;</span> {
-    canvas.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;black&#x27;</span>});
-    myBlock.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;white&#x27;</span>});
-});
-
-scrawl.<span class="hljs-title function_">setColorSchemeLightAction</span>(<span class="hljs-function">() =&gt;</span> {
-    canvas.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;white&#x27;</span>});
-    myBlock.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;black&#x27;</span>});
-});
-
-scrawl.<span class="hljs-title function_">colorSchemeActions</span>();
-</code></pre>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>
-<span class="hljs-keyword">const</span> colorSchemeMediaQuery = <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">matchMedia</span>(<span class="hljs-string">&quot;(prefers-color-scheme: dark)&quot;</span>);
-
-<span class="hljs-keyword">let</span> prefersColorScheme = colorSchemeMediaQuery.<span class="hljs-property">matches</span>,
-    colorScheme_darkAction = λ<span class="hljs-literal">null</span>,
-    colorScheme_lightAction = λ<span class="hljs-literal">null</span>;
-
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">colorSchemeActions</span> = (<span class="hljs-params"></span>) =&gt; {
-
-    <span class="hljs-keyword">if</span> (prefersColorScheme) <span class="hljs-title function_">colorScheme_darkAction</span>();
-    <span class="hljs-keyword">else</span> <span class="hljs-title function_">colorScheme_lightAction</span>();
-};
-
-colorSchemeMediaQuery.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;change&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
-
-    prefersColorScheme = colorSchemeMediaQuery.<span class="hljs-property">matches</span>;
-    <span class="hljs-title function_">colorSchemeActions</span>();
-});
-
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">setColorSchemeLightAction</span> = (<span class="hljs-params">func</span>) =&gt; colorScheme_lightAction = func;
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">setColorSchemeDarkAction</span> = (<span class="hljs-params">func</span>) =&gt; colorScheme_darkAction = func;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
-              </div>
-              <h4 id="prefers-reduced-transparency-media-query">prefers-reduced-transparency media query</h4>
-<p>See the <a href="https://www.w3.org/TR/mediaqueries-5/#descdef-media-prefers-reduced-transparency">W3 Media Queries Level 5 documentation</a> for more information</p>
-<p>Exported function <code>reducedTransparencyActions</code> - depending on the user selection, the appropriate hook function is run; where no selection has been made, this will be the noPreferenceAction function.</p>
-<ul>
-<li><code>reduceTransparency_noPreferenceAction</code></li>
-<li><code>reduceTransparency_reduceAction</code></li>
-</ul>
-<pre><code>__Example code__
-
-<span class="hljs-variable constant_">TODO</span>
-</code></pre>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>
-<span class="hljs-keyword">const</span> reducedTransparencyMediaQuery = <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">matchMedia</span>(<span class="hljs-string">&quot;(prefers-reduced-transparency: reduce)&quot;</span>);
-
-<span class="hljs-keyword">let</span> reduceTransparency = reducedTransparencyMediaQuery.<span class="hljs-property">matches</span>,
-    reduceTransparency_reduceAction = λ<span class="hljs-literal">null</span>,
-    reduceTransparency_noPreferenceAction = λ<span class="hljs-literal">null</span>;
-
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">reducedTransparencyActions</span> = (<span class="hljs-params"></span>) =&gt; {
-
-    <span class="hljs-keyword">if</span> (reduceTransparency) <span class="hljs-title function_">reduceTransparency_reduceAction</span>();
-    <span class="hljs-keyword">else</span> <span class="hljs-title function_">reduceTransparency_noPreferenceAction</span>();
-};
-
-reducedTransparencyMediaQuery.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;change&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
-
-    reduceTransparency = reducedTransparencyMediaQuery.<span class="hljs-property">matches</span>;
-    <span class="hljs-title function_">reducedTransparencyActions</span>();
-});
-
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">setReduceTransparencyAction</span> = (<span class="hljs-params">func</span>) =&gt; reduceTransparency_reduceAction = func;
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">setNoPreferenceTransparencyAction</span> = (<span class="hljs-params">func</span>) =&gt; reduceTransparency_noPreferenceAction = func;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
-              </div>
-              <h4 id="prefers-reduced-data-media-query">prefers-reduced-data media query</h4>
-<p>See the <a href="https://www.w3.org/TR/mediaqueries-5/#descdef-media-prefers-reduced-data">W3 Media Queries Level 5 documentation</a> for more information</p>
-<p>Exported function <code>reducedDataActions</code> - depending on the user selection, the appropriate hook function is run; where no selection has been made, this will be the noPreferenceAction function.</p>
-<ul>
-<li><code>reduceData_noPreferenceAction</code></li>
-<li><code>reduceData_reduceAction</code></li>
-</ul>
-<pre><code>__Example code__
-
-<span class="hljs-variable constant_">TODO</span>
-</code></pre>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>
-<span class="hljs-keyword">const</span> reducedDataMediaQuery = <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">matchMedia</span>(<span class="hljs-string">&quot;(prefers-reduced-data: reduce)&quot;</span>);
-
-<span class="hljs-keyword">let</span> reducedData = reducedDataMediaQuery.<span class="hljs-property">matches</span>,
-    reduceData_reduceAction = λ<span class="hljs-literal">null</span>,
-    reduceData_noPreferenceAction = λ<span class="hljs-literal">null</span>;
-
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">reducedDataActions</span> = (<span class="hljs-params"></span>) =&gt; {
-
-    <span class="hljs-keyword">if</span> (reducedData) <span class="hljs-title function_">reduceData_reduceAction</span>();
-    <span class="hljs-keyword">else</span> <span class="hljs-title function_">reduceData_noPreferenceAction</span>();
-};
-
-reducedDataMediaQuery.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;change&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
-
-    reducedData = reducedDataMediaQuery.<span class="hljs-property">matches</span>;
-    <span class="hljs-title function_">reducedDataActions</span>();
-});
-
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">setReduceDataAction</span> = (<span class="hljs-params">func</span>) =&gt; reduceData_reduceAction = func;
-<span class="hljs-keyword">const</span> <span class="hljs-title function_">setNoPreferenceDataAction</span> = (<span class="hljs-params">func</span>) =&gt; reduceData_noPreferenceAction = func;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
-              </div>
-              <p>Monitoring the device pixel ratio</p>
+              <h2 id="monitoring-the-device-pixel-ratio">Monitoring the device pixel ratio</h2>
 
             </div>
             
@@ -1112,41 +875,13 @@ reducedDataMediaQuery.<span class="hljs-title function_">addEventListener</span>
         <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> [name, wrapper] <span class="hljs-keyword">of</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(cell)) {
 
             wrapper.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
-        }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
-              </div>
-              <p>window.setTimeout(() =&gt; {</p>
+        }
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>
-            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> [name, ent] <span class="hljs-keyword">of</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(entity)) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> [name, ent] <span class="hljs-keyword">of</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(entity)) {
 
-                ent.<span class="hljs-property">dirtyHost</span> = <span class="hljs-literal">true</span>;
-            }</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-19">&#x00a7;</a>
-              </div>
-              <p>}, 20);</p>
+            ent.<span class="hljs-property">dirtyHost</span> = <span class="hljs-literal">true</span>;
+        }
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>
         <span class="hljs-keyword">if</span> (!ignorePixelRatio) <span class="hljs-title function_">dpr_changeAction</span>();
     }
 
@@ -1158,11 +893,11 @@ reducedDataMediaQuery.<span class="hljs-title function_">addEventListener</span>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-20">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 
@@ -1175,22 +910,6 @@ reducedDataMediaQuery.<span class="hljs-title function_">addEventListener</span>
     removeNativeListener,
 
     makeAnimationObserver,
-
-    reducedMotionActions,
-    setReduceMotionAction,
-    setNoPreferenceMotionAction,
-
-    colorSchemeActions,
-    setColorSchemeDarkAction,
-    setColorSchemeLightAction,
-
-    reducedTransparencyActions,
-    setReduceTransparencyAction,
-    setNoPreferenceTransparencyAction,
-
-    reducedDataActions,
-    setReduceDataAction,
-    setNoPreferenceDataAction,
 
     getPixelRatio,
     setPixelRatioChangeAction,
