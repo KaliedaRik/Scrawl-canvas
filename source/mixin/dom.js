@@ -13,7 +13,7 @@
 
 // #### Imports
 import { constructors, artefact } from '../core/library.js';
-import { mergeOver, pushUnique, removeItem, isa_obj, isa_dom, isa_quaternion, xt, xta, λnull, Ωempty } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, isa_obj, isa_dom, isa_quaternion, xt, xta, λnull, Ωempty, isa_fn } from '../core/utilities.js';
 import { uiSubscribedElements, currentCorePosition, applyCoreResizeListener, addLocalMouseMoveListener, removeLocalMouseMoveListener } from '../core/userInteraction.js';
 import { addDomShowElement, setDomShowRequired, domShow } from '../core/document.js';
 
@@ -94,6 +94,16 @@ export default function (P = Ωempty) {
 
 // __includeInTabNavigation__ - pseudo-attribute which is not retained by the wrapper object. See `updateDomAttributes` function below for details on how to use this functionality when creating or updating (via `set`), for example, Element objects
         includeInTabNavigation: false,
+
+// These actions are all related to user accessibility and the ability of the user to define their preferences at the operation system or device level. Listeners to capture the state of, and changes in, those values are set up in `core/userInteraction.js`. Each canvas, stack or (subscribed) element can take advantage of this functionality to update its appearance dependant on the user's preferences.
+        reduceMotionAction: null,
+        noPreferenceMotionAction: null,
+        colorSchemeLightAction: null,
+        colorSchemeDarkAction: null,
+        reduceTransparencyAction: null,
+        noPreferenceTransparencyAction: null,
+        reduceDataAction: null,
+        noPreferenceDataAction: null,
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -881,6 +891,139 @@ S.trackHere = function(val) {
             this.dirtyScale = true;
         }
     };
+
+
+// `initializeAccessibility` - internal function - similar to `initializeDomLayout`, this function gets called by the Stack, Canvas and Element factory function constructors
+    P.initializeAccessibility = function () {
+
+        this.reduceMotionAction = λnull;
+        this.noPreferenceMotionAction = λnull;
+        this.colorSchemeLightAction = λnull;
+        this.colorSchemeDarkAction = λnull;
+        this.reduceTransparencyAction = λnull;
+        this.noPreferenceTransparencyAction = λnull;
+        this.reduceDataAction = λnull;
+        this.noPreferenceDataAction = λnull;
+    };
+
+// __prefers-reduced-motion__ accessibility user choice
+    S.reduceMotionAction = function (item) {
+        if (isa_fn(item)) this.reduceMotionAction = item;
+    };
+    P.setReduceMotionAction = function (item) {
+        if (isa_fn(item)) this.reduceMotionAction = item;
+    };
+    S.noPreferenceMotionAction = function (item) {
+        if (isa_fn(item)) this.noPreferenceMotionAction = item;
+    };
+    P.setNoPreferenceMotionAction = function (item) {
+        if (isa_fn(item)) this.noPreferenceMotionAction = item;
+    };
+    P.reducedMotionActions = function () {
+
+        const here = this.here;
+
+        if (xt(here)) {
+
+            const accessibilityFlag = here.prefersReducedMotion;
+
+            if (xt(accessibilityFlag)) {
+
+                if (accessibilityFlag) this.reduceMotionAction();
+                else this.noPreferenceMotionAction();
+            }
+        }
+    };
+
+// __prefers-color-scheme__ accessibility user choice
+    S.colorSchemeLightAction = function (item) {
+        if (isa_fn(item)) this.colorSchemeLightAction = item;
+    };
+    P.setColorSchemeLightAction = function (item) {
+        if (isa_fn(item)) this.colorSchemeLightAction = item;
+    };
+    S.colorSchemeDarkAction = function (item) {
+        if (isa_fn(item)) this.colorSchemeDarkAction = item;
+    };
+    P.setColorSchemeDarkAction = function (item) {
+        if (isa_fn(item)) this.colorSchemeDarkAction = item;
+    };
+    P.colorSchemeActions = function () {
+
+        const here = this.here;
+
+        if (xt(here)) {
+
+            const accessibilityFlag = here.prefersDarkColorScheme;
+
+            if (xt(accessibilityFlag)) {
+
+                if (accessibilityFlag) this.colorSchemeDarkAction();
+                else this.colorSchemeLightAction();
+            }
+        }
+    };
+
+
+// __prefers-reduced-transparency__ accessibility user choice
+    S.reduceTransparencyAction = function (item) {
+        if (isa_fn(item)) this.reduceTransparencyAction = item;
+    };
+    P.setReduceTransparencyAction = function (item) {
+        if (isa_fn(item)) this.reduceTransparencyAction = item;
+    };
+    S.noPreferenceTransparencyAction = function (item) {
+        if (isa_fn(item)) this.noPreferenceTransparencyAction = item;
+    };
+    P.setNoPreferenceTransparencyAction = function (item) {
+        if (isa_fn(item)) this.noPreferenceTransparencyAction = item;
+    };
+    P.reducedTransparencyActions = function () {
+
+        const here = this.here;
+
+        if (xt(here)) {
+
+            const accessibilityFlag = here.prefersReduceTransparency;
+
+            if (xt(accessibilityFlag)) {
+
+                if (accessibilityFlag) this.reduceTransparencyAction();
+                else this.noPreferenceTransparencyAction();
+            }
+        }
+    };
+
+
+// __prefers-reduced-data__ accessibility user choice
+    S.reduceDataAction = function (item) {
+        if (isa_fn(item)) this.reduceDataAction = item;
+    };
+    P.setReduceDataAction = function (item) {
+        if (isa_fn(item)) this.reduceDataAction = item;
+    };
+    S.noPreferenceDataAction = function (item) {
+        if (isa_fn(item)) this.noPreferenceDataAction = item;
+    };
+    P.setNoPreferenceDataAction = function (item) {
+        if (isa_fn(item)) this.noPreferenceDataAction = item;
+    };
+    P.reducedDataActions = function () {
+
+        const here = this.here;
+
+        if (xt(here)) {
+
+            const accessibilityFlag = here.prefersReduceData;
+
+            if (xt(accessibilityFlag)) {
+
+                if (accessibilityFlag) this.reduceDataAction();
+                else this.noPreferenceDataAction();
+            }
+        }
+    };
+
 
 // `apply`
 // + I really don't like this functionality - see if we can purge it from the code base?

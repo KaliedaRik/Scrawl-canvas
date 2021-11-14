@@ -19,7 +19,11 @@ const uiSubscribedElements = [];
 // Local boolean flags. 
 let trackMouse = false,
     mouseChanged = false,
-    viewportChanged = false;
+    viewportChanged = false,
+    prefersReducedMotionChanged = false,
+    prefersDarkColorSchemeChanged = false,
+    prefersReduceTransparencyChanged = false,
+    prefersReduceDataChanged = false;
 
 
 // `Exported object` (to modules and the scrawl object). The __currentCorePosition__ object holds the __global__ mouse cursor position, alongside browser view dimensions and scroll position
@@ -30,9 +34,78 @@ const currentCorePosition = {
     scrollY: 0,
     w: 0,
     h: 0,
-    type: 'mouse'
+    type: 'mouse',
+    prefersReducedMotion: false,
+    prefersDarkColorScheme: false,
+    prefersReduceTransparency: false,
+    prefersReduceData: false,
 };
 
+
+// ### Accessibility preferences
+
+// __reducedMotionMediaQuery__ - real-time check on the `prefers-reduced-motion` user preference, as set for the device or OS
+const reducedMotionMediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+reducedMotionMediaQuery.addEventListener('change', () => {
+
+    let res = reducedMotionMediaQuery.matches;
+
+    if (currentCorePosition.prefersReducedMotion !== res) {
+
+        currentCorePosition.prefersReducedMotion = res;
+        prefersReducedMotionChanged = true;
+    }
+});
+currentCorePosition.prefersReducedMotion = reducedMotionMediaQuery.matches;
+
+// __colorSchemeMediaQuery__ - real-time check on the `prefers-color-scheme` user preference, as set for the device or OS
+const colorSchemeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+colorSchemeMediaQuery.addEventListener('change', () => {
+
+    let res = colorSchemeMediaQuery.matches;
+
+    if (currentCorePosition.prefersDarkColorScheme !== res) {
+
+        currentCorePosition.prefersDarkColorScheme = res;
+        prefersDarkColorSchemeChanged = true;
+    }
+});
+currentCorePosition.prefersDarkColorScheme = colorSchemeMediaQuery.matches;
+
+// __reducedTransparencyMediaQuery__ - real-time check on the `prefers-reduced-transparency` user preference, as set for the device or OS
+const reducedTransparencyMediaQuery = window.matchMedia("(prefers-reduced-transparency: reduce)");
+
+reducedTransparencyMediaQuery.addEventListener('change', () => {
+
+    let res = reducedTransparencyMediaQuery.matches;
+
+    if (currentCorePosition.prefersReduceTransparency !== res) {
+
+        currentCorePosition.prefersReduceTransparency = res;
+        prefersReduceTransparencyChanged = true;
+    }
+});
+currentCorePosition.prefersReduceTransparency = reducedTransparencyMediaQuery.matches;
+
+// __reducedDataMediaQuery__ - real-time check on the `prefers-reduced-data` user preference, as set for the device or OS
+const reducedDataMediaQuery = window.matchMedia("(prefers-reduced-data: reduce)");
+
+reducedDataMediaQuery.addEventListener('change', () => {
+
+    let res = reducedDataMediaQuery.matches;
+
+    if (currentCorePosition.prefersReduceData !== res) {
+
+        currentCorePosition.prefersReduceData = res;
+        prefersReduceDataChanged = true;
+    }
+});
+currentCorePosition.prefersReduceData = reducedDataMediaQuery.matches;
+
+
+// ### Watch for browser window resize, or device rotation, which trigger changes in the viewport dimensions
 
 // __resizeAction__ function - to check if a view resize has occurred; if yes, flag that currentCorePosition object needs to be updated
 const resizeAction = function (e) {
@@ -49,6 +122,8 @@ const resizeAction = function (e) {
 };
 
 
+// ### Watch for scrolling interactions
+
 // __scrollAction__ function - to check if a view scroll has occurred; if yes, flag that currentCorePosition object needs to be updated
 const scrollAction = function (e) {
 
@@ -64,6 +139,7 @@ const scrollAction = function (e) {
     }
 };
 
+// ### Watch for mouse, pointer and touch movement
 
 // __moveAction__ function - to check if mouse cursor position has changed; if yes, update currentCorePosition object and flag that the updated needs to cascade to subscribed elements at the next RAF invocation.
 
@@ -109,6 +185,7 @@ const touchAction = function (e) {
     }
 };
 
+// ## Cascade interaction results down to subscribed elements
 
 // Functions to update uiSubscribedElements attached to specified DOM elements. Each stack or canvas element tracked by Scrawl-canvas will include a local __here__ object which includes details of the element's current dimensions, relative position, and the position of the mouse cursor in relation to its top-left corner. These all need to be updated whenever there's a resize, scroll or cursor movement.
 const updateUiSubscribedElements = function () {
@@ -139,6 +216,11 @@ const updateUiSubscribedElement = function (art) {
     here.h = Math.round(dims.height);
 
     here.type = currentCorePosition.type;
+
+    here.prefersReducedMotion = currentCorePosition.prefersReducedMotion;
+    here.prefersDarkColorScheme = currentCorePosition.prefersDarkColorScheme;
+    here.prefersReduceTransparency = currentCorePosition.prefersReduceTransparency;
+    here.prefersReduceData = currentCorePosition.prefersReduceData;
 
     // DOM-based artefacts have the option of creating a local mouse move event listener, which better tracks mouse movements across them when their element has been rotated in three dimensions. This if/else 
     if (!dom.localMouseListener) {
@@ -211,6 +293,12 @@ const updateUiSubscribedElement = function (art) {
             }
         }
     }
+
+    if (prefersReducedMotionChanged) dom.reducedMotionActions();
+    if (prefersDarkColorSchemeChanged) dom.colorSchemeActions();
+    if (prefersReduceTransparencyChanged) dom.reducedTransparencyActions();
+    if (prefersReduceDataChanged) dom.reducedDataActions();
+
 };
 
 const updatePhraseEntitys = function () {
@@ -269,10 +357,22 @@ const coreListenersTracker = makeAnimation({
 
         if (!uiSubscribedElements.length) return false;
 
-        if (trackMouse && mouseChanged) {
+        if ((trackMouse && mouseChanged) || prefersReducedMotionChanged || prefersDarkColorSchemeChanged || prefersReduceTransparencyChanged || prefersReduceDataChanged) {
 
-            mouseChanged = false;
             updateUiSubscribedElements();
+
+            if (trackMouse && mouseChanged) {
+
+                mouseChanged = false;
+            }
+
+            if (prefersReducedMotionChanged || prefersDarkColorSchemeChanged || prefersReduceTransparencyChanged || prefersReduceDataChanged) {
+
+                prefersReducedMotionChanged = false,
+                prefersDarkColorSchemeChanged = false,
+                prefersReduceTransparencyChanged = false,
+                prefersReduceDataChanged = false;
+            }
         }
 
         if (viewportChanged) {

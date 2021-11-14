@@ -68,6 +68,9 @@ const Element = function (items = Ωempty) {
     this.initializeDomLayout(items);
 
     this.set(this.defs);
+
+    this.initializeAccessibility();
+
     this.set(items);
 
     el = this.domElement;

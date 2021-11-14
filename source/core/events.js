@@ -234,180 +234,9 @@ const actionNativeListener = function (evt, fn, targ, action) {
     }
 };
 
-// ## Accessibility, and user-defined, preferences
-
-// #### Demos:
-// + [Canvas-033](../../demo/canvas-033.html) - User preferences: prefers-color-scheme; prefers-reduced-motion
-
-// #### prefers-reduced-motion media query
-// In many devices users have the option to set a system-wide flag indicating that, wherever possible, application and website animations should be reduced and/or prevented from playing. Scrawl-canvas investigates for this setting and supplies hooks to which developers can attach hook functions defining the actions to take when reduced motion has been requested, and for whenever this setting is changed.
-// 
-// Exported function `reducedMotionActions` - __we strongly recommend that, whenever a &lt;canvas> scene is animated, developers call this function as part of their definition code.__ By default this function will run the `reducedMotion_reduceAction` function when reduced motion has been requested; in all other cases the `reducedMotion_noPreferenceAction` function will be invoked.
-// + `reducedMotion_reduceAction` is by default a null-function. If actions need to be taken to reduce the speed of a canvas animation, or to stop it, then coders should replace this hook function with their own. Set using the `scrawl.setReduceMotionAction()` function
-// + `reducedMotion_noPreferenceAction` - again, a null function by default. Coders can replace it with their own function to revert the actions set out in their reduceAction function (for instance, to restart a canvas animation). Set using the `scrawl.setNoPreferenceMotionAction()` function
-//
-// ```
-// __Example code__
-//
-// const myAnimation = scrawl.makeRender({
-//     name: 'scene-animation',
-//     target: mycanvas,
-//     delay: true,
-// });
-//
-// scrawl.setReduceMotionAction(() => myAnimation.halt());
-// scrawl.setNoPreferenceMotionAction(() => myAnimation.run());
-//
-// scrawl.reducedMotionActions();
-// ```
-const reducedMotionMediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-
-let prefersReducedMotion = reducedMotionMediaQuery.matches,
-    reducedMotion_reduceAction = λnull,
-    reducedMotion_noPreferenceAction = λnull;
-
-const reducedMotionActions = () => {
-
-    if (prefersReducedMotion) reducedMotion_reduceAction();
-    else reducedMotion_noPreferenceAction();
-};
-
-reducedMotionMediaQuery.addEventListener('change', () => {
-
-    prefersReducedMotion = reducedMotionMediaQuery.matches;
-    reducedMotionActions();
-});
-
-const setReduceMotionAction = (func) => reducedMotion_reduceAction = func;
-const setNoPreferenceMotionAction = (func) => reducedMotion_noPreferenceAction = func;
 
 
-// #### prefers-color-scheme media query
-// In many devices users have the option to set a system-wide flag indicating that, wherever possible, application and website interfaces should use a dark, or light, color scheme. Scrawl-canvas investigates for this setting and supplies hooks to which developers can attach hook functions defining the actions to take when a preference has been selected, and for whenever this setting is changed. Where no selection has been made, Scrawl-canvas assumes that a light color scheme is preferred.
-//
-// Exported function `colorSchemeActions` - depending on the user selection, the appropriate color scheme hook function is run; where no selection has been made, this will be the lightAction function.
-// + `colorScheme_darkAction` is by default a null-function. If actions need to be taken to update a scene to match surrounding dark-theme designs, then coders should replace this hook function with their own. Set using the `scrawl.setColorSchemeDarkAction()` function
-// + `colorScheme_lightAction` - again, a null function by default. Coders can replace it with their own function to revert the actions set out in their darkAction function. Set using the `scrawl.setColorSchemeLightAction()` function
-//
-// ```
-// __Example code__
-//
-// const canvas = scrawl.library.mycanvas;
-//
-// const myBlock = scrawl.makeBlock({
-//     name: 'myThemedBlock',
-//     start: ['center', 'center'],
-//     handle: ['center', 'center'],
-//     dimensions: ['30%', '30%'],
-//     method: 'fill',
-// });
-//
-// scrawl.setColorSchemeDarkAction(() => {
-//     canvas.set({ backgroundColor: 'black'});
-//     myBlock.set({ fillStyle: 'white'});
-// });
-//
-// scrawl.setColorSchemeLightAction(() => {
-//     canvas.set({ backgroundColor: 'white'});
-//     myBlock.set({ fillStyle: 'black'});
-// });
-//
-// scrawl.colorSchemeActions();
-// ```
-
-const colorSchemeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-
-let prefersColorScheme = colorSchemeMediaQuery.matches,
-    colorScheme_darkAction = λnull,
-    colorScheme_lightAction = λnull;
-
-const colorSchemeActions = () => {
-
-    if (prefersColorScheme) colorScheme_darkAction();
-    else colorScheme_lightAction();
-};
-
-colorSchemeMediaQuery.addEventListener('change', () => {
-
-    prefersColorScheme = colorSchemeMediaQuery.matches;
-    colorSchemeActions();
-});
-
-const setColorSchemeLightAction = (func) => colorScheme_lightAction = func;
-const setColorSchemeDarkAction = (func) => colorScheme_darkAction = func;
-
-
-// #### prefers-reduced-transparency media query
-// See the [W3 Media Queries Level 5 documentation](https://www.w3.org/TR/mediaqueries-5/#descdef-media-prefers-reduced-transparency) for more information
-//
-// Exported function `reducedTransparencyActions` - depending on the user selection, the appropriate hook function is run; where no selection has been made, this will be the noPreferenceAction function.
-// + `reduceTransparency_noPreferenceAction`
-// + `reduceTransparency_reduceAction`
-//
-// ```
-// __Example code__
-//
-// TODO
-// ```
-
-const reducedTransparencyMediaQuery = window.matchMedia("(prefers-reduced-transparency: reduce)");
-
-let reduceTransparency = reducedTransparencyMediaQuery.matches,
-    reduceTransparency_reduceAction = λnull,
-    reduceTransparency_noPreferenceAction = λnull;
-
-const reducedTransparencyActions = () => {
-
-    if (reduceTransparency) reduceTransparency_reduceAction();
-    else reduceTransparency_noPreferenceAction();
-};
-
-reducedTransparencyMediaQuery.addEventListener('change', () => {
-
-    reduceTransparency = reducedTransparencyMediaQuery.matches;
-    reducedTransparencyActions();
-});
-
-const setReduceTransparencyAction = (func) => reduceTransparency_reduceAction = func;
-const setNoPreferenceTransparencyAction = (func) => reduceTransparency_noPreferenceAction = func;
-
-
-// #### prefers-reduced-data media query
-// See the [W3 Media Queries Level 5 documentation](https://www.w3.org/TR/mediaqueries-5/#descdef-media-prefers-reduced-data) for more information
-//
-// Exported function `reducedDataActions` - depending on the user selection, the appropriate hook function is run; where no selection has been made, this will be the noPreferenceAction function.
-// + `reduceData_noPreferenceAction`
-// + `reduceData_reduceAction`
-//
-// ```
-// __Example code__
-//
-// TODO
-// ```
-
-const reducedDataMediaQuery = window.matchMedia("(prefers-reduced-data: reduce)");
-
-let reducedData = reducedDataMediaQuery.matches,
-    reduceData_reduceAction = λnull,
-    reduceData_noPreferenceAction = λnull;
-
-const reducedDataActions = () => {
-
-    if (reducedData) reduceData_reduceAction();
-    else reduceData_noPreferenceAction();
-};
-
-reducedDataMediaQuery.addEventListener('change', () => {
-
-    reducedData = reducedDataMediaQuery.matches;
-    reducedDataActions();
-});
-
-const setReduceDataAction = (func) => reduceData_reduceAction = func;
-const setNoPreferenceDataAction = (func) => reduceData_noPreferenceAction = func;
-
-
-// Monitoring the device pixel ratio
+// ## Monitoring the device pixel ratio
 let dpr_changeAction = λnull;
 const setPixelRatioChangeAction = (func) => dpr_changeAction = func;
 
@@ -443,13 +272,10 @@ const updatePixelRatio = () => {
             wrapper.dirtyDimensions = true;
         }
 
-        // window.setTimeout(() => {
+        for (const [name, ent] of Object.entries(entity)) {
 
-            for (const [name, ent] of Object.entries(entity)) {
-
-                ent.dirtyHost = true;
-            }
-        // }, 20);
+            ent.dirtyHost = true;
+        }
 
         if (!ignorePixelRatio) dpr_changeAction();
     }
@@ -469,22 +295,6 @@ export {
     removeNativeListener,
 
     makeAnimationObserver,
-
-    reducedMotionActions,
-    setReduceMotionAction,
-    setNoPreferenceMotionAction,
-
-    colorSchemeActions,
-    setColorSchemeDarkAction,
-    setColorSchemeLightAction,
-
-    reducedTransparencyActions,
-    setReduceTransparencyAction,
-    setNoPreferenceTransparencyAction,
-
-    reducedDataActions,
-    setReduceDataAction,
-    setNoPreferenceDataAction,
 
     getPixelRatio,
     setPixelRatioChangeAction,

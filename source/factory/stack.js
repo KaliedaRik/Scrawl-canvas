@@ -83,7 +83,11 @@ const Stack = function (items = Ωempty) {
     this.addGroups(g.name);
 
     this.set(this.defs);
+
     this.initializeDisplayShapeActions();
+
+    this.initializeAccessibility();
+
     this.set(items);
 
     el = this.domElement;

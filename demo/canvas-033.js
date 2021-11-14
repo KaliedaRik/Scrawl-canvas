@@ -33,7 +33,7 @@ canvas.set({
 }).setAsCurrentCanvas();
 
 // Create the demo Oval entity
-scrawl.makeOval({
+const track = scrawl.makeOval({
 
     name: 'loader-track',
 
@@ -95,21 +95,17 @@ scrawl.makePhrase({
 
 // #### prefers-color-scheme actions
 // Setup the actions to take, to match the animation scene to the user's preference for `dark` or `light` (default) color scheme
-scrawl.setColorSchemeDarkAction(() => {
+canvas.setColorSchemeDarkAction(() => {
 
     canvas.set({ backgroundColor: background_dark});
     textGroup.setArtefacts({ fillStyle: text_dark});
 });
 
-scrawl.setColorSchemeLightAction(() => {
+canvas.setColorSchemeLightAction(() => {
     
     canvas.set({ backgroundColor: background_light});
     textGroup.setArtefacts({ fillStyle: text_light});
 });
-
-// Invoke prefers-color-scheme actions test
-// + Scrawl-canvas will automatically check to see if user changes their preference while the scene is running, and action the change when detected
-scrawl.colorSchemeActions();
 
 
 // #### Scene animation
@@ -123,25 +119,52 @@ const demoAnimation = scrawl.makeRender({
     name: "demo-animation",
     target: canvas,
     afterShow: report,
+
+    afterCreated: () => {
+
+        // Invoke prefers-color-scheme actions test
+        // + Scrawl-canvas will automatically check to see if user changes their preference while the scene is running, and action the change when detected
+        canvas.colorSchemeActions();
+        canvas.reducedMotionActions();
+    },
 });
 
 
 // #### prefers-reduced-motion actions
-// Setup the actions to take, to match the animation scene to the user's preference for `reduced` or unspecified (default) animation
-scrawl.setReduceMotionAction(() => {
+const checkE = (e) => {
+    if (e) {
+        if ("keydown" === e.type) {
+            if (32 === e.keycode) return true; // spacebar
+            if (13 === e.keycode) return true; // enter key
+        }
+        if ("click" === e.type) return true; // mouse click
+        if ("touchend" === e.type) return true; // tap
+    }
+    return false;
+};
 
-    if (demoAnimation.isRunning()) demoAnimation.halt();
-});
+const startAnimation = (e) => {
+    if (e === "reduced-motion" || checkE(e)) {
+        track.set({ noDeltaUpdates: false });
+        textGroup.setArtefacts({ noDeltaUpdates: false });
+    }
+};
 
-scrawl.setNoPreferenceMotionAction(() => {
+const stopAnimation = (e) => {
+    if (e === "reduced-motion" || checkE(e)) {
+        track.set({ noDeltaUpdates: true });
+        textGroup.setArtefacts({ noDeltaUpdates: true });
+    }
+};
 
-    if (!demoAnimation.isRunning()) demoAnimation.run();
-});
+canvas.setReduceMotionAction(() => setTimeout(() => stopAnimation("reduced-motion"), 5000));
 
-// Invoke prefers-reduced-motion actions test
-// + Accessibility recommendation is that a scene should not animate for more than 5 seconds - we can honour this recommendation by delaying the test using `setTimeout`. This approach also allows us to add in an event listener (and any associated canvas chrome/notifications) which would allow the user to interact with the canvas so that animation can resume.
-// + Additionally, Scrawl-canvas will automatically check to see if user changes their preference while the scene is running, and action the change when detected.
-setTimeout(() => scrawl.reducedMotionActions(), 5000);
+canvas.setNoPreferenceMotionAction(() => startAnimation("reduced-motion"));
+
+const startButton = scrawl.addNativeListener(['click', 'keydown', 'touchend'], startAnimation, '#play');
+
+const stopButton = scrawl.addNativeListener(['click', 'keydown', 'touchend'], stopAnimation, '#pause');
+
 
 
 // #### Development and testing

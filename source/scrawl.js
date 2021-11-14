@@ -1,6 +1,6 @@
 // # Scrawl-canvas
 //
-// #### Version 8.6.3 - 13 Nov 2021
+// #### Version 8.6.3 - 14 Nov 2021
 //
 // ---------------------------------------------------------------------------------
 // The MIT License (MIT)
@@ -56,18 +56,6 @@ import {
     addNativeListener,
     removeNativeListener,
     makeAnimationObserver,
-    reducedMotionActions,
-    setReduceMotionAction,
-    setNoPreferenceMotionAction,
-    colorSchemeActions,
-    setColorSchemeDarkAction,
-    setColorSchemeLightAction,
-    reducedTransparencyActions,
-    setReduceTransparencyAction,
-    setNoPreferenceTransparencyAction,
-    reducedDataActions,
-    setReduceDataAction,
-    setNoPreferenceDataAction,
     getPixelRatio,
     setPixelRatioChangeAction,
     getIgnorePixelRatio,
@@ -390,18 +378,6 @@ export default {
     addNativeListener,
     removeNativeListener,
     makeAnimationObserver,
-    reducedMotionActions,
-    setReduceMotionAction,
-    setNoPreferenceMotionAction,
-    colorSchemeActions,
-    setColorSchemeDarkAction,
-    setColorSchemeLightAction,
-    reducedTransparencyActions,
-    setReduceTransparencyAction,
-    setNoPreferenceTransparencyAction,
-    reducedDataActions,
-    setReduceDataAction,
-    setNoPreferenceDataAction,
     getPixelRatio,
     setPixelRatioChangeAction,
     getIgnorePixelRatio,

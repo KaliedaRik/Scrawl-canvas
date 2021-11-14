@@ -8,6 +8,10 @@
   <title>Demo Canvas 033</title>
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
+
+  <!-- using an external font library for the control buttons, for convenience -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
   <style>
     canvas {
       background-color: lemonchiffon;
@@ -15,7 +19,7 @@
       width: 100%;
       height: 100%;
     }
-    canvas.javascript-disabled {
+    .javascript-disabled canvas {
       background-color: transparent;
       border: 0;
 
@@ -27,8 +31,8 @@
       height: 100%;
     }
 
-    canvas.javascript-disabled > nav, 
-    canvas.javascript-disabled > div {
+    .javascript-disabled canvas > nav, 
+    .javascript-disabled canvas > div {
       height: auto;
       max-height: none;
     }
@@ -47,7 +51,59 @@
 
       max-width: 800px;
       max-height: 800px;
+
+      position: relative;
     }
+
+    .canvas-host::after {
+      position: absolute;
+      content: '';
+      bottom: 0;
+      right: 0;
+      width: 0;
+      height: 0;
+      border-bottom: 1em solid red;
+      border-left: 1em solid transparent;
+    }
+
+    .animation-controls {
+      position: absolute;
+      top: 0;
+      left: calc(50% - 51px);
+      width: 102px;
+      background-color: #ffffff8f;
+    }
+
+    .javascript-disabled .animation-controls {
+      display: none;
+    }
+
+    .animation-controls button {
+      background-color: transparent;
+      border-width: 0;
+      padding: 0;
+      display: inline-block;
+    }
+    .animation-controls button:hover {
+      cursor: pointer;
+    }
+
+    .animation-controls span {
+      font-size: 48px;
+      opacity: 0.5;
+    }
+    .animation-controls span:hover {
+      opacity: 1;
+    }
+
+    .animation-controls {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 104px;
+      background-color: #ffffff8f;
+    }
+
   </style>
 </head>
 
@@ -56,19 +112,32 @@
   <h2>User preferences: prefers-color-scheme; prefers-reduced-motion; Javascript disabled</h2>
   <h3>This canvas is resizable - drag the bottom right corner to change its dimensions.</h3>
 
-  <div class="canvas-host">
+  <div class="canvas-host javascript-disabled">
+
+    <canvas id="mycanvas">
+      <p id="no-js-note" style="background-color: rgba(255,255,255,0.9); padding: 1em;">This content will <b>visually</b> appear when Javascript is disabled, and should be used to describe what the canvas would be showing had JS been working. Also include any <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas">relevant links in this copy</a>. Be aware that this text will display over the background image, so needs some styling to show up more clearly. Remember, if JS has been disabled, then text included in Phrase entitys and Anchor objects will not be processed and exposed in the canvas's sub-DOM! Note that Scrawl-canvas appends sub-DOM data/copy, so this paragraph will be the first canvas-related thing a screen reader encounters - unless we get the script snippet to add <i>aria-hidden="true"</i> as an attribute to this element.</p>
+    </canvas>
+
     <!-- 
     This is a test to see if JS has been disabled 
     - if it has, then the class will not be removed
     - meaning we can display a background image instead
     -->
-    <canvas id="mycanvas" class="javascript-disabled">
-      <p id="no-js-note" style="background-color: rgba(255,255,255,0.9); padding: 1em;">This content will <b>visually</b> appear when Javascript is disabled, and should be used to describe what the canvas would be showing had JS been working. Also include any <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas">relevant links in this copy</a>. Be aware that this text will display over the background image, so needs some styling to show up more clearly. Remember, if JS has been disabled, then text included in Phrase entitys and Anchor objects will not be processed and exposed in the canvas's sub-DOM! Note that Scrawl-canvas appends sub-DOM data/copy, so this paragraph will be the first canvas-related thing a screen reader encounters - unless we get the script snippet to add <i>aria-hidden="true"</i> as an attribute to this element.</p>
-    </canvas>
     <script>
-      document.querySelector('#mycanvas').className = '';
+      document.querySelector('.canvas-host').classList.remove('javascript-disabled');
       document.querySelector('#no-js-note').setAttribute('aria-hidden', 'true');
     </script>
+
+    <!-- animation control buttons -->
+    <div class="animation-controls">
+      <button id="play" title="Play animation">
+        <span class="material-icons">play_circle</span>
+      </button>
+      <button id="pause" title="Pause animation">
+        <span class="material-icons">pause_circle</span>
+      </button>
+    </div>
+
   </div>
 
   <p id="reportmessage"></p>
@@ -83,8 +152,8 @@
       <ul>
         <li>When 'prefers-color-scheme' is set to 'light' (default) the background should be light gray and the text dark green</li>
         <li>When 'prefers-color-scheme' is set to 'dark' the background should be dark gray and the text light green</li>
-        <li>When 'prefers-reduced-motion' is set to 'reduced' the animation should stop; resizing the &lt;canvas> element should lead to distortions in the scene</li>
-        <li>When 'prefers-reduced-motion' is unset the animation should start; resizing the &lt;canvas> element should lead to the scene remaining centred in the canvas with no distortion as the resize continues.</li>
+        <li>When 'prefers-reduced-motion' is set to 'reduced' the animation should stop; resizing the &lt;canvas> element should NOT lead to distortions in the scene</li>
+        <li>When 'prefers-reduced-motion' is unset the animation should start.</li>
       </ul>
       <li>When reloading the page, the scene should respect the last choices made in the browser's Inspector; in particular, if 'prefers-reduced-motion' has been set to 'reduced' the animation should play for five seconds, then stop automatically.</li>
     </ul>

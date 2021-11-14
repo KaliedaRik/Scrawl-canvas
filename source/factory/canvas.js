@@ -73,6 +73,8 @@ const Canvas = function (items = Ωempty) {
 
     this.initializeDisplayShapeActions();
 
+    this.initializeAccessibility();
+
     this.set(items);
 
     this.cleanDimensions();
