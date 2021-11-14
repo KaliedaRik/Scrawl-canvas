@@ -2,7 +2,13 @@
 Version: `8.6.3 - 14 Nov 2021` 
 
 Scrawl-canvas website: [scrawl-v8.rikweb.org.uk](https://scrawl-v8.rikweb.org.uk).
+&rarr; learning materials: [scrawl-v8.rikweb.org.uk/learn](https://scrawl-v8.rikweb.org.uk/learn).
+&rarr; documentation: [scrawl-v8.rikweb.org.uk/documentation](https://scrawl-v8.rikweb.org.uk/documentation).
+&rarr; tests/demos: [scrawl-v8.rikweb.org.uk/demonstrations](https://scrawl-v8.rikweb.org.uk/demonstrations).
+
 Scrawl-canvas on CodePen: [codepen.io/collection/RzzMjw](https://codepen.io/collection/RzzMjw).
+
+Scrawl-canvas on Discord: [discord.com/channels/...](https://discord.com/channels/906541519509536829/906541519996080149)
 
 __Do you want to contribute?__ Don't be afraid - reach out and let's see what website magic we can create together!
 
