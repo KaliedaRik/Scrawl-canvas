@@ -2,9 +2,9 @@
 Version: `8.6.3 - 14 Nov 2021` 
 
 Scrawl-canvas website: [scrawl-v8.rikweb.org.uk](https://scrawl-v8.rikweb.org.uk).
-&rarr; learning materials: [scrawl-v8.rikweb.org.uk/learn](https://scrawl-v8.rikweb.org.uk/learn).
-&rarr; documentation: [scrawl-v8.rikweb.org.uk/documentation](https://scrawl-v8.rikweb.org.uk/documentation).
-&rarr; tests/demos: [scrawl-v8.rikweb.org.uk/demonstrations](https://scrawl-v8.rikweb.org.uk/demonstrations).
++ learning materials: [scrawl-v8.rikweb.org.uk/learn](https://scrawl-v8.rikweb.org.uk/learn).
++ documentation: [scrawl-v8.rikweb.org.uk/documentation](https://scrawl-v8.rikweb.org.uk/documentation).
++ tests/demos: [scrawl-v8.rikweb.org.uk/demonstrations](https://scrawl-v8.rikweb.org.uk/demonstrations).
 
 Scrawl-canvas on CodePen: [codepen.io/collection/RzzMjw](https://codepen.io/collection/RzzMjw).
 
