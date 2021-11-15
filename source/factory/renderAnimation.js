@@ -27,7 +27,7 @@
 import { animation, artefact, constructors } from '../core/library.js';
 import { clear, compile, show } from '../core/document.js';
 import { makeAnimationObserver } from '../core/events.js';
-import { mergeOver, pushUnique, removeItem, xt, λnull, λthis, Ωempty } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, xt, λnull, λthis, Ωempty, isa_boolean } from '../core/utilities.js';
 import { animate, resortAnimations } from '../core/animationloop.js';
 
 import baseMix from '../mixin/base.js';
@@ -113,7 +113,13 @@ const RenderAnimation = function (items = Ωempty) {
     this.register();
 
     // The `observer` attribute
-    if (items.observer) this.observer = makeAnimationObserver(this, this.target);
+    const obs = items.observer || false;
+
+    if (obs) {
+
+        if (isa_boolean(obs)) this.observer = makeAnimationObserver(this, this.target);
+        else this.observer = makeAnimationObserver(this, this.target, obs);
+    }
 
     // Start the animation immediately, unless flagged otherwise
     if(!items.delay) this.run();

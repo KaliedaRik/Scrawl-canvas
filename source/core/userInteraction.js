@@ -206,21 +206,27 @@ const updateUiSubscribedElement = function (art) {
 
     let dims = el.getBoundingClientRect(),
         dox = Math.round(dims.left + window.pageXOffset),
-        doy = Math.round(dims.top + window.pageYOffset);
+        doy = Math.round(dims.top + window.pageYOffset),
+        dot = dims.top,
+        doh = dims.height,
+        wih = window.innerHeight;
 
     if (!dom.here) dom.here = {}; 
 
     let here = dom.here;
 
     here.w = Math.round(dims.width);
-    here.h = Math.round(dims.height);
+    here.h = Math.round(doh);
 
     here.type = currentCorePosition.type;
 
-    here.prefersReducedMotion = currentCorePosition.prefersReducedMotion;
-    here.prefersDarkColorScheme = currentCorePosition.prefersDarkColorScheme;
-    here.prefersReduceTransparency = currentCorePosition.prefersReduceTransparency;
-    here.prefersReduceData = currentCorePosition.prefersReduceData;
+    let ivpt = dot / wih,
+        ivpb = (dot + doh) / wih,
+        ivpc = (ivpt + ivpb) / 2;
+
+    here.inViewportTop = ivpt;
+    here.inViewportBase = ivpb;
+    here.inViewportCenter = ivpc;
 
     // DOM-based artefacts have the option of creating a local mouse move event listener, which better tracks mouse movements across them when their element has been rotated in three dimensions. This if/else 
     if (!dom.localMouseListener) {
@@ -293,6 +299,12 @@ const updateUiSubscribedElement = function (art) {
             }
         }
     }
+
+    // Accessibility
+    here.prefersReducedMotion = currentCorePosition.prefersReducedMotion;
+    here.prefersDarkColorScheme = currentCorePosition.prefersDarkColorScheme;
+    here.prefersReduceTransparency = currentCorePosition.prefersReduceTransparency;
+    here.prefersReduceData = currentCorePosition.prefersReduceData;
 
     if (prefersReducedMotionChanged) dom.reducedMotionActions();
     if (prefersDarkColorSchemeChanged) dom.colorSchemeActions();
