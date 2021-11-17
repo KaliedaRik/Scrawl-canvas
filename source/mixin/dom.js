@@ -870,6 +870,7 @@ S.trackHere = function(val) {
         // determine whether there is a need to trigger a redraw of the DOM element
         if (this.dirtyTransform || this.dirtyPerspective || this.dirtyPosition || this.dirtyDomDimensions || this.dirtyTransformOrigin || this.dirtyVisibility || this.dirtyCss || this.dirtyClasses || this.domShowRequired) {
 
+            this.domShowRequired = false;
             addDomShowElement(this.name);
             setDomShowRequired(true);
         }

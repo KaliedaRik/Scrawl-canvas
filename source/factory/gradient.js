@@ -113,29 +113,21 @@ P.updateGradientArgs = function (x, y) {
 // scrawl.makeGradient({
 //     name: 'colored-pipes',
 //     endX: '100%',
-//     cyclePalette: true
+//     cyclePalette: true,
+//     colors: [
+//         [0, 'black'],
+//         [99, 'red'],
+//         [199, 'black'],
+//         [299, 'blue'],
+//         [399, 'black'],
+//         [499, 'gold'],
+//         [599, 'black'],
+//         [699, 'green'],
+//         [799, 'black'],
+//         [899, 'lavender'],
+//         [999, 'black']
+//     ],
 // })
-// .updateColor(0, 'black')
-// .updateColor(49, 'yellow')
-// .updateColor(99, 'black')
-// .updateColor(149, 'lightyellow')
-// .updateColor(199, 'black')
-// .updateColor(249, 'goldenrod')
-// .updateColor(299, 'black')
-// .updateColor(349, 'lemonchiffon')
-// .updateColor(399, 'black')
-// .updateColor(449, 'gold')
-// .updateColor(499, 'black')
-// .updateColor(549, 'tan')
-// .updateColor(599, 'black')
-// .updateColor(649, 'wheat')
-// .updateColor(699, 'black')
-// .updateColor(749, 'yellowgreen')
-// .updateColor(799, 'black')
-// .updateColor(849, 'peachpuff')
-// .updateColor(899, 'black')
-// .updateColor(949, 'papayawhip')
-// .updateColor(999, 'black');
 //
 // scrawl.makeBlock({
 //

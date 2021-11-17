@@ -106,6 +106,9 @@ let defaultAttributes = {
 // __random__ - the factory function, and the clone function, can ask the Color object to set its initial channel values randomly by including this attribute in the argument object; if the attribute resolves to true, random color functionality is invoked to set the r, g and b channel attributes to appropriately random values.
 
 // __color__ - a CSS color definition String which the Color object will attempt to convert into appropriate r, g, b and a channel attribute values.
+
+// __minimumColor__, __maximumColor__ - convenience pseudo-attributes to set the max and min rgba attributes
+
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 

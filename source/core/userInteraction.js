@@ -198,119 +198,124 @@ const updateUiSubscribedElements = function () {
 
 const updateUiSubscribedElement = function (art) {
 
-    let dom = library.artefact[art];
-    if (!xt(dom)) throw new Error(`core/userInteraction updateUiSubscribedElement() error - artefact does not exist: ${art}`);
+    const dom = library.artefact[art];
 
-    let el = dom.domElement;
-    if (!isa_dom(el)) throw new Error(`core/userInteraction updateUiSubscribedElement() error - DOM element missing: ${art}`);
+    if (dom) {
 
-    let dims = el.getBoundingClientRect(),
-        dox = Math.round(dims.left + window.pageXOffset),
-        doy = Math.round(dims.top + window.pageYOffset),
-        dot = dims.top,
-        doh = dims.height,
-        wih = window.innerHeight;
+        if (!dom.here) dom.here = {}; 
 
-    if (!dom.here) dom.here = {}; 
+        const { here, domElement:el } = dom;
 
-    let here = dom.here;
+        // Accessibility
+        here.prefersReducedMotion = currentCorePosition.prefersReducedMotion;
+        here.prefersDarkColorScheme = currentCorePosition.prefersDarkColorScheme;
+        here.prefersReduceTransparency = currentCorePosition.prefersReduceTransparency;
+        here.prefersReduceData = currentCorePosition.prefersReduceData;
 
-    here.w = Math.round(dims.width);
-    here.h = Math.round(doh);
+        if (prefersReducedMotionChanged) dom.reducedMotionActions();
+        if (prefersDarkColorSchemeChanged) dom.colorSchemeActions();
+        if (prefersReduceTransparencyChanged) dom.reducedTransparencyActions();
+        if (prefersReduceDataChanged) dom.reducedDataActions();
 
-    here.type = currentCorePosition.type;
+        // DOM-element-dependant values
+        if (el) {
 
-    let ivpt = dot / wih,
-        ivpb = (dot + doh) / wih,
-        ivpc = (ivpt + ivpb) / 2;
+            const dims = el.getBoundingClientRect(),
+                dox = Math.round(dims.left + window.pageXOffset),
+                doy = Math.round(dims.top + window.pageYOffset),
+                dot = dims.top,
+                doh = dims.height,
+                wih = window.innerHeight;
 
-    here.inViewportTop = ivpt;
-    here.inViewportBase = ivpb;
-    here.inViewportCenter = ivpc;
+            here.w = Math.round(dims.width);
+            here.h = Math.round(doh);
 
-    // DOM-based artefacts have the option of creating a local mouse move event listener, which better tracks mouse movements across them when their element has been rotated in three dimensions. This if/else 
-    if (!dom.localMouseListener) {
+            here.type = currentCorePosition.type;
 
-        here.localListener = false;
-        here.active = true;
+            // Position of the artefact in the browser/device viewport
+            const ivpt = dot / wih,
+                ivpb = (dot + doh) / wih,
+                ivpc = (ivpt + ivpb) / 2;
 
-        here.x = Math.round(currentCorePosition.x - dox);
-        here.y = Math.round(currentCorePosition.y - doy);
+            here.inViewportTop = ivpt;
+            here.inViewportBase = ivpb;
+            here.inViewportCenter = ivpc;
 
-        here.normX = (here.w) ? here.x / here.w : false;
-        here.normY = (here.h) ? here.y / here.h : false;
-        here.offsetX = dox;
-        here.offsetY = doy;
+            // DOM-based artefacts have the option of creating a local mouse move event listener, which better tracks mouse movements across them when their element has been rotated in three dimensions.
+            if (!dom.localMouseListener) {
 
-        if (here.normX < 0 || here.normX > 1 || here.normY < 0 || here.normY > 1) here.active = false;
-    }
-    else {
+                here.localListener = false;
+                here.active = true;
 
-        here.localListener = true;
-        here.active = false;
+                here.x = Math.round(currentCorePosition.x - dox);
+                here.y = Math.round(currentCorePosition.y - doy);
 
-        here.normX = (here.originalWidth) ? here.x / here.originalWidth : false;
-        here.normY = (here.originalHeight) ? here.y / here.originalHeight : false;
-        here.offsetX = dox;
-        here.offsetY = doy;
+                here.normX = (here.w) ? here.x / here.w : false;
+                here.normY = (here.h) ? here.y / here.h : false;
+                here.offsetX = dox;
+                here.offsetY = doy;
 
-        if (here.x > dom.activePadding && here.x < here.originalWidth - dom.activePadding && here.y > 0 + dom.activePadding && here.y < here.originalHeight - dom.activePadding) here.active = true;
-    }
+                if (here.normX < 0 || here.normX > 1 || here.normY < 0 || here.normY > 1) here.active = false;
+            }
+            // Default mouse tracking behaviour
+            else {
 
-    if (dom.type === 'Canvas') dom.updateBaseHere(here, dom.fit);
+                here.localListener = true;
+                here.active = false;
 
-    // Automatically check for element resize
-    // + The artefact's `checkForResize` flag needs to be set
-    // + We ignore resizing actions while dimensions-related dirty flags are set (to prevent getting ourselves into a continuous feedback loop)
-    if (dom.checkForResize && !dom.dirtyDimensions && !dom.dirtyDomDimensions) {
+                here.normX = (here.originalWidth) ? here.x / here.originalWidth : false;
+                here.normY = (here.originalHeight) ? here.y / here.originalHeight : false;
+                here.offsetX = dox;
+                here.offsetY = doy;
 
-        let [w, h] = dom.currentDimensions;
+                if (here.x > dom.activePadding && here.x < here.originalWidth - dom.activePadding && here.y > 0 + dom.activePadding && here.y < here.originalHeight - dom.activePadding) here.active = true;
+            }
 
-        if (dom.type === 'Canvas') {
-            // Regardless of the setting of &lt;canvas> element's `boxSizing` style attribute:
-            // + It will include padding and borders in its `getBoundingClientRect` object (and its `getComputedStyle` width/height values), but these are specifically excluded from the element's `width` and `height` attributes
-            // + Which leads to the normal resize test - `if (w !== here.w || h !== here.h)` - triggering on every mouse/scroll/resize event, which in turn leads to the canvas dimensions increasing uncontrollably.
-            // + Solved by subtracting padding/border values from the `getBoundingClientRect` dimension values before performing the test.
-            // + Tested in Demo [Canvas-004](../../demo/canvas-004.html).
-            if (!dom.computedStyles) dom.computedStyles = window.getComputedStyle(dom.domElement);
+            // Canvas `fit` attribute adjustments
+            if (dom.type === 'Canvas') dom.updateBaseHere(here, dom.fit);
 
-            let s = dom.computedStyles,
-                hw = Math.floor(here.w - parseFloat(s.borderLeftWidth) - parseFloat(s.borderRightWidth) - parseFloat(s.paddingLeft) - parseFloat(s.paddingRight)),
-                hh = Math.floor(here.h - parseFloat(s.borderTopWidth) - parseFloat(s.borderBottomWidth) - parseFloat(s.paddingTop) - parseFloat(s.paddingBottom));
+            // Automatically check for element resize
+            // + The artefact's `checkForResize` flag needs to be set
+            // + We ignore resizing actions while dimensions-related dirty flags are set (to prevent getting ourselves into a continuous feedback loop)
+            if (dom.checkForResize && !dom.dirtyDimensions && !dom.dirtyDomDimensions) {
 
-            if (w !== hw || h !== hh) {
+                let [w, h] = dom.currentDimensions;
 
-                dom.set({
+                if (dom.type === 'Canvas') {
+                    // Regardless of the setting of &lt;canvas> element's `boxSizing` style attribute:
+                    // + It will include padding and borders in its `getBoundingClientRect` object (and its `getComputedStyle` width/height values), but these are specifically excluded from the element's `width` and `height` attributes
+                    // + Which leads to the normal resize test - `if (w !== here.w || h !== here.h)` - triggering on every mouse/scroll/resize event, which in turn leads to the canvas dimensions increasing uncontrollably.
+                    // + Solved by subtracting padding/border values from the `getBoundingClientRect` dimension values before performing the test.
+                    // + Tested in Demo [Canvas-004](../../demo/canvas-004.html).
+                    if (!dom.computedStyles) dom.computedStyles = window.getComputedStyle(dom.domElement);
 
-                    dimensions: [hw, hh],
-                });
+                    let s = dom.computedStyles,
+                        hw = Math.floor(here.w - parseFloat(s.borderLeftWidth) - parseFloat(s.borderRightWidth) - parseFloat(s.paddingLeft) - parseFloat(s.paddingRight)),
+                        hh = Math.floor(here.h - parseFloat(s.borderTopWidth) - parseFloat(s.borderBottomWidth) - parseFloat(s.paddingTop) - parseFloat(s.paddingBottom));
+
+                    if (w !== hw || h !== hh) {
+
+                        dom.set({
+
+                            dimensions: [hw, hh],
+                        });
+                    }
+                }
+                else {
+                
+                    // Stack and Element artefacts resize test.
+                    // + Tested in Demo [DOM-011](../../demo/dom-011.html).
+                    if (w !== here.w || h !== here.h) {
+
+                        dom.set({
+
+                            dimensions: [here.w, here.h],
+                        });
+                    }
+                }
             }
         }
-        else {
-        
-            // Stack and Element artefacts resize test.
-            // + Tested in Demo [DOM-011](../../demo/dom-011.html).
-            if (w !== here.w || h !== here.h) {
-
-                dom.set({
-
-                    dimensions: [here.w, here.h],
-                });
-            }
-        }
     }
-
-    // Accessibility
-    here.prefersReducedMotion = currentCorePosition.prefersReducedMotion;
-    here.prefersDarkColorScheme = currentCorePosition.prefersDarkColorScheme;
-    here.prefersReduceTransparency = currentCorePosition.prefersReduceTransparency;
-    here.prefersReduceData = currentCorePosition.prefersReduceData;
-
-    if (prefersReducedMotionChanged) dom.reducedMotionActions();
-    if (prefersDarkColorSchemeChanged) dom.colorSchemeActions();
-    if (prefersReduceTransparencyChanged) dom.reducedTransparencyActions();
-    if (prefersReduceDataChanged) dom.reducedDataActions();
-
 };
 
 const updatePhraseEntitys = function () {

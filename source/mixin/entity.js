@@ -566,96 +566,97 @@ export default function (P = Ωempty) {
         let w = filterCellElement.width = currentDimensions[0] || currentElement.width,
             h = filterCellElement.height = currentDimensions[1] || currentElement.height;
 
-        // Switch off fast stamp
-        let oldNoCanvasEngineUpdates = this.noCanvasEngineUpdates;
-        this.noCanvasEngineUpdates = false;
+        if (w && h) {
 
-        // Stamp the entity onto the pool Cell
-        this.regularStamp();
+            // Switch off fast stamp
+            let oldNoCanvasEngineUpdates = this.noCanvasEngineUpdates;
+            this.noCanvasEngineUpdates = false;
 
-        if (!this.noFilters && this.filters && this.filters.length) {
+            // Stamp the entity onto the pool Cell
+            this.regularStamp();
 
-            // If we're using the entity as a stencil, copy the entity cell's current display over the entity in the pool Cell
-            if (this.isStencil) {
+            if (!this.noFilters && this.filters && this.filters.length) {
 
-                filterCellEngine.save();
-                filterCellEngine.globalCompositeOperation = 'source-in';
-                filterCellEngine.globalAlpha = 1;
+                // If we're using the entity as a stencil, copy the entity cell's current display over the entity in the pool Cell
+                if (this.isStencil) {
+
+                    filterCellEngine.save();
+                    filterCellEngine.globalCompositeOperation = 'source-in';
+                    filterCellEngine.globalAlpha = 1;
+                    filterCellEngine.setTransform(1, 0, 0, 1, 0, 0);
+                    filterCellEngine.drawImage(currentElement, 0, 0);
+                    filterCellEngine.restore();
+                } 
+
                 filterCellEngine.setTransform(1, 0, 0, 1, 0, 0);
-                filterCellEngine.drawImage(currentElement, 0, 0);
-                filterCellEngine.restore();
-            } 
 
-            filterCellEngine.setTransform(1, 0, 0, 1, 0, 0);
+                let myimage = filterCellEngine.getImageData(0, 0, w, h);
 
-            let myimage = filterCellEngine.getImageData(0, 0, w, h);
+                this.preprocessFilters(this.currentFilters);
 
-            this.preprocessFilters(this.currentFilters);
+                let img = filterEngine.action({
+                    image: myimage,
+                    filters: this.currentFilters
+                });
 
-            let img = filterEngine.action({
-                image: myimage,
-                filters: this.currentFilters
-            });
+                if (img) {
 
-            if (img) {
-
-                filterCellEngine.globalCompositeOperation = 'source-over';
-                filterCellEngine.globalAlpha = 1;
-                filterCellEngine.setTransform(1, 0, 0, 1, 0, 0);
-                filterCellEngine.putImageData(img, 0, 0);
-            }
-        }
-        currentEngine.save();
-
-        currentEngine.globalAlpha = (this.state && this.state.globalAlpha) ? this.state.globalAlpha : 1;
-        currentEngine.globalCompositeOperation = (this.state && this.state.globalCompositeOperation) ? this.state.globalCompositeOperation : 'source-over';
-        
-        currentEngine.setTransform(1, 0, 0, 1, 0, 0);
-
-        currentEngine.drawImage(filterCellElement, 0, 0);
-
-        // This is also the point at which we action any requests to stash the Cell output and (optionally) create/update imageAsset objects and associated &lt;img> elements for use elsewhere in the Scrawl-canvas ecosystem.
-        if (this.stashOutput) {
-
-            this.stashOutput = false;
-
-            let [stashX, stashY, stashWidth, stashHeight] = this.getCellCoverage(filterCellEngine.getImageData(0, 0, filterCellElement.width, filterCellElement.height));
-
-            this.stashedImageData = filterCellEngine.getImageData(stashX, stashY, stashWidth, stashHeight);
-
-            if (this.stashOutputAsAsset) {
-
-                // KNOWN ISSUE - it takes time for the images to load the new dataURLs generated from canvas elements. See demo [Canvas-020](../../demo/canvas-020.html) for a workaround.
-                this.stashOutputAsAsset = false;
-
-                filterCellElement.width = stashWidth;
-                filterCellElement.height = stashHeight;
-                filterCellEngine.putImageData(this.stashedImageData, 0, 0);
-
-                if (!this.stashedImage) {
-
-                    let newimg = this.stashedImage = document.createElement('img');
-
-                    newimg.id = `${this.name}-image`;
-
-                    newimg.onload = function () {
-
-                        scrawlCanvasHold.appendChild(newimg);
-                        importDomImage(`#${newimg.id}`);
-                    };
-
-                    newimg.src = filterCellElement.toDataURL();
+                    filterCellEngine.globalCompositeOperation = 'source-over';
+                    filterCellEngine.globalAlpha = 1;
+                    filterCellEngine.setTransform(1, 0, 0, 1, 0, 0);
+                    filterCellEngine.putImageData(img, 0, 0);
                 }
-                else this.stashedImage.src = filterCellElement.toDataURL();
             }
+            currentEngine.save();
+
+            currentEngine.globalAlpha = (this.state && this.state.globalAlpha) ? this.state.globalAlpha : 1;
+            currentEngine.globalCompositeOperation = (this.state && this.state.globalCompositeOperation) ? this.state.globalCompositeOperation : 'source-over';
+            
+            currentEngine.setTransform(1, 0, 0, 1, 0, 0);
+
+            currentEngine.drawImage(filterCellElement, 0, 0);
+
+            // This is also the point at which we action any requests to stash the Cell output and (optionally) create/update imageAsset objects and associated &lt;img> elements for use elsewhere in the Scrawl-canvas ecosystem.
+            if (this.stashOutput) {
+
+                this.stashOutput = false;
+
+                let [stashX, stashY, stashWidth, stashHeight] = this.getCellCoverage(filterCellEngine.getImageData(0, 0, filterCellElement.width, filterCellElement.height));
+
+                this.stashedImageData = filterCellEngine.getImageData(stashX, stashY, stashWidth, stashHeight);
+
+                if (this.stashOutputAsAsset) {
+
+                    // KNOWN ISSUE - it takes time for the images to load the new dataURLs generated from canvas elements. See demo [Canvas-020](../../demo/canvas-020.html) for a workaround.
+                    this.stashOutputAsAsset = false;
+
+                    filterCellElement.width = stashWidth;
+                    filterCellElement.height = stashHeight;
+                    filterCellEngine.putImageData(this.stashedImageData, 0, 0);
+
+                    if (!this.stashedImage) {
+
+                        let newimg = this.stashedImage = document.createElement('img');
+
+                        newimg.id = `${this.name}-image`;
+
+                        newimg.onload = function () {
+
+                            scrawlCanvasHold.appendChild(newimg);
+                            importDomImage(`#${newimg.id}`);
+                        };
+
+                        newimg.src = filterCellElement.toDataURL();
+                    }
+                    else this.stashedImage.src = filterCellElement.toDataURL();
+                }
+            }
+            currentEngine.restore();
+
+            this.currentHost = currentHost;
+            this.noCanvasEngineUpdates = oldNoCanvasEngineUpdates;
         }
-
         releaseCell(filterHost);
-
-        currentEngine.restore();
-
-        this.currentHost = currentHost;
-        this.noCanvasEngineUpdates = oldNoCanvasEngineUpdates;
     };
 
 // `getCellCoverage` - internal helper function - calculates the box start and dimensions values for the entity on its current Cell host, to help minimize work required when applying filters to the entity output. Also used when building an image when the `scrawl.createImageFromEntity` function is invoked.

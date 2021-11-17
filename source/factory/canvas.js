@@ -512,11 +512,23 @@ P.addCell = function (item) {
 
     if (item) {
 
-        pushUnique(this.cells, item);
-        cell[item].prepareStamp();
-        this.dirtyCells = true;
+        const c = cell[item];
+
+        if (c) {
+
+            if (this.base) {
+
+                c.host = this.base.name;
+                c.currentHost = null;
+            }
+            c.prepareStamp();
+
+            pushUnique(this.cells, item);
+            this.dirtyCells = true;
+            // this.domShowRequired = true;
+        }
     }
-    return item;
+    return this;
 };
 
 // `removeCell` - remove a Cell object from the wrapper's cells Array; argument can be the Cell's name-String, or the Cell object itself
@@ -528,6 +540,7 @@ P.removeCell = function (item) {
 
         removeItem(this.cells, item);
         this.dirtyCells = true;
+        // this.domShowRequired = true;
     }
     return this;
 };

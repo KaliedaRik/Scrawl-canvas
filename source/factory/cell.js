@@ -662,7 +662,15 @@ P.installElement = function (element) {
 // `updateControllerCells` - internal function: ask the Cell's Canvas controller to review/update its cells data
 P.updateControllerCells = function () {
 
-    if (this.controller) this.controller.dirtyCells = true;
+    const { controller, currentHost } = this;
+
+    if (controller) controller.dirtyCells = true;
+    else if (currentHost) {
+
+        let host = currentHost.getHost();
+
+        if (host) host.dirtyCells = true;
+    }
 };
 
 // The following functions set the Cell wrapper's &lt;canvas> element's CanvasRenderingContext2D engine's attributes to match a given set of values

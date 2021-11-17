@@ -187,27 +187,6 @@ scrawl.makeFilter({
     ],
 });
 
-// __Blend__ filter
-scrawl.makeFilter({
-    name: 'blend',
-    actions: [
-        {
-            action: 'process-image',
-            asset: 'iris',
-            width: 400,
-            height: 400,
-            copyWidth: 400,
-            copyHeight: 400,
-            lineOut: 'flower',
-        },
-        {
-            action: 'blend',
-            lineMix: 'flower',
-            blend: 'lighten',
-        }
-    ],
-});
-
 scrawl.makeFilter({
     name: 'compose',
     actions: [

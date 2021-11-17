@@ -1701,7 +1701,15 @@ D.<span class="hljs-property">clearAlpha</span> = <span class="hljs-keyword">fun
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">updateControllerCells</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">controller</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">controller</span>.<span class="hljs-property">dirtyCells</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">const</span> { controller, currentHost } = <span class="hljs-variable language_">this</span>;
+
+    <span class="hljs-keyword">if</span> (controller) controller.<span class="hljs-property">dirtyCells</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (currentHost) {
+
+        <span class="hljs-keyword">let</span> host = currentHost.<span class="hljs-title function_">getHost</span>();
+
+        <span class="hljs-keyword">if</span> (host) host.<span class="hljs-property">dirtyCells</span> = <span class="hljs-literal">true</span>;
+    }
 };</pre></div></div>
             
         </li>
