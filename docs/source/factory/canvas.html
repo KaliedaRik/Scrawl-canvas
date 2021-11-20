@@ -1641,7 +1641,22 @@ S.<span class="hljs-property">composite</span> = <span class="hljs-keyword">func
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">clear</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCells</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanCells</span>();
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCells</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanCells</span>();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-52">&#x00a7;</a>
+              </div>
+              <p>Handle base dimensions - other cells may use it for their relative dimensions</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">base</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">base</span>.<span class="hljs-property">dirtyDimensions</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">base</span>.<span class="hljs-title function_">cleanDimensions</span>();
 
     <span class="hljs-keyword">const</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">cellBatchesClear</span>;
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = c.<span class="hljs-property">length</span>; i &lt; iz; i++) {
@@ -1653,11 +1668,11 @@ S.<span class="hljs-property">composite</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-52">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p><code>compile</code> - For Cell objects in the wrapper’s <strong>cells</strong> (and associated) Arrays:</p>
 <ul>
@@ -1672,17 +1687,32 @@ S.<span class="hljs-property">composite</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-53">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p>Handle constituent cells</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCells</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanCells</span>();
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCells</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanCells</span>();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-55">&#x00a7;</a>
+              </div>
+              <p>Handle base dimensions - other cells may use it for their relative dimensions</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">base</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">base</span>.<span class="hljs-property">dirtyDimensions</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">base</span>.<span class="hljs-title function_">cleanDimensions</span>();
 
     <span class="hljs-keyword">const</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">cellBatchesCompile</span>;
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = c.<span class="hljs-property">length</span>; i &lt; iz; i++) {
@@ -1693,11 +1723,11 @@ S.<span class="hljs-property">composite</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-54">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p>Handle display canvas</p>
 
@@ -1710,11 +1740,11 @@ S.<span class="hljs-property">composite</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-55">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p><code>show</code> - For Cell objects in the wrapper’s <strong>cells</strong> (and associated) Arrays:</p>
 <ul>
@@ -1734,17 +1764,32 @@ S.<span class="hljs-property">composite</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-56">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p>Handle constituent cells</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCells</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanCells</span>();
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCells</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">cleanCells</span>();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-59">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-59">&#x00a7;</a>
+              </div>
+              <p>Handle base dimensions - other cells may use it for their relative dimensions</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">base</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">base</span>.<span class="hljs-property">dirtyDimensions</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">base</span>.<span class="hljs-title function_">cleanDimensions</span>();
 
     <span class="hljs-keyword">const</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">cellBatchesShow</span>;
     <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = c.<span class="hljs-property">length</span>; i &lt; iz; i++) {
@@ -1755,26 +1800,11 @@ S.<span class="hljs-property">composite</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-57">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
-              </div>
-              <p>Clear Display canvas, and get the base cell to stamp itself onto it
-console.log(‘Canvas 590 clearRect’, this.localWidth, this.localHeight);
-this.engine.clearRect(0, 0, this.localWidth, this.localHeight);</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-58">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <p>Get the base cell to stamp itself onto the display canvas</p>
 
@@ -1785,11 +1815,11 @@ this.engine.clearRect(0, 0, this.localWidth, this.localHeight);</p>
         </li>
         
         
-        <li id="section-59">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p>Handle DOM-related positioning and display requirements, including ARIA updates</p>
 
@@ -1802,11 +1832,11 @@ this.engine.clearRect(0, 0, this.localWidth, this.localHeight);</p>
         </li>
         
         
-        <li id="section-60">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p><code>render</code> - orchestrate a single Display cycle - clear, then compile, then show.</p>
 
@@ -1822,11 +1852,11 @@ this.engine.clearRect(0, 0, this.localWidth, this.localHeight);</p>
         </li>
         
         
-        <li id="section-61">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p><code>cleanCells</code> - internal function triggered each time there is an update to the <strong>cells</strong> Array attribute, or a constituent Cell sets the Canvas wrapper’s <code>dirtyCell</code> flag.</p>
 <ul>
@@ -1884,11 +1914,11 @@ this.engine.clearRect(0, 0, this.localWidth, this.localHeight);</p>
         </li>
         
         
-        <li id="section-62">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <h5 id="handling-dom-events">Handling DOM events</h5>
 <p><code>cascadeEventAction</code> - The Canvas wrapper’s &lt;canvas&gt; element is part of the DOM, thus it is able to participate in all normal DOM events. We use the cascadeEventAction function to tell the wrapper which of the events it receives should be cascaded down to its constituent Cell objects and, in turn, their Groups’ artefacts. </p>
@@ -1916,11 +1946,11 @@ this.engine.clearRect(0, 0, this.localWidth, this.localHeight);</p>
         </li>
         
         
-        <li id="section-63">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <ol>
 <li>Find all entitys currently colliding with the mouse/touch coordinate over the canvas</li>
@@ -1941,11 +1971,11 @@ this.engine.clearRect(0, 0, this.localWidth, this.localHeight);</p>
         </li>
         
         
-        <li id="section-64">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <ol start="2">
 <li>Process the returned test results</li>
@@ -1980,11 +2010,11 @@ this.engine.clearRect(0, 0, this.localWidth, this.localHeight);</p>
         </li>
         
         
-        <li id="section-65">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <ol start="3">
 <li>Trigger the required action on each affected entity</li>
@@ -2051,11 +2081,11 @@ this.engine.clearRect(0, 0, this.localWidth, this.localHeight);</p>
         </li>
         
         
-        <li id="section-66">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <ol start="4">
 <li>Cleanup and return</li>
@@ -2071,11 +2101,11 @@ this.engine.clearRect(0, 0, this.localWidth, this.localHeight);</p>
         </li>
         
         
-        <li id="section-67">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <p><code>cleanAria</code> - internal function; transfers updated <strong>title</strong>, <strong>label</strong>, <strong>description</strong> and <strong>role</strong> attribute values into the relevant DOM elements</p>
 
@@ -2093,11 +2123,11 @@ this.engine.clearRect(0, 0, this.localWidth, this.localHeight);</p>
         </li>
         
         
-        <li id="section-68">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
@@ -2114,11 +2144,11 @@ constructors.<span class="hljs-property">Canvas</span> = <span class="hljs-title
         </li>
         
         
-        <li id="section-69">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 

@@ -875,6 +875,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-031.html">
+                  ./demo/temp-031.js
+                </a>
+              
+                
                 <a class="source" href="temp-100.html">
                   ./demo/temp-100.js
                 </a>
@@ -935,7 +940,7 @@
                 <a class="ss" href="#section-1">&#x00a7;</a>
               </div>
               <h1 id="demo-canvas-057">Demo Canvas 057</h1>
-<p>Seeded random number generator; point on path</p>
+<p>Animation observer; animations controlled by scroll position</p>
 
             </div>
             
@@ -988,7 +993,24 @@
     rc2 = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>[<span class="hljs-string">&#x27;responsive-canvas-2&#x27;</span>],
     rc3 = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>[<span class="hljs-string">&#x27;responsive-canvas-3&#x27;</span>],
 
-    bc1 = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>[<span class="hljs-string">&#x27;banner-canvas-1&#x27;</span>],</pre></div></div>
+    bc1 = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>[<span class="hljs-string">&#x27;banner-canvas-1&#x27;</span>],
+    bc2 = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>[<span class="hljs-string">&#x27;banner-canvas-2&#x27;</span>];
+
+<span class="hljs-keyword">const</span> canvasSet = {
+    <span class="hljs-attr">fit</span>: <span class="hljs-string">&#x27;cover&#x27;</span>,
+    <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">ignoreCanvasCssDimensions</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">baseMatchesCanvasDimensions</span>: <span class="hljs-literal">true</span>,
+};
+
+fc.<span class="hljs-title function_">set</span>(canvasSet);
+
+rc1.<span class="hljs-title function_">set</span>(canvasSet);
+rc2.<span class="hljs-title function_">set</span>(canvasSet);
+rc3.<span class="hljs-title function_">set</span>(canvasSet);
+
+bc1.<span class="hljs-title function_">set</span>(canvasSet);
+bc2.<span class="hljs-title function_">set</span>(canvasSet);</pre></div></div>
             
         </li>
         
@@ -999,43 +1021,13 @@
               <div class="sswrap ">
                 <a class="ss" href="#section-5">&#x00a7;</a>
               </div>
-              <p>bs1 = scrawl.library.stack[‘banner-stack-1’],</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>
-    bc2 = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>[<span class="hljs-string">&#x27;banner-canvas-2&#x27;</span>],
-    bs2 = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">stack</span>[<span class="hljs-string">&#x27;banner-stack-2&#x27;</span>];
-
-<span class="hljs-keyword">const</span> canvasSet = {
-    <span class="hljs-attr">fit</span>: <span class="hljs-string">&#x27;cover&#x27;</span>,
-    <span class="hljs-attr">checkForResize</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">ignoreCanvasCssDimensions</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">baseMatchesCanvasDimensions</span>: <span class="hljs-literal">true</span>,
-};
-
-fc.<span class="hljs-title function_">set</span>(canvasSet);
-rc1.<span class="hljs-title function_">set</span>(canvasSet);
-rc2.<span class="hljs-title function_">set</span>(canvasSet);
-rc3.<span class="hljs-title function_">set</span>(canvasSet);
-bc1.<span class="hljs-title function_">set</span>(canvasSet);
-bc2.<span class="hljs-title function_">set</span>(canvasSet);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-6">&#x00a7;</a>
-              </div>
               <h4 id="fixed-canvas">Fixed canvas</h4>
 <p>Update the text values of three Phrase entitys based on the positions of the top, center and base of the canvas element in the viewport</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> fixedCanvasIsDisplaying = <span class="hljs-string">&#x27;&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> fixedCanvasIsDisplaying = <span class="hljs-literal">false</span>;
+<span class="hljs-keyword">let</span> fixedCanvasDragZone = <span class="hljs-literal">false</span>;
 
 <span class="hljs-keyword">const</span> fcAnimation = scrawl.<span class="hljs-title function_">makeRender</span>({
 
@@ -1046,14 +1038,14 @@ bc2.<span class="hljs-title function_">set</span>(canvasSet);</pre></div></div>
         </li>
         
         
-        <li id="section-7">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-7">&#x00a7;</a>
+                <a class="ss" href="#section-6">&#x00a7;</a>
               </div>
               <h4 id="responsive-canvas-1">Responsive canvas 1</h4>
-<p>Update the text values of three Phrase entitys based on the positions of the top, center and base of the canvas element in the viewport</p>
+<p>Update the text values of three Phrase entitys based on the positions of the top, center and base of the &lt;canvas&gt; element in the viewport. The element is responsive, with positions updating as the element is resized.</p>
 
             </div>
             
@@ -1100,14 +1092,14 @@ bc2.<span class="hljs-title function_">set</span>(canvasSet);</pre></div></div>
         </li>
         
         
-        <li id="section-8">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-8">&#x00a7;</a>
+                <a class="ss" href="#section-7">&#x00a7;</a>
               </div>
               <h4 id="responsive-canvas-2">Responsive canvas 2</h4>
-<p>Update the start and end points of a gradient based on the positions of the top and base of the canvas element in the viewport</p>
+<p>Update the start and end points of a gradient based on the positions of the top and base of the &lt;canvas&gt; element in the viewport. Link artefact animation to the element’s position.</p>
 
             </div>
             
@@ -1131,24 +1123,80 @@ bc2.<span class="hljs-title function_">set</span>(canvasSet);</pre></div></div>
     <span class="hljs-attr">endX</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
 });
 
+scrawl.<span class="hljs-title function_">makeLine</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;rc2-line&#x27;</span>,
+    <span class="hljs-attr">group</span>: rc2.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">end</span>: [<span class="hljs-string">&#x27;90%&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">handleX</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;draw&#x27;</span>,
+    <span class="hljs-attr">strokeStyle</span>: <span class="hljs-string">&#x27;rc2-gradient&#x27;</span>,
+    <span class="hljs-attr">lockStrokeStyleToEntity</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">5</span>,
+    <span class="hljs-attr">lineCap</span>: <span class="hljs-string">&#x27;round&#x27;</span>,
+});
+
 scrawl.<span class="hljs-title function_">makeBlock</span>({
 
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;rc2-block&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;rc2-block-1&#x27;</span>,
     <span class="hljs-attr">group</span>: rc2.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
-    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;100%&#x27;</span>, <span class="hljs-string">&#x27;100%&#x27;</span>],
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;25%&#x27;</span>, <span class="hljs-string">&#x27;25%&#x27;</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-string">&#x27;40%&#x27;</span>, <span class="hljs-string">&#x27;10%&#x27;</span>],
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
     <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;rc2-gradient&#x27;</span>,
+    <span class="hljs-attr">lockFillStyleToEntity</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">5</span>,
+    <span class="hljs-attr">lineCap</span>: <span class="hljs-string">&#x27;round&#x27;</span>,
+
+}).<span class="hljs-title function_">clone</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;rc2-block-2&#x27;</span>,
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;75%&#x27;</span>, <span class="hljs-string">&#x27;75%&#x27;</span>],
+    <span class="hljs-attr">flipReverse</span>: <span class="hljs-literal">true</span>,
+});
+
+scrawl.<span class="hljs-title function_">makeWheel</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;rc2-wheel-1&#x27;</span>,
+    <span class="hljs-attr">group</span>: rc2.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>,
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;25%&#x27;</span>, <span class="hljs-string">&#x27;75%&#x27;</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">radius</span>: <span class="hljs-string">&#x27;20%&#x27;</span>,
+    <span class="hljs-attr">startAngle</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">endAngle</span>: -<span class="hljs-number">20</span>,
+    <span class="hljs-attr">includeCenter</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;rc2-gradient&#x27;</span>,
+    <span class="hljs-attr">lockFillStyleToEntity</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">5</span>,
+    <span class="hljs-attr">lineCap</span>: <span class="hljs-string">&#x27;round&#x27;</span>,
+
+}).<span class="hljs-title function_">clone</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;rc2-wheel-2&#x27;</span>,
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;75%&#x27;</span>, <span class="hljs-string">&#x27;25%&#x27;</span>],
+    <span class="hljs-attr">flipReverse</span>: <span class="hljs-literal">true</span>,
 });
 
 <span class="hljs-keyword">const</span> <span class="hljs-title function_">updateRc2</span> = (<span class="hljs-params"></span>) =&gt; {
 
     <span class="hljs-keyword">const</span> {here} = rc2;
-    <span class="hljs-keyword">let</span> { inViewportTop, inViewportBase } = here;
+    <span class="hljs-keyword">let</span> { inViewportTop, inViewportCenter, inViewportBase } = here;
+
+    <span class="hljs-keyword">const</span> group = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">group</span>[rc2.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>];
 
     <span class="hljs-keyword">if</span> (inViewportTop &lt; <span class="hljs-number">0</span>) inViewportTop = <span class="hljs-number">0</span>;
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (inViewportTop &gt; <span class="hljs-number">1</span>) inViewportTop = <span class="hljs-number">1</span>;
 
     <span class="hljs-keyword">if</span> (inViewportBase &lt; <span class="hljs-number">0</span>) inViewportBase = <span class="hljs-number">0</span>;
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (inViewportBase &gt; <span class="hljs-number">1</span>) inViewportBase = <span class="hljs-number">1</span>;
+
+    <span class="hljs-keyword">if</span> (inViewportCenter &lt; <span class="hljs-number">0</span>) inViewportCenter = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (inViewportCenter &gt; <span class="hljs-number">1</span>) inViewportCenter = <span class="hljs-number">1</span>;
+
+    group.<span class="hljs-title function_">setArtefacts</span>({ <span class="hljs-attr">roll</span>: inViewportCenter * -<span class="hljs-number">360</span> });
 
     rc2Gradient.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">0</span>, rc2Color1.<span class="hljs-title function_">getRangeColor</span>(inViewportTop));
     rc2Gradient.<span class="hljs-title function_">updateColor</span>(<span class="hljs-number">999</span>, rc2Color2.<span class="hljs-title function_">getRangeColor</span>(inViewportBase));
@@ -1165,14 +1213,14 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-9">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h4 id="banner-canvas-1">Banner canvas 1</h4>
-<p>Tie an animation to scrolling; animation remains in viewport while it runs. Effect is reversible.</p>
+<p>Fix an animation to the viewport while the user scrolls through the page. When the animation completes, the &lt;canvas&gt; element rejoins the page scroll. The canvas remains interactive before, during and after the animation’s run. The animation is reversible.</p>
 
             </div>
             
@@ -1209,11 +1257,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-10">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-10">&#x00a7;</a>
+                <a class="ss" href="#section-9">&#x00a7;</a>
               </div>
               <p>We create this effect using a dashed line with very large dash/nodash values</p>
 <ul>
@@ -1228,11 +1276,11 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
         </li>
         
         
-        <li id="section-11">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-11">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>To retrieve the Shape’s length, we need to tell it that it is being used as a path</p>
 
@@ -1276,6 +1324,92 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
     <span class="hljs-attr">lineHeight</span>: <span class="hljs-number">1</span>,
 });
 
+scrawl.<span class="hljs-title function_">makeGroup</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;bc1-drag-group&#x27;</span>,
+    <span class="hljs-attr">host</span>: <span class="hljs-string">&#x27;bc1-visual-cell&#x27;</span>,
+    <span class="hljs-attr">order</span>: <span class="hljs-number">0</span>,
+});
+
+scrawl.<span class="hljs-title function_">makeBlock</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;bc1-drag-box-1&#x27;</span>,
+    <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;bc1-drag-group&#x27;</span>,
+    <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">150</span>, <span class="hljs-number">70</span>],
+    <span class="hljs-attr">start</span>: [<span class="hljs-string">&#x27;10%&#x27;</span>, <span class="hljs-string">&#x27;25%&#x27;</span>],
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;white&#x27;</span>,
+    <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">4</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;fillThenDraw&#x27;</span>,
+
+    <span class="hljs-attr">onEnter</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+        bc1.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">css</span>: { <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;pointer&#x27;</span> }});
+        fc.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">css</span>: { <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;pointer&#x27;</span> }});
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({ 
+            <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;pink&#x27;</span>,
+            <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">8</span>,
+        });
+    },
+
+    <span class="hljs-attr">onLeave</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+
+        bc1.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">css</span>: { <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;auto&#x27;</span> }});
+        fc.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">css</span>: { <span class="hljs-attr">cursor</span>: <span class="hljs-string">&#x27;auto&#x27;</span> }});
+        <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">set</span>({ 
+            <span class="hljs-attr">fillStyle</span>: <span class="hljs-string">&#x27;white&#x27;</span>,
+            <span class="hljs-attr">lineWidth</span>: <span class="hljs-number">4</span>,
+        });
+    },
+
+}).<span class="hljs-title function_">clone</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;bc1-drag-box-2&#x27;</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+
+}).<span class="hljs-title function_">clone</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;bc1-drag-box-3&#x27;</span>,
+    <span class="hljs-attr">startY</span>: <span class="hljs-string">&#x27;75%&#x27;</span>,
+});
+
+scrawl.<span class="hljs-title function_">makeGroup</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;bc1-label-group&#x27;</span>,
+    <span class="hljs-attr">host</span>: <span class="hljs-string">&#x27;bc1-visual-cell&#x27;</span>,
+    <span class="hljs-attr">order</span>: <span class="hljs-number">1</span>,
+});
+
+scrawl.<span class="hljs-title function_">makePhrase</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;bc1-drag-box-label-1&#x27;</span>,
+    <span class="hljs-attr">group</span>: <span class="hljs-string">&#x27;bc1-label-group&#x27;</span>,
+    <span class="hljs-attr">font</span>: <span class="hljs-string">&#x27;20px Arial, sans-serif&#x27;</span>,
+    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;DRAG ME!&#x27;</span>,
+    <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;bc1-drag-box-1&#x27;</span>,
+    <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
+    <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;center&#x27;</span>],
+    <span class="hljs-attr">lineHeight</span>: <span class="hljs-number">0.7</span>,
+
+}).<span class="hljs-property">clone</span> ({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;bc1-drag-box-label-2&#x27;</span>,
+    <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;bc1-drag-box-2&#x27;</span>,
+
+}).<span class="hljs-property">clone</span> ({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;bc1-drag-box-label-3&#x27;</span>,
+    <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;bc1-drag-box-3&#x27;</span>,
+});
+
+scrawl.<span class="hljs-title function_">makeDragZone</span>({
+
+    <span class="hljs-attr">zone</span>: bc1,
+    <span class="hljs-attr">collisionGroup</span>: <span class="hljs-string">&#x27;bc1-drag-group&#x27;</span>,
+    <span class="hljs-attr">coordinateSource</span>: bc1Cell,
+    <span class="hljs-attr">endOn</span>: [<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-string">&#x27;leave&#x27;</span>],
+});
+
 <span class="hljs-keyword">const</span> bc1Display = scrawl.<span class="hljs-title function_">makePicture</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;bc1-display&#x27;</span>,
@@ -1286,51 +1420,30 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
     <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span>,
 });
 
+scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-string">&#x27;move&#x27;</span>, <span class="hljs-function">() =&gt;</span> bc1.<span class="hljs-title function_">cascadeEventAction</span>(<span class="hljs-string">&#x27;move&#x27;</span>), bc1.<span class="hljs-property">domElement</span>);
+
 <span class="hljs-keyword">const</span> <span class="hljs-title function_">updateBc1</span> = (<span class="hljs-params"></span>) =&gt; {
+
+    bc1Cell.<span class="hljs-title function_">updateHere</span>();
 
     <span class="hljs-keyword">const</span> { here } = bc1;
     <span class="hljs-keyword">const</span> { inViewportTop } = here;
 
-    bc1Phrase.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">text</span>: <span class="hljs-string">`Canvas top position: <span class="hljs-subst">${inViewportTop.toFixed(<span class="hljs-number">4</span>)}</span>`</span> });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-12">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-12">&#x00a7;</a>
-              </div>
-              <p>Gives the effect of the canvas being sticky only when 100% covering the viewport</p>
+    bc1Phrase.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">text</span>: <span class="hljs-string">`Canvas top position: <span class="hljs-subst">${inViewportTop.toFixed(<span class="hljs-number">4</span>)}</span>`</span> });
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (inViewportTop &gt; <span class="hljs-number">0</span> || inViewportTop &lt; -<span class="hljs-number">2</span>) {</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-13">
-            <div class="annotation">
-              
-              <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
-              </div>
-              <p>fc.domElement.style.transform = <code>translateY(${inViewportTop * 100}%)</code>;</p>
+    <span class="hljs-keyword">if</span> (inViewportTop &gt; <span class="hljs-number">0</span> || inViewportTop &lt; -<span class="hljs-number">2</span>) {
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        fc.<span class="hljs-property">domElement</span>.<span class="hljs-property">style</span>.<span class="hljs-property">transform</span> = <span class="hljs-string">&#x27;translateY(200%)&#x27;</span>;
+        fc.<span class="hljs-property">domElement</span>.<span class="hljs-property">style</span>.<span class="hljs-property">transform</span> = <span class="hljs-string">&#x27;translateY(200%)&#x27;</span>;
 
         <span class="hljs-keyword">if</span> (fixedCanvasIsDisplaying) {
 
-            fixedCanvasIsDisplaying = <span class="hljs-string">&#x27;&#x27;</span>;
+            <span class="hljs-title function_">fixedCanvasIsDisplaying</span>();
+            fixedCanvasIsDisplaying = <span class="hljs-literal">false</span>;
 
-            bc1Cell.<span class="hljs-title function_">set</span>({ 
-                <span class="hljs-attr">startY</span>: (inViewportTop &gt; <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;0%&#x27;</span> : <span class="hljs-string">`<span class="hljs-subst">${ <span class="hljs-number">200</span> / <span class="hljs-number">3</span> }</span>%`</span>,
-                <span class="hljs-attr">shown</span>: <span class="hljs-literal">true</span>, 
-            });
+            <span class="hljs-keyword">if</span> (fixedCanvasDragZone) <span class="hljs-title function_">fixedCanvasDragZone</span>();
+            fixedCanvasDragZone = <span class="hljs-literal">false</span>;
+
+            bc1Cell.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">startY</span>: (inViewportTop &gt; <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;0%&#x27;</span> : <span class="hljs-string">`<span class="hljs-subst">${ <span class="hljs-number">200</span> / <span class="hljs-number">3</span> }</span>%`</span> });
         };
     }
     <span class="hljs-keyword">else</span> {
@@ -1339,11 +1452,19 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
 
         <span class="hljs-keyword">if</span> (!fixedCanvasIsDisplaying) {
 
-            fixedCanvasIsDisplaying = <span class="hljs-string">&#x27;bc1-visual-cell&#x27;</span>;
+            fixedCanvasIsDisplaying = scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-string">&#x27;move&#x27;</span>, <span class="hljs-function">() =&gt;</span> bc1.<span class="hljs-title function_">cascadeEventAction</span>(<span class="hljs-string">&#x27;move&#x27;</span>), fc.<span class="hljs-property">domElement</span>);
 
-            bc1Cell.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span> });
+            fixedCanvasDragZone = scrawl.<span class="hljs-title function_">makeDragZone</span>({
+
+                <span class="hljs-attr">zone</span>: fc,
+                <span class="hljs-attr">collisionGroup</span>: <span class="hljs-string">&#x27;bc1-drag-group&#x27;</span>,
+                <span class="hljs-attr">endOn</span>: [<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-string">&#x27;leave&#x27;</span>],
+            });
         };
+
         bc1ArrowProgress.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">progress</span>: inViewportTop * (-<span class="hljs-number">1</span> / <span class="hljs-number">2</span>) });
+
+        bc1Cell.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">startY</span>: <span class="hljs-string">`<span class="hljs-subst">${ (inViewportTop * -<span class="hljs-number">100</span>) / <span class="hljs-number">3</span> }</span>%`</span> });
     }
 };
 
@@ -1354,29 +1475,25 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
     <span class="hljs-attr">observer</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">commence</span>: updateBc1,
 
-    <span class="hljs-attr">onRun</span>: <span class="hljs-function">() =&gt;</span> {
-        bc1Display.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span> });
-    },
-    <span class="hljs-attr">onHalt</span>: <span class="hljs-function">() =&gt;</span> {
-        bc1Display.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span> });
-    },
+    <span class="hljs-attr">onRun</span>: <span class="hljs-function">() =&gt;</span> bc1Display.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">visibility</span>: <span class="hljs-literal">true</span> }),
+    <span class="hljs-attr">onHalt</span>: <span class="hljs-function">() =&gt;</span> bc1Display.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">visibility</span>: <span class="hljs-literal">false</span> }),
 });</pre></div></div>
             
         </li>
         
         
-        <li id="section-14">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-11">&#x00a7;</a>
               </div>
               <h4 id="responsive-canvas-3">Responsive canvas 3</h4>
-<p>Update the rotations of a group of artefacts based on the position of the center of the canvas element in the viewport; rotation only happens when the center of the canvas element appears in the viewport</p>
+<p>Link progression of tween-based animations to the position of the center of the &lt;canvas&gt; element in the viewport. Trigger timeline actions when the center of the element passes the action’s breakpoint. Tweens and actions are reversible.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>rc3.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">fit</span>: <span class="hljs-string">&#x27;contain&#x27;</span> });
+            <div class="content"><div class='highlight'><pre>rc3.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;red&#x27;</span> });
 
 scrawl.<span class="hljs-title function_">makeGradient</span>({
 
@@ -1439,17 +1556,97 @@ scrawl.<span class="hljs-title function_">makeWheel</span>({
     <span class="hljs-attr">flipReverse</span>: <span class="hljs-literal">true</span>,
 });
 
+<span class="hljs-keyword">const</span> rc3Ticker = scrawl.<span class="hljs-title function_">makeTicker</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;rc3-ticker&#x27;</span>,
+    <span class="hljs-attr">cycles</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">duration</span>: <span class="hljs-number">1000</span>,
+});
+
+scrawl.<span class="hljs-title function_">makeTween</span>({
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;rc3-block-tween&#x27;</span>,
+    <span class="hljs-attr">targets</span>: [<span class="hljs-string">&#x27;rc3-block-1&#x27;</span>, <span class="hljs-string">&#x27;rc3-block-2&#x27;</span>],
+    <span class="hljs-attr">ticker</span>: <span class="hljs-string">&#x27;rc3-ticker&#x27;</span>,
+    <span class="hljs-attr">duration</span>: <span class="hljs-number">600</span>,
+    <span class="hljs-attr">time</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">definitions</span>: [
+        {
+            <span class="hljs-attr">attribute</span>: <span class="hljs-string">&#x27;roll&#x27;</span>,
+            <span class="hljs-attr">start</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">end</span>: <span class="hljs-number">720</span>,
+            <span class="hljs-attr">engine</span>: <span class="hljs-string">&#x27;easeOut&#x27;</span>,
+        },
+    ],
+});
+
+scrawl.<span class="hljs-title function_">makeTween</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;rc3-wheel-tween&#x27;</span>,
+    <span class="hljs-attr">targets</span>: [<span class="hljs-string">&#x27;rc3-wheel-1&#x27;</span>, <span class="hljs-string">&#x27;rc3-wheel-2&#x27;</span>],
+    <span class="hljs-attr">ticker</span>: <span class="hljs-string">&#x27;rc3-ticker&#x27;</span>,
+    <span class="hljs-attr">duration</span>: <span class="hljs-number">600</span>,
+    <span class="hljs-attr">time</span>: <span class="hljs-number">400</span>,
+    <span class="hljs-attr">definitions</span>: [
+        {
+            <span class="hljs-attr">attribute</span>: <span class="hljs-string">&#x27;roll&#x27;</span>,
+            <span class="hljs-attr">start</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">end</span>: -<span class="hljs-number">720</span>,
+            <span class="hljs-attr">engine</span>: <span class="hljs-string">&#x27;easeOut&#x27;</span>,
+        },
+    ],
+});
+
+scrawl.<span class="hljs-title function_">makeTween</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;rc3-line-tween&#x27;</span>,
+    <span class="hljs-attr">targets</span>: <span class="hljs-string">&#x27;rc3-line&#x27;</span>,
+    <span class="hljs-attr">ticker</span>: <span class="hljs-string">&#x27;rc3-ticker&#x27;</span>,
+    <span class="hljs-attr">duration</span>: <span class="hljs-number">800</span>,
+    <span class="hljs-attr">time</span>: <span class="hljs-number">100</span>,
+    <span class="hljs-attr">definitions</span>: [
+        {
+            <span class="hljs-attr">attribute</span>: <span class="hljs-string">&#x27;lineWidth&#x27;</span>,
+            <span class="hljs-attr">start</span>: <span class="hljs-number">6</span>,
+            <span class="hljs-attr">end</span>: <span class="hljs-number">30</span>,
+        },
+    ],
+});
+
+scrawl.<span class="hljs-title function_">makeAction</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;rc3-action-250&#x27;</span>,
+    <span class="hljs-attr">ticker</span>: <span class="hljs-string">&#x27;rc3-ticker&#x27;</span>,
+    <span class="hljs-attr">time</span>: <span class="hljs-number">250</span>,
+    <span class="hljs-attr">action</span>: <span class="hljs-function">() =&gt;</span> rc3.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;blue&#x27;</span>}),
+    <span class="hljs-attr">revert</span>: <span class="hljs-function">() =&gt;</span> rc3.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;red&#x27;</span>}),
+});
+
+scrawl.<span class="hljs-title function_">makeAction</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;rc3-action-500&#x27;</span>,
+    <span class="hljs-attr">ticker</span>: <span class="hljs-string">&#x27;rc3-ticker&#x27;</span>,
+    <span class="hljs-attr">time</span>: <span class="hljs-number">500</span>,
+    <span class="hljs-attr">action</span>: <span class="hljs-function">() =&gt;</span> rc3.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;green&#x27;</span>}),
+    <span class="hljs-attr">revert</span>: <span class="hljs-function">() =&gt;</span> rc3.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;blue&#x27;</span>}),
+});
+
+scrawl.<span class="hljs-title function_">makeAction</span>({
+
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;rc3-action-750&#x27;</span>,
+    <span class="hljs-attr">ticker</span>: <span class="hljs-string">&#x27;rc3-ticker&#x27;</span>,
+    <span class="hljs-attr">time</span>: <span class="hljs-number">750</span>,
+    <span class="hljs-attr">action</span>: <span class="hljs-function">() =&gt;</span> rc3.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;yellow&#x27;</span>}),
+    <span class="hljs-attr">revert</span>: <span class="hljs-function">() =&gt;</span> rc3.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">&#x27;green&#x27;</span>}),
+});
+
 <span class="hljs-keyword">const</span> <span class="hljs-title function_">updateRc3</span> = (<span class="hljs-params"></span>) =&gt; {
 
     <span class="hljs-keyword">const</span> {here} = rc3;
     <span class="hljs-keyword">let</span> { inViewportCenter } = here;
 
-    <span class="hljs-keyword">const</span> group = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">group</span>[rc3.<span class="hljs-property">base</span>.<span class="hljs-property">name</span>];
-
     <span class="hljs-keyword">if</span> (inViewportCenter &lt; <span class="hljs-number">0</span>) inViewportCenter = <span class="hljs-number">0</span>;
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (inViewportCenter &gt; <span class="hljs-number">1</span>) inViewportCenter = <span class="hljs-number">1</span>;
 
-    group.<span class="hljs-title function_">setArtefacts</span>({ <span class="hljs-attr">roll</span>: inViewportCenter * -<span class="hljs-number">360</span> });
+    rc3Ticker.<span class="hljs-title function_">seekTo</span>(inViewportCenter * <span class="hljs-number">1000</span>);
 };
 
 <span class="hljs-keyword">const</span> rc3Animation = scrawl.<span class="hljs-title function_">makeRender</span>({
@@ -1463,14 +1660,14 @@ scrawl.<span class="hljs-title function_">makeWheel</span>({
         </li>
         
         
-        <li id="section-15">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-15">&#x00a7;</a>
+                <a class="ss" href="#section-12">&#x00a7;</a>
               </div>
               <h4 id="banner-canvas-2">Banner canvas 2</h4>
-<p>Play a video only while the canvas is fully visible in the viewport (and after deliberate user interaction with the canvas).</p>
+<p>Play a video (after user interaction) only while the &lt;canvas&gt; element is fully visible in the viewport. Show scroll progression using a graphic dial and text. The blurred background moves upwards (parallax) as the user scrolls down. The parallax effect and dial/text animation are reversible.</p>
 
             </div>
             
@@ -1486,7 +1683,7 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;bc2-gaussian-blur&#x27;</span>,
     <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;gaussianBlur&#x27;</span>,
-    <span class="hljs-attr">radius</span>: <span class="hljs-number">30</span>,
+    <span class="hljs-attr">radius</span>: <span class="hljs-number">8</span>,
 });
 
 <span class="hljs-keyword">const</span> bc2Video1 = scrawl.<span class="hljs-title function_">makePicture</span>({
@@ -1499,8 +1696,10 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
     <span class="hljs-attr">width</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
     <span class="hljs-attr">height</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
 
-    <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
-    <span class="hljs-attr">copyHeight</span>: <span class="hljs-string">&#x27;100%&#x27;</span>,
+    <span class="hljs-attr">copyWidth</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+    <span class="hljs-attr">copyHeight</span>: <span class="hljs-string">&#x27;50%&#x27;</span>,
+
+    <span class="hljs-attr">copyStart</span>: [<span class="hljs-string">&#x27;25%&#x27;</span>, <span class="hljs-string">&#x27;25%&#x27;</span>],
 
     <span class="hljs-attr">filters</span>: [<span class="hljs-string">&#x27;bc2-gaussian-blur&#x27;</span>],
 });
@@ -1529,11 +1728,11 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
         </li>
         
         
-        <li id="section-16">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-16">&#x00a7;</a>
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Get rid of the event listener after invocation - it’s a one-time-only action</p>
 
@@ -1541,7 +1740,7 @@ scrawl.<span class="hljs-title function_">makeFilter</span>({
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-title function_">bc2InitialVideoStart</span>();
 
-}, bc2.<span class="hljs-property">domElement</span>);
+}, [bc2.<span class="hljs-property">domElement</span>, fc.<span class="hljs-property">domElement</span>]);
 
 <span class="hljs-keyword">const</span> bc2Phrase = scrawl.<span class="hljs-title function_">makePhrase</span>({
 
@@ -1602,6 +1801,7 @@ bc2DialWheel.<span class="hljs-title function_">clone</span>({
     <span class="hljs-attr">pivot</span>: <span class="hljs-string">&#x27;bc2-dial-wheel&#x27;</span>,
     <span class="hljs-attr">lockTo</span>: <span class="hljs-string">&#x27;pivot&#x27;</span>,
     <span class="hljs-attr">handle</span>: [<span class="hljs-string">&#x27;center&#x27;</span>, <span class="hljs-string">&#x27;-40%&#x27;</span>],
+    <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;0%&#x27;</span>,
 });
 
 <span class="hljs-keyword">const</span> bc2Color = scrawl.<span class="hljs-title function_">makeColor</span>({
@@ -1632,11 +1832,11 @@ bc2DialWheel.<span class="hljs-title function_">clone</span>({
         </li>
         
         
-        <li id="section-17">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-17">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>fc.domElement.style.transform = <code>translateY(${inViewportTop * 100}%)</code>;</p>
 
@@ -1646,7 +1846,11 @@ bc2DialWheel.<span class="hljs-title function_">clone</span>({
 
         <span class="hljs-keyword">if</span> (fixedCanvasIsDisplaying) {
 
-            fixedCanvasIsDisplaying = <span class="hljs-string">&#x27;&#x27;</span>;
+            <span class="hljs-title function_">fixedCanvasIsDisplaying</span>();
+            fixedCanvasIsDisplaying = <span class="hljs-literal">false</span>;
+
+            <span class="hljs-keyword">if</span> (fixedCanvasDragZone) <span class="hljs-title function_">fixedCanvasDragZone</span>();
+            fixedCanvasDragZone = <span class="hljs-literal">false</span>;
 
             bc2Cell.<span class="hljs-title function_">set</span>({ 
                 <span class="hljs-attr">startY</span>: (inViewportTop &gt; <span class="hljs-number">0</span>) ? <span class="hljs-string">&#x27;0%&#x27;</span> : <span class="hljs-string">&#x27;75%&#x27;</span>,
@@ -1660,7 +1864,8 @@ bc2DialWheel.<span class="hljs-title function_">clone</span>({
 
         <span class="hljs-keyword">if</span> (!fixedCanvasIsDisplaying) {
 
-            fixedCanvasIsDisplaying = <span class="hljs-string">&#x27;bc2-visual-cell&#x27;</span>;
+            fixedCanvasIsDisplaying = <span class="hljs-function">() =&gt;</span> {};
+            fixedCanvasDragZone = <span class="hljs-function">() =&gt;</span> {};
 
             bc2Cell.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">shown</span>: <span class="hljs-literal">false</span> });
         };
@@ -1672,6 +1877,8 @@ bc2DialWheel.<span class="hljs-title function_">clone</span>({
         });
 
         bc2DialProgress.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">text</span>: <span class="hljs-string">`<span class="hljs-subst">${((-inViewportTop / <span class="hljs-number">3</span>) * <span class="hljs-number">100</span>).toFixed(<span class="hljs-number">0</span>)}</span>%`</span>});
+
+        bc2Video1.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">copyStartY</span>: <span class="hljs-string">`<span class="hljs-subst">${<span class="hljs-number">25</span> + (inViewportTop * -<span class="hljs-number">10</span>)}</span>%`</span>});
     }
 
     <span class="hljs-keyword">if</span> (bc2UsertInteractionConfirmed) {
@@ -1712,11 +1919,11 @@ bc2DialWheel.<span class="hljs-title function_">clone</span>({
         </li>
         
         
-        <li id="section-18">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-18">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <h4 id="scene-animation-reporter">Scene animation reporter</h4>
 <p>Function to display whether each canvas wrapper’s associated animation object is currently running</p>

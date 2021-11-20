@@ -1,5 +1,5 @@
 // # Demo Canvas 057 
-// Seeded random number generator; point on path
+// Animation observer; animations controlled by scroll position
 
 // [Run code](../../demo/canvas-057.html)
 import scrawl from '../source/scrawl.js'
@@ -16,10 +16,7 @@ const fc = scrawl.library.canvas['fixed-canvas'],
     rc3 = scrawl.library.canvas['responsive-canvas-3'],
 
     bc1 = scrawl.library.canvas['banner-canvas-1'],
-    // bs1 = scrawl.library.stack['banner-stack-1'],
-
-    bc2 = scrawl.library.canvas['banner-canvas-2'],
-    bs2 = scrawl.library.stack['banner-stack-2'];
+    bc2 = scrawl.library.canvas['banner-canvas-2'];
 
 const canvasSet = {
     fit: 'cover',
@@ -29,16 +26,19 @@ const canvasSet = {
 };
 
 fc.set(canvasSet);
+
 rc1.set(canvasSet);
 rc2.set(canvasSet);
 rc3.set(canvasSet);
+
 bc1.set(canvasSet);
 bc2.set(canvasSet);
 
 
 // #### Fixed canvas
 // Update the text values of three Phrase entitys based on the positions of the top, center and base of the canvas element in the viewport
-let fixedCanvasIsDisplaying = '';
+let fixedCanvasIsDisplaying = false;
+let fixedCanvasDragZone = false;
 
 const fcAnimation = scrawl.makeRender({
 
@@ -48,7 +48,7 @@ const fcAnimation = scrawl.makeRender({
 
 
 // #### Responsive canvas 1
-// Update the text values of three Phrase entitys based on the positions of the top, center and base of the canvas element in the viewport
+// Update the text values of three Phrase entitys based on the positions of the top, center and base of the &lt;canvas> element in the viewport. The element is responsive, with positions updating as the element is resized.
 const rc1PhraseTop = scrawl.makePhrase({
 
     name: 'rc1-pos-top',
@@ -91,7 +91,7 @@ const rc1Animation = scrawl.makeRender({
 
 
 // #### Responsive canvas 2
-// Update the start and end points of a gradient based on the positions of the top and base of the canvas element in the viewport
+// Update the start and end points of a gradient based on the positions of the top and base of the &lt;canvas> element in the viewport. Link artefact animation to the element's position.
 const rc2Color1 = scrawl.makeColor({
 
     name: 'rc2-color-factory-1',
@@ -112,24 +112,80 @@ const rc2Gradient = scrawl.makeGradient({
     endX: '100%',
 });
 
+scrawl.makeLine({
+
+    name: 'rc2-line',
+    group: rc2.base.name,
+    start: ['center', 'center'],
+    end: ['90%', 'center'],
+    handleX: '50%',
+    method: 'draw',
+    strokeStyle: 'rc2-gradient',
+    lockStrokeStyleToEntity: true,
+    lineWidth: 5,
+    lineCap: 'round',
+});
+
 scrawl.makeBlock({
 
-    name: 'rc2-block',
+    name: 'rc2-block-1',
     group: rc2.base.name,
-    dimensions: ['100%', '100%'],
+    start: ['25%', '25%'],
+    handle: ['center', 'center'],
+    dimensions: ['40%', '10%'],
+    method: 'fillThenDraw',
     fillStyle: 'rc2-gradient',
+    lockFillStyleToEntity: true,
+    lineWidth: 5,
+    lineCap: 'round',
+
+}).clone({
+
+    name: 'rc2-block-2',
+    start: ['75%', '75%'],
+    flipReverse: true,
+});
+
+scrawl.makeWheel({
+
+    name: 'rc2-wheel-1',
+    group: rc2.base.name,
+    start: ['25%', '75%'],
+    handle: ['center', 'center'],
+    radius: '20%',
+    startAngle: 20,
+    endAngle: -20,
+    includeCenter: true,
+    method: 'fillThenDraw',
+    fillStyle: 'rc2-gradient',
+    lockFillStyleToEntity: true,
+    lineWidth: 5,
+    lineCap: 'round',
+
+}).clone({
+
+    name: 'rc2-wheel-2',
+    start: ['75%', '25%'],
+    flipReverse: true,
 });
 
 const updateRc2 = () => {
 
     const {here} = rc2;
-    let { inViewportTop, inViewportBase } = here;
+    let { inViewportTop, inViewportCenter, inViewportBase } = here;
+
+    const group = scrawl.library.group[rc2.base.name];
 
     if (inViewportTop < 0) inViewportTop = 0;
     else if (inViewportTop > 1) inViewportTop = 1;
 
     if (inViewportBase < 0) inViewportBase = 0;
     else if (inViewportBase > 1) inViewportBase = 1;
+
+    if (inViewportCenter < 0) inViewportCenter = 0;
+    else if (inViewportCenter > 1) inViewportCenter = 1;
+
+    group.setArtefacts({ roll: inViewportCenter * -360 });
 
     rc2Gradient.updateColor(0, rc2Color1.getRangeColor(inViewportTop));
     rc2Gradient.updateColor(999, rc2Color2.getRangeColor(inViewportBase));
@@ -145,7 +201,7 @@ const rc2Animation = scrawl.makeRender({
 
 
 // #### Banner canvas 1
-// Tie an animation to scrolling; animation remains in viewport while it runs. Effect is reversible.
+// Fix an animation to the viewport while the user scrolls through the page. When the animation completes, the &lt;canvas> element rejoins the page scroll. The canvas remains interactive before, during and after the animation's run. The animation is reversible.
 const bc1Cell = bc1.buildCell({
 
     name: 'bc1-visual-cell',
@@ -220,6 +276,92 @@ const bc1Phrase = scrawl.makePhrase({
     lineHeight: 1,
 });
 
+scrawl.makeGroup({
+
+    name: 'bc1-drag-group',
+    host: 'bc1-visual-cell',
+    order: 0,
+});
+
+scrawl.makeBlock({
+
+    name: 'bc1-drag-box-1',
+    group: 'bc1-drag-group',
+    dimensions: [150, 70],
+    start: ['10%', '25%'],
+    handle: ['center', 'center'],
+    fillStyle: 'white',
+    lineWidth: 4,
+    method: 'fillThenDraw',
+
+    onEnter: function () {
+
+        bc1.set({ css: { cursor: 'pointer' }});
+        fc.set({ css: { cursor: 'pointer' }});
+        this.set({ 
+            fillStyle: 'pink',
+            lineWidth: 8,
+        });
+    },
+
+    onLeave: function () {
+
+        bc1.set({ css: { cursor: 'auto' }});
+        fc.set({ css: { cursor: 'auto' }});
+        this.set({ 
+            fillStyle: 'white',
+            lineWidth: 4,
+        });
+    },
+
+}).clone({
+
+    name: 'bc1-drag-box-2',
+    startY: '50%',
+
+}).clone({
+
+    name: 'bc1-drag-box-3',
+    startY: '75%',
+});
+
+scrawl.makeGroup({
+
+    name: 'bc1-label-group',
+    host: 'bc1-visual-cell',
+    order: 1,
+});
+
+scrawl.makePhrase({
+
+    name: 'bc1-drag-box-label-1',
+    group: 'bc1-label-group',
+    font: '20px Arial, sans-serif',
+    text: 'DRAG ME!',
+    pivot: 'bc1-drag-box-1',
+    lockTo: 'pivot',
+    handle: ['center', 'center'],
+    lineHeight: 0.7,
+
+}).clone ({
+
+    name: 'bc1-drag-box-label-2',
+    pivot: 'bc1-drag-box-2',
+
+}).clone ({
+
+    name: 'bc1-drag-box-label-3',
+    pivot: 'bc1-drag-box-3',
+});
+
+scrawl.makeDragZone({
+
+    zone: bc1,
+    collisionGroup: 'bc1-drag-group',
+    coordinateSource: bc1Cell,
+    endOn: ['up', 'leave'],
+});
+
 const bc1Display = scrawl.makePicture({
 
     name: 'bc1-display',
@@ -230,27 +372,30 @@ const bc1Display = scrawl.makePicture({
     visibility: false,
 });
 
+scrawl.addListener('move', () => bc1.cascadeEventAction('move'), bc1.domElement);
+
 const updateBc1 = () => {
+
+    bc1Cell.updateHere();
 
     const { here } = bc1;
     const { inViewportTop } = here;
 
     bc1Phrase.set({ text: `Canvas top position: ${inViewportTop.toFixed(4)}` });
 
-    // Gives the effect of the canvas being sticky only when 100% covering the viewport
     if (inViewportTop > 0 || inViewportTop < -2) {
 
-        // fc.domElement.style.transform = `translateY(${inViewportTop * 100}%)`;
         fc.domElement.style.transform = 'translateY(200%)';
 
         if (fixedCanvasIsDisplaying) {
 
-            fixedCanvasIsDisplaying = '';
+            fixedCanvasIsDisplaying();
+            fixedCanvasIsDisplaying = false;
 
-            bc1Cell.set({ 
-                startY: (inViewportTop > 0) ? '0%' : `${ 200 / 3 }%`,
-                shown: true, 
-            });
+            if (fixedCanvasDragZone) fixedCanvasDragZone();
+            fixedCanvasDragZone = false;
+
+            bc1Cell.set({ startY: (inViewportTop > 0) ? '0%' : `${ 200 / 3 }%` });
         };
     }
     else {
@@ -259,11 +404,19 @@ const updateBc1 = () => {
 
         if (!fixedCanvasIsDisplaying) {
 
-            fixedCanvasIsDisplaying = 'bc1-visual-cell';
+            fixedCanvasIsDisplaying = scrawl.addListener('move', () => bc1.cascadeEventAction('move'), fc.domElement);
 
-            bc1Cell.set({ shown: false });
+            fixedCanvasDragZone = scrawl.makeDragZone({
+
+                zone: fc,
+                collisionGroup: 'bc1-drag-group',
+                endOn: ['up', 'leave'],
+            });
         };
+
         bc1ArrowProgress.set({ progress: inViewportTop * (-1 / 2) });
+
+        bc1Cell.set({ startY: `${ (inViewportTop * -100) / 3 }%` });
     }
 };
 
@@ -274,18 +427,14 @@ const bc1Animation = scrawl.makeRender({
     observer: true,
     commence: updateBc1,
 
-    onRun: () => {
-        bc1Display.set({ visibility: true });
-    },
-    onHalt: () => {
-        bc1Display.set({ visibility: false });
-    },
+    onRun: () => bc1Display.set({ visibility: true }),
+    onHalt: () => bc1Display.set({ visibility: false }),
 });
 
 
 // #### Responsive canvas 3
-// Update the rotations of a group of artefacts based on the position of the center of the canvas element in the viewport; rotation only happens when the center of the canvas element appears in the viewport
-rc3.set({ fit: 'contain' });
+// Link progression of tween-based animations to the position of the center of the &lt;canvas> element in the viewport. Trigger timeline actions when the center of the element passes the action's breakpoint. Tweens and actions are reversible.
+rc3.set({ backgroundColor: 'red' });
 
 scrawl.makeGradient({
 
@@ -348,17 +497,97 @@ scrawl.makeWheel({
     flipReverse: true,
 });
 
+const rc3Ticker = scrawl.makeTicker({
+    name: 'rc3-ticker',
+    cycles: 0,
+    duration: 1000,
+});
+
+scrawl.makeTween({
+    name: 'rc3-block-tween',
+    targets: ['rc3-block-1', 'rc3-block-2'],
+    ticker: 'rc3-ticker',
+    duration: 600,
+    time: 0,
+    definitions: [
+        {
+            attribute: 'roll',
+            start: 0,
+            end: 720,
+            engine: 'easeOut',
+        },
+    ],
+});
+
+scrawl.makeTween({
+
+    name: 'rc3-wheel-tween',
+    targets: ['rc3-wheel-1', 'rc3-wheel-2'],
+    ticker: 'rc3-ticker',
+    duration: 600,
+    time: 400,
+    definitions: [
+        {
+            attribute: 'roll',
+            start: 0,
+            end: -720,
+            engine: 'easeOut',
+        },
+    ],
+});
+
+scrawl.makeTween({
+
+    name: 'rc3-line-tween',
+    targets: 'rc3-line',
+    ticker: 'rc3-ticker',
+    duration: 800,
+    time: 100,
+    definitions: [
+        {
+            attribute: 'lineWidth',
+            start: 6,
+            end: 30,
+        },
+    ],
+});
+
+scrawl.makeAction({
+
+    name: 'rc3-action-250',
+    ticker: 'rc3-ticker',
+    time: 250,
+    action: () => rc3.set({ backgroundColor: 'blue'}),
+    revert: () => rc3.set({ backgroundColor: 'red'}),
+});
+
+scrawl.makeAction({
+
+    name: 'rc3-action-500',
+    ticker: 'rc3-ticker',
+    time: 500,
+    action: () => rc3.set({ backgroundColor: 'green'}),
+    revert: () => rc3.set({ backgroundColor: 'blue'}),
+});
+
+scrawl.makeAction({
+
+    name: 'rc3-action-750',
+    ticker: 'rc3-ticker',
+    time: 750,
+    action: () => rc3.set({ backgroundColor: 'yellow'}),
+    revert: () => rc3.set({ backgroundColor: 'green'}),
+});
+
 const updateRc3 = () => {
 
     const {here} = rc3;
     let { inViewportCenter } = here;
 
-    const group = scrawl.library.group[rc3.base.name];
-
     if (inViewportCenter < 0) inViewportCenter = 0;
     else if (inViewportCenter > 1) inViewportCenter = 1;
 
-    group.setArtefacts({ roll: inViewportCenter * -360 });
+    rc3Ticker.seekTo(inViewportCenter * 1000);
 };
 
 const rc3Animation = scrawl.makeRender({
@@ -371,7 +600,7 @@ const rc3Animation = scrawl.makeRender({
 
 
 // #### Banner canvas 2
-// Play a video only while the canvas is fully visible in the viewport (and after deliberate user interaction with the canvas).
+// Play a video (after user interaction) only while the &lt;canvas> element is fully visible in the viewport. Show scroll progression using a graphic dial and text. The blurred background moves upwards (parallax) as the user scrolls down. The parallax effect and dial/text animation are reversible.
 const bc2Cell = bc2.buildCell({
 
     name: 'bc2-visual-cell',
@@ -384,7 +613,7 @@ scrawl.makeFilter({
 
     name: 'bc2-gaussian-blur',
     method: 'gaussianBlur',
-    radius: 30,
+    radius: 8,
 });
 
 const bc2Video1 = scrawl.makePicture({
@@ -397,8 +626,10 @@ const bc2Video1 = scrawl.makePicture({
     width: '100%',
     height: '100%',
 
-    copyWidth: '100%',
-    copyHeight: '100%',
+    copyWidth: '50%',
+    copyHeight: '50%',
+
+    copyStart: ['25%', '25%'],
 
     filters: ['bc2-gaussian-blur'],
 });
@@ -427,7 +658,7 @@ const bc2InitialVideoStart = scrawl.addListener('up', () => {
     // Get rid of the event listener after invocation - it's a one-time-only action
     bc2InitialVideoStart();
 
-}, bc2.domElement);
+}, [bc2.domElement, fc.domElement]);
 
 const bc2Phrase = scrawl.makePhrase({
 
@@ -488,6 +719,7 @@ const bc2DialProgress = scrawl.makePhrase({
     pivot: 'bc2-dial-wheel',
     lockTo: 'pivot',
     handle: ['center', '-40%'],
+    text: '0%',
 });
 
 const bc2Color = scrawl.makeColor({
@@ -520,7 +752,11 @@ const updateBc2 = () => {
 
         if (fixedCanvasIsDisplaying) {
 
-            fixedCanvasIsDisplaying = '';
+            fixedCanvasIsDisplaying();
+            fixedCanvasIsDisplaying = false;
+
+            if (fixedCanvasDragZone) fixedCanvasDragZone();
+            fixedCanvasDragZone = false;
 
             bc2Cell.set({ 
                 startY: (inViewportTop > 0) ? '0%' : '75%',
@@ -534,7 +770,8 @@ const updateBc2 = () => {
 
         if (!fixedCanvasIsDisplaying) {
 
-            fixedCanvasIsDisplaying = 'bc2-visual-cell';
+            fixedCanvasIsDisplaying = () => {};
+            fixedCanvasDragZone = () => {};
 
             bc2Cell.set({ shown: false });
         };
@@ -546,6 +783,8 @@ const updateBc2 = () => {
         });
 
         bc2DialProgress.set({ text: `${((-inViewportTop / 3) * 100).toFixed(0)}%`});
+
+        bc2Video1.set({ copyStartY: `${25 + (inViewportTop * -10)}%`});
     }
 
     if (bc2UsertInteractionConfirmed) {

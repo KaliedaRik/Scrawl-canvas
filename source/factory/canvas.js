@@ -567,6 +567,9 @@ P.clear = function () {
 
     if (this.dirtyCells) this.cleanCells();
 
+    // Handle base dimensions - other cells may use it for their relative dimensions
+    if (this.base && this.base.dirtyDimensions) this.base.cleanDimensions();
+
     const c = this.cellBatchesClear;
     for (let i = 0, iz = c.length; i < iz; i++) {
 
@@ -581,6 +584,9 @@ P.compile = function () {
 
     // Handle constituent cells
     if (this.dirtyCells) this.cleanCells();
+
+    // Handle base dimensions - other cells may use it for their relative dimensions
+    if (this.base && this.base.dirtyDimensions) this.base.cleanDimensions();
 
     const c = this.cellBatchesCompile;
     for (let i = 0, iz = c.length; i < iz; i++) {
@@ -605,15 +611,14 @@ P.show = function(){
     // Handle constituent cells
     if (this.dirtyCells) this.cleanCells();
 
+    // Handle base dimensions - other cells may use it for their relative dimensions
+    if (this.base && this.base.dirtyDimensions) this.base.cleanDimensions();
+
     const c = this.cellBatchesShow;
     for (let i = 0, iz = c.length; i < iz; i++) {
 
         c[i].show();
     }
-
-    // Clear Display canvas, and get the base cell to stamp itself onto it
-    // console.log('Canvas 590 clearRect', this.localWidth, this.localHeight);
-    // this.engine.clearRect(0, 0, this.localWidth, this.localHeight);
 
     // Get the base cell to stamp itself onto the display canvas
     this.base.show();
