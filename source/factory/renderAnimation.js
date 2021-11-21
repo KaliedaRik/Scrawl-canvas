@@ -42,7 +42,8 @@ const RenderAnimation = function (items = Ωempty) {
     if (!items.target) target = {
         clear: clear,
         compile: compile,
-        show: show
+        show: show,
+        checkAccessibilityValues: λnull,
     };
 
     // Handle cases where we have multiple targets - each needs its own render animation
