@@ -1003,7 +1003,7 @@ canvas.<span class="hljs-title function_">setBase</span>({
     <span class="hljs-attr">compileOrder</span>: <span class="hljs-number">1</span>,
 });
 
-canvas.<span class="hljs-title function_">buildCell</span>({
+<span class="hljs-keyword">const</span> textCell = canvas.<span class="hljs-title function_">buildCell</span>({
 
     <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;text-cell&#x27;</span>,
     <span class="hljs-attr">dimensions</span>: [<span class="hljs-number">100</span>, <span class="hljs-number">100</span>],
@@ -1167,22 +1167,18 @@ scrawl.<span class="hljs-title function_">makeBlock</span>({
     },
 });
 
-scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
 
-    <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
-    <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;.controlItem&#x27;</span>,
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
 
-    <span class="hljs-attr">target</span>: canvas,
-    <span class="hljs-attr">targetLibrarySection</span>: <span class="hljs-string">&#x27;group&#x27;</span>,
+    <span class="hljs-keyword">if</span> (e &amp;&amp; e.<span class="hljs-property">target</span>) {
 
-    <span class="hljs-attr">useNativeListener</span>: <span class="hljs-literal">true</span>,
-    <span class="hljs-attr">preventDefault</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-keyword">const</span> val = (e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span> === <span class="hljs-string">&#x27;1&#x27;</span>) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
 
-    <span class="hljs-attr">updates</span>: {
-
-        <span class="hljs-attr">smoothFont</span>: [<span class="hljs-string">&#x27;smoothFont&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
-    },
-});
+        canvas.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">smoothFont</span>: val });
+        canvas.<span class="hljs-title function_">setBase</span>({ <span class="hljs-attr">smoothFont</span>: val });
+        textCell.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">smoothFont</span>: val });
+    }
+}, <span class="hljs-string">&#x27;#smoothFont&#x27;</span>)
 
 <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#smoothFont&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;
 <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#imageSmoothingEnabled&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;

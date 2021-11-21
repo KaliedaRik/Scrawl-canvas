@@ -20,7 +20,7 @@ canvas.setBase({
     compileOrder: 1,
 });
 
-canvas.buildCell({
+const textCell = canvas.buildCell({
 
     name: 'text-cell',
     dimensions: [100, 100],
@@ -149,22 +149,18 @@ scrawl.observeAndUpdate({
     },
 });
 
-scrawl.observeAndUpdate({
 
-    event: ['input', 'change'],
-    origin: '.controlItem',
+scrawl.addNativeListener(['input', 'change'], (e) => {
 
-    target: canvas,
-    targetLibrarySection: 'group',
+    if (e && e.target) {
 
-    useNativeListener: true,
-    preventDefault: true,
+        const val = (e.target.value === '1') ? true : false;
 
-    updates: {
-
-        smoothFont: ['smoothFont', 'boolean'],
-    },
-});
+        canvas.set({ smoothFont: val });
+        canvas.setBase({ smoothFont: val });
+        textCell.set({ smoothFont: val });
+    }
+}, '#smoothFont')
 
 document.querySelector('#smoothFont').options.selectedIndex = 1;
 document.querySelector('#imageSmoothingEnabled').options.selectedIndex = 1;

@@ -499,6 +499,32 @@ D.clearAlpha = function (val) {
 };
 
 
+// `smoothFont` - handle this directly; don't save the attribute state
+S.smoothFont = function (item) {
+
+    const { element } = this;
+
+    if (element) {
+
+        const { style } = element;
+
+        if (style) {
+
+            if (item) {
+                style['webkitFontSmoothing'] = 'auto';
+                style['mozOsxFontSmoothing'] = 'auto';
+                style['smoothFont'] = 'auto';
+            }
+            else {
+                style['webkitFontSmoothing'] = 'none';
+                style['mozOsxFontSmoothing'] = 'grayscale';
+                style['smoothFont'] = 'never';
+            }
+        }
+    }
+};
+
+
 // #### Prototype functions
 
 // `checkSource` - internal function

@@ -1428,9 +1428,33 @@ D.<span class="hljs-property">clearAlpha</span> = <span class="hljs-keyword">fun
               <div class="sswrap ">
                 <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
-              <h4 id="prototype-functions">Prototype functions</h4>
+              <p><code>smoothFont</code> - handle this directly; don’t save the attribute state</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">smoothFont</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
+
+    <span class="hljs-keyword">const</span> { element } = <span class="hljs-variable language_">this</span>;
+
+    <span class="hljs-keyword">if</span> (element) {
+
+        <span class="hljs-keyword">const</span> { style } = element;
+
+        <span class="hljs-keyword">if</span> (style) {
+
+            <span class="hljs-keyword">if</span> (item) {
+                style[<span class="hljs-string">&#x27;webkitFontSmoothing&#x27;</span>] = <span class="hljs-string">&#x27;auto&#x27;</span>;
+                style[<span class="hljs-string">&#x27;mozOsxFontSmoothing&#x27;</span>] = <span class="hljs-string">&#x27;auto&#x27;</span>;
+                style[<span class="hljs-string">&#x27;smoothFont&#x27;</span>] = <span class="hljs-string">&#x27;auto&#x27;</span>;
+            }
+            <span class="hljs-keyword">else</span> {
+                style[<span class="hljs-string">&#x27;webkitFontSmoothing&#x27;</span>] = <span class="hljs-string">&#x27;none&#x27;</span>;
+                style[<span class="hljs-string">&#x27;mozOsxFontSmoothing&#x27;</span>] = <span class="hljs-string">&#x27;grayscale&#x27;</span>;
+                style[<span class="hljs-string">&#x27;smoothFont&#x27;</span>] = <span class="hljs-string">&#x27;never&#x27;</span>;
+            }
+        }
+    }
+};</pre></div></div>
             
         </li>
         
@@ -1440,6 +1464,19 @@ D.<span class="hljs-property">clearAlpha</span> = <span class="hljs-keyword">fun
               
               <div class="sswrap ">
                 <a class="ss" href="#section-39">&#x00a7;</a>
+              </div>
+              <h4 id="prototype-functions">Prototype functions</h4>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <p><code>checkSource</code> - internal function</p>
 
@@ -1453,11 +1490,11 @@ D.<span class="hljs-property">clearAlpha</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-40">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p><code>getData</code> - internal function, invoked when a Cell wrapper is used as an entity’s pattern style</p>
 
@@ -1473,11 +1510,11 @@ D.<span class="hljs-property">clearAlpha</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-41">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-41">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <p><code>updateArtefacts</code> - passes the <strong>items</strong> argument object through to each of the Cell’s Groups for forwarding to their artefacts’ <code>setDelta</code> function</p>
 
@@ -1512,11 +1549,11 @@ D.<span class="hljs-property">clearAlpha</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-42">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-42">&#x00a7;</a>
+                <a class="ss" href="#section-43">&#x00a7;</a>
               </div>
               <p><code>cleanDimensionsAdditionalActions</code> - overwrites mixin/position function:</p>
 <ul>
@@ -1544,11 +1581,11 @@ D.<span class="hljs-property">clearAlpha</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-43">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-43">&#x00a7;</a>
+                <a class="ss" href="#section-44">&#x00a7;</a>
               </div>
               <p>DEPRECATED (because it is a really bad name) <strong>isComponent</strong> replaced by <strong>baseMatchesCanvasDimensions</strong></p>
 
@@ -1616,11 +1653,11 @@ D.<span class="hljs-property">clearAlpha</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-44">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-44">&#x00a7;</a>
+                <a class="ss" href="#section-45">&#x00a7;</a>
               </div>
               <p><code>notifySubscriber</code> - Overrides mixin/asset.js function</p>
 
@@ -1643,11 +1680,11 @@ D.<span class="hljs-property">clearAlpha</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-45">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-45">&#x00a7;</a>
+                <a class="ss" href="#section-46">&#x00a7;</a>
               </div>
               <p><code>subscribeAction</code> - Overrides mixin/asset.js function</p>
 
@@ -1664,11 +1701,11 @@ D.<span class="hljs-property">clearAlpha</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-46">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-46">&#x00a7;</a>
+                <a class="ss" href="#section-47">&#x00a7;</a>
               </div>
               <p><code>installElement</code> - internal function, used by the constructor</p>
 
@@ -1689,11 +1726,11 @@ D.<span class="hljs-property">clearAlpha</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-47">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-47">&#x00a7;</a>
+                <a class="ss" href="#section-48">&#x00a7;</a>
               </div>
               <p><code>updateControllerCells</code> - internal function: ask the Cell’s Canvas controller to review/update its cells data</p>
 
@@ -1715,11 +1752,11 @@ D.<span class="hljs-property">clearAlpha</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-48">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-48">&#x00a7;</a>
+                <a class="ss" href="#section-49">&#x00a7;</a>
               </div>
               <p>The following functions set the Cell wrapper’s &lt;canvas&gt; element’s CanvasRenderingContext2D engine’s attributes to match a given set of values</p>
 
@@ -1728,11 +1765,11 @@ D.<span class="hljs-property">clearAlpha</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-49">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-49">&#x00a7;</a>
+                <a class="ss" href="#section-50">&#x00a7;</a>
               </div>
               <p><code>setEngineFromState</code> - internal function: set engine to match this Cell’s State object’s attribute values</p>
 
@@ -1768,11 +1805,11 @@ D.<span class="hljs-property">clearAlpha</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-50">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-50">&#x00a7;</a>
+                <a class="ss" href="#section-51">&#x00a7;</a>
               </div>
               <p><code>setToDefaults</code> - internal function: set engine to match the State Factory’s default attribute values</p>
 
@@ -1811,11 +1848,11 @@ D.<span class="hljs-property">clearAlpha</span> = <span class="hljs-keyword">fun
         </li>
         
         
-        <li id="section-51">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-51">&#x00a7;</a>
+                <a class="ss" href="#section-52">&#x00a7;</a>
               </div>
               <p><code>setEngine</code> - internal function: set engine to match the entity object’s State attribute values</p>
 
@@ -1851,11 +1888,11 @@ P.<span class="hljs-property">setEngine</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-52">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-52">&#x00a7;</a>
+                <a class="ss" href="#section-53">&#x00a7;</a>
               </div>
               <p><strong>setEngineActions</strong> - an Object containing functions for updating the engine’s attributes; used by <code>setEngine</code></p>
 
@@ -1970,11 +2007,11 @@ P.<span class="hljs-property">setEngine</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-53">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-53">&#x00a7;</a>
+                <a class="ss" href="#section-54">&#x00a7;</a>
               </div>
               <p>The following functions are used as part of entity object <code>stamp</code> functionality - specifically for those with a <strong>method</strong> whose appearance is affected by shadows, and for the <code>clear</code> method</p>
 <ul>
@@ -1988,11 +2025,11 @@ P.<span class="hljs-property">setEngine</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-54">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-54">&#x00a7;</a>
+                <a class="ss" href="#section-55">&#x00a7;</a>
               </div>
               <p><code>clearShadow</code></p>
 
@@ -2013,11 +2050,11 @@ P.<span class="hljs-property">setEngine</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-55">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-55">&#x00a7;</a>
+                <a class="ss" href="#section-56">&#x00a7;</a>
               </div>
               <p><code>restoreShadow</code></p>
 
@@ -2040,11 +2077,11 @@ P.<span class="hljs-property">setEngine</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-56">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-56">&#x00a7;</a>
+                <a class="ss" href="#section-57">&#x00a7;</a>
               </div>
               <p><code>setToClearShape</code></p>
 
@@ -2065,11 +2102,11 @@ P.<span class="hljs-property">setEngine</span> = <span class="hljs-keyword">func
         </li>
         
         
-        <li id="section-57">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-57">&#x00a7;</a>
+                <a class="ss" href="#section-58">&#x00a7;</a>
               </div>
               <p><code>saveEngine</code>, <code>restoreEngine</code> - save and restore the Cell wrapper’s &lt;canvas&gt; element’s CanvasRenderingContext2D engine’s current state to/from a stack</p>
 
@@ -2090,11 +2127,11 @@ P.<span class="hljs-property">restoreEngine</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-58">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-58">&#x00a7;</a>
+                <a class="ss" href="#section-59">&#x00a7;</a>
               </div>
               <p><code>getComputedFontSizes</code> - internal function - the Cell wrapper gets passed by Phrase entitys to its fontAttributes object, which then invokes it when calculating font sizes</p>
 
@@ -2117,11 +2154,11 @@ P.<span class="hljs-property">restoreEngine</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-59">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-59">&#x00a7;</a>
+                <a class="ss" href="#section-60">&#x00a7;</a>
               </div>
               <h4 id="display-cycle-functionality">Display cycle functionality</h4>
 <p>This functionality is triggered by the Cell’s Canvas wrapper controller</p>
@@ -2131,11 +2168,11 @@ P.<span class="hljs-property">restoreEngine</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-60">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-60">&#x00a7;</a>
+                <a class="ss" href="#section-61">&#x00a7;</a>
               </div>
               <p><code>checkEngineScale</code></p>
 
@@ -2161,11 +2198,11 @@ P.<span class="hljs-property">restoreEngine</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-61">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-61">&#x00a7;</a>
+                <a class="ss" href="#section-62">&#x00a7;</a>
               </div>
               <p><code>clear</code></p>
 
@@ -2238,11 +2275,11 @@ P.<span class="hljs-property">restoreEngine</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-62">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-62">&#x00a7;</a>
+                <a class="ss" href="#section-63">&#x00a7;</a>
               </div>
               <p><code>compile</code></p>
 
@@ -2275,11 +2312,11 @@ P.<span class="hljs-property">restoreEngine</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-63">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-63">&#x00a7;</a>
+                <a class="ss" href="#section-64">&#x00a7;</a>
               </div>
               <p><code>show</code> - Note that functionality here differs for <strong>base cells</strong> and other Cell wrappers</p>
 
@@ -2290,11 +2327,11 @@ P.<span class="hljs-property">restoreEngine</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-64">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-64">&#x00a7;</a>
+                <a class="ss" href="#section-65">&#x00a7;</a>
               </div>
               <p>get the destination cell’s canvas context</p>
 
@@ -2313,11 +2350,11 @@ P.<span class="hljs-property">restoreEngine</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-65">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-65">&#x00a7;</a>
+                <a class="ss" href="#section-66">&#x00a7;</a>
               </div>
               <p>Cannot draw to the destination canvas if either of its dimensions === 0</p>
 
@@ -2345,11 +2382,11 @@ P.<span class="hljs-property">restoreEngine</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-66">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-66">&#x00a7;</a>
+                <a class="ss" href="#section-67">&#x00a7;</a>
               </div>
               <p>copy the base canvas over to the display canvas. This copy operation ignores any scale, roll or position attributes set on the base cell, instead complying with the controller’s fit attribute requirements</p>
 
@@ -2374,11 +2411,11 @@ P.<span class="hljs-property">restoreEngine</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-67">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-67">&#x00a7;</a>
+                <a class="ss" href="#section-68">&#x00a7;</a>
               </div>
               <p>base must copy into display resized, centered, letterboxing if necessary, maintaining aspect ratio</p>
 
@@ -2408,11 +2445,11 @@ P.<span class="hljs-property">restoreEngine</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-68">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-68">&#x00a7;</a>
+                <a class="ss" href="#section-69">&#x00a7;</a>
               </div>
               <p>base must copy into display resized, centered, leaving no letterbox area, maintaining aspect ratio</p>
 
@@ -2442,11 +2479,11 @@ P.<span class="hljs-property">restoreEngine</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-69">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-69">&#x00a7;</a>
+                <a class="ss" href="#section-70">&#x00a7;</a>
               </div>
               <p>base must copy into display resized, distorting the aspect ratio as necessary</p>
 
@@ -2464,11 +2501,11 @@ P.<span class="hljs-property">restoreEngine</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-70">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-70">&#x00a7;</a>
+                <a class="ss" href="#section-71">&#x00a7;</a>
               </div>
               <p>base copies into display as-is, centred, maintaining aspect ratio</p>
 
@@ -2488,11 +2525,11 @@ P.<span class="hljs-property">restoreEngine</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-71">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-71">&#x00a7;</a>
+                <a class="ss" href="#section-72">&#x00a7;</a>
               </div>
               <p>Cell canvases are treated like entitys on the base canvas: they can be positioned, scaled and rotated. Positioning will respect lockTo; flipReverse and flipUpend; and can be pivoted to other artefacts, or follow a path entity, etc. If pivoted to the mouse, they will use the base canvas’s .here attribute, which takes into account differences between the base and display canvas dimensions.</p>
 
@@ -2521,11 +2558,11 @@ P.<span class="hljs-property">restoreEngine</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-72">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-72">&#x00a7;</a>
+                <a class="ss" href="#section-73">&#x00a7;</a>
               </div>
               <p><code>applyFilters</code> - Internal function - add filters to the Cell’s current output.</p>
 
@@ -2550,11 +2587,11 @@ P.<span class="hljs-property">restoreEngine</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-73">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-73">&#x00a7;</a>
+                <a class="ss" href="#section-74">&#x00a7;</a>
               </div>
               <p><code>stashOutputAction</code> - Internal function - stash the Cell’s current output. While this function can be called at any time, the simplest way to invoke it is to set the Cell’s <strong>stashOutput</strong> flag to true, which will then invoke this function at the end of the compile step of the Display cycle (after any filters have been applied to the cell display).</p>
 <ul>
@@ -2584,11 +2621,11 @@ P.<span class="hljs-property">restoreEngine</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-74">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-74">&#x00a7;</a>
+                <a class="ss" href="#section-75">&#x00a7;</a>
               </div>
               <p>Keep the stashed image within bounds of the Cell’s dimensions.</p>
 
@@ -2616,11 +2653,11 @@ P.<span class="hljs-property">restoreEngine</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-75">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-75">&#x00a7;</a>
+                <a class="ss" href="#section-76">&#x00a7;</a>
               </div>
               <p>Get the imageData object, and stash it</p>
 
@@ -2634,11 +2671,11 @@ P.<span class="hljs-property">restoreEngine</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-76">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-76">&#x00a7;</a>
+                <a class="ss" href="#section-77">&#x00a7;</a>
               </div>
               <p>Get the dataUrl String, updating the stashed &lt;img&gt; element with it</p>
 
@@ -2682,11 +2719,11 @@ P.<span class="hljs-property">restoreEngine</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-77">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-77">&#x00a7;</a>
+                <a class="ss" href="#section-78">&#x00a7;</a>
               </div>
               <p><code>getHost</code> - Internal function - get a reference to the Cell’s current host (where it will be stamping itself as part of the Display cycle).</p>
 <ul>
@@ -2712,11 +2749,11 @@ P.<span class="hljs-property">restoreEngine</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-78">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-78">&#x00a7;</a>
+                <a class="ss" href="#section-79">&#x00a7;</a>
               </div>
               <p><code>updateBaseHere</code> - Internal function - keeping the Canvas object’s ‘base’ Cell’s <code>.here</code> attribute up-to-date with accurate mouse/pointer/touch cursor data</p>
 
@@ -2811,11 +2848,11 @@ P.<span class="hljs-property">restoreEngine</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-79">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-79">&#x00a7;</a>
+                <a class="ss" href="#section-80">&#x00a7;</a>
               </div>
               <p><code>prepareStamp</code> - Internal function - steps to be performed before the Cell stamps its visual contents onto a Canvas object’s base cell’s canvas. Will be invoked as part of the Display cycle ‘show’ functionality.</p>
 <ul>
@@ -2867,11 +2904,11 @@ P.<span class="hljs-property">restoreEngine</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-80">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-80">&#x00a7;</a>
+                <a class="ss" href="#section-81">&#x00a7;</a>
               </div>
               <p><code>cleanPathObject</code> - Calculate the Cell’s <strong>Path2D object</strong></p>
 
@@ -2901,11 +2938,11 @@ P.<span class="hljs-property">restoreEngine</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-81">
+        <li id="section-82">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-81">&#x00a7;</a>
+                <a class="ss" href="#section-82">&#x00a7;</a>
               </div>
               <p><code>updateHere</code> - Internal function - get the Cell to update its .here information</p>
 
@@ -2990,11 +3027,11 @@ P.<span class="hljs-property">restoreEngine</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-82">
+        <li id="section-83">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-82">&#x00a7;</a>
+                <a class="ss" href="#section-83">&#x00a7;</a>
               </div>
               <p><code>getEntityHits</code> - Returns an array of entity Objects responding ‘true’ to a checkHit call on them, for the Cell’s current <code>.here</code> attribute coordinates. Used in particular with <code>Canvas.cascadeEventAction()</code> function</p>
 
@@ -3034,11 +3071,11 @@ P.<span class="hljs-property">restoreEngine</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-83">
+        <li id="section-84">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-83">&#x00a7;</a>
+                <a class="ss" href="#section-84">&#x00a7;</a>
               </div>
               <p><code>rotateDestination</code> - internal function, called by entity objects about to stamp themselves onto the Cell.</p>
 <ul>
@@ -3093,11 +3130,11 @@ P.<span class="hljs-property">restoreEngine</span> = <span class="hljs-keyword">
         </li>
         
         
-        <li id="section-84">
+        <li id="section-85">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-84">&#x00a7;</a>
+                <a class="ss" href="#section-85">&#x00a7;</a>
               </div>
               <h4 id="cell-pool">Cell pool</h4>
 <p>A number of processes - for instance collision functionality, and applying filters to entitys and groups - require the use of a &lt;canvas&gt; element and its CanvasRenderingContext2D engine. Rather than generate these canvas elements on the fly, we store them in a pool, to help make the code more efficiant.</p>
@@ -3121,11 +3158,11 @@ P.<span class="hljs-property">poolDefs</span> = {
         </li>
         
         
-        <li id="section-85">
+        <li id="section-86">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-85">&#x00a7;</a>
+                <a class="ss" href="#section-86">&#x00a7;</a>
               </div>
               <p><code>Exported function</code> - <strong>requestCell</strong></p>
 
@@ -3150,11 +3187,11 @@ P.<span class="hljs-property">poolDefs</span> = {
         </li>
         
         
-        <li id="section-86">
+        <li id="section-87">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-86">&#x00a7;</a>
+                <a class="ss" href="#section-87">&#x00a7;</a>
               </div>
               <p><code>Exported function</code> - <strong>releaseCell</strong></p>
 
@@ -3172,11 +3209,11 @@ P.<span class="hljs-property">poolDefs</span> = {
         </li>
         
         
-        <li id="section-87">
+        <li id="section-88">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-87">&#x00a7;</a>
+                <a class="ss" href="#section-88">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 
@@ -3193,11 +3230,11 @@ constructors.<span class="hljs-property">Cell</span> = <span class="hljs-title c
         </li>
         
         
-        <li id="section-88">
+        <li id="section-89">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-88">&#x00a7;</a>
+                <a class="ss" href="#section-89">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 
