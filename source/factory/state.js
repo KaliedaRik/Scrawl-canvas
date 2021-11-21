@@ -138,6 +138,13 @@ P.defs = {
 // __filter__ - the Canvas 2D engine supports the [filter attribute](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter) on an experimental basis, thus it is not guaranteed to work in all browsers and devices. The filter attribute takes a String value (default: 'none') defining one or more filter functions to be applied to the entity as it is stamped on the canvas.
 // + Be aware that entitys can also take a `filters` Array - this represents an array of Scrawl-canvas filters to be applied to the entity (or group or Cell). The two filter systems are completely separate - combine their effects at your own risk!
     filter: 'none',
+
+// ##### Image smoothing
+// __imageSmoothingEnabled__ - switch image smoothing on or off, on a per-entity basis
+    imageSmoothingEnabled: true,
+
+// __imageSmoothingQuality__ - when image smoothing is enabled, determine the quality of image smoothing to apply to the entity.
+    imageSmoothingQuality: 'high',
 };
 
 
@@ -254,9 +261,9 @@ S.strokeStyle = function (item) {
 
 // Internal arrays used by a number of Style functions
 P.allKeys = Object.keys(P.defs);
-P.mainKeys = ['globalAlpha', 'globalCompositeOperation', 'shadowOffsetX', 'shadowOffsetY', 'shadowBlur', 'filter'];
-P.lineKeys = ['lineWidth', 'lineCap', 'lineJoin', 'lineDash', 'lineDashOffset', 'miterLimit'];
-P.styleKeys = ['fillStyle', 'strokeStyle', 'shadowColor'];
+P.mainKeys = ['filter', 'globalAlpha', 'globalCompositeOperation', 'imageSmoothingEnabled', 'imageSmoothingQuality', 'shadowBlur', 'shadowOffsetX', 'shadowOffsetY'];
+P.lineKeys = ['lineCap', 'lineDash', 'lineDashOffset', 'lineJoin', 'lineWidth', 'miterLimit'];
+P.styleKeys = ['fillStyle', 'shadowColor', 'strokeStyle'];
 P.textKeys = ['font'];
 
 // `getChanges` is the key function performed by State objects. This is where the entity's state is compared to a Cell engine's current state, to identify which engine attributes need to change to bring it into alignment with the entity object's requirements
@@ -277,7 +284,7 @@ P.getChanges = function (ent, engineState) {
 
     if (ent.substring) ent = entity[ent];
 
-    // 'globalAlpha', 'globalCompositeOperation', 'shadowOffsetX', 'shadowOffsetY', 'shadowBlur', 'filter'
+    // 'filter', 'globalAlpha', 'globalCompositeOperation', 'imageSmoothingEnabled', 'imageSmoothingQuality', 'shadowBlur', 'shadowOffsetX', 'shadowOffsetY'
     for (i = 0, iz = mainKeys.length; i < iz; i++) {
 
         k = mainKeys[i];
@@ -287,7 +294,7 @@ P.getChanges = function (ent, engineState) {
         if (current !== desired) result[k] = desired;
     }
 
-    // 'lineWidth', 'lineCap', 'lineJoin', 'lineDash', 'lineDashOffset', 'miterLimit'
+    // 'lineCap', 'lineDash', 'lineDashOffset', 'lineJoin', 'lineWidth', 'miterLimit'
     if (this.lineWidth || engineState.lineWidth) {
 
         for (i = 0, iz = lineKeys.length; i < iz; i++) {
@@ -336,7 +343,7 @@ P.getChanges = function (ent, engineState) {
         }
     }
 
-    // 'fillStyle', 'strokeStyle', 'shadowColor'
+    // 'fillStyle', 'shadowColor', 'strokeStyle'
     for (i = 0, iz = styleKeys.length; i < iz; i++) {
 
         k = styleKeys[i];
@@ -403,7 +410,7 @@ const makeState = function (items) {
 };
 
 // Note: does NOT include 'font', textAlign or textBaseline because we set them in the fontAttributes object and Phrase entity, not the state object
-const stateKeys = ['fillStyle', 'filter', 'globalAlpha', 'globalCompositeOperation', 'lineCap', 'lineDash', 'lineDashOffset', 'lineJoin', 'lineWidth', 'miterLimit', 'shadowBlur', 'shadowColor', 'shadowOffsetX', 'shadowOffsetY', 'strokeStyle'];
+const stateKeys = ['fillStyle', 'filter', 'globalAlpha', 'globalCompositeOperation', 'imageSmoothingEnabled', 'imageSmoothingQuality', 'lineCap', 'lineDash', 'lineDashOffset', 'lineJoin', 'lineWidth', 'miterLimit', 'shadowBlur', 'shadowColor', 'shadowOffsetX', 'shadowOffsetY', 'strokeStyle'];
 
 
 constructors.State = State;

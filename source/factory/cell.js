@@ -800,6 +800,14 @@ P.setEngineActions = {
         engine.globalCompositeOperation = item;
     },
 
+    imageSmoothingEnabled: function (item, engine) {
+        engine.imageSmoothingEnabled = item;
+    },
+
+    imageSmoothingQuality: function (item, engine) {
+        engine.imageSmoothingQuality = item;
+    },
+
     lineCap: function (item, engine) {
         engine.lineCap = item;
     },

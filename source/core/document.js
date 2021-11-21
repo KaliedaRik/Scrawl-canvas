@@ -632,6 +632,23 @@ const domShow = function (singleArtefact = '') {
                 style.display = (art.visibility) ? 'block' : 'none';
             }
 
+            // update visibility
+            if (art.dirtySmoothFont) {
+
+                art.dirtySmoothFont = false;
+
+                if (art.smoothFont) {
+                    style['webkitFontSmoothing'] = 'auto';
+                    style['mozOsxFontSmoothing'] = 'auto';
+                    style['smoothFont'] = 'auto';
+                }
+                else {
+                    style['webkitFontSmoothing'] = 'none';
+                    style['mozOsxFontSmoothing'] = 'grayscale';
+                    style['smoothFont'] = 'never';
+                }
+            }
+
             // update other CSS changes
             if (art.dirtyCss) {
 

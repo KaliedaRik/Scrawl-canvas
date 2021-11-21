@@ -872,8 +872,7 @@ P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Stat
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">filter</span>: <span class="hljs-string">&#x27;none&#x27;</span>,
-};</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">filter</span>: <span class="hljs-string">&#x27;none&#x27;</span>,</pre></div></div>
             
         </li>
         
@@ -883,6 +882,38 @@ P.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;Stat
               
               <div class="sswrap ">
                 <a class="ss" href="#section-23">&#x00a7;</a>
+              </div>
+              <h5 id="image-smoothing">Image smoothing</h5>
+<p><strong>imageSmoothingEnabled</strong> - switch image smoothing on or off, on a per-entity basis</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">imageSmoothingEnabled</span>: <span class="hljs-literal">true</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-24">&#x00a7;</a>
+              </div>
+              <p><strong>imageSmoothingQuality</strong> - when image smoothing is enabled, determine the quality of image smoothing to apply to the entity.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-attr">imageSmoothingQuality</span>: <span class="hljs-string">&#x27;high&#x27;</span>,
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <h4 id="packet-management">Packet management</h4>
 
@@ -923,11 +954,11 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
         </li>
         
         
-        <li id="section-24">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <h4 id="clone-management">Clone management</h4>
 <p>Handled by Cell and entity objects, not by the State object</p>
@@ -937,11 +968,11 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
         </li>
         
         
-        <li id="section-25">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-27">&#x00a7;</a>
               </div>
               <h4 id="kill-management">Kill management</h4>
 <p>Handled by Cell and entity objects, not by the State object</p>
@@ -951,11 +982,11 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
         </li>
         
         
-        <li id="section-26">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-26">&#x00a7;</a>
+                <a class="ss" href="#section-28">&#x00a7;</a>
               </div>
               <h4 id="get-set-deltaset">Get, Set, deltaSet</h4>
 
@@ -1029,11 +1060,11 @@ S.<span class="hljs-property">strokeStyle</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-27">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-27">&#x00a7;</a>
+                <a class="ss" href="#section-29">&#x00a7;</a>
               </div>
               <h4 id="prototype-functions">Prototype functions</h4>
 
@@ -1042,30 +1073,30 @@ S.<span class="hljs-property">strokeStyle</span> = <span class="hljs-keyword">fu
         </li>
         
         
-        <li id="section-28">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-28">&#x00a7;</a>
+                <a class="ss" href="#section-30">&#x00a7;</a>
               </div>
               <p>Internal arrays used by a number of Style functions</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>P.<span class="hljs-property">allKeys</span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(P.<span class="hljs-property">defs</span>);
-P.<span class="hljs-property">mainKeys</span> = [<span class="hljs-string">&#x27;globalAlpha&#x27;</span>, <span class="hljs-string">&#x27;globalCompositeOperation&#x27;</span>, <span class="hljs-string">&#x27;shadowOffsetX&#x27;</span>, <span class="hljs-string">&#x27;shadowOffsetY&#x27;</span>, <span class="hljs-string">&#x27;shadowBlur&#x27;</span>, <span class="hljs-string">&#x27;filter&#x27;</span>];
-P.<span class="hljs-property">lineKeys</span> = [<span class="hljs-string">&#x27;lineWidth&#x27;</span>, <span class="hljs-string">&#x27;lineCap&#x27;</span>, <span class="hljs-string">&#x27;lineJoin&#x27;</span>, <span class="hljs-string">&#x27;lineDash&#x27;</span>, <span class="hljs-string">&#x27;lineDashOffset&#x27;</span>, <span class="hljs-string">&#x27;miterLimit&#x27;</span>];
-P.<span class="hljs-property">styleKeys</span> = [<span class="hljs-string">&#x27;fillStyle&#x27;</span>, <span class="hljs-string">&#x27;strokeStyle&#x27;</span>, <span class="hljs-string">&#x27;shadowColor&#x27;</span>];
+P.<span class="hljs-property">mainKeys</span> = [<span class="hljs-string">&#x27;filter&#x27;</span>, <span class="hljs-string">&#x27;globalAlpha&#x27;</span>, <span class="hljs-string">&#x27;globalCompositeOperation&#x27;</span>, <span class="hljs-string">&#x27;imageSmoothingEnabled&#x27;</span>, <span class="hljs-string">&#x27;imageSmoothingQuality&#x27;</span>, <span class="hljs-string">&#x27;shadowBlur&#x27;</span>, <span class="hljs-string">&#x27;shadowOffsetX&#x27;</span>, <span class="hljs-string">&#x27;shadowOffsetY&#x27;</span>];
+P.<span class="hljs-property">lineKeys</span> = [<span class="hljs-string">&#x27;lineCap&#x27;</span>, <span class="hljs-string">&#x27;lineDash&#x27;</span>, <span class="hljs-string">&#x27;lineDashOffset&#x27;</span>, <span class="hljs-string">&#x27;lineJoin&#x27;</span>, <span class="hljs-string">&#x27;lineWidth&#x27;</span>, <span class="hljs-string">&#x27;miterLimit&#x27;</span>];
+P.<span class="hljs-property">styleKeys</span> = [<span class="hljs-string">&#x27;fillStyle&#x27;</span>, <span class="hljs-string">&#x27;shadowColor&#x27;</span>, <span class="hljs-string">&#x27;strokeStyle&#x27;</span>];
 P.<span class="hljs-property">textKeys</span> = [<span class="hljs-string">&#x27;font&#x27;</span>];</pre></div></div>
             
         </li>
         
         
-        <li id="section-29">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-29">&#x00a7;</a>
+                <a class="ss" href="#section-31">&#x00a7;</a>
               </div>
               <p><code>getChanges</code> is the key function performed by State objects. This is where the entity’s state is compared to a Cell engine’s current state, to identify which engine attributes need to change to bring it into alignment with the entity object’s requirements</p>
 
@@ -1091,13 +1122,13 @@ P.<span class="hljs-property">textKeys</span> = [<span class="hljs-string">&#x27
         </li>
         
         
-        <li id="section-30">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-30">&#x00a7;</a>
+                <a class="ss" href="#section-32">&#x00a7;</a>
               </div>
-              <p>‘globalAlpha’, ‘globalCompositeOperation’, ‘shadowOffsetX’, ‘shadowOffsetY’, ‘shadowBlur’, ‘filter’</p>
+              <p>‘filter’, ‘globalAlpha’, ‘globalCompositeOperation’, ‘imageSmoothingEnabled’, ‘imageSmoothingQuality’, ‘shadowBlur’, ‘shadowOffsetX’, ‘shadowOffsetY’</p>
 
             </div>
             
@@ -1113,13 +1144,13 @@ P.<span class="hljs-property">textKeys</span> = [<span class="hljs-string">&#x27
         </li>
         
         
-        <li id="section-31">
+        <li id="section-33">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-31">&#x00a7;</a>
+                <a class="ss" href="#section-33">&#x00a7;</a>
               </div>
-              <p>‘lineWidth’, ‘lineCap’, ‘lineJoin’, ‘lineDash’, ‘lineDashOffset’, ‘miterLimit’</p>
+              <p>‘lineCap’, ‘lineDash’, ‘lineDashOffset’, ‘lineJoin’, ‘lineWidth’, ‘miterLimit’</p>
 
             </div>
             
@@ -1174,13 +1205,13 @@ P.<span class="hljs-property">textKeys</span> = [<span class="hljs-string">&#x27
         </li>
         
         
-        <li id="section-32">
+        <li id="section-34">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-32">&#x00a7;</a>
+                <a class="ss" href="#section-34">&#x00a7;</a>
               </div>
-              <p>‘fillStyle’, ‘strokeStyle’, ‘shadowColor’</p>
+              <p>‘fillStyle’, ‘shadowColor’, ‘strokeStyle’</p>
 
             </div>
             
@@ -1193,11 +1224,11 @@ P.<span class="hljs-property">textKeys</span> = [<span class="hljs-string">&#x27
         </li>
         
         
-        <li id="section-33">
+        <li id="section-35">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-33">&#x00a7;</a>
+                <a class="ss" href="#section-35">&#x00a7;</a>
               </div>
               <p>string colors - only update if necessary</p>
 
@@ -1208,11 +1239,11 @@ P.<span class="hljs-property">textKeys</span> = [<span class="hljs-string">&#x27
         </li>
         
         
-        <li id="section-34">
+        <li id="section-36">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-34">&#x00a7;</a>
+                <a class="ss" href="#section-36">&#x00a7;</a>
               </div>
               <p>Color object colors need to be extracted before they can be compared and, if necessary, updated</p>
 
@@ -1228,11 +1259,11 @@ P.<span class="hljs-property">textKeys</span> = [<span class="hljs-string">&#x27
         </li>
         
         
-        <li id="section-35">
+        <li id="section-37">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-35">&#x00a7;</a>
+                <a class="ss" href="#section-37">&#x00a7;</a>
               </div>
               <p>gradient and pattern objects - get freshly deployed with each entity stamp</p>
 
@@ -1244,11 +1275,11 @@ P.<span class="hljs-property">textKeys</span> = [<span class="hljs-string">&#x27
         </li>
         
         
-        <li id="section-36">
+        <li id="section-38">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-36">&#x00a7;</a>
+                <a class="ss" href="#section-38">&#x00a7;</a>
               </div>
               <p>‘font’</p>
 
@@ -1271,11 +1302,11 @@ P.<span class="hljs-property">textKeys</span> = [<span class="hljs-string">&#x27
         </li>
         
         
-        <li id="section-37">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-37">&#x00a7;</a>
+                <a class="ss" href="#section-39">&#x00a7;</a>
               </div>
               <p>The <code>setStateFromEngine</code> function takes a CanvasRenderingContext2D engine object and updates its own attributes to match the engine’s current state.</p>
 
@@ -1303,11 +1334,11 @@ P.<span class="hljs-property">textKeys</span> = [<span class="hljs-string">&#x27
         </li>
         
         
-        <li id="section-38">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-38">&#x00a7;</a>
+                <a class="ss" href="#section-40">&#x00a7;</a>
               </div>
               <h4 id="factory">Factory</h4>
 <p>Only used internally by Cell and entity factory functions</p>
@@ -1323,17 +1354,17 @@ P.<span class="hljs-property">textKeys</span> = [<span class="hljs-string">&#x27
         </li>
         
         
-        <li id="section-39">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-39">&#x00a7;</a>
+                <a class="ss" href="#section-41">&#x00a7;</a>
               </div>
               <p>Note: does NOT include ‘font’, textAlign or textBaseline because we set them in the fontAttributes object and Phrase entity, not the state object</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> stateKeys = [<span class="hljs-string">&#x27;fillStyle&#x27;</span>, <span class="hljs-string">&#x27;filter&#x27;</span>, <span class="hljs-string">&#x27;globalAlpha&#x27;</span>, <span class="hljs-string">&#x27;globalCompositeOperation&#x27;</span>, <span class="hljs-string">&#x27;lineCap&#x27;</span>, <span class="hljs-string">&#x27;lineDash&#x27;</span>, <span class="hljs-string">&#x27;lineDashOffset&#x27;</span>, <span class="hljs-string">&#x27;lineJoin&#x27;</span>, <span class="hljs-string">&#x27;lineWidth&#x27;</span>, <span class="hljs-string">&#x27;miterLimit&#x27;</span>, <span class="hljs-string">&#x27;shadowBlur&#x27;</span>, <span class="hljs-string">&#x27;shadowColor&#x27;</span>, <span class="hljs-string">&#x27;shadowOffsetX&#x27;</span>, <span class="hljs-string">&#x27;shadowOffsetY&#x27;</span>, <span class="hljs-string">&#x27;strokeStyle&#x27;</span>];
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> stateKeys = [<span class="hljs-string">&#x27;fillStyle&#x27;</span>, <span class="hljs-string">&#x27;filter&#x27;</span>, <span class="hljs-string">&#x27;globalAlpha&#x27;</span>, <span class="hljs-string">&#x27;globalCompositeOperation&#x27;</span>, <span class="hljs-string">&#x27;imageSmoothingEnabled&#x27;</span>, <span class="hljs-string">&#x27;imageSmoothingQuality&#x27;</span>, <span class="hljs-string">&#x27;lineCap&#x27;</span>, <span class="hljs-string">&#x27;lineDash&#x27;</span>, <span class="hljs-string">&#x27;lineDashOffset&#x27;</span>, <span class="hljs-string">&#x27;lineJoin&#x27;</span>, <span class="hljs-string">&#x27;lineWidth&#x27;</span>, <span class="hljs-string">&#x27;miterLimit&#x27;</span>, <span class="hljs-string">&#x27;shadowBlur&#x27;</span>, <span class="hljs-string">&#x27;shadowColor&#x27;</span>, <span class="hljs-string">&#x27;shadowOffsetX&#x27;</span>, <span class="hljs-string">&#x27;shadowOffsetY&#x27;</span>, <span class="hljs-string">&#x27;strokeStyle&#x27;</span>];
 
 
 constructors.<span class="hljs-property">State</span> = <span class="hljs-title class_">State</span>;</pre></div></div>
@@ -1341,11 +1372,11 @@ constructors.<span class="hljs-property">State</span> = <span class="hljs-title 
         </li>
         
         
-        <li id="section-40">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-40">&#x00a7;</a>
+                <a class="ss" href="#section-42">&#x00a7;</a>
               </div>
               <h4 id="exports">Exports</h4>
 
