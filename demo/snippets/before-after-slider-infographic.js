@@ -793,7 +793,8 @@ export default function (el) {
 
             // __14. Hook into event listeners__
             scrawl.addListener('move', () => canvas.cascadeEventAction('move'), el);
-            scrawl.addNativeListener('click', () => canvas.cascadeEventAction('up'), el);
+            scrawl.addNativeListener('touchmove', () => canvas.cascadeEventAction('move'), el);
+            scrawl.addNativeListener(['click', 'touchend'], () => canvas.cascadeEventAction('up'), el);
 
             // __15. Update the animation object to listen for drag bar activity__
             animation.set({

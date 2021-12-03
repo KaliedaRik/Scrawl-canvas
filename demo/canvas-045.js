@@ -147,6 +147,14 @@ const demoAnimation = scrawl.makeRender({
 // #### User interaction
 scrawl.addListener('move', () => canvas.cascadeEventAction('move'), canvas.domElement);
 
+// For this demo we will suppress touchmove functionality over the canvas
+scrawl.addNativeListener('touchmove', (e) => {
+
+    e.preventDefault();
+    e.returnValue = false;
+
+}, canvas.domElement);
+
 
 // #### Development and testing
 console.log(scrawl.library);

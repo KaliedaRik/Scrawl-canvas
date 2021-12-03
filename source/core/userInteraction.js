@@ -166,10 +166,8 @@ const moveAction = function (e) {
 // Note: this is different to mouse moveAction, which is choked via an animation object so update checks happen on each requestAnimationFrame. 
 //
 // TODO: Need to keep an eye on how many times touchAction gets run, for example during a touch-driven drag-and-drop action. If necessary, add a Date.now mediated choke to the check (say minimum 15ms between checks?) to minimize impact on the wider Scrawl-canvas ecosystem.
-let touchActionLastChecked = 0;
-
-let touchActionChoke = 16;
-let touchActionChanged = false;
+let touchActionLastChecked = 0,
+    touchActionChoke = 16;
 
 const getTouchActionChoke = function () {
 
@@ -181,41 +179,42 @@ const setTouchActionChoke = function (val) {
     if (val && val.toFixed && !isNaN(val)) touchActionChoke = val;
 };
 
-const touchAction = function (e) {
+const touchAction = function (e, resetCoordsToZeroOnTouchEnd = true) {
 
-    if (e.type === 'touchstart' || e.type === 'touchmove') {
+    currentCorePosition.rawTouches.length = 0;
 
-        currentCorePosition.rawTouches.length = 0;
+    if (e.touches && e.touches.length) {
 
-        if (e.touches && e.touches.length) {
+        currentCorePosition.rawTouches.push(...e.touches);
 
-            currentCorePosition.rawTouches.push(...e.touches);
+        const touch = e.touches[0],
+            x = Math.round(touch.pageX),
+            y = Math.round(touch.pageY);
 
-            touchActionChanged = true;
+        if (currentCorePosition.x !== x || currentCorePosition.y !== y) {
 
-            const touch = e.touches[0],
-                x = Math.round(touch.pageX),
-                y = Math.round(touch.pageY);
+            currentCorePosition.type = 'touch';
+            currentCorePosition.x = x;
+            currentCorePosition.y = y;
+        }
+    }
+    else {
 
-            if (currentCorePosition.x !== x || currentCorePosition.y !== y) {
+        currentCorePosition.type = 'touch';
 
-                currentCorePosition.type = 'touch';
-                currentCorePosition.x = x;
-                currentCorePosition.y = y;
-            }
+        if (resetCoordsToZeroOnTouchEnd) {
+
+            currentCorePosition.x = 0;
+            currentCorePosition.y = 0;
         }
     }
 
-    if (touchActionChanged) {
+    const now = Date.now();
 
-        const now = Date.now();
+    if (now > touchActionLastChecked + touchActionChoke) {
 
-        if (now > touchActionLastChecked + touchActionChoke) {
-
-            touchActionChanged = false;
-            touchActionLastChecked = now;
-            updateUiSubscribedElements();
-        }
+        touchActionLastChecked = now;
+        updateUiSubscribedElements();
     }
 };
 
@@ -728,6 +727,7 @@ const observeAndUpdate = function (items = Ωempty) {
 // + __.updateWhileMoving__ - Function to be run while drag is in progress
 // + __.exposeCurrentArtefact__ - Boolean (default: false)
 // + __.preventTouchDefaultWhenDragging__ - Boolean (default: false)
+// + __.resetCoordsToZeroOnTouchEnd__ - Boolean (default: true)
 // 
 // If `exposeCurrentArtefact` attribute is true, the factory returns a function that can be invoked at any time to get the collision data object (containing x, y, artefact attributes) for the artefact being dragged (false if nothing is being dragged). 
 //
@@ -740,7 +740,7 @@ const observeAndUpdate = function (items = Ωempty) {
 // `Exported function` (to modules and the scrawl object). Add drag-and-drop functionality to a canvas or stack.
 const makeDragZone = function (items = Ωempty) {
 
-    let {zone, coordinateSource, collisionGroup, startOn, endOn, updateOnStart, updateOnEnd, updateWhileMoving, exposeCurrentArtefact, preventTouchDefaultWhenDragging} = items
+    let {zone, coordinateSource, collisionGroup, startOn, endOn, updateOnStart, updateOnEnd, updateWhileMoving, exposeCurrentArtefact, preventTouchDefaultWhenDragging, resetCoordsToZeroOnTouchEnd} = items
 
     // `zone` is required
     // + must be either a Canvas or Stack wrapper, or a wrapper's String name
@@ -784,6 +784,10 @@ const makeDragZone = function (items = Ωempty) {
     if (!Array.isArray(startOn)) startOn = ['down'];
     if (!Array.isArray(endOn)) endOn = ['up'];
 
+    if (exposeCurrentArtefact == null) exposeCurrentArtefact = false;
+    if (preventTouchDefaultWhenDragging == null) preventTouchDefaultWhenDragging = false;
+    if (resetCoordsToZeroOnTouchEnd == null) resetCoordsToZeroOnTouchEnd = true;
+
     // We can only drag one artefact at a time; that artefact - alongside the hit coordinate's x and y values -  is stored in the `current` variable
     let current = false;
 
@@ -821,7 +825,7 @@ const makeDragZone = function (items = Ωempty) {
         checkE(e);
 
         let type = e.type;
-        if (type === 'touchstart' || type === 'touchcancel') touchAction(e);
+        if (type === 'touchstart' || type === 'touchcancel') touchAction(e, resetCoordsToZeroOnTouchEnd);
 
         current = collisionGroup.getArtefactAt(coordinateSource);
 
@@ -847,7 +851,10 @@ const makeDragZone = function (items = Ωempty) {
         checkE(e);
 
         let type = e.type;
-        if (type === 'touchend') touchAction(e);
+        if (type === 'touchend') {
+
+            touchAction(e, resetCoordsToZeroOnTouchEnd);
+        }
 
         if (current) {
 

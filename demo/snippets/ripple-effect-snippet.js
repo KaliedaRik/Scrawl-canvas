@@ -112,7 +112,7 @@ export default function (el, args = {}) {
                 }).run();
             }
         };
-        scrawl.addNativeListener('click', clickAction, el);
+        scrawl.addNativeListener(['click', 'touchend'], clickAction, el);
     }
     return snippet;
 };

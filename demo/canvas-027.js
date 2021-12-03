@@ -408,7 +408,8 @@ myLocalTweenFactory('test-goose2-tween', 'test-video-ticker', 'test-goose2-hitzo
 ]);
 
 scrawl.addListener('move', () => canvas.cascadeEventAction('move'), canvas.domElement);
-scrawl.addNativeListener('click', () => canvas.cascadeEventAction('up'), canvas.domElement);
+scrawl.addNativeListener(['touchstart', 'touchmove'], () => canvas.cascadeEventAction('move'), canvas.domElement);
+scrawl.addNativeListener(['click', 'touchend'], () => canvas.cascadeEventAction('up'), canvas.domElement);
 
 
 // Video time bar

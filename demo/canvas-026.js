@@ -101,6 +101,8 @@ let dragActions = scrawl.makeDragZone({
     endOn: ['up', 'leave'],
     exposeCurrentArtefact: true,
 
+    resetCoordsToZeroOnTouchEnd: false,
+
     updateOnStart: {
         shadowBlur: 10,
         shadowOffsetX: 3,

@@ -174,5 +174,14 @@ scrawl.makeRender({
 });
 
 
+// For this demo we will suppress touchmove functionality over the canvas
+scrawl.addNativeListener('touchmove', (e) => {
+
+    e.preventDefault();
+    e.returnValue = false;
+
+}, [canvases['hackney'].domElement, canvases['heathrow'].domElement, canvases['kingston'].domElement, canvases['burglary'].domElement]);
+
+
 // #### Development and testing
 console.log(scrawl.library);

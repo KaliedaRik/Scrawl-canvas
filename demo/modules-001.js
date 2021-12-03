@@ -76,6 +76,20 @@ scrawl.addListener(
     canvas.domElement 
 );
 
+scrawl.addNativeListener(
+    'touchstart', 
+    () => canvas.cascadeEventAction('move'), 
+    canvas.domElement 
+);
+
+// For this demo we will suppress touchmove functionality over the canvas
+scrawl.addNativeListener('touchmove', (e) => {
+
+    e.preventDefault();
+    e.returnValue = false;
+
+}, canvas.domElement);
+
 let currentGraphType = 'bars',
     currentArea = 'Hackney',
     currentCategory = 'Burglary';

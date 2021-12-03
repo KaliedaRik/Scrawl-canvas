@@ -360,6 +360,7 @@ scrawl.makeDragZone({
     collisionGroup: 'bc1-drag-group',
     coordinateSource: bc1Cell,
     endOn: ['up', 'leave'],
+    preventTouchDefaultWhenDragging: true,
 });
 
 const bc1Display = scrawl.makePicture({

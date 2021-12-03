@@ -91,21 +91,27 @@ let clientX = 0,
     screenY = 0;
 
 scrawl.addListener('move', (e) => {
-    clientX = e.clientX.toFixed(0);
-    clientY = e.clientY.toFixed(0);
-    movementX = e.movementX.toFixed(0);
-    movementY = e.movementY.toFixed(0);
-    offsetX = e.offsetX.toFixed(0);
-    offsetY = e.offsetY.toFixed(0);
-    pageX = e.pageX.toFixed(0);
-    pageY = e.pageY.toFixed(0);
-    screenX= e.screenX.toFixed(0);
-    screenY = e.screenY.toFixed(0);
 
-    offset.set({
-        startX: parseFloat(offsetX),
-        startY: parseFloat(offsetY),
-    });
+    if (e.type !== 'touchmove') {
+
+
+        clientX = e.clientX.toFixed(0);
+        clientY = e.clientY.toFixed(0);
+        movementX = e.movementX.toFixed(0);
+        movementY = e.movementY.toFixed(0);
+        offsetX = e.offsetX.toFixed(0);
+        offsetY = e.offsetY.toFixed(0);
+        pageX = e.pageX.toFixed(0);
+        pageY = e.pageY.toFixed(0);
+        screenX= e.screenX.toFixed(0);
+        screenY = e.screenY.toFixed(0);
+
+        offset.set({
+            startX: parseFloat(offsetX),
+            startY: parseFloat(offsetY),
+        });
+    }
+
 }, canvas.domElement);
 
 
