@@ -292,6 +292,7 @@ scrawl.makeDragZone({
     zone: canvas,
     collisionGroup: 'my-draggable-entitys',
     endOn: ['up', 'leave'],
+    preventTouchDefaultWhenDragging: true,
 });
 
 // #### Development and testing

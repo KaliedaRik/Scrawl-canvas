@@ -39,6 +39,7 @@ const currentCorePosition = {
     prefersDarkColorScheme: false,
     prefersReduceTransparency: false,
     prefersReduceData: false,
+    rawTouches: [],
 };
 
 
@@ -165,22 +166,55 @@ const moveAction = function (e) {
 // Note: this is different to mouse moveAction, which is choked via an animation object so update checks happen on each requestAnimationFrame. 
 //
 // TODO: Need to keep an eye on how many times touchAction gets run, for example during a touch-driven drag-and-drop action. If necessary, add a Date.now mediated choke to the check (say minimum 15ms between checks?) to minimize impact on the wider Scrawl-canvas ecosystem.
+let touchActionLastChecked = 0;
+
+let touchActionChoke = 16;
+let touchActionChanged = false;
+
+const getTouchActionChoke = function () {
+
+    return touchActionChoke;
+};
+
+const setTouchActionChoke = function (val) {
+
+    if (val && val.toFixed && !isNaN(val)) touchActionChoke = val;
+};
+
 const touchAction = function (e) {
 
     if (e.type === 'touchstart' || e.type === 'touchmove') {
 
-        if (e.touches && e.touches[0]) {
+        currentCorePosition.rawTouches.length = 0;
 
-            let touch = e.touches[0],
+        if (e.touches && e.touches.length) {
+
+            currentCorePosition.rawTouches.push(...e.touches);
+
+            touchActionChanged = true;
+
+            const touch = e.touches[0],
                 x = Math.round(touch.pageX),
                 y = Math.round(touch.pageY);
 
             if (currentCorePosition.x !== x || currentCorePosition.y !== y) {
+
                 currentCorePosition.type = 'touch';
                 currentCorePosition.x = x;
                 currentCorePosition.y = y;
-                updateUiSubscribedElements();
             }
+        }
+    }
+
+    if (touchActionChanged) {
+
+        const now = Date.now();
+
+        if (now > touchActionLastChecked + touchActionChoke) {
+
+            touchActionChanged = false;
+            touchActionLastChecked = now;
+            updateUiSubscribedElements();
         }
     }
 };
@@ -269,6 +303,22 @@ const updateUiSubscribedElement = function (art) {
                 here.offsetY = doy;
 
                 if (here.x > dom.activePadding && here.x < here.originalWidth - dom.activePadding && here.y > 0 + dom.activePadding && here.y < here.originalHeight - dom.activePadding) here.active = true;
+            }
+
+            const touches = currentCorePosition.rawTouches;
+
+            if (touches.length) {
+
+                if (!here.touches) here.touches = [];
+
+                here.touches.length = 0;
+
+                for (let i = 0, iz = touches.length; i < iz; i++) {
+
+                    const touch = touches[i];
+
+                    here.touches.push([Math.round(touch.pageX - dox), Math.round(touch.pageY - doy)]);
+                }
             }
 
             // Canvas `fit` attribute adjustments
@@ -676,7 +726,8 @@ const observeAndUpdate = function (items = Ωempty) {
 // + __.updateOnStart__ - Function, or a `set` object to be applied to the current artefact
 // + __.updateOnEnd__ - Function, or a `set` object to be applied to the current artefact
 // + __.updateWhileMoving__ - Function to be run while drag is in progress
-// + __.exposeCurrentArtefact__ - Boolean
+// + __.exposeCurrentArtefact__ - Boolean (default: false)
+// + __.preventTouchDefaultWhenDragging__ - Boolean (default: false)
 // 
 // If `exposeCurrentArtefact` attribute is true, the factory returns a function that can be invoked at any time to get the collision data object (containing x, y, artefact attributes) for the artefact being dragged (false if nothing is being dragged). 
 //
@@ -689,7 +740,7 @@ const observeAndUpdate = function (items = Ωempty) {
 // `Exported function` (to modules and the scrawl object). Add drag-and-drop functionality to a canvas or stack.
 const makeDragZone = function (items = Ωempty) {
 
-    let {zone, coordinateSource, collisionGroup, startOn, endOn, updateOnStart, updateOnEnd, updateWhileMoving, exposeCurrentArtefact} = items
+    let {zone, coordinateSource, collisionGroup, startOn, endOn, updateOnStart, updateOnEnd, updateWhileMoving, exposeCurrentArtefact, preventTouchDefaultWhenDragging} = items
 
     // `zone` is required
     // + must be either a Canvas or Stack wrapper, or a wrapper's String name
@@ -752,8 +803,16 @@ const makeDragZone = function (items = Ωempty) {
 
         if (e && e.cancelable) {
             
-            e.preventDefault();
-            e.returnValue = false;
+            if (preventTouchDefaultWhenDragging && current) {
+
+                e.preventDefault();
+                e.returnValue = false;
+            }
+            else if (!preventTouchDefaultWhenDragging) {
+
+                e.preventDefault();
+                e.returnValue = false;
+            }
         }
     };
 
@@ -762,7 +821,6 @@ const makeDragZone = function (items = Ωempty) {
         checkE(e);
 
         let type = e.type;
-
         if (type === 'touchstart' || type === 'touchcancel') touchAction(e);
 
         current = collisionGroup.getArtefactAt(coordinateSource);
@@ -777,12 +835,19 @@ const makeDragZone = function (items = Ωempty) {
     const move = function (e) {
 
         checkE(e);
-        if (current) updateWhileMoving();
+
+        let type = e.type;
+        if (type === 'touchmove') touchAction(e);
+
+        updateWhileMoving();
     };
 
     const drop = function (e) {
 
         checkE(e);
+
+        let type = e.type;
+        if (type === 'touchend') touchAction(e);
 
         if (current) {
 
@@ -829,4 +894,6 @@ export {
     applyCoreScrollListener,
     observeAndUpdate,
     makeDragZone,
+    getTouchActionChoke,
+    setTouchActionChoke,
 };

@@ -144,6 +144,7 @@ scrawl.makeDragZone({
     collisionGroup: 'drag-group',
     coordinateSource: mycell,
     endOn: ['up', 'leave'],
+    preventTouchDefaultWhenDragging: true,
 });
 
 

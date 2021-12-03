@@ -139,6 +139,7 @@ scrawl.makeDragZone({
     zone: canvas1,
     collisionGroup: 'canvas1-drag-group',
     endOn: ['up', 'leave'],
+    preventTouchDefaultWhenDragging: true,
 });
 
 
@@ -263,6 +264,7 @@ const canvasTwoPostInitialization = function () {
             zone: canvas2,
             collisionGroup: 'canvas2-drag-group',
             endOn: ['up', 'leave'],
+            preventTouchDefaultWhenDragging: true,
         });
     }
 
@@ -367,6 +369,7 @@ const canvasThreePostInitialization = function () {
             zone: canvas3,
             collisionGroup: 'canvas3-drag-group',
             endOn: ['up', 'leave'],
+            preventTouchDefaultWhenDragging: true,
         });
     }
 

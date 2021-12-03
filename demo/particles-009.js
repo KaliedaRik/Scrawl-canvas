@@ -233,6 +233,7 @@ scrawl.makeDragZone({
     zone: canvas,
     collisionGroup: 'my-draggable-group',
     endOn: ['up', 'leave'],
+    preventTouchDefaultWhenDragging: true,
 });
 
 // When we set a filter on a Net entity, all the entity's visual output will be filtered

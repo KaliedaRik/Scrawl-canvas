@@ -110,28 +110,28 @@ const actionMouseListener = function (events, fn, targets, action) {
                 
                     case 'move':
                         target[action]('mousemove', fn, false);
-                        target[action]('touchmove', fn, {passive: true});
-                        target[action]('touchfollow', fn, {passive: true});
+                        target[action]('touchmove', fn, {passive: false});
+                        target[action]('touchfollow', fn, {passive: false});
                         break;
 
                     case 'up':
                         target[action]('mouseup', fn, false);
-                        target[action]('touchend', fn, {passive: true});
+                        target[action]('touchend', fn, {passive: false});
                         break;
 
                     case 'down':
                         target[action]('mousedown', fn, false);
-                        target[action]('touchstart', fn, {passive: true});
+                        target[action]('touchstart', fn, {passive: false});
                         break;
 
                     case 'leave':
                         target[action]('mouseleave', fn, false);
-                        target[action]('touchleave', fn, {passive: true});
+                        target[action]('touchleave', fn, {passive: false});
                         break;
 
                     case 'enter':
                         target[action]('mouseenter', fn, false);
-                        target[action]('touchenter', fn, {passive: true});
+                        target[action]('touchenter', fn, {passive: false});
                         break;
                 }
             }

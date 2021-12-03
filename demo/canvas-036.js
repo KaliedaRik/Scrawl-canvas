@@ -159,6 +159,7 @@ scrawl.makeDragZone({
     zone: canvas,
     collisionGroup: myGroup,
     endOn: ['up', 'leave'],
+    preventTouchDefaultWhenDragging: true,
 });
 
 // Check to see if a Cell will mimic on an entity

@@ -785,6 +785,7 @@ export default function (el) {
 
                     isDragging = false;
                 },
+                preventTouchDefaultWhenDragging: true,
             });
 
             // __13. Build the interactive links__

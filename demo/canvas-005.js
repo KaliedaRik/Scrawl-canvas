@@ -199,6 +199,7 @@ let current = scrawl.makeDragZone({
     zone: canvas,
     endOn: ['up', 'leave'],
     exposeCurrentArtefact: true,
+    preventTouchDefaultWhenDragging: true,
 });
 
 

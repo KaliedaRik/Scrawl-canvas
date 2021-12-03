@@ -176,6 +176,7 @@ scrawl.makeDragZone({
     zone: stack,
     collisionGroup: 'draggable-artefacts',
     endOn: ['up', 'leave'],
+    preventTouchDefaultWhenDragging: true,
 });
 
 

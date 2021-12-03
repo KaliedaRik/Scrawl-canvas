@@ -154,6 +154,7 @@ scrawl.makeDragZone({
     zone: canvas,
     collisionGroup: 'first-pins',
     endOn: ['up', 'leave'],
+    preventTouchDefaultWhenDragging: true,
 });
 
 // #### Development and testing

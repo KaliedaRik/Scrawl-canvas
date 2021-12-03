@@ -82,6 +82,8 @@ import {
     stopCoreListeners, 
     observeAndUpdate,
     makeDragZone,
+    getTouchActionChoke,
+    setTouchActionChoke,
 } from './core/userInteraction.js';
 
 
@@ -358,6 +360,8 @@ export default {
     stopCoreListeners,
     observeAndUpdate,
     makeDragZone,
+    getTouchActionChoke,
+    setTouchActionChoke,
 
 
     // core/document.js

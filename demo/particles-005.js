@@ -202,6 +202,7 @@ scrawl.makeDragZone({
     collisionGroup: dragItems,
     endOn: ['up', 'leave'],
     exposeCurrentArtefact: true,
+    preventTouchDefaultWhenDragging: true,
 });
 
 

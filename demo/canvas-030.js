@@ -201,6 +201,8 @@ scrawl.makeDragZone({
         shadowOffsetX: 0,
         shadowOffsetY: 0,
     },
+
+    preventTouchDefaultWhenDragging: true,
 });
 
 
