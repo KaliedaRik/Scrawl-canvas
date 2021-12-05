@@ -83,7 +83,11 @@
     <ul>
       <li>Resizing the canvas (dimensions attributes) will lead to positioning failures.</li>
       <li>The positioning accuracy on 3D-rotated canvases is not as accurate in Firefox as it is in other browsers.</li>
+      <li>Touch positioning is (often) returning 'NaN' for both canvas.here and canvas.base.here on Android browser - needs investigating.</li>
     </ul>
+
+    <p><b>Touch test:</b> should work as expected</p>
+
     <p><a href="../docs/demo/dom-013.html">Annotated code</a></p>
   </div>
 

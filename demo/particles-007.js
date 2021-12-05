@@ -199,6 +199,14 @@ scrawl.makeRender({
 
 
 // #### User interaction
+// For this demo we will suppress touchmove functionality over the canvas
+scrawl.addNativeListener('touchmove', (e) => {
+
+    e.preventDefault();
+    e.returnValue = false;
+
+}, canvas.domElement);
+
 // Setup form observer functionality
 scrawl.observeAndUpdate({
 

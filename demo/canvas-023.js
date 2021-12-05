@@ -388,6 +388,14 @@ scrawl.addListener(['move', 'up'], function () {
     }).videoPlay();
 }, canvas.domElement);
 
+// For this demo we will suppress touchmove functionality over the canvas
+scrawl.addNativeListener('touchmove', (e) => {
+
+    e.preventDefault();
+    e.returnValue = false;
+
+}, canvas.domElement);
+
 
 // Setup form
 document.querySelector('#columns').value = 6;

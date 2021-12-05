@@ -117,6 +117,14 @@ artefact.bottomface.set({
 
 
 // #### User interaction
+// For this demo we will suppress touchmove functionality over the canvas
+scrawl.addNativeListener(['touchmove'], (e) => {
+
+    e.preventDefault();
+    e.returnValue = false;
+
+}, stack.domElement);
+
 // Function to check whether mouse cursor is over the Stack element, and lock the cube Element accordingly
 let stackCheck = function () {
 

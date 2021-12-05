@@ -124,6 +124,14 @@ scrawl.makeRender({
 
 
 // #### User interaction
+// For this demo we will suppress touchmove functionality over the canvas; we also need to disable Android magnification gesture - this is done in CSS with `touch-action: none;` - note: dragging issue does not affect Demo DOM-008
+scrawl.addNativeListener(['touchmove'], (e) => {
+
+    e.preventDefault();
+    e.returnValue = false;
+
+}, stack.domElement);
+
 // Setup form observer functionality
 scrawl.observeAndUpdate({
 

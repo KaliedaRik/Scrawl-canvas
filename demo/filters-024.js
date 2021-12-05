@@ -136,6 +136,7 @@ const currentPin = scrawl.makeDragZone({
     collisionGroup: 'drag-group',
     endOn: ['up', 'leave'],
     exposeCurrentArtefact: true,
+    preventTouchDefaultWhenDragging: true,
 
     updateOnStart: () => {
 

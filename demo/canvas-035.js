@@ -173,6 +173,7 @@ scrawl.makeDragZone({
 
     zone: canvas,
     endOn: ['up', 'leave'],
+    preventTouchDefaultWhenDragging: true,
 });
 
 // Setup form observer functionality for display block

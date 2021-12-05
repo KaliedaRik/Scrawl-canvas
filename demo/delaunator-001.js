@@ -350,6 +350,14 @@ const myEmitter = scrawl.makeEmitter({
 });
 
 
+// #### User interaction
+// For this demo we will suppress touchmove functionality over the canvas
+scrawl.addNativeListener(['touchmove'], (e) => {
+
+    e.preventDefault();
+    e.returnValue = false;
+
+}, canvas.domElement);
 
 
 // #### Scene animation

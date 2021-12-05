@@ -14,6 +14,7 @@
       width: 500px;
       height: 500px;
       margin: 0 auto;
+      touch-action: none;
     }
   </style>
 </head>
@@ -42,6 +43,9 @@
       <li>(Cube animations up to scrawl v7 relied on direct manipulation of quaternions in user code; this should all be hidden in v8, leaving the user able to animate the cube entirely via rotation attributes - pitch, yaw, roll)</li>
     </ul>
     <p><b>Note:</b> transform-style: preserve-3d or backface-visibility: hidden issue? Safari displays differently from other browsers. See <a href="https://css-tricks.com/things-watch-working-css-3d/">Things to Watch Out for When Working with CSS 3D</a>.</p>
+
+    <p><b>Touch test:</b> should work as expected</p>
+
     <p><a href="../docs/demo/dom-008.html">Annotated code</a></p>
   </div>
 

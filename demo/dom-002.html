@@ -14,6 +14,9 @@
       width: 500px;
       height: 500px;
       margin: 0 auto;
+
+      /* Known issue - this attempt to prevent stack shrinkage on Android browser does not work */
+      touch-action: none;
     }
 
     #myelement {
@@ -153,6 +156,9 @@
       <li>Check the attributes that allow a pivoted element to take into account the host element's handle and rotation values</li>
     </ul>
     <p><b>Note:</b> transform-style: preserve-3d issue? Safari displays differently from other browsers. See <a href="https://css-tricks.com/things-watch-working-css-3d/">Things to Watch Out for When Working with CSS 3D</a>.</p>
+
+    <p><b>Touch test:</b> should work as expected. Known issue: dragging causes the web page to shrink/enlarge - needs investigating.</p>
+
     <p><a href="../docs/demo/dom-002.html">Annotated code</a></p>
   </div>
 

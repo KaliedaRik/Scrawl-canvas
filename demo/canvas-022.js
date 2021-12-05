@@ -103,6 +103,14 @@ let checkHitTiles = () => {
     else hitReport = 'Hits - none reported';
 };
 
+// For this demo we will suppress touchmove functionality over the canvas
+scrawl.addNativeListener('touchmove', (e) => {
+
+    e.preventDefault();
+    e.returnValue = false;
+
+}, canvas.domElement);
+
 
 // #### Scene animation
 // Function to display frames-per-second data, and other information relevant to the demo

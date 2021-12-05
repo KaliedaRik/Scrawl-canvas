@@ -221,6 +221,14 @@ scrawl.makeRender({
 
 
 // #### User interaction
+// For this demo we will suppress touchmove functionality over the canvas
+scrawl.addNativeListener('touchmove', (e) => {
+
+    e.preventDefault();
+    e.returnValue = false;
+
+}, canvas.domElement);
+
 // Setting (restricting) the range of colors assigned to particles when they are generated.
 const setLowColor = function () {
 

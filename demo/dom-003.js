@@ -198,6 +198,7 @@ scrawl.makeDragZone({
     zone: stack,
     collisionGroup: hitGroup,
     endOn: ['up', 'leave'],
+    preventTouchDefaultWhenDragging: true,
 });
 
 

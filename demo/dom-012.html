@@ -32,12 +32,13 @@
     #target {
       background-color: #b8ffb8;
       margin-bottom: 1em;
-
+      touch-action: none;
     }
 
     ['data-stack'] {
       border: 1px solid red;
       min-height: 20px;
+      touch-action: none;
     }
 
     #not-a-stack {
@@ -45,6 +46,7 @@
       margin: 1em 0;
       border: 1px solid blue;
       background-color: aliceblue;
+      touch-action: none;
     }
   </style>
 </head>
@@ -78,6 +80,11 @@
       <li>Create a Scrawl-canvas stack inside another stack</li>
       <li>Dynamically remove and delete a Scrawl-canvas stack from the DOM</li>
     </ul>
+
+    <p><b>Known issue:</b> conversion to stack causes the stack element text to shrink on Android browser - possibly a FOUC problem?</p>
+
+    <p><b>Touch test:</b> not required</p>
+
     <p><a href="../docs/demo/dom-012.html">Annotated code</a></p>
   </div>
 

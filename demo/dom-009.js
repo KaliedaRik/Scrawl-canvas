@@ -185,6 +185,14 @@ scrawl.makeRender({
 
 
 // #### User interaction
+// For this demo we will suppress touchmove functionality over the canvas
+scrawl.addNativeListener(['touchmove'], (e) => {
+
+    e.preventDefault();
+    e.returnValue = false;
+
+}, stack.domElement);
+
 // Event listener for the buttons
 let buttonControls = function () {
 
