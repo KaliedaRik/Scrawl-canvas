@@ -571,6 +571,7 @@
     <span class="hljs-attr">prefersDarkColorScheme</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">prefersReduceTransparency</span>: <span class="hljs-literal">false</span>,
     <span class="hljs-attr">prefersReduceData</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">rawTouches</span>: [],
 };</pre></div></div>
             
         </li>
@@ -865,23 +866,55 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> touchAction = <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">let</span> touchActionLastChecked = <span class="hljs-number">0</span>,
+    touchActionChoke = <span class="hljs-number">16</span>;
 
-    <span class="hljs-keyword">if</span> (e.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;touchstart&#x27;</span> || e.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;touchmove&#x27;</span>) {
+<span class="hljs-keyword">const</span> getTouchActionChoke = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
-        <span class="hljs-keyword">if</span> (e.<span class="hljs-property">touches</span> &amp;&amp; e.<span class="hljs-property">touches</span>[<span class="hljs-number">0</span>]) {
+    <span class="hljs-keyword">return</span> touchActionChoke;
+};
 
-            <span class="hljs-keyword">let</span> touch = e.<span class="hljs-property">touches</span>[<span class="hljs-number">0</span>],
-                x = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(touch.<span class="hljs-property">pageX</span>),
-                y = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(touch.<span class="hljs-property">pageY</span>);
+<span class="hljs-keyword">const</span> setTouchActionChoke = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
 
-            <span class="hljs-keyword">if</span> (currentCorePosition.<span class="hljs-property">x</span> !== x || currentCorePosition.<span class="hljs-property">y</span> !== y) {
-                currentCorePosition.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;touch&#x27;</span>;
-                currentCorePosition.<span class="hljs-property">x</span> = x;
-                currentCorePosition.<span class="hljs-property">y</span> = y;
-                <span class="hljs-title function_">updateUiSubscribedElements</span>();
-            }
+    <span class="hljs-keyword">if</span> (val &amp;&amp; val.<span class="hljs-property">toFixed</span> &amp;&amp; !<span class="hljs-built_in">isNaN</span>(val)) touchActionChoke = val;
+};
+
+<span class="hljs-keyword">const</span> touchAction = <span class="hljs-keyword">function</span> (<span class="hljs-params">e, resetCoordsToZeroOnTouchEnd = <span class="hljs-literal">true</span></span>) {
+
+    currentCorePosition.<span class="hljs-property">rawTouches</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">if</span> (e.<span class="hljs-property">touches</span> &amp;&amp; e.<span class="hljs-property">touches</span>.<span class="hljs-property">length</span>) {
+
+        currentCorePosition.<span class="hljs-property">rawTouches</span>.<span class="hljs-title function_">push</span>(...e.<span class="hljs-property">touches</span>);
+
+        <span class="hljs-keyword">const</span> touch = e.<span class="hljs-property">touches</span>[<span class="hljs-number">0</span>],
+            x = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(touch.<span class="hljs-property">pageX</span>),
+            y = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(touch.<span class="hljs-property">pageY</span>);
+
+        <span class="hljs-keyword">if</span> (currentCorePosition.<span class="hljs-property">x</span> !== x || currentCorePosition.<span class="hljs-property">y</span> !== y) {
+
+            currentCorePosition.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;touch&#x27;</span>;
+            currentCorePosition.<span class="hljs-property">x</span> = x;
+            currentCorePosition.<span class="hljs-property">y</span> = y;
         }
+    }
+    <span class="hljs-keyword">else</span> {
+
+        currentCorePosition.<span class="hljs-property">type</span> = <span class="hljs-string">&#x27;touch&#x27;</span>;
+
+        <span class="hljs-keyword">if</span> (resetCoordsToZeroOnTouchEnd) {
+
+            currentCorePosition.<span class="hljs-property">x</span> = <span class="hljs-number">0</span>;
+            currentCorePosition.<span class="hljs-property">y</span> = <span class="hljs-number">0</span>;
+        }
+    }
+
+    <span class="hljs-keyword">const</span> now = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>();
+
+    <span class="hljs-keyword">if</span> (now &gt; touchActionLastChecked + touchActionChoke) {
+
+        touchActionLastChecked = now;
+        <span class="hljs-title function_">updateUiSubscribedElements</span>();
     }
 };</pre></div></div>
             
@@ -1053,6 +1086,22 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
                 here.<span class="hljs-property">offsetY</span> = doy;
 
                 <span class="hljs-keyword">if</span> (here.<span class="hljs-property">x</span> &gt; dom.<span class="hljs-property">activePadding</span> &amp;&amp; here.<span class="hljs-property">x</span> &lt; here.<span class="hljs-property">originalWidth</span> - dom.<span class="hljs-property">activePadding</span> &amp;&amp; here.<span class="hljs-property">y</span> &gt; <span class="hljs-number">0</span> + dom.<span class="hljs-property">activePadding</span> &amp;&amp; here.<span class="hljs-property">y</span> &lt; here.<span class="hljs-property">originalHeight</span> - dom.<span class="hljs-property">activePadding</span>) here.<span class="hljs-property">active</span> = <span class="hljs-literal">true</span>;
+            }
+
+            <span class="hljs-keyword">const</span> touches = currentCorePosition.<span class="hljs-property">rawTouches</span>;
+
+            <span class="hljs-keyword">if</span> (touches.<span class="hljs-property">length</span>) {
+
+                <span class="hljs-keyword">if</span> (!here.<span class="hljs-property">touches</span>) here.<span class="hljs-property">touches</span> = [];
+
+                here.<span class="hljs-property">touches</span>.<span class="hljs-property">length</span> = <span class="hljs-number">0</span>;
+
+                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, iz = touches.<span class="hljs-property">length</span>; i &lt; iz; i++) {
+
+                    <span class="hljs-keyword">const</span> touch = touches[i];
+
+                    here.<span class="hljs-property">touches</span>.<span class="hljs-title function_">push</span>([<span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(touch.<span class="hljs-property">pageX</span> - dox), <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">round</span>(touch.<span class="hljs-property">pageY</span> - doy)]);
+                }
             }</pre></div></div>
             
         </li>
@@ -1733,7 +1782,9 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
 <li><strong>.updateOnStart</strong> - Function, or a <code>set</code> object to be applied to the current artefact</li>
 <li><strong>.updateOnEnd</strong> - Function, or a <code>set</code> object to be applied to the current artefact</li>
 <li><strong>.updateWhileMoving</strong> - Function to be run while drag is in progress</li>
-<li><strong>.exposeCurrentArtefact</strong> - Boolean</li>
+<li><strong>.exposeCurrentArtefact</strong> - Boolean (default: false)</li>
+<li><strong>.preventTouchDefaultWhenDragging</strong> - Boolean (default: false)</li>
+<li><strong>.resetCoordsToZeroOnTouchEnd</strong> - Boolean (default: true)</li>
 </ul>
 <p>If <code>exposeCurrentArtefact</code> attribute is true, the factory returns a function that can be invoked at any time to get the collision data object (containing x, y, artefact attributes) for the artefact being dragged (false if nothing is being dragged). </p>
 <p>Invoking the returned function with a single argument that evaluates to true will trigger the kill function.</p>
@@ -1757,7 +1808,7 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> makeDragZone = <span class="hljs-keyword">function</span> (<span class="hljs-params">items = Ωempty</span>) {
 
-    <span class="hljs-keyword">let</span> {zone, coordinateSource, collisionGroup, startOn, endOn, updateOnStart, updateOnEnd, updateWhileMoving, exposeCurrentArtefact} = items</pre></div></div>
+    <span class="hljs-keyword">let</span> {zone, coordinateSource, collisionGroup, startOn, endOn, updateOnStart, updateOnEnd, updateWhileMoving, exposeCurrentArtefact, preventTouchDefaultWhenDragging, resetCoordsToZeroOnTouchEnd} = items</pre></div></div>
             
         </li>
         
@@ -1853,7 +1904,11 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (!<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(startOn)) startOn = [<span class="hljs-string">&#x27;down&#x27;</span>];
-    <span class="hljs-keyword">if</span> (!<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(endOn)) endOn = [<span class="hljs-string">&#x27;up&#x27;</span>];</pre></div></div>
+    <span class="hljs-keyword">if</span> (!<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(endOn)) endOn = [<span class="hljs-string">&#x27;up&#x27;</span>];
+
+    <span class="hljs-keyword">if</span> (exposeCurrentArtefact == <span class="hljs-literal">null</span>) exposeCurrentArtefact = <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">if</span> (preventTouchDefaultWhenDragging == <span class="hljs-literal">null</span>) preventTouchDefaultWhenDragging = <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">if</span> (resetCoordsToZeroOnTouchEnd == <span class="hljs-literal">null</span>) resetCoordsToZeroOnTouchEnd = <span class="hljs-literal">true</span>;</pre></div></div>
             
         </li>
         
@@ -1910,8 +1965,16 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
 
         <span class="hljs-keyword">if</span> (e &amp;&amp; e.<span class="hljs-property">cancelable</span>) {
             
-            e.<span class="hljs-title function_">preventDefault</span>();
-            e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
+            <span class="hljs-keyword">if</span> (preventTouchDefaultWhenDragging &amp;&amp; current) {
+
+                e.<span class="hljs-title function_">preventDefault</span>();
+                e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
+            }
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!preventTouchDefaultWhenDragging) {
+
+                e.<span class="hljs-title function_">preventDefault</span>();
+                e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
+            }
         }
     };
 
@@ -1920,8 +1983,7 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
         <span class="hljs-title function_">checkE</span>(e);
 
         <span class="hljs-keyword">let</span> type = e.<span class="hljs-property">type</span>;
-
-        <span class="hljs-keyword">if</span> (type === <span class="hljs-string">&#x27;touchstart&#x27;</span> || type === <span class="hljs-string">&#x27;touchcancel&#x27;</span>) <span class="hljs-title function_">touchAction</span>(e);
+        <span class="hljs-keyword">if</span> (type === <span class="hljs-string">&#x27;touchstart&#x27;</span> || type === <span class="hljs-string">&#x27;touchcancel&#x27;</span>) <span class="hljs-title function_">touchAction</span>(e, resetCoordsToZeroOnTouchEnd);
 
         current = collisionGroup.<span class="hljs-title function_">getArtefactAt</span>(coordinateSource);
 
@@ -1935,12 +1997,22 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
     <span class="hljs-keyword">const</span> move = <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
 
         <span class="hljs-title function_">checkE</span>(e);
-        <span class="hljs-keyword">if</span> (current) <span class="hljs-title function_">updateWhileMoving</span>();
+
+        <span class="hljs-keyword">let</span> type = e.<span class="hljs-property">type</span>;
+        <span class="hljs-keyword">if</span> (type === <span class="hljs-string">&#x27;touchmove&#x27;</span>) <span class="hljs-title function_">touchAction</span>(e);
+
+        <span class="hljs-title function_">updateWhileMoving</span>();
     };
 
     <span class="hljs-keyword">const</span> drop = <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
 
         <span class="hljs-title function_">checkE</span>(e);
+
+        <span class="hljs-keyword">let</span> type = e.<span class="hljs-property">type</span>;
+        <span class="hljs-keyword">if</span> (type === <span class="hljs-string">&#x27;touchend&#x27;</span>) {
+
+            <span class="hljs-title function_">touchAction</span>(e, resetCoordsToZeroOnTouchEnd);
+        }
 
         <span class="hljs-keyword">if</span> (current) {
 
@@ -1999,6 +2071,8 @@ currentCorePosition.<span class="hljs-property">prefersReduceData</span> = reduc
     applyCoreScrollListener,
     observeAndUpdate,
     makeDragZone,
+    getTouchActionChoke,
+    setTouchActionChoke,
 };</pre></div></div>
             
         </li>

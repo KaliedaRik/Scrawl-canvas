@@ -386,7 +386,7 @@ myElements.<span class="hljs-title function_">forEach</span>(<span class="hljs-f
                 }).<span class="hljs-title function_">run</span>();
             }
         };
-        scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;click&#x27;</span>, clickAction, el);
+        scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-string">&#x27;touchend&#x27;</span>], clickAction, el);
     }
     <span class="hljs-keyword">return</span> snippet;
 };

@@ -885,6 +885,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-032.html">
+                  ./demo/temp-032.js
+                </a>
+              
+                
                 <a class="source" href="temp-100.html">
                   ./demo/temp-100.js
                 </a>
@@ -1086,21 +1091,27 @@ canvas.<span class="hljs-title function_">set</span>({
     screenY = <span class="hljs-number">0</span>;
 
 scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-string">&#x27;move&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
-    clientX = e.<span class="hljs-property">clientX</span>.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">0</span>);
-    clientY = e.<span class="hljs-property">clientY</span>.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">0</span>);
-    movementX = e.<span class="hljs-property">movementX</span>.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">0</span>);
-    movementY = e.<span class="hljs-property">movementY</span>.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">0</span>);
-    offsetX = e.<span class="hljs-property">offsetX</span>.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">0</span>);
-    offsetY = e.<span class="hljs-property">offsetY</span>.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">0</span>);
-    pageX = e.<span class="hljs-property">pageX</span>.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">0</span>);
-    pageY = e.<span class="hljs-property">pageY</span>.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">0</span>);
-    screenX= e.<span class="hljs-property">screenX</span>.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">0</span>);
-    screenY = e.<span class="hljs-property">screenY</span>.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">0</span>);
 
-    offset.<span class="hljs-title function_">set</span>({
-        <span class="hljs-attr">startX</span>: <span class="hljs-built_in">parseFloat</span>(offsetX),
-        <span class="hljs-attr">startY</span>: <span class="hljs-built_in">parseFloat</span>(offsetY),
-    });
+    <span class="hljs-keyword">if</span> (e.<span class="hljs-property">type</span> !== <span class="hljs-string">&#x27;touchmove&#x27;</span>) {
+
+
+        clientX = e.<span class="hljs-property">clientX</span>.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">0</span>);
+        clientY = e.<span class="hljs-property">clientY</span>.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">0</span>);
+        movementX = e.<span class="hljs-property">movementX</span>.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">0</span>);
+        movementY = e.<span class="hljs-property">movementY</span>.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">0</span>);
+        offsetX = e.<span class="hljs-property">offsetX</span>.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">0</span>);
+        offsetY = e.<span class="hljs-property">offsetY</span>.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">0</span>);
+        pageX = e.<span class="hljs-property">pageX</span>.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">0</span>);
+        pageY = e.<span class="hljs-property">pageY</span>.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">0</span>);
+        screenX= e.<span class="hljs-property">screenX</span>.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">0</span>);
+        screenY = e.<span class="hljs-property">screenY</span>.<span class="hljs-title function_">toFixed</span>(<span class="hljs-number">0</span>);
+
+        offset.<span class="hljs-title function_">set</span>({
+            <span class="hljs-attr">startX</span>: <span class="hljs-built_in">parseFloat</span>(offsetX),
+            <span class="hljs-attr">startY</span>: <span class="hljs-built_in">parseFloat</span>(offsetY),
+        });
+    }
+
 }, canvas.<span class="hljs-property">domElement</span>);</pre></div></div>
             
         </li>
@@ -1163,7 +1174,27 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
                 <a class="ss" href="#section-8">&#x00a7;</a>
               </div>
               <h4 id="user-interaction">User interaction</h4>
-<p>Setup form observer functionality</p>
+<p>For this demo we will suppress touchmove functionality over the canvas</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;touchmove&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+
+    e.<span class="hljs-title function_">preventDefault</span>();
+    e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
+
+}, [stack.<span class="hljs-property">domElement</span>, canvas.<span class="hljs-property">domElement</span>]);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-9">&#x00a7;</a>
+              </div>
+              <p>Setup form observer functionality</p>
 
             </div>
             
@@ -1200,11 +1231,11 @@ scrawl.<span class="hljs-title function_">addListener</span>(<span class="hljs-s
         </li>
         
         
-        <li id="section-9">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-9">&#x00a7;</a>
+                <a class="ss" href="#section-10">&#x00a7;</a>
               </div>
               <p>Setup form</p>
 

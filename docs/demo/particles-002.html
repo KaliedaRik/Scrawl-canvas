@@ -885,6 +885,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-032.html">
+                  ./demo/temp-032.js
+                </a>
+              
+                
                 <a class="source" href="temp-100.html">
                   ./demo/temp-100.js
                 </a>
@@ -1417,7 +1422,27 @@ canvas.<span class="hljs-title function_">setBase</span>({
                 <a class="ss" href="#section-22">&#x00a7;</a>
               </div>
               <h4 id="user-interaction">User interaction</h4>
-<p>Setting (restricting) the range of colors assigned to particles when they are generated.</p>
+<p>For this demo we will suppress touchmove functionality over the canvas</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;touchmove&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+
+    e.<span class="hljs-title function_">preventDefault</span>();
+    e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
+
+}, canvas.<span class="hljs-property">domElement</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-23">&#x00a7;</a>
+              </div>
+              <p>Setting (restricting) the range of colors assigned to particles when they are generated.</p>
 
             </div>
             
@@ -1448,11 +1473,11 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-23">&#x00a7;</a>
+                <a class="ss" href="#section-24">&#x00a7;</a>
               </div>
               <p>Change the artefact to be used in the animation</p>
 
@@ -1505,11 +1530,11 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-24">&#x00a7;</a>
+                <a class="ss" href="#section-25">&#x00a7;</a>
               </div>
               <p>Setup other form observer functionality</p>
 
@@ -1596,11 +1621,11 @@ killRadiusVariation.<span class="hljs-property">value</span> = <span class="hljs
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-25">&#x00a7;</a>
+                <a class="ss" href="#section-26">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 

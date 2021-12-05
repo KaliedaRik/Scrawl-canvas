@@ -670,28 +670,28 @@
                 
                     <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;move&#x27;</span>:
                         target[action](<span class="hljs-string">&#x27;mousemove&#x27;</span>, fn, <span class="hljs-literal">false</span>);
-                        target[action](<span class="hljs-string">&#x27;touchmove&#x27;</span>, fn, {<span class="hljs-attr">passive</span>: <span class="hljs-literal">true</span>});
-                        target[action](<span class="hljs-string">&#x27;touchfollow&#x27;</span>, fn, {<span class="hljs-attr">passive</span>: <span class="hljs-literal">true</span>});
+                        target[action](<span class="hljs-string">&#x27;touchmove&#x27;</span>, fn, {<span class="hljs-attr">passive</span>: <span class="hljs-literal">false</span>});
+                        target[action](<span class="hljs-string">&#x27;touchfollow&#x27;</span>, fn, {<span class="hljs-attr">passive</span>: <span class="hljs-literal">false</span>});
                         <span class="hljs-keyword">break</span>;
 
                     <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;up&#x27;</span>:
                         target[action](<span class="hljs-string">&#x27;mouseup&#x27;</span>, fn, <span class="hljs-literal">false</span>);
-                        target[action](<span class="hljs-string">&#x27;touchend&#x27;</span>, fn, {<span class="hljs-attr">passive</span>: <span class="hljs-literal">true</span>});
+                        target[action](<span class="hljs-string">&#x27;touchend&#x27;</span>, fn, {<span class="hljs-attr">passive</span>: <span class="hljs-literal">false</span>});
                         <span class="hljs-keyword">break</span>;
 
                     <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;down&#x27;</span>:
                         target[action](<span class="hljs-string">&#x27;mousedown&#x27;</span>, fn, <span class="hljs-literal">false</span>);
-                        target[action](<span class="hljs-string">&#x27;touchstart&#x27;</span>, fn, {<span class="hljs-attr">passive</span>: <span class="hljs-literal">true</span>});
+                        target[action](<span class="hljs-string">&#x27;touchstart&#x27;</span>, fn, {<span class="hljs-attr">passive</span>: <span class="hljs-literal">false</span>});
                         <span class="hljs-keyword">break</span>;
 
                     <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;leave&#x27;</span>:
                         target[action](<span class="hljs-string">&#x27;mouseleave&#x27;</span>, fn, <span class="hljs-literal">false</span>);
-                        target[action](<span class="hljs-string">&#x27;touchleave&#x27;</span>, fn, {<span class="hljs-attr">passive</span>: <span class="hljs-literal">true</span>});
+                        target[action](<span class="hljs-string">&#x27;touchleave&#x27;</span>, fn, {<span class="hljs-attr">passive</span>: <span class="hljs-literal">false</span>});
                         <span class="hljs-keyword">break</span>;
 
                     <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;enter&#x27;</span>:
                         target[action](<span class="hljs-string">&#x27;mouseenter&#x27;</span>, fn, <span class="hljs-literal">false</span>);
-                        target[action](<span class="hljs-string">&#x27;touchenter&#x27;</span>, fn, {<span class="hljs-attr">passive</span>: <span class="hljs-literal">true</span>});
+                        target[action](<span class="hljs-string">&#x27;touchenter&#x27;</span>, fn, {<span class="hljs-attr">passive</span>: <span class="hljs-literal">false</span>});
                         <span class="hljs-keyword">break</span>;
                 }
             }

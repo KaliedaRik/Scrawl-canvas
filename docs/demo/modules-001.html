@@ -885,6 +885,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-032.html">
+                  ./demo/temp-032.js
+                </a>
+              
+                
                 <a class="source" href="temp-100.html">
                   ./demo/temp-100.js
                 </a>
@@ -1037,6 +1042,32 @@ scrawl.<span class="hljs-title function_">addListener</span>(
     canvas.<span class="hljs-property">domElement</span> 
 );
 
+scrawl.<span class="hljs-title function_">addNativeListener</span>(
+    <span class="hljs-string">&#x27;touchstart&#x27;</span>, 
+    <span class="hljs-function">() =&gt;</span> canvas.<span class="hljs-title function_">cascadeEventAction</span>(<span class="hljs-string">&#x27;move&#x27;</span>), 
+    canvas.<span class="hljs-property">domElement</span> 
+);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-3">&#x00a7;</a>
+              </div>
+              <p>For this demo we will suppress touchmove functionality over the canvas</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;touchmove&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+
+    e.<span class="hljs-title function_">preventDefault</span>();
+    e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
+
+}, canvas.<span class="hljs-property">domElement</span>);
+
 <span class="hljs-keyword">let</span> currentGraphType = <span class="hljs-string">&#x27;bars&#x27;</span>,
     currentArea = <span class="hljs-string">&#x27;Hackney&#x27;</span>,
     currentCategory = <span class="hljs-string">&#x27;Burglary&#x27;</span>;
@@ -1139,11 +1170,11 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
         </li>
         
         
-        <li id="section-3">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-3">&#x00a7;</a>
+                <a class="ss" href="#section-4">&#x00a7;</a>
               </div>
               <p>Initial display</p>
 

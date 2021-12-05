@@ -885,6 +885,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-032.html">
+                  ./demo/temp-032.js
+                </a>
+              
+                
                 <a class="source" href="temp-100.html">
                   ./demo/temp-100.js
                 </a>
@@ -1209,6 +1214,7 @@ scrawl.<span class="hljs-title function_">makeWheel</span>({
     <span class="hljs-attr">collisionGroup</span>: <span class="hljs-string">&#x27;drag-group&#x27;</span>,
     <span class="hljs-attr">coordinateSource</span>: mycell,
     <span class="hljs-attr">endOn</span>: [<span class="hljs-string">&#x27;up&#x27;</span>, <span class="hljs-string">&#x27;leave&#x27;</span>],
+    <span class="hljs-attr">preventTouchDefaultWhenDragging</span>: <span class="hljs-literal">true</span>,
 });</pre></div></div>
             
         </li>
@@ -1219,6 +1225,26 @@ scrawl.<span class="hljs-title function_">makeWheel</span>({
               
               <div class="sswrap ">
                 <a class="ss" href="#section-12">&#x00a7;</a>
+              </div>
+              <p>For this demo we will suppress touchmove functionality over the canvas</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>scrawl.<span class="hljs-title function_">addNativeListener</span>(<span class="hljs-string">&#x27;touchmove&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+
+    e.<span class="hljs-title function_">preventDefault</span>();
+    e.<span class="hljs-property">returnValue</span> = <span class="hljs-literal">false</span>;
+
+}, canvas.<span class="hljs-property">domElement</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="sswrap ">
+                <a class="ss" href="#section-13">&#x00a7;</a>
               </div>
               <p>Setup form observer functionality</p>
 
@@ -1259,11 +1285,11 @@ scrawl.<span class="hljs-title function_">makeWheel</span>({
         </li>
         
         
-        <li id="section-13">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-13">&#x00a7;</a>
+                <a class="ss" href="#section-14">&#x00a7;</a>
               </div>
               <p>Setup form</p>
 
@@ -1285,11 +1311,11 @@ scrawl.<span class="hljs-title function_">makeWheel</span>({
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="sswrap ">
-                <a class="ss" href="#section-14">&#x00a7;</a>
+                <a class="ss" href="#section-15">&#x00a7;</a>
               </div>
               <h4 id="development-and-testing">Development and testing</h4>
 
