@@ -19,7 +19,7 @@
 
 
 // #### Imports
-import { constructors } from '../core/library.js';
+import { constructors, radian } from '../core/library.js';
 import { mergeOver, addStrings, isa_number, pushUnique, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
@@ -123,7 +123,7 @@ P.updateGradientArgs = function (x, y) {
 
     let gradientArgs = this.gradientArgs,
         currentStart = this.currentStart,
-        startAngle = this.startAngle;
+        startAngle = this.startAngle * radian;
 
     let sx = currentStart[0] + x,
         sy = currentStart[1] + y;
