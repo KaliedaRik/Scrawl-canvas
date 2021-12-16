@@ -820,7 +820,7 @@ const makeDragZone = function (items = Ωempty) {
         }
     };
 
-    const pickup = function (e) {
+    const pickup = function (e = {}) {
 
         checkE(e);
 
@@ -836,7 +836,7 @@ const makeDragZone = function (items = Ωempty) {
         }
     };
 
-    const move = function (e) {
+    const move = function (e = {}) {
 
         checkE(e);
 
@@ -846,7 +846,7 @@ const makeDragZone = function (items = Ωempty) {
         updateWhileMoving();
     };
 
-    const drop = function (e) {
+    const drop = function (e = {}) {
 
         checkE(e);
 
