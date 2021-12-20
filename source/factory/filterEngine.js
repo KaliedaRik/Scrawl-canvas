@@ -10,6 +10,7 @@ import { easeOutSine, easeInSine, easeOutInSine, easeOutQuad, easeInQuad, easeOu
 
 import {requestCell, releaseCell} from './cell.js';
 import {requestCoordinate, releaseCoordinate} from './coordinate.js';
+import { makeColor } from './color.js';
 
 // #### FilterEngine constructor
 const FilterEngine = function () {
@@ -34,6 +35,7 @@ P.type = 'FilterEngine';
 
 P.action = function (packet) {
 
+    // let { identifier, filters, image } = packet;
     let { filters, image } = packet;
 
     let { workstoreLastAccessed, workstore, actions, choke, theBigActionsObject } = this;
@@ -51,6 +53,12 @@ P.action = function (packet) {
             delete workstoreLastAccessed[s];
         }
     }
+
+    // if (identifier && workstore[identifier]) {
+
+    //     workstoreLastAccessed[identifier] = Date.now();
+    //     return workstore[identifier];
+    // }
 
     actions.length = 0;
 
@@ -72,6 +80,9 @@ P.action = function (packet) {
 
             if (a) a.call(this, actData);
         }
+
+        // workstore[identifier] = this.cache.work;
+        // workstoreLastAccessed[identifier] = Date.now();
 
         return this.cache.work;
     }
@@ -164,23 +175,65 @@ P.buildImageGrid = function (image) {
     return false;
 };
 
+// `getOrAddWorkstore` creates an Array which can be populated by swirl-related coordinates
+P.getOrAddWorkstore = function (name) {
+
+    const { workstore, workstoreLastAccessed } = this;
+
+    if (workstore[name]) {
+        workstoreLastAccessed[name] = Date.now();
+        return workstore[name];
+    }
+
+    workstore[name] = [];
+    workstoreLastAccessed[name] = Date.now();
+    return workstore[name];
+};
+
+// `getRandomNumbers` creates an Array and populates it with random numbers
+P.getRandomNumbers = function (seed, length) {
+
+    const name = `random-${seed}-${length}`
+
+    const { workstore, workstoreLastAccessed } = this;
+
+    if (workstore[name]) {
+        workstoreLastAccessed[name] = Date.now();
+        return workstore[name];
+    }
+
+    const vals = [];
+
+    const engine = seededRandomNumberGenerator(seed);
+
+    for (let i = 0; i < length; i++) {
+
+        vals.push(engine.random());
+    }
+
+    workstore[name] = vals;
+    workstoreLastAccessed[name] = Date.now();
+    return workstore[name];
+};
+
 P.buildImageCoordinateLookup = function (image) {
 
-    let { cache, workstore, workstoreLastAccessed } = this;
+    const { cache, workstore, workstoreLastAccessed } = this;
 
     if (!image) image = cache.source;
 
-    let { width, height } = image
+    const { width, height } = image
 
     if (width && height) {
 
-        let name = `coords-lookup-${width}-${height}`;
+        const name = `coords-lookup-${width}-${height}`;
+
         if (workstore[name]) {
             workstoreLastAccessed[name] = Date.now();
             return workstore[name];
         }
 
-        let lookup = []
+        const lookup = []
 
         for (let y = 0; y < height; y++) {
 
@@ -199,11 +252,11 @@ P.buildImageCoordinateLookup = function (image) {
 // `buildAlphaTileSets` - creates a record of which pixels belong to which tile - used for manipulating alpha channel values. Resulting object will be cached in the store
 P.buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeight, offsetX, offsetY, areaAlphaLevels, image) {
 
-    let { cache, workstore, workstoreLastAccessed } = this;
+    const { cache, workstore, workstoreLastAccessed } = this;
 
     if (!image) image = cache.source;
 
-    let { width:iWidth, height:iHeight } = image;
+    const { width:iWidth, height:iHeight } = image;
 
     if (iWidth && iHeight) {
 
@@ -232,7 +285,8 @@ P.buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeigh
         if (offsetY < 0) offsetY = 0;
         if (offsetY >= aHeight) offsetY = aHeight - 1;
 
-        let name = `alphatileset-${iWidth}-${iHeight}-${tileWidth}-${tileHeight}-${gutterWidth}-${gutterHeight}-${offsetX}-${offsetY}`;
+        const name = `alphatileset-${iWidth}-${iHeight}-${tileWidth}-${tileHeight}-${gutterWidth}-${gutterHeight}-${offsetX}-${offsetY}`;
+
         if (workstore[name]) {
             workstoreLastAccessed[name] = Date.now();
             return workstore[name];
@@ -296,11 +350,11 @@ P.buildAlphaTileSets = function (tileWidth, tileHeight, gutterWidth, gutterHeigh
 // `buildImageTileSets` - creates a record of which pixels belong to which tile - used for manipulating color channels values. Resulting object will be cached in the store
 P.buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY, image) {
 
-    let { cache, workstore, workstoreLastAccessed } = this;
+    const { cache, workstore, workstoreLastAccessed } = this;
 
     if (!image) image = cache.source;
 
-    let { width:iWidth, height:iHeight } = image;
+    const { width:iWidth, height:iHeight } = image;
 
     if (iWidth && iHeight) {
 
@@ -318,13 +372,14 @@ P.buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY, image)
         if (offsetY < 0) offsetY = 0;
         if (offsetY >= tileHeight) offsetY = tileHeight - 1;
 
-        let name = `imagetileset-${iWidth}-${iHeight}-${tileWidth}-${tileHeight}-${offsetX}-${offsetY}`;
+        const name = `imagetileset-${iWidth}-${iHeight}-${tileWidth}-${tileHeight}-${offsetX}-${offsetY}`;
+
         if (workstore[name]) {
             workstoreLastAccessed[name] = Date.now();
             return workstore[name];
         }
 
-        let tiles = [];
+        const tiles = [];
 
         for (let j = offsetY - tileHeight, jz = iHeight; j < jz; j += tileHeight) {
 
@@ -355,14 +410,15 @@ P.buildImageTileSets = function (tileWidth, tileHeight, offsetX, offsetY, image)
 // `buildHorizontalBlur` - creates an Array of Arrays detailing which pixels contribute to the horizontal part of each pixel's blur calculation. Resulting object will be cached in the store
 P.buildHorizontalBlur = function (grid, radius) {
 
-    let { workstore, workstoreLastAccessed } = this;
+    const { workstore, workstoreLastAccessed } = this;
 
     if (!radius || !radius.toFixed || isNaN(radius)) radius = 0;
 
-    let gridHeight = grid.length,
+    const gridHeight = grid.length,
         gridWidth = grid[0].length;
 
-    let name = `blur-h-${gridWidth}-${gridHeight}-${radius}`;
+    const name = `blur-h-${gridWidth}-${gridHeight}-${radius}`;
+
     if (workstore[name]) {
         workstoreLastAccessed[name] = Date.now();
         return workstore[name];
@@ -392,14 +448,15 @@ P.buildHorizontalBlur = function (grid, radius) {
 // `buildVerticalBlur` - creates an Array of Arrays detailing which pixels contribute to the vertical part of each pixel's blur calculation. Resulting object will be cached in the store
 P.buildVerticalBlur = function (grid, radius) {
 
-    let { workstore, workstoreLastAccessed } = this;
+    const { workstore, workstoreLastAccessed } = this;
 
     if (!radius || !radius.toFixed || isNaN(radius)) radius = 0;
 
-    let gridHeight = grid.length,
+    const gridHeight = grid.length,
         gridWidth = grid[0].length;
 
-    let name = `blur-v-${gridWidth}-${gridHeight}-${radius}`;
+    const name = `blur-v-${gridWidth}-${gridHeight}-${radius}`;
+
     if (workstore[name]) {
         workstoreLastAccessed[name] = Date.now();
         return workstore[name];
@@ -429,11 +486,11 @@ P.buildVerticalBlur = function (grid, radius) {
 // `buildMatrixGrid` - creates an Array of Arrays detailing which pixels contribute to each pixel's matrix calculation. Resulting object will be cached in the store
 P.buildMatrixGrid = function (mWidth, mHeight, mX, mY, image) {
 
-    let { cache, workstore, workstoreLastAccessed } = this;
+    const { cache, workstore, workstoreLastAccessed } = this;
 
     if (!image) image = cache.source;
 
-    let { width:iWidth, height:iHeight, data } = image;
+    const { width:iWidth, height:iHeight, data } = image;
 
     if (mWidth == null || mWidth < 1) mWidth = 1;
     if (mHeight == null || mHeight < 1) mHeight = 1;
@@ -444,7 +501,8 @@ P.buildMatrixGrid = function (mWidth, mHeight, mX, mY, image) {
     if (mY == null || mY < 0) mY = 0;
     else if (mY >= mHeight) mY = mHeight - 1;
 
-    let name = `matrix-${iWidth}-${iHeight}-${mWidth}-${mHeight}-${mX}-${mY}`;
+    const name = `matrix-${iWidth}-${iHeight}-${mWidth}-${mHeight}-${mX}-${mY}`;
+
     if (workstore[name]) {
         workstoreLastAccessed[name] = Date.now();
         return workstore[name];
@@ -555,7 +613,7 @@ P.getInputAndOutputLines = function (requirements) {
 
     if (requirements.lineIn) {
 
-        if (requirements.lineIn == 'source') lineIn = sourceData;
+        if (requirements.lineIn === 'source') lineIn = sourceData;
         else if (requirements.lineIn == 'source-alpha') lineIn = alphaData;
         else if (cache[requirements.lineIn]) lineIn = cache[requirements.lineIn];
     }
@@ -577,6 +635,12 @@ P.getInputAndOutputLines = function (requirements) {
     else lineOut = cache[requirements.lineOut];
 
     return [lineIn, lineOut, lineMix];
+};
+
+// `getGrayscaleValue` - put here because this calculation is used in several different filters
+P.getGrayscaleValue = function (r, g, b) {
+
+    return Math.floor((0.2126 * r) + (0.7152 * g) + (0.0722 * b));
 };
 
 // `processResults` - at the conclusion of each action function, combine the results of the function's manipulations back into the data supplied for manipulation, in line with the value of the action object's `opacity` attribute
@@ -603,75 +667,120 @@ P.processResults = function (store, incoming, ratio) {
     }
 };
 
+P.colorEngine = makeColor({
+    name: `filterEngine-colorEngine-do-not-overwrite`,
+});
+
 // `getHSLfromRGB` - convert an RGB format color into an HSL format color
-P.getHSLfromRGB = function (dr, dg, db) {
+// P.getHSLfromRGB = function (dr, dg, db) {
 
-    let minColor = Math.min(dr, dg, db),
-        maxColor = Math.max(dr, dg, db);
+//     let minColor = Math.min(dr, dg, db),
+//         maxColor = Math.max(dr, dg, db);
 
-    let lum = (minColor + maxColor) / 2;
+//     let lum = (minColor + maxColor) / 2;
 
-    let sat = 0;
+//     let sat = 0;
 
-    if (minColor !== maxColor) {
+//     if (minColor !== maxColor) {
 
-        if (lum <= 0.5) sat = (maxColor - minColor) / (maxColor + minColor);
-        else sat = (maxColor - minColor) / (2 - maxColor - minColor);
-    }
+//         if (lum <= 0.5) sat = (maxColor - minColor) / (maxColor + minColor);
+//         else sat = (maxColor - minColor) / (2 - maxColor - minColor);
+//     }
 
-    let hue = 0;
+//     let hue = 0;
 
-    if (maxColor === dr) hue = (dg - db) / (maxColor - minColor);
-    else if (maxColor === dg) hue = 2 + ((db - dr) / (maxColor - minColor));
-    else hue = 4 + ((dr - dg) / (maxColor - minColor));
+//     if (maxColor === dr) hue = (dg - db) / (maxColor - minColor);
+//     else if (maxColor === dg) hue = 2 + ((db - dr) / (maxColor - minColor));
+//     else hue = 4 + ((dr - dg) / (maxColor - minColor));
 
-    hue *= 60;
+//     hue *= 60;
 
-    if (hue < 0) hue += 360;
+//     if (hue < 0) hue += 360;
 
-    return [hue, sat, lum];
-};
+//     return [hue, sat, lum];
+// };
 
 // `getRGBfromHSL` - convert an HSL format color into an RGB format color
-P.getRGBfromHSL = function (h, s, l) {
+// P.getRGBfromHSL = function (h, s, l) {
 
-    if (!s) {
+//     if (!s) {
 
-        let gray = Math.floor(l * 255);
-        return [gray, gray, gray];
-    }
+//         let gray = Math.floor(l * 255);
+//         return [gray, gray, gray];
+//     }
 
-    let tempLum1 = (l < 0.5) ? l * (s + 1) : l + s - (l * s),
-        tempLum2 = (2 * l) - tempLum1;
+//     let tempLum1 = (l < 0.5) ? l * (s + 1) : l + s - (l * s),
+//         tempLum2 = (2 * l) - tempLum1;
 
-    const calculator = function (t, l1, l2) {
+//     const calculator = function (t, l1, l2) {
 
-        if (t * 6 < 1) return l2 + ((l1 - l2) * 6 * t);
-        if (t * 2 < 1) return l1;
-        if (t * 2 < 2) return l2 + ((l1 - l2) * 6 * (t * 0.666));
-        return l2;
-    };
+//         if (t * 6 < 1) return l2 + ((l1 - l2) * 6 * t);
+//         if (t * 2 < 1) return l1;
+//         if (t * 2 < 2) return l2 + ((l1 - l2) * 6 * (t * 0.666));
+//         return l2;
+//     };
 
-    h /= 360;
+//     h /= 360;
 
-    let tr = h + 0.333,
-        tg = h,
-        tb = h - 0.333;
+//     let tr = h + 0.333,
+//         tg = h,
+//         tb = h - 0.333;
 
-    if (tr < 0) tr += 1;
-    if (tr > 1) tr -= 1;
-    if (tg < 0) tg += 1;
-    if (tg > 1) tg -= 1;
-    if (tb < 0) tb += 1;
-    if (tb > 1) tb -= 1;
+//     if (tr < 0) tr += 1;
+//     if (tr > 1) tr -= 1;
+//     if (tg < 0) tg += 1;
+//     if (tg > 1) tg -= 1;
+//     if (tb < 0) tb += 1;
+//     if (tb > 1) tb -= 1;
 
-    let r = calculator(tr, tempLum1, tempLum2) * 255,
-        g = calculator(tg, tempLum1, tempLum2) * 255,
-        b = calculator(tb, tempLum1, tempLum2) * 255;
+//     let r = calculator(tr, tempLum1, tempLum2) * 255,
+//         g = calculator(tg, tempLum1, tempLum2) * 255,
+//         b = calculator(tb, tempLum1, tempLum2) * 255;
 
-    return [r, g, b];
-};
+//     return [r, g, b];
+// };
 
+// // `getYUVfromRGB` - convert an RGB format color into a YUV format color
+// // + Inspired by https://github.com/SimonWaldherr/ColorConverter.js/blob/master/colorconverter.js
+// P.getYUVfromRGB = function (r, g, b) {
+
+//     const round = Math.round;
+
+//     const y = round((0.299 * r) + (0.587 * g) + (0.114 * b)),
+//         u = round((((b - y) * 0.493) + 111) / 222 * 255),
+//         v = round((((r - y) * 0.877) + 155) / 312 * 255);
+
+//     return [y, u, v];
+// };
+
+// // `getRGBfromYUV` - convert an RGB format color into a YUV format color
+// P.getRGBfromYUV = function (y, u, v) {
+
+//     const round = Math.round;
+
+//     let r = round(y + v / 0.877),
+//         g = round(y - 0.39466 * u - 0.5806 * v),
+//         b = round(y + u / 0.493);
+
+//     if (r > 255) r = 255;
+//     if (g > 255) g = 255;
+//     if (b > 255) b = 255;
+
+//     return [r, g, b];
+// };
+
+// // `getYuvDistance` - convert an RGB format color into a YUV format color
+// P.getYuvDistance = function (y1, u1, v1, y2, u2, v2) {
+
+//     const dy = y1 - y2,
+//         du = u1 - u2,
+//         dv = v1 - v2;
+
+//     // Algorithm requires the result to be a square root for proper euclidean distance but we're comparing colors, not distances, so should be okay?
+//     return Math.sqrt((dy * dy) + (du * du) + (dv * dv));
+// }
+
+// `getGradientData` - create an imageData object containing the 256 values from a gradient that we require for doing filters work
 P.getGradientData = function (gradient) {
 
     const mycell = requestCell();
@@ -697,7 +806,7 @@ P.getGradientData = function (gradient) {
     return data;
 };
 
-// Assuming val is going to be a float Number between 0 and 1
+// `getEasedValue` - convenience function - assumes val is going to be a float Number between 0 and 1
 P.getEasedValue = function (val, easing) {
 
     switch (easing) {
@@ -1059,6 +1168,8 @@ P.theBigActionsObject = {
         };
 
         const alphaCalc = (dA, mA) => (dA + (mA * (1 - dA))) * 255;
+
+        const { getHSLfromRGB, getRGBfromHSL } = this.colorEngine;
 
         let [input, output, mix] = this.getInputAndOutputLines(requirements);
 
@@ -1493,10 +1604,10 @@ P.theBigActionsObject = {
 
                 const colorCalc = (iR, iG, iB, mR, mG, mB) => {
 
-                    let [iH, iS, iL] = this.getHSLfromRGB(iR, iG, iB);
-                    let [mH, mS, mL] = this.getHSLfromRGB(mR, mG, mB);
+                    let [iH, iS, iL] = getHSLfromRGB(iR, iG, iB);
+                    let [mH, mS, mL] = getHSLfromRGB(mR, mG, mB);
 
-                    return this.getRGBfromHSL(iH, iS, mL);
+                    return getRGBfromHSL(iH, iS, mL);
                 };
 
                 for (y = 0; y < iHeight; y++) {
@@ -1535,10 +1646,10 @@ P.theBigActionsObject = {
 
                 const hueCalc = (iR, iG, iB, mR, mG, mB) => {
 
-                    let [iH, iS, iL] = this.getHSLfromRGB(iR, iG, iB);
-                    let [mH, mS, mL] = this.getHSLfromRGB(mR, mG, mB);
+                    let [iH, iS, iL] = getHSLfromRGB(iR, iG, iB);
+                    let [mH, mS, mL] = getHSLfromRGB(mR, mG, mB);
 
-                    return this.getRGBfromHSL(iH, mS, mL);
+                    return getRGBfromHSL(iH, mS, mL);
                 };
 
                 for (y = 0; y < iHeight; y++) {
@@ -1577,10 +1688,10 @@ P.theBigActionsObject = {
 
                 const luminosityCalc = (iR, iG, iB, mR, mG, mB) => {
 
-                    let [iH, iS, iL] = this.getHSLfromRGB(iR, iG, iB);
-                    let [mH, mS, mL] = this.getHSLfromRGB(mR, mG, mB);
+                    let [iH, iS, iL] = getHSLfromRGB(iR, iG, iB);
+                    let [mH, mS, mL] = getHSLfromRGB(mR, mG, mB);
 
-                    return this.getRGBfromHSL(mH, mS, iL);
+                    return getRGBfromHSL(mH, mS, iL);
                 };
 
                 for (y = 0; y < iHeight; y++) {
@@ -1619,10 +1730,10 @@ P.theBigActionsObject = {
 
                 const saturationCalc = (iR, iG, iB, mR, mG, mB) => {
 
-                    let [iH, iS, iL] = this.getHSLfromRGB(iR, iG, iB);
-                    let [mH, mS, mL] = this.getHSLfromRGB(mR, mG, mB);
+                    let [iH, iS, iL] = getHSLfromRGB(iR, iG, iB);
+                    let [mH, mS, mL] = getHSLfromRGB(mR, mG, mB);
 
-                    return this.getRGBfromHSL(mH, iS, mL);
+                    return getRGBfromHSL(mH, iS, mL);
                 };
 
                 for (y = 0; y < iHeight; y++) {
@@ -2583,6 +2694,85 @@ P.theBigActionsObject = {
         else this.processResults(this.cache.work, output, opacity);
     },
 
+// __dither__ - Set all pixels to the channel values supplied in the "red", "green", "blue" and "alpha" arguments
+// P.paletteBlackWhite = [[0,0,0], [255,255,255]];
+// P.paletteRGBK = [[0,0,0], [255,255,255], [255,0,0], [0,255,0], [0,0,255]];
+// P.paletteCMYK = [[0,0,0], [255,255,255], [255,255,0], [0,255,255], [255,0,255]];
+// P.paletteRestricted8 = [[0,0,0], [255,255,255], [255,255,0], [0,255,255], [255,0,255], [255,255,0], [0,255,255], [255,0,255]];
+// P.paletteRestricted16 = [[255,255,255], [191,191,191], [127,127,127], [0,0,0], [255,0,0], [127,0,0], [255,255,0], [127,127,0], [0,255,0], [0,127,0], [0,255,255], [0,127,127], [0,0,255], [0,0,127], [255,0,255], [127,0,127]];
+
+    'dither': function (requirements) {
+
+        let [input, output] = this.getInputAndOutputLines(requirements);
+
+        let iData = input.data,
+            oData = output.data,
+            len = iData.length,
+            i, r, g, b, a, refPalette;;
+
+        let {opacity, dither, paletteType, paletteColors, seed, lineOut} = requirements;
+
+        if (null == opacity) opacity = 1;
+        if (null == dither) dither = 'none';
+        if (null == paletteType) paletteType = 'black-white';
+        if (null == paletteColors) paletteColors = 2;
+        if (null == seed) seed = 'some-random-string-or-other';
+
+        // we may need to assay the input for most popular colors
+        if ('commonest' === paletteType) {
+
+            // do image assay
+        }
+
+        // we need to setup the reference palette
+        switch (paletteType) {
+
+            case 'rgbk' :
+                refPalette = this.paletteRGBK;
+                break;
+
+            case 'cmyk' :
+                refPalette = this.paletteCMYK;
+                break;
+
+            case 'restricted-8' :
+                refPalette = this.paletteCMYK;
+
+            case 'restricted-16' :
+                refPalette = this.paletteCMYK;
+
+            case 'custom' :
+                if (Array.isArray(paletteColors)) {
+                    refPalette = paletteColors;
+                    break;
+                }
+
+            default :
+                refPalette = this.paletteBlackWhite;
+        }
+        refPalette;
+
+        // we need to update each pixel to match its closest reference color
+
+        // we need to dither the results
+
+        for (i = 0; i < len; i += 4) {
+
+            r = i;
+            g = r + 1;
+            b = g + 1;
+            a = b + 1;
+
+            oData[r] = iData[a];
+            oData[g] = iData[a];
+            oData[b] = iData[a];
+            oData[a] = iData[a];
+        }
+
+        if (lineOut) this.processResults(output, input, 1 - opacity);
+        else this.processResults(this.cache.work, output, opacity);
+    },
+
 // __emboss__ - A 3x3 matrix transform; the matrix weights are calculated internally from the values of two arguments: "strength", and "angle" - which is a value measured in degrees, with 0 degrees pointing to the right of the origin (along the positive x axis). Post-processing options include removing unchanged pixels, or setting then to mid-gray. The convenience method includes additional arguments which will add a choice of grayscale, then channel clamping, then blurring actions before passing the results to this emboss action
     'emboss': function (requirements) {
 
@@ -3008,12 +3198,14 @@ P.theBigActionsObject = {
         if (null == offsetAlphaMax) offsetAlphaMax = 0;
         if (null == transparentEdges) transparentEdges = false;
 
-        const rndEngine = seededRandomNumberGenerator(seed),
+        const rnd = this.getRandomNumbers(seed, iHeight * 5),
             range = offsetMax - offsetMin,
             redRange = offsetRedMax - offsetRedMin,
             greenRange = offsetGreenMax - offsetGreenMin,
             blueRange = offsetBlueMax - offsetBlueMin,
             alphaRange = offsetAlphaMax - offsetAlphaMin;
+
+        let rndCursor = -1;
 
         const rows = [];
 
@@ -3022,13 +3214,13 @@ P.theBigActionsObject = {
 
         for (i = 0; i < iHeight; i += step) {
 
-            affectedRow = (rndEngine.random() < level) ? true : false;
+            affectedRow = (rnd[++rndCursor] < level) ? true : false;
 
             if (affectedRow) {
 
                 if (useMixedChannel) {
 
-                    shift = (offsetMin + Math.floor(rndEngine.random() * range)) * 4;
+                    shift = (offsetMin + Math.floor(rnd[++rndCursor] * range)) * 4;
 
                     for (j = 0; j < step; j++) {
 
@@ -3037,10 +3229,10 @@ P.theBigActionsObject = {
                 }
                 else {
 
-                    shiftR = (offsetRedMin + Math.floor(rndEngine.random() * redRange)) * 4;
-                    shiftG = (offsetGreenMin + Math.floor(rndEngine.random() * greenRange)) * 4;
-                    shiftB= (offsetBlueMin + Math.floor(rndEngine.random() * blueRange)) * 4;
-                    shiftA= (offsetAlphaMin + Math.floor(rndEngine.random() * alphaRange)) * 4;
+                    shiftR = (offsetRedMin + Math.floor(rnd[++rndCursor] * redRange)) * 4;
+                    shiftG = (offsetGreenMin + Math.floor(rnd[++rndCursor] * greenRange)) * 4;
+                    shiftB= (offsetBlueMin + Math.floor(rnd[++rndCursor] * blueRange)) * 4;
+                    shiftA= (offsetAlphaMin + Math.floor(rnd[++rndCursor] * alphaRange)) * 4;
                     
                     for (j = 0; j < step; j++) {
 
@@ -3103,12 +3295,16 @@ P.theBigActionsObject = {
 
         let iData = input.data,
             oData = output.data,
+            // len = iData.length,
+            // r, g, b, a, i, gray;
             len = iData.length,
             r, g, b, a, i, gray;
 
         let {opacity, lineOut} = requirements;
 
         if (null == opacity) opacity = 1;
+
+        const gVal = this.getGrayscaleValue;
 
         for (i = 0; i < len; i += 4) {
 
@@ -3117,7 +3313,7 @@ P.theBigActionsObject = {
             b = g + 1;
             a = b + 1;
 
-            gray = Math.floor((0.2126 * iData[r]) + (0.7152 * iData[g]) + (0.0722 * iData[b]));
+            gray = gVal(iData[r], iData[g], iData[b]);
 
             oData[r] = gray;
             oData[g] = gray;
@@ -3232,6 +3428,8 @@ P.theBigActionsObject = {
 
             let rainbowData = this.getGradientData(gradient);
 
+            const gVal = this.getGrayscaleValue;
+
             for (i = 0; i < len; i += 4) {
 
                 r = i;
@@ -3241,7 +3439,7 @@ P.theBigActionsObject = {
 
                 if (iData[a]) {
 
-                    if (useNaturalGrayscale) avg = Math.floor((0.2126 * iData[r]) + (0.7152 * iData[g]) + (0.0722 * iData[b]));
+                    if (useNaturalGrayscale) avg = gVal(iData[r], iData[g], iData[b]);
                     else avg = Math.floor((0.3333 * iData[r]) + (0.3333 * iData[g]) + (0.3333 * iData[b]));
 
                     v = avg * 4;
@@ -3360,6 +3558,8 @@ P.theBigActionsObject = {
 
         if (saturation) {
 
+            const gVal = this.getGrayscaleValue;
+
             for (i = 0; i < len; i += 4) {
 
                 r = i;
@@ -3371,7 +3571,7 @@ P.theBigActionsObject = {
                 vg = iData[g];
                 vb = iData[b];
 
-                gray = Math.floor((0.2126 * vr) + (0.7152 * vg) + (0.0722 * vb));
+                gray = gVal(vr, vg, vb);
 
                 oData[r] = gray + ((vr - gray) * red);
                 oData[g] = gray + ((vg - gray) * green);
@@ -3597,8 +3797,10 @@ P.theBigActionsObject = {
         if (null == includeAlpha) includeAlpha = true;
         if (null == excludeTransparentPixels) excludeTransparentPixels = true;
 
-        const rndEngine = seededRandomNumberGenerator(seed),
-            halfWidth = width / 2,
+        const rnd = this.getRandomNumbers(seed, Math.ceil((len / 4) * 3));
+        let rndCursor = -1;
+
+        const halfWidth = width / 2,
             halfHeight = height / 2;
 
         for (i = 0; i < len; i += 4) {
@@ -3608,10 +3810,10 @@ P.theBigActionsObject = {
             b = g + 1;
             a = b + 1;
 
-            if (rndEngine.random() < level) {
+            if (rnd[++rndCursor] < level) {
 
-                dw = Math.floor((rndEngine.random() * width) - halfWidth);
-                dh = Math.floor((rndEngine.random() * height) - halfHeight);
+                dw = Math.floor((rnd[++rndCursor] * width) - halfWidth);
+                dh = Math.floor((rnd[++rndCursor] * height) - halfHeight);
 
                 source = i + ((dh * iWidth) + dw) * 4;
 
@@ -3774,9 +3976,6 @@ P.theBigActionsObject = {
 
             const getEasedValue = this.getEasedValue;
 
-            const start = requestCoordinate();
-            const coord = requestCoordinate();
-
             for (s = 0, sz = swirls.length; s < sz; s++) {
 
                 const [startX, startY, innerRadius, outerRadius, angle, easing] = swirls[s];
@@ -3807,68 +4006,84 @@ P.theBigActionsObject = {
 
                 if (x < xz && y < yz && x < tWidth && xz > 0 && y < tHeight && yz > 0) {
 
-                    start.setFromArray([sx, sy]);
+                    const swirlName = `swirl-${startX}-${startY}-${innerRadius}-${outerRadius}-${angle}-${easing}-${iWidth}-${iHeight}`;
 
+                    const swirlCoords = this.getOrAddWorkstore(swirlName);
+
+                    if (!swirlCoords.length) {
+
+                        const start = requestCoordinate();
+                        const coord = requestCoordinate();
+
+                        start.setFromArray([sx, sy]);
+
+                        for (i = y; i < yz; i++) {
+
+                            for (j = x; j < xz; j++) {
+                                
+                                pos = [j, i];
+
+                                r = grid[i][j] * 4;
+
+                                distance = coord.set(pos).subtract(start).getMagnitude();
+
+                                if (distance > outer) dr = r;
+                                else if (distance < inner) {
+
+                                    coord.rotate(angle).add(start);
+
+                                    dx = floor(coord[0]);
+                                    dy = floor(coord[1]);
+
+                                    if (dx < 0) dx += iWidth;
+                                    else if (dx >= iWidth) dx -= iWidth;
+
+                                    if (dy < 0) dy += iHeight;
+                                    else if (dy >= iHeight) dy -= iHeight;
+
+                                    dr = grid[dy][dx] * 4;
+                                }
+                                else {
+
+                                    dLen = 1 - ((distance - inner) / complexLen);
+
+                                    dLen = getEasedValue(dLen, easing);
+
+                                    coord.rotate(angle * dLen).add(start);
+
+                                    dx = floor(coord[0]);
+                                    dy = floor(coord[1]);
+
+                                    if (dx < 0) dx += iWidth;
+                                    else if (dx >= iWidth) dx -= iWidth;
+
+                                    if (dy < 0) dy += iHeight;
+                                    else if (dy >= iHeight) dy -= iHeight;
+
+                                    dr = grid[dy][dx] * 4;
+                                }
+                                swirlCoords.push(dr);
+                            }
+                        }
+                        releaseCoordinate(coord);
+                        releaseCoordinate(start);
+                    }
+
+                    let swirlCursor = -1;
                     for (i = y; i < yz; i++) {
 
                         for (j = x; j < xz; j++) {
                             
-                            pos = [j, i];
-
                             r = grid[i][j] * 4;
                             g = r + 1;
                             b = g + 1;
                             a = b + 1;
 
-                            distance = coord.set(pos).subtract(start).getMagnitude();
+                            dr = swirlCoords[++swirlCursor];
+                            dg = dr + 1;
+                            db = dg + 1;
+                            da = db + 1;
 
-                            if (distance > outer) {
-
-                                dr = r;
-                                dg = g;
-                                db = b;
-                                da = a;
-                            }
-                            else if (distance < inner) {
-
-                                coord.rotate(angle).add(start);
-
-                                dx = floor(coord[0]);
-                                dy = floor(coord[1]);
-
-                                if (dx < 0) dx += iWidth;
-                                else if (dx >= iWidth) dx -= iWidth;
-
-                                if (dy < 0) dy += iHeight;
-                                else if (dy >= iHeight) dy -= iHeight;
-
-                                dr = grid[dy][dx] * 4;
-                                dg = dr + 1;
-                                db = dg + 1;
-                                da = db + 1;
-                            }
-                            else {
-
-                                dLen = 1 - ((distance - inner) / complexLen);
-
-                                dLen = getEasedValue(dLen, easing);
-
-                                coord.rotate(angle * dLen).add(start);
-
-                                dx = floor(coord[0]);
-                                dy = floor(coord[1]);
-
-                                if (dx < 0) dx += iWidth;
-                                else if (dx >= iWidth) dx -= iWidth;
-
-                                if (dy < 0) dy += iHeight;
-                                else if (dy >= iHeight) dy -= iHeight;
-
-                                dr = grid[dy][dx] * 4;
-                                dg = dr + 1;
-                                db = dg + 1;
-                                da = db + 1;
-                            }
                             oData[r] = tData[dr];
                             oData[g] = tData[dg];
                             oData[b] = tData[db];
@@ -3893,8 +4108,6 @@ P.theBigActionsObject = {
                     }
                 }
             }
-            releaseCoordinate(coord);
-            releaseCoordinate(start);
         }
         if (lineOut) this.processResults(output, input, 1 - opacity);
         else this.processResults(this.cache.work, output, opacity);
@@ -3921,6 +4134,8 @@ P.theBigActionsObject = {
         let [lowR, lowG, lowB, lowA] = low;
         let [highR, highG, highB, highA] = high;
 
+        const gVal = this.getGrayscaleValue;
+
         for (i = 0; i < len; i += 4) {
 
             r = i;
@@ -3928,7 +4143,7 @@ P.theBigActionsObject = {
             b = g + 1;
             a = b + 1;
 
-            gray = Math.floor((0.2126 * iData[r]) + (0.7152 * iData[g]) + (0.0722 * iData[b]));
+            gray = gVal(iData[r], iData[g], iData[b]);
 
             if (gray < level) {
 
@@ -4037,6 +4252,8 @@ P.theBigActionsObject = {
             weights.fill(0);
         }
 
+        const gVal = this.getGrayscaleValue;
+
         for (i = 0; i < len; i += 4) {
 
             r = i;
@@ -4050,7 +4267,7 @@ P.theBigActionsObject = {
 
             if (useMixedChannel) {
 
-                gray = Math.floor((0.2126 * red) + (0.7152 * green) + (0.0722 * blue));
+                gray = gVal(red, green, blue);
 
                 all = weights[(gray * 4) + 3];
 
