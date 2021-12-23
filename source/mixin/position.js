@@ -1010,6 +1010,7 @@ export default function (P = Ωempty) {
             else if (val === 'center') current[i] = dim / 2;
             else current[i] = (parseFloat(val) / 100) * dim;
         }
+        this.dirtyFilterIdentifier = true;
     };
 
 
@@ -1049,6 +1050,8 @@ export default function (P = Ωempty) {
         if (oldScale !== this.currentScale) this.dirtyPositionSubscribers = true;
 
         if (this.mimicked && this.mimicked.length) this.dirtyMimicScale = true;
+
+        this.dirtyFilterIdentifier = true;
     };
 
 
@@ -1103,6 +1106,8 @@ export default function (P = Ωempty) {
             if (oldW !== curDims[0] || oldH !== curDims[1]) this.dirtyPositionSubscribers = true;
 
             if (this.mimicked && this.mimicked.length) this.dirtyMimicDimensions = true;
+
+            this.dirtyFilterIdentifier = true;
         }
         else this.dirtyDimensions = true;
     };
@@ -1257,6 +1262,8 @@ export default function (P = Ωempty) {
 
         // If this artefact is being mimicked by other artefacts, it needs to check its rotation values on every iteration of the display cycle
         if (this.mimicked && this.mimicked.length) this.dirtyMimicRotation = true;
+
+        this.dirtyFilterIdentifier = true;
     };
 
 
@@ -1397,6 +1404,8 @@ export default function (P = Ωempty) {
 
                     if (lock === 'mouse') hereFlag = true;
 
+                    if ('start' !== lock) this.dirtyFilterIdentifier = true;
+
                     localLockArray.push(lock);
                 }
             }
@@ -1463,6 +1472,8 @@ export default function (P = Ωempty) {
                 if (lock === 'mimic' && !mimic) lock = 'start';
 
                 coord = handle[i];
+
+                if ('start' !== lock) this.dirtyFilterIdentifier = true;
 
                 switch (lock) {
 

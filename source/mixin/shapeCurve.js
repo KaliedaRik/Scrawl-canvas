@@ -140,12 +140,14 @@ P.factoryKill = function () {
         this.endPathPosition = item;
         this.dirtyEnd = true;
         this.currentEndPathData = false;
+        this.dirtyFilterIdentifier = true;
     };
     D.endPathPosition = function (item) {
 
         this.endPathPosition += item;
         this.dirtyEnd = true;
         this.currentEndPathData = false;
+        this.dirtyFilterIdentifier = true;
     };
 
     // __end__

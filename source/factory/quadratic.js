@@ -178,12 +178,14 @@ S.controlPathPosition = function (item) {
     this.controlPathPosition = item;
     this.dirtyControl = true;
     this.currentControlPathData = false;
+    this.dirtyFilterIdentifier = true;
 };
 D.controlPathPosition = function (item) {
 
     this.controlPathPosition += item;
     this.dirtyControl = true;
     this.currentControlPathData = false;
+    this.dirtyFilterIdentifier = true;
 };
 
 // __control__
@@ -302,6 +304,8 @@ P.cleanDimensions = function () {
     this.dirtyStart = true;
     this.dirtyControl = true;
     this.dirtyEnd = true;
+
+    this.dirtyFilterIdentifier = true;
 };
 
 P.preparePinsForStamp = function () {

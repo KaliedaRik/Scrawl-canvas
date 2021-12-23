@@ -206,12 +206,14 @@ S.endControlPathPosition = function (item) {
     this.endControlPathPosition = item;
     this.dirtyEndControl = true;
     this.currentEndControlPathData = false;
+    this.dirtyFilterIdentifier = true;
 };
 D.endControlPathPosition = function (item) {
 
     this.endControlPathPosition += item;
     this.dirtyEndControl = true;
     this.currentEndControlPathData = false;
+    this.dirtyFilterIdentifier = true;
 };
 
 // __startControlPivot__
@@ -245,12 +247,14 @@ S.startControlPathPosition = function (item) {
     this.startControlPathPosition = item;
     this.dirtyStartControl = true;
     this.currentStartControlPathData = false;
+    this.dirtyFilterIdentifier = true;
 };
 D.startControlPathPosition = function (item) {
 
     this.startControlPathPosition += item;
     this.dirtyStartControl = true;
     this.currentStartControlPathData = false;
+    this.dirtyFilterIdentifier = true;
 };
 
 // __startControl__
@@ -447,6 +451,8 @@ P.cleanDimensions = function () {
     this.dirtyStartControl = true;
     this.dirtyEndControl = true;
     this.dirtyEnd = true;
+
+    this.dirtyFilterIdentifier = true;
 };
 
 P.preparePinsForStamp = function () {

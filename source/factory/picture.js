@@ -185,6 +185,7 @@ S.copyStartX = function (coord) {
         this.copyStart[0] = coord;
         this.dirtyCopyStart = true;
         this.dirtyImageSubscribers = true;
+        this.dirtyFilterIdentifier = true;
     }
 };
 S.copyStartY = function (coord) {
@@ -194,6 +195,7 @@ S.copyStartY = function (coord) {
         this.copyStart[1] = coord;
         this.dirtyCopyStart = true;
         this.dirtyImageSubscribers = true;
+        this.dirtyFilterIdentifier = true;
     }
 };
 S.copyStart = function (x, y) {
@@ -201,6 +203,7 @@ S.copyStart = function (x, y) {
     this.setCoordinateHelper('copyStart', x, y);
     this.dirtyCopyStart = true;
     this.dirtyImageSubscribers = true;
+    this.dirtyFilterIdentifier = true;
 };
 D.copyStartX = function (coord) {
 
@@ -208,18 +211,21 @@ D.copyStartX = function (coord) {
     c[0] = addStrings(c[0], coord);
     this.dirtyCopyStart = true;
     this.dirtyImageSubscribers = true;
+    this.dirtyFilterIdentifier = true;
 };
 D.copyStartY = function (coord) {
 
     let c = this.copyStart;
     c[1] = addStrings(c[1], coord);
     this.dirtyCopyStart = true;
+    this.dirtyFilterIdentifier = true;
 };
 D.copyStart = function (x, y) {
 
     this.setDeltaCoordinateHelper('copyStart', x, y);
     this.dirtyCopyStart = true;
     this.dirtyImageSubscribers = true;
+    this.dirtyFilterIdentifier = true;
 };
 
 // __copyDimensions__
@@ -243,6 +249,7 @@ S.copyWidth = function (val) {
         this.copyDimensions[0] = val;
         this.dirtyCopyDimensions = true;
         this.dirtyImageSubscribers = true;
+        this.dirtyFilterIdentifier = true;
     }
 };
 S.copyHeight = function (val) {
@@ -252,6 +259,7 @@ S.copyHeight = function (val) {
         this.copyDimensions[1] = val;
         this.dirtyCopyDimensions = true;
         this.dirtyImageSubscribers = true;
+        this.dirtyFilterIdentifier = true;
     }
 };
 S.copyDimensions = function (w, h) {
@@ -259,6 +267,7 @@ S.copyDimensions = function (w, h) {
     this.setCoordinateHelper('copyDimensions', w, h);
     this.dirtyCopyDimensions = true;
     this.dirtyImageSubscribers = true;
+    this.dirtyFilterIdentifier = true;
 };
 D.copyWidth = function (val) {
 
@@ -266,6 +275,7 @@ D.copyWidth = function (val) {
     c[0] = addStrings(c[0], val);
     this.dirtyCopyDimensions = true;
     this.dirtyImageSubscribers = true;
+    this.dirtyFilterIdentifier = true;
 };
 D.copyHeight = function (val) {
 
@@ -273,12 +283,14 @@ D.copyHeight = function (val) {
     c[1] = addStrings(c[1], val);
     this.dirtyCopyDimensions = true;
     this.dirtyImageSubscribers = true;
+    this.dirtyFilterIdentifier = true;
 };
 D.copyDimensions = function (w, h) {
 
     this.setDeltaCoordinateHelper('copyDimensions', w, h);
     this.dirtyCopyDimensions = true;
     this.dirtyImageSubscribers = true;
+    this.dirtyFilterIdentifier = true;
 };
 
 S.checkHitIgnoreTransparency = function (item) {

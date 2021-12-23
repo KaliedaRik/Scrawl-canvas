@@ -586,6 +586,8 @@ export default function (P = Ωempty) {
                     filterCellEngine.setTransform(1, 0, 0, 1, 0, 0);
                     filterCellEngine.drawImage(currentElement, 0, 0);
                     filterCellEngine.restore();
+
+                    this.dirtyFilterIdentifier = true;
                 } 
 
                 filterCellEngine.setTransform(1, 0, 0, 1, 0, 0);
@@ -595,6 +597,7 @@ export default function (P = Ωempty) {
                 this.preprocessFilters(this.currentFilters);
 
                 let img = filterEngine.action({
+                    identifier: this.filterIdentifier,
                     image: myimage,
                     filters: this.currentFilters
                 });

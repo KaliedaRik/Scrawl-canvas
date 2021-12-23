@@ -111,6 +111,7 @@ S.outerRadius = function (val) {
 
         this.outerRadius = val;
         this.dirtyDimensions = true;
+        this.dirtyFilterIdentifier = true;
     }
 };
 D.outerRadius = function (val) {
@@ -119,6 +120,7 @@ D.outerRadius = function (val) {
 
         this.outerRadius = addStrings(this.outerRadius, val);
         this.dirtyDimensions = true;
+        this.dirtyFilterIdentifier = true;
     }
 };
 
@@ -128,6 +130,7 @@ S.innerRadius = function (val) {
 
         this.innerRadius = val;
         this.dirtyDimensions = true;
+        this.dirtyFilterIdentifier = true;
     }
 };
 D.innerRadius = function (val) {
@@ -136,6 +139,7 @@ D.innerRadius = function (val) {
 
         this.innerRadius = addStrings(this.innerRadius, val);
         this.dirtyDimensions = true;
+        this.dirtyFilterIdentifier = true;
     }
 };
 
@@ -154,6 +158,7 @@ S.displacement = function (val) {
         this.displacement = d;
 
         this.dirtyDimensions = true;
+        this.dirtyFilterIdentifier = true;
     }
 };
 D.displacement = function (val) {
@@ -166,6 +171,7 @@ D.displacement = function (val) {
 
         this.displacement = d;
         this.dirtyDimensions = true;
+        this.dirtyFilterIdentifier = true;
     }
 };
 
@@ -173,6 +179,7 @@ S.displayIntersect = function (val) {
 
     this.displayIntersect = val;
     this.dirtyPathObject = true;
+    this.dirtyFilterIdentifier = true;
 };
 
 // #### Prototype functions

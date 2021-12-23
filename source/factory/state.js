@@ -204,7 +204,11 @@ P.set = function (items = Ωempty) {
 
         if (key != 'name') {
 
-            if (typeof d[key] != 'undefined') this[key] = items[key];
+            if (typeof d[key] != 'undefined') {
+
+                this[key] = items[key];
+                this.dirtyFilterIdentifier = true;
+            }
         }
     }
     return this;

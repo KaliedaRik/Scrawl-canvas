@@ -399,7 +399,7 @@ P.set = function (items = Ωempty) {
     }
     if (this.method && setActionsArray[this.method]) setActionsArray[this.method](this);
 
-    this.dirtyFiltersCache = true;
+    this.dirtyFilterIdentifier = true;
 
     return this;
 };
@@ -433,7 +433,7 @@ P.setDelta = function (items = Ωempty) {
     }
     if (this.method && setActionsArray[this.method]) setActionsArray[this.method](this);
 
-    this.dirtyFiltersCache = true;
+    this.dirtyFilterIdentifier = true;
     
     return this;
 };

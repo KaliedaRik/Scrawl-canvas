@@ -262,15 +262,27 @@ S.rangeFrom = function (item) { this.rangeFrom.set(item); };
 
 S.preAction = function (item) {
 
-    if (isa_fn(item)) this.preAction = item;
+    if (isa_fn(item)) {
+
+        this.preAction = item;
+        this.dirtyFilterIdentifier = true;
+    }
 };
 S.stampAction = function (item) {
 
-    if (isa_fn(item)) this.stampAction = item;
+    if (isa_fn(item)) {
+
+        this.stampAction = item;
+        this.dirtyFilterIdentifier = true;
+    }
 };
 S.postAction = function (item) {
 
-    if (isa_fn(item)) this.postAction = item;
+    if (isa_fn(item)) {
+
+        this.postAction = item;
+        this.dirtyFilterIdentifier = true;
+    }
 };
 
 
@@ -281,7 +293,10 @@ S.world = function (item) {
     if (item.substring) w = world[item];
     else if (isa_obj(item) && item.type === 'World') w = item;
 
-    if (w) this.world = w;
+    if (w) {
+
+        this.world = w;
+    }
 };
 
 S.artefact = function (item) {
@@ -291,7 +306,11 @@ S.artefact = function (item) {
     if (item.substring) art = artefact[item];
     else if (isa_obj(item) && item.isArtefact) art = item;
 
-    if (art) this.artefact = art;
+    if (art) {
+
+        this.artefact = art;
+        this.dirtyFilterIdentifier = true;
+    }
 };
 
 // To generate along a path, or in an area, we set the `generateAlongPath` or `generateInArea` attributes to the (path-based) artefact we shall be using for the template. This can be the artefact's String name, or the artefact object itself
@@ -304,6 +323,8 @@ S.generateAlongPath = function (item) {
 
     if (art && art.useAsPath) this.generateAlongPath = art;
     else this.generateAlongPath = false;
+
+    this.dirtyFilterIdentifier = true;
 };
 
 S.generateInArea = function (item) {
@@ -315,33 +336,41 @@ S.generateInArea = function (item) {
 
     if (art) this.generateInArea = art;
     else this.generateInArea = false;
+
+    this.dirtyFilterIdentifier = true;
 };
 
 // Color management - we can set these attributes (`fillColor fillMinimumColor fillMaximumColor, strokeColor strokeMinimumColor strokeMaximumColor`) on the Emitter object - the setter functions pass the color value onto the appropriate color factory for processing and update
 S.fillColor = function (item) {
 
     this.fillColorFactory.set({color: item});
+    this.dirtyFilterIdentifier = true;
 };
 S.fillMinimumColor = function (item) {
 
     this.fillColorFactory.set({minimumColor: item});
+    this.dirtyFilterIdentifier = true;
 };
 S.fillMaximumColor = function (item) {
 
     this.fillColorFactory.set({maximumColor: item});
+    this.dirtyFilterIdentifier = true;
 };
 
 S.strokeColor = function (item) {
 
     this.strokeColorFactory.set({color: item});
+    this.dirtyFilterIdentifier = true;
 };
 S.strokeMinimumColor = function (item) {
 
     this.strokeColorFactory.set({minimumColor: item});
+    this.dirtyFilterIdentifier = true;
 };
 S.strokeMaximumColor = function (item) {
 
     this.strokeColorFactory.set({maximumColor: item});
+    this.dirtyFilterIdentifier = true;
 };
 
 S.hitRadius = function (item) {

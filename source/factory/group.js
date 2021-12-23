@@ -408,6 +408,8 @@ P.applyFilters = function (myCell) {
         filterCellEngine.setTransform(1, 0, 0, 1, 0, 0);
         filterCellEngine.drawImage(currentElement, 0, 0);
         filterCellEngine.restore();
+
+        this.dirtyFilterIdentifier = true;
     } 
 
     // At this point we will send the contents of the filterHost canvas over to the filter engine
@@ -418,6 +420,7 @@ P.applyFilters = function (myCell) {
     this.preprocessFilters(this.currentFilters);
 
     let img = filterEngine.action({
+        identifier: this.filterIdentifier,
         image: myimage,
         filters: this.currentFilters,
     })

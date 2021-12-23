@@ -118,6 +118,7 @@ export default function (P = Ωempty) {
 
         this.dirtySpecies = true;
         this.dirtyPathObject = true;
+        this.dirtyFilterIdentifier = true;
     };
 
     // `midInitActions` - internal constructor helper function

@@ -9,7 +9,7 @@
 
 // #### Imports
 import { filter, asset } from '../core/library.js';
-import { mergeOver, pushUnique, removeItem, Ωempty } from '../core/utilities.js';
+import { mergeOver, pushUnique, removeItem, Ωempty, generateUuid } from '../core/utilities.js';
 import { requestCell, releaseCell } from '../factory/cell.js';
 
 
@@ -29,6 +29,9 @@ export default function (P = Ωempty) {
 
 // __isStencil__ - Use the entity as a stencil. When this flag is set filter effects will be applied to the background imagery covered by the entity (or Group of entitys, or Cell), the results of which will replace the entity/Group/Cell in the final display.
         isStencil: false,
+
+// __memoizeFilterOutput__ - 
+        memoizeFilterOutput: false,
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -59,7 +62,25 @@ export default function (P = Ωempty) {
                 this.dirtyFilters = true;
                 this.dirtyImageSubscribers = true;
             }
+            this.dirtyFilterIdentifier = true;
         }
+    };
+
+// `memoizeFilterOutput` - ___Dangerous action!__ - replaces the existing filters Array with a new filters Array. If a string name is supplied, will add that name to the existing filters array
+    S.memoizeFilterOutput = function (item) {
+
+        this.memoizeFilterOutput = item;
+        this.updateFilterIdentifier(!!item);
+    };
+    P.updateFilterIdentifier = function (item) {
+
+        console.log('memoizeFilterOutput', this.memoizeFilterOutput, item);
+
+        this.dirtyFilterIdentifier = false;
+        if (this.state) this.state.dirtyFilterIdentifier = false;
+
+        if (this.memoizeFilterOutput && item) this.filterIdentifier = generateUuid();
+        else this.filterIdentifier = '';
     };
 
 
@@ -178,7 +199,13 @@ export default function (P = Ωempty) {
 
                     if (img) {
 
-                        if (img.type === 'Noise' || img.type === 'Cell' || img.type === 'RawAsset' || img.type === 'RdAsset') {
+                        if ('Image' !== img.type) {
+
+                            img.checkSource();
+                            this.dirtyFilterIdentifier = true;
+                        }
+
+                        if (img.type === 'Video' || img.type === 'Sprite' || img.type === 'Noise' || img.type === 'Cell' || img.type === 'RawAsset' || img.type === 'RdAsset') {
 
                             img.checkSource();
                         }
@@ -284,7 +311,9 @@ export default function (P = Ωempty) {
                     }
                 }
             }
+            if (filter.dirtyFilterIdentifier) this.dirtyFilterIdentifier = true;
         }
+        if (this.dirtyFilterIdentifier || (this.state && this.state.dirtyFilterIdentifier)) this.updateFilterIdentifier(true);
     };
 
 // Return the prototype

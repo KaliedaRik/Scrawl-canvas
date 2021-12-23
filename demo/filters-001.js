@@ -106,6 +106,8 @@ scrawl.observeAndUpdate({
         processHorizontal: ['processHorizontal', 'boolean'],
         processVertical: ['processVertical', 'boolean'],
         excludeTransparentPixels: ['excludeTransparentPixels', 'boolean'],
+
+        memoizeFilterOutput: ['memoizeFilterOutput', 'boolean'],
     },
 });
 
@@ -119,6 +121,21 @@ scrawl.addNativeListener(['update', 'change'], (e) => {
     })
 
 }, '#blurFilter');
+
+scrawl.observeAndUpdate({
+
+    event: ['input', 'change'],
+    origin: '#memoizeFilterOutput',
+
+    target: piccy,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+        memoizeFilterOutput: ['memoizeFilterOutput', 'boolean'],
+    },
+});
 
 scrawl.addNativeListener(['update', 'change'], (e) => {
 
@@ -167,6 +184,7 @@ document.querySelector('#includeAlpha').options.selectedIndex = 0;
 document.querySelector('#processHorizontal').options.selectedIndex = 1;
 document.querySelector('#processVertical').options.selectedIndex = 1;
 document.querySelector('#excludeTransparentPixels').options.selectedIndex = 1;
+document.querySelector('#memoizeFilterOutput').options.selectedIndex = 0;
 
 
 // #### Development and testing

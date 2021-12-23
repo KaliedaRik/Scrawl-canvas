@@ -388,6 +388,7 @@ S.text = function (item) {
     this.dirtyText = true;
     this.dirtyPathObject = true;
     this.dirtyDimensions = true;
+    this.dirtyFilterIdentifier = true;
 };
 
 // __justify__
@@ -398,6 +399,7 @@ S.justify = function (item) {
     
     this.dirtyText = true;
     this.dirtyPathObject = true;
+    this.dirtyFilterIdentifier = true;
 };
 
 // __width__
@@ -454,6 +456,7 @@ S.lineHeight = function (item) {
     
     this.dirtyPathObject = true;
     this.dirtyText = true;
+    this.dirtyFilterIdentifier = true;
 };
 D.lineHeight = function (item) {
 
@@ -465,6 +468,7 @@ D.lineHeight = function (item) {
 
     this.dirtyPathObject = true;
     this.dirtyText = true;
+    this.dirtyFilterIdentifier = true;
 };
 
 // __letterSpacing__
@@ -474,6 +478,7 @@ S.letterSpacing = function (item) {
 
     this.dirtyPathObject = true;
     this.dirtyText = true;
+    this.dirtyFilterIdentifier = true;
 };
 D.letterSpacing = function (item) {
 
@@ -482,6 +487,7 @@ D.letterSpacing = function (item) {
 
     this.dirtyPathObject = true;
     this.dirtyText = true;
+    this.dirtyFilterIdentifier = true;
 };
 
 // __overlinePosition__
@@ -491,6 +497,7 @@ S.overlinePosition = function (item) {
 
     this.dirtyPathObject = true;
     this.dirtyText = true;
+    this.dirtyFilterIdentifier = true;
 };
 D.overlinePosition = function (item) {
 
@@ -498,6 +505,7 @@ D.overlinePosition = function (item) {
 
     this.dirtyPathObject = true;
     this.dirtyText = true;
+    this.dirtyFilterIdentifier = true;
 };
 
 // __underlinePosition__
@@ -507,6 +515,7 @@ S.underlinePosition = function (item) {
 
     this.dirtyPathObject = true;
     this.dirtyText = true;
+    this.dirtyFilterIdentifier = true;
 };
 D.underlinePosition = function (item) {
 
@@ -514,6 +523,7 @@ D.underlinePosition = function (item) {
 
     this.dirtyPathObject = true;
     this.dirtyText = true;
+    this.dirtyFilterIdentifier = true;
 };
 
 // __textPath__
@@ -524,6 +534,7 @@ S.textPath = function (item) {
     this.dirtyHandle = true;
     this.dirtyText = true;
     this.dirtyPathObject = true;
+    this.dirtyFilterIdentifier = true;
 };
 
 // __textPathPosition__
@@ -536,6 +547,7 @@ S.textPathPosition = function (item) {
         this.textPathPosition = parseFloat(item.toFixed(6));
     }
     else this.textPathPosition = item;
+    this.dirtyFilterIdentifier = true;
 };
 D.textPathPosition = function (item) {
 
@@ -548,6 +560,7 @@ D.textPathPosition = function (item) {
         this.textPathPosition = parseFloat(newVal.toFixed(6));
     }
     else this.textPathPosition = newVal;
+    this.dirtyFilterIdentifier = true;
 };
 
 
@@ -569,6 +582,7 @@ S.font = function (item) {
 
     this.dirtyFont = true;
     this.dirtyPathObject = true;
+    this.dirtyFilterIdentifier = true;
 };
 
 // __style__ - CSS `font-style` String
@@ -582,6 +596,7 @@ S.style = function (item) {
 
     this.dirtyFont = true;
     this.dirtyPathObject = true;
+    this.dirtyFilterIdentifier = true;
 };
 
 // __variant__ - CSS `font-variant` String
@@ -595,6 +610,7 @@ S.variant = function (item) {
 
     this.dirtyFont = true;
     this.dirtyPathObject = true;
+    this.dirtyFilterIdentifier = true;
 };
 
 // __weight__ - CSS `font-weight` String
@@ -608,6 +624,7 @@ S.weight = function (item) {
 
     this.dirtyFont = true;
     this.dirtyPathObject = true;
+    this.dirtyFilterIdentifier = true;
 };
 
 // __stretch__ - CSS `font-stretch` String
@@ -621,6 +638,7 @@ S.stretch = function (item) {
 
     this.dirtyFont = true;
     this.dirtyPathObject = true;
+    this.dirtyFilterIdentifier = true;
 };
 
 // __size__ - CSS `font-size` String
@@ -634,6 +652,7 @@ S.size = function (item) {
 
     this.dirtyFont = true;
     this.dirtyPathObject = true;
+    this.dirtyFilterIdentifier = true;
 };
 
 // __sizeValue__ - the Number part of the font's size value
@@ -647,6 +666,7 @@ S.sizeValue = function (item) {
 
     this.dirtyFont = true;
     this.dirtyPathObject = true;
+    this.dirtyFilterIdentifier = true;
 };
 D.sizeValue = function (item) {
 
@@ -654,6 +674,7 @@ D.sizeValue = function (item) {
 
     this.dirtyFont = true;
     this.dirtyPathObject = true;
+    this.dirtyFilterIdentifier = true;
 };
 
 // __sizeMetric__ - the String metric part of the font's size value
@@ -667,6 +688,7 @@ S.sizeMetric = function (item) {
 
     this.dirtyFont = true;
     this.dirtyPathObject = true;
+    this.dirtyFilterIdentifier = true;
 };
 
 // __family__ - CSS `font-family` String
@@ -680,6 +702,7 @@ S.family = function (item) {
 
     this.dirtyFont = true;
     this.dirtyPathObject = true;
+    this.dirtyFilterIdentifier = true;
 };
 
 

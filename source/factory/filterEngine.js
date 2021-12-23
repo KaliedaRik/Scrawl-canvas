@@ -4,10 +4,11 @@
 // + At some point in the future we may implement this code as a WebAssembly module.
 
 
-import { constructors } from '../core/library.js';
+import { constructors, filter, filternames } from '../core/library.js';
 import { seededRandomNumberGenerator } from '../core/random-seed.js';
 import { easeOutSine, easeInSine, easeOutInSine, easeOutQuad, easeInQuad, easeOutInQuad, easeOutCubic, easeInCubic, easeOutInCubic, easeOutQuart, easeInQuart, easeOutInQuart, easeOutQuint, easeInQuint, easeOutInQuint, easeOutExpo, easeInExpo, easeOutInExpo, easeOutCirc, easeInCirc, easeOutInCirc, easeOutBack, easeInBack, easeOutInBack, easeOutElastic, easeInElastic, easeOutInElastic, easeOutBounce, easeInBounce, easeOutInBounce } from '../core/utilities.js';
 
+import {makeAnimation} from './animation.js';
 import {requestCell, releaseCell} from './cell.js';
 import {requestCoordinate, releaseCoordinate} from './coordinate.js';
 import { makeColor } from './color.js';
@@ -35,8 +36,7 @@ P.type = 'FilterEngine';
 
 P.action = function (packet) {
 
-    // let { identifier, filters, image } = packet;
-    let { filters, image } = packet;
+    let { identifier, filters, image } = packet;
 
     let { workstoreLastAccessed, workstore, actions, choke, theBigActionsObject } = this;
 
@@ -54,11 +54,11 @@ P.action = function (packet) {
         }
     }
 
-    // if (identifier && workstore[identifier]) {
+    if (identifier && workstore[identifier]) {
 
-    //     workstoreLastAccessed[identifier] = Date.now();
-    //     return workstore[identifier];
-    // }
+        workstoreLastAccessed[identifier] = Date.now();
+        return workstore[identifier];
+    }
 
     actions.length = 0;
 
@@ -81,8 +81,11 @@ P.action = function (packet) {
             if (a) a.call(this, actData);
         }
 
-        // workstore[identifier] = this.cache.work;
-        // workstoreLastAccessed[identifier] = Date.now();
+        if (identifier) {
+
+            workstore[identifier] = this.cache.work;
+            workstoreLastAccessed[identifier] = Date.now();
+        }
 
         return this.cache.work;
     }
@@ -4293,6 +4296,22 @@ P.theBigActionsObject = {
     },
 
 };
+
+// We need an animation object to go through all the filters at the very end of the Display cycle RAF (request animation frame) and reset their `dirtyFilterIdentifier` flag to false.
+makeAnimation({
+
+    name: 'filters-cleanup-action',
+    order: 999,
+    fn: function () {
+
+        filternames.forEach(name => {
+
+            const f = filter[name];
+
+            if (f) f.dirtyFilterIdentifier = false;
+        });
+    },
+});
 
 
 // #### Factory

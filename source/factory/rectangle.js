@@ -368,6 +368,7 @@ S.rectangleWidth = function (val) {
 
         this.rectangleWidth = val;
         this.dirtyDimensions = true;
+        this.dirtyFilterIdentifier = true;
     }
 };
 S.rectangleHeight = function (val) {
@@ -376,17 +377,20 @@ S.rectangleHeight = function (val) {
 
         this.rectangleHeight = val;
         this.dirtyDimensions = true;
+        this.dirtyFilterIdentifier = true;
     }
 };
 D.rectangleWidth = function (val) {
 
     this.rectangleWidth = addStrings(this.rectangleWidth, val);
     this.dirtyDimensions = true;
+    this.dirtyFilterIdentifier = true;
 };
 D.rectangleHeight = function (val) {
 
     this.rectangleHeight = addStrings(this.rectangleHeight, val);
     this.dirtyDimensions = true;
+    this.dirtyFilterIdentifier = true;
 };
 
 

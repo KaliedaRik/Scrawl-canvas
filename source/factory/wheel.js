@@ -177,22 +177,26 @@ S.startAngle = function (val) {
 
     this.startAngle = ensureFloat(val, 4);
     this.dirtyPathObject = true;
+    this.dirtyFilterIdentifier = true;
 };
 D.startAngle = function (val) {
 
     this.startAngle += ensureFloat(val, 4);
     this.dirtyPathObject = true;
+    this.dirtyFilterIdentifier = true;
 };
 
 S.endAngle = function (val) {
 
     this.endAngle = ensureFloat(val, 4);
     this.dirtyPathObject = true;
+    this.dirtyFilterIdentifier = true;
 };
 D.endAngle = function (val) {
 
     this.endAngle += ensureFloat(val, 4);
     this.dirtyPathObject = true;
+    this.dirtyFilterIdentifier = true;
 };
 
 S.closed = function (bool) {
@@ -201,6 +205,7 @@ S.closed = function (bool) {
 
         this.closed = !!bool;
         this.dirtyPathObject = true;
+        this.dirtyFilterIdentifier = true;
     }
 };
 
@@ -210,6 +215,7 @@ S.includeCenter = function (bool) {
 
         this.includeCenter = !!bool;
         this.dirtyPathObject = true;
+        this.dirtyFilterIdentifier = true;
     }
 };
 
@@ -219,6 +225,7 @@ S.clockwise = function (bool) {
 
         this.clockwise = !!bool;
         this.dirtyPathObject = true;
+        this.dirtyFilterIdentifier = true;
     }
 };
 
@@ -234,6 +241,7 @@ P.dimensionsHelper = function () {
     else this.radius = (width / 2);
 
     this.dirtyDimensions = true;
+    this.dirtyFilterIdentifier = true;
 };
 P.radiusHelper = function () {
 
@@ -244,6 +252,7 @@ P.radiusHelper = function () {
     else dims[0] = dims[1] = (radius * 2);
 
     this.dirtyDimensions = true;
+    this.dirtyFilterIdentifier = true;
 };
 
 // Dimensions calculations - overwrites mixin/position.js function

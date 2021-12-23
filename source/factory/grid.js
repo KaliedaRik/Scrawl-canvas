@@ -197,6 +197,7 @@ S.columns = function (item) {
         }
     }
     this.dirtyPathObject = true;
+    this.dirtyFilterIdentifier = true;
 };
 D.columns = λnull;
 
@@ -219,6 +220,7 @@ S.rows = function (item) {
         }
     }
     this.dirtyPathObject = true;
+    this.dirtyFilterIdentifier = true;
 };
 D.rows = λnull;
 
@@ -234,6 +236,7 @@ P.setAllTilesTo = function (val) {
         if (!Number.isInteger(val)) val = parseInt(val, 10);
 
         this.tileFill.fill(val);
+        this.dirtyFilterIdentifier = true;
     }
 };
 
@@ -246,6 +249,7 @@ P.setTileFill = function (item) {
     if (Array.isArray(item) && item.length === columns * rows) {
 
         this.tileFill = item;
+        this.dirtyFilterIdentifier = true;
     }
 };
 
@@ -268,6 +272,7 @@ P.setTilesTo = function (tiles, val) {
                 if (isa_number(tile)) tileFill[tile] = val;
             });
         }
+        this.dirtyFilterIdentifier = true;
     }
 };
 

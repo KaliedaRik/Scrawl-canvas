@@ -158,7 +158,11 @@ S.artefact = function (item) {
     if (item.substring) art = artefact[item];
     else if (isa_obj(item) && item.isArtefact) art = item;
 
-    if (art) this.artefact = art;
+    if (art) {
+
+        this.artefact = art;
+        this.dirtyFilterIdentifier = true;
+    }
 };
 
 

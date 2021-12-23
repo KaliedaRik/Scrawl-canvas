@@ -1226,6 +1226,7 @@ P.applyFilters = function () {
     this.preprocessFilters(this.currentFilters);
 
     let img = filterEngine.action({
+        identifier: this.filterIdentifier,
         image: image,
         filters: this.currentFilters
     });

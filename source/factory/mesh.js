@@ -310,7 +310,11 @@ P.set = function (items = Ωempty) {
                     predefined = setters[key];
 
                     if (predefined) predefined.call(this, value);
-                    else if (typeof defs[key] != 'undefined') this[key] = value;
+                    else if (typeof defs[key] != 'undefined') {
+
+                        this[key] = value;
+                        this.dirtyFilterIdentifier = true;
+                    }
                 }
                 else {
 
@@ -354,7 +358,11 @@ P.setDelta = function (items = Ωempty) {
                     predefined = setters[key];
 
                     if (predefined) predefined.call(this, value);
-                    else if (typeof defs[key] != 'undefined') this[key] = addStrings(this[key], value);
+                    else if (typeof defs[key] != 'undefined') {
+
+                        this[key] = addStrings(this[key], value);
+                        this.dirtyFilterIdentifier = true;
+                    }
                 }
                 else {
 
@@ -380,6 +388,7 @@ S.host = function (item) {
         else this.host = item;
     }
     else this.host = '';
+    this.dirtyFilterIdentifier = true;
 };
 
 // __group__ - copied over from the position mixin.
@@ -426,6 +435,7 @@ S.net = function (item) {
             this.net = item;
             this.dirtyStart = true;
         }
+        this.dirtyFilterIdentifier = true;
     }
 };
 
@@ -443,6 +453,7 @@ S.source = function (item) {
         this.source = item;
         item.imageSubscribe(this.name);
         this.dirtyInput = true;
+        this.dirtyFilterIdentifier = true;
     }
 };
 
@@ -451,6 +462,7 @@ S.isHorizontalCopy = function (item) {
 
     this.isHorizontalCopy = (item) ? true : false;
     this.dirtyPathData = true;
+    this.dirtyFilterIdentifier = true;
 };
 
 

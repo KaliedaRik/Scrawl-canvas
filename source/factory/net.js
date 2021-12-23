@@ -300,6 +300,7 @@ S.artefact = function (item) {
     else if (isa_obj(item) && item.isArtefact) art = item;
 
     if (art) this.artefact = art;
+    this.dirtyFilterIdentifier = true;
 };
 
 S.shapeTemplate = function (item) {
@@ -310,6 +311,7 @@ S.shapeTemplate = function (item) {
     else if (isa_obj(item) && item.isArtefact && xt(item.species)) art = item;
 
     if (art) this.shapeTemplate = art;
+    this.dirtyFilterIdentifier = true;
 };
 
 // #### Prototype functions
