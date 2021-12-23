@@ -24,7 +24,7 @@ const FilterEngine = function () {
     // __actions__ - the Array of action objects that the engine needs to process - data supplied by the main thread in its message's `packetFiltersArray` attribute.
     this.actions = [];
 
-    this.choke = 3000;
+    this.choke = 500;
 
     return this;
 };

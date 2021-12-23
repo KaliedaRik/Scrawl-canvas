@@ -1293,6 +1293,7 @@ S.<span class="hljs-property">artefact</span> = <span class="hljs-keyword">funct
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(item) &amp;&amp; item.<span class="hljs-property">isArtefact</span>) art = item;
 
     <span class="hljs-keyword">if</span> (art) <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefact</span> = art;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };
 
 S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
@@ -1303,6 +1304,7 @@ S.<span class="hljs-property">shapeTemplate</span> = <span class="hljs-keyword">
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(item) &amp;&amp; item.<span class="hljs-property">isArtefact</span> &amp;&amp; <span class="hljs-title function_">xt</span>(item.<span class="hljs-property">species</span>)) art = item;
 
     <span class="hljs-keyword">if</span> (art) <span class="hljs-variable language_">this</span>.<span class="hljs-property">shapeTemplate</span> = art;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>

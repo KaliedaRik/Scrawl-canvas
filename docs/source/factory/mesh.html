@@ -1085,7 +1085,11 @@ P.<span class="hljs-property">handlePacketAnchor</span> = <span class="hljs-keyw
                     predefined = setters[key];
 
                     <span class="hljs-keyword">if</span> (predefined) predefined.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, value);
-                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] != <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-variable language_">this</span>[key] = value;
+                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] != <span class="hljs-string">&#x27;undefined&#x27;</span>) {
+
+                        <span class="hljs-variable language_">this</span>[key] = value;
+                        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
+                    }
                 }
                 <span class="hljs-keyword">else</span> {
 
@@ -1141,7 +1145,11 @@ P.<span class="hljs-property">handlePacketAnchor</span> = <span class="hljs-keyw
                     predefined = setters[key];
 
                     <span class="hljs-keyword">if</span> (predefined) predefined.<span class="hljs-title function_">call</span>(<span class="hljs-variable language_">this</span>, value);
-                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] != <span class="hljs-string">&#x27;undefined&#x27;</span>) <span class="hljs-variable language_">this</span>[key] = <span class="hljs-title function_">addStrings</span>(<span class="hljs-variable language_">this</span>[key], value);
+                    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> defs[key] != <span class="hljs-string">&#x27;undefined&#x27;</span>) {
+
+                        <span class="hljs-variable language_">this</span>[key] = <span class="hljs-title function_">addStrings</span>(<span class="hljs-variable language_">this</span>[key], value);
+                        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
+                    }
                 }
                 <span class="hljs-keyword">else</span> {
 
@@ -1179,6 +1187,7 @@ P.<span class="hljs-property">handlePacketAnchor</span> = <span class="hljs-keyw
         <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span> = item;
     }
     <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">host</span> = <span class="hljs-string">&#x27;&#x27;</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1261,6 +1270,7 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">net</span> = item;
             <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStart</span> = <span class="hljs-literal">true</span>;
         }
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
     }
 };</pre></div></div>
             
@@ -1290,6 +1300,7 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">source</span> = item;
         item.<span class="hljs-title function_">imageSubscribe</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span>);
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyInput</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
     }
 };</pre></div></div>
             
@@ -1310,6 +1321,7 @@ S.<span class="hljs-property">group</span> = <span class="hljs-keyword">function
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">isHorizontalCopy</span> = (item) ? <span class="hljs-literal">true</span> : <span class="hljs-literal">false</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathData</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>

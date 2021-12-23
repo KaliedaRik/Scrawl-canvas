@@ -2122,6 +2122,7 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
             <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (val === <span class="hljs-string">&#x27;center&#x27;</span>) current[i] = dim / <span class="hljs-number">2</span>;
             <span class="hljs-keyword">else</span> current[i] = (<span class="hljs-built_in">parseFloat</span>(val) / <span class="hljs-number">100</span>) * dim;
         }
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -2174,6 +2175,8 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
         <span class="hljs-keyword">if</span> (oldScale !== <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentScale</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPositionSubscribers</span> = <span class="hljs-literal">true</span>;
 
         <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">mimicked</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">mimicked</span>.<span class="hljs-property">length</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyMimicScale</span> = <span class="hljs-literal">true</span>;
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -2241,6 +2244,8 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
             <span class="hljs-keyword">if</span> (oldW !== curDims[<span class="hljs-number">0</span>] || oldH !== curDims[<span class="hljs-number">1</span>]) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPositionSubscribers</span> = <span class="hljs-literal">true</span>;
 
             <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">mimicked</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">mimicked</span>.<span class="hljs-property">length</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyMimicDimensions</span> = <span class="hljs-literal">true</span>;
+
+            <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
         }
         <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
     };</pre></div></div>
@@ -2481,6 +2486,8 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
             </div>
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">mimicked</span> &amp;&amp; <span class="hljs-variable language_">this</span>.<span class="hljs-property">mimicked</span>.<span class="hljs-property">length</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyMimicRotation</span> = <span class="hljs-literal">true</span>;
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
     };</pre></div></div>
             
         </li>
@@ -2682,6 +2689,8 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
 
                     <span class="hljs-keyword">if</span> (lock === <span class="hljs-string">&#x27;mouse&#x27;</span>) hereFlag = <span class="hljs-literal">true</span>;
 
+                    <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;start&#x27;</span> !== lock) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
+
                     localLockArray.<span class="hljs-title function_">push</span>(lock);
                 }
             }
@@ -2773,6 +2782,8 @@ myBlock.<span class="hljs-title function_">setDelta</span>({
                 <span class="hljs-keyword">if</span> (lock === <span class="hljs-string">&#x27;mimic&#x27;</span> &amp;&amp; !mimic) lock = <span class="hljs-string">&#x27;start&#x27;</span>;
 
                 coord = handle[i];
+
+                <span class="hljs-keyword">if</span> (<span class="hljs-string">&#x27;start&#x27;</span> !== lock) <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 
                 <span class="hljs-keyword">switch</span> (lock) {
 

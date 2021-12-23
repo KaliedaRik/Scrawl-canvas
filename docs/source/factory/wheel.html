@@ -885,22 +885,26 @@ S.<span class="hljs-property">startAngle</span> = <span class="hljs-keyword">fun
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">startAngle</span> = <span class="hljs-title function_">ensureFloat</span>(val, <span class="hljs-number">4</span>);
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };
 D.<span class="hljs-property">startAngle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">startAngle</span> += <span class="hljs-title function_">ensureFloat</span>(val, <span class="hljs-number">4</span>);
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };
 
 S.<span class="hljs-property">endAngle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">endAngle</span> = <span class="hljs-title function_">ensureFloat</span>(val, <span class="hljs-number">4</span>);
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };
 D.<span class="hljs-property">endAngle</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">endAngle</span> += <span class="hljs-title function_">ensureFloat</span>(val, <span class="hljs-number">4</span>);
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };
 
 S.<span class="hljs-property">closed</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">bool</span>) {
@@ -909,6 +913,7 @@ S.<span class="hljs-property">closed</span> = <span class="hljs-keyword">functio
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">closed</span> = !!bool;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
     }
 };
 
@@ -918,6 +923,7 @@ S.<span class="hljs-property">includeCenter</span> = <span class="hljs-keyword">
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">includeCenter</span> = !!bool;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
     }
 };
 
@@ -927,6 +933,7 @@ S.<span class="hljs-property">clockwise</span> = <span class="hljs-keyword">func
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">clockwise</span> = !!bool;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
     }
 };</pre></div></div>
             
@@ -964,6 +971,7 @@ S.<span class="hljs-property">clockwise</span> = <span class="hljs-keyword">func
     <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">radius</span> = (width / <span class="hljs-number">2</span>);
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };
 P.<span class="hljs-property">radiusHelper</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
 
@@ -974,6 +982,7 @@ P.<span class="hljs-property">radiusHelper</span> = <span class="hljs-keyword">f
     <span class="hljs-keyword">else</span> dims[<span class="hljs-number">0</span>] = dims[<span class="hljs-number">1</span>] = (radius * <span class="hljs-number">2</span>);
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>

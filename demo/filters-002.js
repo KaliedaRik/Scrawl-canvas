@@ -12,6 +12,7 @@ scrawl.setIgnorePixelRatio(false);
 
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas,
+    entity = scrawl.library.entity,
     filter = scrawl.library.filter;
 
 scrawl.importDomImage('.flowers');
@@ -258,13 +259,37 @@ const myFilters = [
     filter.invert
 ];
 
+const myPictures = [
+    entity['red-filter'],
+    entity['green-filter'],
+    entity['blue-filter'],
+    entity['cyan-filter'],
+    entity['magenta-filter'],
+    entity['yellow-filter'],
+    entity['notred-filter'],
+    entity['notgreen-filter'],
+    entity['notblue-filter'],
+    entity['grayscale-filter'],
+    entity['sepia-filter'],
+    entity['invert-filter'],
+];
+
 scrawl.addNativeListener(['input', 'change'], (e) => {
 
     myFilters.forEach(f => f.set({ opacity: parseFloat(e.target.value) }));
 
 }, '#opacity');
 
+scrawl.addNativeListener(['input', 'change'], (e) => {
+
+    const val = (e.target.value === '0') ? false : true;
+
+    myPictures.forEach(p => p.set({ memoizeFilterOutput: val }));
+
+}, '#memoizeFilterOutput');
+
 // Setup form
+document.querySelector('#memoizeFilterOutput').options.selectedIndex = 0;
 const opacity = document.querySelector('#opacity');
 opacity.value = 1;
 

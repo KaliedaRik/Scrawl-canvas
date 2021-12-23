@@ -980,6 +980,7 @@ S.<span class="hljs-property">rectangleWidth</span> = <span class="hljs-keyword"
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">rectangleWidth</span> = val;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
     }
 };
 S.<span class="hljs-property">rectangleHeight</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
@@ -988,17 +989,20 @@ S.<span class="hljs-property">rectangleHeight</span> = <span class="hljs-keyword
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">rectangleHeight</span> = val;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
     }
 };
 D.<span class="hljs-property">rectangleWidth</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">rectangleWidth</span> = <span class="hljs-title function_">addStrings</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">rectangleWidth</span>, val);
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };
 D.<span class="hljs-property">rectangleHeight</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">rectangleHeight</span> = <span class="hljs-title function_">addStrings</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">rectangleHeight</span>, val);
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyDimensions</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>

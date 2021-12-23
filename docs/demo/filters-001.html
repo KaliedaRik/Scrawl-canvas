@@ -890,6 +890,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-033.html">
+                  ./demo/temp-033.js
+                </a>
+              
+                
                 <a class="source" href="temp-100.html">
                   ./demo/temp-100.js
                 </a>
@@ -1149,6 +1154,8 @@ scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hlj
         <span class="hljs-attr">processHorizontal</span>: [<span class="hljs-string">&#x27;processHorizontal&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
         <span class="hljs-attr">processVertical</span>: [<span class="hljs-string">&#x27;processVertical&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
         <span class="hljs-attr">excludeTransparentPixels</span>: [<span class="hljs-string">&#x27;excludeTransparentPixels&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
+
+        <span class="hljs-attr">memoizeFilterOutput</span>: [<span class="hljs-string">&#x27;memoizeFilterOutput&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
     },
 });
 
@@ -1162,6 +1169,21 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
     })
 
 }, <span class="hljs-string">&#x27;#blurFilter&#x27;</span>);
+
+scrawl.<span class="hljs-title function_">observeAndUpdate</span>({
+
+    <span class="hljs-attr">event</span>: [<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>],
+    <span class="hljs-attr">origin</span>: <span class="hljs-string">&#x27;#memoizeFilterOutput&#x27;</span>,
+
+    <span class="hljs-attr">target</span>: piccy,
+
+    <span class="hljs-attr">useNativeListener</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">preventDefault</span>: <span class="hljs-literal">true</span>,
+
+    <span class="hljs-attr">updates</span>: {
+        <span class="hljs-attr">memoizeFilterOutput</span>: [<span class="hljs-string">&#x27;memoizeFilterOutput&#x27;</span>, <span class="hljs-string">&#x27;boolean&#x27;</span>],
+    },
+});
 
 scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;update&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
 
@@ -1221,7 +1243,8 @@ opacity.<span class="hljs-property">value</span> = <span class="hljs-number">1</
 <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#includeAlpha&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
 <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#processHorizontal&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;
 <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#processVertical&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;
-<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#excludeTransparentPixels&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;</pre></div></div>
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#excludeTransparentPixels&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">1</span>;
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#memoizeFilterOutput&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;</pre></div></div>
             
         </li>
         

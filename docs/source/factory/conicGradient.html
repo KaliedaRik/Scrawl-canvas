@@ -534,7 +534,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">import</span> { constructors, radian } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/library.js&#x27;</span>;
 <span class="hljs-keyword">import</span> { mergeOver, addStrings, isa_number, pushUnique, Ωempty } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../core/utilities.js&#x27;</span>;
 
 <span class="hljs-keyword">import</span> baseMix <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../mixin/base.js&#x27;</span>;
@@ -788,7 +788,7 @@ P.<span class="hljs-property">defs</span> = <span class="hljs-title function_">m
 
     <span class="hljs-keyword">let</span> gradientArgs = <span class="hljs-variable language_">this</span>.<span class="hljs-property">gradientArgs</span>,
         currentStart = <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStart</span>,
-        startAngle = <span class="hljs-variable language_">this</span>.<span class="hljs-property">startAngle</span>;
+        startAngle = <span class="hljs-variable language_">this</span>.<span class="hljs-property">startAngle</span> * radian;
 
     <span class="hljs-keyword">let</span> sx = currentStart[<span class="hljs-number">0</span>] + x,
         sy = currentStart[<span class="hljs-number">1</span>] + y;

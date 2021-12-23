@@ -2577,6 +2577,7 @@ P.<span class="hljs-property">restoreEngine</span> = <span class="hljs-keyword">
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">preprocessFilters</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFilters</span>);
 
     <span class="hljs-keyword">let</span> img = filterEngine.<span class="hljs-title function_">action</span>({
+        <span class="hljs-attr">identifier</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">filterIdentifier</span>,
         <span class="hljs-attr">image</span>: image,
         <span class="hljs-attr">filters</span>: <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentFilters</span>
     });

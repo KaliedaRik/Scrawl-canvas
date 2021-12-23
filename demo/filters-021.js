@@ -149,6 +149,15 @@ scrawl.observeAndUpdate({
     },
 });
 
+scrawl.addNativeListener(['input', 'change'], (e) => {
+
+    const val = (e.target.value === '0') ? false : true;
+
+    canvas.base.set({ memoizeFilterOutput: val });
+
+}, '#memoizeFilterOutput');
+
+
 // Setup form
 const matrix_width = document.querySelector('#matrix_width'),
     matrix_height = document.querySelector('#matrix_height'),
@@ -167,6 +176,7 @@ document.querySelector('#includeRed').options.selectedIndex = 0;
 document.querySelector('#includeGreen').options.selectedIndex = 0;
 document.querySelector('#includeBlue').options.selectedIndex = 0;
 document.querySelector('#includeAlpha').options.selectedIndex = 1;
+document.querySelector('#memoizeFilterOutput').options.selectedIndex = 0;
 
 
 // #### Development and testing

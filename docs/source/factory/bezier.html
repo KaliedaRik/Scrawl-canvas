@@ -989,12 +989,14 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">endControlPathPosition</span> = item;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyEndControl</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEndControlPathData</span> = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };
 D.<span class="hljs-property">endControlPathPosition</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">endControlPathPosition</span> += item;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyEndControl</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentEndControlPathData</span> = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1076,12 +1078,14 @@ D.<span class="hljs-property">endControlPathPosition</span> = <span class="hljs-
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">startControlPathPosition</span> = item;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStartControl</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStartControlPathData</span> = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };
 D.<span class="hljs-property">startControlPathPosition</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">startControlPathPosition</span> += item;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStartControl</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentStartControlPathData</span> = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1378,6 +1382,8 @@ D.<span class="hljs-property">endControl</span> = <span class="hljs-keyword">fun
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStartControl</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyEndControl</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyEnd</span> = <span class="hljs-literal">true</span>;
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };
 
 P.<span class="hljs-property">preparePinsForStamp</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {

@@ -872,6 +872,7 @@ S.<span class="hljs-property">copyStartX</span> = <span class="hljs-keyword">fun
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyStart</span>[<span class="hljs-number">0</span>] = coord;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyStart</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
     }
 };
 S.<span class="hljs-property">copyStartY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
@@ -881,6 +882,7 @@ S.<span class="hljs-property">copyStartY</span> = <span class="hljs-keyword">fun
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyStart</span>[<span class="hljs-number">1</span>] = coord;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyStart</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
     }
 };
 S.<span class="hljs-property">copyStart</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) {
@@ -888,6 +890,7 @@ S.<span class="hljs-property">copyStart</span> = <span class="hljs-keyword">func
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setCoordinateHelper</span>(<span class="hljs-string">&#x27;copyStart&#x27;</span>, x, y);
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyStart</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };
 D.<span class="hljs-property">copyStartX</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
 
@@ -895,18 +898,21 @@ D.<span class="hljs-property">copyStartX</span> = <span class="hljs-keyword">fun
     c[<span class="hljs-number">0</span>] = <span class="hljs-title function_">addStrings</span>(c[<span class="hljs-number">0</span>], coord);
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyStart</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };
 D.<span class="hljs-property">copyStartY</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">coord</span>) {
 
     <span class="hljs-keyword">let</span> c = <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyStart</span>;
     c[<span class="hljs-number">1</span>] = <span class="hljs-title function_">addStrings</span>(c[<span class="hljs-number">1</span>], coord);
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyStart</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };
 D.<span class="hljs-property">copyStart</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setDeltaCoordinateHelper</span>(<span class="hljs-string">&#x27;copyStart&#x27;</span>, x, y);
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyStart</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -944,6 +950,7 @@ S.<span class="hljs-property">copyWidth</span> = <span class="hljs-keyword">func
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyDimensions</span>[<span class="hljs-number">0</span>] = val;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyDimensions</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
     }
 };
 S.<span class="hljs-property">copyHeight</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
@@ -953,6 +960,7 @@ S.<span class="hljs-property">copyHeight</span> = <span class="hljs-keyword">fun
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">copyDimensions</span>[<span class="hljs-number">1</span>] = val;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyDimensions</span> = <span class="hljs-literal">true</span>;
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">true</span>;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
     }
 };
 S.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">w, h</span>) {
@@ -960,6 +968,7 @@ S.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword"
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setCoordinateHelper</span>(<span class="hljs-string">&#x27;copyDimensions&#x27;</span>, w, h);
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyDimensions</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };
 D.<span class="hljs-property">copyWidth</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
 
@@ -967,6 +976,7 @@ D.<span class="hljs-property">copyWidth</span> = <span class="hljs-keyword">func
     c[<span class="hljs-number">0</span>] = <span class="hljs-title function_">addStrings</span>(c[<span class="hljs-number">0</span>], val);
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyDimensions</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };
 D.<span class="hljs-property">copyHeight</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) {
 
@@ -974,12 +984,14 @@ D.<span class="hljs-property">copyHeight</span> = <span class="hljs-keyword">fun
     c[<span class="hljs-number">1</span>] = <span class="hljs-title function_">addStrings</span>(c[<span class="hljs-number">1</span>], val);
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyDimensions</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };
 D.<span class="hljs-property">copyDimensions</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">w, h</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">setDeltaCoordinateHelper</span>(<span class="hljs-string">&#x27;copyDimensions&#x27;</span>, w, h);
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyCopyDimensions</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyImageSubscribers</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };
 
 S.<span class="hljs-property">checkHitIgnoreTransparency</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {

@@ -878,6 +878,7 @@ P.<span class="hljs-property">finalizePacketOut</span> = <span class="hljs-keywo
         }
     }
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };
 D.<span class="hljs-property">columns</span> = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
@@ -912,6 +913,7 @@ D.<span class="hljs-property">columns</span> = λ<span class="hljs-literal">null
         }
     }
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyPathObject</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };
 D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</span>;</pre></div></div>
             
@@ -951,6 +953,7 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
         <span class="hljs-keyword">if</span> (!<span class="hljs-title class_">Number</span>.<span class="hljs-title function_">isInteger</span>(val)) val = <span class="hljs-built_in">parseInt</span>(val, <span class="hljs-number">10</span>);
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">tileFill</span>.<span class="hljs-title function_">fill</span>(val);
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
     }
 };</pre></div></div>
             
@@ -977,6 +980,7 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
     <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(item) &amp;&amp; item.<span class="hljs-property">length</span> === columns * rows) {
 
         <span class="hljs-variable language_">this</span>.<span class="hljs-property">tileFill</span> = item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
     }
 };</pre></div></div>
             
@@ -1013,6 +1017,7 @@ D.<span class="hljs-property">rows</span> = λ<span class="hljs-literal">null</s
                 <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_number</span>(tile)) tileFill[tile] = val;
             });
         }
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
     }
 };</pre></div></div>
             

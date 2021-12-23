@@ -1077,7 +1077,7 @@ P.<span class="hljs-property">set</span> = <span class="hljs-keyword">function</
     }
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">method</span> &amp;&amp; setActionsArray[<span class="hljs-variable language_">this</span>.<span class="hljs-property">method</span>]) setActionsArray[<span class="hljs-variable language_">this</span>.<span class="hljs-property">method</span>](<span class="hljs-variable language_">this</span>);
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFiltersCache</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };
@@ -1111,7 +1111,7 @@ P.<span class="hljs-property">setDelta</span> = <span class="hljs-keyword">funct
     }
     <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">method</span> &amp;&amp; setActionsArray[<span class="hljs-variable language_">this</span>.<span class="hljs-property">method</span>]) setActionsArray[<span class="hljs-variable language_">this</span>.<span class="hljs-property">method</span>](<span class="hljs-variable language_">this</span>);
 
-    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFiltersCache</span> = <span class="hljs-literal">true</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
     
     <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>;
 };</pre></div></div>

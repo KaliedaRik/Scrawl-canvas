@@ -1170,15 +1170,27 @@ S.<span class="hljs-property">rangeFrom</span> = <span class="hljs-keyword">func
 
 S.<span class="hljs-property">preAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">preAction</span> = item;
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">preAction</span> = item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
+    }
 };
 S.<span class="hljs-property">stampAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">stampAction</span> = item;
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">stampAction</span> = item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
+    }
 };
 S.<span class="hljs-property">postAction</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
-    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) <span class="hljs-variable language_">this</span>.<span class="hljs-property">postAction</span> = item;
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_fn</span>(item)) {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">postAction</span> = item;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
+    }
 };
 
 
@@ -1189,7 +1201,10 @@ S.<span class="hljs-property">world</span> = <span class="hljs-keyword">function
     <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) w = world[item];
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(item) &amp;&amp; item.<span class="hljs-property">type</span> === <span class="hljs-string">&#x27;World&#x27;</span>) w = item;
 
-    <span class="hljs-keyword">if</span> (w) <span class="hljs-variable language_">this</span>.<span class="hljs-property">world</span> = w;
+    <span class="hljs-keyword">if</span> (w) {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">world</span> = w;
+    }
 };
 
 S.<span class="hljs-property">artefact</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
@@ -1199,7 +1214,11 @@ S.<span class="hljs-property">artefact</span> = <span class="hljs-keyword">funct
     <span class="hljs-keyword">if</span> (item.<span class="hljs-property">substring</span>) art = artefact[item];
     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-title function_">isa_obj</span>(item) &amp;&amp; item.<span class="hljs-property">isArtefact</span>) art = item;
 
-    <span class="hljs-keyword">if</span> (art) <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefact</span> = art;
+    <span class="hljs-keyword">if</span> (art) {
+
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">artefact</span> = art;
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
+    }
 };</pre></div></div>
             
         </li>
@@ -1224,6 +1243,8 @@ S.<span class="hljs-property">artefact</span> = <span class="hljs-keyword">funct
 
     <span class="hljs-keyword">if</span> (art &amp;&amp; art.<span class="hljs-property">useAsPath</span>) <span class="hljs-variable language_">this</span>.<span class="hljs-property">generateAlongPath</span> = art;
     <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">generateAlongPath</span> = <span class="hljs-literal">false</span>;
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };
 
 S.<span class="hljs-property">generateInArea</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
@@ -1235,6 +1256,8 @@ S.<span class="hljs-property">generateInArea</span> = <span class="hljs-keyword"
 
     <span class="hljs-keyword">if</span> (art) <span class="hljs-variable language_">this</span>.<span class="hljs-property">generateInArea</span> = art;
     <span class="hljs-keyword">else</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">generateInArea</span> = <span class="hljs-literal">false</span>;
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1253,27 +1276,33 @@ S.<span class="hljs-property">generateInArea</span> = <span class="hljs-keyword"
             <div class="content"><div class='highlight'><pre>S.<span class="hljs-property">fillColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">fillColorFactory</span>.<span class="hljs-title function_">set</span>({<span class="hljs-attr">color</span>: item});
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };
 S.<span class="hljs-property">fillMinimumColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">fillColorFactory</span>.<span class="hljs-title function_">set</span>({<span class="hljs-attr">minimumColor</span>: item});
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };
 S.<span class="hljs-property">fillMaximumColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">fillColorFactory</span>.<span class="hljs-title function_">set</span>({<span class="hljs-attr">maximumColor</span>: item});
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };
 
 S.<span class="hljs-property">strokeColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">strokeColorFactory</span>.<span class="hljs-title function_">set</span>({<span class="hljs-attr">color</span>: item});
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };
 S.<span class="hljs-property">strokeMinimumColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">strokeColorFactory</span>.<span class="hljs-title function_">set</span>({<span class="hljs-attr">minimumColor</span>: item});
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };
 S.<span class="hljs-property">strokeMaximumColor</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">strokeColorFactory</span>.<span class="hljs-title function_">set</span>({<span class="hljs-attr">maximumColor</span>: item});
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };
 
 S.<span class="hljs-property">hitRadius</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {

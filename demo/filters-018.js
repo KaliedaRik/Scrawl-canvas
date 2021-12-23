@@ -37,7 +37,7 @@ const myFilter = scrawl.makeFilter({
 
 
 // Create the target entity
-scrawl.makePicture({
+const piccy = scrawl.makePicture({
 
     name: 'base-piccy',
 
@@ -100,6 +100,14 @@ scrawl.observeAndUpdate({
     },
 });
 
+scrawl.addNativeListener(['input', 'change'], (e) => {
+
+    const val = (e.target.value === '0') ? false : true;
+
+    piccy.set({ memoizeFilterOutput: val });
+
+}, '#memoizeFilterOutput');
+
 // Setup form
 let strength = document.querySelector('#strength'),
     angle = document.querySelector('#angle'),
@@ -118,6 +126,7 @@ opacity.value = 1;
 document.querySelector('#postProcessResults').options.selectedIndex = 1;
 document.querySelector('#useNaturalGrayscale').options.selectedIndex = 0;
 document.querySelector('#keepOnlyChangedAreas').options.selectedIndex = 0;
+document.querySelector('#memoizeFilterOutput').options.selectedIndex = 0;
 
 
 // #### Development and testing

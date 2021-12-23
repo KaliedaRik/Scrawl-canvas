@@ -74,8 +74,6 @@ export default function (P = Ωempty) {
     };
     P.updateFilterIdentifier = function (item) {
 
-        console.log('memoizeFilterOutput', this.memoizeFilterOutput, item);
-
         this.dirtyFilterIdentifier = false;
         if (this.state) this.state.dirtyFilterIdentifier = false;
 

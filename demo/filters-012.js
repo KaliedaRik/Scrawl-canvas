@@ -114,6 +114,14 @@ const updateWeights = function () {
 }();
 scrawl.addNativeListener(['input', 'change'], updateWeights, '.weight');
 
+scrawl.addNativeListener(['input', 'change'], (e) => {
+
+    const val = (e.target.value === '0') ? false : true;
+
+    target.set({ memoizeFilterOutput: val });
+
+}, '#memoizeFilterOutput');
+
 scrawl.observeAndUpdate({
 
     event: ['input', 'change'],
@@ -216,6 +224,7 @@ document.querySelector('#includeRed').options.selectedIndex = 1;
 document.querySelector('#includeGreen').options.selectedIndex = 1;
 document.querySelector('#includeBlue').options.selectedIndex = 1;
 document.querySelector('#includeAlpha').options.selectedIndex = 0;
+document.querySelector('#memoizeFilterOutput').options.selectedIndex = 0;
 
 
 // #### Development and testing

@@ -890,6 +890,11 @@
                 </a>
               
                 
+                <a class="source" href="temp-033.html">
+                  ./demo/temp-033.js
+                </a>
+              
+                
                 <a class="source" href="temp-100.html">
                   ./demo/temp-100.js
                 </a>
@@ -1000,6 +1005,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> canvas = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">canvas</span>.<span class="hljs-property">mycanvas</span>,
+    entity = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">entity</span>,
     filter = scrawl.<span class="hljs-property">library</span>.<span class="hljs-property">filter</span>;
 
 scrawl.<span class="hljs-title function_">importDomImage</span>(<span class="hljs-string">&#x27;.flowers&#x27;</span>);</pre></div></div>
@@ -1300,11 +1306,34 @@ scrawl.<span class="hljs-title function_">makePhrase</span>({
     filter.<span class="hljs-property">invert</span>
 ];
 
+<span class="hljs-keyword">const</span> myPictures = [
+    entity[<span class="hljs-string">&#x27;red-filter&#x27;</span>],
+    entity[<span class="hljs-string">&#x27;green-filter&#x27;</span>],
+    entity[<span class="hljs-string">&#x27;blue-filter&#x27;</span>],
+    entity[<span class="hljs-string">&#x27;cyan-filter&#x27;</span>],
+    entity[<span class="hljs-string">&#x27;magenta-filter&#x27;</span>],
+    entity[<span class="hljs-string">&#x27;yellow-filter&#x27;</span>],
+    entity[<span class="hljs-string">&#x27;notred-filter&#x27;</span>],
+    entity[<span class="hljs-string">&#x27;notgreen-filter&#x27;</span>],
+    entity[<span class="hljs-string">&#x27;notblue-filter&#x27;</span>],
+    entity[<span class="hljs-string">&#x27;grayscale-filter&#x27;</span>],
+    entity[<span class="hljs-string">&#x27;sepia-filter&#x27;</span>],
+    entity[<span class="hljs-string">&#x27;invert-filter&#x27;</span>],
+];
+
 scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
 
     myFilters.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">f</span> =&gt;</span> f.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">opacity</span>: <span class="hljs-built_in">parseFloat</span>(e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span>) }));
 
-}, <span class="hljs-string">&#x27;#opacity&#x27;</span>);</pre></div></div>
+}, <span class="hljs-string">&#x27;#opacity&#x27;</span>);
+
+scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;change&#x27;</span>], <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+
+    <span class="hljs-keyword">const</span> val = (e.<span class="hljs-property">target</span>.<span class="hljs-property">value</span> === <span class="hljs-string">&#x27;0&#x27;</span>) ? <span class="hljs-literal">false</span> : <span class="hljs-literal">true</span>;
+
+    myPictures.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">p</span> =&gt;</span> p.<span class="hljs-title function_">set</span>({ <span class="hljs-attr">memoizeFilterOutput</span>: val }));
+
+}, <span class="hljs-string">&#x27;#memoizeFilterOutput&#x27;</span>);</pre></div></div>
             
         </li>
         
@@ -1319,7 +1348,8 @@ scrawl.<span class="hljs-title function_">addNativeListener</span>([<span class=
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> opacity = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#opacity&#x27;</span>);
+            <div class="content"><div class='highlight'><pre><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#memoizeFilterOutput&#x27;</span>).<span class="hljs-property">options</span>.<span class="hljs-property">selectedIndex</span> = <span class="hljs-number">0</span>;
+<span class="hljs-keyword">const</span> opacity = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;#opacity&#x27;</span>);
 opacity.<span class="hljs-property">value</span> = <span class="hljs-number">1</span>;</pre></div></div>
             
         </li>

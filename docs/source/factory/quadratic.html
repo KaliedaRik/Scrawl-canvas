@@ -907,12 +907,14 @@ P.<span class="hljs-property">packetFunctions</span> = <span class="hljs-title f
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">controlPathPosition</span> = item;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyControl</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentControlPathData</span> = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };
 D.<span class="hljs-property">controlPathPosition</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) {
 
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">controlPathPosition</span> += item;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyControl</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">currentControlPathData</span> = <span class="hljs-literal">false</span>;
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };</pre></div></div>
             
         </li>
@@ -1105,6 +1107,8 @@ D.<span class="hljs-property">control</span> = <span class="hljs-keyword">functi
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyStart</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyControl</span> = <span class="hljs-literal">true</span>;
     <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyEnd</span> = <span class="hljs-literal">true</span>;
+
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">dirtyFilterIdentifier</span> = <span class="hljs-literal">true</span>;
 };
 
 P.<span class="hljs-property">preparePinsForStamp</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
