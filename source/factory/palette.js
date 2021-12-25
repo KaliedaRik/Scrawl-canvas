@@ -349,6 +349,8 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
             end = 999;
         }
 
+        const engine = (null != easeEngines[easing]) ? easeEngines[easing] : easeEngines['linear'];
+
         // Option 1 start == end, cycle irrelevant
         if (start === end) return stops[start] || 'rgba(0,0,0,0)';
 
@@ -366,7 +368,7 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
 
                 if (item > start && item < end) {
 
-                    offset = easeEngines[easing]((item - start) / spread);
+                    offset = engine((item - start) / spread);
 
                     if (cycle) {
 
@@ -394,8 +396,8 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
 
                     item = keys[i];
 
-                    if (item > start) offset = easeEngines[easing]((item - start) / spread);
-                    else if (item < end) offset = easeEngines[easing]((item + n) / spread);
+                    if (item > start) offset = engine((item - start) / spread);
+                    else if (item < end) offset = engine((item + n) / spread);
                     else continue;
 
                     if (offset > 1) offset -= 1;
@@ -419,7 +421,7 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
 
                     if (item < start && item > end) {
 
-                        offset = easeEngines[easing](1 - ((item - end) / spread));
+                        offset = engine(1 - ((item - end) / spread));
 
                         if (offset > 0 && offset < 1) gradient.addColorStop(offset, stops[item]);
                     }

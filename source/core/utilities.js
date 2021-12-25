@@ -334,6 +334,40 @@ const easeEngines = {
     easeOutIn3: (t) => (t < 0.5) ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2,
     easeOutIn4: (t) => (t < 0.5) ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2,
     easeOutIn5: (t) => (t < 0.5) ? 16 * t * t * t * t * t : 1 - Math.pow(-2 * t + 2, 5) / 2,
+
+    easeInOut: (t) => {
+
+        const tin = 0.5 - t,
+            tout = t - 0.5;
+
+        if (t < 0.5) return 0.5 + (-2 * tin * tin);
+        return 0.5 + Math.pow(2 * tout, 2) / 2;
+    },
+    easeInOut3: (t) => {
+
+        const tin = 0.5 - t,
+            tout = t - 0.5;
+
+        if (t < 0.5) return 0.5 + (-4 * tin * tin * tin);
+        return 0.5 + Math.pow(2 * tout, 3) / 2;
+    },
+    easeInOut4: (t) => {
+
+        const tin = 0.5 - t,
+            tout = t - 0.5;
+
+        if (t < 0.5) return 0.5 + (-8 * tin * tin * tin * tin);
+        return 0.5 + Math.pow(2 * tout, 4) / 2;
+    },
+    easeInOut5: (t) => {
+
+        const tin = 0.5 - t,
+            tout = t - 0.5;
+
+        if (t < 0.5) return 0.5 + (-16 * tin * tin * tin * tin * tin);
+        return 0.5 + Math.pow(2 * tout, 5) / 2;
+    },
+
     easeOut: (t) => t * t,
     easeOut3: (t) => t * t * t,
     easeOut4: (t) => t * t * t * t,

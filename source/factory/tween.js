@@ -479,7 +479,8 @@ P.doSimpleUpdate = function (items = Ωempty) {
 // + For the legacy engines, igher numbers indicates a more intense change between starting, middle and ending speeds
 P.engineActions = function(engine, start, change, position) {
 
-    return start + (change * easeEngines[engine](position));
+    const e = (null != easeEngines[engine]) ? engine : 'linear';
+    return start + (change * easeEngines[e](position));
 };
 
 // `setDefinitionsValues` - convert `start` and `end` values into float Numbers.

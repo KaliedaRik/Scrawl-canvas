@@ -3691,6 +3691,8 @@ P.theBigActionsObject = {
                         const start = requestCoordinate();
                         const coord = requestCoordinate();
 
+                        const e = (null != easeEngines[easing]) ? easing : 'linear';
+
                         start.setFromArray([sx, sy]);
 
                         for (i = y; i < yz; i++) {
@@ -3723,7 +3725,7 @@ P.theBigActionsObject = {
 
                                     dLen = 1 - ((distance - inner) / complexLen);
 
-                                    dLen = easeEngines[easing](dLen);
+                                    dLen = easeEngines[e](dLen);
 
                                     coord.rotate(angle * dLen).add(start);
 

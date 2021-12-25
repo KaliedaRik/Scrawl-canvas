@@ -338,7 +338,7 @@ gradientStart.value = '#ff0000';
 gradientEnd.value = '#00ff00';
 octaveFunction.options.selectedIndex = 0;
 sumFunction.options.selectedIndex = 0;
-smoothing.options.selectedIndex = 3;
+smoothing.options.selectedIndex = 23;
 seed.value = 'noize';
 worleyOutput.options.selectedIndex = 0;
 

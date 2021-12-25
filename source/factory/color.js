@@ -361,7 +361,9 @@ P.getRangeColor = function (item) {
 
         let {rMin, gMin, bMin, aMin, rMax, gMax, bMax, aMax, easing} = this;
 
-        item = easeEngines[easing](item);
+        const e = (null != easeEngines[easing]) ? easing : 'linear';
+
+        item = easeEngines[e](item);
 
         if (item > 1) item = 1;
         else if (item < 0) item = 0;

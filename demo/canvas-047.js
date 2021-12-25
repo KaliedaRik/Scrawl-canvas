@@ -84,7 +84,7 @@ const easingDisplayComponent = function (name, ypos) {
     }).run();
 };
 
-const easings = ['out', 'easeOut', 'easeOut3', 'easeOut4', 'easeOut5', 'easeOutSine', 'easeOutQuad', 'easeOutCubic', 'easeOutQuart', 'easeOutQuint', 'easeOutExpo', 'easeOutCirc', 'easeOutBack', 'easeOutElastic', 'easeOutBounce', 'in', 'easeIn', 'easeIn3', 'easeIn4', 'easeIn5', 'easeInSine', 'easeInQuad', 'easeInCubic', 'easeInQuart', 'easeInQuint', 'easeInExpo', 'easeInCirc', 'easeInBack', 'easeInElastic', 'easeInBounce', 'easeOutIn', 'easeOutIn3', 'easeOutIn4', 'easeOutIn5', 'easeOutInSine', 'easeOutInQuad', 'easeOutInCubic', 'easeOutInQuart', 'easeOutInQuint', 'easeOutInExpo', 'easeOutInCirc', 'easeOutInBack', 'easeOutInElastic', 'easeOutInBounce'];
+const easings = ['linear', 'out', 'easeOut', 'easeOut3', 'easeOut4', 'easeOut5', 'easeOutSine', 'easeOutQuad', 'easeOutCubic', 'easeOutQuart', 'easeOutQuint', 'easeOutExpo', 'easeOutCirc', 'easeOutBack', 'easeOutElastic', 'easeOutBounce', 'in', 'easeIn', 'easeIn3', 'easeIn4', 'easeIn5', 'easeInSine', 'easeInQuad', 'easeInCubic', 'easeInQuart', 'easeInQuint', 'easeInExpo', 'easeInCirc', 'easeInBack', 'easeInElastic', 'easeInBounce', 'easeOutIn', 'easeOutIn3', 'easeOutIn4', 'easeOutIn5', 'easeOutInSine', 'easeOutInQuad', 'easeOutInCubic', 'easeOutInQuart', 'easeOutInQuint', 'easeOutInExpo', 'easeOutInCirc', 'easeOutInBack', 'easeOutInElastic', 'easeOutInBounce', 'easeInOut', 'easeInOut3', 'easeInOut4', 'easeInOut5', 'none', 'nOnSeNsE', 'cosine', 'hermite', 'quintic'];
 
 easings.forEach((easing, index) => easingDisplayComponent(easing, 50 + (index * 30)));
 
