@@ -6,7 +6,7 @@
 // The Canvas API CanvasRenderingContext2D interface defines three types of gradient: the widely supported [linear](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createLinearGradient) and [radial](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createRadialGradient) gradients, and the [conic](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createConicGradient) which, while widely supported as a CSS feature, is very much an experimental technology for CanvasRenderingContext2D engines.
 // + the `createLinearGradient` method creates a gradient along the line connecting two given coordinates (__start__ and __end__) which are absolute values (measured in pixels) from the &lt;canvas> elements top-left corner
 // + the `createRadialGradient` method creates a radial gradient using the size and coordinates of two circles.
-// + the `createConicGradient` method creates a conic gradient as a 360° sweep around the gradient's start coordinate. For browsers which donb't support this gradient out of the box, the method will apply no gradient to the entity.
+// + the `createConicGradient` method creates a conic gradient as a 360° sweep around the gradient's start coordinate. For browsers which don't support this gradient out of the box, the method will apply no gradient to the entity.
 //
 // Common to linear and radial types of gradient is the idea of a start coordinate and an end coordinate, supplied in pixels. 
 // + Scrawl-canvas extends this idea so that the coordinates can be supplied as a percentage value (String%) of the host Cell's dimensions. 
@@ -60,6 +60,7 @@ export default function (P = Ωempty) {
 // The __colors__ _pseudo-attribute_ can be used to pass through an array of palette color objects to the Palette object. The data is not retained by the gradient object.
 // + A better approach to managing gradient colors is to use the `updateColor` and `removeColor` functions
 
+// The __easing__ _pseudo-attribute_ represents a transformation that will be applied to a copy of the color stops Array - this allows us to create non-linear gradients. Value is passed through to the Palette object
     };
     P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -282,6 +283,12 @@ export default function (P = Ωempty) {
         if (Array.isArray(item) && this.palette) this.palette.set({ colors: item });
     };
 
+// `easing` - Pass through the String name of an easing function that will be applied to the colors array by the Palette object
+    S.easing = function (item) {
+
+        if (this.palette) this.palette.set({ easing: item });
+    };
+
 // `delta` - Gradient-type styles objects support the delta attribute, and can be delta-animated using its attributes
     S.delta = function (items = Ωempty) {
 
@@ -364,6 +371,7 @@ export default function (P = Ωempty) {
                     }
                 }
             }
+            this.dirtyFilterIdentifier = true;
         }
         return this;
     };
@@ -412,6 +420,7 @@ export default function (P = Ωempty) {
                     }
                 }
             }
+            this.dirtyFilterIdentifier = true;
         }
         return this;
     };
@@ -582,8 +591,12 @@ export default function (P = Ωempty) {
 // `addStopsToGradient` - internal function, called by the `buildStyle` function (which is overwritten by the Gradient and RadialGradient factories)
     P.addStopsToGradient = function (gradient, start, stop, cycle) {
 
-        if (this.palette) return this.palette.addStopsToGradient(gradient, start, stop, cycle);
+        if (this.palette) {
 
+            this.dirtyFilterIdentifier = true;
+
+            return this.palette.addStopsToGradient(gradient, start, stop, cycle);
+        }
         return gradient;
     };
 
@@ -635,7 +648,11 @@ export default function (P = Ωempty) {
 // + __color__ - CSS color String
     P.updateColor = function (index, color) {
 
-        if (this.palette) this.palette.updateColor(index, color);
+        if (this.palette) {
+
+            this.dirtyFilterIdentifier = true;
+            this.palette.updateColor(index, color);
+        }
 
         return this;
     };
@@ -644,7 +661,11 @@ export default function (P = Ωempty) {
 // + __index__ - positive integer number between 0 and 999 inclusive
     P.removeColor = function (index) {
 
-        if (this.palette) this.palette.removeColor(index);
+        if (this.palette) {
+
+            this.dirtyFilterIdentifier = true;
+            this.palette.removeColor(index);
+        }
 
         return this;
     };

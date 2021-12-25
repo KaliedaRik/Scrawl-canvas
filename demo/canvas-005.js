@@ -61,6 +61,8 @@ scrawl.makeGradient({
     endX: '100%',
     cyclePalette: true,
 
+    easing: 'easeOutInQuad',
+
     colors: [
         [0, 'black'],
         [49, 'yellow'],

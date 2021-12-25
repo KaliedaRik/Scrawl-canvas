@@ -8,7 +8,7 @@
 
 
 // #### Imports
-import { filter, asset } from '../core/library.js';
+import { filter, asset, styles } from '../core/library.js';
 import { mergeOver, pushUnique, removeItem, Ωempty, generateUuid } from '../core/utilities.js';
 import { requestCell, releaseCell } from '../factory/cell.js';
 
@@ -79,6 +79,7 @@ export default function (P = Ωempty) {
 
         if (this.memoizeFilterOutput && item) this.filterIdentifier = generateUuid();
         else this.filterIdentifier = '';
+
     };
 
 
@@ -311,6 +312,22 @@ export default function (P = Ωempty) {
             }
             if (filter.dirtyFilterIdentifier) this.dirtyFilterIdentifier = true;
         }
+
+        const state = this.state;
+
+        if (state) {
+
+            if (state.dirtyFilterIdentifier) this.dirtyFilterIdentifier = true;
+            else {
+
+                let {fillStyle, strokeStyle} = state;
+
+                if (styles[fillStyle] && styles[fillStyle].dirtyFilterIdentifier) this.dirtyFilterIdentifier = true;
+
+                else if (styles[strokeStyle] && styles[strokeStyle].dirtyFilterIdentifier) this.dirtyFilterIdentifier = true;
+            }
+        }
+
         if (this.dirtyFilterIdentifier || (this.state && this.state.dirtyFilterIdentifier)) this.updateFilterIdentifier(true);
     };
 

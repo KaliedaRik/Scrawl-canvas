@@ -38,7 +38,7 @@
 
 // #### Imports
 import { constructors, animationtickers, radian } from '../core/library.js';
-import { mergeOver, pushUnique, xt, xtGet, xto, convertTime, λnull, easeOutSine, easeInSine, easeOutInSine, easeOutQuad, easeInQuad, easeOutInQuad, easeOutCubic, easeInCubic, easeOutInCubic, easeOutQuart, easeInQuart, easeOutInQuart, easeOutQuint, easeInQuint, easeOutInQuint, easeOutExpo, easeInExpo, easeOutInExpo, easeOutCirc, easeInCirc, easeOutInCirc, easeOutBack, easeInBack, easeOutInBack, easeOutElastic, easeInElastic, easeOutInElastic, easeOutBounce, easeInBounce, easeOutInBounce, Ωempty } from '../core/utilities.js';
+import { mergeOver, pushUnique, xt, xtGet, xto, convertTime, λnull, easeEngines, Ωempty } from '../core/utilities.js';
 
 import { makeTicker } from './ticker.js';
 
@@ -446,7 +446,7 @@ P.doSimpleUpdate = function (items = Ωempty) {
         attribute = def.attribute;
 
         // Invoke the appropriate easing function for this particular definition object
-        if (engine.substring) val = actions[engine](effectiveStart, effectiveChange, progress);
+        if (engine.substring) val = actions(engine, effectiveStart, effectiveChange, progress);
         else val = engine(effectiveStart, effectiveChange, progress);
 
         if (int) val = round(val);
@@ -467,279 +467,19 @@ P.doSimpleUpdate = function (items = Ωempty) {
     if (action) action();
 };
 
-// `engineActions` - Javascript Object: keys are the easing function name; values are the functions. All Scrawl-canvas easing functions need to take the following arguments:
+// `engineActions` - internal function to run built-in easing engines
+// + __engine__ - String name of the required easing. All built-in easing engines are defined in the `core/utilities` file 
 // + __start__ - the `effectiveStart` value, in milliseconds.
 // + __change__ - the time in milliseconds that this animation will take (`effectiveEnd - effectiveStart`).
 // + __position__ - the time elapsed since this Tween started running
 //
-// In all the following easings: 
-// + `out` indicates an acceleration.
-// + `in` indicates a deceleration.
-// + Higher numbers indicates a more intense change between starting, middle and ending speeds 
-P.engineActions = {
-
-// __out__ - cosine-based easing - starts slow, speeds up
-    out: function (start, change, position) {
-        
-        let temp = 1 - position;
-        return (start + change) + (Math.cos((position * 90) * radian) * -change);
-    },
-
-// __in__ - sine-based easing - starts fast, slows down
-    in : function (start, change, position) {
-
-        return start + (Math.sin((position * 90) * radian) * change);
-    },
-
-// __easeIn__
-    easeIn: function (start, change, position) {
-        
-        let temp = 1 - position;
-        return (start + change) + ((temp * temp) * -change);
-    },
-
-// __easeIn3__
-    easeIn3: function (start, change, position) {
-
-        let temp = 1 - position;
-        return (start + change) + ((temp * temp * temp) * -change);
-    },
-
-// __easeIn4__
-    easeIn4: function (start, change, position) {
-
-        let temp = 1 - position;
-        return (start + change) + ((temp * temp * temp * temp) * -change);
-    },
-
-// __easeIn5__
-    easeIn5: function (start, change, position) {
-
-        let temp = 1 - position;
-        return (start + change) + ((temp * temp * temp * temp * temp) * -change);
-    },
-
-// __easeOutIn__
-    easeOutIn: function (start, change, position) {
-
-        let temp = 1 - position;
-
-        return (position < 0.5) ?
-            start + ((position * position) * change * 2) :
-            (start + change) + ((temp * temp) * -change * 2);
-    },
-
-// __easeOutIn3__
-    easeOutIn3: function (start, change, position) {
-
-        let temp = 1 - position;
-
-        return (position < 0.5) ?
-            start + ((position * position * position) * change * 4) :
-            (start + change) + ((temp * temp * temp) * -change * 4);
-    },
-
-// __easeOutIn4__
-    easeOutIn4: function (start, change, position) {
-
-        let temp = 1 - position;
-
-        return (position < 0.5) ?
-            start + ((position * position * position * position) * change * 8) :
-            (start + change) + ((temp * temp * temp * temp) * -change * 8);
-    },
-
-// __easeOutIn5__
-    easeOutIn5: function (start, change, position) {
-
-        let temp = 1 - position;
-
-        return (position < 0.5) ?
-            start + ((position * position * position * position * position) * change * 16) :
-            (start + change) + ((temp * temp * temp * temp * temp) * -change * 16);
-    },
-
-// __easeOut__
-    easeOut: function (start, change, position) {
-
-        return start + ((position * position) * change);
-    },
-
-// __easeOut3__
-    easeOut3: function (start, change, position) {
-
-        return start + ((position * position * position) * change);
-    },
-
-// __easeOut4__
-    easeOut4: function (start, change, position) {
-
-        return start + ((position * position * position * position) * change);
-    },
-
-// __easeOut5__
-    easeOut5: function (start, change, position) {
-
-        return start + ((position * position * position * position * position) * change);
-    },
-
-// __linear__ - the ___default easing function___ - no change in velocity throughout the tween
-    linear: function (start, change, position) {
-
-        return start + (position * change);
-    },
-
-// The following easing functions have been taken from the [easings.net](https://easings.net/) web page: __easeOutSine, easeInSine, easeOutInSine, easeOutQuad, easeInQuad, easeOutInQuad, easeOutCubic, easeInCubic, easeOutInCubic, easeOutQuart, easeInQuart, easeOutInQuart, easeOutQuint, easeInQuint, easeOutInQuint, easeOutExpo, easeInExpo, easeOutInExpo, easeOutCirc, easeInCirc, easeOutInCirc, easeOutBack, easeInBack, easeOutInBack, easeOutElastic, easeInElastic, easeOutInElastic, easeOutBounce, easeInBounce, easeOutInBounce__
-
-    easeOutSine: function (start, change, position) {
-
-        return start + (change * easeOutSine(position));
-    }, 
-
-    easeInSine: function (start, change, position) {
-
-        return start + (change * easeInSine(position));
-    }, 
-
-    easeOutInSine: function (start, change, position) {
-
-        return start + (change * easeOutInSine(position));
-    }, 
-
-    easeOutQuad: function (start, change, position) {
-
-        return start + (change * easeOutQuad(position));
-    }, 
-
-    easeInQuad: function (start, change, position) {
-
-        return start + (change * easeInQuad(position));
-    }, 
-
-    easeOutInQuad: function (start, change, position) {
-
-        return start + (change * easeOutInQuad(position));
-    }, 
-
-    easeOutCubic: function (start, change, position) {
-
-        return start + (change * easeOutCubic(position));
-    }, 
-
-    easeInCubic: function (start, change, position) {
-
-        return start + (change * easeInCubic(position));
-    }, 
-
-    easeOutInCubic: function (start, change, position) {
-
-        return start + (change * easeOutInCubic(position));
-    }, 
-
-    easeOutQuart: function (start, change, position) {
-
-        return start + (change * easeOutQuart(position));
-    }, 
-
-    easeInQuart: function (start, change, position) {
-
-        return start + (change * easeInQuart(position));
-    }, 
-
-    easeOutInQuart: function (start, change, position) {
-
-        return start + (change * easeOutInQuart(position));
-    }, 
-
-    easeOutQuint: function (start, change, position) {
-
-        return start + (change * easeOutQuint(position));
-    }, 
-
-    easeInQuint: function (start, change, position) {
-
-        return start + (change * easeInQuint(position));
-    }, 
-
-    easeOutInQuint: function (start, change, position) {
-
-        return start + (change * easeOutInQuint(position));
-    }, 
-
-    easeOutExpo: function (start, change, position) {
-
-        return start + (change * easeOutExpo(position));
-    }, 
-
-    easeInExpo: function (start, change, position) {
-
-        return start + (change * easeInExpo(position));
-    }, 
-
-    easeOutInExpo: function (start, change, position) {
-
-        return start + (change * easeOutInExpo(position));
-    }, 
-
-    easeOutCirc: function (start, change, position) {
-
-        return start + (change * easeOutCirc(position));
-    }, 
-
-    easeInCirc: function (start, change, position) {
-
-        return start + (change * easeInCirc(position));
-    }, 
-
-    easeOutInCirc: function (start, change, position) {
-
-        return start + (change * easeOutInCirc(position));
-    }, 
-
-    easeOutBack: function (start, change, position) {
-
-        return start + (change * easeOutBack(position));
-    }, 
-
-    easeInBack: function (start, change, position) {
-
-        return start + (change * easeInBack(position));
-    }, 
-
-    easeOutInBack: function (start, change, position) {
-
-        return start + (change * easeOutInBack(position));
-    }, 
-
-    easeOutElastic: function (start, change, position) {
-
-        return start + (change * easeOutElastic(position));
-    }, 
-
-    easeInElastic: function (start, change, position) {
-
-        return start + (change * easeInElastic(position));
-    }, 
-
-    easeOutInElastic: function (start, change, position) {
-
-        return start + (change * easeOutInElastic(position));
-    }, 
-
-    easeOutBounce: function (start, change, position) {
-
-        return start + (change * easeOutBounce(position));
-    }, 
-
-    easeInBounce: function (start, change, position) {
-
-        return start + (change * easeInBounce(position));
-    }, 
-
-    easeOutInBounce: function (start, change, position) {
-
-        return start + (change * easeOutInBounce(position));
-    }, 
+// Scrawl-canvas easing engines use the following metaphor to define their names: 
+// + `out` indicates an acceleration. Think of a train leaving the station.
+// + `in` indicates a deceleration. Think of a train arriving the station.
+// + For the legacy engines, igher numbers indicates a more intense change between starting, middle and ending speeds
+P.engineActions = function(engine, start, change, position) {
+
+    return start + (change * easeEngines[engine](position));
 };
 
 // `setDefinitionsValues` - convert `start` and `end` values into float Numbers.

@@ -256,6 +256,7 @@ let defaultAttributes = {
     gutterHeight: 1,
     gutterWidth: 1,
     height: 1,
+    highAlpha: 255,
     highBlue: 255,
     highGreen: 255,
     highRed: 255,
@@ -266,6 +267,7 @@ let defaultAttributes = {
     innerRadius: 0,
     keepOnlyChangedAreas: false,
     level: 0,
+    lowAlpha: 0,
     lowBlue: 0,
     lowGreen: 0,
     lowRed: 0,
@@ -500,17 +502,38 @@ const setActionsArray = {
         }];
     },
 
-// __binary__ (new in v8.4.0) - set the channel to either 0 or 255, depending on whether the channel value is below or above a given level. Level values are set using the `red`, `green`, `blue` and `alpha` arguments. Setting these values to 0 disables the action for that channel
+// DEPRECATED! __binary__ - use the updated threshold filter instead
     binary: function (f) {
+        let lowRed = (f.lowRed != null) ? f.lowRed : 0,
+            lowGreen = (f.lowGreen != null) ? f.lowGreen : 0,
+            lowBlue = (f.lowBlue != null) ? f.lowBlue : 0,
+            lowAlpha = (f.lowAlpha != null) ? f.lowAlpha : 255,
+            highRed = (f.highRed != null) ? f.highRed : 255,
+            highGreen = (f.highGreen != null) ? f.highGreen : 255,
+            highBlue = (f.highBlue != null) ? f.highBlue : 255,
+            highAlpha = (f.highAlpha != null) ? f.highAlpha : 255;
+            
+
+        let low = (f.low != null) ? f.low : [lowRed, lowGreen, lowBlue, lowAlpha],
+            high = (f.high != null) ? f.high : [highRed, highGreen, highBlue, highAlpha];
+
         f.actions = [{
-            action: 'binary',
+            action: 'threshold',
             lineIn: (f.lineIn != null) ? f.lineIn : '',
             lineOut: (f.lineOut != null) ? f.lineOut : '',
             opacity: (f.opacity != null) ? f.opacity : 1,
-            red: (f.red != null) ? f.red : 0,
-            green: (f.green != null) ? f.green : 0,
-            blue: (f.blue != null) ? f.blue : 0,
-            alpha: (f.alpha != null) ? f.alpha : 0,
+            level: (f.level != null) ? f.level : 128,
+            red: (f.red != null) ? f.red : 128,
+            green: (f.green != null) ? f.green : 128,
+            blue: (f.blue != null) ? f.blue : 128,
+            alpha: (f.alpha != null) ? f.alpha : 128,
+            low,
+            high,
+            includeRed: (f.includeRed != null) ? f.includeRed : true,
+            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
+            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
+            includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
+            useMixedChannel: (f.useMixedChannel != null) ? f.useMixedChannel : false,
         }];
     },
 
@@ -540,7 +563,7 @@ const setActionsArray = {
         }];
     },
 
-// DEPRECATED! __blur__ - blurs the image
+// __blur__ - blurs the image
 // + Use the gaussian blur filter instead. This is being retained only for backwards compatibility and will be removed in a future major release
     blur: function (f) {
         f.actions = [{
@@ -1221,9 +1244,17 @@ const setActionsArray = {
             lineOut: (f.lineOut != null) ? f.lineOut : '',
             opacity: (f.opacity != null) ? f.opacity : 1,
             level: (f.level != null) ? f.level : 128,
+            red: (f.red != null) ? f.red : 128,
+            green: (f.green != null) ? f.green : 128,
+            blue: (f.blue != null) ? f.blue : 128,
+            alpha: (f.alpha != null) ? f.alpha : 128,
             low,
             high,
+            includeRed: (f.includeRed != null) ? f.includeRed : true,
+            includeGreen: (f.includeGreen != null) ? f.includeGreen : true,
+            includeBlue: (f.includeBlue != null) ? f.includeBlue : true,
             includeAlpha: (f.includeAlpha != null) ? f.includeAlpha : false,
+            useMixedChannel: (f.useMixedChannel != null) ? f.useMixedChannel : true,
         }];
     },
 

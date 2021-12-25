@@ -33,7 +33,7 @@
 // #### Imports
 import { constructors } from '../core/library.js';
 import { seededRandomNumberGenerator } from '../core/random-seed.js';
-import { mergeOver, λnull, λthis, λfirstArg, removeItem, interpolate, easeOutSine, easeInSine, easeOutInSine, easeOutQuad, easeInQuad, easeOutInQuad, easeOutCubic, easeInCubic, easeOutInCubic, easeOutQuart, easeInQuart, easeOutInQuart, easeOutQuint, easeInQuint, easeOutInQuint, easeOutExpo, easeInExpo, easeOutInExpo, easeOutCirc, easeInCirc, easeOutInCirc, easeOutBack, easeInBack, easeOutInBack, easeOutElastic, easeInElastic, easeOutInElastic, easeOutBounce, easeInBounce, easeOutInBounce, Ωempty } from '../core/utilities.js';
+import { mergeOver, λnull, λthis, λfirstArg, removeItem, interpolate, easeEngines, Ωempty } from '../core/utilities.js';
 
 import { makeColor } from './color.js';
 
@@ -182,28 +182,28 @@ S.subscribers = λnull;
 
 S.octaveFunction = function (item) {
 
-    this.octaveFunction = this.octaveFunctions[item] || λfirstArg;
+    this.octaveFunction = (null != this.octaveFunctions[item]) ? this.octaveFunctions[item] : λfirstArg;
     this.dirtyNoise = true;
     this.dirtyOutput = true;
 };
 
 S.sumFunction = function (item) {
 
-    this.sumFunction = this.sumFunctions[item] || λfirstArg;
+    this.sumFunction = (null != this.sumFunctions[item]) ? this.sumFunctions[item] : λfirstArg;
     this.dirtyNoise = true;
     this.dirtyOutput = true;
 };
 
 S.smoothing = function (item) {
 
-    this.smoothing = this.smoothingFunctions[item] || λfirstArg;
+    this.smoothing = (null != easeEngines[item]) ? easeEngines[item] : λfirstArg;
     this.dirtyNoise = true;
     this.dirtyOutput = true;
 };
 
 S.noiseEngine = function (item) {
 
-    this.noiseEngine = this.noiseEngines[item] || this.noiseEngines['simplex'];
+    this.noiseEngine = (null != this.noiseEngines[item]) ? this.noiseEngines[item] : this.noiseEngines['simplex'];
     this.dirtyNoise = true;
     this.dirtyOutput = true;
 };
@@ -855,57 +855,6 @@ P.sumFunctions = {
         return g;
     },
 };
-
-// `smoothingFunctions` - a {key:function} object containing various ___fade functions___ which can be used to smooth calculated coordinate values so that they will ease towards integral values.
-// + Used by the "perlin_classic", "perlin_improved" and "value" getNoiseValue functions; the "simplex" getNoiseValue function does away with the need for a smoothing operation.
-// + Also used by the "smoothed-stripes" getNoiseValue function.
-// + calling signature: `smoothing(value)`
-P.smoothingFunctions = {
-
-    // __none__ - effectively linear - no smoothing gets performed
-    none: λfirstArg,
-
-    easeOutSine,
-    easeInSine,
-    easeOutInSine,
-    easeOutQuad,
-    easeInQuad,
-    easeOutInQuad,
-    easeOutCubic,
-    easeInCubic,
-    easeOutInCubic,
-    easeOutQuart,
-    easeInQuart,
-    easeOutInQuart,
-    easeOutQuint,
-    easeInQuint,
-    easeOutInQuint,
-    easeOutExpo,
-    easeInExpo,
-    easeOutInExpo,
-    easeOutCirc,
-    easeInCirc,
-    easeOutInCirc,
-    easeOutBack,
-    easeInBack,
-    easeOutInBack,
-    easeOutElastic,
-    easeInElastic,
-    easeOutInElastic,
-    easeOutBounce,
-    easeInBounce,
-    easeOutInBounce,
-
-    // __cosine__ - a cosine-based interpolator
-    cosine: function(t) { return .5 * (1 + Math.cos((1 - t) * Math.PI)) },
-
-    // __hermite__ - a cubic Hermite interpolator
-    hermite: function(t) { return t * t * (-t * 2 + 3) },
-
-    // __quintic__ - the original ease function used by Perlin
-    quintic: function(t) { return t * t * t * (t * (t * 6 - 15) + 10) },
-};
-
 
 // Worley functionality found in the [jackunion/tooloud GitHub repository](https://github.com/jackunion/tooloud/blob/master/src/Worley.js)
 P.wXorshift = function (value) {

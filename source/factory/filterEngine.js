@@ -4,13 +4,13 @@
 // + At some point in the future we may implement this code as a WebAssembly module.
 
 
-import { constructors, filter, filternames } from '../core/library.js';
+import { constructors, filter, filternames, styles, stylesnames } from '../core/library.js';
 import { seededRandomNumberGenerator } from '../core/random-seed.js';
-import { easeOutSine, easeInSine, easeOutInSine, easeOutQuad, easeInQuad, easeOutInQuad, easeOutCubic, easeInCubic, easeOutInCubic, easeOutQuart, easeInQuart, easeOutInQuart, easeOutQuint, easeInQuint, easeOutInQuint, easeOutExpo, easeInExpo, easeOutInExpo, easeOutCirc, easeInCirc, easeOutInCirc, easeOutBack, easeInBack, easeOutInBack, easeOutElastic, easeInElastic, easeOutInElastic, easeOutBounce, easeInBounce, easeOutInBounce } from '../core/utilities.js';
+import { easeEngines } from '../core/utilities.js';
 
-import {makeAnimation} from './animation.js';
-import {requestCell, releaseCell} from './cell.js';
-import {requestCoordinate, releaseCoordinate} from './coordinate.js';
+import { makeAnimation } from './animation.js';
+import { requestCell, releaseCell } from './cell.js';
+import { requestCoordinate, releaseCoordinate } from './coordinate.js';
 import { makeColor } from './color.js';
 
 // #### FilterEngine constructor
@@ -24,8 +24,6 @@ const FilterEngine = function () {
     // __actions__ - the Array of action objects that the engine needs to process - data supplied by the main thread in its message's `packetFiltersArray` attribute.
     this.actions = [];
 
-    this.choke = 500;
-
     return this;
 };
 
@@ -34,11 +32,17 @@ const FilterEngine = function () {
 let P = FilterEngine.prototype = Object.create(Object.prototype);
 P.type = 'FilterEngine';
 
+let choke = 1000;
+const setFilterMemoizationChoke = function (val) {
+
+    if (val.toFixed && !isNaN(val) && val >= 200 && val <= 10000) choke = val;
+};
+
 P.action = function (packet) {
 
     let { identifier, filters, image } = packet;
 
-    let { workstoreLastAccessed, workstore, actions, choke, theBigActionsObject } = this;
+    let { workstoreLastAccessed, workstore, actions, theBigActionsObject } = this;
 
     let workstoreKeys = Object.keys(workstore), 
         workstoreChoke = Date.now() - choke;
@@ -674,115 +678,6 @@ P.colorEngine = makeColor({
     name: `filterEngine-colorEngine-do-not-overwrite`,
 });
 
-// `getHSLfromRGB` - convert an RGB format color into an HSL format color
-// P.getHSLfromRGB = function (dr, dg, db) {
-
-//     let minColor = Math.min(dr, dg, db),
-//         maxColor = Math.max(dr, dg, db);
-
-//     let lum = (minColor + maxColor) / 2;
-
-//     let sat = 0;
-
-//     if (minColor !== maxColor) {
-
-//         if (lum <= 0.5) sat = (maxColor - minColor) / (maxColor + minColor);
-//         else sat = (maxColor - minColor) / (2 - maxColor - minColor);
-//     }
-
-//     let hue = 0;
-
-//     if (maxColor === dr) hue = (dg - db) / (maxColor - minColor);
-//     else if (maxColor === dg) hue = 2 + ((db - dr) / (maxColor - minColor));
-//     else hue = 4 + ((dr - dg) / (maxColor - minColor));
-
-//     hue *= 60;
-
-//     if (hue < 0) hue += 360;
-
-//     return [hue, sat, lum];
-// };
-
-// `getRGBfromHSL` - convert an HSL format color into an RGB format color
-// P.getRGBfromHSL = function (h, s, l) {
-
-//     if (!s) {
-
-//         let gray = Math.floor(l * 255);
-//         return [gray, gray, gray];
-//     }
-
-//     let tempLum1 = (l < 0.5) ? l * (s + 1) : l + s - (l * s),
-//         tempLum2 = (2 * l) - tempLum1;
-
-//     const calculator = function (t, l1, l2) {
-
-//         if (t * 6 < 1) return l2 + ((l1 - l2) * 6 * t);
-//         if (t * 2 < 1) return l1;
-//         if (t * 2 < 2) return l2 + ((l1 - l2) * 6 * (t * 0.666));
-//         return l2;
-//     };
-
-//     h /= 360;
-
-//     let tr = h + 0.333,
-//         tg = h,
-//         tb = h - 0.333;
-
-//     if (tr < 0) tr += 1;
-//     if (tr > 1) tr -= 1;
-//     if (tg < 0) tg += 1;
-//     if (tg > 1) tg -= 1;
-//     if (tb < 0) tb += 1;
-//     if (tb > 1) tb -= 1;
-
-//     let r = calculator(tr, tempLum1, tempLum2) * 255,
-//         g = calculator(tg, tempLum1, tempLum2) * 255,
-//         b = calculator(tb, tempLum1, tempLum2) * 255;
-
-//     return [r, g, b];
-// };
-
-// // `getYUVfromRGB` - convert an RGB format color into a YUV format color
-// // + Inspired by https://github.com/SimonWaldherr/ColorConverter.js/blob/master/colorconverter.js
-// P.getYUVfromRGB = function (r, g, b) {
-
-//     const round = Math.round;
-
-//     const y = round((0.299 * r) + (0.587 * g) + (0.114 * b)),
-//         u = round((((b - y) * 0.493) + 111) / 222 * 255),
-//         v = round((((r - y) * 0.877) + 155) / 312 * 255);
-
-//     return [y, u, v];
-// };
-
-// // `getRGBfromYUV` - convert an RGB format color into a YUV format color
-// P.getRGBfromYUV = function (y, u, v) {
-
-//     const round = Math.round;
-
-//     let r = round(y + v / 0.877),
-//         g = round(y - 0.39466 * u - 0.5806 * v),
-//         b = round(y + u / 0.493);
-
-//     if (r > 255) r = 255;
-//     if (g > 255) g = 255;
-//     if (b > 255) b = 255;
-
-//     return [r, g, b];
-// };
-
-// // `getYuvDistance` - convert an RGB format color into a YUV format color
-// P.getYuvDistance = function (y1, u1, v1, y2, u2, v2) {
-
-//     const dy = y1 - y2,
-//         du = u1 - u2,
-//         dv = v1 - v2;
-
-//     // Algorithm requires the result to be a square root for proper euclidean distance but we're comparing colors, not distances, so should be okay?
-//     return Math.sqrt((dy * dy) + (du * du) + (dv * dv));
-// }
-
 // `getGradientData` - create an imageData object containing the 256 values from a gradient that we require for doing filters work
 P.getGradientData = function (gradient) {
 
@@ -807,107 +702,6 @@ P.getGradientData = function (gradient) {
     releaseCell(mycell);
 
     return data;
-};
-
-// `getEasedValue` - convenience function - assumes val is going to be a float Number between 0 and 1
-P.getEasedValue = function (val, easing) {
-
-    switch (easing) {
-        case 'easeOutSine' :
-            val = easeOutSine(val);
-            break;
-        case 'easeInSine' :
-            val = easeInSine(val);
-            break;
-        case 'easeOutInSine' :
-            val = easeOutInSine(val);
-            break;
-        case 'easeOutQuad' :
-            val = easeOutQuad(val);
-            break;
-        case 'easeInQuad' :
-            val = easeInQuad(val);
-            break;
-        case 'easeOutInQuad' :
-            val = easeOutInQuad(val);
-            break;
-        case 'easeOutCubic' :
-            val = easeOutCubic(val);
-            break;
-        case 'easeInCubic' :
-            val = easeInCubic(val);
-            break;
-        case 'easeOutInCubic' :
-            val = easeOutInCubic(val);
-            break;
-        case 'easeOutQuart' :
-            val = easeOutQuart(val);
-            break;
-        case 'easeInQuart' :
-            val = easeInQuart(val);
-            break;
-        case 'easeOutInQuart' :
-            val = easeOutInQuart(val);
-            break;
-        case 'easeOutQuint' :
-            val = easeOutQuint(val);
-            break;
-        case 'easeInQuint' :
-            val = easeInQuint(val);
-            break;
-        case 'easeOutInQuint' :
-            val = easeOutInQuint(val);
-            break;
-        case 'easeOutExpo' :
-            val = easeOutExpo(val);
-            break;
-        case 'easeInExpo' :
-            val = easeInExpo(val);
-            break;
-        case 'easeOutInExpo' :
-            val = easeOutInExpo(val);
-            break;
-        case 'easeOutCirc' :
-            val = easeOutCirc(val);
-            break;
-        case 'easeInCirc' :
-            val = easeInCirc(val);
-            break;
-        case 'easeOutInCirc' :
-            val = easeOutInCirc(val);
-            break;
-        case 'easeOutBack' :
-            val = easeOutBack(val);
-            break;
-        case 'easeInBack' :
-            val = easeInBack(val);
-            break;
-        case 'easeOutInBack' :
-            val = easeOutInBack(val);
-            break;
-        case 'easeOutElastic' :
-            val = easeOutElastic(val);
-            break;
-        case 'easeInElastic' :
-            val = easeInElastic(val);
-            break;
-        case 'easeOutInElastic' :
-            val = easeOutInElastic(val);
-            break;
-        case 'easeOutBounce' :
-            val = easeOutBounce(val);
-            break;
-        case 'easeInBounce' :
-            val = easeInBounce(val);
-            break;
-        case 'easeOutInBounce' :
-            val = easeOutInBounce(val);
-            break;
-    }
-
-    if (isNaN(val)) val = 1;
-
-    return val;
 };
 
 // ## Filter action functions
@@ -1074,48 +868,8 @@ P.theBigActionsObject = {
         else this.processResults(this.cache.work, output, opacity);
     },
 
-// __binary__ - Set the channel to either 0 or 255, depending on whether the channel value is below or above a given level. Level values are set using the "red", "green", "blue" and "alpha" arguments. Setting these values to 0 disables the action for that channel.
-    'binary': function (requirements) {
-
-        let [input, output] = this.getInputAndOutputLines(requirements);
-
-        let iData = input.data,
-            oData = output.data,
-            len = iData.length,
-            r, g, b, a, i;
-
-        let {opacity, red, green, blue, alpha, lineOut} = requirements;
-
-        if (null == opacity) opacity = 1;
-        if (null == red) red = 0;
-        if (null == green) green = 0;
-        if (null == blue) blue = 0;
-        if (null == alpha) alpha = 0;
-
-        for (i = 0; i < len; i += 4) {
-
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
-
-            if (red) oData[r] = (iData[r] > red) ? 255 : 0;
-            else oData[r] = iData[r];
-
-            if (green) oData[g] = (iData[g] > green) ? 255 : 0;
-            else oData[g] = iData[g];
-
-            if (blue) oData[b] = (iData[b] > blue) ? 255 : 0;
-            else oData[b] = iData[b];
-
-            if (alpha) oData[a] = (iData[a] > alpha) ? 255 : 0;
-            else oData[a] = iData[a];
-        }
-
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
-    },
-
+// DEPRECATED! __binary__ - use the updated `threshold` filter instead, which now incorporates binary filter functionality
+//
 // __blend__ - Using two source images (from the "lineIn" and "lineMix" arguments), combine their color information using various separable and non-separable blend modes (as defined by the W3C Compositing and Blending Level 1 recommendations. The blending method is determined by the String value supplied in the "blend" argument; permitted values are: 'color-burn', 'color-dodge', 'darken', 'difference', 'exclusion', 'hard-light', 'lighten', 'lighter', 'multiply', 'overlay', 'screen', 'soft-light', 'color', 'hue', 'luminosity', and 'saturation'. Note that the source images may be of different sizes: the output (lineOut) image size will be the same as the source (NOT lineIn) image; the lineMix image can be moved relative to the lineIn image using the "offsetX" and "offsetY" arguments.
     'blend': function (requirements) {
 
@@ -2697,85 +2451,6 @@ P.theBigActionsObject = {
         else this.processResults(this.cache.work, output, opacity);
     },
 
-// __dither__ - Set all pixels to the channel values supplied in the "red", "green", "blue" and "alpha" arguments
-// P.paletteBlackWhite = [[0,0,0], [255,255,255]];
-// P.paletteRGBK = [[0,0,0], [255,255,255], [255,0,0], [0,255,0], [0,0,255]];
-// P.paletteCMYK = [[0,0,0], [255,255,255], [255,255,0], [0,255,255], [255,0,255]];
-// P.paletteRestricted8 = [[0,0,0], [255,255,255], [255,255,0], [0,255,255], [255,0,255], [255,255,0], [0,255,255], [255,0,255]];
-// P.paletteRestricted16 = [[255,255,255], [191,191,191], [127,127,127], [0,0,0], [255,0,0], [127,0,0], [255,255,0], [127,127,0], [0,255,0], [0,127,0], [0,255,255], [0,127,127], [0,0,255], [0,0,127], [255,0,255], [127,0,127]];
-
-    'dither': function (requirements) {
-
-        let [input, output] = this.getInputAndOutputLines(requirements);
-
-        let iData = input.data,
-            oData = output.data,
-            len = iData.length,
-            i, r, g, b, a, refPalette;;
-
-        let {opacity, dither, paletteType, paletteColors, seed, lineOut} = requirements;
-
-        if (null == opacity) opacity = 1;
-        if (null == dither) dither = 'none';
-        if (null == paletteType) paletteType = 'black-white';
-        if (null == paletteColors) paletteColors = 2;
-        if (null == seed) seed = 'some-random-string-or-other';
-
-        // we may need to assay the input for most popular colors
-        if ('commonest' === paletteType) {
-
-            // do image assay
-        }
-
-        // we need to setup the reference palette
-        switch (paletteType) {
-
-            case 'rgbk' :
-                refPalette = this.paletteRGBK;
-                break;
-
-            case 'cmyk' :
-                refPalette = this.paletteCMYK;
-                break;
-
-            case 'restricted-8' :
-                refPalette = this.paletteCMYK;
-
-            case 'restricted-16' :
-                refPalette = this.paletteCMYK;
-
-            case 'custom' :
-                if (Array.isArray(paletteColors)) {
-                    refPalette = paletteColors;
-                    break;
-                }
-
-            default :
-                refPalette = this.paletteBlackWhite;
-        }
-        refPalette;
-
-        // we need to update each pixel to match its closest reference color
-
-        // we need to dither the results
-
-        for (i = 0; i < len; i += 4) {
-
-            r = i;
-            g = r + 1;
-            b = g + 1;
-            a = b + 1;
-
-            oData[r] = iData[a];
-            oData[g] = iData[a];
-            oData[b] = iData[a];
-            oData[a] = iData[a];
-        }
-
-        if (lineOut) this.processResults(output, input, 1 - opacity);
-        else this.processResults(this.cache.work, output, opacity);
-    },
-
 // __emboss__ - A 3x3 matrix transform; the matrix weights are calculated internally from the values of two arguments: "strength", and "angle" - which is a value measured in degrees, with 0 degrees pointing to the right of the origin (along the positive x axis). Post-processing options include removing unchanged pixels, or setting then to mid-gray. The convenience method includes additional arguments which will add a choice of grayscale, then channel clamping, then blurring actions before passing the results to this emboss action
     'emboss': function (requirements) {
 
@@ -3977,8 +3652,6 @@ P.theBigActionsObject = {
 
             let grid = this.buildImageGrid(input);
 
-            const getEasedValue = this.getEasedValue;
-
             for (s = 0, sz = swirls.length; s < sz; s++) {
 
                 const [startX, startY, innerRadius, outerRadius, angle, easing] = swirls[s];
@@ -4050,7 +3723,7 @@ P.theBigActionsObject = {
 
                                     dLen = 1 - ((distance - inner) / complexLen);
 
-                                    dLen = getEasedValue(dLen, easing);
+                                    dLen = easeEngines[easing](dLen);
 
                                     coord.rotate(angle * dLen).add(start);
 
@@ -4116,7 +3789,11 @@ P.theBigActionsObject = {
         else this.processResults(this.cache.work, output, opacity);
     },
 
-// __threshold__ - Grayscales the input then, for each pixel, checks the color channel values against a "level" argument: pixels with channel values above the level value are assigned to the 'high' color; otherwise they are updated to the 'low' color. The "high" and "low" arguments are [red, green, blue] integer Number Arrays. The convenience function will accept the pseudo-attributes "highRed", "lowRed" etc in place of the "high" and "low" Arrays.
+// __threshold__ - performs a binary check on each pixel and, according to the result, assigns the pixel to a defined high or low color
+// + By default this filter will grayscale the input then, for each pixel, check the color channel values against a `level` argument: pixels with grayscale values above the level value are assigned to the `high` color; otherwise they are updated to the `low` color. The "high" and "low" arguments are `[red, green, blue, alpha]` integer Number Arrays. 
+// + The convenience function will accept the pseudo-attributes `highRed`, `lowRed` etc in place of the "high" and "low" Arrays.
+// + When the `useMixedChannel` flag is set to `false` then the filter will perform the threshold check on each channel in turn; the threshold levels for these per-channel checks are set in the `red`, `green`, `blue` and `alpha` arguments
+// + Channels can be excluded from the filter action by setting the `includeRed` etc flags to false
     'threshold': function (requirements) {
 
         let [input, output] = this.getInputAndOutputLines(requirements);
@@ -4124,15 +3801,23 @@ P.theBigActionsObject = {
         let iData = input.data,
             oData = output.data,
             len = iData.length,
-            r, g, b, a, i, gray;
+            r, g, b, a, i, pr, pg, pb, pa, gray;
 
-        let {opacity, low, high, level, includeAlpha, lineOut} = requirements;
+        let {opacity, low, high, level, red, green, blue, alpha, includeRed, includeGreen, includeBlue, includeAlpha, useMixedChannel, lineOut} = requirements;
 
         if (null == opacity) opacity = 1;
         if (null == low) low = [0,0,0];
         if (null == high) high = [255,255,255];
         if (null == level) level = 128;
+        if (null == red) red = 128;
+        if (null == green) green = 128;
+        if (null == blue) blue = 128;
+        if (null == alpha) alpha = 128;
+        if (null == includeRed) includeRed = true;
+        if (null == includeGreen) includeGreen = true;
+        if (null == includeBlue) includeBlue = true;
         if (null == includeAlpha) includeAlpha = false;
+        if (null == useMixedChannel) useMixedChannel = true;
 
         let [lowR, lowG, lowB, lowA] = low;
         let [highR, highG, highB, highA] = high;
@@ -4146,23 +3831,52 @@ P.theBigActionsObject = {
             b = g + 1;
             a = b + 1;
 
-            gray = gVal(iData[r], iData[g], iData[b]);
+            pr = iData[r];
+            pg = iData[g];
+            pb = iData[b];
+            pa = iData[a];
 
-            if (gray < level) {
+            if (useMixedChannel) {
 
-                oData[r] = lowR;
-                oData[g] = lowG;
-                oData[b] = lowB;
-                oData[a] = (includeAlpha) ? lowA : iData[a];
+                gray = gVal(pr, pg, pb);
+
+                if (gray < level) {
+
+                    oData[r] = (includeRed) ? lowR : pr;
+                    oData[g] = (includeGreen) ? lowG : pg;
+                    oData[b] = (includeBlue) ? lowB : pb;
+                    oData[a] = (includeAlpha) ? lowA : pa;
+                }
+                else {
+
+                    oData[r] = (includeRed) ? highR : pr;
+                    oData[g] = (includeGreen) ? highG : pg;
+                    oData[b] = (includeBlue) ? highB : pb;
+                    oData[a] = (includeAlpha) ? highA : pa;
+                }
             }
             else {
 
-                oData[r] = highR;
-                oData[g] = highG;
-                oData[b] = highB;
-                oData[a] = (includeAlpha) ? highA : iData[a];
+                if (includeRed) {
+                    oData[r] = (pr < red) ? lowR : highR;
+                }
+                else oData[r] = pr;
+
+                if (includeGreen) {
+                    oData[g] = (pg < green) ? lowG : highG;
+                }
+                else oData[g] = pg;
+
+                if (includeBlue) {
+                    oData[b] = (pb < blue) ? lowB : highB;
+                }
+                else oData[b] = pb;
+
+                if (includeAlpha) {
+                    oData[a] = (pa < alpha) ? lowA : highA;
+                }
+                else oData[a] = pa;
             }
-            
         }
 
         if (lineOut) this.processResults(output, input, 1 - opacity);
@@ -4310,6 +4024,13 @@ makeAnimation({
 
             if (f) f.dirtyFilterIdentifier = false;
         });
+
+        stylesnames.forEach(name => {
+
+            const s = styles[name];
+
+            if (s) s.dirtyFilterIdentifier = false;
+        });
     },
 });
 
@@ -4331,4 +4052,6 @@ const filterEngine = new FilterEngine();
 export {
     makeFilterEngine,
     filterEngine,
+
+    setFilterMemoizationChoke,
 };

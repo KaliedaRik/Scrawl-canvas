@@ -303,104 +303,165 @@ const xtGet = (...args) => args.find(item => typeof item != 'undefined');
 const xto = (...args) => (args.find(item => typeof item != 'undefined')) ? true : false;
 
 
-// ##### Easing functions
+// ##### Easing engines
+// `easeEngines` - an object in which keys define various easing functions
+const easeEngines = {
+
+// Legacy easings
+    out: (t) => 1 - Math.cos((t * Math.PI) / 2),
+    in: (t) => Math.sin((t * Math.PI) / 2),
+    easeIn: (t) => {
+        
+        let temp = 1 - t;
+        return 1 - (temp * temp);
+    },
+    easeIn3: (t) => {
+
+        let temp = 1 - t;
+        return 1 - (temp * temp * temp);
+    },
+    easeIn4: (t) => {
+
+        let temp = 1 - t;
+        return 1 - (temp * temp * temp * temp);
+    },
+    easeIn5: (t) => {
+
+        let temp = 1 - t;
+        return 1 - (temp * temp * temp * temp * temp);
+    },
+    easeOutIn: (t) => (t < 0.5) ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2,
+    easeOutIn3: (t) => (t < 0.5) ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2,
+    easeOutIn4: (t) => (t < 0.5) ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2,
+    easeOutIn5: (t) => (t < 0.5) ? 16 * t * t * t * t * t : 1 - Math.pow(-2 * t + 2, 5) / 2,
+    easeOut: (t) => t * t,
+    easeOut3: (t) => t * t * t,
+    easeOut4: (t) => t * t * t * t,
+    easeOut5: (t) => t * t * t * t * t,
+
+    none: (val) => val,
+    linear: (val) => val,
+
+    // Noise functionality easing engines
+    cosine: (t) => .5 * (1 + Math.cos((1 - t) * Math.PI)),
+    hermite: (t) => t * t * (-t * 2 + 3),
+    quintic: (t) => t * t * t * (t * (t * 6 - 15) + 10),
+
 // The following easing variations come from the [easings.net](https://easings.net/) web page
 // + Note: the naming convention for easing is different in Scrawl-canvas. Easing out implies a speeding up, while easing in implies a slowing down. Think of a train easing into a station, and then easing out of it again as it continues its journey. 
-const easeOutSine = function (t) { return 1 - Math.cos((t * Math.PI) / 2) };
-const easeInSine = function (t) { return Math.sin((t * Math.PI) / 2) };
-const easeOutInSine = function (t) { return -(Math.cos(Math.PI * t) - 1) / 2 };
+    easeOutSine: (t) => 1 - Math.cos((t * Math.PI) / 2),
+    easeInSine: (t) => Math.sin((t * Math.PI) / 2),
+    easeOutInSine: (t) => -(Math.cos(Math.PI * t) - 1) / 2,
 
-const easeOutQuad = function (t) { return t * t };
-const easeInQuad = function (t) { return 1 - ((1 - t) * (1 - t)) };
-const easeOutInQuad = function(t) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2 };
+    easeOutQuad: (t) => t * t,
+    easeInQuad: (t) => 1 - ((1 - t) * (1 - t)),
+    easeOutInQuad: (t) => (t < 0.5) ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2,
 
-const easeOutCubic = function(t) { return t * t * t };
-const easeInCubic = function(t) { return 1 - Math.pow(1 - t, 3) };
-const easeOutInCubic = function(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2 };
+    easeOutCubic: (t) => t * t * t,
+    easeInCubic: (t) => 1 - Math.pow(1 - t, 3),
+    easeOutInCubic: (t) => (t < 0.5) ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2,
 
-const easeOutQuart = function(t) { return t * t * t * t };
-const easeInQuart = function(t) { return 1 - Math.pow(1 - t, 4) };
-const easeOutInQuart = function(t) { return t < 0.5 ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2 };
+    easeOutQuart: (t) => t * t * t * t,
+    easeInQuart: (t) => 1 - Math.pow(1 - t, 4),
+    easeOutInQuart: (t) => (t < 0.5) ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2,
 
-const easeOutQuint = function(t) { return t * t * t * t * t };
-const easeInQuint = function(t) { return 1 - Math.pow(1 - t, 5) };
-const easeOutInQuint = function(t) { return t < 0.5 ? 16 * t * t * t * t * t : 1 - Math.pow(-2 * t + 2, 5) / 2 };
+    easeOutQuint: (t) => t * t * t * t * t,
+    easeInQuint: (t) => 1 - Math.pow(1 - t, 5),
+    easeOutInQuint: (t) => (t < 0.5) ? 16 * t * t * t * t * t : 1 - Math.pow(-2 * t + 2, 5) / 2,
 
-const easeOutExpo = function(t) { return t === 0 ? 0 : Math.pow(2, 10 * t - 10) };
-const easeInExpo = function(t) { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t) };
-const easeOutInExpo = function(t) {
-    if (t === 0 || t === 1) return t;
-    return t < 0.5 ? Math.pow(2, 20 * t - 10) / 2 : (2 - Math.pow(2, -20 * t + 10)) / 2;        
+    easeOutExpo: (t) => (t === 0) ? 0 : Math.pow(2, 10 * t - 10),
+    easeInExpo: (t) => (t === 1) ? 1 : 1 - Math.pow(2, -10 * t),
+    easeOutInExpo: (t) => {
+        if (t === 0 || t === 1) return t;
+        return t < 0.5 ? Math.pow(2, 20 * t - 10) / 2 : (2 - Math.pow(2, -20 * t + 10)) / 2;
+    },
+
+    easeOutCirc: (t) => 1 - Math.sqrt(1 - Math.pow(t, 2)),
+    easeInCirc: (t) => Math.sqrt(1 - Math.pow(t - 1, 2)),
+    easeOutInCirc: (t) => { 
+
+        if (t < 0.5) return (1 - Math.sqrt(1 - Math.pow(2 * t, 2))) / 2;
+        return (Math.sqrt(1 - Math.pow(-2 * t + 2, 2)) + 1) / 2;
+    },
+
+    easeOutBack: (t) => (2.70158 * t * t * t) - (1.70158 * t * t),
+    easeInBack: (t) => 1 + (2.70158 * Math.pow(t - 1, 3)) + (1.70158 * Math.pow(t - 1, 2)),
+    easeOutInBack: (t) => {
+
+        const c1 = 1.70158, c2 = c1 * 1.525;
+        if (t < 0.5) return (Math.pow(2 * t, 2) * ((c2 + 1) * 2 * t - c2)) / 2;
+        return (Math.pow(2 * t - 2, 2) * ((c2 + 1) * (t * 2 - 2) + c2) + 2) / 2;
+    },
+
+    easeOutElastic: (t) => {
+
+        const c4 = (2 * Math.PI) / 3;
+        if (t === 0 || t === 1) return t;
+        return -Math.pow(2, 10 * t - 10) * Math.sin((t * 10 - 10.75) * c4);
+    },
+    easeInElastic: (t) => {
+
+        const c4 = (2 * Math.PI) / 3;
+        if (t === 0 || t === 1) return t;
+        return Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
+    },
+    easeOutInElastic: (t) => {
+
+        const c5 = (2 * Math.PI) / 4.5;
+        if (t === 0 || t === 1) return t;
+        if (t < 0.5) return -(Math.pow(2, 20 * t - 10) * Math.sin((20 * t - 11.125) * c5)) / 2;
+        return (Math.pow(2, -20 * t + 10) * Math.sin((20 * t - 11.125) * c5)) / 2 + 1;
+    },
+
+    easeOutBounce: (t) => {
+
+        t = 1 - t;
+
+        const n1 = 7.5625, 
+            d1 = 2.75;
+
+        if (t < 1 / d1) return 1 - (n1 * t * t);
+        if (t < 2 / d1) return 1 - (n1 * (t -= 1.5 / d1) * t + 0.75);
+        if (t < 2.5 / d1) return 1 - (n1 * (t -= 2.25 / d1) * t + 0.9375);
+        return 1 - (n1 * (t -= 2.625 / d1) * t + 0.984375);
+    },
+
+    easeInBounce: (t) => {
+
+        const n1 = 7.5625, 
+            d1 = 2.75;
+
+        if (t < 1 / d1) return n1 * t * t;
+        if (t < 2 / d1) return n1 * (t -= 1.5 / d1) * t + 0.75;
+        if (t < 2.5 / d1) return n1 * (t -= 2.25 / d1) * t + 0.9375;
+        return n1 * (t -= 2.625 / d1) * t + 0.984375;
+    },
+
+// This is wrong
+    easeOutInBounce: (t) => {
+
+        const n1 = 7.5625, d1 = 2.75;
+        let res;
+
+        if (t < 0.5) {
+            t = 1 - 2 * t;
+            if (t < 1 / d1) res = n1 * t * t;
+            else if (t < 2 / d1) res = n1 * (t -= 1.5 / d1) * t + 0.75;
+            else if (t < 2.5 / d1) res = n1 * (t -= 2.25 / d1) * t + 0.9375;
+            else res = n1 * (t -= 2.625 / d1) * t + 0.984375;
+            return (1 - res) / 2;
+        }
+        else {
+            t = 2 * t - 1;
+            if (t < 1 / d1) res = n1 * t * t;
+            else if (t < 2 / d1) res = n1 * (t -= 1.5 / d1) * t + 0.75;
+            else if (t < 2.5 / d1) res = n1 * (t -= 2.25 / d1) * t + 0.9375;
+            else res = n1 * (t -= 2.625 / d1) * t + 0.984375;
+            return (1 + res) / 2;
+        }
+    },
 };
 
-const easeOutCirc = function(t) { return 1 - Math.sqrt(1 - Math.pow(t, 2)) };
-const easeInCirc = function(t) { return Math.sqrt(1 - Math.pow(t - 1, 2)) };
-const easeOutInCirc = function(t) { return t < 0.5 ? (1 - Math.sqrt(1 - Math.pow(2 * t, 2))) / 2 : (Math.sqrt(1 - Math.pow(-2 * t + 2, 2)) + 1) / 2 };
-
-const easeOutBack = function(t) { return (2.70158 * t * t * t) - (1.70158 * t * t) };
-const easeInBack = function(t) { return 1 + (2.70158 * Math.pow(t - 1, 3)) + (1.70158 * Math.pow(t - 1, 2)) };
-const easeOutInBack = function(t) {
-    let c1 = 1.70158, c2 = c1 * 1.525;
-    return t < 0.5 ? (Math.pow(2 * t, 2) * ((c2 + 1) * 2 * t - c2)) / 2 : (Math.pow(2 * t - 2, 2) * ((c2 + 1) * (t * 2 - 2) + c2) + 2) / 2;
-};
-
-const easeOutElastic = function(t) {
-    const c4 = (2 * Math.PI) / 3;
-    if (t === 0 || t === 1) return t;
-    return -Math.pow(2, 10 * t - 10) * Math.sin((t * 10 - 10.75) * c4);
-};
-
-const easeInElastic = function(t) {
-    const c4 = (2 * Math.PI) / 3;
-    if (t === 0 || t === 1) return t;
-    return Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
-};
-
-const easeOutInElastic = function(t) {
-    const c5 = (2 * Math.PI) / 4.5;
-    if (t === 0 || t === 1) return t;
-    return t < 0.5 ? 
-        -(Math.pow(2, 20 * t - 10) * Math.sin((20 * t - 11.125) * c5)) / 2 : 
-        (Math.pow(2, -20 * t + 10) * Math.sin((20 * t - 11.125) * c5)) / 2 + 1;
-};
-
-const easeOutBounce = function(t) {
-    t = 1 - t;
-    const n1 = 7.5625, d1 = 2.75;
-    if (t < 1 / d1) return 1 - (n1 * t * t);
-    if (t < 2 / d1) return 1 - (n1 * (t -= 1.5 / d1) * t + 0.75);
-    if (t < 2.5 / d1) return 1 - (n1 * (t -= 2.25 / d1) * t + 0.9375);
-    return 1 - (n1 * (t -= 2.625 / d1) * t + 0.984375);
-};
-
-const easeInBounce = function(t) {
-    const n1 = 7.5625, d1 = 2.75;
-    if (t < 1 / d1) return n1 * t * t;
-    if (t < 2 / d1) return n1 * (t -= 1.5 / d1) * t + 0.75;
-    if (t < 2.5 / d1) return n1 * (t -= 2.25 / d1) * t + 0.9375;
-    return n1 * (t -= 2.625 / d1) * t + 0.984375;
-};
-
-const easeOutInBounce = function(t) {
-    const n1 = 7.5625, d1 = 2.75;
-    let res;
-    if (t < 0.5) {
-        t = 1 - 2 * t;
-        if (t < 1 / d1) res = n1 * t * t;
-        else if (t < 2 / d1) res = n1 * (t -= 1.5 / d1) * t + 0.75;
-        else if (t < 2.5 / d1) res = n1 * (t -= 2.25 / d1) * t + 0.9375;
-        else res = n1 * (t -= 2.625 / d1) * t + 0.984375;
-        return (1 - res) / 2;
-    }
-    else {
-        t = 2 * t - 1;
-        if (t < 1 / d1) res = n1 * t * t;
-        else if (t < 2 / d1) res = n1 * (t -= 1.5 / d1) * t + 0.75;
-        else if (t < 2.5 / d1) res = n1 * (t -= 2.25 / d1) * t + 0.9375;
-        else res = n1 * (t -= 2.625 / d1) * t + 0.984375;
-        return (1 + res) / 2;
-    }
-};
 
 const getArrayType = someObject => someObject && someObject.constructor && someObject.constructor.name && someObject.constructor.name || null;
 
@@ -459,36 +520,7 @@ export {
     xtGet,
     xto, 
 
-    easeOutSine,
-    easeInSine,
-    easeOutInSine,
-    easeOutQuad,
-    easeInQuad,
-    easeOutInQuad,
-    easeOutCubic,
-    easeInCubic,
-    easeOutInCubic,
-    easeOutQuart,
-    easeInQuart,
-    easeOutInQuart,
-    easeOutQuint,
-    easeInQuint,
-    easeOutInQuint,
-    easeOutExpo,
-    easeInExpo,
-    easeOutInExpo,
-    easeOutCirc,
-    easeInCirc,
-    easeOutInCirc,
-    easeOutBack,
-    easeInBack,
-    easeOutInBack,
-    easeOutElastic,
-    easeInElastic,
-    easeOutInElastic,
-    easeOutBounce,
-    easeInBounce,
-    easeOutInBounce,
+    easeEngines,
 
     getArrayType,
 

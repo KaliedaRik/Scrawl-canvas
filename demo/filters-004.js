@@ -59,6 +59,7 @@ const report = reportSpeed('#reportmessage', function () {
 
     return `    Low color: ${lowCol.value}, High color: ${highCol.value}
     Level: ${level.value}
+    Red: ${red.value}; Green: ${green.value}; Blue: ${blue.value}; Alpha: ${alpha.value}; 
     Opacity: ${opacity.value}`;
 });
 
@@ -78,15 +79,40 @@ const converter = scrawl.makeColor({
     name: 'converter',
 });
 
-scrawl.addNativeListener(
-    ['input', 'change'], 
-    (e) => myFilter.set({ level: parseFloat(e.target.value) }), 
-    '#level');
+// scrawl.addNativeListener(
+//     ['input', 'change'], 
+//     (e) => myFilter.set({ level: parseFloat(e.target.value) }), 
+//     '#level');
 
-scrawl.addNativeListener(
-    ['input', 'change'], 
-    (e) => myFilter.set({ opacity: parseFloat(e.target.value) }), 
-    '#opacity');
+// scrawl.addNativeListener(
+//     ['input', 'change'], 
+//     (e) => myFilter.set({ opacity: parseFloat(e.target.value) }), 
+//     '#opacity');
+
+scrawl.observeAndUpdate({
+
+    event: ['input', 'change'],
+    origin: '.controlItem',
+
+    target: myFilter,
+
+    useNativeListener: true,
+    preventDefault: true,
+
+    updates: {
+        opacity: ['opacity', 'float'],
+        level: ['level', 'round'],
+        red: ['red', 'round'],
+        green: ['green', 'round'],
+        blue: ['blue', 'round'],
+        alpha: ['alpha', 'round'],
+        includeRed: ['includeRed', 'boolean'],
+        includeGreen: ['includeGreen', 'boolean'],
+        includeBlue: ['includeBlue', 'boolean'],
+        includeAlpha: ['includeAlpha', 'boolean'],
+        useMixedChannel: ['useMixedChannel', 'boolean'],
+    },
+});
 
 scrawl.addNativeListener(
     ['input', 'change'], 
@@ -120,13 +146,26 @@ scrawl.addNativeListener(
 const lowCol = document.querySelector('#lowColor'),
     highCol = document.querySelector('#highColor'),
     level = document.querySelector('#level'),
+    red = document.querySelector('#red'),
+    green = document.querySelector('#green'),
+    blue = document.querySelector('#blue'),
+    alpha = document.querySelector('#alpha'),
     opacity = document.querySelector('#opacity');
 
 lowCol.value = '#000000';
 highCol.value = '#ffffff';
-level.value = 127;
+level.value = 128;
+red.value = 128;
+green.value = 128;
+blue.value = 128;
+alpha.value = 128;
 opacity.value = 1;
 
+document.querySelector('#useMixedChannel').options.selectedIndex = 1;
+document.querySelector('#includeRed').options.selectedIndex = 1;
+document.querySelector('#includeGreen').options.selectedIndex = 1;
+document.querySelector('#includeBlue').options.selectedIndex = 1;
+document.querySelector('#includeAlpha').options.selectedIndex = 0;
 
 // #### Development and testing
 console.log(scrawl.library);

@@ -144,6 +144,11 @@ import {
 
 
 import { 
+    setFilterMemoizationChoke,
+} from './factory/filterEngine.js';
+
+
+import { 
     makeForce,
 } from './factory/particleForce.js';
 
@@ -439,6 +444,10 @@ export default {
 
     // factory/filter.js
     makeFilter,
+
+
+    // factory/filterEngine.js
+    setFilterMemoizationChoke,
 
 
     // factory/particleForce.js

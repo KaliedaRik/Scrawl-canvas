@@ -54,7 +54,7 @@
 
 // #### Imports
 import { constructors } from '../core/library.js';
-import { λnull, isa_obj, mergeOver, xt, xta, pushUnique, Ωempty } from '../core/utilities.js';
+import { λnull, isa_obj, mergeOver, xt, xta, pushUnique, Ωempty, easeEngines } from '../core/utilities.js';
 
 import { makeColor } from './color.js';
 
@@ -104,6 +104,9 @@ let defaultAttributes = {
 
 // If the __cyclic__ flag is set, then we know to calculate appropriate stop values between the last key color and the first key color, thus allowing for smooth crossing of the 1 -> 0 stops boundary
     cyclic: false,
+
+// The __easing__ value represents a transformation that will be applied to a copy of the color stops Array - this allows us to create non-linear gradients
+    easing: 'linear',
 };
 P.defs = mergeOver(P.defs, defaultAttributes);
 
@@ -150,6 +153,12 @@ S.colors = function (item) {
     }
 };
 
+// __easing__ - a String representing the easing to be applied to the gradient 
+S.easing = function (item) {
+
+    this.easing = item;
+    this.dirtyPalette = true;
+};
 
 // __stops__ - Do nothing. The stops array needs to be kept private, its values set only via the `recalculate` function, which happens whenever the `dirtyPalette` attribute is set to true.
 S.stops = λnull;
@@ -323,8 +332,11 @@ P.removeColor = function (index) {
 // `addStopsToGradient` - complete the construction of the Canvas API CanvasGradient object
 P.addStopsToGradient = function (gradient, start, end, cycle) {
 
-    let stops = this.stops,
-        keys = Object.keys(this.colors),
+    // It's at this point that we apply the easing function
+
+    let { stops, easing } = this;
+
+    let keys = Object.keys(this.colors),
         spread, offset, i, iz, item, n;
 
     if (gradient) {
@@ -354,7 +366,13 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
 
                 if (item > start && item < end) {
 
-                    offset = (item - start) / spread;
+                    offset = easeEngines[easing]((item - start) / spread);
+
+                    if (cycle) {
+
+                        if (offset > 1) offset -= 1;
+                        else if (offset < 0) offset += 1;
+                    }
 
                     if (offset > 0 && offset < 1) gradient.addColorStop(offset, stops[item]);
                 }
@@ -376,9 +394,12 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
 
                     item = keys[i];
 
-                    if (item > start) offset = (item - start) / spread;
-                    else if (item < end) offset = (item + n) / spread;
+                    if (item > start) offset = easeEngines[easing]((item - start) / spread);
+                    else if (item < end) offset = easeEngines[easing]((item + n) / spread);
                     else continue;
+
+                    if (offset > 1) offset -= 1;
+                    else if (offset < 0) offset += 1;
 
                     if (offset > 0 && offset < 1) gradient.addColorStop(offset, stops[item]);
                 }
@@ -398,7 +419,7 @@ P.addStopsToGradient = function (gradient, start, end, cycle) {
 
                     if (item < start && item > end) {
 
-                        offset = 1 - ((item - end) / spread);
+                        offset = easeEngines[easing](1 - ((item - end) / spread));
 
                         if (offset > 0 && offset < 1) gradient.addColorStop(offset, stops[item]);
                     }

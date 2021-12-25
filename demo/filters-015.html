@@ -95,6 +95,8 @@
       <li>In particular make sure the lineMix asset moves when the filter offset values are updated</li>
     </ul>
 
+    <p>Note that filter memoization would provide no benefit in this demo because of the way we include the (rotating) cell-based wheel image filter in the display block filters array, even though that filter will only be displayed (as part of the compositing filter) if selected. Moral: only load process-image filters into a filter array if you intend to use them!</p>
+
     <p><b>Touch test:</b> not required</p>
 
     <p><a href="../docs/demo/filters-015.html">Annotated code</a></p>

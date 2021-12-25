@@ -21,7 +21,7 @@
 
 // #### Imports
 import { constructors, entity } from '../core/library.js';
-import { mergeOver, xt, xtGet, isa_obj, easeOutSine, easeInSine, easeOutInSine, easeOutQuad, easeInQuad, easeOutInQuad, easeOutCubic, easeInCubic, easeOutInCubic, easeOutQuart, easeInQuart, easeOutInQuart, easeOutQuint, easeInQuint, easeOutInQuint, easeOutExpo, easeInExpo, easeOutInExpo, easeOutCirc, easeInCirc, easeOutInCirc, easeOutBack, easeInBack, easeOutInBack, easeOutElastic, easeInElastic, easeOutInElastic, easeOutBounce, easeInBounce, easeOutInBounce, Ωempty } from '../core/utilities.js';
+import { mergeOver, xt, xtGet, isa_obj, easeEngines, Ωempty } from '../core/utilities.js';
 
 import baseMix from '../mixin/base.js';
 
@@ -361,101 +361,7 @@ P.getRangeColor = function (item) {
 
         let {rMin, gMin, bMin, aMin, rMax, gMax, bMax, aMax, easing} = this;
 
-        if (easing !== 'linear') {
-
-            switch (easing) {
-                case 'easeOutSine' :
-                    item = easeOutSine(item);
-                    break;
-                case 'easeInSine' :
-                    item = easeInSine(item);
-                    break;
-                case 'easeOutInSine' :
-                    item = easeOutInSine(item);
-                    break;
-                case 'easeOutQuad' :
-                    item = easeOutQuad(item);
-                    break;
-                case 'easeInQuad' :
-                    item = easeInQuad(item);
-                    break;
-                case 'easeOutInQuad' :
-                    item = easeOutInQuad(item);
-                    break;
-                case 'easeOutCubic' :
-                    item = easeOutCubic(item);
-                    break;
-                case 'easeInCubic' :
-                    item = easeInCubic(item);
-                    break;
-                case 'easeOutInCubic' :
-                    item = easeOutInCubic(item);
-                    break;
-                case 'easeOutQuart' :
-                    item = easeOutQuart(item);
-                    break;
-                case 'easeInQuart' :
-                    item = easeInQuart(item);
-                    break;
-                case 'easeOutInQuart' :
-                    item = easeOutInQuart(item);
-                    break;
-                case 'easeOutQuint' :
-                    item = easeOutQuint(item);
-                    break;
-                case 'easeInQuint' :
-                    item = easeInQuint(item);
-                    break;
-                case 'easeOutInQuint' :
-                    item = easeOutInQuint(item);
-                    break;
-                case 'easeOutExpo' :
-                    item = easeOutExpo(item);
-                    break;
-                case 'easeInExpo' :
-                    item = easeInExpo(item);
-                    break;
-                case 'easeOutInExpo' :
-                    item = easeOutInExpo(item);
-                    break;
-                case 'easeOutCirc' :
-                    item = easeOutCirc(item);
-                    break;
-                case 'easeInCirc' :
-                    item = easeInCirc(item);
-                    break;
-                case 'easeOutInCirc' :
-                    item = easeOutInCirc(item);
-                    break;
-                case 'easeOutBack' :
-                    item = easeOutBack(item);
-                    break;
-                case 'easeInBack' :
-                    item = easeInBack(item);
-                    break;
-                case 'easeOutInBack' :
-                    item = easeOutInBack(item);
-                    break;
-                case 'easeOutElastic' :
-                    item = easeOutElastic(item);
-                    break;
-                case 'easeInElastic' :
-                    item = easeInElastic(item);
-                    break;
-                case 'easeOutInElastic' :
-                    item = easeOutInElastic(item);
-                    break;
-                case 'easeOutBounce' :
-                    item = easeOutBounce(item);
-                    break;
-                case 'easeInBounce' :
-                    item = easeInBounce(item);
-                    break;
-                case 'easeOutInBounce' :
-                    item = easeOutInBounce(item);
-                    break;
-            }
-        }
+        item = easeEngines[easing](item);
 
         if (item > 1) item = 1;
         else if (item < 0) item = 0;
@@ -816,6 +722,46 @@ P.setFromHSL = function (h, s, l, a) {
 
         this.a = a * 255;
     }
+};
+
+// `getYUVfromRGB` - convert an RGB format color into a YUV format color
+// + Inspired by https://github.com/SimonWaldherr/ColorConverter.js/blob/master/colorconverter.js
+P.getYUVfromRGB = function (r, g, b) {
+
+    const round = Math.round;
+
+    const y = round((0.299 * r) + (0.587 * g) + (0.114 * b)),
+        u = round((((b - y) * 0.493) + 111) / 222 * 255),
+        v = round((((r - y) * 0.877) + 155) / 312 * 255);
+
+    return [y, u, v];
+};
+
+// `getRGBfromYUV` - convert an RGB format color into a YUV format color
+P.getRGBfromYUV = function (y, u, v) {
+
+    const round = Math.round;
+
+    let r = round(y + v / 0.877),
+        g = round(y - 0.39466 * u - 0.5806 * v),
+        b = round(y + u / 0.493);
+
+    if (r > 255) r = 255;
+    if (g > 255) g = 255;
+    if (b > 255) b = 255;
+
+    return [r, g, b];
+};
+
+// `getYuvDistance` - calculating color distances using YUV gives better results compared to RGB
+P.getYuvDistance = function (y1, u1, v1, y2, u2, v2) {
+
+    const dy = y1 - y2,
+        du = u1 - u2,
+        dv = v1 - v2;
+
+    // Algorithm requires the result to be a square root for proper euclidean distance but we're comparing colors, not distances, so should be okay?
+    return Math.sqrt((dy * dy) + (du * du) + (dv * dv));
 };
 
 
