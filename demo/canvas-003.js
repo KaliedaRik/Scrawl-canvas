@@ -84,6 +84,8 @@ let makeObserver = () => {
 
             endX: ['endX', '%'],
             endY: ['endY', '%'],
+
+            easing: ['easing', 'raw'],
         },
     });
 }
@@ -123,6 +125,7 @@ document.querySelector('#endX').value = 100;
 document.querySelector('#endY').value = 0;
 document.querySelector('#red').value = 0;
 document.querySelector('#blue').value = 0;
+document.querySelector('#easing').options.selectedIndex = 0;
 
 
 // #### Development and testing

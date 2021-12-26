@@ -4,7 +4,7 @@
 // [Run code](../../demo/filters-002.html)
 import scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
@@ -292,6 +292,10 @@ scrawl.addNativeListener(['input', 'change'], (e) => {
 document.querySelector('#memoizeFilterOutput').options.selectedIndex = 0;
 const opacity = document.querySelector('#opacity');
 opacity.value = 1;
+
+
+// #### Drag-and-Drop image loading functionality
+addImageDragAndDrop(canvas, '#my-image-store', myPictures);
 
 
 // #### Development and testing

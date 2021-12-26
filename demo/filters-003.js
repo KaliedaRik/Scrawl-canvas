@@ -4,7 +4,7 @@
 // [Run code](../../demo/filters-003.html)
 import scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
@@ -12,7 +12,8 @@ scrawl.setIgnorePixelRatio(false);
 
 // #### Scene setup
 const canvas = scrawl.library.canvas.mycanvas,
-    filter = scrawl.library.filter;
+    filter = scrawl.library.filter,
+    entity = scrawl.library.entity;
 
 scrawl.importDomImage('.flowers');
 
@@ -210,6 +211,15 @@ red.value = 1;
 green.value = 1;
 blue.value = 1;
 alpha.value = 1;
+
+
+// #### Drag-and-Drop image loading functionality
+addImageDragAndDrop(canvas, '#my-image-store', [
+    entity['brightness-picture'], 
+    entity['saturation-picture'], 
+    entity['advanced-brightness-picture'], 
+    entity['advanced-saturation-picture']
+]);
 
 
 // #### Development and testing

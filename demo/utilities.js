@@ -288,6 +288,105 @@ const killTicker = (stack, name, time) => {
     }, time);
 };
 
+const addImageDragAndDrop = (canvas, selector, targets, callback) => {
+
+    // #### Drag-and-Drop image loading functionality
+    const store = document.querySelector(selector);
+    const timeoutDelay = 200;
+
+    let counter = 0;
+
+    if (!Array.isArray(targets)) targets = [targets];
+
+    scrawl.addNativeListener(['dragenter', 'dragover', 'dragleave'], (e) => {
+
+        e.preventDefault();
+        e.stopPropagation();
+
+    }, canvas.domElement);
+
+    scrawl.addNativeListener('drop', (e) => {
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        const dt = e.dataTransfer;
+
+        if (dt) [...dt.files].forEach(addImageAsset);
+
+    }, canvas.domElement);
+
+    const addImageAsset = (file) => {
+
+        if (file.type.indexOf('image/') === 0) {
+
+            const reader = new FileReader();
+
+            reader.readAsDataURL(file);
+
+            reader.onloadend = function() {
+
+                // Create a name for our new asset
+                const name = `user-upload-${counter}`;
+                counter++;
+
+                // Add the image to the DOM and create our asset from it
+                const img = document.createElement('img');
+                img.src = reader.result;
+                img.id = name;
+                store.appendChild(img);
+
+                scrawl.importDomImage(`#${name}`);
+
+                // Update our Picture entity's asset attribute so it displays the new image
+                targets.forEach(target => {
+
+                    target.set({
+                        asset: name,
+                    });
+                });
+
+                // HOW TO: set the Picture entity's copy dimensions to take into account any difference between the old and new image's dimensions
+                // + Because of asynch stuff, we need to wait for stuff to complete before performing this functionality
+                // + The Picture entity copies (for the sake of our sanity) a square part of the image. Thus we shall use the new image's shorter dimension as the copy dimension and offset the longer copy start so we are viewing the middle of it
+                setTimeout(() => {
+
+                    const asset = scrawl.library.asset[name];
+
+                    const width = asset.get('width'),
+                        height = asset.get('height');
+
+                    let copyStartX = 0,
+                        copyStartY = 0,
+                        dim = 0;
+
+                    if (width > height) {
+
+                        copyStartX = (width - height) / 2;
+                        dim = height;
+                    }
+                    else {
+
+                        copyStartY = (height - width) / 2;
+                        dim = width;
+                    }
+
+                    targets.forEach(target => {
+
+                        target.set({
+                            copyStartX,
+                            copyStartY,
+                            copyWidth: dim,
+                            copyHeight: dim,
+                        });
+                    })
+
+                    if (callback) setTimeout(callback, timeoutDelay);
+                }, timeoutDelay);
+            }
+        }
+    };
+};
 
 export {
     reportSpeed,
@@ -297,4 +396,6 @@ export {
     killPolylineArtefact,
     killStyle,
     killTicker,
+
+    addImageDragAndDrop,
 }

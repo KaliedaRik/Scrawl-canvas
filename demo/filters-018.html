@@ -9,11 +9,12 @@
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
+    #my-image-store {
+      display: none;
+    }
+
     .controls {
       grid-template-columns: 1fr 2fr 1fr 2fr;
-    }
-    img {
-      display: none;
     }
   </style>
 </head>
@@ -21,6 +22,8 @@
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 018</h1>
   <h2>Parameters for: emboss filter</h2>
+  <h3>Where red represents the background color -<br />only shows through where pixels have been removed by the filter</h3>
+  <h3>To change image, drag-and-drop an image file over the canvas</h3>
 
   <div class="controls">
 
@@ -77,9 +80,6 @@
 
   <canvas id="mycanvas" width="400" height="400"></canvas>
 
-  <img id="iris" src="img/iris.png" class="flowers" />
-  <img id="perlin" src="img/perlin-noise-texture.png" class="flowers" />
-
   <p id="reportmessage"></p>
 
   <div class="testinfo">
@@ -94,6 +94,10 @@
     <p><b>Touch test:</b> not required</p>
 
     <p><a href="../docs/demo/filters-018.html">Annotated code</a></p>
+  </div>
+
+  <div id="my-image-store">
+    <img id="iris" src="img/iris.png" class="flowers" />
   </div>
 
   <script src="filters-018.js" type="module"></script>

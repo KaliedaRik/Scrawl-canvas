@@ -4,7 +4,7 @@
 // [Run code](../../demo/filters-025.html)
 import scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
@@ -117,6 +117,10 @@ document.querySelector('#innerRadius_absolute').value = 0;
 document.querySelector('#outerRadius_percent').value = 30;
 document.querySelector('#outerRadius_absolute').value = 120;
 document.querySelector('#easing').options.selectedIndex = 0;
+
+
+// #### Drag-and-Drop image loading functionality
+addImageDragAndDrop(canvas, '#my-image-store', piccy);
 
 
 // #### Development and testing

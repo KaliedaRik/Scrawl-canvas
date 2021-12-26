@@ -188,6 +188,7 @@ export default function (P = Ωempty) {
         sub.dirtyCopyStart = true;
         sub.dirtyCopyDimensions = true;
         sub.dirtyImageSubscribers = true;
+        sub.dirtyFilterIdentifier = true;
     };
 
 // Return the prototype

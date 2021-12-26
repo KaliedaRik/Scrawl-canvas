@@ -4,7 +4,7 @@
 // [Run code](../../demo/filters-022.html)
 import scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
@@ -97,7 +97,7 @@ const myFilter = scrawl.makeFilter({
 
 
 // Create the target entity
-scrawl.makePicture({
+const piccy = scrawl.makePicture({
 
     name: 'base-piccy',
 
@@ -163,6 +163,10 @@ opacity.value = 1;
 
 document.querySelector('#useNaturalGrayscale').value = '0';
 document.querySelector('#gradient').value = 'red-to-blue';
+
+
+// #### Drag-and-Drop image loading functionality
+addImageDragAndDrop(canvas, '#my-image-store', piccy);
 
 
 // #### Development and testing

@@ -9,6 +9,10 @@
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
+    #my-image-store {
+      display: none;
+    }
+
     .controls {
       grid-template-columns: 1fr 2fr 1fr 2fr;
     }
@@ -16,9 +20,6 @@
       grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
       width: 400px;
       margin: 0 auto;
-    }
-    img {
-      display: none;
     }
     canvas {
       margin: 0 auto;
@@ -29,6 +30,7 @@
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 012</h1>
   <h2>Parameters for: matrix, matrix5 filters</h2>
+  <h3>To change image, drag-and-drop an image file over the canvas</h3>
 
   <div class="controls matrixcontrols">
 
@@ -124,8 +126,6 @@
 
   </div>
 
-  <img id="iris" src="img/iris.png" class="flowers" />
-
   <p id="reportmessage"></p>
 
   <div class="testinfo">
@@ -140,6 +140,10 @@
     <p><b>Touch test:</b> not required</p>
 
     <p><a href="../docs/demo/filters-012.html">Annotated code</a></p>
+  </div>
+
+  <div id="my-image-store">
+    <img id="iris" src="img/iris.png" class="flowers" />
   </div>
 
   <script src="filters-012.js" type="module"></script>

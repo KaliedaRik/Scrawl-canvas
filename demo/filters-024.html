@@ -9,6 +9,10 @@
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
+    #my-image-store {
+      display: none;
+    }
+
     .controls {
       grid-template-columns: 1fr 2fr 1fr 2fr;
     }
@@ -23,13 +27,12 @@
 
       font-size:  12px;
     }
-    img {
-      display: none;
-    }
+
     canvas {
       border: 1px solid black;
       margin: 1em auto;
     }
+
     .channel-buttons {
       text-align: center;
     }
@@ -45,6 +48,7 @@
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 024</h1>
   <h2>Parameters for: curveWeights filter</h2>
+  <h3>To change image, drag-and-drop an image file over the canvas</h3>
 
   <div class="controls">
 
@@ -77,8 +81,6 @@
     </div>
   </div>
 
-  <img id="iris" src="img/iris.png" class="flowers" />
-
   <p id="reportmessage"></p>
 
   <div class="testinfo">
@@ -95,6 +97,10 @@
     <p><b>Touch test:</b> should work as expected. Known issue: the pins are currently too small for effective UX on touch devices.</p>
 
     <p><a href="../docs/demo/filters-024.html">Annotated code</a></p>
+  </div>
+
+  <div id="my-image-store">
+    <img id="iris" src="img/iris.png" class="flowers" />
   </div>
 
   <script src="filters-024.js" type="module"></script>

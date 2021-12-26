@@ -9,11 +9,12 @@
   <link href="css/normalize.css" rel="stylesheet" />
   <link href="css/tests.css" rel="stylesheet" />
   <style>
+    #my-image-store {
+      display: none;
+    }
+
     .controls {
       grid-template-columns: 1fr 2fr 1fr 2fr;
-    }
-    img {
-      display: none;
     }
   </style>
 </head>
@@ -21,6 +22,7 @@
 <body>
   <h1><a href="index.html">Scrawl-canvas v8</a> - Filters test 021</h1>
   <h2>Parameters for: corrode filter</h2>
+  <h3>To change image, drag-and-drop an image file over the canvas</h3>
 
   <div class="controls">
 
@@ -93,8 +95,6 @@
 
   <canvas id="mycanvas" width="600" height="400"></canvas>
 
-  <img id="iris" src="img/iris.png" class="flowers" />
-
   <p id="reportmessage"></p>
 
   <div class="testinfo">
@@ -106,9 +106,15 @@
       <li>Update filter attributes and observe the effect they have on the entitys</li>
     </ul>
 
+    <p>Note that, because this image is being applied to the Cell, not the Picture entity, changing the image while filter memoization is in operation will not display the changed image. In cases like this, memoization needs to be switched of for one Display cycle for the change to be picked up, then switched back on again.</p>
+
     <p><b>Touch test:</b> not required</p>
 
     <p><a href="../docs/demo/filters-021.html">Annotated code</a></p>
+  </div>
+
+  <div id="my-image-store">
+    <img id="iris" src="img/iris.png" class="flowers" />
   </div>
 
   <script src="filters-021.js" type="module"></script>

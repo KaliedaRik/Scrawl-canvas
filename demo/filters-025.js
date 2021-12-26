@@ -4,7 +4,7 @@
 // [Run code](../../demo/filters-025.html)
 import scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
@@ -122,6 +122,10 @@ offsetGreenMax.value = 0;
 offsetBlueMin.value = 0;
 offsetBlueMax.value = 0;
 opacity.value = 1;
+
+
+// #### Drag-and-Drop image loading functionality
+addImageDragAndDrop(canvas, '#my-image-store', piccy);
 
 
 // #### Development and testing

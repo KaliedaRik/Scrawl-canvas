@@ -1,10 +1,10 @@
 // # Demo Filters 001
-// Filter parameters: Blur filter
+// Parameters for: Blur, Gaussianblur filters; filter memoization
 
 // [Run code](../../demo/filters-001.html)
 import scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
@@ -185,6 +185,10 @@ document.querySelector('#processHorizontal').options.selectedIndex = 1;
 document.querySelector('#processVertical').options.selectedIndex = 1;
 document.querySelector('#excludeTransparentPixels').options.selectedIndex = 1;
 document.querySelector('#memoizeFilterOutput').options.selectedIndex = 0;
+
+
+// #### Drag-and-Drop image loading functionality
+addImageDragAndDrop(canvas, '#my-image-store', piccy);
 
 
 // #### Development and testing

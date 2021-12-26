@@ -184,6 +184,7 @@ P.set = function (items = Ωempty) {
                 else if (typeof defs[key] !== 'undefined') this[key] = value;
             }
         }
+        this.dirtyFilterIdentifier = true;
     }
     return this;
 };

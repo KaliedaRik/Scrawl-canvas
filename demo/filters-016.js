@@ -4,7 +4,7 @@
 // [Run code](../../demo/filters-016.html)
 import scrawl from '../source/scrawl.js';
 
-import { reportSpeed } from './utilities.js';
+import { reportSpeed, addImageDragAndDrop } from './utilities.js';
 
 // Get Scrawl-canvas to recognise and act on device pixel ratios greater than 1
 scrawl.setIgnorePixelRatio(false);
@@ -103,7 +103,7 @@ scrawl.makeFilter({
     lineOut: 'wheel',
 });
 
-scrawl.makeFilter({
+const imageFilter = scrawl.makeFilter({
 
     name: 'flower-filter',
     method: 'image',
@@ -222,6 +222,10 @@ oy.value = 30;
 document.querySelector('#source').options.selectedIndex = 0;
 document.querySelector('#destination').options.selectedIndex = 2;
 document.querySelector('#blend').options.selectedIndex = 0;
+
+
+// #### Drag-and-Drop image loading functionality
+addImageDragAndDrop(canvas, '#my-image-store', imageFilter);
 
 
 // #### Development and testing

@@ -4,6 +4,8 @@
 // [Run code](../../demo/filters-024.html)
 import scrawl from '../source/scrawl.js';
 
+import { addImageDragAndDrop } from './utilities.js';
+
 
 // #### Scene setup
 scrawl.setIgnorePixelRatio(false);
@@ -28,7 +30,7 @@ const myFilter = scrawl.makeFilter({
 
 
 // #### Output canvas
-scrawl.makePicture({
+const piccy = scrawl.makePicture({
 
     name: 'base-piccy',
     group: oCanvas.base.name,
@@ -337,16 +339,14 @@ const recalculateWeights = function () {
 
 
 // #### Scene animation
-// In this demo we continuously animate the (right hand side) curves canvas, but only update the (left hand side) output canvas when the filter changes
 const demoAnimation = scrawl.makeRender({
 
     name: "demo-animation",
-    target: wCanvas,
+    target: [wCanvas, oCanvas],
 });
 
 const updateOutput = () => {
 
-    oCanvas.render();
     document.querySelector('#reportmessage').textContent = weights.join(', ');
 }
 
@@ -415,6 +415,10 @@ scrawl.addNativeListener(['input', 'change'], () => updateOutput(), '.controlIte
 // Setup form
 document.querySelector('#useMixedChannel').options.selectedIndex = 1;
 document.querySelector('#opacity').value = 1;
+
+
+// #### Drag-and-Drop image loading functionality
+addImageDragAndDrop(oCanvas, '#my-image-store', piccy);
 
 
 // #### Development and testing
